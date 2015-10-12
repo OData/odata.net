@@ -37,7 +37,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Determines the type name to write to the payload.  Json Light type names are only written into the payload for open properties
+        /// Determines the type name to write to the payload. Json Light type names are only written into the payload for open properties
         /// or if the payload type name is more derived than the model type name.
         /// </summary>
         /// <param name="value">The ODataValue whose type name is to be written.</param>

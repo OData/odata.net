@@ -241,7 +241,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Bind this function call token as a built in function
         /// </summary>
-        /// <param name="functionCallToken">the function call token to bidn</param>
+        /// <param name="functionCallToken">the function call token to bind</param>
         /// <param name="argumentNodes">list of semantically bound arguments</param>
         /// <returns>A function call node bound to this function.</returns>
         private QueryNode BindAsBuiltInFunction(FunctionCallToken functionCallToken, List<QueryNode> argumentNodes)

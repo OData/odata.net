@@ -145,5 +145,50 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 this.ExpandedChildElement = compiled() as IEnumerable;
             }
         }
+
+        /// <summary>
+        /// Handle an ExpandedReferenceSelectItem
+        /// </summary>
+        /// <param name="item">the item to Handle</param>
+        public override void Handle(ExpandedReferenceSelectItem item)
+        {
+            var navigationProperty = (item.PathToNavigationProperty.LastSegment as NavigationPropertySegment).NavigationProperty;
+            this.ExpandedChildElement = this.ParentElement.GetType().GetProperty(navigationProperty.Name).GetValue(this.ParentElement, null);
+
+            if (this.ExpandedChildElement is IEnumerable)
+            {
+                var entityInstanceType = EdmClrTypeUtils.GetInstanceType(item.NavigationSource.EntityType().FullName());
+                Expression resultExpression = (this.ExpandedChildElement as IEnumerable).AsQueryable().Expression;
+
+                if (item.FilterOption != null)
+                {
+                    resultExpression = resultExpression.ApplyFilter(entityInstanceType, null, item.FilterOption);
+                }
+
+                if (item.SearchOption != null)
+                {
+                    resultExpression = resultExpression.ApplySearch(entityInstanceType, null, item.SearchOption);
+                }
+
+                if (item.OrderByOption != null)
+                {
+                    resultExpression = resultExpression.ApplyOrderBy(entityInstanceType, null, item.OrderByOption);
+                }
+
+                if (item.SkipOption.HasValue)
+                {
+                    resultExpression = resultExpression.ApplySkip(entityInstanceType, item.SkipOption.Value);
+                }
+
+                if (item.TopOption.HasValue)
+                {
+                    resultExpression = resultExpression.ApplyTop(entityInstanceType, item.TopOption.Value);
+                }
+
+                Expression<Func<object>> lambda = Expression.Lambda<Func<object>>(resultExpression);
+                Func<object> compiled = lambda.Compile();
+                this.ExpandedChildElement = compiled() as IEnumerable;
+            }
+        }
     }
 }

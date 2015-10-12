@@ -210,7 +210,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// Resolve operation's parameters.
         /// </summary>
         /// <param name="operation">Current operation for parameters.</param>
-        /// <param name="input">A dictionary the paramenter list.</param>
+        /// <param name="input">A dictionary the parameter list.</param>
         /// <returns>A dictionary containing resolved parameters.</returns>
         public virtual IDictionary<IEdmOperationParameter, SingleValueNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, SingleValueNode> input)
         {

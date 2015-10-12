@@ -50,8 +50,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             CustomizeEntry(incomingHeaders, entry);
 
             writer.WriteStart(entry);
-            var expandedNavigationItems = selectExpandClause == null ? null : selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>();
-            WriteNavigationLinks(writer, element, entry.ReadLink, entitySource, targetVersion, expandedNavigationItems);
+
+            // gets all of the expandedItems, including ExpandedRefernceSelectItem and ExpandedNavigationItem
+            var expandedItems = selectExpandClause == null ? null : selectExpandClause.SelectedItems.OfType<ExpandedReferenceSelectItem>();
+            WriteNavigationLinks(writer, element, entry.ReadLink, entitySource, targetVersion, expandedItems);
             writer.WriteEnd();
         }
 
@@ -127,15 +129,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             writer.WriteEnd();
         }
 
-        private static void WriteNavigationLinks(ODataWriter writer, object element, Uri parentEntryUri, IEdmNavigationSource edmParent, ODataVersion targetVersion, IEnumerable<ExpandedNavigationSelectItem> expandedNavigationItems)
+        private static void WriteNavigationLinks(ODataWriter writer, object element, Uri parentEntryUri, IEdmNavigationSource edmParent, ODataVersion targetVersion, IEnumerable<SelectItem> expandedItems)
         {
             foreach (var navigationProperty in ((IEdmEntityType)EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element)).NavigationProperties())
             {
-                var expandedNavigationItem = GetExpandedNavigationItem(expandedNavigationItems, navigationProperty.Name);
+                // give proprity to ExpandedReferenceSelectItem
+                var expandedItem = GetExpandedReferenceItem(expandedItems, navigationProperty.Name);
+                if (expandedItem == null)
+                {
+                    expandedItem = GetExpandedNavigationItem(expandedItems, navigationProperty.Name);
+                }
 
                 // For Atom, we always manually write out the links for the navigation properties off of the entity type
                 // Or if the navigation is expanded, we manually write out the links for the navigation properties along with the expanded entries
-                if (writer.GetType().Name != "ODataJsonLightWriter" || expandedNavigationItem != null)
+                if (writer.GetType().Name != "ODataJsonLightWriter" || expandedItem != null)
                 {
                     bool isCollection = navigationProperty.Type.IsCollection();
 
@@ -152,11 +159,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     }
 
                     writer.WriteStart(navigationLink);
-
-                    if (expandedNavigationItem != null)
+                    if (expandedItem != null)
                     {
                         ExpandSelectItemHandler expandItemHandler = new ExpandSelectItemHandler(element);
-                        expandedNavigationItem.HandleWith(expandItemHandler);
+                        expandedItem.HandleWith(expandItemHandler);
+
                         var propertyValue = expandItemHandler.ExpandedChildElement;
 
                         if (propertyValue != null)
@@ -167,29 +174,90 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             {
                                 long? count = null;
                                 var collectionValue = propertyValue as IEnumerable;
-                                if (collectionValue != null && expandedNavigationItem.CountOption == true)
+                                if (collectionValue != null && expandedItem.CountOption == true)
                                 {
                                     count = collectionValue.Cast<object>().LongCount();
                                 }
-                                WriteFeed(writer, collectionValue, targetSource as IEdmEntitySetBase, targetVersion, expandedNavigationItem.SelectAndExpand, count, null, null);
+
+                                if (expandedItem.GetType() == typeof(ExpandedReferenceSelectItem))
+                                {
+                                    WriteReferenceLinks(writer, collectionValue, targetSource as IEdmEntitySetBase, targetVersion, navigationLink);
+                                }
+                                else
+                                {
+                                    
+                                    WriteFeed(writer, collectionValue, targetSource as IEdmEntitySetBase, targetVersion, ((ExpandedNavigationSelectItem)expandedItem).SelectAndExpand, count, null, null);
+                                }
                             }
                             else
                             {
-                                WriteEntry(writer, propertyValue, targetSource, targetVersion, expandedNavigationItem.SelectAndExpand);
+                                if (expandedItem.GetType() == typeof(ExpandedReferenceSelectItem))
+                                {
+                                    WriteReferenceLink(writer, propertyValue, targetSource, targetVersion, navigationLink);
+                                }
+                                else
+                                {
+                                    WriteEntry(writer, propertyValue, targetSource, targetVersion, ((ExpandedNavigationSelectItem)expandedItem).SelectAndExpand);                                   
+                                }
                             }
                         }
                     }
-
                     writer.WriteEnd();
                 }
             }
         }
 
-        private static ExpandedNavigationSelectItem GetExpandedNavigationItem(IEnumerable<ExpandedNavigationSelectItem> expandedNavigationItems, string name)
+        /// <summary>
+        /// Writes a ReferenceLink
+        /// </summary>
+        /// <param name="writer">The ODataWriter that will write the ReferenceLink.</param>
+        public static void WriteReferenceLink(ODataWriter writer, object element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
         {
-            if (expandedNavigationItems != null)
+            ODataEntry entry = ODataObjectModelConverter.ConvertToODataEntityReferenceLink (element, entitySource, targetVersion);
+            entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationByEntry", new ODataPrimitiveValue(true)));
+            writer.WriteStart(entry);
+            writer.WriteEnd();
+        }
+
+        /// <summary>
+        /// Writes a ReferenceLinks
+        /// </summary>
+        /// <param name="writer">The ODataWriter that will write the ReferenceLinks.</param>
+        public static void WriteReferenceLinks(ODataWriter writer, IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
+        {
+            IEnumerable<ODataEntry> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks (element, entitySource, targetVersion);
+            var feed = new ODataFeed { };
+            writer.WriteStart(feed);
+            foreach (var entry in links)
             {
-                foreach (var item in expandedNavigationItems)
+                entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationByFeed", new ODataPrimitiveValue(true)));
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            }
+            writer.WriteEnd();
+        }
+
+        private static ExpandedReferenceSelectItem GetExpandedReferenceItem(IEnumerable<SelectItem> expandedItems, string name)
+        {
+            if (expandedItems != null)
+            {
+                foreach (ExpandedReferenceSelectItem item in expandedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
+                {
+                    if ((item.PathToNavigationProperty.LastSegment as NavigationPropertySegment).NavigationProperty.Name == name)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static ExpandedNavigationSelectItem GetExpandedNavigationItem(IEnumerable<SelectItem> expandedItems, string name)
+        {
+            if (expandedItems != null)
+            {
+                foreach (ExpandedNavigationSelectItem item in expandedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
                 {
                     if ((item.PathToNavigationProperty.LastSegment as NavigationPropertySegment).NavigationProperty.Name == name)
                     {

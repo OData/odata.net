@@ -57,6 +57,13 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         }
 
         [TestMethod]
+        public void SelectPropertiesWithRefOperationShouldThrow()
+        {
+            Action readResult = () => RunParseSelectExpand("MyLions/$ref", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand("$ref", "MyLions/$ref"));
+        }
+
+        [TestMethod]
         public void SelectWithAsteriskMeansWildcard()
         {
             ParseSingleSelectForPerson("*").ShouldBeWildcardSelectionItem();
@@ -442,6 +449,36 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             Action parseWithNonSemiColonTerminatedQueryOptions = () => RunParseSelectExpand(null, "MyDog($select=Color,$expand=MyPeople)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             parseWithNonSemiColonTerminatedQueryOptions.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand("$expand", "Color,$expand=MyPeople"));
+        }
+
+        [TestMethod]
+        public void ExpandPropertiesWithRefOperationInNonTopLevel()
+        {
+            var result = RunParseSelectExpand(null, "MyDog($expand=MyPeople/$ref)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            AssertExpandString("MyDog($expand=MyPeople/$ref)", result);
+        }
+
+        [TestMethod]
+        public void ExpandNavigationWithNavigationAfterRefOperationShouldThrow()
+        {
+            const string expandClauseText = "MyDog/$ref/MyPeople";
+            Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+        }
+
+        [TestMethod]
+        public void ExpandNavigationWithNestedQueryOptionOnRef()
+        {
+            const string expandWithOrderby = "MyPet2Set/$ref($orderby=PetColorPattern desc)";
+            var results = RunParseSelectExpand(null, expandWithOrderby, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            results.SelectedItems.Should().HaveCount(1);
+            results.AllSelected.Should().BeTrue();
+
+            SelectItem expandItem = results.SelectedItems.Single(x => x.GetType() == typeof(ExpandedReferenceSelectItem));
+            var orderbyClause = expandItem.ShouldBeExpansionWithRefFor(HardCodedTestModel.GetPersonMyPet2SetNavProp()).And.OrderByOption;
+            orderbyClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
+            orderbyClause.Direction.Should().Be(OrderByDirection.Descending);
         }
 
         [TestMethod]

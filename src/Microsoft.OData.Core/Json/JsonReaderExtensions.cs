@@ -283,7 +283,7 @@ namespace Microsoft.OData.Core.Json
         /// Creates an exception instance that is appropriate for the current library being built.
         /// Allows the code in this class to be shared between ODataLib and the common spatial library.
         /// </summary>
-        /// <param name="exceptionMessage">String to use for the exception messag.</param>
+        /// <param name="exceptionMessage">String to use for the exception message.</param>
         /// <returns>Exception to be thrown.</returns>
 #if SPATIAL
         internal static FormatException CreateException(string exceptionMessage)

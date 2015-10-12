@@ -9,6 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriBuilder;
     using Microsoft.OData.Core.UriParser;
@@ -31,7 +32,8 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             edmEntityType.AddKeys(edmEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             edmEntityType.AddStructuralProperty("Color", EdmPrimitiveTypeKind.String);
             edmEntityType.AddStructuralProperty("FA", EdmPrimitiveTypeKind.String);
-            edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDog", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType });
+            edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDog", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType }); 
+            edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyCat", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType });
             model.AddElement(edmEntityType);
             EdmEntityContainer container = new EdmEntityContainer("NS", "EntityContainer");
             model.AddElement(container);
@@ -43,7 +45,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
         [TestMethod]
         public void ODataUriBuilderWithEntitySet()
         {
-            Uri fullUri = new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
+            Uri fullUri = new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
             ODataUriParser odataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, fullUri);
             odataUriParser.UrlConventions = ODataUrlConventions.Default;
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
@@ -67,12 +69,16 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
 
             //verify $select and $expand
             IEnumerable<SelectItem> selectItems = odataUri.SelectAndExpand.SelectedItems;
-            foreach (ExpandedNavigationSelectItem selectItem in selectItems)
-            {
-                NavigationPropertySegment navigationProperty = (NavigationPropertySegment)selectItem.PathToNavigationProperty.FirstSegment;
-                Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyDog");
-                break;
-            }
+            IEnumerable<ExpandedNavigationSelectItem> expandedNavigationSelectItem = selectItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)).OfType<ExpandedNavigationSelectItem>();
+            IEnumerable<ExpandedReferenceSelectItem> expandedReferenceSelectItem = selectItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)).OfType<ExpandedReferenceSelectItem>();
+            IEnumerable<PathSelectItem> pathSelectItem = selectItems.Where(I => I.GetType() == typeof(PathSelectItem)).OfType<PathSelectItem>();
+            Assert.AreEqual(expandedNavigationSelectItem.Count(), 1);
+            Assert.AreEqual(expandedReferenceSelectItem.Count(), 1);
+            Assert.AreEqual(pathSelectItem.Count(), 3);
+            NavigationPropertySegment navigationProperty = (NavigationPropertySegment)expandedNavigationSelectItem.First().PathToNavigationProperty.FirstSegment;
+            Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyDog");
+            navigationProperty = (NavigationPropertySegment)expandedReferenceSelectItem.First().PathToNavigationProperty.FirstSegment;
+            Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyCat");
 
             //verify $orderby
             SingleValuePropertyAccessNode orderby = (SingleValuePropertyAccessNode)odataUri.OrderBy.Expression;
@@ -93,17 +99,17 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
 
             ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
             Uri actualUri = odataUriBuilder.BuildUri();
-            Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
+            Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
-            Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
+            Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
         }
 
         [TestMethod]
         public void TestODataUriBuilderWithKeySegment()
         {
-            Uri fullUri = new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
+            Uri fullUri = new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
             ODataUriParser odataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, fullUri);
             odataUriParser.UrlConventions = ODataUrlConventions.Default;
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
@@ -134,12 +140,16 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
 
             //verify $select and $expand
             IEnumerable<SelectItem> selectItems = odataUri.SelectAndExpand.SelectedItems;
-            foreach (ExpandedNavigationSelectItem selectItem in selectItems)
-            {
-                NavigationPropertySegment navigationProperty = (NavigationPropertySegment)selectItem.PathToNavigationProperty.FirstSegment;
-                Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyDog");
-                break;
-            }
+            IEnumerable<ExpandedNavigationSelectItem> expandedNavigationSelectItem = selectItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)).OfType<ExpandedNavigationSelectItem>();
+            IEnumerable<ExpandedReferenceSelectItem> expandedReferenceSelectItem = selectItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)).OfType<ExpandedReferenceSelectItem>();
+            IEnumerable<PathSelectItem> pathSelectItem = selectItems.Where(I => I.GetType() == typeof(PathSelectItem)).OfType<PathSelectItem>();
+            Assert.AreEqual(expandedNavigationSelectItem.Count(), 1);
+            Assert.AreEqual(expandedReferenceSelectItem.Count(), 1);
+            Assert.AreEqual(pathSelectItem.Count(), 3);
+            NavigationPropertySegment navigationProperty = (NavigationPropertySegment)expandedNavigationSelectItem.First().PathToNavigationProperty.FirstSegment;
+            Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyDog");
+            navigationProperty = (NavigationPropertySegment)expandedReferenceSelectItem.First().PathToNavigationProperty.FirstSegment;
+            Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyCat");
 
             //verify $orderby
             SingleValuePropertyAccessNode orderby = (SingleValuePropertyAccessNode)odataUri.OrderBy.Expression;
@@ -159,13 +169,13 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             Assert.AreEqual(searchTermNode.Text, "FA");
             ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
             Uri actualUri = odataUriBuilder.BuildUri();
-            Assert.AreEqual(new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
+            Assert.AreEqual(new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
         }
 
         [TestMethod]
         public void ODataUriBuilderWithKeyAsSegment()
         {
-            Uri fullUri = new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog&$top=1&$skip=2&$count=false");
+            Uri fullUri = new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$top=1&$skip=2&$count=false");
             ODataUriParser oDataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, fullUri);
             oDataUriParser.UrlConventions = ODataUrlConventions.KeyAsSegment;
             SetODataUriParserSettingsTo(this.settings, oDataUriParser.Settings);
@@ -196,12 +206,16 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
 
             //verify $select and $expand
             IEnumerable<SelectItem> selectItems = odataUri.SelectAndExpand.SelectedItems;
-            foreach (ExpandedNavigationSelectItem selectItem in selectItems)
-            {
-                NavigationPropertySegment navigationProperty = (NavigationPropertySegment)selectItem.PathToNavigationProperty.FirstSegment;
-                Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyDog");
-                break;
-            }
+            IEnumerable<ExpandedNavigationSelectItem> expandedNavigationSelectItem = selectItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)).OfType<ExpandedNavigationSelectItem>();
+            IEnumerable<ExpandedReferenceSelectItem> expandedReferenceSelectItem = selectItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)).OfType<ExpandedReferenceSelectItem>();
+            IEnumerable<PathSelectItem> pathSelectItem = selectItems.Where(I => I.GetType() == typeof(PathSelectItem)).OfType<PathSelectItem>();
+            Assert.AreEqual(expandedNavigationSelectItem.Count(), 1);
+            Assert.AreEqual(expandedReferenceSelectItem.Count(), 1);
+            Assert.AreEqual(pathSelectItem.Count(), 3);
+            NavigationPropertySegment navigationProperty = (NavigationPropertySegment)expandedNavigationSelectItem.First().PathToNavigationProperty.FirstSegment;
+            Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyDog");
+            navigationProperty = (NavigationPropertySegment)expandedReferenceSelectItem.First().PathToNavigationProperty.FirstSegment;
+            Assert.AreEqual(navigationProperty.NavigationProperty.Name, "MyCat");
 
             //verify $top
             Assert.AreEqual(odataUri.Top, 1);
@@ -214,7 +228,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             Uri actualUri = uriBuilderWithKeyAsSegment.BuildUri();
-            Assert.AreEqual(new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog&$expand=MyDog&$top=1&$skip=2&$count=false"), actualUri);
+            Assert.AreEqual(new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$top=1&$skip=2&$count=false"), actualUri);
         }
 
         [TestMethod]

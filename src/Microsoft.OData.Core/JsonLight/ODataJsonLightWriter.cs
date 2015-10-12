@@ -259,7 +259,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             // Get the projected properties
             JsonLightEntryScope entryScope = this.CurrentEntryScope;
-           
+
             this.jsonLightEntryAndFeedSerializer.WriteEntryMetadataProperties(entryScope);
 
             // Write custom instance annotations
