@@ -19,7 +19,6 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using Edm.Library;
     #endregion Namespaces
 
     /// <summary>

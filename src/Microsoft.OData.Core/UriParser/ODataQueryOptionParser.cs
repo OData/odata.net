@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core.UriParser
         private SearchClause searchClause;
 
         /// <summary>
-        /// Apply clause for aggregate queries 
+        /// Apply clause for aggregate queries
         /// </summary>
         private ApplyClause applyClause;
         #endregion private fields

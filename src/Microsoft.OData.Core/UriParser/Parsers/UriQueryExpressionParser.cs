@@ -208,7 +208,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         // parses $apply aggregate tranformation (.e.g. aggregate(UnitPrice with sum as TotalUnitPrice)
         internal AggregateToken ParseAggregate()
         {
-            // "aggregate"         
+            // "aggregate"
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordAggregate));
             lexer.NextToken();
 
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         // parses $apply groupby tranformation (.e.g. groupby(ProductID, CategoryId, aggregate(UnitPrice with sum as TotalUnitPrice))
         internal GroupByToken ParseGroupBy()
         {
-            // "groupby"         
+            // "groupby"
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordGroupBy));
             lexer.NextToken();
 
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             this.lexer.NextToken();
 
-            // optional aggregate 
+            // optional aggregate
             AggregateToken aggregate = null;
 
             // "," (comma)
@@ -343,7 +343,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         // parses $apply filter tranformation (.e.g. filter(ProductName eq 'Aniseed Syrup'))
         internal QueryToken ParseApplyFilter()
         {
-            // "filter"         
+            // "filter"
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordFilter));
             lexer.NextToken();
 

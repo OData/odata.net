@@ -64,20 +64,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes the odata.type instance annotation with the specified type name.
-        /// </summary>
-        /// <param name="jsonWriter">The JSON writer to write to.</param>
-        /// <param name="typeName">The type name to write.</param>
-        internal static void WriteODataIdAnnotation(IJsonWriter jsonWriter, string value)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter != null");
-
-            // "@odata.id": #"value"
-            jsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
-            jsonWriter.WriteValue(value);
-        }
-
-        /// <summary>
         /// Write a JSON property name which represents a property annotation.
         /// </summary>
         /// <param name="jsonWriter">The JSON writer to write to.</param>

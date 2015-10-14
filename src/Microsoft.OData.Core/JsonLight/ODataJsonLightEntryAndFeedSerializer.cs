@@ -12,7 +12,6 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Core.Json;
-    using Edm.Library;
     #endregion Namespaces
 
     /// <summary>

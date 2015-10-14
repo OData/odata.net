@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
     using System.Collections.Generic;
 
     internal sealed class GroupByToken : QueryToken
-    {        
+    {
         public GroupByToken(IEnumerable<EndPathToken> properties, AggregateToken aggregate)
         {
             ExceptionUtils.CheckArgumentNotNull(properties, "properties");

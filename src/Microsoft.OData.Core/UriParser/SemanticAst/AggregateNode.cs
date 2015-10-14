@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregateNode2.cs" company="Microsoft">
+// <copyright file="AggregateNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             ExceptionUtils.CheckArgumentNotNull(itemType, "itemType");
 
             this._statements = statements;
-            this._itemType = itemType;        
+            this._itemType = itemType;
         }
 
         private readonly IEnumerable<AggregateStatementNode> _statements;
