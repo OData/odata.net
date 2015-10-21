@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {            
             var token = new AggregateStatementToken(expressionToken, AggregationVerb.CountDistinct, "Alias");
             token.Kind.Should().Be(QueryTokenKind.AggregateStatement);
-        }        
+        }
     }
 }
 

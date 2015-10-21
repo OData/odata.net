@@ -124,7 +124,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 case AggregationVerb.CountDistinct:
                     return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int64, false);
                 case AggregationVerb.Max:
-                    return expressionType;
                 case AggregationVerb.Min:
                     return expressionType;
                 case AggregationVerb.Sum:

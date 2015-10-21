@@ -30,6 +30,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private readonly int maxDepth;
 
         /// <summary>
+        /// List of supported $apply keywords
+        /// </summary>
+        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy});
+
+        /// <summary>
         /// Set of parsed parameters
         /// </summary>
         private readonly HashSet<string> parameters = new HashSet<string>(StringComparer.Ordinal)
@@ -172,7 +177,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByExpression(apply);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
 
             while (true)
             {
@@ -188,7 +193,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         transformationTokens.Add(ParseGroupBy());
                         break;
                     default:
-                        var supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy });
                         throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
                 // '/' indicates there are more transformations
@@ -237,7 +241,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -332,7 +336,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -361,7 +365,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(expressionText != null, "expressionText != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByExpression(expressionText);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(expressionText);
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 
@@ -378,7 +382,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(orderBy != null, "orderBy != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByExpression(orderBy);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(orderBy);
 
             List<OrderByToken> orderByTokens = new List<OrderByToken>();
             while (true)
@@ -423,11 +427,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Creates a new <see cref="ExpressionLexer"/> for the given filter or orderby expression.
+        /// Creates a new <see cref="ExpressionLexer"/> for the given filter, orderby or apply expression.
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
-        private static ExpressionLexer CreateLexerForFilterOrOrderByExpression(string expression)
+        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
         {
             return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*parsingFunctionParameters*/);
         }

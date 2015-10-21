@@ -119,7 +119,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var actual = this.testSubject.ParseApply(string.Empty);
             actual.Should().NotBeNull();
-            actual.Should().BeEmpty();            
+            actual.Should().BeEmpty();
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "invalid(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby",0,apply));
         }
 
         [TestMethod]
@@ -135,7 +135,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate(UnitPrice with sum as TotalPrice),";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.ExpressionLexer_SyntaxError(apply.Length, apply));
         }
 
         [TestMethod]
@@ -178,7 +178,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(10, apply));
         }
 
         [TestMethod]
@@ -186,7 +186,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate(UnitPrice with sum as TotalPrice";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
         [TestMethod]
@@ -194,7 +194,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateAfterGroupByMissingStatementShouldThrow()
+        {
+            var apply = "groupby((UnitPrice))/aggregate()";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
         }
 
         [TestMethod]
@@ -202,7 +210,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate(UnitPrice sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_WithExpected(20, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateStatementWithInvalidAggregateExpressionWithShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice mul with sum as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
         }
 
         [TestMethod]
@@ -210,7 +226,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate(UnitPrice with invalid as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb("invalid",25, apply));
         }
 
         [TestMethod]
@@ -218,7 +234,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate(UnitPrice with sum TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
         }
 
         [TestMethod]
@@ -226,7 +242,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "aggregate(UnitPrice with sum as)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
         private static void VerifyGroupByTokenProperties(IEnumerable<string> expectedEndPathIdentifiers, GroupByToken actual)
@@ -311,15 +327,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "groupby (UnitPrice))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(9, apply));
         }
 
         [TestMethod]
         public void ParseApplyWithGroupByMissingCloseParenShouldThrow()
         {
-            var apply = "groupBy((UnitPrice)";
+            var apply = "groupby((UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
         [TestMethod]
@@ -327,7 +343,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "groupBy((UnitPrice), aggregate(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby", 0, apply));
         }
 
         [TestMethod]
@@ -335,7 +351,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "groupby()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
         }
 
         [TestMethod]
@@ -343,7 +359,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "groupby(UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
         }
 
         [TestMethod]
@@ -351,7 +367,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "groupby(())";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
         }
 
         private static void VerifyBinaryOperatorToken<T>(string expectedEndPathIdentifier, BinaryOperatorKind expectedOperator, T expectedLiteralValue, BinaryOperatorToken actual)
@@ -386,7 +402,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "filter UnitPrice eq 5)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(7, apply));
         }
 
         [TestMethod]
@@ -394,7 +410,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "filter(UnitPrice eq 5";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(apply.Length, apply));
         }
 
         [TestMethod]
@@ -402,8 +418,17 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         {
             var apply = "filter()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>();
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(7, apply));
         }
+
+        [TestMethod]
+        public void ParseApplyWithFilterInvalidExpressionShouldThrow()
+        {
+            var apply = "filter(UnitPrice eq)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+        }
+
 
         [TestMethod]
         public void ParseApplyWithMultipleTransformationShouldReturnTransformations()
