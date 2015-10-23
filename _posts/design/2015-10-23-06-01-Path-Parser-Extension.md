@@ -7,8 +7,10 @@ category: "7. Design"
 
 This doc discuss about the design of extension of Path parser part of UriParser.
 
-### 1 Path Parser Overview
-# 1.1 Current path parsing logic
+# 1 Path Parser Overview
+
+## 1.1 Current path parsing logic
+
 - Linear parsing, one segment is determined, then next one;
 - Syntax and semantic passes are combined together, as we need type information from model to validate the identifiers (Web API );
 - For certain raw segment, each kind of segment is tried one by one. And it stops processing when one matches;
@@ -69,10 +71,11 @@ private void CreateNextSegment(string text)
 }
 {% endhighlight %}
 
-# 1.2 KeyAsSegment Rule
+## 1.2 KeyAsSegment Rule
+
 Key as segment means user could choose to place a key in the path, instead of in brackets, which is OData convention.
 Currently the ODataLib supports KeyAsSegment by providing an ODataUrlConventions setting on ODataUriparser. But the introducing of KeyAsSegment does bring conflicts, in order to solve those conflicts, ODataLib also introduced the ‘$’ escape sign. Here are some words taken from source code:
-```
+{% highlight text %}
 If this segment is the special escape-marker segment, then remember that the next segment cannot be a key, 
 even if we are in key-as-segments mode. Essentially, it is an escape into 'metadata-space', so to speak. 
 DEVNOTE: We went back and forth several times on whether this should be allowed everywhere or only 
@@ -83,7 +86,7 @@ where a key could appear. We landed on allowing it absolutely everywhere for sev
   3) It's better to be either extremely loose or extremely strict than allow it in some cases and not in others.
 Note that this is not publicly documented in OData V3 nor is it planned to be documented in OData V4, but it 
 is a part of supporting the Key-As-Segment conventions that are used by many Azure services.
-```
+{% endhighlight %}
 
 In this case for the following 2 Urls would have different parsing results:
 1. 
@@ -99,12 +102,15 @@ In this case for the following 2 Urls would have different parsing results:
 
 As the quote says, for now we still do not have document to describe the detailed behavior of ‘$’, so it would be nice if we can have some pre-defined parsing rules to resolve the confliction while not relying on ‘$’. Also it is supposed to be the default Url convention for OData simplified. Detailed design would be discussed in later part.
 
-## 1.3 Key notes for design
+## 1.3 Design goal
+
 - Do not throw exception until segment cannot be handled eventually, customer extensions may define new syntax rules.
 - Modularize single segment parser, we easily integrate community contributed parser extensions. (We’d provide an extension framework, instead of hard-coded extensions.)
 
-### 2 Design Detail
+# 2 Design Detail
+
 ## 2.1 New parser context class
+
 Add the following class:
 {% highlight csharp %}
 public class ODataUriParserContext
@@ -123,6 +129,7 @@ public class ODataUriParserContext
 
 
 ## 2.2 Update Parser configuration
+
 Modify the following class:
 {% highlight csharp %}
 public sealed class ODataUriParser
@@ -148,25 +155,20 @@ The current behavior doesn’t look like an idea model for path parsing, while a
 If we are going to change this, we may have a simplified parser context and parsing flow.
 
 ## 2.3 New Convention for KeyAsSegment
+
 {% highlight csharp %}
 public sealed class ODataUrlConventions{
     public static ODataUrlConventions Default { get; }
     public static ODataUrlConventions KeyAsSegment { get; }
-    **public static ODataUrlConventions ODataSimplified { get; }**
+    public static ODataUrlConventions ODataSimplified { get; }
 }
 {% endhighlight %}
 
-When ODataSimplified convention is chosen, the following extensions are automatically applied:
-StringAsEnum, CaseInsensitive, UnqualifiedFunctionCall
+When ODataSimplified convention is chosen, the following path segment parsing order is applied:
 
-Please refer to [ODataUriParser Extension Support](http://blogs.msdn.com/b/odatateam/archive/2014/09/12/tutorial-amp-sample-odatauriparser-extension-support.aspx) for details about those extensions.
-
-
-the following Path segment parsing order is applied:
-
-| collectionNavigation          | singleNavigation              |
-|-------------------------------|:------------------------------| 
-| Fixed Segment ( $ref, $count) | Fixed Segment ($ref, $value)  |
-| Type                          | Type                          |
-| Operation                     | Operation                     | 
-| Key                           | Property                      |
+ collectionNavigation          | singleNavigation              
+ ----------------------------- | :----------------------------  
+ Fixed Segment ( $ref, $count) | Fixed Segment ($ref, $value)  
+ Type                          | Type                          
+ Operation                     | Operation                      
+ Key                           | Property                      
