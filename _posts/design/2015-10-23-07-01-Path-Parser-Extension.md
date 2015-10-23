@@ -167,7 +167,7 @@ public sealed class ODataUrlConventions{
 When ODataSimplified convention is chosen, the following path segment parsing order is applied:
 
  collectionNavigation           | singleNavigation              
- ------------------------------ | :----------------------------  
+ ------------------------------ | ----------------------------  
  Fixed Segment ( $ref, $count)  | Fixed Segment ($ref, $value)  
  Type                           | Type                          
  Operation                      | Operation                      
