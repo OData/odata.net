@@ -98,7 +98,7 @@ namespace Microsoft.OData.Client
                     return true;
                 }
 
-                if (re.Source != null)
+                if (re.Source != null && !re.IsOperationInvocation)
                 {
                     ResourceSetExpression rse = re.Source as ResourceSetExpression;
                     if ((rse != null) && !rse.HasKeyPredicate)
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Client
                 List<Expression> clauses = predicates.Value;
                 List<Expression> nonKeyPredicates;
                 List<Expression> keyPredicates = ExtractKeyPredicate(target, clauses, model, out nonKeyPredicates);
-                if (keyPredicates == null || 
+                if (keyPredicates == null ||
                     (nonKeyPredicates != null && nonKeyPredicates.Count > 0))
                 {
                     // UNSUPPORTED: Only key predicates may be applied to earlier path components
@@ -979,7 +979,7 @@ namespace Microsoft.OData.Client
             {
                 obj = StripConvert(mce.Object, mce.Method.ReturnType);
             }
-            
+
             ResourceExpression re = obj as ResourceExpression;
             if (re == null)
             {
@@ -1486,7 +1486,7 @@ namespace Microsoft.OData.Client
                     {
                         t = typeof(DataServiceQuery<>).MakeGenericType(mce.Method.GetParameters()[0].ParameterType.GetGenericArguments()[0]);
                     }
-                    
+
                     if (mce.Method.Name == ExpandMethodName && mce.Method.DeclaringType == t)
                     {
                         return AnalyzeExpand(mce, this.context);
@@ -1641,7 +1641,7 @@ namespace Microsoft.OData.Client
                     if (MatchNonPrivateReadableProperty(me, out pi, out boundTarget))
                     {
                         string propertyName = ClientTypeUtil.GetServerDefinedName(pi);
-                        
+
                         NonSystemToken newPropertyToAdd = new NonSystemToken(propertyName, null, null);
                         if (propertyPath == null)
                         {
@@ -1660,7 +1660,7 @@ namespace Microsoft.OData.Client
                             NonSystemToken subPropertyToAdd = new NonSystemToken(UriHelper.GetEntityTypeNameForUriAndValidateMaxProtocolVersion(convertedType, context, ref uriVersion), null, null);
                             subPropertyToAdd.SetNextToken(propertyPath);
                             propertyPath = subPropertyToAdd;
-                       }
+                        }
                     }
                     else
                     {

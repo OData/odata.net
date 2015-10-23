@@ -536,7 +536,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             //Bound Function : Bound to CollectionOfEntity, Return Entity
             var getSeniorEmployees = new EdmFunction(ns, "GetSeniorEmployees",
                 new EdmEntityTypeReference(employeeType, true),
-                true, new EdmPathExpression("People"), true);
+                true, new EdmPathExpression("employees"), true);
             getSeniorEmployees.AddParameter("employees", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(employeeType, false))));
             model.AddElement(getSeniorEmployees);
 
