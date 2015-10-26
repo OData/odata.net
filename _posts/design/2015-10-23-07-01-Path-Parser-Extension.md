@@ -169,6 +169,6 @@ When ODataSimplified convention is chosen, the following path segment parsing or
  collectionNavigation           | singleNavigation              
  ------------------------------ | ----------------------------  
  Fixed Segment ( $ref, $count)  | Fixed Segment ($ref, $value)  
- Type                           | Type                          
- Operation                      | Operation                      
- Key                            | Property                      
+ Type                           | Property                          
+ Operation                      | Type                      
+ Key                            | Operation                  
