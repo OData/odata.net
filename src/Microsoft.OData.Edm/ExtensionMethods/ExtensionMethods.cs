@@ -2401,7 +2401,7 @@ namespace Microsoft.OData.Edm
         /// <returns>true if <paramref name="type"/> is nullable; false otherwise.</returns>
         internal static bool IsNullableType(Type type)
         {
-            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>) || !type.IsValueType;
         }
 
         /// <summary>Gets a non-nullable version of the specified type.</summary>
