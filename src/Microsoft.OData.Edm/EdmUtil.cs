@@ -8,12 +8,12 @@ namespace Microsoft.OData.Edm
 {
     #region Namespaces
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System.Xml;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Csdl.CsdlSemantics;
     using Microsoft.OData.Edm.Library;
@@ -435,15 +435,23 @@ namespace Microsoft.OData.Edm
             CheckArgumentNull(computeValue, "computeValue");
 
             TValue val;
-            if (!dictionary.TryGetValue(key, out val))
+
+            // Dictionary may reallocate buckets while adding a new item. Then this TryGetValue() might get a very strange result if it is not locked.
+            lock (dictionary)
             {
-                lock (dictionary)
+                if (dictionary.TryGetValue(key, out val))
                 {
-                    if (!dictionary.TryGetValue(key, out val))
-                    {
-                        val = computeValue(key);
-                        dictionary.Add(key, val);
-                    }
+                    return val;
+                }
+            }
+
+            TValue computedValue = computeValue(key);
+            lock (dictionary)
+            {
+                if (!dictionary.TryGetValue(key, out val))
+                {
+                    val = computedValue;
+                    dictionary.Add(key, computedValue);                    
                 }
             }
 

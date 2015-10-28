@@ -18,6 +18,7 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
@@ -259,6 +260,65 @@ namespace EdmLibTests.FunctionalTests
                 });
 
             Assert.AreEqual(0, errorCount);
+        }
+
+        [TestMethod]
+        public void FindVocabularyAnnotationInParallel()
+        {
+            int annotationCount = 30;
+            var edmModel = new EdmParModel().Model as EdmModel;
+            var container = edmModel.EntityContainer;
+
+            for (int i = 0; i < annotationCount; i++)
+            {
+                EdmTerm term = new EdmTerm("NS", "Test" + i, EdmPrimitiveTypeKind.String);
+                EdmVocabularyAnnotation annotation = new EdmAnnotation(
+                            container,
+                            term,
+                            new EdmStringConstant("desc" + i));
+                edmModel.AddVocabularyAnnotation(annotation);
+            }
+
+            IEdmModel loadedEdmModel = null;
+            using (var ms = new MemoryStream())
+            {
+                var xw = XmlWriter.Create(ms, new XmlWriterSettings { Indent = true });
+
+                IEnumerable<EdmError> errors;
+                var res = EdmxWriter.TryWriteEdmx(edmModel, xw, EdmxTarget.OData, out errors);
+                xw.Flush();
+                ms.Flush();
+                ms.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(ms))
+                {
+                    var metadata = sr.ReadToEnd();
+                    loadedEdmModel = EdmxReader.Parse(XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(metadata))));
+                }
+            }
+            container = loadedEdmModel.EntityContainer;
+
+            int errorCount = 0;
+            int totalAnnotationCount = 0;
+            int taskCount = 100;
+
+            Parallel.ForEach(
+                Enumerable.Range(0, taskCount),
+                index =>
+                {
+                    try
+                    {
+                        var count = loadedEdmModel.FindVocabularyAnnotations(container).ToList().Count();
+                        Interlocked.Add(ref totalAnnotationCount, count);
+                    }
+                    catch (Exception ew)
+                    {
+                        Console.WriteLine(ew);
+                        Interlocked.Increment(ref errorCount);
+                    }
+                });
+
+            Assert.AreEqual(0, errorCount);
+            Assert.AreEqual(taskCount * annotationCount, totalAnnotationCount);
         }
 
         /*
