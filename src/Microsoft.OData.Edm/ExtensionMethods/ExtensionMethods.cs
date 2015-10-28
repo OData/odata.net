@@ -2389,7 +2389,7 @@ namespace Microsoft.OData.Edm
             foreach (var prop in type.GetPublicProperties(instanceOnly: false))
             {
                 var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
-                edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType)));
+                edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
             }
 
             return edmType;
@@ -2401,7 +2401,7 @@ namespace Microsoft.OData.Edm
         /// <returns>true if <paramref name="type"/> is nullable; false otherwise.</returns>
         internal static bool IsNullableType(Type type)
         {
-            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>) || !type.IsValueType;
+            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         /// <summary>Gets a non-nullable version of the specified type.</summary>
