@@ -969,7 +969,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private void CreateNextSegment(string text)
         {
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
-            if (this.TryHandleAsKeySegment(text))
+            if (!this.configuration.UrlConventions.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
@@ -1045,6 +1045,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             if (this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
+            {
+                return;
+            }
+
+            // OData simplified convention, try to handle it as a key property value after can't parse as type and operation
+            if (this.configuration.UrlConventions.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
             {
                 return;
             }

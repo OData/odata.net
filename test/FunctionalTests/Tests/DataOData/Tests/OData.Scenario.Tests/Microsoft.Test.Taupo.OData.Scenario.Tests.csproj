@@ -477,6 +477,12 @@
     <Content Include="UriParser\OrderBy\OrderByTests.OrderByHoursMinutesSeconds.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="UriParser\Path\PathTests.PathKeysAsSegmentsWithODataSimplifiedEnabled.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathTypeSegmentWithODataSimplifiedEnabled.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="UriParser\Search\SearchTests.KeywordWithParenthesis.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

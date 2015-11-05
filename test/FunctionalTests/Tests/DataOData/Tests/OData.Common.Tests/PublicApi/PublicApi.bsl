@@ -5160,6 +5160,7 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriParserSettings {
 public sealed class Microsoft.OData.Core.UriParser.ODataUrlConventions {
 	Microsoft.OData.Core.UriParser.ODataUrlConventions Default  { public static get; }
 	Microsoft.OData.Core.UriParser.ODataUrlConventions KeyAsSegment  { public static get; }
+	Microsoft.OData.Core.UriParser.ODataUrlConventions ODataSimplified  { public static get; }
 }
 
 public class Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
