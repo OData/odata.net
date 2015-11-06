@@ -58,9 +58,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Evaluation
             model.AddElement(container);
             if (addAnnotation)
             {
-                model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));                
+                model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
             }
-            
+
             EdmEntityType entityType = new EdmEntityType("Fake", "FakeType");
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             model.AddElement(entityType);
@@ -76,9 +76,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Evaluation
                 new Uri("http://temp.org/$metadata"),
                 null /*requestUri*/);
 
-            var thing = new ODataEntry {Properties = new[] {new ODataProperty {Name = "Id", Value = 1}}};
+            var thing = new ODataEntry { Properties = new[] { new ODataProperty { Name = "Id", Value = 1 } } };
             thing.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
-            thing.MetadataBuilder = metadataContext.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = thing, SelectedProperties = new SelectedPropertiesNode("*")}, useKeyAsSegment);
+            thing.MetadataBuilder = metadataContext.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = thing, SelectedProperties = new SelectedPropertiesNode("*") }, useKeyAsSegment);
             return thing;
         }
     }
