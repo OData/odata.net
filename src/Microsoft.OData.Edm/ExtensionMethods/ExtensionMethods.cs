@@ -2253,6 +2253,14 @@ namespace Microsoft.OData.Edm
                     return collectionType.ElementType.Definition as IEdmEntityType;
                 }
 
+                var unknownEntitySet = entitySetBase as IEdmUnknownEntitySet;
+                if (unknownEntitySet != null)
+                {
+                    // Handle missing navigation target for nullable
+                    // singleton navigation property.
+                    return unknownEntitySet.Type as IEdmEntityType;
+                }
+
                 return null;
             }
 

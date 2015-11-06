@@ -39,8 +39,8 @@ namespace Microsoft.OData.Core
             { ODataPayloadKind.IndividualProperty,      ValidateResourcePath },
             { ODataPayloadKind.Collection,              ValidateCollectionType },
             { ODataPayloadKind.Property,                ValidateType },
-            { ODataPayloadKind.Entry,                   ValidateNavigationPath },
-            { ODataPayloadKind.Feed,                    ValidateNavigationPath },
+            { ODataPayloadKind.Entry,                   ValidateNavigationSource },
+            { ODataPayloadKind.Feed,                    ValidateNavigationSource },
             { ODataPayloadKind.Delta,                   ValidateDelta },
         };
 
@@ -213,12 +213,12 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validate NavigationPath for given ODataContextUrlInfo for entry or feed
+        /// Validate NavigationSource for given ODataContextUrlInfo for entry or feed
         /// </summary>
         /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
-        private static void ValidateNavigationPath(ODataContextUrlInfo contextUrlInfo)
+        private static void ValidateNavigationSource(ODataContextUrlInfo contextUrlInfo)
         {
-            if (string.IsNullOrEmpty(contextUrlInfo.NavigationPath))
+            if (string.IsNullOrEmpty(contextUrlInfo.NavigationSource))
             {
                 throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed);
             }

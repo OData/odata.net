@@ -584,16 +584,29 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
-        // TODO： everywhere we call FindNavigationTarget() use a helper and throw the right exception
         [TestMethod]
         public void NavigationPropertyWithMissingEntitySetShouldThrow()
         {
-            var model = ModelBuildingHelpers.GetModelWithNavPropWithNoTargetSet();
+            var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
+            var path = new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/GenesModified")).ParsePath();
+            Assert.AreEqual(path.LastSegment.Identifier, "GenesModified");
+        }
 
-            // We want a descriptive error message, and do NOT want a ODataUriParserException so the service implementor does not blindly surface this to users
-            Action parse = () => new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/GenesModified")).ParsePath();
-            parse.ShouldThrow<ODataException>().WithMessage("The target Entity Set of Navigation Property 'GenesModified' could not be found. This is most likely an error in the IEdmModel.").
+        [TestMethod]
+        public void SingletonNonNullableNavigationPropertyWithMissingEntitySetShouldThrow()
+        {
+            var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
+            Action parse = () => new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/KeyGene")).ParsePath();
+            parse.ShouldThrow<ODataException>().WithMessage("The target Entity Set of Navigation Property 'KeyGene' could not be found. This is most likely an error in the IEdmModel.").
                 And.GetType().Should().Be<ODataException>();
+        }
+
+        [TestMethod]
+        public void SingletonNullableNavigationPropertyWithMissingEntitySetShouldNotThrow()
+        {
+            var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
+            var path = new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/DefectiveGene")).ParsePath();
+            Assert.AreEqual(path.LastSegment.Identifier, "DefectiveGene");
         }
 
         [TestMethod]

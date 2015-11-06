@@ -144,6 +144,7 @@
     <Compile Include="BinaryValueEncodingTests.cs" />
     <Compile Include="ContextUrlWriterReaderTests.cs" />
     <Compile Include="Writer\FullPayloadValidateTests.cs" />
+    <Compile Include="Writer\JsonLight\ODataJsonLightFeedWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightDeltaWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightInheritComplexCollectionWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightODataTypeSerializerTests.cs" />

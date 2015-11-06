@@ -1190,8 +1190,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 var navigationProperty = (IEdmNavigationProperty)property;
                 IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty);
 
-                // If we can't compute the target navigation source, then throw
-                if (navigationSource is IEdmUnknownEntitySet)
+                // Relationship between TargetMultiplicity and navigation property:
+                //  1) EdmMultiplicity.Many <=> collection navigation property
+                //  2) EdmMultiplicity.ZeroOrOne <=> nullable singleton navigation property
+                //  3) EdmMultiplicity.One <=> non-nullable singleton navigation property
+                //
+                // According to OData Spec CSDL 7.1.3:
+                //  1) non-nullable singleton navigation property => navigation source required
+                //  2) the other cases => navigation source optional
+                if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.One
+                    && navigationSource is IEdmUnknownEntitySet)
                 {
                     // Specifically not throwing ODataUriParserException since it's more an an internal server error
                     throw new ODataException(ODataErrorStrings.RequestUriProcessor_TargetEntitySetNotFound(property.Name));

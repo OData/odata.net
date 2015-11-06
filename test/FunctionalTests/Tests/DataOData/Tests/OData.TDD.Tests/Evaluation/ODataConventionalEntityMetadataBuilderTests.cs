@@ -1197,6 +1197,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Evaluation
 
         public string NavigationSourceEntityTypeName { get; set; }
 
+        public string NavigationSourceFullTypeName { get; set; }
+
         public string ExpectedEntityTypeName { get; set; }
 
         public bool IsMediaLinkEntry { get; set; }

@@ -93,14 +93,19 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
             return new EdmComplexType("Name.Space", "ComplexType");
         }
 
-        public static EdmModel GetModelWithNavPropWithNoTargetSet()
+        public static EdmModel GetTestModelForNavigationPropertyBinding()
         {
-            // Create a model with a Navigation Property with a missing target entity set
+            // Create a model with three navigation properties:
+            // 2. "Many" with no target entity set
+            // 4. "ZeroOrOne" with no target entity set
+            // 6. "One" with no target entity set
             EdmEntityType geneType = new EdmEntityType("Test", "Gene");
             EdmEntityType vegetableType = new EdmEntityType("Test", "Vegetable");
             IEdmStructuralProperty id = vegetableType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
             vegetableType.AddKeys(id);
-            vegetableType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() {Name = "GenesModified", Target = geneType, TargetMultiplicity = EdmMultiplicity.Many,});
+            vegetableType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "GenesModified", Target = geneType, TargetMultiplicity = EdmMultiplicity.Many });
+            vegetableType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "DefectiveGene", Target = geneType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
+            vegetableType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "KeyGene", Target = geneType, TargetMultiplicity = EdmMultiplicity.One });
 
             // Note how we do NOT call AddNavigationTarget(...) to create associations 
             EdmEntityContainer container = new EdmEntityContainer("Test", "Container");
