@@ -15,11 +15,9 @@ namespace Microsoft.OData.Core.Metadata
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Validation;
 #if ASTORIA_SERVER
     using Microsoft.OData.Service;
     using ErrorStrings = Microsoft.OData.Service.Strings;
@@ -1483,33 +1481,6 @@ namespace Microsoft.OData.Core.Metadata
             Debug.Assert(operationImportGroup.All(f => f.FullName() == fullName), "operationImportGroup.All(f => f.FullName() == fullName)");
             return fullName;
         }
-#endif
-        #endregion
-
-        #region ODataLib Contrib only (stuff that is not yet released)
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
-
-        /// <summary>
-        /// Gets the multiplicity of a navigation property.
-        /// </summary>
-        /// <param name="property">Reference to the calling object.</param>
-        /// <returns>The multiplicity of the navigation property in question.</returns>
-        /// <remarks>This has been added to EdmLib, but EdmLib won't be released for a while.
-        /// If you need to use this functionality before we release EdmLib, then use this method. Change your calls
-        /// to use the real method whenever we release EdmLib again.</remarks>
-        internal static EdmMultiplicity TargetMultiplicityTemporary(this IEdmNavigationProperty property)
-        {
-            Debug.Assert(property != null, "property != null");
-
-            IEdmTypeReference type = property.Type;
-            if (type.IsCollection())
-            {
-                return EdmMultiplicity.Many;
-            }
-
-            return type.IsNullable ? EdmMultiplicity.ZeroOrOne : EdmMultiplicity.One;
-        }
-
 #endif
         #endregion
 

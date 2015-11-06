@@ -88,7 +88,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
 
-            if (navigationProperty.TargetMultiplicityTemporary() != EdmMultiplicity.Many)
+            if (navigationProperty.TargetMultiplicity() != EdmMultiplicity.Many)
             {
                 throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
             }
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         public EdmMultiplicity TargetMultiplicity
         {
-            get { return this.navigationProperty.TargetMultiplicityTemporary(); }
+            get { return this.navigationProperty.TargetMultiplicity(); }
         }
 
         /// <summary>
