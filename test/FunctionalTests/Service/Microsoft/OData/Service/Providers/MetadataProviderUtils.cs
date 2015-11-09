@@ -442,8 +442,8 @@ namespace Microsoft.OData.Service.Providers
                 return new EntityCollectionResourceType(GetResourceType(elementTypeDefinition));
             }
 
-            ResourceType primitiveResourceType = PrimitiveResourceTypeMap.TypeMap.GetPrimitive(edmType.ODataFullName());
-            Debug.Assert(primitiveResourceType != null, "Could not determine a resource type for edm type: " + edmType.ODataFullName());
+            ResourceType primitiveResourceType = PrimitiveResourceTypeMap.TypeMap.GetPrimitive(edmType.FullTypeName());
+            Debug.Assert(primitiveResourceType != null, "Could not determine a resource type for edm type: " + edmType.FullTypeName());
             return primitiveResourceType;
         }
 

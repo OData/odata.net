@@ -641,7 +641,7 @@ namespace Microsoft.OData.Core.Atom
 
             // If we have a metadata type for the complex value, use that type name
             // otherwise use the type name from the payload (if there was any).
-            complexValue.TypeName = complexType == null ? payloadTypeName : complexType.ODataFullName();
+            complexValue.TypeName = complexType == null ? payloadTypeName : complexType.FullTypeName();
             if (serializationTypeNameAnnotation != null)
             {
                 complexValue.SetAnnotation(serializationTypeNameAnnotation);
@@ -702,7 +702,7 @@ namespace Microsoft.OData.Core.Atom
 
             // If we have a metadata type for the collection, use that type name
             // otherwise use the type name from the payload (if there was any).
-            collectionValue.TypeName = collectionTypeReference == null ? payloadTypeName : collectionTypeReference.ODataFullName();
+            collectionValue.TypeName = collectionTypeReference == null ? payloadTypeName : collectionTypeReference.FullName();
             if (serializationTypeNameAnnotation != null)
             {
                 collectionValue.SetAnnotation(serializationTypeNameAnnotation);

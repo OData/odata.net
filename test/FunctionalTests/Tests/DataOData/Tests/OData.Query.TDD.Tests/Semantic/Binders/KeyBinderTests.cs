@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)), new NamedValue(null, new LiteralToken(456)), };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType().ODataFullName()));
+            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType().FullTypeName()));
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var namedValues = new[] { new NamedValue("ID1", new LiteralToken(123)) };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
+            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.FullName()));
         }
 
         [TestMethod]
@@ -118,7 +118,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)) };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_KeyValueApplicableOnlyToEntityType(collectionNode.ItemType.ODataFullName()));
+            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_KeyValueApplicableOnlyToEntityType(collectionNode.ItemType.FullTypeName()));
         }
 
         // TODO: Collection of Complex should throw
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)) };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_KeyValueApplicableOnlyToEntityType(collectionNode.ItemType.ODataFullName()));
+            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_KeyValueApplicableOnlyToEntityType(collectionNode.ItemType.FullTypeName()));
         }
         */
     }

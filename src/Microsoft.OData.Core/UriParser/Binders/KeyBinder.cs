@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
+                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.FullName()));
             }
         }
 
@@ -191,7 +191,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(collectionItemEntityType.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(collectionItemEntityType.FullTypeName()));
                     }
                 }
             }

@@ -137,9 +137,9 @@ namespace Microsoft.OData.Core.Evaluation
                     
                     bool isAction;
                     ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
-                    if (bindableOperation.Parameters.Any() && this.entryMetadataContext.ActualEntityTypeName != bindableOperation.Parameters.First().Type.ODataFullName())
+                    if (bindableOperation.Parameters.Any() && this.entryMetadataContext.ActualEntityTypeName != bindableOperation.Parameters.First().Type.FullName())
                     {
-                        operation.BindingParameterTypeName = bindableOperation.Parameters.First().Type.ODataFullName();
+                        operation.BindingParameterTypeName = bindableOperation.Parameters.First().Type.FullName();
                     }
 
                     operation.SetMetadataBuilder(this.entryMetadataContext.Entry.MetadataBuilder, this.metadataContext.MetadataDocumentUri);

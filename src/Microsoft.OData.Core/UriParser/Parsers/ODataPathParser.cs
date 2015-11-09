@@ -1124,7 +1124,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (!targetEdmType.IsOrInheritsFrom(previousEdmType) && !previousEdmType.IsOrInheritsFrom(targetEdmType))
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.ODataFullName(), previousEdmType.ODataFullName()));
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
             }
 
             // We want the type of the type segment to be a collection if the previous segment was a collection

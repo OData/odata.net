@@ -132,7 +132,7 @@ namespace Microsoft.OData.Core.UriParser
             {
                 if (!expectedTypeReference.IsNullable)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType(expectedTypeReference.ODataFullName()));
+                    throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType(expectedTypeReference.FullName()));
                 }
 
                 return nullValue;
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Core.UriParser
             IEdmPrimitiveTypeReference expectedPrimitiveTypeReference = expectedTypeReference.AsPrimitiveOrNull();
             if (expectedPrimitiveTypeReference == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedTypeReference.ODataFullName(), primitiveValue));
+                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedTypeReference.FullName(), primitiveValue));
             }
 
             object coercedResult = CoerceNumericType(primitiveValue, expectedPrimitiveTypeReference.PrimitiveDefinition());
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core.UriParser
                 return primitiveValue;
             }
 
-            throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedPrimitiveTypeReference.ODataFullName(), primitiveValue));
+            throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedPrimitiveTypeReference.FullName(), primitiveValue));
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (parentNode.TypeReference != null && !parentNode.TypeReference.Definition.IsOpenType())
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    parentNode.TypeReference.ODataFullName(),
+                    parentNode.TypeReference.FullName(),
                     endPathToken.Identifier));
             }
 

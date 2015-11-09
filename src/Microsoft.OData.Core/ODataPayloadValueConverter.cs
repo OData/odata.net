@@ -79,7 +79,7 @@ namespace Microsoft.OData.Core
 
                     if (targetType != typeof(Decimal))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDecimal(primitiveTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDecimal(primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is Double)
@@ -92,28 +92,28 @@ namespace Microsoft.OData.Core
 
                     if (targetType != typeof(Double))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDouble(primitiveTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDouble(primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is bool)
                 {
                     if (targetType != typeof(bool))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertBoolean(primitiveTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertBoolean(primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is DateTime)
                 {
                     if (targetType != typeof(DateTime))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDateTime(primitiveTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDateTime(primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is DateTimeOffset)
                 {
                     if (targetType != typeof(DateTimeOffset))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDateTimeOffset(primitiveTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDateTimeOffset(primitiveTypeReference.FullName()));
                     }
                 }
             }
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Core
 
             if (targetType != typeof(Int32))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertInt32(primitiveTypeReference.ODataFullName()));
+                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertInt32(primitiveTypeReference.FullName()));
             }
 
             return intValue;

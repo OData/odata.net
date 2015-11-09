@@ -71,8 +71,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             IEdmTypeReference rightType;
             if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, left, right, out leftType, out rightType))
             {
-                string leftTypeName = left.TypeReference == null ? "<null>" : left.TypeReference.ODataFullName();
-                string rightTypeName = right.TypeReference == null ? "<null>" : right.TypeReference.ODataFullName();
+                string leftTypeName = left.TypeReference == null ? "<null>" : left.TypeReference.FullName();
+                string rightTypeName = right.TypeReference == null ? "<null>" : right.TypeReference.FullName();
                 throw new ODataException(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError(leftTypeName, rightTypeName, binaryOperatorKind));
             }
 

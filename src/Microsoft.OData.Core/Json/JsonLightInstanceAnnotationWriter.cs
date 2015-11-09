@@ -129,7 +129,7 @@ namespace Microsoft.OData.Core
             {
                 if (expectedType != null && !expectedType.IsNullable)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.ODataFullName()));
+                    throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.FullName()));
                 }
 
                 this.WriteInstanceAnnotationName(propertyName, name);

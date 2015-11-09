@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             Action bind = () => binder.BindInnerPathSegment(token);
 
             string expectedMessage =
-                ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType().ODataFullName(), MissingPropertyName);
+                ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType().FullTypeName(), MissingPropertyName);
             bind.ShouldThrow<ODataException>(expectedMessage);
         }
 

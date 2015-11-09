@@ -469,7 +469,7 @@ namespace Microsoft.OData.Core
             if (targetEntityTypeReference != null)
             {
                 targetEntityType = targetEntityTypeReference.EntityDefinition();
-                entry.TypeName = targetEntityType.ODataFullName();
+                entry.TypeName = targetEntityType.FullTypeName();
 
                 if (serializationTypeNameAnnotation != null)
                 {

@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             IEdmTypeReference typeReference = operand.TypeReference;
             if (!TypePromotionUtils.PromoteOperandType(unaryOperatorKind, ref typeReference))
             {
-                string typeName = operand.TypeReference == null ? "<null>" : operand.TypeReference.ODataFullName();
+                string typeName = operand.TypeReference == null ? "<null>" : operand.TypeReference.FullName();
                 throw new ODataException(ODataErrorStrings.MetadataBinder_IncompatibleOperandError(typeName, unaryOperatorKind));
             }
 

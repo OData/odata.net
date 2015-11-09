@@ -84,7 +84,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
             var bin = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
             bin.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
-            bin.Right.ShouldBeEnumNode(new ODataEnumValue("2", enumtypeRef.ODataFullName()));
+            bin.Right.ShouldBeEnumNode(new ODataEnumValue("2", enumtypeRef.FullName()));
         }
 
         private static void VerifyEnumVsStringFilterExpressionReverse(FilterClause filter)
@@ -92,7 +92,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
             var bin = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
             bin.Right.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
-            bin.Left.ShouldBeEnumNode(new ODataEnumValue("2", enumtypeRef.ODataFullName()));
+            bin.Left.ShouldBeEnumNode(new ODataEnumValue("2", enumtypeRef.FullName()));
         }
 
         [TestMethod]

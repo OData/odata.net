@@ -523,8 +523,8 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 throw new ODataException(ODataErrorStrings.ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType(
                         UriUtils.UriToString(this.ContextUriParseResult.ContextUri),
-                        typeFromContextUri.ODataFullName(),
-                        expectedPropertyTypeReference.ODataFullName()));
+                        typeFromContextUri.FullTypeName(),
+                        expectedPropertyTypeReference.FullName()));
             }
 
             // Assume the value is nullable as its the looser option and the value may come from an open property.
@@ -564,7 +564,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.JsonReader.ReadStartArray();
 
             ODataCollectionValue collectionValue = new ODataCollectionValue();
-            collectionValue.TypeName = collectionValueTypeReference != null ? collectionValueTypeReference.ODataFullName() : payloadTypeName;
+            collectionValue.TypeName = collectionValueTypeReference != null ? collectionValueTypeReference.FullName() : payloadTypeName;
             if (serializationTypeNameAnnotation != null)
             {
                 collectionValue.SetAnnotation(serializationTypeNameAnnotation);
@@ -689,7 +689,7 @@ namespace Microsoft.OData.Core.JsonLight
                     {
                         if ((result is string) ^ this.JsonReader.IsIeee754Compatible)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(expectedValueTypeReference.ODataFullName()));
+                            throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(expectedValueTypeReference.FullName()));
                         }
                     }
 
@@ -734,7 +734,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             string enumStr = this.JsonReader.ReadStringValue();
-            return new ODataEnumValue(enumStr, expectedValueTypeReference.ODataFullName());
+            return new ODataEnumValue(enumStr, expectedValueTypeReference.FullName());
         }
 
         /// <summary>
@@ -762,7 +762,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.IncreaseRecursionDepth();
 
             ODataComplexValue complexValue = new ODataComplexValue();
-            complexValue.TypeName = complexValueTypeReference != null ? complexValueTypeReference.ODataFullName() : payloadTypeName;
+            complexValue.TypeName = complexValueTypeReference != null ? complexValueTypeReference.FullName() : payloadTypeName;
             if (serializationTypeNameAnnotation != null)
             {
                 complexValue.SetAnnotation(serializationTypeNameAnnotation);
@@ -995,7 +995,7 @@ namespace Microsoft.OData.Core.JsonLight
                     if (targetTypeKind != EdmTypeKind.Collection || isDynamicProperty != true)
                     {
                         // A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
-                        throw new ODataException(ODataErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, targetTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, targetTypeReference.FullName()));
                     }
                 }
 

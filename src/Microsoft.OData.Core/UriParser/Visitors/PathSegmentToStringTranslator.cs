@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     using System.Diagnostics;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Translator to translate segments to strings.
@@ -38,7 +39,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         public override string Translate(TypeSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return segment.EdmType.ODataFullName();
+            return segment.EdmType.FullTypeName();
         }
 
         /// <summary>

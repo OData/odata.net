@@ -309,9 +309,9 @@ namespace Microsoft.OData.Core.UriParser
             node.Should().BeOfType<ConstantNode>();
             var enumNode = node.As<ConstantNode>();
 
-            enumNode.TypeReference.ODataFullName().Should().Be(enumType.ODataFullName());
+            enumNode.TypeReference.FullName().Should().Be(enumType.FullTypeName());
             ((ODataEnumValue)enumNode.Value).Value.Should().Be(value + "");
-            ((ODataEnumValue)enumNode.Value).TypeName.Should().Be(enumType.ODataFullName());
+            ((ODataEnumValue)enumNode.Value).TypeName.Should().Be(enumType.FullTypeName());
 
             return new AndConstraint<ConstantNode>(enumNode);
         }

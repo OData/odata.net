@@ -63,7 +63,7 @@ namespace Microsoft.OData.Core
             string typeName = GetTypeNameFromValue(value);
             if (typeName == null && typeReferenceFromValue != null)
             {
-                typeName = typeReferenceFromValue.ODataFullName();
+                typeName = typeReferenceFromValue.FullName();
             }
 
             if (typeName != null)

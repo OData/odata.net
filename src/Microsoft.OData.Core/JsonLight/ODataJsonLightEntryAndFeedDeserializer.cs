@@ -700,7 +700,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.FullName()));
                     }
                 }
             }
@@ -1346,7 +1346,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // Undeclared link properties are reported if the right flag is used, otherwise we need to fail.
                     if (!this.MessageReaderSettings.ReportUndeclaredLinkProperties)
                     {
-                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
                     }
 
                     // Read it as a deferred link - we never read the expanded content.
@@ -1358,7 +1358,7 @@ namespace Microsoft.OData.Core.JsonLight
                     {
                         if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
                         {
-                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
+                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
                         }
 
                         this.ValidateExpandedNavigationLinkPropertyValue(null, propertyName);
@@ -1382,7 +1382,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // Undeclared link properties are reported if the right flag is used, otherwise we need to fail.
                     if (!this.MessageReaderSettings.ReportUndeclaredLinkProperties)
                     {
-                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
+                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
                     }
 
                     // Stream properties can't have a value
@@ -1413,7 +1413,7 @@ namespace Microsoft.OData.Core.JsonLight
             // Property with value can only be ignored if we're asked to do so.
             if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
             {
-                throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
+                throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
             }
 
             // Validate that the property doesn't have unrecognized annotations

@@ -426,7 +426,7 @@ namespace Microsoft.OData.Core.Atom
                         }
                         else
                         {
-                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(currentNavigationLink.Name, this.LinkParentEntityScope.EntityType.ODataFullName()));
+                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(currentNavigationLink.Name, this.LinkParentEntityScope.EntityType.FullTypeName()));
                         }
                     }
                 }

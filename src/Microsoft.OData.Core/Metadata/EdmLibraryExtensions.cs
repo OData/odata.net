@@ -1228,59 +1228,6 @@ namespace Microsoft.OData.Core.Metadata
         #region ODataLib and WCF DS Server
 #if !ODATALIB_QUERY && !ASTORIA_CLIENT
         /// <summary>
-        /// Gets the full name of the definition referred to by the type reference.
-        /// </summary>
-        /// <param name="typeReference">The type reference to get the full name for.</param>
-        /// <returns>The full name of this <paramref name="typeReference"/>.</returns>
-        /// <remarks>
-        /// Note that this method is different from the EdmLib FullName extension method in that it also returns
-        /// names for collection types. For EdmLib, collection types are functions and thus don't have a full name.
-        /// The name/string they use in CSDL is just shorthand for them.
-        /// </remarks>
-        internal static string ODataFullName(this IEdmTypeReference typeReference)
-        {
-#if !ASTORIA_SERVER
-#endif
-            Debug.Assert(typeReference != null, "typeReference != null");
-            Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
-            return typeReference.Definition.ODataFullName();
-        }
-
-        /// <summary>
-        /// Gets the full name of the type.
-        /// </summary>
-        /// <param name="type">The type to get the full name for.</param>
-        /// <returns>The full name of the <paramref name="type"/>.</returns>
-        /// <remarks>
-        /// Note that this method is different from the EdmLib FullName extension method in that it also returns
-        /// names for collection types. For EdmLib, collection types are functions and thus don't have a full name.
-        /// The name/string they use in CSDL is just shorthand for them.
-        /// </remarks>
-        internal static string ODataFullName(this IEdmType type)
-        {
-#if !ASTORIA_SERVER
-#endif
-            Debug.Assert(type != null, "type != null");
-
-            // Handle collection type names here since for EdmLib collection values are functions
-            // that do not have a full name
-            IEdmCollectionType collectionType = type as IEdmCollectionType;
-            if (collectionType != null)
-            {
-                string elementTypeName = collectionType.ElementType.ODataFullName();
-                if (elementTypeName == null)
-                {
-                    return null;
-                }
-
-                return GetCollectionTypeName(elementTypeName);
-            }
-
-            var namedDefinition = type as IEdmSchemaElement;
-            return namedDefinition != null ? namedDefinition.FullName() : null;
-        }
-
-        /// <summary>
         /// Gets the Partail name of the definition referred to by the type reference.
         /// </summary>
         /// <param name="typeReference">The type reference to get the partial name for.</param>
@@ -2212,7 +2159,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             // TODO: Resolve duplication of operationImport and operation
             return JsonLightConstants.FunctionParameterStart +
-                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.ODataFullName()).ToArray()) +
+                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
                 JsonLightConstants.FunctionParameterEnd;
         }
 

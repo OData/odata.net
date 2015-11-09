@@ -208,13 +208,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             IEdmProperty edmProperty = this.configuration.Resolver.ResolveProperty(currentLevelEntityType, firstNonTypeToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentLevelEntityType.ODataFullName(), currentToken.Identifier));
+                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentLevelEntityType.FullTypeName(), currentToken.Identifier));
             }
 
             IEdmNavigationProperty currentNavProp = edmProperty as IEdmNavigationProperty;
             if (currentNavProp == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentLevelEntityType.ODataFullName()));
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
             }
 
             bool isRef = false;
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (sourceType != null && relatedType != null && !UriEdmHelpers.IsRelatedTo(sourceType, relatedType))
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType(property.Name, relatedType.ODataFullName(), sourceType.ODataFullName()));
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType(property.Name, relatedType.FullTypeName(), sourceType.FullTypeName()));
             }
 
             return new LevelsClause(levelsOption.Value < 0, levelsOption.Value);

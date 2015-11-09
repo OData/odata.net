@@ -370,7 +370,7 @@ namespace Microsoft.OData.Core.Atom
 
             // If both m:type is present and attribute value notation is being used, they must match.
             // For example, if m:type is "Edm.Int32", but the "string" attribute is also present, we should throw.
-            if (typeAttributeValue != null && !string.Equals(attributeValueNotationTypeReference.Definition.ODataFullName(), typeAttributeValue, StringComparison.Ordinal))
+            if (typeAttributeValue != null && !string.Equals(attributeValueNotationTypeReference.Definition.FullTypeName(), typeAttributeValue, StringComparison.Ordinal))
             {
                 throw new ODataException(ODataErrorStrings.AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType(typeAttributeValue, attributeValueNotationAttributeName));
             }
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Core.Atom
                 expectedTypeReference,
                 EdmTypeKind.Primitive,
                 attributeValueNotationTypeReference.Definition,
-                attributeValueNotationTypeReference.ODataFullName(),
+                attributeValueNotationTypeReference.FullName(),
                 attributeValueNotationTypeReference.Definition,
                 model,
                 messageReaderSettings);

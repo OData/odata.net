@@ -144,7 +144,7 @@ namespace Microsoft.OData.Core
             }
             else if (itemTypeReference != null)
             {
-                collectionTypeName = EdmLibraryExtensions.GetCollectionTypeName(itemTypeReference.ODataFullName());
+                collectionTypeName = EdmLibraryExtensions.GetCollectionTypeName(itemTypeReference.FullName());
             }
 
             return new ODataContextUrlInfo()
@@ -307,11 +307,11 @@ namespace Microsoft.OData.Core
             IEdmTypeDefinitionReference typeDefinitionReference = model.ResolveUIntTypeDefinition(primitive.Value);
             if (typeDefinitionReference != null)
             {
-                return typeDefinitionReference.ODataFullName();
+                return typeDefinitionReference.FullName();
             }
 
             IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
-            return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.ODataFullName();
+            return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
         }
 
         #region SelectAndExpand Convert
