@@ -311,9 +311,18 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
 
         [TestMethod]
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
-        public void PathTypeSegmentWithKeyAsSegmentEnabled()
+        public void PathTypeSegmentWithODataSimplifiedEnabled()
         {
-            ODataUriParser parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/People(1)/Microsoft.Test.Taupo.OData.WCFService.Customer")) { UrlConventions = ODataUrlConventions.KeyAsSegment };
+            ODataUriParser parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Schools(1)/Student/Microsoft.Test.Taupo.OData.WCFService.Customer")) { UrlConventions = ODataUrlConventions.ODataSimplified };
+            var result = parser.ParsePath();
+            ApprovalVerify(QueryNodeToStringVisitor.ToString(result));
+        }
+
+        [TestMethod]
+        [MethodImplAttribute(MethodImplOptions.NoOptimization)]
+        public void PathKeysAsSegmentsWithODataSimplifiedEnabled()
+        {
+            var parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Schools/1/Student/Microsoft.Test.Taupo.OData.WCFService.Customer")) { UrlConventions = ODataUrlConventions.ODataSimplified };
             var result = parser.ParsePath();
             ApprovalVerify(QueryNodeToStringVisitor.ToString(result));
         }

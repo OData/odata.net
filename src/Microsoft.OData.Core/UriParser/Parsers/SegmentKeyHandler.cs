@@ -87,8 +87,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             keySegment = null;
 
-            // If the current convention is not keys-as-segments, then this does not apply.
-            if (!urlConvention.GenerateKeyAsSegment)
+            // If the current convention does not support keys-as-segments, then this does not apply.
+            if (!(urlConvention.GenerateKeyAsSegment || urlConvention.ODataSimplified))
             {
                 return false;
             }

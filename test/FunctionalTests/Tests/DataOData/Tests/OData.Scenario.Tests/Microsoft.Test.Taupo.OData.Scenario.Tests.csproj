@@ -235,9 +235,6 @@
     <None Include="UriParser\Path\PathTests.PathTypeSegmentToNavigation.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="UriParser\Path\PathTests.PathTypeSegmentWithKeyAsSegmentEnabled.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="UriParser\SelectTests\Select.SelectAll.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -478,6 +475,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="UriParser\OrderBy\OrderByTests.OrderByHoursMinutesSeconds.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathKeysAsSegmentsWithODataSimplifiedEnabled.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathTypeSegmentWithODataSimplifiedEnabled.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="UriParser\Search\SearchTests.KeywordWithParenthesis.approved.txt">
