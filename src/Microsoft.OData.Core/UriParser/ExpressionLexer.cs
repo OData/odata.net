@@ -1036,20 +1036,20 @@ namespace Microsoft.OData.Core.UriParser
 
             if (guessedKind == ExpressionTokenKind.IntegerLiteral)
             {
-                if (int.TryParse(numericStr, out tmpInt))
+                if (int.TryParse(numericStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out tmpInt))
                 {
                     return ExpressionTokenKind.IntegerLiteral;
                 }
 
-                if (long.TryParse(numericStr, out tmpLong))
+                if (long.TryParse(numericStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out tmpLong))
                 {
                     return ExpressionTokenKind.Int64Literal;
                 }
             }
 
-            bool canBeSingle = float.TryParse(numericStr, out tmpFloat);
-            bool canBeDouble = double.TryParse(numericStr, out tmpDouble);
-            bool canBeDecimal = decimal.TryParse(numericStr, out tmpDecimal);
+            bool canBeSingle = float.TryParse(numericStr, NumberStyles.Float, CultureInfo.InvariantCulture, out tmpFloat);
+            bool canBeDouble = double.TryParse(numericStr, NumberStyles.Float, CultureInfo.InvariantCulture, out tmpDouble);
+            bool canBeDecimal = decimal.TryParse(numericStr, NumberStyles.Number, CultureInfo.InvariantCulture, out tmpDecimal);
 
             // 1. try high precision -> low precision
             if (canBeDouble && canBeDecimal)
@@ -1058,10 +1058,10 @@ namespace Microsoft.OData.Core.UriParser
                 decimal doubleToDecimalN;
 
                 // To keep the full presion of the current value, which if necessary is all 17 digits of precision supported by the Double type.
-                bool doubleCanBeDecimalR = decimal.TryParse(tmpDouble.ToString("R", CultureInfo.InvariantCulture), out doubleToDecimalR);
+                bool doubleCanBeDecimalR = decimal.TryParse(tmpDouble.ToString("R", CultureInfo.InvariantCulture), NumberStyles.Number, CultureInfo.InvariantCulture, out doubleToDecimalR);
 
                 // To cover the scientific notation case, such as 1e+19 in the tmpDouble
-                bool doubleCanBeDecimalN = decimal.TryParse(tmpDouble.ToString("N29", CultureInfo.InvariantCulture), out doubleToDecimalN);
+                bool doubleCanBeDecimalN = decimal.TryParse(tmpDouble.ToString("N29", CultureInfo.InvariantCulture), NumberStyles.Number, CultureInfo.InvariantCulture, out doubleToDecimalN);
 
                 if ((doubleCanBeDecimalR && doubleToDecimalR != tmpDecimal) || (!doubleCanBeDecimalR && doubleCanBeDecimalN && doubleToDecimalN != tmpDecimal))
                 {
