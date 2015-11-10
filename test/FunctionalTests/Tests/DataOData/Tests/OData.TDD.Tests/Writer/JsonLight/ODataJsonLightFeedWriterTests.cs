@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.Test.OData.Utils.Metadata;
-
 namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
 {
     using System;
@@ -15,6 +13,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

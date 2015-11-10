@@ -26,10 +26,7 @@ namespace Microsoft.OData.Core
         /// <summary>Whether target is contained</summary>
         private bool isContained;
 
-        /// <summary>Whether target is unknown entity set</summary>
-        private bool isUnknownEntitySet;
-
-        /// <summary>The navigation soruce for current target</summary>
+        /// <summary>The navigation source for current target</summary>
         private string navigationSource;
 
         /// <summary>ODataUri information for context Url</summary>
@@ -46,12 +43,15 @@ namespace Microsoft.OData.Core
         /// <summary>The delta kind used for building context Url</summary>
         internal ODataDeltaKind DeltaKind { get; set; }
 
+        /// <summary>Whether target is unknown entity set</summary>
+        internal bool IsUnknownEntitySet { get; set; }
+
         /// <summary>Name of navigation path used for building context Url</summary>
         internal string NavigationPath
         {
             get
             {
-                if (this.isUnknownEntitySet)
+                if (this.IsUnknownEntitySet)
                 {
                     // If the navigation target is not specified, i.e., UnknownEntitySet,
                     // the navigation path should be null so that type name will be used
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Core
             return new ODataContextUrlInfo()
             {
                 isContained = kind == EdmNavigationSourceKind.ContainedEntitySet,
-                isUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,
+                IsUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = navigationSource.Name,
                 TypeCast = navigationSourceEntityType == expectedEntityTypeName ? null : expectedEntityTypeName,
                 TypeName = navigationSourceEntityType,
@@ -191,7 +191,7 @@ namespace Microsoft.OData.Core
             return new ODataContextUrlInfo()
                 {
                     isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
-                    isUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
+                    IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                     navigationSource = typeContext.NavigationSourceName,
                     TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
                     TypeName = typeContext.NavigationSourceFullTypeName,
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Core
             ODataContextUrlInfo contextUriInfo = new ODataContextUrlInfo()
             {
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
-                isUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
+                IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,
                 TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
                 TypeName = typeContext.NavigationSourceEntityTypeName,

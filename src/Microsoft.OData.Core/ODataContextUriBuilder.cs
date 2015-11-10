@@ -213,12 +213,17 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validate NavigationSource for given ODataContextUrlInfo for entry or feed
+        /// Validate NavigationSource for given ODataContextUrlInfo for entry or feed.
         /// </summary>
         /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
         private static void ValidateNavigationSource(ODataContextUrlInfo contextUrlInfo)
         {
-            if (string.IsNullOrEmpty(contextUrlInfo.NavigationSource))
+            // For navigation property without navigation target, navigation path should be null so
+            // validate its navigation source (should be the name of the navigation property) which
+            // at least requires EdmUnknownEntitySet to be present; otherwise validate its navigation
+            // path as before.
+            if (!contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationPath) ||
+                contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource))
             {
                 throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed);
             }

@@ -96,9 +96,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
         public static EdmModel GetTestModelForNavigationPropertyBinding()
         {
             // Create a model with three navigation properties:
-            // 2. "Many" with no target entity set
-            // 4. "ZeroOrOne" with no target entity set
-            // 6. "One" with no target entity set
+            // 1. "Many" with no target entity set
+            // 2. "ZeroOrOne" with no target entity set
+            // 3. "One" with no target entity set
             EdmEntityType geneType = new EdmEntityType("Test", "Gene");
             EdmEntityType vegetableType = new EdmEntityType("Test", "Vegetable");
             IEdmStructuralProperty id = vegetableType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));

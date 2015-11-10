@@ -585,7 +585,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         }
 
         [TestMethod]
-        public void NavigationPropertyWithMissingEntitySetShouldThrow()
+        public void CollectionNavigationPropertyWithMissingEntitySetShouldNotThrow()
         {
             var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
             var path = new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/GenesModified")).ParsePath();
