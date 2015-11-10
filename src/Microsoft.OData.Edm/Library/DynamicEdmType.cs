@@ -112,4 +112,54 @@ namespace Microsoft.OData.Edm.Library
             }
         }
     }
+
+    public sealed class DynamicNestedType : EdmStructuredType, IEdmComplexType
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicNestedType"/> class.
+        /// </summary>
+        /// <param name="name">Name of the entity.</param>
+        public DynamicNestedType(string name)
+            : base(isAbstract: false, isOpen: true, baseStructuredType: null)
+        {
+            this.Name = name;
+        }
+
+        public string Name
+        {
+            get; private set;
+        }
+
+        public string Namespace
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Gets the schema element kind of this element.
+        /// </summary>
+        public EdmSchemaElementKind SchemaElementKind
+        {
+            get { return EdmSchemaElementKind.TypeDefinition; }
+        }
+
+        /// <summary>
+        /// Gets the kind of this type.
+        /// </summary>
+        public override EdmTypeKind TypeKind
+        {
+            get { return EdmTypeKind.Complex; }
+        }
+
+        /// <summary>
+        /// Gets the kind of this term.
+        /// </summary>
+        public EdmTermKind TermKind
+        {
+            get { return EdmTermKind.Type; }
+        }
+    }
 }

@@ -1267,7 +1267,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(element, "element");
             // Dynamic types "don't" have names
-            if (element is DynamicEdmType)
+            if (element is DynamicEdmType || element is DynamicNestedType)
             {
                 return null;
             }
@@ -2389,7 +2389,41 @@ namespace Microsoft.OData.Edm
             foreach (var prop in type.GetPublicProperties(instanceOnly: false))
             {
                 var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
-                edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
+                if (propEdmType != null)
+                {
+                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
+                }
+                else
+                {
+                    var nestedPropEdmType = prop.PropertyType.GetDynamicNestedType();
+                    edmType.AddStructuralProperty(prop.Name, new EdmComplexTypeReference(nestedPropEdmType, true) );
+                }
+            }
+
+            return edmType;
+        }
+
+        /// <summary>
+        /// Create DynamicEntityType definition based on CLr type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IEdmComplexType GetDynamicNestedType(this Type type)
+        {
+            var edmType = new DynamicNestedType(type.Name);
+
+            foreach (var prop in type.GetPublicProperties(instanceOnly: false))
+            {
+                var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
+                if (propEdmType != null)
+                {
+                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
+                }
+                else
+                {
+                    var nestedPropEdmType = prop.PropertyType.GetDynamicNestedType();
+                    edmType.AddStructuralProperty(prop.Name, new EdmComplexTypeReference(nestedPropEdmType, true));
+                }
             }
 
             return edmType;

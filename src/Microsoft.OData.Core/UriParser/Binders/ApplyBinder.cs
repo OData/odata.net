@@ -151,8 +151,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 properties.Add(property);
 
-                groupingType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
-                resultType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
+                AddPropertyToType(groupingType, ReverseAccessNode(property));
+                AddPropertyToType(resultType, ReverseAccessNode(property));
+                //groupingType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
+                //resultType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
             }
 
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
@@ -173,6 +175,78 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // TODO: Determine source
             return new GroupByNode(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
 
+        }
+
+        private Stack<SingleValueNode> ReverseAccessNode(SingleValueNode node)
+        {
+            var result = new Stack<SingleValueNode>();
+            do
+            {
+                result.Push(node);
+                if (node.Kind == TreeNodeKinds.QueryNodeKind.SingleValuePropertyAccess)
+                {
+                    node = ((SingleValuePropertyAccessNode)node).Source;
+
+                }
+                else if (node.Kind == TreeNodeKinds.QueryNodeKind.SingleNavigationNode)
+                {
+                    node = ((SingleNavigationNode)node).NavigationSource as SingleValueNode;
+                }
+            } while (node != null && (node.Kind == TreeNodeKinds.QueryNodeKind.SingleValuePropertyAccess || node.Kind == TreeNodeKinds.QueryNodeKind.SingleNavigationNode));
+
+            return result;
+        }
+
+        private void AddPropertyToType(EdmEntityType edmType, Stack<SingleValueNode> propertyStack)
+        {
+            var property = propertyStack.Pop();
+            string propertyName = GetNodePropertyName(property);
+
+            if (propertyStack.Count != 0)
+            {
+                // Not at the leaf, let's add to the container 
+
+                var containerProperty = edmType.DeclaredProperties.FirstOrDefault(p => p.Name == propertyName);
+                EdmEntityType containerType = null;
+                if (containerProperty == null)
+                {
+                    // We do not have container yet. Create it
+                    containerType = new EdmEntityType(string.Empty, edmType.Name + propertyName, baseType: null, isAbstract: false, isOpen: true);
+                    edmType.AddStructuralProperty(propertyName, containerType.ToTypeReference());
+                }
+                else
+                {
+                    // Get container type
+                    containerType = (EdmEntityType)containerProperty.Type.Definition;
+                }
+
+                AddPropertyToType(containerType, propertyStack);
+            }
+            else
+            {
+                // It's the leaf just add
+                edmType.AddStructuralProperty(propertyName, property.GetEdmTypeReference());
+            }
+        }
+
+        private static string GetNodePropertyName(SingleValueNode property)
+        {
+            string propertyName = null;
+            if (property.Kind == TreeNodeKinds.QueryNodeKind.SingleValuePropertyAccess)
+            {
+                propertyName = ((SingleValuePropertyAccessNode)property).Property.Name;
+            }
+            else if (property.Kind == TreeNodeKinds.QueryNodeKind.SingleNavigationNode)
+            {
+                propertyName = ((SingleNavigationNode)property).NavigationProperty.Name;
+            }
+
+            else
+            {
+                // TODO: Throw?
+            }
+
+            return propertyName;
         }
 
         private static IEdmTypeReference ToEdmTypeReference(IEdmType edmType, bool isNullable)
