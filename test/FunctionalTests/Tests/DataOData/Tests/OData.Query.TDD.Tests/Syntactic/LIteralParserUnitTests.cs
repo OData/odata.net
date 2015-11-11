@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Library;
+
 namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
 {
     using System;
@@ -46,6 +48,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
             object output;
             parser.TryParseLiteral(typeof(TimeSpan), "P1D", out output).Should().BeTrue();
             output.ShouldBeEquivalentTo(new TimeSpan(1, 0, 0, 0));
+        }
+
+        [TestMethod]
+        public void TryParseLiteralWithDateForKeyAsSegmentUrlConventionsShouldReturnValidDate()
+        {
+            var parser = LiteralParser.ForKeys(true /*keyAsSegment*/);
+            object output;
+            parser.TryParseLiteral(typeof(Date), "2015-09-28", out output).Should().BeTrue();
+            output.ShouldBeEquivalentTo(new Date(2015, 09, 28));
         }
     }
 }

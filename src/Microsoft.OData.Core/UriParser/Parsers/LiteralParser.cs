@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Globalization;
     using System.Text;
     using System.Xml;
+    using Edm.Library;
     using Microsoft.Spatial;
     using XmlConstants = ExpressionConstants;
 
@@ -37,6 +38,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             { typeof(byte[]), new BinaryPrimitiveParser() },
             { typeof(String), new StringPrimitiveParser() },
             { typeof(Decimal), new DecimalPrimitiveParser() },
+            { typeof(Date), new DatePrimitiveParser() },
 
             // Types without single-quotes or type markers
             { typeof(Boolean), DelegatingPrimitiveParser<bool>.WithoutMarkup(XmlConvert.ToBoolean) },
@@ -624,6 +626,53 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             internal override bool TryRemoveFormatting(ref string text)
             {
                 return UriPrimitiveTypeParser.TryRemoveQuotes(ref text);
+            }
+        }
+
+        /// <summary>
+        /// Parser specific to the Edm.Date type.
+        /// </summary>
+        private sealed class DatePrimitiveParser : PrimitiveParser
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DatePrimitiveParser"/> class.
+            /// </summary>
+            public DatePrimitiveParser() : base(typeof(Date))
+            {
+            }
+
+            /// <summary>
+            /// Tries to convert the given text into this parser's expected type. Conversion only, formatting should already have been removed.
+            /// </summary>
+            /// <param name="text">The text to convert.</param>
+            /// <param name="targetValue">The target value.</param>
+            /// <returns>
+            /// Whether or not conversion was successful.
+            /// </returns>
+            internal override bool TryConvert(string text, out object targetValue)
+            {
+                try
+                {
+                    var date = XmlConvert.ToDateTimeOffset(text);
+                    targetValue = new Date(date.Year, date.Month, date.Day);
+                }
+                catch (FormatException)
+                {
+                    targetValue = null;
+                    return false;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    targetValue = null;
+                    return false;
+                }
+                catch (ArgumentNullException)
+                {
+                    targetValue = null;
+                    return false;
+                }
+
+                return true;
             }
         }
     }
