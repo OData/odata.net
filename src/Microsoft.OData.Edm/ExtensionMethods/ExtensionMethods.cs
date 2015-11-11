@@ -1267,7 +1267,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(element, "element");
             // Dynamic types "don't" have names
-            if (element is DynamicEdmType || element is DynamicNestedType)
+            if (element is EdmDynamicEntityType || element is EdmDynamicComplexType)
             {
                 return null;
             }
@@ -2384,21 +2384,9 @@ namespace Microsoft.OData.Edm
         /// <returns></returns>
         public static IEdmEntityType GetDynamicEntityType(this Type type)
         {
-            var edmType = new DynamicEdmType(type.Name);
+            var edmType = new EdmDynamicEntityType(type.Name);
 
-            foreach (var prop in type.GetPublicProperties(instanceOnly: false))
-            {
-                var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
-                if (propEdmType != null)
-                {
-                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
-                }
-                else
-                {
-                    var nestedPropEdmType = prop.PropertyType.GetDynamicNestedType();
-                    edmType.AddStructuralProperty(prop.Name, new EdmComplexTypeReference(nestedPropEdmType, true) );
-                }
-            }
+            AddPropertiesToDynamicType(type, edmType);
 
             return edmType;
         }
@@ -2408,10 +2396,17 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IEdmComplexType GetDynamicNestedType(this Type type)
+        public static IEdmComplexType GetDynamicComplexType(this Type type)
         {
-            var edmType = new DynamicNestedType(type.Name);
+            var edmType = new EdmDynamicComplexType(type.Name);
 
+            AddPropertiesToDynamicType(type, edmType);
+
+            return edmType;
+        }
+
+        internal static void AddPropertiesToDynamicType(Type type, EdmStructuredType edmType)
+        {
             foreach (var prop in type.GetPublicProperties(instanceOnly: false))
             {
                 var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
@@ -2421,13 +2416,12 @@ namespace Microsoft.OData.Edm
                 }
                 else
                 {
-                    var nestedPropEdmType = prop.PropertyType.GetDynamicNestedType();
+                    var nestedPropEdmType = prop.PropertyType.GetDynamicComplexType();
                     edmType.AddStructuralProperty(prop.Name, new EdmComplexTypeReference(nestedPropEdmType, true));
                 }
             }
-
-            return edmType;
         }
+
         #endregion
 
         /// <summary>Checks whether the specified type is a generic nullable type.</summary>

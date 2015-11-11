@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         private GroupByNode BindGroupByToken(GroupByToken token)
         {
-            var propertiesMap = new List<GroupByPropertyNode>();
+            var properties = new List<GroupByPropertyNode>();
 
             foreach (var propertyToken in token.Properties)
             {
@@ -146,10 +146,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(propertyToken.Identifier));
                 }
 
-                RegisterProperty(propertiesMap, ReverseAccessNode(property));
+                RegisterProperty(properties, ReverseAccessNode(property));
             }
 
-            var groupingType = ToGroupingType(propertiesMap, "DynamicTypeWrapper");
+            var groupingType = ToGroupingType(properties, "DynamicTypeWrapper");
             var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: groupingType, isAbstract: false, isOpen: true);
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var resultingTypeReference = (IEdmTypeReference)ToEdmTypeReference(resultType, true);
 
             // TODO: Determine source
-            return new GroupByNode(propertiesMap, groupingTypeReference, aggregate, resultingTypeReference, null);
+            return new GroupByNode(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
 
         }
 
