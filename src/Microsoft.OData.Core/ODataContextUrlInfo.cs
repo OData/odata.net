@@ -311,12 +311,24 @@ namespace Microsoft.OData.Core
         {
             if (applyClause != null)
             {
-                // TODO: Support multilevel as soon as TypeReference will have it
-                string contextUri = string.Join(",", (applyClause.TypeReference.Definition as IEdmStructuredType).Properties().Select(prop => prop.Name).ToArray());
-                return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
+                return CreatePropertiesUriSegment(applyClause.TypeReference.Definition);
             }
 
             return string.Empty;
+        }
+
+        private static string CreatePropertiesUriSegment(IEdmType edmType)
+        {
+            var structedType = edmType as IEdmStructuredType;
+            if (structedType != null)
+            {
+                string contextUri = string.Join(",", structedType.Properties().Select(prop => prop.Name + CreatePropertiesUriSegment(prop.Type.Definition)).ToArray());
+                return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         #region SelectAndExpand Convert
