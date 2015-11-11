@@ -9,7 +9,6 @@ using Microsoft.OData.Edm;
 using System.Collections.Generic;
 using System;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Core.UriParser.SemanticAst;
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {

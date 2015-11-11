@@ -15,7 +15,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     using System.Collections.Generic;
     using Edm.Library;
-    using SemanticAst;
 
     internal sealed class ApplyBinder
     {
@@ -136,9 +135,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         private GroupByNode BindGroupByToken(GroupByToken token)
         {
-            var groupingType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
-            var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
-
             var propertiesMap = new List<GroupByPropertyNode>();
 
             foreach (var propertyToken in token.Properties)
@@ -151,11 +147,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
 
                 RegisterProperty(propertiesMap, ReverseAccessNode(property));
-
-                AddPropertytoType(groupingType, ReverseAccessNode(property));
-                AddPropertytoType(resultType, ReverseAccessNode(property));
             }
 
+            var groupingType = ToGroupingType(propertiesMap, "DynamicTypeWrapper");
+            var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: groupingType, isAbstract: false, isOpen: true);
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
             AggregateNode aggregate = null;
@@ -196,6 +191,25 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return result;
         }
 
+        private EdmEntityType ToGroupingType(IList<GroupByPropertyNode> properties, string typeName)
+        {
+            var groupingType = new EdmEntityType(string.Empty, typeName, baseType: null, isAbstract: false, isOpen: true);
+            foreach (var property in properties)
+            {
+                if (property.Accessor != null)
+                {
+                    groupingType.AddStructuralProperty(property.Name, property.Accessor.GetEdmTypeReference());
+                }
+                else
+                {
+                    var containerType = ToGroupingType(property.Children, typeName + property.Name);
+                    groupingType.AddStructuralProperty(property.Name, containerType.ToTypeReference());
+                }
+            }
+
+            return groupingType;
+        }
+
         private void RegisterProperty(IList<GroupByPropertyNode> properties, Stack<SingleValueNode> propertyStack)
         {
             var property = propertyStack.Pop();
@@ -219,38 +233,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 // It's the leaf just add
                 properties.Add(new GroupByPropertyNode(propertyName, property as SingleValuePropertyAccessNode));
-            }
-        }
-
-        private void AddPropertytoType(EdmEntityType edmType, Stack<SingleValueNode> propertyStack)
-        {
-            var property = propertyStack.Pop();
-            string propertyName = GetNodePropertyName(property);
-
-            if (propertyStack.Count != 0)
-            {
-                // Not at the leaf, let's add to the container 
-
-                var containerProperty = edmType.DeclaredProperties.FirstOrDefault(p => p.Name == propertyName);
-                EdmEntityType containerType = null;
-                if (containerProperty == null)
-                {
-                    // We do not have container yet. Create it
-                    containerType = new EdmEntityType(string.Empty, edmType.Name + propertyName, baseType: null, isAbstract: false, isOpen: true);
-                    edmType.AddStructuralProperty(propertyName, containerType.ToTypeReference());
-                }
-                else
-                {
-                    // Get container type
-                    containerType = (EdmEntityType)containerProperty.Type.Definition;
-                }
-
-                AddPropertytoType(containerType, propertyStack);
-            }
-            else
-            {
-                // It's the leaf just add
-                edmType.AddStructuralProperty(propertyName, property.GetEdmTypeReference());
             }
         }
 
