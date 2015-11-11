@@ -149,8 +149,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 RegisterProperty(properties, ReverseAccessNode(property));
             }
 
-            var groupingType = ToGroupingType(properties, "DynamicTypeWrapper");
-            var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: groupingType, isAbstract: false, isOpen: true);
+            var groupingType = ToGroupingType(properties, "GroupingDynamicTypeWrapper");
+            var resultType = new EdmEntityType(string.Empty, "ResultDynamicTypeWrapper", baseType: groupingType, isAbstract: false, isOpen: true);
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
             AggregateNode aggregate = null;
@@ -194,6 +194,21 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private EdmEntityType ToGroupingType(IList<GroupByPropertyNode> properties, string typeName)
         {
             var groupingType = new EdmEntityType(string.Empty, typeName, baseType: null, isAbstract: false, isOpen: true);
+            AddPropertiesToEdmType(properties, typeName, groupingType);
+
+            return groupingType;
+        }
+
+        private EdmComplexType ToComplexType(IList<GroupByPropertyNode> properties, string typeName)
+        {
+            var groupingType = new EdmComplexType(string.Empty, typeName, baseType: null, isAbstract: false, isOpen: true);
+            AddPropertiesToEdmType(properties, typeName, groupingType);
+
+            return groupingType;
+        }
+
+        private void AddPropertiesToEdmType(IList<GroupByPropertyNode> properties, string typeName, EdmStructuredType groupingType)
+        {
             foreach (var property in properties)
             {
                 if (property.Accessor != null)
@@ -202,12 +217,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    var containerType = ToGroupingType(property.Children, typeName + property.Name);
+                    var containerType = ToComplexType(property.Children, typeName + property.Name);
                     groupingType.AddStructuralProperty(property.Name, containerType.ToTypeReference());
                 }
             }
-
-            return groupingType;
         }
 
         private void RegisterProperty(IList<GroupByPropertyNode> properties, Stack<SingleValueNode> propertyStack)
