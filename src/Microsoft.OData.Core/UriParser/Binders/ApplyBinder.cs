@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     using System.Collections.Generic;
     using Edm.Library;
+    using SemanticAst;
 
     internal sealed class ApplyBinder
     {
@@ -138,7 +139,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var groupingType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
             var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
 
-            var properties = new List<SingleValuePropertyAccessNode>();
+            var propertiesMap = new List<GroupByPropertyNode>();
 
             foreach (var propertyToken in token.Properties)
             {
@@ -149,12 +150,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(propertyToken.Identifier));
                 }
 
-                properties.Add(property);
+                RegisterProperty(propertiesMap, ReverseAccessNode(property));
 
-                AddPropertyToType(groupingType, ReverseAccessNode(property));
-                AddPropertyToType(resultType, ReverseAccessNode(property));
-                //groupingType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
-                //resultType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
+                AddPropertytoType(groupingType, ReverseAccessNode(property));
+                AddPropertytoType(resultType, ReverseAccessNode(property));
             }
 
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
@@ -173,7 +172,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var resultingTypeReference = (IEdmTypeReference)ToEdmTypeReference(resultType, true);
 
             // TODO: Determine source
-            return new GroupByNode(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
+            return new GroupByNode(propertiesMap, groupingTypeReference, aggregate, resultingTypeReference, null);
 
         }
 
@@ -197,7 +196,33 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return result;
         }
 
-        private void AddPropertyToType(EdmEntityType edmType, Stack<SingleValueNode> propertyStack)
+        private void RegisterProperty(IList<GroupByPropertyNode> properties, Stack<SingleValueNode> propertyStack)
+        {
+            var property = propertyStack.Pop();
+            string propertyName = GetNodePropertyName(property);
+
+            if (propertyStack.Count != 0)
+            {
+                // Not at the leaf, let's add to the container 
+
+                var containerProperty = properties.FirstOrDefault(p => p.Name == propertyName);
+                if (containerProperty == null)
+                {
+                    // We do not have container yet. Create it
+                    containerProperty = new GroupByPropertyNode(propertyName, (SingleValuePropertyAccessNode)null);
+                    properties.Add(containerProperty);
+                }
+
+                RegisterProperty(containerProperty.Children, propertyStack);
+            }
+            else
+            {
+                // It's the leaf just add
+                properties.Add(new GroupByPropertyNode(propertyName, property as SingleValuePropertyAccessNode));
+            }
+        }
+
+        private void AddPropertytoType(EdmEntityType edmType, Stack<SingleValueNode> propertyStack)
         {
             var property = propertyStack.Pop();
             string propertyName = GetNodePropertyName(property);
@@ -220,7 +245,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     containerType = (EdmEntityType)containerProperty.Type.Definition;
                 }
 
-                AddPropertyToType(containerType, propertyStack);
+                AddPropertytoType(containerType, propertyStack);
             }
             else
             {

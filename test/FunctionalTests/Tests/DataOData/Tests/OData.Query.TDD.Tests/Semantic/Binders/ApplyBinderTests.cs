@@ -89,8 +89,8 @@
             groupBy.GroupingProperties.Should().HaveCount(2);
 
             var groupingProperties = groupBy.GroupingProperties.ToList();
-            VerifyIsFakeSingleValueNode(groupingProperties[0]);
-            VerifyIsFakeSingleValueNode(groupingProperties[1]);
+            VerifyIsFakeSingleValueNode(groupingProperties[0].Accessor);
+            VerifyIsFakeSingleValueNode(groupingProperties[1].Accessor);
 
             groupBy.Aggregate.Should().BeNull();
         }

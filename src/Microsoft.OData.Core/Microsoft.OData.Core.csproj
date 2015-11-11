@@ -525,6 +525,7 @@
     <Compile Include="UriParser\SemanticAst\ParameterAliasValueAccessor.cs" />
     <Compile Include="UriParser\SemanticAst\PathSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\PathTemplateSegment.cs" />
+    <Compile Include="UriParser\SemanticAst\GroupByPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\PropertySegment.cs" />
     <Compile Include="UriParser\SemanticAst\QueryNode.cs" />
     <Compile Include="UriParser\SemanticAst\RangeVariable.cs" />

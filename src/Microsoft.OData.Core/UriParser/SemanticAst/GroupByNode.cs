@@ -9,12 +9,13 @@ using Microsoft.OData.Edm;
 using System.Collections.Generic;
 using System;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Core.UriParser.SemanticAst;
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
     public sealed class GroupByNode : QueryNode
     {
-        public GroupByNode(IEnumerable<SingleValuePropertyAccessNode> groupingProperties, IEdmTypeReference groupingItemType, AggregateNode aggregate, IEdmTypeReference itemType, CollectionNode source)
+        public GroupByNode(IList<GroupByPropertyNode> groupingProperties, IEdmTypeReference groupingItemType, AggregateNode aggregate, IEdmTypeReference itemType, CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
             ExceptionUtils.CheckArgumentNotNull(groupingItemType, "groupingItemType");
@@ -29,15 +30,16 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this._source = source;
         }
 
-        private readonly IEnumerable<SingleValuePropertyAccessNode> _groupingProperties;
+        private readonly IEnumerable<GroupByPropertyNode> _groupingProperties;
 
-        public IEnumerable<SingleValuePropertyAccessNode> GroupingProperties
+        public IEnumerable<GroupByPropertyNode> GroupingProperties
         {
             get
             {
                 return _groupingProperties;
             }
         }
+    
 
         private readonly AggregateNode _aggregate;
 
