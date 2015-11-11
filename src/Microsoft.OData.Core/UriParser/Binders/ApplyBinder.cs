@@ -263,7 +263,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             else
             {
-                // TODO: Throw?
+                throw new NotSupportedException();
             }
 
             return propertyName;

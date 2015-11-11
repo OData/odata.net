@@ -38,7 +38,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 return _groupingProperties;
             }
         }
-    
 
         private readonly AggregateNode _aggregate;
 
@@ -49,7 +48,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 return _aggregate;
             }
         }
-
 
         private readonly CollectionNode _source;
 

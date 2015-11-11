@@ -1,9 +1,12 @@
-﻿using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Edm.Library;
+﻿//---------------------------------------------------------------------
+// <copyright file="GroupByPropertyNode.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+// OData v4 Aggregation Extensions.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {

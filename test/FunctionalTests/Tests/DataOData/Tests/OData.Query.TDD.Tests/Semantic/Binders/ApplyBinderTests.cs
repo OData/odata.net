@@ -96,6 +96,40 @@
         }
 
         [TestMethod]
+        public void BindApplyWitGroupByWithNavigationShouldReturnApplyClause()
+        {
+            var tokens = _parser.ParseApply("groupby((MyDog/City))");
+
+            var binder = new ApplyBinder(FakeBindMethods.BindMethodReturnsPersonDogNameNavigation, _bindingState);
+            var actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            var transformations = actual.Transformations.ToList();
+            var groupBy = transformations[0] as GroupByNode;
+
+            groupBy.Should().NotBeNull();
+            groupBy.Kind.Should().Be(QueryNodeKind.GroupBy);
+            groupBy.GroupingProperties.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+
+            var groupingProperties = groupBy.GroupingProperties.ToList();
+            var dogNode = groupingProperties[0];
+            dogNode.Accessor.Should().BeNull();
+            dogNode.Name.Should().Be("MyDog");
+            dogNode.Children.Should().HaveCount(1);
+
+            var nameNode = dogNode.Children[0];
+
+            dogNode.Name.Should().Be("MyDog");
+
+            nameNode.Accessor.Should().BeSameAs(FakeBindMethods.FakePersonDogNameNode);
+
+            groupBy.Aggregate.Should().BeNull();
+        }
+
+        [TestMethod]
         public void BindApplyWitGroupByWithAggregateShouldReturnApplyClause()
         {
             var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice), aggregate(UnitPrice with sum as TotalPrice))");

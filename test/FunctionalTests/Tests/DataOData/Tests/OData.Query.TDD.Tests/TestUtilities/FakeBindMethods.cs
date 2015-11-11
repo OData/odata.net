@@ -54,6 +54,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
         public static readonly SingleValuePropertyAccessNode FakeSingleValueProperty =
             new SingleValuePropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
 
+        public static readonly SingleValuePropertyAccessNode FakePersonDogNameNode =
+            new SingleValuePropertyAccessNode(
+                new SingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp(),FakePersonNode),HardCodedTestModel.GetAddressCityProperty());
+
+
         public static readonly CollectionPropertyAccessNode FakeCollectionValueProperty =
             new CollectionPropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
 
@@ -110,6 +115,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
         public static SingleValuePropertyAccessNode BindSingleValueProperty(QueryToken queryToken)
         {
             return FakeSingleValueProperty;
+        }
+
+        public static SingleValuePropertyAccessNode BindMethodReturnsPersonDogNameNavigation(QueryToken queryToken)
+        {
+            return FakePersonDogNameNode;
         }
 
         public static CollectionPropertyAccessNode BindCollectionProperty(QueryToken queryToken)
