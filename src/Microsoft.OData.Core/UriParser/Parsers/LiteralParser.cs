@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Xml;
     using Edm.Library;
     using Microsoft.Spatial;
-    using XmlConstants = ExpressionConstants;
 
     /// <summary>Use this class to parse literals from keys, etags, skiptokens, and filter/orderby expression constants.</summary>
     internal abstract class LiteralParser
@@ -637,7 +636,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <summary>
             /// Initializes a new instance of the <see cref="DatePrimitiveParser"/> class.
             /// </summary>
-            public DatePrimitiveParser() : base(typeof(Date))
+            public DatePrimitiveParser()
+                : base(typeof(Date))
             {
             }
 
@@ -651,28 +651,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryConvert(string text, out object targetValue)
             {
-                try
-                {
-                    var date = XmlConvert.ToDateTimeOffset(text);
-                    targetValue = new Date(date.Year, date.Month, date.Day);
-                }
-                catch (FormatException)
-                {
-                    targetValue = null;
-                    return false;
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    targetValue = null;
-                    return false;
-                }
-                catch (ArgumentNullException)
-                {
-                    targetValue = null;
-                    return false;
-                }
-
-                return true;
+                Date? date;
+                bool isSucceed = EdmValueParser.TryParseDate(text, out date);
+                targetValue = date;
+                return isSucceed;
             }
         }
     }

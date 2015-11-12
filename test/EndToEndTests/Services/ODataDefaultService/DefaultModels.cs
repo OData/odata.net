@@ -199,6 +199,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     }
 
     /// <summary>
+    /// The class represents the Calendar model type.
+    /// </summary>
+    public class Calendar : AbstractEntity
+    {
+        public Calendar()
+        {
+        }
+
+        public Date Day { get; set; }
+    }
+
+    /// <summary>
     /// The class represents the OrderDetail model type.
     /// </summary>
     public class OrderDetail : AbstractEntity

@@ -180,6 +180,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             var orderSet = new EdmEntitySet(defaultContainer, "Orders", orderType);
             defaultContainer.AddElement(orderSet);
 
+            var calendarType = new EdmEntityType(ns, "Calendar", abstractType);
+            var calendarIdProperty = new EdmStructuralProperty(calendarType, "Day", EdmCoreModel.Instance.GetDate(false));
+            calendarType.AddProperty(calendarIdProperty);
+            calendarType.AddKeys(calendarIdProperty);
+            model.AddElement(calendarType);
+            var calendarSet = new EdmEntitySet(defaultContainer, "Calendars", calendarType);
+            defaultContainer.AddElement(calendarSet);
+
             var orderDetailType = new EdmEntityType(ns, "OrderDetail", abstractType);
             var orderId = new EdmStructuralProperty(orderDetailType, "OrderID", EdmCoreModel.Instance.GetInt32(false));
             orderDetailType.AddProperty(orderId);
