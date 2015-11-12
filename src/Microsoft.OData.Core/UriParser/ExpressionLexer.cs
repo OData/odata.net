@@ -1049,7 +1049,7 @@ namespace Microsoft.OData.Core.UriParser
 
             bool canBeSingle = float.TryParse(numericStr, NumberStyles.Float, CultureInfo.InvariantCulture, out tmpFloat);
             bool canBeDouble = double.TryParse(numericStr, NumberStyles.Float, CultureInfo.InvariantCulture, out tmpDouble);
-            bool canBeDecimal = decimal.TryParse(numericStr, NumberStyles.Number, CultureInfo.InvariantCulture, out tmpDecimal);
+            bool canBeDecimal = decimal.TryParse(numericStr, NumberStyles.Integer | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out tmpDecimal);
 
             // 1. try high precision -> low precision
             if (canBeDouble && canBeDecimal)
