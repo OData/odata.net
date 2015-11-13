@@ -42,6 +42,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
         public static readonly SingleValueNode FakeSinglePrimitive =
             new ConstantNode("A_STRING");
 
+        public static readonly SingleValueNode FakeSingleIntPrimitive =
+            new ConstantNode(100);
+
         public static readonly SingleValueNode FakeSingleOpenProperty =
             new SingleValueOpenPropertyAccessNode(new ConstantNode(null), "A_OPENPROPERTY");
 
@@ -85,6 +88,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
         public static SingleValueNode BindMethodReturningASinglePrimitive(QueryToken token)
         {
             return FakeSinglePrimitive;
+        }
+
+        public static SingleValueNode BindMethodReturningASingleIntPrimitive(QueryToken token)
+        {
+            return FakeSingleIntPrimitive;
         }
 
         public static SingleValueNode BindMethodReturningASingleOpenProperty(QueryToken token)

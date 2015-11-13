@@ -18,11 +18,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
     internal sealed class ApplyBinder
     {
-        private readonly MetadataBinder.QueryTokenVisitor _bindMethod;
+        private MetadataBinder.QueryTokenVisitor _bindMethod;
 
-        private readonly BindingState _state;
+        private BindingState _state;
 
-        private readonly FilterBinder _filterBinder;
+        private FilterBinder _filterBinder;
 
         internal ApplyBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
@@ -46,11 +46,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         var aggregate = BindAggregateToken((AggregateToken)(token));
                         resultType = aggregate.ItemType;
                         transformations.Add(aggregate);
+                        RefreshState(resultType);
                         break;
                     case TreeNodeKinds.QueryTokenKind.GroupBy:
                         var groupBy = BindGroupByToken((GroupByToken)(token));
                         resultType = groupBy.ItemType;
                         transformations.Add(groupBy);
+                        RefreshState(resultType);
                         break;
                     default: //assumes filter
                         var filterClause = this._filterBinder.BindFilter(token);
@@ -61,6 +63,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             return new ApplyClause(transformations, resultType);
+        }
+
+        private void RefreshState(IEdmTypeReference resultType)
+        {
+            var state = new BindingState(_state.Configuration);
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(resultType, null);
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            _state = state;
+
+            this._bindMethod = (new MetadataBinder(state)).Bind;
+            this._filterBinder = new FilterBinder(_bindMethod, state);
         }
 
         private AggregateNode BindAggregateToken(AggregateToken token)

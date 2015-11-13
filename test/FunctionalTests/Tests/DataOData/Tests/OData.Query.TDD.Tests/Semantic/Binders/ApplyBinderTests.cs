@@ -68,7 +68,32 @@
 
             VerifyDynamicTypeReferenceNames(aggregate.ItemType, new string[] { "TotalPrice" });
         }
-      
+
+        [TestMethod]
+        public void BindApplyWithAggregateAndFilterShouldReturnApplyClause()
+        {
+            var tokens = _parser.ParseApply("aggregate(StockQuantity with sum as TotalPrice)/filter(TotalPrice eq 100)");
+
+            var binder = new ApplyBinder(FakeBindMethods.BindMethodReturningASingleIntPrimitive, _bindingState);
+            var actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(2);
+
+            var transformations = actual.Transformations.ToList();
+            var filter = transformations[1] as FilterClause;
+
+            filter.Should().NotBeNull();
+            filter.Kind.Should().Be(QueryNodeKind.Filter);
+
+            filter.Expression.Should().NotBeNull();
+            var binaryOperation = filter.Expression as BinaryOperatorNode;
+            binaryOperation.Should().NotBeNull();
+            var propertyAccess = binaryOperation.Left as SingleValuePropertyAccessNode;
+            propertyAccess.Should().NotBeNull();
+            propertyAccess.Property.Name.Should().Be("TotalPrice");
+        }
+
         [TestMethod]
         public void BindApplyWitGroupByShouldReturnApplyClause()
         {
@@ -171,9 +196,13 @@
         [TestMethod]
         public void BindApplyWitMultipleTokensShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("groupby((FirstName, LastName))/aggregate(UnitPrice with sum as TotalPrice)/groupby((UnitPrice, SalePrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var tokens = _parser.ParseApply("groupby((ID, SSN, LifeTime))/aggregate(LifeTime with sum as TotalLife)/groupby((TotalLife))");
+
+            var state = new BindingState(_configuration);
+            var metadataBiner = new MetadataBinder(_bindingState);
+
+            var binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
