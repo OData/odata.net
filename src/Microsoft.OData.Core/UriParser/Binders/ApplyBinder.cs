@@ -65,6 +65,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new ApplyClause(transformations, resultType);
         }
 
+        /// <summary>
+        /// Updates bingingState, methoid and filter binder to refrect changed type.
+        /// </summary>
+        /// <remarks>
+        /// Need to call that method after each transformation that chnages shape: groupby, aggregate etc.
+        /// </remarks>
+        /// <param name="resultType"></param>
         private void RefreshState(IEdmTypeReference resultType)
         {
             var state = new BindingState(_state.Configuration);
