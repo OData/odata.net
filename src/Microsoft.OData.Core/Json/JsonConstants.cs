@@ -50,6 +50,16 @@ namespace Microsoft.OData.Core.Json
         internal const string ODataErrorMessageName = "message";
 
         /// <summary>
+        /// "target" header for the error message property
+        /// </summary>
+        internal const string ODataErrorTargetName = "target";
+
+        /// <summary>
+        /// "details" header for the inner error property
+        /// </summary>
+        internal const string ODataErrorDetailsName = "details";
+
+        /// <summary>
         /// "innererror" header for the inner error property
         /// </summary>
         internal const string ODataErrorInnerErrorName = "innererror";

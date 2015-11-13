@@ -530,6 +530,43 @@ namespace Microsoft.OData.Core.Json
 
                         break;
 
+                    case JsonConstants.ODataErrorTargetName:
+                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                            ref propertiesFoundBitmask,
+                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.Target))
+                        {
+                            return false;
+                        }
+
+                        string errorTarget;
+                        if (this.TryReadErrorStringPropertyValue(out errorTarget))
+                        {
+                            error.Target = errorTarget;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    case JsonConstants.ODataErrorDetailsName:
+                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                                ref propertiesFoundBitmask,
+                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Details))
+                        {
+                            return false;
+                        }
+
+                        ICollection<ODataErrorDetail> details;
+                        if (!this.TryReadErrorDetailsPropertyValue(out details))
+                        {
+                            return false;
+                        }
+
+                        error.Details = details;
+                        break;
+                    
                     case JsonConstants.ODataErrorInnerErrorName:
                         if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
@@ -559,6 +596,142 @@ namespace Microsoft.OData.Core.Json
 
             // if we don't find any properties it is not a valid error object
             return propertiesFoundBitmask != ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+        }
+
+        private bool TryReadErrorDetailsPropertyValue(out ICollection<ODataErrorDetail> details)
+        {
+            Debug.Assert(
+                this.currentBufferedNode.NodeType == JsonNodeType.Property,
+                "this.currentBufferedNode.NodeType == JsonNodeType.Property");
+            Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
+            this.AssertBuffering();
+
+            // move the reader onto the property value
+            this.ReadInternal();
+
+            // we expect a start-array node here
+            if (this.currentBufferedNode.NodeType != JsonNodeType.StartArray)
+            {
+                details = null;
+                return false;
+            }
+
+            // [
+            ReadInternal();
+
+            details = new List<ODataErrorDetail>();
+            ODataErrorDetail detail;
+            if (TryReadErrorDetail(out detail))
+            {
+                details.Add(detail);
+            }
+
+            // ]
+            ReadInternal();
+
+            return true;
+        }
+
+        private bool TryReadErrorDetail(out ODataErrorDetail detail)
+        {
+            Debug.Assert(
+                this.currentBufferedNode.NodeType == JsonNodeType.StartObject,
+                "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
+            Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
+            this.AssertBuffering();
+
+            if (this.currentBufferedNode.NodeType != JsonNodeType.StartObject)
+            {
+                detail = null;
+                return false;
+            }
+
+            // {
+            ReadInternal();
+
+            detail = new ODataErrorDetail();
+            // we expect one of the supported properties for the value (or end-object)
+            var propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
+            {
+                var propertyName = (string)this.currentBufferedNode.Value;
+
+                switch (propertyName)
+                {
+                    case JsonConstants.ODataErrorCodeName:
+                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                                ref propertiesFoundBitmask,
+                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Code))
+                        {
+                            return false;
+                        }
+
+                        string code;
+                        if (this.TryReadErrorStringPropertyValue(out code))
+                        {
+                            detail.ErrorCode = code;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    case JsonConstants.ODataErrorTargetName:
+                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                                ref propertiesFoundBitmask,
+                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Target))
+                        {
+                            return false;
+                        }
+
+                        string target;
+                        if (this.TryReadErrorStringPropertyValue(out target))
+                        {
+                            detail.Target = target;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    case JsonConstants.ODataErrorMessageName:
+                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                                ref propertiesFoundBitmask,
+                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageValue))
+                        {
+                            return false;
+                        }
+
+                        string message;
+                        if (this.TryReadErrorStringPropertyValue(out message))
+                        {
+                            detail.Message = message;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    default:
+                        // if we find a non-supported property in an inner error, we skip it
+                        this.SkipValueInternal();
+                        break;
+                }
+
+                this.ReadInternal();
+            }
+
+            Debug.Assert(
+                this.currentBufferedNode.NodeType == JsonNodeType.EndObject,
+                "this.currentBufferedNode.NodeType == JsonNodeType.EndObject");
+
+            return true;
         }
 
         /// <summary>

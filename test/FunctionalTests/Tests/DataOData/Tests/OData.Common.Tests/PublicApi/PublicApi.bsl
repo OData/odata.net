@@ -4526,10 +4526,20 @@ DebuggerDisplayAttribute(),
 public sealed class Microsoft.OData.Core.ODataError : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataError ()
 
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataErrorDetail]] Details  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	string ErrorCode  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	Microsoft.OData.Core.ODataInnerError InnerError  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	string Message  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Target  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+}
+
+public sealed class Microsoft.OData.Core.ODataErrorDetail {
+	public ODataErrorDetail ()
+
+	string ErrorCode  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Message  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Target  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 }
 
 [

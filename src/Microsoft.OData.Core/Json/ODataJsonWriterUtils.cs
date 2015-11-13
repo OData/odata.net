@@ -28,7 +28,9 @@ namespace Microsoft.OData.Core.Json
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
-        internal static void WriteError(IJsonWriter jsonWriter, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight)
+        internal static void WriteError(IJsonWriter jsonWriter,
+            Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, ODataError error,
+            bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
@@ -38,7 +40,17 @@ namespace Microsoft.OData.Core.Json
 
             ODataInnerError innerError = includeDebugInformation ? error.InnerError : null;
 
-            WriteError(jsonWriter, code, message, innerError, error.GetInstanceAnnotations(), writeInstanceAnnotationsDelegate, maxInnerErrorDepth, writingJsonLight);
+            WriteError(
+                jsonWriter,
+                code,
+                message,
+                error.Target,
+                error.Details,
+                innerError,
+                error.GetInstanceAnnotations(),
+                writeInstanceAnnotationsDelegate,
+                maxInnerErrorDepth,
+                writingJsonLight);
         }
 
         /// <summary>
@@ -85,7 +97,12 @@ namespace Microsoft.OData.Core.Json
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
-        private static void WriteError(IJsonWriter jsonWriter, string code, string message, ODataInnerError innerError, IEnumerable<ODataInstanceAnnotation> instanceAnnotations, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, int maxInnerErrorDepth, bool writingJsonLight)
+        private static void WriteError(IJsonWriter jsonWriter, string code, string message, string target,
+            IEnumerable<ODataErrorDetail> details,
+            ODataInnerError innerError,
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, int maxInnerErrorDepth,
+            bool writingJsonLight)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(code != null, "code != null");
@@ -113,6 +130,24 @@ namespace Microsoft.OData.Core.Json
             jsonWriter.WriteName(JsonConstants.ODataErrorMessageName);
             jsonWriter.WriteValue(message);
 
+            // For example, "target": "query",
+            if (target != null)
+            {
+                jsonWriter.WriteName(JsonConstants.ODataErrorTargetName);
+                jsonWriter.WriteValue(target);
+            }
+
+            // Such as, "details": [
+            //  {
+            //   "code": "301",
+            //   "target": "$search",
+            //   "message": "$search query option not supported"
+            //  }]
+            if (details != null)
+            {
+                WriteErrorDetails(jsonWriter, details, JsonConstants.ODataErrorDetailsName);
+            }
+
             if (innerError != null)
             {
                 WriteInnerError(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName, /* recursionDepth */ 0, maxInnerErrorDepth);
@@ -127,6 +162,45 @@ namespace Microsoft.OData.Core.Json
             // } }
             jsonWriter.EndObjectScope();
             jsonWriter.EndObjectScope();
+        }
+
+        private static void WriteErrorDetails(IJsonWriter jsonWriter, IEnumerable<ODataErrorDetail> details,
+            string odataErrorDetailsName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(details != null, "details != null");
+            Debug.Assert(odataErrorDetailsName != null, "odataErrorDetailsName != null");
+
+            // "details": [
+            jsonWriter.WriteName(odataErrorDetailsName);
+            jsonWriter.StartArrayScope();
+
+            foreach (var detail in details.Where(d => d != null))
+            {
+                // {
+                jsonWriter.StartObjectScope();
+
+                // "code": "301",
+                jsonWriter.WriteName(JsonConstants.ODataErrorCodeName);
+                jsonWriter.WriteValue(detail.ErrorCode ?? string.Empty);
+
+                if (detail.Target != null)
+                {
+                    // "target": "$search" 
+                    jsonWriter.WriteName(JsonConstants.ODataErrorTargetName);
+                    jsonWriter.WriteValue(detail.Target);
+                }
+
+                // "message": "$search query option not supported",                
+                jsonWriter.WriteName(JsonConstants.ODataErrorMessageName);
+                jsonWriter.WriteValue(detail.Message ?? string.Empty);
+
+                // }
+                jsonWriter.EndObjectScope();
+            }
+
+            // ]
+            jsonWriter.EndArrayScope();
         }
 
         /// <summary>
