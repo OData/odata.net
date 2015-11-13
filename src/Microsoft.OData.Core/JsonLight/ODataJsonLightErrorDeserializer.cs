@@ -8,6 +8,7 @@ namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
@@ -357,6 +358,14 @@ namespace Microsoft.OData.Core.JsonLight
                     error.Message = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorMessageName);
                     break;
 
+                case JsonConstants.ODataErrorTargetName:
+                    error.Target = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorTargetName);
+                    break;
+
+                case JsonConstants.ODataErrorDetailsName:
+                    error.Details = this.ReadDetails();
+                    break;
+
                 case JsonConstants.ODataErrorInnerErrorName:
                     error.InnerError = this.ReadInnerError(0 /* recursionDepth */);
                     break;
@@ -388,10 +397,62 @@ namespace Microsoft.OData.Core.JsonLight
                     }
                     else
                     {
-                        // we only allow a 'code', 'message' and 'innererror' properties in the value of the 'error' property or custom instance annotations
+                        // we only allow a 'code', 'message', 'target', 'details, and 'innererror' properties
+                        // in the value of the 'error' property or custom instance annotations
                         throw new ODataException(Strings.ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty(propertyName));
                     }
 
+                    break;
+            }
+        }
+
+        private ICollection<ODataErrorDetail> ReadDetails()
+        {
+            var details = new List<ODataErrorDetail>();
+            // [
+            this.JsonReader.ReadStartArray();
+
+            while (JsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                var detail = ReadDetail();
+                details.Add(detail);
+            }
+
+            // ]
+            this.JsonReader.ReadEndArray();
+
+            return details;
+        }
+
+        private ODataErrorDetail ReadDetail()
+        {
+            var detail = new ODataErrorDetail();
+
+            ReadJsonObjectInErrorPayload(
+                (propertyName, duplicationPropertyNameChecker) =>
+                ReadPropertyValueInODataErrorDetailObject(detail, propertyName));
+
+            return detail;
+        }
+
+        private void ReadPropertyValueInODataErrorDetailObject(ODataErrorDetail detail, string propertyName)
+        {
+            switch (propertyName)
+            {
+                case JsonConstants.ODataErrorCodeName:
+                    detail.ErrorCode = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
+                    break;
+
+                case JsonConstants.ODataErrorMessageName:
+                    detail.Message = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorMessageName);
+                    break;
+
+                case JsonConstants.ODataErrorTargetName:
+                    detail.Target = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorTargetName);
+                    break;
+
+                default:
+                    this.JsonReader.SkipValue();
                     break;
             }
         }

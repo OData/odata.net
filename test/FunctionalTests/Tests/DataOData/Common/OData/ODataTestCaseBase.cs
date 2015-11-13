@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// Base classs for ODataLib Tests
+    /// Base class for ODataLib Tests
     /// </summary>
     [TestClass]
     public class ODataTestCaseBase : TestCase
