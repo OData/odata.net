@@ -1057,11 +1057,11 @@ namespace Microsoft.OData.Core.UriParser
                 decimal doubleToDecimalR;
                 decimal doubleToDecimalN;
 
-                // To keep the full presion of the current value, which if necessary is all 17 digits of precision supported by the Double type.
-                bool doubleCanBeDecimalR = decimal.TryParse(tmpDouble.ToString("R", CultureInfo.InvariantCulture), NumberStyles.Integer | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out doubleToDecimalR);
+                // To keep the full precision of the current value, which if necessary is all 17 digits of precision supported by the Double type.
+                bool doubleCanBeDecimalR = decimal.TryParse(tmpDouble.ToString("R", CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture, out doubleToDecimalR);
 
                 // To cover the scientific notation case, such as 1e+19 in the tmpDouble
-                bool doubleCanBeDecimalN = decimal.TryParse(tmpDouble.ToString("N29", CultureInfo.InvariantCulture), NumberStyles.Integer | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out doubleToDecimalN);
+                bool doubleCanBeDecimalN = decimal.TryParse(tmpDouble.ToString("N29", CultureInfo.InvariantCulture), NumberStyles.Number, CultureInfo.InvariantCulture, out doubleToDecimalN);
 
                 if ((doubleCanBeDecimalR && doubleToDecimalR != tmpDecimal) || (!doubleCanBeDecimalR && doubleCanBeDecimalN && doubleToDecimalN != tmpDecimal))
                 {
