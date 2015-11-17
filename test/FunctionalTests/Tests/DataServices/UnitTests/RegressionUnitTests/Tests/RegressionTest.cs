@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
     using System.Data.Test.Astoria;
     using System.Data.Test.Astoria.Util;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -4620,7 +4621,10 @@ Content-Type: application/atom+xml;type=entry
                     var etag = request.ResponseETag;
 
                     string payload = String.Format("{{\"ID\": 0, \"ETagSingle1\": \"{0}\", \"ETagSingle2\": \"{1}\", \"ETagDouble1\": \"{2}\", \"ETagDouble2\": \"{3}\"}}",
-                        values["SingleValue1"].ToString(), values["SingleValue2"].ToString(), values["DoubleValue1"].ToString(), values["DoubleValue2"].ToString());
+                        ((float)values["SingleValue1"]).ToString(CultureInfo.InvariantCulture),
+                        ((float)values["SingleValue2"]).ToString(CultureInfo.InvariantCulture),
+                        ((double)values["DoubleValue1"]).ToString(CultureInfo.InvariantCulture),
+                        ((double)values["DoubleValue2"]).ToString(CultureInfo.InvariantCulture));
 
                     UnitTestsUtil.GetTestWebRequestInstance(
                         UnitTestsUtil.JsonLightMimeType, "/Entities(0)", typeof(FloatPointETagContext), new KeyValuePair<string, string>[] { new KeyValuePair<String, String>("If-Match", etag) }, "PUT",
