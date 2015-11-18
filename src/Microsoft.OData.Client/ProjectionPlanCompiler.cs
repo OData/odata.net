@@ -659,8 +659,12 @@ namespace Microsoft.OData.Client
                 //
                 // new T { t2 = new T2 { id2 = *.t2.id2 } }
                 // => ProjInit(pt, "t2", f(ProjInit(pt->t2), "id2", *.id2)))
-                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(ClientTypeUtil.GetMemberType(assignment.Member)) &&
-                     assignment.Expression.NodeType == ExpressionType.MemberInit))
+                //
+                // new T { t2 = new T2 { t3 = *.t2.t3 == null ? null : new T3 { id3 = *.t2.t3.id3 } }
+                // => ProjInit(pt, "t2", f(ProjInit(pt->t2), "t3", ProjectionIsNull(*.t3) ? null : f(ProjInit(pt->t2.t3), "id3", *.id3)))
+                if ((ClientTypeUtil.TypeOrElementTypeIsEntity(ClientTypeUtil.GetMemberType(assignment.Member))
+                    && (assignment.Expression.NodeType == ExpressionType.MemberInit
+                    || assignment.Expression.NodeType == ExpressionType.Conditional)))
                 {
                     Expression nestedEntry = CallMaterializer(
                         "ProjectionGetEntry",
@@ -693,7 +697,7 @@ namespace Microsoft.OData.Client
                     Type memberParentType = assignment.Member.DeclaringType;
 #else
                     Type memberParentType = assignment.Member.ReflectedType;
-#endif                    
+#endif
                     ProjectionPathSegment nestedSegment = new ProjectionPathSegment(
                         entryPath,
                         assignment.Member.Name,
