@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core
         public string Target { get; set; }
 
         /// <summary>
-        /// An array of JSON objects that MUST contain name/value pairs for code and message, and MAY contain 
+        /// A collection of JSON objects that MUST contain name/value pairs for code and message, and MAY contain 
         /// a name/value pair for target, as described above.
         /// </summary>
         /// <returns>The error details.</returns>
