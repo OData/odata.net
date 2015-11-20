@@ -92,6 +92,8 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonWriter">JSON writer.</param>
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The message of the error.</param>
+        /// <param name="target">The target of the error.</param>
+        /// <param name="details">The details of the error.</param>
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>

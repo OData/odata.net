@@ -650,6 +650,7 @@ namespace Microsoft.OData.Core.Json
             ReadInternal();
 
             detail = new ODataErrorDetail();
+
             // we expect one of the supported properties for the value (or end-object)
             var propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)

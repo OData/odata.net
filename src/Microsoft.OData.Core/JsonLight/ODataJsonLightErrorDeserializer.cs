@@ -409,6 +409,7 @@ namespace Microsoft.OData.Core.JsonLight
         private ICollection<ODataErrorDetail> ReadDetails()
         {
             var details = new List<ODataErrorDetail>();
+
             // [
             this.JsonReader.ReadStartArray();
 
