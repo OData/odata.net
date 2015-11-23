@@ -50,10 +50,20 @@ namespace Microsoft.Data.OData
         /// </summary>
         /// <param name="propertyName">The name of the open property.</param>
         /// <param name="value">The value of the open property.</param>
-        internal static void ValidateOpenPropertyValue(string propertyName, object value)
+        /// <param name="undeclaredPropertyBehaviorKinds">Value of UndeclaredPropertyBehaviorKinds in message settings.</param>
+        internal static void ValidateOpenPropertyValue(string propertyName, object value, ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds)
         {
             DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+
+            // .None / .LinkProperty
+            bool throwErr = !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
+                && !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+
+            if (throwErr && value is ODataCollectionValue)
+            {
+                throw new ODataException(Strings.ValidationUtils_OpenCollectionProperty(propertyName));
+            }
 
             if (value is ODataStreamReferenceValue)
             {

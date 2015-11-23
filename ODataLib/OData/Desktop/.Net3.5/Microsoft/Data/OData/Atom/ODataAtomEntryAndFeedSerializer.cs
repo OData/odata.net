@@ -400,13 +400,13 @@ namespace Microsoft.Data.OData.Atom
 
             WriterValidationUtils.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(streamProperty);
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(streamProperty.Name, owningType);
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(streamProperty.Name, owningType, this.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
             WriterValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty, this.Version, this.WritingResponse);
             ODataStreamReferenceValue streamReferenceValue = (ODataStreamReferenceValue)streamProperty.Value;
             WriterValidationUtils.ValidateStreamReferenceValue(streamReferenceValue, false /*isDefaultStream*/);
             if (owningType != null && owningType.IsOpen && edmProperty == null)
             {
-                ValidationUtils.ValidateOpenPropertyValue(streamProperty.Name, streamReferenceValue);
+                ValidationUtils.ValidateOpenPropertyValue(streamProperty.Name, streamReferenceValue, this.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
             }
 
             AtomStreamReferenceMetadata streamReferenceMetadata = streamReferenceValue.GetAnnotation<AtomStreamReferenceMetadata>();

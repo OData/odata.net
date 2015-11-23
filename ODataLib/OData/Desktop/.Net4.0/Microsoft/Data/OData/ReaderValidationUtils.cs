@@ -101,10 +101,11 @@ namespace Microsoft.Data.OData
             {
                 // If no property match was found in the metadata and an error wasn't raised, 
                 // it is an open property (which is not supported for streams).
-                if (streamEdmProperty == null && !messageReaderSettings.ReportUndeclaredLinkProperties)
+                if (streamEdmProperty == null &&
+                    !messageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty))
                 {
                     // Fails with the correct error message.
-                    ValidationUtils.ValidateOpenPropertyValue(streamProperty.Name, streamProperty.Value);
+                    ValidationUtils.ValidateOpenPropertyValue(streamProperty.Name, streamProperty.Value, messageReaderSettings.UndeclaredPropertyBehaviorKinds);
                 }
             }
         }
@@ -212,11 +213,11 @@ namespace Microsoft.Data.OData
             IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (messageReaderSettings.IgnoreUndeclaredValueProperties)
+                if (messageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty))
                 {
                     ignoreProperty = true;
                 }
-                else
+                else if (!messageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty))
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.ODataFullName()));
                 }
@@ -264,7 +265,7 @@ namespace Microsoft.Data.OData
             IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (!messageReaderSettings.ReportUndeclaredLinkProperties)
+                if (!messageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty))
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.ODataFullName()));
                 }
@@ -299,7 +300,8 @@ namespace Microsoft.Data.OData
             IEdmProperty property = ValidateLinkPropertyDefined(propertyName, owningEntityType, messageReaderSettings);
             if (property == null)
             {
-                if (owningEntityType.IsOpen && !messageReaderSettings.ReportUndeclaredLinkProperties)
+                if (owningEntityType.IsOpen &&
+                    !messageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty))
                 {
                     // We don't support open navigation properties
                     throw new ODataException(Strings.ValidationUtils_OpenNavigationProperty(propertyName, owningEntityType.ODataFullName()));
@@ -415,7 +417,7 @@ namespace Microsoft.Data.OData
             out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
         {
             DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(typeKindPeekedFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
+            Debug.Assert(typeKindPeekedFromPayloadFunc != null, "typeKindPeekedFromPayloadFunc != null");
 
             serializationTypeNameAnnotation = null;
 
@@ -664,9 +666,7 @@ namespace Microsoft.Data.OData
             if (expectedTypeReference == null || useExpectedTypeOnlyForTypeResolution)
             {
                 Debug.Assert(payloadTypeName == null || payloadType != null, "The payload type must have resolved before we get here.");
-                return ResolveAndValidateTargetTypeWithNoExpectedType(
-                    expectedTypeKind,
-                    payloadType);
+                return ResolveAndValidateTargetTypeWithNoExpectedType(expectedTypeKind, payloadType, messageReaderSettings.UndeclaredPropertyBehaviorKinds);
             }
 
             if (messageReaderSettings.DisableStrictMetadataValidation)
@@ -880,10 +880,12 @@ namespace Microsoft.Data.OData
         /// </summary>
         /// <param name="expectedTypeKind">The expected type kind for the value.</param>
         /// <param name="payloadType">The payload type, or null if the payload type was not specified, or it didn't resolve against the model.</param>
+        /// <param name="undeclaredPropertyBehaviorKinds">Value of UndeclaredPropertyBehaviorKinds in message settings.</param>
         /// <returns>The target type reference to use for parsing the value.</returns>
         private static IEdmTypeReference ResolveAndValidateTargetTypeWithNoExpectedType(
             EdmTypeKind expectedTypeKind,
-            IEdmType payloadType)
+            IEdmType payloadType,
+            ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds)
         {
             // No expected type (for example an open property, but other scenarios are possible)
             if (payloadType == null)
@@ -893,7 +895,16 @@ namespace Microsoft.Data.OData
                     throw new ODataException(Strings.ReaderValidationUtils_EntryWithoutType);
                 }
 
-                return null; // supports undeclared property
+                // .None / .LinkProperty
+                bool throwErr = !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
+                    && !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+
+                if (!throwErr)
+                {
+                    return null; // supports undeclared property
+                }
+                
+                throw new ODataException(Strings.ReaderValidationUtils_ValueWithoutType);
             }
 
             // Payload types are always nullable.

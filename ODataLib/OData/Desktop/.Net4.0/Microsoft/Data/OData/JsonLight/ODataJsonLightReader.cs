@@ -752,7 +752,8 @@ namespace Microsoft.Data.OData.JsonLight
 
             ODataNavigationLink currentLink = this.CurrentNavigationLink;
             Debug.Assert(
-                currentLink.IsCollection.HasValue || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                currentLink.IsCollection.HasValue ||
+                this.jsonLightInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty),
                 "Expect to know whether this is a singleton or collection link based on metadata.");
 
             IODataJsonLightReaderEntryState parentEntryState = (IODataJsonLightReaderEntryState)this.LinkParentEntityScope;
@@ -1125,7 +1126,8 @@ namespace Microsoft.Data.OData.JsonLight
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.jsonLightEntryAndFeedDeserializer.JsonReader.Value == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
             Debug.Assert(
-                navigationProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                navigationProperty != null ||
+                this.jsonLightInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty),
                 "A navigation property must be found for each link we find unless we're allowed to report undeclared links.");
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(!string.IsNullOrEmpty(navigationLink.Name), "Navigation links must have a name.");

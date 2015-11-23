@@ -405,7 +405,8 @@ namespace Microsoft.Data.OData.VerboseJson
 
             ODataNavigationLink currentLink = this.CurrentNavigationLink;
             Debug.Assert(
-                currentLink.IsCollection.HasValue || this.verboseJsonInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                currentLink.IsCollection.HasValue ||
+                this.verboseJsonInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty),
                 "Expect to know whether this is a singleton or collection link based on metadata.");
 
             IODataVerboseJsonReaderEntryState parentEntryState = (IODataVerboseJsonReaderEntryState)this.LinkParentEntityScope;
@@ -861,7 +862,8 @@ namespace Microsoft.Data.OData.VerboseJson
                 this.verboseJsonEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.verboseJsonEntryAndFeedDeserializer.JsonReader.Value == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null)");
             Debug.Assert(
-                navigationProperty != null || this.verboseJsonInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                navigationProperty != null ||
+                this.verboseJsonInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty),
                 "A navigation property must be found for each link we find unless we're allowed to report undeclared links.");
 
             // we are at the beginning of a link

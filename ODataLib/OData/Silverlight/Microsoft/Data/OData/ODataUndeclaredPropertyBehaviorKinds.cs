@@ -59,5 +59,10 @@ namespace Microsoft.Data.OData
         /// - Stream properties
         /// </remarks>
         ReportUndeclaredLinkProperty = 2,
+
+        /// <summary>
+        /// Reading/writing undeclared properties will be supported.
+        /// </summary>
+        SupportUndeclaredValueProperty = 4,
     }
 }

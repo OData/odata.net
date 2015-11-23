@@ -23,6 +23,7 @@ namespace System.Data.Services.Client.Materialization
 {
     using System.Data.Services.Client.Metadata;
     using Microsoft.Data.Edm;
+    using Microsoft.Data.OData;
 
     /// <summary>
     /// Contains state and methods required to materialize odata collection, complex and primitive values
@@ -38,12 +39,19 @@ namespace System.Data.Services.Client.Materialization
             this.ResponseInfo = responseInfo;
         }
 
+        /// <remarks>
+        /// Undeclared properties will be silently ignored if they are allowed from pervious stage, otherwise exception will be thrown.
+        /// </remarks>
         /// <summary>
         /// Gets a value indicating whether to ignore missing properties when materializing values
         /// </summary>
         public bool IgnoreMissingProperties
         {
-            get { return this.ResponseInfo.IgnoreMissingProperties; }
+            get
+            {
+                return this.ResponseInfo.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty) ||
+                    this.ResponseInfo.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+            }
         }
 
         /// <summary>

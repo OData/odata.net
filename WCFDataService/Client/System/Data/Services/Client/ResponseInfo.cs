@@ -24,6 +24,7 @@ namespace System.Data.Services.Client
     using System.Data.Services.Common;
     using System.Data.Services.Client.Metadata;
     using System.Diagnostics;
+    using Microsoft.Data.OData;
 
     /// <summary>
     /// Wrappers the context and only exposes information required for
@@ -93,6 +94,35 @@ namespace System.Data.Services.Client
         internal bool IgnoreMissingProperties
         {
             get { return this.Context.IgnoreMissingProperties; }
+        }
+
+        /// <summary>Gets the value of UndeclaredPropertyBehaviorKinds.</summary>
+        internal ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds
+        {
+            get
+            {
+                // DsContxt.UndeclaredPropertyBehavior    DsContxt.IgnoreMissingProperty    ODL behavior ODL UndeclaredPropertyBehaviorKinds    Materializer behavior
+                // .None (let IgnoreMissingProperty decide)    True    Read&write    .SupportUndeclaredValueProperty    Silently ignore
+                // .None (let IgnoreMissingProperty decide)    False    Throw exception    .None    Throw exception
+                // .Ignore    ignore    .IgnoreUndeclaredValueProperty    Silently ignore
+                // .Support    Read&write    .SupportUndeclaredValueProperty    Silently ignore
+                if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.None)
+                {
+                    return this.Context.IgnoreMissingProperties
+                        ?
+                        ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty
+                        :
+                        ODataUndeclaredPropertyBehaviorKinds.None;
+                }
+                else if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Ignore)
+                {
+                    return ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty;
+                }
+                else
+                {
+                    return ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+                }
+            }
         }
 
         /// <summary>Returns the instance of entity tracker class which tracks all the entities and links for the context.</summary>
@@ -172,9 +202,9 @@ namespace System.Data.Services.Client
         /// <param name="entityDescriptor">Entity whose property is being loaded.</param>
         /// <param name="property">Property which is being loaded.</param>
         internal LoadPropertyResponseInfo(
-            RequestInfo requestInfo, 
-            MergeOption mergeOption, 
-            EntityDescriptor entityDescriptor, 
+            RequestInfo requestInfo,
+            MergeOption mergeOption,
+            EntityDescriptor entityDescriptor,
             ClientPropertyAnnotation property)
             : base(requestInfo, mergeOption)
         {

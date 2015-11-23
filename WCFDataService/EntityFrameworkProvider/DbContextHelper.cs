@@ -179,12 +179,9 @@ namespace System.Data.Services.Providers
             const BindingFlags DbContextBindingFlags = BindingFlags.Public | BindingFlags.Instance;
             const string DbContextTypeName = "System.Data.Entity.DbContext";
             const string IObjectContextAdapterTypeName = "System.Data.Entity.Infrastructure.IObjectContextAdapter";
-            string EFAssembly = "EntityFramework, Version=4";
-#if EF6Provider                
-            EFAssembly = "EntityFramework, Version=6";
-#endif
+
             DbContextAccessor accessor = null;
-            bool derivesFromDbContext = IsTypeOf(type, DbContextTypeName, EFAssembly);
+            bool derivesFromDbContext = IsTypeOf(type, DbContextTypeName);
 
             if (derivesFromDbContext)
             {
@@ -227,20 +224,22 @@ namespace System.Data.Services.Providers
         /// </summary>
         /// <param name="type">The type to have its derivation checked.</param>
         /// <param name="fromTypeName">The name of the type to check for derivation from</param>
-        /// <param name="assemblyInfo">The assemblyInfo of the type to check for derivation from</param>
         /// <returns>True if the type is of the type the TypeName refers to, False otherwise.</returns>
-        private static bool IsTypeOf(Type type, string fromTypeName, string assemblyInfo = null)
+        private static bool IsTypeOf(Type type, string fromTypeName)
         {
             bool isDerivedFrom = false;
             Type typeToCheck = type;
 
             while (!isDerivedFrom && typeToCheck != typeof(object) && typeToCheck != null)
             {
-                isDerivedFrom = String.Equals(typeToCheck.FullName, fromTypeName, StringComparison.Ordinal)
-                                    && (string.IsNullOrEmpty(assemblyInfo)
-                                        || typeToCheck.AssemblyQualifiedName != null 
-                                            && typeToCheck.AssemblyQualifiedName.Contains(assemblyInfo));
-                
+                isDerivedFrom = String.Equals(typeToCheck.FullName, fromTypeName, StringComparison.Ordinal);
+#if !EF6Provider
+                isDerivedFrom &= typeToCheck.AssemblyQualifiedName == null
+                    || !typeToCheck.AssemblyQualifiedName.StartsWith(
+                        "System.Data.Entity.DbContext, EntityFramework, Version=6",
+                        StringComparison.Ordinal);
+#endif
+
                 typeToCheck = typeToCheck.BaseType;
             }
 

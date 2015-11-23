@@ -259,27 +259,19 @@ namespace Microsoft.Data.OData
         }
 
         /// <summary>
-        /// Whether or not to report any undeclared link properties in the payload. Computed from the UndeclaredPropertyBehaviorKinds enum property.
+        /// True if OdataMessgeReaderSettings contain corresponding undeclaredPropertyBehaviorKinds.
         /// </summary>
-        internal bool ReportUndeclaredLinkProperties
+        /// <param name="undeclaredPropertyBehaviorKinds">The enum value of ODataUndeclaredPropertyBehaviorKinds.</param>
+        /// <returns>True if OdataMessgeReaderSettings contain corresponding undeclaredPropertyBehaviorKinds.</returns>
+        public bool ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds)
         {
-            get
+            DebugUtils.CheckNoExternalCallers();
+            if (undeclaredPropertyBehaviorKinds == ODataUndeclaredPropertyBehaviorKinds.None)
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty);
+                return this.UndeclaredPropertyBehaviorKinds == ODataUndeclaredPropertyBehaviorKinds.None;
             }
-        }
 
-        /// <summary>
-        /// Whether or not to ignore any undeclared value properties in the payload. Computed from the UndeclaredPropertyBehaviorKinds enum property.
-        /// </summary>
-        internal bool IgnoreUndeclaredValueProperties
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
-            }
+            return this.UndeclaredPropertyBehaviorKinds.HasFlag(undeclaredPropertyBehaviorKinds);
         }
 
         /// <summary>Sets the atom entry XML customization callback.</summary>

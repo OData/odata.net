@@ -484,17 +484,16 @@ namespace Microsoft.Data.OData.Atom
                                     isOpen = edmProperty == null;
                                 }
 
-                                ODataProperty property = null;
                                 if (ignoreProperty)
                                 {
-                                    property = this.ReadUndeclarePropertyOrSkip();
+                                    this.XmlReader.Skip();
                                 }
                                 else
                                 {
                                     ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null
                                         ? ODataNullValueBehaviorKind.Default
                                         : this.Model.NullValueReadBehaviorKind(edmProperty);
-                                    property = this.ReadProperty(
+                                    ODataProperty property = this.ReadProperty(
                                         edmProperty == null ? null : edmProperty.Name,
                                         edmProperty == null ? null : edmProperty.Type,
                                         nullValueReadBehaviorKind,
@@ -502,17 +501,17 @@ namespace Microsoft.Data.OData.Atom
                                     Debug.Assert(
                                         property != null || nullValueReadBehaviorKind == ODataNullValueBehaviorKind.IgnoreValue,
                                         "If we don't ignore null values the property must not be null.");
-                                }
 
-                                if (property != null)
-                                {
-                                    if (isOpen)
+                                    if (property != null)
                                     {
-                                        ValidationUtils.ValidateOpenPropertyValue(property.Name, property.Value);
-                                    }
+                                        if (isOpen)
+                                        {
+                                            ValidationUtils.ValidateOpenPropertyValue(property.Name, property.Value, this.MessageReaderSettings.UndeclaredPropertyBehaviorKinds);
+                                        }
 
-                                    duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-                                    properties.AddToSourceList(property);
+                                        duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+                                        properties.AddToSourceList(property);
+                                    }
                                 }
                             }
                             else
@@ -533,66 +532,6 @@ namespace Microsoft.Data.OData.Atom
                     }
                 }
                 while (this.XmlReader.NodeType != XmlNodeType.EndElement);
-            }
-        }
-
-        /// <summary>
-        /// Reads undeclared property in an element (primitive type value, or null value of complex type)
-        /// </summary>
-        /// <returns>The result ODataProperty.</returns>
-        private ODataProperty ReadUndeclarePropertyOrSkip()
-        {
-            ODataProperty property = new ODataProperty();
-            string propertyName = this.XmlReader.LocalName;
-            ValidationUtils.ValidatePropertyName(propertyName);
-            property.Name = propertyName;
-
-            // Read the attributes looking for m:type and m:null
-            string payloadTypeName;
-            bool isNull;
-            this.ReadNonEntityValueAttributes(out payloadTypeName, out isNull);
-
-            // only read primitive (Edm.) type values, ignore collection/complex values.
-            if ((string.IsNullOrEmpty(payloadTypeName) || payloadTypeName.StartsWith("Edm.", System.StringComparison.Ordinal)))
-            {
-                IEdmPrimitiveTypeReference targetTypeReference = null;
-                if (string.IsNullOrEmpty(payloadTypeName))
-                {
-                    targetTypeReference = EdmCoreModel.Instance.GetString(true);
-                }
-                else
-                {
-                    EdmTypeKind payloadTypeKind;
-                    IEdmType payloadType =
-                        MetadataUtils.ResolveTypeNameForRead(
-                            this.Model,
-                            null,
-                            payloadTypeName, // expectedType
-                            this.MessageReaderSettings.ReaderBehavior,
-                            this.Version,
-                            out payloadTypeKind);
-                    targetTypeReference = payloadType.ToTypeReference().AsPrimitive();
-                }
-
-                if (isNull)
-                {
-                    property.Value = this.ReadNullValue(targetTypeReference, /*validateNullValue*/ false, propertyName);
-                }
-                else
-                {
-                    property.Value = this.ReadPrimitiveValue(targetTypeReference);
-                }
-
-                // Read past the end tag of the property or the start tag if the element is empty.
-                this.XmlReader.Read();
-                this.XmlReader.AssertNotBuffering();
-
-                return property;
-            }
-            else
-            {
-                this.XmlReader.Skip();
-                return null;
             }
         }
 

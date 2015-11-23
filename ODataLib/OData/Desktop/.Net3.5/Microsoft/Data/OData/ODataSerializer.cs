@@ -166,7 +166,7 @@ namespace Microsoft.Data.OData
             WriterValidationUtils.ValidateAssociationLink(associationLink, this.Version, this.WritingResponse);
 
             // We don't need the returned IEdmProperty since it was already validated to be a navigation property.
-            WriterValidationUtils.ValidateNavigationPropertyDefined(associationLink.Name, entryEntityType);
+            WriterValidationUtils.ValidateNavigationPropertyDefined(associationLink.Name, entryEntityType, this.outputContext.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
         }
     }
 }

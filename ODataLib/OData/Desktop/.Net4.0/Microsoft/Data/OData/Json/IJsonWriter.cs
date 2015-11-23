@@ -168,6 +168,12 @@ namespace Microsoft.Data.OData.Json
         void WriteValue(string value);
 
         /// <summary>
+        /// Write a raw string value without any escaping or encoding.
+        /// </summary>
+        /// <param name="value">String value to be written.</param>
+        void WriteRawString(string value);
+
+        /// <summary>
         /// Clears all buffers for the current writer.
         /// </summary>
         void Flush();

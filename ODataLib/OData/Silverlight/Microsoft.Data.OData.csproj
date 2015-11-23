@@ -279,6 +279,8 @@
     <Compile Include="Microsoft\Data\OData\Atom\ODataAtomReaderNavigationLinkDescriptor.cs" />
     <Compile Include="Microsoft\Data\OData\CollectionWithoutExpectedTypeValidator.cs" />
     <Compile Include="Microsoft\Data\OData\BufferingReadStream.cs" />
+    <Compile Include="Microsoft\Data\OData\ODataJsonLightRawAnnotationSet.cs" />
+    <Compile Include="Microsoft\Data\OData\ODataUntypedValue.cs" />
     <Compile Include="Microsoft\Data\OData\Evaluation\IODataEntryMetadataContext.cs" />
     <Compile Include="Microsoft\Data\OData\Evaluation\NoOpEntityMetadataBuilder.cs" />
     <Compile Include="Microsoft\Data\OData\Evaluation\ODataEntryMetadataContext.cs" />

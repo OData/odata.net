@@ -27,6 +27,7 @@ namespace Microsoft.Data.OData.JsonLight
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
@@ -127,7 +128,7 @@ namespace Microsoft.Data.OData.JsonLight
         /// <remarks>This property is only available after the ReadPayloadStart was called.</remarks>
         internal ODataJsonLightMetadataUriParseResult MetadataUriParseResult
         {
-            get 
+            get
             {
                 DebugUtils.CheckNoExternalCallers();
 #if DEBUG
@@ -218,8 +219,8 @@ namespace Microsoft.Data.OData.JsonLight
             // Top-level error payloads don't need and use the metadata URI.
             if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error)
             {
-                parseResult = this.jsonLightInputContext.PayloadKindDetectionState == null 
-                    ? null 
+                parseResult = this.jsonLightInputContext.PayloadKindDetectionState == null
+                    ? null
                     : this.jsonLightInputContext.PayloadKindDetectionState.MetadataUriParseResult;
                 if (parseResult == null && metadataUriAnnotationValue != null)
                 {
@@ -352,9 +353,9 @@ namespace Microsoft.Data.OData.JsonLight
             DebugUtils.CheckNoExternalCallers();
             string stringValue = this.ReadAndValidateAnnotationStringValue(annotationName);
             return (long)ODataJsonLightReaderUtils.ConvertValue(
-                stringValue, 
+                stringValue,
                 EdmCoreModel.Instance.GetInt64(false),
-                this.MessageReaderSettings, 
+                this.MessageReaderSettings,
                 this.Version,
                 /*validateNullValue*/ true,
                 annotationName);
@@ -410,10 +411,10 @@ namespace Microsoft.Data.OData.JsonLight
             Debug.Assert(readPropertyAnnotationValue != null, "readPropertyAnnotationValue != null");
             Debug.Assert(handleProperty != null, "handleProperty != null");
             this.AssertJsonCondition(JsonNodeType.Property);
-            
+
             string propertyName;
             PropertyParsingResult propertyParsingResult = this.ParseProperty(duplicatePropertyNamesChecker, readPropertyAnnotationValue, out propertyName);
-            
+
             while (propertyParsingResult == PropertyParsingResult.CustomInstanceAnnotation && this.ShouldSkipCustomInstanceAnnotation(propertyName))
             {
                 // Make sure there's no duplicated instance annotation name even though we are skipping over it.
@@ -488,8 +489,9 @@ namespace Microsoft.Data.OData.JsonLight
         /// Note that when we add new odata annotations that cannot be skipped, we would bump the protocol version.
         /// </remarks>
         /// <param name="annotationName">The annotation name in question.</param>
+        /// <param name="skippedRawJson">Outputs the skipped raw json string.</param>
         /// <returns>Returns true if the annotation name and value is skipped; returns false otherwise.</returns>
-        private bool SkippedOverUnknownODataAnnotation(string annotationName)
+        private bool SkippedOverUnknownODataAnnotation(string annotationName, out string skippedRawJson)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             this.AssertJsonCondition(JsonNodeType.Property);
@@ -498,10 +500,13 @@ namespace Microsoft.Data.OData.JsonLight
             {
                 // Read over the name and value.
                 this.JsonReader.Read();
-                this.JsonReader.SkipValue();
+                StringBuilder builder = new StringBuilder();
+                this.JsonReader.SkipValue(builder);
+                skippedRawJson = builder.ToString();
                 return true;
             }
 
+            skippedRawJson = null;
             return false;
         }
 
@@ -555,12 +560,19 @@ namespace Microsoft.Data.OData.JsonLight
                     return PropertyParsingResult.PropertyWithoutValue;
                 }
 
+                duplicatePropertyNamesChecker.AnnotationCollector.ShouldCollectAnnotation =
+                    (this.MessageReaderSettings.UndeclaredPropertyBehaviorKinds
+                            == ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+                string skippedRawJson = null;
                 if (isPropertyAnnotation)
                 {
+                    duplicatePropertyNamesChecker.AnnotationCollector.TryPeekAndCollectAnnotationRawJson(
+                        this.JsonReader, propertyNameFromReader, annotationNameFromReader);
+
                     // If this is a unknown odata annotation targeting a property, we skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
                     // Note that we don't skip over unknown odata annotations targeting another annotation. We don't allow annotations (except odata.type) targeting other annotations,
                     // so this.ProcessPropertyAnnotation() will test and fail for that case.
-                    if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader) && this.SkippedOverUnknownODataAnnotation(annotationNameFromReader))
+                    if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader) && this.SkippedOverUnknownODataAnnotation(annotationNameFromReader, out skippedRawJson))
                     {
                         continue;
                     }
@@ -574,8 +586,13 @@ namespace Microsoft.Data.OData.JsonLight
                 }
 
                 // If this is a unknown odata annotation, skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
-                if (this.SkippedOverUnknownODataAnnotation(propertyNameFromReader))
+                if (this.SkippedOverUnknownODataAnnotation(propertyNameFromReader, out skippedRawJson))
                 {
+                    // collect 'odata.<unknown>' annotation:
+                    // here we know the original property name contains no '@', but '.' dot
+                    Debug.Assert(annotationNameFromReader == null, "annotationNameFromReader == null");
+                    duplicatePropertyNamesChecker.AnnotationCollector.TryAddPropertyAnnotationRawJson(
+                        "", propertyNameFromReader, skippedRawJson);
                     continue;
                 }
 
@@ -594,6 +611,12 @@ namespace Microsoft.Data.OData.JsonLight
                     // Normal property
                     return PropertyParsingResult.PropertyWithValue;
                 }
+
+                // collect 'xxx.yyyy' annotation:
+                // here we know the original property name contains no '@', but '.' dot
+                Debug.Assert(annotationNameFromReader == null, "annotationNameFromReader == null");
+                duplicatePropertyNamesChecker.AnnotationCollector.TryPeekAndCollectAnnotationRawJson(
+                    this.JsonReader, "", propertyNameFromReader); // propertyNameFromReader is the annotation name
 
                 // Handle 'odata.XXXXX' annotations
                 if (ODataJsonLightReaderUtils.IsODataAnnotationName(propertyNameFromReader))

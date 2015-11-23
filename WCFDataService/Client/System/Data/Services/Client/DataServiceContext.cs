@@ -54,6 +54,29 @@ namespace System.Data.Services.Client
     #endregion Namespaces
 
     /// <summary>
+    /// Indicates DataServiceContext's behavior on undeclared property in entity/complex value.
+    /// </summary>
+    public enum UndeclaredPropertyBehavior
+    {
+        /// <summary>
+        /// The default value, implies respecting DataServiceContext.IgnoreMissingProperties boolean.
+        /// Note: IgnoreMissingProperties==false is to throw exception on undeclared property in entity.
+        /// IgnoreMissingProperties==true is to read undeclared property in entity.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Sliently ignores undeclared property.
+        /// </summary>
+        Ignore = 1,
+
+        /// <summary>
+        /// Supports undeclared property.
+        /// </summary>
+        Support = 2,
+    }
+
+    /// <summary>
     /// The <see cref="T:System.Data.Services.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
@@ -113,6 +136,9 @@ namespace System.Data.Services.Client
 
         /// <summary>Options when deserializing properties to the target type.</summary>
         private bool ignoreMissingProperties;
+
+        /// <summary>Options on top of ignoreMissingProperties.</summary>
+        private UndeclaredPropertyBehavior undeclaredPropertyBehavior;
 
         /// <summary>Used to specify a value synchronization strategy.</summary>
         private MergeOption mergeOption;
@@ -284,7 +310,7 @@ namespace System.Data.Services.Client
         /// When calling BeginSaveChanges and not using SaveChangesOptions.Batch and SaveChangesOptions.BatchWithIndependentOperations,
         /// this event may be raised from a different thread.
         /// </remarks>
-        [Obsolete("SendingRequest2 has been deprecated in favor of SendingRequest2.")] 
+        [Obsolete("SendingRequest2 has been deprecated in favor of SendingRequest2.")]
         public event EventHandler<SendingRequestEventArgs> SendingRequest
         {
             add
@@ -298,7 +324,7 @@ namespace System.Data.Services.Client
                 {
                     throw new DataServiceClientException(ClientStrings.Context_SendingRequest_InvalidWhenUsingOnMessageCreating);
                 }
-                
+
                 this.Configurations.RequestPipeline.ContextUsingSendingRequest = true;
 
                 this.InnerSendingRequest += value;
@@ -570,6 +596,19 @@ namespace System.Data.Services.Client
         {
             get { return this.ignoreMissingProperties; }
             set { this.ignoreMissingProperties = value; }
+        }
+
+        /// <summary>Gets or sets whether to respect IgnoreMissingProperties boolean, or directly ignore/support undeclared properties.</summary>
+        /// <remarks>
+        /// This also affects responses during SaveChanges.
+        /// </remarks>
+#if WINDOWS_PHONE
+        [DataMember]
+#endif
+        public UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        {
+            get { return this.undeclaredPropertyBehavior; }
+            set { this.undeclaredPropertyBehavior = value; }
         }
 
         /// <summary>Gets or sets the XML namespace for data items, not metadata items, of an Atom payload.</summary>
@@ -1465,7 +1504,7 @@ namespace System.Data.Services.Client
         /// <param name="queries">The array of query requests to include in the batch request.</param>
         public IAsyncResult BeginExecuteBatch(AsyncCallback callback, object state, params DataServiceRequest[] queries)
         {
-            Util.CheckArgumentNotEmpty(queries, "queries");            
+            Util.CheckArgumentNotEmpty(queries, "queries");
             BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.Batch, callback, state);
             result.BatchBeginRequest();
             return result;
@@ -2706,7 +2745,7 @@ namespace System.Data.Services.Client
                 SaveChangesOptions.BatchWithIndependentOperations |
                 SaveChangesOptions.ReplaceOnUpdate |
                 SaveChangesOptions.PatchOnUpdate;
-          
+
             // Make sure no higher order bits are set.
             if ((options | All) != All)
             {

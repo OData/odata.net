@@ -188,7 +188,7 @@ namespace System.Data.Services
                 // Note that we defer the same test for the default atom stream till later when we know if the instance type is an MLE.
                 if (resultDescription.TargetKind == RequestTargetKind.MediaResource &&
                     resultDescription.IsNamedStream &&
-                    service.OperationContext.RequestMessage.HttpVerb.IsChange() &&                    
+                    service.OperationContext.RequestMessage.HttpVerb.IsChange() &&
                     service.OperationContext.RequestMessage.HttpVerb != HttpVerbs.PUT)
                 {
                     throw DataServiceException.CreateMethodNotAllowed(
@@ -684,7 +684,7 @@ namespace System.Data.Services
             {
                 return;
             }
-            
+
             int segmentIdxToSkipRightsCheck = -1;
             var lastSegment = segments.Last();
             Debug.Assert(lastSegment != null, "lastSegment != null");
@@ -718,9 +718,9 @@ namespace System.Data.Services
                 if (previous != null)
                 {
                     // for legacy reasons, the request expression for cross-referencing URI's is only modified for certain cases.
-                    if (isCrossReferencingUri 
-                        && (segment.TargetKind != RequestTargetKind.PrimitiveValue 
-                        && segment.TargetKind != RequestTargetKind.OpenPropertyValue 
+                    if (isCrossReferencingUri
+                        && (segment.TargetKind != RequestTargetKind.PrimitiveValue
+                        && segment.TargetKind != RequestTargetKind.OpenPropertyValue
                         && segment.TargetKind != RequestTargetKind.MediaResource))
                     {
                         continue;
@@ -1133,7 +1133,7 @@ namespace System.Data.Services
         {
             Debug.Assert(queryExpression != null, "queryExpression != null");
             Debug.Assert(key != null, "key != null");
-            
+
             List<KeyValuePair<string, object>> keyValues = key.Keys.ToList();
             Debug.Assert(keyValues.Count != 0, "keyValues.Count != 0");
             Debug.Assert(resourceType.KeyProperties.Count == keyValues.Count, "resourceType.KeyProperties.Count == keyValues.Count");
@@ -1150,9 +1150,9 @@ namespace System.Data.Services
                 }
                 else
                 {
-                    keyValue = keyValues.Single(v => v.Key == keyProperty.Name).Value;    
+                    keyValue = keyValues.Single(v => v.Key == keyProperty.Name).Value;
                 }
-                
+
                 var binaryValue = keyValue as byte[];
                 if (binaryValue != null && keyProperty.Type == typeof(System.Data.Linq.Binary))
                 {
@@ -1178,7 +1178,8 @@ namespace System.Data.Services
                 }
 
                 BinaryExpression body = Expression.Equal(e, Expression.Constant(keyValue));
-                LambdaExpression predicate = Expression.Lambda(body, parameter);
+                Type delegateType = GetDelegateTypeForLambdaExpression(body, parameter);
+                LambdaExpression predicate = Expression.Lambda(delegateType, body, parameter);
                 queryExpression = queryExpression.QueryableWhere(predicate);
             }
 
@@ -1228,6 +1229,60 @@ namespace System.Data.Services
             {
                 throw DataServiceException.CreateBadRequestError(Strings.RequestQueryProcessor_FormatNotApplicable);
             }
+        }
+
+        /// <summary>
+        /// Gets the delegate type for constructing a lambda expression, given a parameter
+        /// and the body for the lambda.
+        /// </summary>
+        /// <param name="body">Expression representing the body of the lambda.</param>
+        /// <param name="param">Parameter for the lambda.</param>
+        /// <returns>The delegate type for the lambda.</returns>
+        private static Type GetDelegateTypeForLambdaExpression(Expression body, ParameterExpression param)
+        {
+            Type[] types = GetTypeArgs(body, param);
+            Debug.Assert(types != null && types.Length > 0, "types != null && types.Length > 0");
+
+            Type result;
+            if (types[types.Length - 1] == typeof(void))
+            {
+                Type[] p = new Type[types.Length - 1];
+                Array.Copy(types, 0, p, 0, p.Length);
+                Expression.TryGetActionType(p, out result);
+            }
+            else
+            {
+                Expression.TryGetFuncType(types, out result);
+            }
+
+            // Can only used predefined delegates if we have no byref types and
+            // the arity is small enough to fit in Func<...> or Action<...>
+            // Otherwise, a custom delegate needs to be created.
+            if (result == null)
+            {
+                result = Expression.GetDelegateType(types);
+            }
+
+            Debug.Assert(result != null, "result != null");
+            return result;
+        }
+
+        /// <summary>
+        /// Get an array of types for a lambda delegate from parameter and body expressions.
+        /// </summary>
+        /// <param name="body">Expression representing the body of the lambda.</param>
+        /// <param name="param">Parameter for the lambda.</param>
+        /// <returns>Array of types for the lambda delegate.</returns>
+        private static Type[] GetTypeArgs(Expression body, ParameterExpression param)
+        {
+            Debug.Assert(body != null, "body != null");
+            Debug.Assert(param != null, "param != null");
+
+            Type[] typeArgs = new Type[2];
+            typeArgs[0] = param.IsByRef ? param.Type.MakeByRefType() : param.Type;
+            typeArgs[1] = body.Type;
+
+            return typeArgs;
         }
     }
 }

@@ -238,7 +238,7 @@ namespace Microsoft.Data.Edm.Csdl.Internal.CsdlSemantics
 
             List<CsdlSemanticsAnnotations> elementAnnotations;
             string fullName = EdmUtil.FullyQualifiedName(element);
-            
+
             if (fullName != null && this.outOfLineAnnotations.TryGetValue(fullName, out elementAnnotations))
             {
                 List<IEdmVocabularyAnnotation> result = new List<IEdmVocabularyAnnotation>();
@@ -451,22 +451,17 @@ namespace Microsoft.Data.Edm.Csdl.Internal.CsdlSemantics
 
         private IEdmVocabularyAnnotation WrapVocabularyAnnotation(CsdlVocabularyAnnotationBase annotation, CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, string qualifier)
         {
-            CsdlSemanticsVocabularyAnnotation result;
-
-            // Guarantee that multiple calls to wrap a given annotation all return the same object.
-            if (this.wrappedAnnotations.TryGetValue(annotation, out result))
-            {
-                return result;
-            }
-
-            CsdlValueAnnotation valueAnnotation = annotation as CsdlValueAnnotation;
-            result =
-                valueAnnotation != null
-                ? (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, valueAnnotation, qualifier)
-                : (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsTypeAnnotation(schema, targetContext, annotationsContext, (CsdlTypeAnnotation)annotation, qualifier);
-
-            this.wrappedAnnotations[annotation] = result;
-            return result;
+            return EdmUtil.DictionaryGetOrUpdate(
+                this.wrappedAnnotations,
+                annotation,
+                ann =>
+                {
+                    CsdlValueAnnotation valueAnnotation = ann as CsdlValueAnnotation;
+                    return
+                        valueAnnotation != null
+                        ? (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, valueAnnotation, qualifier)
+                        : (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsTypeAnnotation(schema, targetContext, annotationsContext, (CsdlTypeAnnotation)annotation, qualifier);
+                });
         }
 
         private void AddSchema(CsdlSchema schema)
@@ -554,4 +549,4 @@ namespace Microsoft.Data.Edm.Csdl.Internal.CsdlSemantics
         }
     }
 }
- 
+

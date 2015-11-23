@@ -150,7 +150,7 @@ namespace Microsoft.Data.OData.Atom
             bool lastSegment = epmInfo.PropertyValuePath.Length == sourceSegmentIndex + 1;
 
             IEdmStructuredType structuredType = structuredTypeReference.StructuredDefinition();
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, structuredType);
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, structuredType, this.atomOutputContext.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
             IEdmTypeReference propertyTypeReference = null;
             if (edmProperty != null)
             {

@@ -391,6 +391,16 @@ namespace Microsoft.Data.OData.Json
         }
 
         /// <summary>
+        /// Write a raw string value without any escaping or encoding.
+        /// </summary>
+        /// <param name="value">String value to be written.</param>
+        public void WriteRawString(string value)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            this.writer.Write(value);
+        }
+
+        /// <summary>
         /// Clears all buffers for the current writer.
         /// </summary>
         public void Flush()

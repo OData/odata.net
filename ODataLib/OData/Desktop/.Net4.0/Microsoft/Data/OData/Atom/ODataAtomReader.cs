@@ -453,12 +453,12 @@ namespace Microsoft.Data.OData.Atom
                 ODataAtomDeserializerExpandedNavigationLinkContent expandedNavigationLinkContent = this.atomEntryAndFeedDeserializer.ReadNavigationLinkContentBeforeExpansion();
                 if (expandedNavigationLinkContent != ODataAtomDeserializerExpandedNavigationLinkContent.None)
                 {
-                    if (navigationProperty == null && this.atomInputContext.Model.IsUserModel() &&
-                        this.atomInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties)
+                    if (navigationProperty == null && this.atomInputContext.Model.IsUserModel()
+                        && this.atomInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty))
                     {
                         // Undeclared navigation link with content which we should read anyway.
                         // If we are to ignore value properties, then skip the content and read the link only as deferred link, otherwise fail.
-                        if (this.atomInputContext.MessageReaderSettings.IgnoreUndeclaredValueProperties)
+                        if (this.atomInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty))
                         {
                             // The reader is positioned on some element inside the link (either </m:inline> or <entry> or <feed>)
                             // So we need to read until we find the end-element for the link and skip everything in between.
@@ -824,7 +824,7 @@ namespace Microsoft.Data.OData.Atom
                 "The navigation link doesn't match the navigation property.");
             Debug.Assert(
                 navigationLinkDescriptor.NavigationProperty != null || !this.atomInputContext.Model.IsUserModel() ||
-                this.atomInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                this.atomInputContext.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty),
                 "We don't support open navigation links yet, so either we must not have a model or the reading of undeclared nav. props needs to be allowed.");
             this.atomEntryAndFeedDeserializer.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(

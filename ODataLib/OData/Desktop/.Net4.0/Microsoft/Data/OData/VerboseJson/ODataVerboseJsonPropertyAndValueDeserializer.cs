@@ -591,11 +591,9 @@ namespace Microsoft.Data.OData.VerboseJson
                             edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(propertyName, complexValueTypeReference.ComplexDefinition(), this.MessageReaderSettings, out ignoreProperty);
                         }
 
-                        if (ignoreProperty
-                            && (this.JsonReader.NodeType == JsonNodeType.StartObject || this.JsonReader.NodeType == JsonNodeType.StartArray))
+                        if (ignoreProperty)
                         {
-                            // in case of ignoreProperty = true which means undeclared property,
-                            // we still read primitive values, only skip complex or collecction values.
+                            // in case of ignoreProperty = true which means to ignore undeclared property.
                             this.JsonReader.SkipValue();
                         }
                         else

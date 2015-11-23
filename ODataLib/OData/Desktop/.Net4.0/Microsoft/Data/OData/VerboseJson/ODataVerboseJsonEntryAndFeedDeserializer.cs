@@ -882,7 +882,7 @@ namespace Microsoft.Data.OData.VerboseJson
                 /*validateNullValue*/ true,
                 propertyName);
 
-            ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
+            ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue, this.MessageReaderSettings.UndeclaredPropertyBehaviorKinds);
             AddEntryProperty(entryState, propertyName, propertyValue);
 
             this.JsonReader.AssertNotBuffering();
@@ -954,7 +954,7 @@ namespace Microsoft.Data.OData.VerboseJson
             {
                 // Undeclared link properties (stream property or deferred links) are reported if the right flag is used, otherwise we need to fail
                 // reporting the undeclared property.
-                if (!this.MessageReaderSettings.ReportUndeclaredLinkProperties)
+                if (!this.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty))
                 {
                     throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
                 }
@@ -970,7 +970,7 @@ namespace Microsoft.Data.OData.VerboseJson
 
                 // Undeclared value properties (anything which doesn't look like stream property or deferred link) are ignored if the right flag is used,
                 // otherwise we need to fail reporting the undeclared property.
-                if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
+                if (!this.MessageReaderSettings.ContainUndeclaredPropertyBehavior(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty))
                 {
                     throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
                 }

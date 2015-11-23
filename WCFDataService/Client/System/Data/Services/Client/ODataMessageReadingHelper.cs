@@ -66,17 +66,14 @@ namespace System.Data.Services.Client
 
             settings.EnableWcfDataServicesClientBehavior(
                 resolveWireTypeName,
-                this.responseInfo.DataNamespace, 
-                UriUtil.UriToString(this.responseInfo.TypeScheme), 
+                this.responseInfo.DataNamespace,
+                UriUtil.UriToString(this.responseInfo.TypeScheme),
                 entryXmlCustomizer);
 
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
-            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
-            if (this.responseInfo.IgnoreMissingProperties)
-            {
-                settings.UndeclaredPropertyBehaviorKinds |= ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty;
-            }
+            settings.UndeclaredPropertyBehaviorKinds = this.responseInfo.UndeclaredPropertyBehaviorKinds
+                | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;
 
             CommonUtil.SetDefaultMessageQuotas(settings.MessageQuotas);
 

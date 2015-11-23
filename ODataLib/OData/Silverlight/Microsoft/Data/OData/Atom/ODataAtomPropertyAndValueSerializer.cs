@@ -571,7 +571,7 @@ namespace Microsoft.Data.OData.Atom
 
             WriterValidationUtils.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType, this.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
             
             if (value is ODataStreamReferenceValue)
@@ -597,7 +597,7 @@ namespace Microsoft.Data.OData.Atom
             bool isOpenPropertyType = owningType != null && owningType.IsOpen && propertyTypeReference == null;
             if (isOpenPropertyType)
             {
-                ValidationUtils.ValidateOpenPropertyValue(propertyName, value);
+                ValidationUtils.ValidateOpenPropertyValue(propertyName, value, this.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
             }
 
             if (complexValue != null)

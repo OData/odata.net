@@ -946,7 +946,8 @@ namespace System.Data.Services.Serializers
                     }
 
                     string queryStringItem = this.service.OperationContext.RequestMessage.GetQueryStringItem(parameter.Name);
-                    if (!string.IsNullOrEmpty(queryStringItem)) {
+                    if (!string.IsNullOrEmpty(queryStringItem)) 
+                    {
                         // Only append parameter when it was provided in the first place
                         queryParametersBuilder.Append(parameter.Name).Append('=');
                         string escapedQueryStringItem = DataStringEscapeBuilder.EscapeDataString(queryStringItem);

@@ -1117,8 +1117,11 @@ namespace Microsoft.Data.OData
                 ODataNavigationLink currentNavigationLink = (ODataNavigationLink)currentScope.Item;
                 this.InterceptException(() =>
                 {
-                    IEdmNavigationProperty navigationProperty =
-                        WriterValidationUtils.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind);
+                    IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(
+                        currentNavigationLink,
+                        this.ParentEntryEntityType,
+                        contentPayloadKind,
+                        this.outputContext.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
                     if (navigationProperty != null)
                     {
                         this.CurrentScope.EntityType = navigationProperty.ToEntityType();
@@ -1257,7 +1260,11 @@ namespace Microsoft.Data.OData
                     if (this.outputContext.WritingResponse)
                     {
                         IEdmEntityType currentEntityType = currentScope.EntityType;
-                        IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null);
+                        IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(
+                            navigationLink,
+                            currentEntityType,
+                            /*payloadKind*/null,
+                            this.outputContext.MessageWriterSettings.UndeclaredPropertyBehaviorKinds);
                         if (navigationProperty != null)
                         {
                             entityType = navigationProperty.ToEntityType();
