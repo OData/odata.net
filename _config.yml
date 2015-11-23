@@ -1,13 +1,15 @@
 # Site settings
-title: OData .NET Libraries
+title: ODataLib
 email: odatafeedback@microsoft.com
 description: > # this means to ignore newlines until "baseurl:"
-  This site contains samples covering basic and advanced OData scenarios for
-  OData Web API.
+  This site contains tutorials and samples covering basic and advanced OData scenarios.
 baseurl: "/odata.net" # the subpath of your site, e.g. /blog/
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 github_username:  odata
-
+license: > #
+  The materials available on this site are licensed
+  as set forth <a href="https://github.com/OData/odata.github.io/blob/master/License.txt">here</a>.
+  
 permalink: /:title/
 
 # Build settings
