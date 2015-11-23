@@ -577,6 +577,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextWriterWrapper.cs">
       <Link>Microsoft\OData\Core\Json\TextWriterWrapper.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataErrorDetail.cs">
+      <Link>Microsoft\OData\Core\ODataErrorDetail.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMediaType.cs">
       <Link>Microsoft\OData\Core\ODataMediaType.cs</Link>
     </Compile>

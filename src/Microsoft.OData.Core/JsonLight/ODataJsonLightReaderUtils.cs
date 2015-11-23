@@ -57,6 +57,12 @@ namespace Microsoft.OData.Core.JsonLight
 
             /// <summary>The "stacktrace" property of an inner error object.</summary>
             StackTrace = 128,
+
+            /// <summary>The "target" property.</summary>
+            Target = 256,
+
+            /// <summary>The "details" property.</summary>
+            Details = 512
         }
 
         /// <summary>

@@ -72,6 +72,10 @@ We keep uploading the daily nightly signed NuGet packages for ODataLib/EdmLib/Cl
 You can query the latest nightly NuGet packages using the following MAGIC OData query:
 https://www.myget.org/F/odlnightly/Packages?$select=Id,Version&$orderby=Version%20desc&$top=4&$format=application/json
 
+### Debug
+
+Please refer to the [How to debug](http://odata.github.io/WebApi/10-01-debug-webapi-source).
+
 ## Community
 ### Contribution
 Please refer to the [CONTRIBUTION.md](https://github.com/OData/odata.net/blob/master/CONTRIBUTION.md).
