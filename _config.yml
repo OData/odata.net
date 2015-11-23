@@ -6,11 +6,14 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "/odata.net" # the subpath of your site, e.g. /blog/
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 github_username:  odata
-license: > #
-  The materials available on this site are licensed
-  as set forth <a href="https://github.com/OData/odata.github.io/blob/master/License.txt">here</a>.
-  
+
 permalink: /:title/
+
+# Footer settings
+footer:
+  copyright: > #
+    The materials available on this site are licensed
+    as set forth <a href="https://github.com/OData/odata.github.io/blob/master/License.txt">here</a>.
 
 # Build settings
 kramdown:
