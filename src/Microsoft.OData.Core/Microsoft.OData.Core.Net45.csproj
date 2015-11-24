@@ -159,6 +159,7 @@
     <Compile Include="JsonLight\JsonFullMetadataTypeNameOracle.cs" />
     <Compile Include="JsonLight\JsonLightConstants.cs" />
     <Compile Include="JsonLight\JsonLightMetadataLevel.cs" />
+    <Compile Include="JsonLight\JsonLightODataAnnotationWriter.cs" />
     <Compile Include="JsonLight\JsonLightTypeNameOracle.cs" />
     <Compile Include="JsonLight\JsonMinimalMetadataLevel.cs" />
     <Compile Include="JsonLight\JsonMinimalMetadataTypeNameOracle.cs" />

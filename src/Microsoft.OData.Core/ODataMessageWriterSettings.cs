@@ -88,6 +88,7 @@ namespace Microsoft.OData.Core
             this.EnableAtom = false;
             this.EnableFullValidation = true;
             this.mediaTypeResolver = null;
+            this.ODataSimplified = false;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>
@@ -116,6 +117,7 @@ namespace Microsoft.OData.Core
             this.EnableAtom = other.EnableAtom;
             this.EnableFullValidation = other.EnableFullValidation;
             this.mediaTypeResolver = other.mediaTypeResolver;
+            this.ODataSimplified = other.ODataSimplified;
         }
 
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
@@ -228,6 +230,11 @@ namespace Microsoft.OData.Core
                 this.mediaTypeResolver = value;
             }
         }
+
+        /// <summary>
+        /// Whether OData Simplified is enabled.
+        /// </summary>
+        public bool ODataSimplified { get; set; }
 
         /// <summary>
         /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 

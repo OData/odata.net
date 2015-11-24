@@ -38,8 +38,20 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private readonly ODataJsonLightEntryAndFeedSerializer jsonLightEntryAndFeedSerializer;
 
-        /// <summary>Stack of writer scopes to keep track of the current context of the writer.</summary>
+        /// <summary>
+        /// Stack of writer scopes to keep track of the current context of the writer.
+        /// </summary>
         private readonly ScopeStack scopes = new ScopeStack();
+
+        /// <summary>
+        /// OData annotation writer.
+        /// </summary>
+        private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
+
+        /// <summary>
+        /// The underlying JSON writer.
+        /// </summary>
+        private readonly IJsonWriter jsonWriter;
 
         #endregion
 
@@ -72,6 +84,8 @@ namespace Microsoft.OData.Core.JsonLight
             ODataUri odataUri = this.jsonLightOutputContext.MessageWriterSettings.ODataUri.Clone();
 
             this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, entityType, this.jsonLightOutputContext.MessageWriterSettings.SelectedProperties, odataUri));
+            this.jsonWriter = jsonLightOutputContext.JsonWriter;
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified);
         }
 
         #endregion
@@ -884,8 +898,8 @@ namespace Microsoft.OData.Core.JsonLight
             long? count = feed.Count;
             if (count.HasValue)
             {
-                this.jsonLightOutputContext.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataCount);
-                this.jsonLightOutputContext.JsonWriter.WriteValue(count.Value);
+                this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataCount);
+                this.jsonWriter.WriteValue(count.Value);
             }
         }
 
@@ -901,8 +915,8 @@ namespace Microsoft.OData.Core.JsonLight
             Uri nextPageLink = feed.NextPageLink;
             if (nextPageLink != null && !this.CurrentDeltaFeedScope.NextPageLinkWritten)
             {
-                this.jsonLightOutputContext.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNextLink);
-                this.jsonLightOutputContext.JsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(nextPageLink));
+                this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNextLink);
+                this.jsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(nextPageLink));
                 this.CurrentDeltaFeedScope.NextPageLinkWritten = true;
             }
         }
@@ -919,8 +933,8 @@ namespace Microsoft.OData.Core.JsonLight
             Uri deltaLink = feed.DeltaLink;
             if (deltaLink != null && !this.CurrentDeltaFeedScope.DeltaLinkWritten)
             {
-                this.jsonLightOutputContext.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataDeltaLink);
-                this.jsonLightOutputContext.JsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(deltaLink));
+                this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataDeltaLink);
+                this.jsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(deltaLink));
                 this.CurrentDeltaFeedScope.DeltaLinkWritten = true;
             }
         }
@@ -951,8 +965,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private void WriteDeltaFeedValueStart()
         {
-            this.jsonLightOutputContext.JsonWriter.WriteValuePropertyName();
-            this.jsonLightOutputContext.JsonWriter.StartArrayScope();
+            this.jsonWriter.WriteValuePropertyName();
+            this.jsonWriter.StartArrayScope();
         }
 
         #endregion
@@ -967,8 +981,8 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(entry != null, "entry != null");
 
-            this.jsonLightOutputContext.JsonWriter.WriteName(JsonLightConstants.ODataIdPropertyName);
-            this.jsonLightOutputContext.JsonWriter.WriteValue(entry.Id);
+            this.jsonWriter.WriteName(JsonLightConstants.ODataIdPropertyName);
+            this.jsonWriter.WriteValue(entry.Id);
         }
 
         /// <summary>
@@ -984,15 +998,15 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
-            this.jsonLightOutputContext.JsonWriter.WriteName(JsonLightConstants.ODataReasonPropertyName);
+            this.jsonWriter.WriteName(JsonLightConstants.ODataReasonPropertyName);
 
             switch (entry.Reason.Value)
             {
                 case DeltaDeletedEntryReason.Deleted:
-                    this.jsonLightOutputContext.JsonWriter.WriteValue(JsonLightConstants.ODataReasonDeletedValue);
+                    this.jsonWriter.WriteValue(JsonLightConstants.ODataReasonDeletedValue);
                     break;
                 case DeltaDeletedEntryReason.Changed:
-                    this.jsonLightOutputContext.JsonWriter.WriteValue(JsonLightConstants.ODataReasonChangedValue);
+                    this.jsonWriter.WriteValue(JsonLightConstants.ODataReasonChangedValue);
                     break;
                 default:
                     Debug.Assert(false, "Unknown reason.");
@@ -1080,8 +1094,8 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
 
-            this.jsonLightOutputContext.JsonWriter.WriteName(JsonLightConstants.ODataSourcePropertyName);
-            this.jsonLightOutputContext.JsonWriter.WriteValue(UriUtils.UriToString(link.Source));
+            this.jsonWriter.WriteName(JsonLightConstants.ODataSourcePropertyName);
+            this.jsonWriter.WriteValue(UriUtils.UriToString(link.Source));
         }
 
         /// <summary>
@@ -1093,8 +1107,8 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
 
-            this.jsonLightOutputContext.JsonWriter.WriteName(JsonLightConstants.ODataRelationshipPropertyName);
-            this.jsonLightOutputContext.JsonWriter.WriteValue(link.Relationship);
+            this.jsonWriter.WriteName(JsonLightConstants.ODataRelationshipPropertyName);
+            this.jsonWriter.WriteValue(link.Relationship);
         }
 
         /// <summary>
@@ -1106,8 +1120,8 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
 
-            this.jsonLightOutputContext.JsonWriter.WriteName(JsonLightConstants.ODataTargetPropertyName);
-            this.jsonLightOutputContext.JsonWriter.WriteValue(UriUtils.UriToString(link.Target));
+            this.jsonWriter.WriteName(JsonLightConstants.ODataTargetPropertyName);
+            this.jsonWriter.WriteValue(UriUtils.UriToString(link.Target));
         }
 
         #endregion
@@ -1123,7 +1137,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(feed != null, "feed != null");
             Debug.Assert(this.IsTopLevel, "Delta feed must be on top level.");
 
-            this.jsonLightOutputContext.JsonWriter.StartObjectScope();
+            this.jsonWriter.StartObjectScope();
 
             this.WriteDeltaFeedContextUri();
             this.WriteDeltaFeedCount(feed);
@@ -1142,7 +1156,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(!this.IsTopLevel, "Delta entry cannot be on top level.");
 
-            this.jsonLightOutputContext.JsonWriter.StartObjectScope();
+            this.jsonWriter.StartObjectScope();
 
             this.WriteDeltaEntryContextUri(ODataDeltaKind.Entry);
             this.WriteDeltaEntryStartMetadata();
@@ -1159,7 +1173,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(!this.IsTopLevel, "Delta entry cannot be on top level.");
 
-            this.jsonLightOutputContext.JsonWriter.StartObjectScope();
+            this.jsonWriter.StartObjectScope();
 
             this.WriteDeltaEntryContextUri(ODataDeltaKind.DeletedEntry);
             this.WriteDeltaEntryId(entry);
@@ -1175,7 +1189,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
 
-            this.jsonLightOutputContext.JsonWriter.StartObjectScope();
+            this.jsonWriter.StartObjectScope();
 
             if (link is ODataDeltaLink)
             {
@@ -1204,7 +1218,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(feed != null, "feed != null");
 
             // End the array which holds the entries in the feed.
-            this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+            this.jsonWriter.EndArrayScope();
 
             // Write custom instance annotations
             this.jsonLightEntryAndFeedSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(feed.InstanceAnnotations, this.CurrentDeltaFeedScope.InstanceAnnotationWriteTracker);
@@ -1216,7 +1230,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteDeltaFeedDeltaLink(feed);
 
             // Close the object wrapper.
-            this.jsonLightOutputContext.JsonWriter.EndObjectScope();
+            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
@@ -1232,7 +1246,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Close the object scope
-            this.jsonLightOutputContext.JsonWriter.EndObjectScope();
+            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
@@ -1240,7 +1254,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private void EndDeltaLink()
         {
-            this.jsonLightOutputContext.JsonWriter.EndObjectScope();
+            this.jsonWriter.EndObjectScope();
         }
 
         #endregion

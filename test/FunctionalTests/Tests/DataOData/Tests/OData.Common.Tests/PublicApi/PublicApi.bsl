@@ -4779,6 +4779,7 @@ public sealed class Microsoft.OData.Core.ODataMessageWriterSettings : Microsoft.
 	bool EnableFullValidation  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	string JsonPCallback  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
+	bool ODataSimplified  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	Microsoft.OData.Core.ODataUri ODataUri  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }

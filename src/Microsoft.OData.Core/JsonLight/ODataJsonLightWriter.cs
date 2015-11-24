@@ -36,8 +36,20 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private readonly ODataJsonLightEntryAndFeedSerializer jsonLightEntryAndFeedSerializer;
 
-        /// <summary>True if the writer was created for writing a parameter; false otherwise.</summary>
+        /// <summary>
+        /// True if the writer was created for writing a parameter; false otherwise.
+        /// </summary>
         private readonly bool writingParameter;
+
+        /// <summary>
+        /// The underlying JSON writer.
+        /// </summary>
+        private readonly IJsonWriter jsonWriter;
+
+        /// <summary>
+        /// OData annotation writer.
+        /// </summary>
+        private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
 
         /// <summary>
         /// Constructor.
@@ -63,6 +75,8 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightEntryAndFeedSerializer = new ODataJsonLightEntryAndFeedSerializer(this.jsonLightOutputContext);
 
             this.writingParameter = writingParameter;
+            this.jsonWriter = this.jsonLightOutputContext.JsonWriter;
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified);
         }
 
         /// <summary>
@@ -194,7 +208,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (parentNavLink != null)
             {
                 // Write the property name of an expanded navigation property to start the value. 
-                this.jsonLightOutputContext.JsonWriter.WriteName(parentNavLink.Name);
+                this.jsonWriter.WriteName(parentNavLink.Name);
             }
 
             if (entry == null)
@@ -204,12 +218,12 @@ namespace Microsoft.OData.Core.JsonLight
                         "when entry == null, it has to be and expanded single entry navigation");
 
                 // this is a null expanded single entry and it is null, so write a JSON null as value.
-                this.jsonLightOutputContext.JsonWriter.WriteValue((string)null);
+                this.jsonWriter.WriteValue((string)null);
                 return;
             }
 
             // Write just the object start, nothing else, since we might not have complete information yet
-            this.jsonLightOutputContext.JsonWriter.StartObjectScope();
+            this.jsonWriter.StartObjectScope();
 
             JsonLightEntryScope entryScope = this.CurrentEntryScope;
 
@@ -268,7 +282,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightEntryAndFeedSerializer.WriteEntryEndMetadataProperties(entryScope, entryScope.DuplicatePropertyNamesChecker);
 
             // Close the object scope
-            this.jsonLightOutputContext.JsonWriter.EndObjectScope();
+            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
@@ -279,17 +293,16 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(feed != null, "feed != null");
 
-            IJsonWriter jsonWriter = this.jsonLightOutputContext.JsonWriter;
             if (this.ParentNavigationLink == null && this.writingParameter)
             {
                 // Start array which will hold the entries in the feed.
-                jsonWriter.StartArrayScope();
+                this.jsonWriter.StartArrayScope();
             }
             else if (this.ParentNavigationLink == null)
             {
                 // Top-level feed.
                 // "{"
-                jsonWriter.StartObjectScope();
+                this.jsonWriter.StartObjectScope();
 
                 // @odata.context
                 this.jsonLightEntryAndFeedSerializer.WriteFeedContextUri(this.CurrentFeedScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
@@ -324,10 +337,10 @@ namespace Microsoft.OData.Core.JsonLight
                 this.jsonLightEntryAndFeedSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(feed.InstanceAnnotations, this.CurrentFeedScope.InstanceAnnotationWriteTracker);
 
                 // "value":
-                jsonWriter.WriteValuePropertyName();
+                this.jsonWriter.WriteValuePropertyName();
 
                 // Start array which will hold the entries in the feed.
-                jsonWriter.StartArrayScope();
+                this.jsonWriter.StartArrayScope();
             }
             else
             {
@@ -349,10 +362,10 @@ namespace Microsoft.OData.Core.JsonLight
                     this.WriteFeedNextLink(feed, propertyName);
 
                     // And then write the property name to start the value. 
-                    jsonWriter.WriteName(propertyName);
+                    this.jsonWriter.WriteName(propertyName);
 
                     // Start array which will hold the entries in the feed.
-                    jsonWriter.StartArrayScope();
+                    this.jsonWriter.StartArrayScope();
                 }
                 else
                 {
@@ -362,14 +375,14 @@ namespace Microsoft.OData.Core.JsonLight
                         // Close the entity reference link array (if written)
                         if (navigationLinkScope.EntityReferenceLinkWritten)
                         {
-                            jsonWriter.EndArrayScope();
+                            this.jsonWriter.EndArrayScope();
                         }
 
                         // And then write the property name to start the value. 
-                        jsonWriter.WriteName(propertyName);
+                        this.jsonWriter.WriteName(propertyName);
 
                         // Start array which will hold the entries in the feed.
-                        jsonWriter.StartArrayScope();
+                        this.jsonWriter.StartArrayScope();
 
                         navigationLinkScope.FeedWritten = true;
                     }
@@ -388,12 +401,12 @@ namespace Microsoft.OData.Core.JsonLight
             if (this.ParentNavigationLink == null && this.writingParameter)
             {
                 // End the array which holds the entries in the feed.
-                this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+                this.jsonWriter.EndArrayScope();
             }
             else if (this.ParentNavigationLink == null)
             {
                 // End the array which holds the entries in the feed.
-                this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+                this.jsonWriter.EndArrayScope();
 
                 // Write custom instance annotations
                 this.jsonLightEntryAndFeedSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(feed.InstanceAnnotations, this.CurrentFeedScope.InstanceAnnotationWriteTracker);
@@ -408,7 +421,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
 
                 // Close the object wrapper.
-                this.jsonLightOutputContext.JsonWriter.EndObjectScope();
+                this.jsonWriter.EndObjectScope();
             }
             else
             {
@@ -426,7 +439,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // NOTE: in requests we will only write the EndArray of a feed 
                     //       when we hit the navigation link end since a navigation link
                     //       can contain multiple feeds that get collapesed into a single array value.
-                    this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+                    this.jsonWriter.EndArrayScope();
 
                     // Write the next link if it's available.
                     this.WriteFeedNextLink(feed, propertyName);
@@ -495,7 +508,7 @@ namespace Microsoft.OData.Core.JsonLight
                 // feed afterwards, we have to now close the array of links.
                 if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.FeedWritten && navigationLink.IsCollection.Value)
                 {
-                    this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+                    this.jsonWriter.EndArrayScope();
                 }
 
                 // In requests, the navigation link may have multiple entries in multiple feeds in it; if we 
@@ -503,7 +516,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (navigationLinkScope.FeedWritten)
                 {
                     Debug.Assert(navigationLink.IsCollection.Value, "navigationLink.IsCollection.Value");
-                    this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+                    this.jsonWriter.EndArrayScope();
                 }
             }
         }
@@ -531,18 +544,18 @@ namespace Microsoft.OData.Core.JsonLight
             if (!navigationLinkScope.EntityReferenceLinkWritten)
             {
                 // Write the property annotation for the entity reference link(s)
-                this.jsonLightOutputContext.JsonWriter.WritePropertyAnnotationName(parentNavigationLink.Name, ODataAnnotationNames.ODataBind);
+                this.odataAnnotationWriter.WritePropertyAnnotationName(parentNavigationLink.Name, ODataAnnotationNames.ODataBind);
                 Debug.Assert(parentNavigationLink.IsCollection.HasValue, "parentNavigationLink.IsCollection.HasValue");
                 if (parentNavigationLink.IsCollection.Value)
                 {
-                    this.jsonLightOutputContext.JsonWriter.StartArrayScope();
+                    this.jsonWriter.StartArrayScope();
                 }
 
                 navigationLinkScope.EntityReferenceLinkWritten = true;
             }
 
             Debug.Assert(entityReferenceLink.Url != null, "The entity reference link Url should have been validated by now.");
-            this.jsonLightOutputContext.JsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(entityReferenceLink.Url));
+            this.jsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(entityReferenceLink.Url));
         }
 
         /// <summary>
@@ -639,14 +652,14 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (propertyName == null)
                 {
-                    this.jsonLightOutputContext.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataCount);
+                    this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataCount);
                 }
                 else
                 {
-                    this.jsonLightOutputContext.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataCount);
+                    this.odataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataCount);
                 }
 
-                this.jsonLightOutputContext.JsonWriter.WriteValue(count.Value);
+                this.jsonWriter.WriteValue(count.Value);
             }
         }
 
@@ -665,14 +678,14 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (propertyName == null)
                 {
-                    this.jsonLightOutputContext.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNextLink);
+                    this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNextLink);
                 }
                 else
                 {
-                    this.jsonLightOutputContext.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataNextLink);
+                    this.odataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataNextLink);
                 }
 
-                this.jsonLightOutputContext.JsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(nextPageLink));
+                this.jsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(nextPageLink));
                 this.CurrentFeedScope.NextPageLinkWritten = true;
             }
         }
@@ -689,8 +702,8 @@ namespace Microsoft.OData.Core.JsonLight
             Uri deltaLink = feed.DeltaLink;
             if (deltaLink != null && !this.CurrentFeedScope.DeltaLinkWritten)
             {
-                this.jsonLightOutputContext.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataDeltaLink);
-                this.jsonLightOutputContext.JsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(deltaLink));
+                this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataDeltaLink);
+                this.jsonWriter.WriteValue(this.jsonLightEntryAndFeedSerializer.UriToString(deltaLink));
                 this.CurrentFeedScope.DeltaLinkWritten = true;
             }
         }
