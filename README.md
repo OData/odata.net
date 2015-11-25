@@ -1,6 +1,6 @@
 # OData .NET Libraries
 ## Introduction
-The OData .NET Libraries (or OData.NET, for short) project includes the implementation of the OData protocol on the .NET platform. It is a fully open sourced project maintained by the OData team of Microsoft.
+The [OData .NET Libraries](http://odata.github.io/odata.net) (or OData.NET, for short) project includes the implementation of the OData protocol on the .NET platform. It is a fully open sourced project maintained by the OData team of Microsoft.
 
 OData stands for the Open Data Protocol. It was initiated by Microsoft and is now an OASIS standard. OData enables the creation and consumption of REST APIs, which allow resources, identified using URLs and defined in a data model, to be published and edited by Web clients using simple HTTP messages.
 
@@ -10,7 +10,7 @@ For more information about OData, please refer to the following resources:
  - [OASIS Open Data Protocol (OData) Technical Committee](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata)
 
 ## Project structure
-The project currently has three branches: master, ODATAV3, and WCFDSV4. 
+The project currently has a few branches: master, gh-pages, ODATAV3, and WCFDSV4. 
 
 ### Master branch
 The master branch includes the .NET libraries for OData V4 only that are now most actively iterated and maintained by the OData team. It has the following libraries: 
@@ -27,6 +27,9 @@ The master branch includes the .NET libraries for OData V4 only that are now mos
 For these libraries, we accept bug reports, feature requirements and pull requests. The corresponding fixes and implementations will be included into every new release.
 
 The release of the component binaries is carried out monthly through [Nuget](http://www.nuget.org/).
+
+### gh-pages
+The [gh-pages](https://github.com/OData/odata.net/tree/gh-pages) branch contains documentation source for OData v4 Lib - tutorials, guides, etc.  The documention source is in Markdown format.
 
 ### ODATAV3 (maintenance mode)
 
@@ -71,6 +74,9 @@ We keep uploading the daily nightly signed NuGet packages for ODataLib/EdmLib/Cl
 
 You can query the latest nightly NuGet packages using the following MAGIC OData query:
 https://www.myget.org/F/odlnightly/Packages?$select=Id,Version&$orderby=Version%20desc&$top=4&$format=application/json
+
+### Documentation
+Please visit the [ODataLib pages](http://odata.github.io/odata.net).
 
 ### Debug
 
