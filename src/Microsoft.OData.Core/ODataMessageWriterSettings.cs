@@ -85,10 +85,7 @@ namespace Microsoft.OData.Core
         {
             // Create the default writer behavior
             this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
-            this.EnableAtom = false;
             this.EnableFullValidation = true;
-            this.mediaTypeResolver = null;
-            this.ODataSimplified = false;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>

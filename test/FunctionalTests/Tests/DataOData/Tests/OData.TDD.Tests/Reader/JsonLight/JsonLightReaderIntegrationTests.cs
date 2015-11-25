@@ -7,18 +7,13 @@
 namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Text;
-    using System.Xml;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.TDD.Tests.Common;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -49,13 +44,38 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             Model = TestUtils.WrapReferencedModelsToMainModel("Namespace", "Container", tmp);
         }
 
+        #region ShouldBeAbleToReadEntryWithIdOnly
+
+        private void ShouldBeAbleToReadEntryWithIdOnlyImplementation(string payload, bool odataSimplified)
+        {
+            var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: odataSimplified);
+            actual.Id.Should().Be("http://www.example.com/defaultService.svc/entryId");
+        }
+
         [TestMethod]
         public void ShouldBeAbleToReadEntryWithIdOnly()
         {
             const string payload = "{" + ContextUrl + ",\"@odata.id\":\"entryId\"}";
-            var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
-            actual.Id.Should().Be("http://www.example.com/defaultService.svc/entryId");
+            ShouldBeAbleToReadEntryWithIdOnlyImplementation(payload, false);
         }
+
+        [TestMethod]
+        public void ShouldBeAbleToReadEntryWithSimplifiedIdOnlyODataSimplified()
+        {
+            // cover "@id"
+            const string payload = "{" + ContextUrl + ",\"@id\":\"entryId\"}";
+            ShouldBeAbleToReadEntryWithIdOnlyImplementation(payload, true);
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToReadEntryWithFullIdOnlyODataSimplified()
+        {
+            // cover "@odata.id"
+            const string payload = "{" + ContextUrl + ",\"@odata.id\":\"entryId\"}";
+            ShouldBeAbleToReadEntryWithIdOnlyImplementation(payload, true);
+        }
+
+        #endregion
 
         [TestMethod]
         public void ShouldBeAbleToReadTransientEntryInFullMetadataLevel()
@@ -73,16 +93,45 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             actual.IsTransient.Should().BeTrue();
         }
 
+        #region LinkReadingRequestShouldBeTheSameForJsonEntry
+
+        private void LinkReadingRequestShouldBeTheSameForJsonEntryImplementation(string payload, bool odataSimplified)
+        {
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false, odataSimplified: odataSimplified);
+            actual.Id.Should().Be(CreateUri("entryId"));
+            actual.EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit"));
+        }
+
         [TestMethod]
         public void LinkReadingRequestShouldBeTheSameForJsonEntry()
         {
             const string payload = "{" + ContextUrl + ", " +
                 "\"@odata.editLink\": \"http://www.example.com/defaultService.svc/edit\", " +
                 "\"@odata.id\":\"entryId\"}";
-            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false);
-            actual.Id.Should().Be(CreateUri("entryId"));
-            actual.EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit"));
+            LinkReadingRequestShouldBeTheSameForJsonEntryImplementation(payload, false);
         }
+
+        [TestMethod]
+        public void LinkReadingRequestShouldBeTheSameForJsonEntrySimplifiedEditLinkODataSimplified()
+        {
+            // cover "@editLink"
+            const string payload = "{" + ContextUrl + ", " +
+                "\"@editLink\": \"http://www.example.com/defaultService.svc/edit\", " +
+                "\"@id\":\"entryId\"}";
+            LinkReadingRequestShouldBeTheSameForJsonEntryImplementation(payload, true);
+        }
+
+        [TestMethod]
+        public void LinkReadingRequestShouldBeTheSameForJsonEntryFullEditLinkODataSimplified()
+        {
+            // cover "@odata.editLink"
+            const string payload = "{" + ContextUrl + ", " +
+                "\"@odata.editLink\": \"http://www.example.com/defaultService.svc/edit\", " +
+                "\"@odata.id\":\"entryId\"}";
+            LinkReadingRequestShouldBeTheSameForJsonEntryImplementation(payload, true);
+        }
+
+        #endregion
 
         [TestMethod]
         public void LinkReadingResponseShouldBeReadAsAbsoluteForJsonEntry()
@@ -102,6 +151,32 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 "\"@odata.readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@odata.id\":\"entryId\"}";
             var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
+            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
+            actual.EditLink.Should().BeNull();
+            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+        }
+
+        [TestMethod]
+        public void EditLinkShouldBeNullIfItsReadonlyEntrySimplifiedReadLinkODataSimplified()
+        {
+            // cover "@readLink"
+            const string payload = "{" + ContextUrl + ", " +
+                "\"@readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
+                "\"@id\":\"entryId\"}";
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: true);
+            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
+            actual.EditLink.Should().BeNull();
+            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+        }
+
+        [TestMethod]
+        public void EditLinkShouldBeNullIfItsReadonlyEntryFullReadLinkODataSimplified()
+        {
+            // cover "@odata.readLink"
+            const string payload = "{" + ContextUrl + ", " +
+                "\"@odata.readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
+                "\"@odata.id\":\"entryId\"}";
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: true);
             actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
             actual.EditLink.Should().BeNull();
             actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
@@ -179,7 +254,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
         }
 
-        private ODataEntry ReadJsonLightEntry(string payload, string contentType, bool readingResponse)
+        private ODataEntry ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false)
         {
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", contentType);
@@ -187,9 +262,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
 
             ODataEntry topLevelEntry = null;
 
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
+
             using (var messageReader = readingResponse
-                ? new ODataMessageReader((IODataResponseMessage)message, null, Model)
-                : new ODataMessageReader((IODataRequestMessage)message, null, Model))
+                ? new ODataMessageReader((IODataResponseMessage)message, settings, Model)
+                : new ODataMessageReader((IODataRequestMessage)message, settings, Model))
             {
                 var reader = messageReader.CreateODataEntryReader(EntitySet, EntityType);
                 while (reader.Read())

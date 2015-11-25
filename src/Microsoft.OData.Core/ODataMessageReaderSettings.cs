@@ -42,10 +42,7 @@ namespace Microsoft.OData.Core
             this.readerBehavior = ODataReaderBehavior.DefaultBehavior;
 
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
-            this.EnableAtom = false;
             this.EnableFullValidation = true;
-            this.UseKeyAsSegment = null;
-            this.mediaTypeResolver = null;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class.</summary>
@@ -67,6 +64,7 @@ namespace Microsoft.OData.Core
             this.EnableFullValidation = other.EnableFullValidation;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.mediaTypeResolver = other.mediaTypeResolver;
+            this.ODataSimplified = other.ODataSimplified;
         }
 
         /// <summary>
@@ -263,6 +261,15 @@ namespace Microsoft.OData.Core
                 ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
                 this.mediaTypeResolver = value;
             }
+        }
+
+        /// <summary>
+        /// Whether OData Simplified is enabled.
+        /// </summary>
+        public bool ODataSimplified
+        {
+            get;
+            set;
         }
 
         /// <summary>
