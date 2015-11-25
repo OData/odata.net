@@ -1,0 +1,2062 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PerformanceServices.Edm.AdventureWorks" Alias="Self" xmlns:annotation="http://docs.oasis-open.org/odata/ns/edm/annotation" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:m2="http://docs.oasis-open.org/odata/ns/dataservices/metadata">
+  <EntityContainer Name="AdventureWorksEdmContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Person" EntityType="PerformanceServices.Edm.AdventureWorks.Person" />
+    <EntitySet Name="AWBuildVersion" EntityType="PerformanceServices.Edm.AdventureWorks.AWBuildVersion" />
+    <EntitySet Name="DatabaseLog" EntityType="PerformanceServices.Edm.AdventureWorks.DatabaseLog" />
+    <EntitySet Name="ErrorLog" EntityType="PerformanceServices.Edm.AdventureWorks.ErrorLog" />
+    <EntitySet Name="Department" EntityType="PerformanceServices.Edm.AdventureWorks.Department" >
+      <NavigationPropertyBinding Path="EmployeeDepartmentHistory" Target="EmployeeDepartmentHistory" />
+    </EntitySet>
+    <EntitySet Name="Employee" EntityType="PerformanceServices.Edm.AdventureWorks.Employee" >
+      <NavigationPropertyBinding Path="Employee1" Target="Employee" />
+      <NavigationPropertyBinding Path="Employee2" Target="Employee" />
+      <NavigationPropertyBinding Path="EmployeeAddress" Target="EmployeeAddress" />
+      <NavigationPropertyBinding Path="EmployeeDepartmentHistory" Target="EmployeeDepartmentHistory" />
+      <NavigationPropertyBinding Path="EmployeePayHistory" Target="EmployeePayHistory" />
+      <NavigationPropertyBinding Path="JobCandidate" Target="JobCandidate" />
+      <NavigationPropertyBinding Path="PurchaseOrderHeader" Target="PurchaseOrderHeader" />
+      <NavigationPropertyBinding Path="SalesPerson" Target="SalesPerson" />
+    </EntitySet>
+    <EntitySet Name="EmployeeAddress" EntityType="PerformanceServices.Edm.AdventureWorks.EmployeeAddress" >
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+      <NavigationPropertyBinding Path="Address" Target="Address" />
+    </EntitySet>
+    <EntitySet Name="EmployeeDepartmentHistory" EntityType="PerformanceServices.Edm.AdventureWorks.EmployeeDepartmentHistory" >
+      <NavigationPropertyBinding Path="Department" Target="Department" />
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+      <NavigationPropertyBinding Path="EmployeeAddress" Target="EmployeeAddress" />
+    </EntitySet>
+    <EntitySet Name="EmployeePayHistory" EntityType="PerformanceServices.Edm.AdventureWorks.EmployeePayHistory" >
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+    </EntitySet>
+    <EntitySet Name="JobCandidate" EntityType="PerformanceServices.Edm.AdventureWorks.JobCandidate" >
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+    </EntitySet>
+    <EntitySet Name="Shift" EntityType="PerformanceServices.Edm.AdventureWorks.Shift" >
+      <NavigationPropertyBinding Path="EmployeeDepartmentHistory" Target="EmployeeDepartmentHistory" />
+    </EntitySet>
+    <EntitySet Name="Address" EntityType="PerformanceServices.Edm.AdventureWorks.Address" >
+      <NavigationPropertyBinding Path="EmployeeAddress" Target="EmployeeAddress" />
+      <NavigationPropertyBinding Path="StateProvince" Target="StateProvince" />
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader" />
+      <NavigationPropertyBinding Path="VendorAddress" Target="VendorAddress" />
+    </EntitySet>
+    <EntitySet Name="AddressType" EntityType="PerformanceServices.Edm.AdventureWorks.AddressType" >
+      <NavigationPropertyBinding Path="CustomerAddress" Target="CustomerAddress" />
+      <NavigationPropertyBinding Path="VendorAddress" Target="VendorAddress" />
+    </EntitySet>
+    <EntitySet Name="Contact" EntityType="PerformanceServices.Edm.AdventureWorks.Contact" >
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+      <NavigationPropertyBinding Path="ContactCreditCard" Target="ContactCreditCard" />
+      <NavigationPropertyBinding Path="Individual" Target="Individual" />
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader" />
+      <NavigationPropertyBinding Path="StoreContact" Target="StoreContact" />
+      <NavigationPropertyBinding Path="VendorContact" Target="VendorContact" />
+    </EntitySet>
+    <EntitySet Name="ContactType" EntityType="PerformanceServices.Edm.AdventureWorks.ContactType" >
+      <NavigationPropertyBinding Path="StoreContact" Target="StoreContact"	/>
+      <NavigationPropertyBinding Path="VendorContact" Target="VendorContact"	/>
+    </EntitySet>
+    <EntitySet Name="CountryRegion" EntityType="PerformanceServices.Edm.AdventureWorks.CountryRegion" >
+      <NavigationPropertyBinding Path="CountryRegionCurrency" Target="CountryRegionCurrency"	/>
+      <NavigationPropertyBinding Path="StateProvince" Target="StateProvince"	/>
+    </EntitySet>
+    <EntitySet Name="StateProvince" EntityType="PerformanceServices.Edm.AdventureWorks.StateProvince" >
+      <NavigationPropertyBinding Path="CountryRegion" Target="CountryRegion"	/>
+      <NavigationPropertyBinding Path="SalesTaxRate" Target="SalesTaxRate"	/>
+      <NavigationPropertyBinding Path="SalesTerritory" Target="SalesTerritory"	/>
+    </EntitySet>
+    <EntitySet Name="BillOfMaterials" EntityType="PerformanceServices.Edm.AdventureWorks.BillOfMaterials" >
+      <NavigationPropertyBinding Path="Product" Target="Product" />
+      <NavigationPropertyBinding Path="Product1" Target="Product" />
+      <NavigationPropertyBinding Path="UnitMeasure" Target="UnitMeasure"/>
+    </EntitySet>
+    <EntitySet Name="Culture" EntityType="PerformanceServices.Edm.AdventureWorks.Culture" >
+      <NavigationPropertyBinding Path="ProductModelProductDescriptionCulture" Target="ProductModelProductDescriptionCulture"	/>
+    </EntitySet>
+    <EntitySet Name="Document" EntityType="PerformanceServices.Edm.AdventureWorks.Document" >
+      <NavigationPropertyBinding Path="ProductDocument" Target="ProductDocument"	/>
+    </EntitySet>
+    <EntitySet Name="Illustration" EntityType="PerformanceServices.Edm.AdventureWorks.Illustration" >
+      <NavigationPropertyBinding Path="ProductModelIllustration" Target="ProductModelIllustration"	/>
+    </EntitySet>
+    <EntitySet Name="Location" EntityType="PerformanceServices.Edm.AdventureWorks.Location" >
+      <NavigationPropertyBinding Path="ProductInventory" Target="ProductInventory"	/>
+      <NavigationPropertyBinding Path="WorkOrderRouting" Target="WorkOrderRouting"	/>
+    </EntitySet>
+    <EntitySet Name="Product" EntityType="PerformanceServices.Edm.AdventureWorks.Product" >
+      <NavigationPropertyBinding Path="BillOfMaterials" Target="BillOfMaterials"	/>
+      <NavigationPropertyBinding Path="BillOfMaterials1" Target="BillOfMaterials"	/>
+      <NavigationPropertyBinding Path="ProductModel" Target="ProductModel"	/>
+      <NavigationPropertyBinding Path="ProductSubcategory" Target="ProductSubcategory"	/>
+      <NavigationPropertyBinding Path="UnitMeasure" Target="UnitMeasure"	/>
+      <NavigationPropertyBinding Path="UnitMeasure1" Target="UnitMeasure"	/>
+      <NavigationPropertyBinding Path="ProductCostHistory" Target="ProductCostHistory"	/>
+      <NavigationPropertyBinding Path="ProductDocument" Target="ProductDocument"	/>
+      <NavigationPropertyBinding Path="ProductInventory" Target="ProductInventory"	/>
+      <NavigationPropertyBinding Path="ProductListPriceHistory" Target="ProductListPriceHistory"	/>
+      <NavigationPropertyBinding Path="ProductProductPhoto" Target="ProductProductPhoto"	/>
+      <NavigationPropertyBinding Path="ProductReview" Target="ProductReview"	/>
+      <NavigationPropertyBinding Path="ProductVendor" Target="ProductVendor"	/>
+      <NavigationPropertyBinding Path="PurchaseOrderDetail" Target="PurchaseOrderDetail"	/>
+      <NavigationPropertyBinding Path="ShoppingCartItem" Target="ShoppingCartItem"	/>
+      <NavigationPropertyBinding Path="SpecialOfferProduct" Target="SpecialOfferProduct"	/>
+      <NavigationPropertyBinding Path="TransactionHistory" Target="TransactionHistory"	/>
+      <NavigationPropertyBinding Path="WorkOrder" Target="WorkOrder"	/>
+    </EntitySet>
+    <EntitySet Name="ProductCategory" EntityType="PerformanceServices.Edm.AdventureWorks.ProductCategory" >
+      <NavigationPropertyBinding Path="ProductSubcategory" Target="ProductSubcategory"	/>
+    </EntitySet>
+    <EntitySet Name="ProductCostHistory" EntityType="PerformanceServices.Edm.AdventureWorks.ProductCostHistory" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="ProductDescription" EntityType="PerformanceServices.Edm.AdventureWorks.ProductDescription" >
+      <NavigationPropertyBinding Path="ProductModelProductDescriptionCulture" Target="ProductModelProductDescriptionCulture"	/>
+    </EntitySet>
+    <EntitySet Name="ProductDocument" EntityType="PerformanceServices.Edm.AdventureWorks.ProductDocument" >
+      <NavigationPropertyBinding Path="Document" Target="Document"	/>
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="ProductInventory" EntityType="PerformanceServices.Edm.AdventureWorks.ProductInventory" >
+      <NavigationPropertyBinding Path="Location" Target="Location"	/>
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="ProductListPriceHistory" EntityType="PerformanceServices.Edm.AdventureWorks.ProductListPriceHistory" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="ProductModel" EntityType="PerformanceServices.Edm.AdventureWorks.ProductModel" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="ProductModelIllustration" Target="ProductModelIllustration"	/>
+      <NavigationPropertyBinding Path="ProductModelProductDescriptionCulture" Target="ProductModelProductDescriptionCulture"	/>
+    </EntitySet>
+    <EntitySet Name="ProductModelIllustration" EntityType="PerformanceServices.Edm.AdventureWorks.ProductModelIllustration" >
+      <NavigationPropertyBinding Path="Illustration" Target="Illustration"	/>
+      <NavigationPropertyBinding Path="ProductModel" Target="ProductModel"	/>
+    </EntitySet>
+    <EntitySet Name="ProductModelProductDescriptionCulture" EntityType="PerformanceServices.Edm.AdventureWorks.ProductModelProductDescriptionCulture" >
+      <NavigationPropertyBinding Path="Culture" Target="Culture"	/>
+      <NavigationPropertyBinding Path="ProductDescription" Target="ProductDescription"	/>
+      <NavigationPropertyBinding Path="ProductModel" Target="ProductModel"	/>
+    </EntitySet>
+    <EntitySet Name="ProductPhoto" EntityType="PerformanceServices.Edm.AdventureWorks.ProductPhoto" >
+      <NavigationPropertyBinding Path="ProductProductPhoto" Target="ProductProductPhoto"	/>
+    </EntitySet>
+    <EntitySet Name="ProductProductPhoto" EntityType="PerformanceServices.Edm.AdventureWorks.ProductProductPhoto" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="ProductPhoto" Target="ProductPhoto"	/>
+    </EntitySet>
+    <EntitySet Name="ProductReview" EntityType="PerformanceServices.Edm.AdventureWorks.ProductReview" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="ProductSubcategory" EntityType="PerformanceServices.Edm.AdventureWorks.ProductSubcategory" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="ProductCategory" Target="ProductCategory"	/>
+    </EntitySet>
+    <EntitySet Name="ScrapReason" EntityType="PerformanceServices.Edm.AdventureWorks.ScrapReason" >
+      <NavigationPropertyBinding Path="WorkOrder" Target="WorkOrder"	/>
+    </EntitySet>
+    <EntitySet Name="TransactionHistory" EntityType="PerformanceServices.Edm.AdventureWorks.TransactionHistory" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="TransactionHistoryArchive" EntityType="PerformanceServices.Edm.AdventureWorks.TransactionHistoryArchive" />
+    <EntitySet Name="UnitMeasure" EntityType="PerformanceServices.Edm.AdventureWorks.UnitMeasure" >
+      <NavigationPropertyBinding Path="BillOfMaterials" Target="BillOfMaterials"	/>
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="Product1" Target="Product"	/>
+      <NavigationPropertyBinding Path="ProductVendor" Target="ProductVendor"	/>
+    </EntitySet>
+    <EntitySet Name="WorkOrder" EntityType="PerformanceServices.Edm.AdventureWorks.WorkOrder" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="ScrapReason" Target="ScrapReason"	/>
+      <NavigationPropertyBinding Path="WorkOrderRouting" Target="WorkOrderRouting"	/>
+    </EntitySet>
+    <EntitySet Name="WorkOrderRouting" EntityType="PerformanceServices.Edm.AdventureWorks.WorkOrderRouting" >
+      <NavigationPropertyBinding Path="Location" Target="Location"	/>
+      <NavigationPropertyBinding Path="WorkOrder" Target="WorkOrder"	/>
+    </EntitySet>
+    <EntitySet Name="ProductVendor" EntityType="PerformanceServices.Edm.AdventureWorks.ProductVendor" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="UnitMeasure" Target="UnitMeasure"	/>
+      <NavigationPropertyBinding Path="Vendor" Target="Vendor"	/>
+    </EntitySet>
+    <EntitySet Name="PurchaseOrderDetail" EntityType="PerformanceServices.Edm.AdventureWorks.PurchaseOrderDetail" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="PurchaseOrderHeader" Target="PurchaseOrderHeader"	/>
+    </EntitySet>
+    <EntitySet Name="PurchaseOrderHeader" EntityType="PerformanceServices.Edm.AdventureWorks.PurchaseOrderHeader" >
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+      <NavigationPropertyBinding Path="PurchaseOrderDetail" Target="PurchaseOrderDetail"	/>
+      <NavigationPropertyBinding Path="ShipMethod" Target="ShipMethod"	/>
+      <NavigationPropertyBinding Path="Vendor" Target="Vendor"	/>
+    </EntitySet>
+    <EntitySet Name="ShipMethod" EntityType="PerformanceServices.Edm.AdventureWorks.ShipMethod" >
+      <NavigationPropertyBinding Path="PurchaseOrderHeader" Target="PurchaseOrderHeader"	/>
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+    </EntitySet>
+    <EntitySet Name="Vendor" EntityType="PerformanceServices.Edm.AdventureWorks.Vendor" >
+      <NavigationPropertyBinding Path="ProductVendor" Target="ProductVendor"	/>
+      <NavigationPropertyBinding Path="PurchaseOrderHeader" Target="PurchaseOrderHeader"	/>
+      <NavigationPropertyBinding Path="VendorAddress" Target="VendorAddress"	/>
+      <NavigationPropertyBinding Path="VendorContact" Target="VendorContact"	/>
+    </EntitySet>
+    <EntitySet Name="VendorAddress" EntityType="PerformanceServices.Edm.AdventureWorks.VendorAddress" >
+      <NavigationPropertyBinding Path="Address" Target="Address" />
+      <NavigationPropertyBinding Path="AddressType" Target="AddressType" />
+      <NavigationPropertyBinding Path="Vendor" Target="Vendor"	/>
+    </EntitySet>
+    <EntitySet Name="VendorContact" EntityType="PerformanceServices.Edm.AdventureWorks.VendorContact" >
+      <NavigationPropertyBinding Path="Contact" Target="Contact"	/>
+      <NavigationPropertyBinding Path="ContactType" Target="ContactType"	/>
+      <NavigationPropertyBinding Path="Vendor" Target="Vendor"	/>
+    </EntitySet>
+    <EntitySet Name="ContactCreditCard" EntityType="PerformanceServices.Edm.AdventureWorks.ContactCreditCard" >
+      <NavigationPropertyBinding Path="Contact" Target="Contact" />
+    </EntitySet>
+    <EntitySet Name="CountryRegionCurrency" EntityType="PerformanceServices.Edm.AdventureWorks.CountryRegionCurrency" >
+      <NavigationPropertyBinding Path="CountryRegion" Target="CountryRegion"	/>
+      <NavigationPropertyBinding Path="Currency" Target="Currency"	/>
+    </EntitySet>
+    <EntitySet Name="CreditCard" EntityType="PerformanceServices.Edm.AdventureWorks.CreditCard" >
+      <NavigationPropertyBinding Path="ContactCreditCard" Target="ContactCreditCard"	/>
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+    </EntitySet>
+    <EntitySet Name="Currency" EntityType="PerformanceServices.Edm.AdventureWorks.Currency" >
+      <NavigationPropertyBinding Path="CountryRegionCurrency" Target="CountryRegionCurrency"	/>
+      <NavigationPropertyBinding Path="CurrencyRate" Target="CurrencyRate"	/>
+      <NavigationPropertyBinding Path="CurrencyRate" Target="CurrencyRate"	/>
+    </EntitySet>
+    <EntitySet Name="CurrencyRate" EntityType="PerformanceServices.Edm.AdventureWorks.CurrencyRate" >
+      <NavigationPropertyBinding Path="Currency" Target="Currency"	/>
+      <NavigationPropertyBinding Path="Currency" Target="Currency"	/>
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+    </EntitySet>
+    <EntitySet Name="Customer" EntityType="PerformanceServices.Edm.AdventureWorks.Customer" >
+      <NavigationPropertyBinding Path="SalesTerritory" Target="SalesTerritory"	/>
+      <NavigationPropertyBinding Path="CustomerAddress" Target="CustomerAddress"	/>
+      <NavigationPropertyBinding Path="Individual" Target="Individual"	/>
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+      <NavigationPropertyBinding Path="Store" Target="Store"	/>
+    </EntitySet>
+    <EntitySet Name="CustomerAddress" EntityType="PerformanceServices.Edm.AdventureWorks.CustomerAddress" >
+      <NavigationPropertyBinding Path="Address" Target="Address" />
+      <NavigationPropertyBinding Path="AddressType" Target="AddressType" />
+      <NavigationPropertyBinding Path="Customer" Target="Customer"	/>
+    </EntitySet>
+    <EntitySet Name="Individual" EntityType="PerformanceServices.Edm.AdventureWorks.Individual" >
+      <NavigationPropertyBinding Path="Contact" Target="Contact" />
+      <NavigationPropertyBinding Path="Customer" Target="Customer" />
+    </EntitySet>
+    <EntitySet Name="SalesOrderDetail" EntityType="PerformanceServices.Edm.AdventureWorks.SalesOrderDetail" >
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+      <NavigationPropertyBinding Path="SpecialOfferProduct" Target="SpecialOfferProduct"	/>
+    </EntitySet>
+    <EntitySet Name="SalesOrderHeader" EntityType="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" >
+      <NavigationPropertyBinding Path="Address" Target="Address" />
+      <NavigationPropertyBinding Path="AddressType" Target="AddressType" />
+      <NavigationPropertyBinding Path="Contact" Target="Contact" />
+      <NavigationPropertyBinding Path="ShipMethod" Target="ShipMethod" />
+      <NavigationPropertyBinding Path="CreditCard" Target="CreditCard" />
+      <NavigationPropertyBinding Path="CurrencyRate" Target="CurrencyRate" />
+      <NavigationPropertyBinding Path="Customer" Target="Customer" />
+      <NavigationPropertyBinding Path="SalesOrderDetail" Target="SalesOrderDetail" />
+      <NavigationPropertyBinding Path="SalesPerson" Target="SalesPerson" />
+      <NavigationPropertyBinding Path="SalesTerritory" Target="SalesTerritory" />
+      <NavigationPropertyBinding Path="SalesOrderHeaderSalesReason" Target="SalesOrderHeaderSalesReason" />
+    </EntitySet>
+    <EntitySet Name="SalesOrderHeaderSalesReason" EntityType="PerformanceServices.Edm.AdventureWorks.SalesOrderHeaderSalesReason" >
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+      <NavigationPropertyBinding Path="SalesReason" Target="SalesReason"	/>
+    </EntitySet>
+    <EntitySet Name="SalesPerson" EntityType="PerformanceServices.Edm.AdventureWorks.SalesPerson" >
+      <NavigationPropertyBinding Path="Employee" Target="Employee" />
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+      <NavigationPropertyBinding Path="SalesTerritory" Target="SalesTerritory"	/>
+      <NavigationPropertyBinding Path="SalesPersonQuotaHistory" Target="SalesPersonQuotaHistory"	/>
+      <NavigationPropertyBinding Path="SalesTerritoryHistory" Target="SalesTerritoryHistory"	/>
+      <NavigationPropertyBinding Path="Store" Target="Store"	/>
+    </EntitySet>
+    <EntitySet Name="SalesPersonQuotaHistory" EntityType="PerformanceServices.Edm.AdventureWorks.SalesPersonQuotaHistory" >
+      <NavigationPropertyBinding Path="SalesPerson" Target="SalesPerson"	/>
+    </EntitySet>
+    <EntitySet Name="SalesReason" EntityType="PerformanceServices.Edm.AdventureWorks.SalesReason" >
+      <NavigationPropertyBinding Path="SalesOrderHeaderSalesReason" Target="SalesOrderHeaderSalesReason"	/>
+    </EntitySet>
+    <EntitySet Name="SalesTaxRate" EntityType="PerformanceServices.Edm.AdventureWorks.SalesTaxRate" >
+      <NavigationPropertyBinding Path="StateProvince" Target="StateProvince"	/>
+    </EntitySet>
+    <EntitySet Name="SalesTerritory" EntityType="PerformanceServices.Edm.AdventureWorks.SalesTerritory" >
+      <NavigationPropertyBinding Path="StateProvince" Target="StateProvince"	/>
+      <NavigationPropertyBinding Path="Customer" Target="Customer"	/>
+      <NavigationPropertyBinding Path="SalesOrderHeader" Target="SalesOrderHeader"	/>
+      <NavigationPropertyBinding Path="SalesPerson" Target="SalesPerson"	/>
+      <NavigationPropertyBinding Path="SalesTerritoryHistory" Target="SalesTerritoryHistory"	/>
+    </EntitySet>
+    <EntitySet Name="SalesTerritoryHistory" EntityType="PerformanceServices.Edm.AdventureWorks.SalesTerritoryHistory" >
+      <NavigationPropertyBinding Path="SalesPerson" Target="SalesPerson"	/>
+      <NavigationPropertyBinding Path="SalesTerritory" Target="SalesTerritory"	/>
+    </EntitySet>
+    <EntitySet Name="ShoppingCartItem" EntityType="PerformanceServices.Edm.AdventureWorks.ShoppingCartItem" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+    </EntitySet>
+    <EntitySet Name="SpecialOffer" EntityType="PerformanceServices.Edm.AdventureWorks.SpecialOffer" >
+      <NavigationPropertyBinding Path="SpecialOfferProduct" Target="SpecialOfferProduct"	/>
+    </EntitySet>
+    <EntitySet Name="SpecialOfferProduct" EntityType="PerformanceServices.Edm.AdventureWorks.SpecialOfferProduct" >
+      <NavigationPropertyBinding Path="Product" Target="Product"	/>
+      <NavigationPropertyBinding Path="SalesOrderDetail" Target="SalesOrderDetail"	/>
+      <NavigationPropertyBinding Path="SpecialOffer" Target="SpecialOffer"	/>
+    </EntitySet>
+    <EntitySet Name="Store" EntityType="PerformanceServices.Edm.AdventureWorks.Store" >
+      <NavigationPropertyBinding Path="Customer" Target="Customer"	/>
+      <NavigationPropertyBinding Path="SalesPerson" Target="SalesPerson"	/>
+      <NavigationPropertyBinding Path="StoreContact" Target="StoreContact"	/>
+    </EntitySet>
+    <EntitySet Name="StoreContact" EntityType="PerformanceServices.Edm.AdventureWorks.StoreContact" >
+      <NavigationPropertyBinding Path="Store" Target="Store" />
+      <NavigationPropertyBinding Path="Contact" Target="Contact" />
+      <NavigationPropertyBinding Path="ContactType" Target="ContactType" />
+    </EntitySet>
+    <EntitySet Name="vEmployee" EntityType="PerformanceServices.Edm.AdventureWorks.vEmployee" />
+    <EntitySet Name="vEmployeeDepartment" EntityType="PerformanceServices.Edm.AdventureWorks.vEmployeeDepartment" />
+    <EntitySet Name="vEmployeeDepartmentHistory" EntityType="PerformanceServices.Edm.AdventureWorks.vEmployeeDepartmentHistory" />
+    <EntitySet Name="vJobCandidate" EntityType="PerformanceServices.Edm.AdventureWorks.vJobCandidate" />
+    <EntitySet Name="vJobCandidateEducation" EntityType="PerformanceServices.Edm.AdventureWorks.vJobCandidateEducation" />
+    <EntitySet Name="vJobCandidateEmployment" EntityType="PerformanceServices.Edm.AdventureWorks.vJobCandidateEmployment" />
+    <EntitySet Name="vAdditionalContactInfo" EntityType="PerformanceServices.Edm.AdventureWorks.vAdditionalContactInfo" />
+    <EntitySet Name="vStateProvinceCountryRegion" EntityType="PerformanceServices.Edm.AdventureWorks.vStateProvinceCountryRegion" />
+    <EntitySet Name="vProductAndDescription" EntityType="PerformanceServices.Edm.AdventureWorks.vProductAndDescription" />
+    <EntitySet Name="vProductModelCatalogDescription" EntityType="PerformanceServices.Edm.AdventureWorks.vProductModelCatalogDescription" />
+    <EntitySet Name="vProductModelInstructions" EntityType="PerformanceServices.Edm.AdventureWorks.vProductModelInstructions" />
+    <EntitySet Name="vVendor" EntityType="PerformanceServices.Edm.AdventureWorks.vVendor" />
+    <EntitySet Name="vIndividualCustomer" EntityType="PerformanceServices.Edm.AdventureWorks.vIndividualCustomer" />
+    <EntitySet Name="vIndividualDemographics" EntityType="PerformanceServices.Edm.AdventureWorks.vIndividualDemographics" />
+    <EntitySet Name="vSalesPerson" EntityType="PerformanceServices.Edm.AdventureWorks.vSalesPerson" />
+    <EntitySet Name="vSalesPersonSalesByFiscalYears" EntityType="PerformanceServices.Edm.AdventureWorks.vSalesPersonSalesByFiscalYears" />
+    <EntitySet Name="vStoreWithDemographics" EntityType="PerformanceServices.Edm.AdventureWorks.vStoreWithDemographics" />
+    <EntitySet Name="PropertyTest" EntityType="PerformanceServices.Edm.AdventureWorks.PropertyTestType" />
+  </EntityContainer>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="true" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Worker" BaseType="PerformanceServices.Edm.AdventureWorks.Person">
+    <Property Name="Employer" Type="String" Nullable="true" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="AWBuildVersion">
+    <Key>
+      <PropertyRef Name="SystemInformationID" />
+    </Key>
+    <Property Name="SystemInformationID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Database_Version" Type="String" Nullable="false" MaxLength="25" Unicode="true"   />
+    <Property Name="VersionDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DatabaseLog">
+    <Key>
+      <PropertyRef Name="DatabaseLogID" />
+    </Key>
+    <Property Name="DatabaseLogID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PostTime" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="DatabaseUser" Type="String" Nullable="false" MaxLength="128" Unicode="true"   />
+    <Property Name="Event" Type="String" Nullable="false" MaxLength="128" Unicode="true"   />
+    <Property Name="Schema" Type="String" MaxLength="128" Unicode="true"   />
+    <Property Name="Object" Type="String" MaxLength="128" Unicode="true"   />
+    <Property Name="TSQL" Type="String" Nullable="false" MaxLength="Max" Unicode="true"   />
+    <Property Name="XmlEvent" Type="String" Nullable="false" MaxLength="Max" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="ErrorLog">
+    <Key>
+      <PropertyRef Name="ErrorLogID" />
+    </Key>
+    <Property Name="ErrorLogID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ErrorTime" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="128" Unicode="true"   />
+    <Property Name="ErrorNumber" Type="Int32" Nullable="false" />
+    <Property Name="ErrorSeverity" Type="Int32" />
+    <Property Name="ErrorState" Type="Int32" />
+    <Property Name="ErrorProcedure" Type="String" MaxLength="126" Unicode="true"   />
+    <Property Name="ErrorLine" Type="Int32" />
+    <Property Name="ErrorMessage" Type="String" Nullable="false" MaxLength="4000" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="DepartmentID" />
+    </Key>
+    <Property Name="DepartmentID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="EmployeeDepartmentHistory" Partner="Department" Type="PerformanceServices.Edm.AdventureWorks.EmployeeDepartmentHistory" />
+  </EntityType>
+  <EntityType Name="Employee" m2:HasStream="true">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NationalIDNumber" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="ContactID" Type="Int32" Nullable="false" />
+    <Property Name="LoginID" Type="String" Nullable="false" MaxLength="256" Unicode="true"   />
+    <Property Name="ManagerID" Type="Int32" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="BirthDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="MaritalStatus" Type="String" Nullable="false" MaxLength="1" Unicode="true"   />
+    <Property Name="Gender" Type="String" Nullable="false" MaxLength="1" Unicode="true"   />
+    <Property Name="HireDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="SalariedFlag" Type="Boolean" Nullable="false" />
+    <Property Name="VacationHours" Type="Int16" Nullable="false" />
+    <Property Name="SickLeaveHours" Type="Int16" Nullable="false" />
+    <Property Name="CurrentFlag" Type="Boolean" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Contact" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.Contact">
+      <ReferentialConstraint Property="ContactID" ReferencedProperty="ContactID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Employee1" Partner="Employee2" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+    <NavigationProperty Name="Employee2" Partner="Employee1" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+    <NavigationProperty Name="EmployeeAddress" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.EmployeeAddress" />
+    <NavigationProperty Name="EmployeeDepartmentHistory" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.EmployeeDepartmentHistory" />
+    <NavigationProperty Name="EmployeePayHistory" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.EmployeePayHistory" />
+    <NavigationProperty Name="JobCandidate" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.JobCandidate" />
+    <NavigationProperty Name="PurchaseOrderHeader" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.PurchaseOrderHeader" />
+    <NavigationProperty Name="SalesPerson" Partner="Employee" Type="PerformanceServices.Edm.AdventureWorks.SalesPerson" />
+  </EntityType>
+  <EntityType Name="EmployeeAddress">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="AddressID" Type="Int32" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="SpatialDetails" Type="PerformanceServices.Edm.AdventureWorks.AddressSpatial" Nullable="false" />
+    <NavigationProperty Name="Employee" Partner="EmployeeAddress" Type="PerformanceServices.Edm.AdventureWorks.Employee" >
+      <ReferentialConstraint Property="EmployeeID" ReferencedProperty="EmployeeID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Address" Partner="EmployeeAddress" Type="PerformanceServices.Edm.AdventureWorks.Address" />
+  </EntityType>
+  <EntityType Name="EmployeeDepartmentHistory">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+      <PropertyRef Name="DepartmentID" />
+      <PropertyRef Name="ShiftID" />
+      <PropertyRef Name="StartDate" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="DepartmentID" Type="Int16" Nullable="false" />
+    <Property Name="ShiftID" Type="Byte" Nullable="false" />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Department" Partner="EmployeeDepartmentHistory" Type="PerformanceServices.Edm.AdventureWorks.Department" >
+      <ReferentialConstraint Property="DepartmentID" ReferencedProperty="DepartmentID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Employee" Partner="EmployeeDepartmentHistory" Type="PerformanceServices.Edm.AdventureWorks.Employee" >
+      <ReferentialConstraint Property="EmployeeID" ReferencedProperty="EmployeeID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Shift" Partner="EmployeeDepartmentHistory" Type="PerformanceServices.Edm.AdventureWorks.Shift" >
+      <ReferentialConstraint Property="ShiftID" ReferencedProperty="ShiftID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="EmployeePayHistory">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+      <PropertyRef Name="RateChangeDate" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="RateChangeDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="PayFrequency" Type="Byte" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Employee" Partner="EmployeePayHistory" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+  </EntityType>
+  <EntityType Name="JobCandidate">
+    <Key>
+      <PropertyRef Name="JobCandidateID" />
+    </Key>
+    <Property Name="JobCandidateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeID" Type="Int32" />
+    <Property Name="Resume" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Employee" Partner="JobCandidate" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+  </EntityType>
+  <EntityType Name="Shift">
+    <Key>
+      <PropertyRef Name="ShiftID" />
+    </Key>
+    <Property Name="ShiftID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="StartTime" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndTime" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="EmployeeDepartmentHistory" Partner="Shift" Type="PerformanceServices.Edm.AdventureWorks.EmployeeDepartmentHistory" />
+  </EntityType>
+  <EntityType Name="Address">
+    <Key>
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="AddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="60" Unicode="true"   />
+    <Property Name="AddressLine2" Type="String" MaxLength="60" Unicode="true"   />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="30" Unicode="true"   />
+    <Property Name="StateProvinceID" Type="Int32" Nullable="false" />
+    <Property Name="PostalCode" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="EmployeeAddress" Partner="Address" Type="PerformanceServices.Edm.AdventureWorks.EmployeeAddress" />
+    <NavigationProperty Name="StateProvince" Partner="Address" Type="PerformanceServices.Edm.AdventureWorks.StateProvince" >
+      <ReferentialConstraint Property="StateProvinceID"  ReferencedProperty="StateProvinceID" />
+    </NavigationProperty>
+    <NavigationProperty Name="CustomerAddress" Partner="Address" Type="PerformanceServices.Edm.AdventureWorks.CustomerAddress" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="Address" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+    <NavigationProperty Name="SalesOrderHeader1" Partner="Address" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+    <NavigationProperty Name="VendorAddress" Partner="Address" Type="PerformanceServices.Edm.AdventureWorks.VendorAddress" />
+  </EntityType>
+  <EntityType Name="AddressType">
+    <Key>
+      <PropertyRef Name="AddressTypeID" />
+    </Key>
+    <Property Name="AddressTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="CustomerAddress" Partner="AddressType" Type="PerformanceServices.Edm.AdventureWorks.CustomerAddress" />
+    <NavigationProperty Name="VendorAddress" Partner="AddressType" Type="PerformanceServices.Edm.AdventureWorks.VendorAddress" />
+  </EntityType>
+  <EntityType Name="Contact">
+    <Key>
+      <PropertyRef Name="ContactID" />
+    </Key>
+    <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NameStyle" Type="Boolean" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="EmailPromotion" Type="Int32" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="128" Unicode="false"   />
+    <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="10" Unicode="false"   />
+    <Property Name="AdditionalContactInfo" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Employee" Partner="Contact" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+    <NavigationProperty Name="ContactCreditCard" Partner="Contact" Type="PerformanceServices.Edm.AdventureWorks.ContactCreditCard" />
+    <NavigationProperty Name="Individual" Partner="Contact" Type="PerformanceServices.Edm.AdventureWorks.Individual" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="Contact" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+    <NavigationProperty Name="StoreContact" Partner="Contact" Type="PerformanceServices.Edm.AdventureWorks.StoreContact" />
+    <NavigationProperty Name="VendorContact" Partner="Contact" Type="PerformanceServices.Edm.AdventureWorks.VendorContact" />
+  </EntityType>
+  <EntityType Name="ContactType">
+    <Key>
+      <PropertyRef Name="ContactTypeID" />
+    </Key>
+    <Property Name="ContactTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="StoreContact" Partner="ContactType" Type="PerformanceServices.Edm.AdventureWorks.StoreContact" />
+    <NavigationProperty Name="VendorContact" Partner="ContactType" Type="PerformanceServices.Edm.AdventureWorks.VendorContact" />
+  </EntityType>
+  <EntityType Name="CountryRegion">
+    <Key>
+      <PropertyRef Name="CountryRegionCode" />
+    </Key>
+    <Property Name="CountryRegionCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="CountryRegionCurrency" Partner="CountryRegion" Type="PerformanceServices.Edm.AdventureWorks.CountryRegionCurrency" />
+    <NavigationProperty Name="StateProvince" Partner="CountryRegion" Type="PerformanceServices.Edm.AdventureWorks.StateProvince" />
+  </EntityType>
+  <EntityType Name="StateProvince">
+    <Key>
+      <PropertyRef Name="StateProvinceID" />
+    </Key>
+    <Property Name="StateProvinceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StateProvinceCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="CountryRegionCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="IsOnlyStateProvinceFlag" Type="Boolean" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="TerritoryID" Type="Int32" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Address" Partner="StateProvince" Type="PerformanceServices.Edm.AdventureWorks.Address" />
+    <NavigationProperty Name="CountryRegion" Partner="StateProvince" Type="PerformanceServices.Edm.AdventureWorks.CountryRegion" >
+      <ReferentialConstraint Property="CountryRegionCode"  ReferencedProperty="CountryRegionCode" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesTaxRate" Partner="StateProvince" Type="PerformanceServices.Edm.AdventureWorks.SalesTaxRate" />
+    <NavigationProperty Name="SalesTerritory" Partner="StateProvince" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritory">
+      <ReferentialConstraint Property="TerritoryID"  ReferencedProperty="TerritoryID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="BillOfMaterials">
+    <Key>
+      <PropertyRef Name="BillOfMaterialsID" />
+    </Key>
+    <Property Name="BillOfMaterialsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductAssemblyID" Type="Int32" />
+    <Property Name="ComponentID" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+    <Property Name="UnitMeasureCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="BOMLevel" Type="Int16" Nullable="false" />
+    <Property Name="PerAssemblyQty" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="BillOfMaterials" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ComponentID" ReferencedProperty="ProductID" />
+      <ReferentialConstraint Property="ProductAssemblyID" ReferencedProperty="ProductID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Product1" Partner="BillOfMaterials" Type="PerformanceServices.Edm.AdventureWorks.Product" />
+    <NavigationProperty Name="UnitMeasure" Partner="BillOfMaterials" Type="PerformanceServices.Edm.AdventureWorks.UnitMeasure" >
+      <ReferentialConstraint Property="UnitMeasureCode"  ReferencedProperty="UnitMeasureCode" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Culture">
+    <Key>
+      <PropertyRef Name="CultureID" />
+    </Key>
+    <Property Name="CultureID" Type="String" Nullable="false" MaxLength="6" Unicode="true"   />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductModelProductDescriptionCulture" Partner="Culture" Type="PerformanceServices.Edm.AdventureWorks.ProductModelProductDescriptionCulture" />
+  </EntityType>
+  <EntityType Name="Document">
+    <Key>
+      <PropertyRef Name="DocumentID" />
+    </Key>
+    <Property Name="DocumentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="FileName" Type="String" Nullable="false" MaxLength="400" Unicode="true"   />
+    <Property Name="FileExtension" Type="String" Nullable="false" MaxLength="8" Unicode="true"   />
+    <Property Name="Revision" Type="String" Nullable="false" MaxLength="5" Unicode="true"   />
+    <Property Name="ChangeNumber" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Byte" Nullable="false" />
+    <Property Name="DocumentSummary" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Document1" Type="Binary" MaxLength="Max"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductDocument" Partner="Document" Type="PerformanceServices.Edm.AdventureWorks.ProductDocument" />
+  </EntityType>
+  <EntityType Name="Illustration">
+    <Key>
+      <PropertyRef Name="IllustrationID" />
+    </Key>
+    <Property Name="IllustrationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Diagram" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductModelIllustration" Partner="Illustration" Type="PerformanceServices.Edm.AdventureWorks.ProductModelIllustration" />
+  </EntityType>
+  <EntityType Name="Location">
+    <Key>
+      <PropertyRef Name="LocationID" />
+    </Key>
+    <Property Name="LocationID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="CostRate" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+    <Property Name="Availability" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductInventory" Partner="Location" Type="PerformanceServices.Edm.AdventureWorks.ProductInventory" />
+    <NavigationProperty Name="WorkOrderRouting" Partner="Location" Type="PerformanceServices.Edm.AdventureWorks.WorkOrderRouting" />
+  </EntityType>
+  <EntityType Name="Product" OpenType="true">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ProductNumber" Type="String" Nullable="false" MaxLength="25" Unicode="true"   />
+    <Property Name="MakeFlag" Type="Boolean" Nullable="false" />
+    <Property Name="FinishedGoodsFlag" Type="Boolean" Nullable="false" />
+    <Property Name="Color" Type="String" MaxLength="15" Unicode="true"   />
+    <Property Name="SafetyStockLevel" Type="Int16" Nullable="false" />
+    <Property Name="ReorderPoint" Type="Int16" Nullable="false" />
+    <Property Name="StandardCost" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ListPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Size" Type="String" MaxLength="5" Unicode="true"   />
+    <Property Name="SizeUnitMeasureCode" Type="String" MaxLength="3" Unicode="true"   />
+    <Property Name="WeightUnitMeasureCode" Type="String" MaxLength="3" Unicode="true"   />
+    <Property Name="Weight" Type="Decimal" Precision="8" Scale="2" />
+    <Property Name="DaysToManufacture" Type="Int32" Nullable="false" />
+    <Property Name="ProductLine" Type="String" MaxLength="2" Unicode="true"   />
+    <Property Name="Class" Type="String" MaxLength="2" Unicode="true"   />
+    <Property Name="Style" Type="String" MaxLength="2" Unicode="true"   />
+    <Property Name="ProductSubcategoryID" Type="Int32" />
+    <Property Name="ProductModelID" Type="Int32" />
+    <Property Name="SellStartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="SellEndDate" Type="DateTimeOffset" />
+    <Property Name="DiscontinuedDate" Type="DateTimeOffset" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="LuckyNumbers" Type="Collection(Int64)" Nullable="false" />
+    <Property Name="TimeZones" Type="Collection(PerformanceServices.Edm.AdventureWorks.TimeZone)" Nullable="false" />
+    <NavigationProperty Name="BillOfMaterials" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.BillOfMaterials)" />
+    <NavigationProperty Name="BillOfMaterials1" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.BillOfMaterials)" />
+    <NavigationProperty Name="ProductModel" Partner="Product" Type="PerformanceServices.Edm.AdventureWorks.ProductModel">
+      <ReferentialConstraint Property="ProductModelID"  ReferencedProperty="ProductModelID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ProductSubcategory" Partner="Product" Type="PerformanceServices.Edm.AdventureWorks.ProductSubcategory">
+      <ReferentialConstraint Property="ProductSubcategoryID"  ReferencedProperty="ProductSubcategoryID" />
+    </NavigationProperty>
+    <NavigationProperty Name="UnitMeasure" Partner="Product" Type="PerformanceServices.Edm.AdventureWorks.UnitMeasure">
+      <ReferentialConstraint Property="SizeUnitMeasureCode" ReferencedProperty="UnitMeasureCode" />
+      <ReferentialConstraint Property="WeightUnitMeasureCode" ReferencedProperty="UnitMeasureCode"  />
+    </NavigationProperty>
+    <NavigationProperty Name="UnitMeasure1" Partner="Product" Type="PerformanceServices.Edm.AdventureWorks.UnitMeasure" />
+    <NavigationProperty Name="ProductCostHistory" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductCostHistory)" />
+    <NavigationProperty Name="ProductDocument" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductDocument)" />
+    <NavigationProperty Name="ProductInventory" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductInventory)" />
+    <NavigationProperty Name="ProductListPriceHistory" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductListPriceHistory)" />
+    <NavigationProperty Name="ProductProductPhoto" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductProductPhoto)" />
+    <NavigationProperty Name="ProductReview" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductReview)" />
+    <NavigationProperty Name="ProductVendor" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductVendor)" />
+    <NavigationProperty Name="PurchaseOrderDetail" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.PurchaseOrderDetail)" />
+    <NavigationProperty Name="ShoppingCartItem" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.ShoppingCartItem)" />
+    <NavigationProperty Name="SpecialOfferProduct" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.SpecialOfferProduct)" />
+    <NavigationProperty Name="TransactionHistory" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.TransactionHistory)" />
+    <NavigationProperty Name="WorkOrder" Partner="Product" Type="Collection(PerformanceServices.Edm.AdventureWorks.WorkOrder)" />
+  </EntityType>
+  <EntityType Name="ProductCategory">
+    <Key>
+      <PropertyRef Name="ProductCategoryID" />
+    </Key>
+    <Property Name="ProductCategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductSubcategory" Partner="ProductCategory" Type="PerformanceServices.Edm.AdventureWorks.ProductSubcategory" />
+  </EntityType>
+  <EntityType Name="ProductCostHistory">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="StartDate" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+    <Property Name="StandardCost" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductCostHistory" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductDescription">
+    <Key>
+      <PropertyRef Name="ProductDescriptionID" />
+    </Key>
+    <Property Name="ProductDescriptionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="400" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductModelProductDescriptionCulture" Partner="ProductDescription" Type="PerformanceServices.Edm.AdventureWorks.ProductModelProductDescriptionCulture" />
+  </EntityType>
+  <EntityType Name="ProductDocument">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="DocumentID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="DocumentID" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Document" Partner="ProductDocument" Type="PerformanceServices.Edm.AdventureWorks.Document">
+      <ReferentialConstraint Property="DocumentID"  ReferencedProperty="DocumentID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Product" Partner="ProductDocument" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductInventory">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="LocationID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="LocationID" Type="Int16" Nullable="false" />
+    <Property Name="Shelf" Type="String" Nullable="false" MaxLength="10" Unicode="true"   />
+    <Property Name="Bin" Type="Byte" Nullable="false" />
+    <Property Name="Quantity" Type="Int16" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Location" Partner="ProductInventory" Type="PerformanceServices.Edm.AdventureWorks.Location" >
+      <ReferentialConstraint Property="LocationID"  ReferencedProperty="LocationID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Product" Partner="ProductInventory" Type="PerformanceServices.Edm.AdventureWorks.Product" >
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductListPriceHistory">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="StartDate" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+    <Property Name="ListPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductListPriceHistory" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductModel">
+    <Key>
+      <PropertyRef Name="ProductModelID" />
+    </Key>
+    <Property Name="ProductModelID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="CatalogDescription" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Instructions" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductModel" Type="Collection(PerformanceServices.Edm.AdventureWorks.Product)" />
+    <NavigationProperty Name="ProductModelIllustration" Partner="ProductModel" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductModelIllustration)" />
+    <NavigationProperty Name="ProductModelProductDescriptionCulture" Partner="ProductModel" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductModelProductDescriptionCulture)" />
+  </EntityType>
+  <EntityType Name="ProductModelIllustration">
+    <Key>
+      <PropertyRef Name="ProductModelID" />
+      <PropertyRef Name="IllustrationID" />
+    </Key>
+    <Property Name="ProductModelID" Type="Int32" Nullable="false" />
+    <Property Name="IllustrationID" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Illustration" Partner="ProductModelIllustration" Type="PerformanceServices.Edm.AdventureWorks.Illustration" >
+      <ReferentialConstraint Property="IllustrationID"  ReferencedProperty="IllustrationID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ProductModel" Partner="ProductModelIllustration" Type="PerformanceServices.Edm.AdventureWorks.ProductModel" >
+      <ReferentialConstraint Property="ProductModelID"  ReferencedProperty="ProductModelID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductModelProductDescriptionCulture">
+    <Key>
+      <PropertyRef Name="ProductModelID" />
+      <PropertyRef Name="ProductDescriptionID" />
+      <PropertyRef Name="CultureID" />
+    </Key>
+    <Property Name="ProductModelID" Type="Int32" Nullable="false" />
+    <Property Name="ProductDescriptionID" Type="Int32" Nullable="false" />
+    <Property Name="CultureID" Type="String" Nullable="false" MaxLength="6" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Culture" Partner="ProductModelProductDescriptionCulture" Type="PerformanceServices.Edm.AdventureWorks.Culture">
+      <ReferentialConstraint Property="CultureID"  ReferencedProperty="CultureID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ProductDescription" Partner="ProductModelProductDescriptionCulture" Type="PerformanceServices.Edm.AdventureWorks.ProductDescription">
+      <ReferentialConstraint Property="ProductDescriptionID"  ReferencedProperty="ProductDescriptionID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ProductModel" Partner="ProductModelProductDescriptionCulture" Type="PerformanceServices.Edm.AdventureWorks.ProductModel" >
+      <ReferentialConstraint Property="ProductModelID"  ReferencedProperty="ProductModelID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductPhoto">
+    <Key>
+      <PropertyRef Name="ProductPhotoID" />
+    </Key>
+    <Property Name="ProductPhotoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ThumbNailPhoto" Type="Binary" MaxLength="Max"   />
+    <Property Name="ThumbnailPhotoFileName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LargePhoto" Type="Binary" MaxLength="Max"   />
+    <Property Name="LargePhotoFileName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductProductPhoto" Partner="ProductPhoto" Type="PerformanceServices.Edm.AdventureWorks.ProductProductPhoto" />
+  </EntityType>
+  <EntityType Name="ProductProductPhoto">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="ProductPhotoID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="ProductPhotoID" Type="Int32" Nullable="false" />
+    <Property Name="Primary" Type="Boolean" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductProductPhoto" Type="PerformanceServices.Edm.AdventureWorks.Product" >
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ProductPhoto" Partner="ProductProductPhoto" Type="PerformanceServices.Edm.AdventureWorks.ProductPhoto" >
+      <ReferentialConstraint Property="ProductPhotoID"  ReferencedProperty="ProductPhotoID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductReview">
+    <Key>
+      <PropertyRef Name="ProductReviewID" />
+    </Key>
+    <Property Name="ProductReviewID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="ReviewerName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ReviewDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Rating" Type="Int32" Nullable="false" />
+    <Property Name="Comments" Type="String" MaxLength="3850" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductReview" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductSubcategory">
+    <Key>
+      <PropertyRef Name="ProductSubcategoryID" />
+    </Key>
+    <Property Name="ProductSubcategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductCategoryID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductSubcategory" Type="Collection(PerformanceServices.Edm.AdventureWorks.Product)" />
+    <NavigationProperty Name="ProductCategory" Partner="ProductSubcategory" Type="PerformanceServices.Edm.AdventureWorks.ProductCategory" >
+      <ReferentialConstraint Property="ProductCategoryID"  ReferencedProperty="ProductCategoryID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ScrapReason">
+    <Key>
+      <PropertyRef Name="ScrapReasonID" />
+    </Key>
+    <Property Name="ScrapReasonID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="WorkOrder" Partner="ScrapReason" Type="PerformanceServices.Edm.AdventureWorks.WorkOrder" />
+  </EntityType>
+  <EntityType Name="TransactionHistory">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+    </Key>
+    <Property Name="TransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="ReferenceOrderID" Type="Int32" Nullable="false" />
+    <Property Name="ReferenceOrderLineID" Type="Int32" Nullable="false" />
+    <Property Name="TransactionDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="TransactionType" Type="String" Nullable="false" MaxLength="1" Unicode="true"   />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="ActualCost" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="TransactionHistory" Type="PerformanceServices.Edm.AdventureWorks.Product" >
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="TransactionHistoryArchive">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+    </Key>
+    <Property Name="TransactionID" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="ReferenceOrderID" Type="Int32" Nullable="false" />
+    <Property Name="ReferenceOrderLineID" Type="Int32" Nullable="false" />
+    <Property Name="TransactionDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="TransactionType" Type="String" Nullable="false" MaxLength="1" Unicode="true"   />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="ActualCost" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UnitMeasure">
+    <Key>
+      <PropertyRef Name="UnitMeasureCode" />
+    </Key>
+    <Property Name="UnitMeasureCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="BillOfMaterials" Partner="UnitMeasure" Type="Collection(PerformanceServices.Edm.AdventureWorks.BillOfMaterials)" />
+    <NavigationProperty Name="Product" Partner="UnitMeasure" Type="Collection(PerformanceServices.Edm.AdventureWorks.Product)" />
+    <NavigationProperty Name="Product1" Partner="UnitMeasure1" Type="Collection(PerformanceServices.Edm.AdventureWorks.Product)" />
+    <NavigationProperty Name="ProductVendor" Partner="UnitMeasure" Type="Collection(PerformanceServices.Edm.AdventureWorks.ProductVendor)" />
+  </EntityType>
+  <EntityType Name="WorkOrder">
+    <Key>
+      <PropertyRef Name="WorkOrderID" />
+    </Key>
+    <Property Name="WorkOrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="OrderQty" Type="Int32" Nullable="false" />
+    <Property Name="StockedQty" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="ScrappedQty" Type="Int16" Nullable="false" />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+    <Property Name="DueDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ScrapReasonID" Type="Int16" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="WorkOrder" Type="PerformanceServices.Edm.AdventureWorks.Product" >
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ScrapReason" Partner="WorkOrder" Type="PerformanceServices.Edm.AdventureWorks.ScrapReason" >
+      <ReferentialConstraint Property="ScrapReasonID"  ReferencedProperty="ScrapReasonID" />
+    </NavigationProperty>
+    <NavigationProperty Name="WorkOrderRouting" Partner="WorkOrder" Type="Collection(PerformanceServices.Edm.AdventureWorks.WorkOrderRouting)" />
+  </EntityType>
+  <EntityType Name="WorkOrderRouting">
+    <Key>
+      <PropertyRef Name="WorkOrderID" />
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="OperationSequence" />
+    </Key>
+    <Property Name="WorkOrderID" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="OperationSequence" Type="Int16" Nullable="false" />
+    <Property Name="LocationID" Type="Int16" Nullable="false" />
+    <Property Name="ScheduledStartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ScheduledEndDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ActualStartDate" Type="DateTimeOffset" />
+    <Property Name="ActualEndDate" Type="DateTimeOffset" />
+    <Property Name="ActualResourceHrs" Type="Decimal" Precision="9" Scale="4" />
+    <Property Name="PlannedCost" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ActualCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Location" Partner="WorkOrderRouting" Type="PerformanceServices.Edm.AdventureWorks.Location" >
+      <ReferentialConstraint Property="LocationID"  ReferencedProperty="LocationID" />
+    </NavigationProperty>
+    <NavigationProperty Name="WorkOrder" Partner="WorkOrderRouting" Type="PerformanceServices.Edm.AdventureWorks.WorkOrder" >
+      <ReferentialConstraint Property="WorkOrderID"  ReferencedProperty="WorkOrderID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductVendor">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="VendorID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="VendorID" Type="Int32" Nullable="false" />
+    <Property Name="AverageLeadTime" Type="Int32" Nullable="false" />
+    <Property Name="StandardPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="LastReceiptCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="LastReceiptDate" Type="DateTimeOffset" />
+    <Property Name="MinOrderQty" Type="Int32" Nullable="false" />
+    <Property Name="MaxOrderQty" Type="Int32" Nullable="false" />
+    <Property Name="OnOrderQty" Type="Int32" />
+    <Property Name="UnitMeasureCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ProductVendor" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+    <NavigationProperty Name="UnitMeasure" Partner="ProductVendor" Type="PerformanceServices.Edm.AdventureWorks.UnitMeasure" >
+      <ReferentialConstraint Property="UnitMeasureCode"  ReferencedProperty="UnitMeasureCode" />
+    </NavigationProperty>
+    <NavigationProperty Name="Vendor" Partner="ProductVendor" Type="PerformanceServices.Edm.AdventureWorks.Vendor" >
+      <ReferentialConstraint Property="VendorID"  ReferencedProperty="VendorID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="PurchaseOrderDetail">
+    <Key>
+      <PropertyRef Name="PurchaseOrderID" />
+      <PropertyRef Name="PurchaseOrderDetailID" />
+    </Key>
+    <Property Name="PurchaseOrderID" Type="Int32" Nullable="false" />
+    <Property Name="PurchaseOrderDetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DueDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="OrderQty" Type="Int16" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="LineTotal" Type="Decimal" Nullable="false" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="ReceivedQty" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="RejectedQty" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="StockedQty" Type="Decimal" Nullable="false" Precision="9" Scale="2" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="PurchaseOrderDetail" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+    <NavigationProperty Name="PurchaseOrderHeader" Partner="PurchaseOrderDetail" Type="PerformanceServices.Edm.AdventureWorks.PurchaseOrderHeader">
+      <ReferentialConstraint Property="PurchaseOrderID"  ReferencedProperty="PurchaseOrderID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="PurchaseOrderHeader">
+    <Key>
+      <PropertyRef Name="PurchaseOrderID" />
+    </Key>
+    <Property Name="PurchaseOrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionNumber" Type="Byte" Nullable="false" />
+    <Property Name="Status" Type="Byte" Nullable="false" />
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="VendorID" Type="Int32" Nullable="false" />
+    <Property Name="ShipMethodID" Type="Int32" Nullable="false" />
+    <Property Name="OrderDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ShipDate" Type="DateTimeOffset" />
+    <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="TaxAmt" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Freight" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="TotalDue" Type="Decimal" Nullable="false" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Employee" Partner="PurchaseOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+    <NavigationProperty Name="PurchaseOrderDetail" Partner="PurchaseOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.PurchaseOrderDetail" />
+    <NavigationProperty Name="ShipMethod" Partner="PurchaseOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.ShipMethod" >
+      <ReferentialConstraint Property="ShipMethodID"  ReferencedProperty="ShipMethodID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Vendor" Partner="PurchaseOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.Vendor" >
+      <ReferentialConstraint Property="VendorID"  ReferencedProperty="VendorID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ShipMethod">
+    <Key>
+      <PropertyRef Name="ShipMethodID" />
+    </Key>
+    <Property Name="ShipMethodID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ShipBase" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ShipRate" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="PurchaseOrderHeader" Partner="ShipMethod" Type="PerformanceServices.Edm.AdventureWorks.PurchaseOrderHeader" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="ShipMethod" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+  </EntityType>
+  <EntityType Name="Vendor">
+    <Key>
+      <PropertyRef Name="VendorID" />
+    </Key>
+    <Property Name="VendorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountNumber" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="CreditRating" Type="Byte" Nullable="false" />
+    <Property Name="PreferredVendorStatus" Type="Boolean" Nullable="false" />
+    <Property Name="ActiveFlag" Type="Boolean" Nullable="false" />
+    <Property Name="PurchasingWebServiceURL" Type="String" MaxLength="1024" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ProductVendor" Partner="Vendor" Type="PerformanceServices.Edm.AdventureWorks.ProductVendor" />
+    <NavigationProperty Name="PurchaseOrderHeader" Partner="Vendor" Type="PerformanceServices.Edm.AdventureWorks.PurchaseOrderHeader" />
+    <NavigationProperty Name="VendorAddress" Partner="Vendor" Type="PerformanceServices.Edm.AdventureWorks.VendorAddress" />
+    <NavigationProperty Name="VendorContact" Partner="Vendor" Type="PerformanceServices.Edm.AdventureWorks.VendorContact" />
+  </EntityType>
+  <EntityType Name="VendorAddress">
+    <Key>
+      <PropertyRef Name="VendorID" />
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="VendorID" Type="Int32" Nullable="false" />
+    <Property Name="AddressID" Type="Int32" Nullable="false" />
+    <Property Name="AddressTypeID" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Address" Partner="VendorAddress" Type="PerformanceServices.Edm.AdventureWorks.Address">
+      <ReferentialConstraint Property="AddressID"  ReferencedProperty="AddressID" />
+    </NavigationProperty>
+    <NavigationProperty Name="AddressType" Partner="VendorAddress" Type="PerformanceServices.Edm.AdventureWorks.AddressType" >
+      <ReferentialConstraint Property="AddressTypeID"  ReferencedProperty="AddressTypeID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Vendor" Partner="VendorAddress" Type="PerformanceServices.Edm.AdventureWorks.Vendor" >
+      <ReferentialConstraint Property="VendorID"  ReferencedProperty="VendorID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="VendorContact">
+    <Key>
+      <PropertyRef Name="VendorID" />
+      <PropertyRef Name="ContactID" />
+    </Key>
+    <Property Name="VendorID" Type="Int32" Nullable="false" />
+    <Property Name="ContactID" Type="Int32" Nullable="false" />
+    <Property Name="ContactTypeID" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Contact" Partner="VendorContact" Type="PerformanceServices.Edm.AdventureWorks.Contact" >
+      <ReferentialConstraint Property="ContactID"  ReferencedProperty="ContactID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ContactType" Partner="VendorContact" Type="PerformanceServices.Edm.AdventureWorks.ContactType" >
+      <ReferentialConstraint Property="ContactTypeID"  ReferencedProperty="ContactTypeID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Vendor" Partner="VendorContact" Type="PerformanceServices.Edm.AdventureWorks.Vendor" >
+      <ReferentialConstraint Property="VendorID"  ReferencedProperty="VendorID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ContactCreditCard">
+    <Key>
+      <PropertyRef Name="ContactID" />
+      <PropertyRef Name="CreditCardID" />
+    </Key>
+    <Property Name="ContactID" Type="Int32" Nullable="false" />
+    <Property Name="CreditCardID" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Contact" Partner="ContactCreditCard" Type="PerformanceServices.Edm.AdventureWorks.Contact">
+      <ReferentialConstraint Property="ContactID"  ReferencedProperty="ContactID" />
+    </NavigationProperty>
+    <NavigationProperty Name="CreditCard" Partner="ContactCreditCard" Type="PerformanceServices.Edm.AdventureWorks.CreditCard" >
+      <ReferentialConstraint Property="CreditCardID"  ReferencedProperty="CreditCardID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="CountryRegionCurrency">
+    <Key>
+      <PropertyRef Name="CountryRegionCode" />
+      <PropertyRef Name="CurrencyCode" />
+    </Key>
+    <Property Name="CountryRegionCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="CurrencyCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="CountryRegion" Partner="CountryRegionCurrency" Type="PerformanceServices.Edm.AdventureWorks.CountryRegion" >
+      <ReferentialConstraint Property="CountryRegionCode"  ReferencedProperty="CountryRegionCode" />
+    </NavigationProperty>
+    <NavigationProperty Name="Currency" Partner="CountryRegionCurrency" Type="PerformanceServices.Edm.AdventureWorks.Currency">
+      <ReferentialConstraint Property="CurrencyCode"  ReferencedProperty="CurrencyCode" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="CreditCard">
+    <Key>
+      <PropertyRef Name="CreditCardID" />
+    </Key>
+    <Property Name="CreditCardID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CardType" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="CardNumber" Type="String" Nullable="false" MaxLength="25" Unicode="true"   />
+    <Property Name="ExpMonth" Type="Byte" Nullable="false" />
+    <Property Name="ExpYear" Type="Int16" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="ContactCreditCard" Partner="CreditCard" Type="PerformanceServices.Edm.AdventureWorks.ContactCreditCard" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="CreditCard" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+  </EntityType>
+  <EntityType Name="Currency">
+    <Key>
+      <PropertyRef Name="CurrencyCode" />
+    </Key>
+    <Property Name="CurrencyCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   ConcurrencyMode="Fixed" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="CountryRegionCurrency" Partner="Currency" Type="PerformanceServices.Edm.AdventureWorks.CountryRegionCurrency" />
+    <NavigationProperty Name="CurrencyRate" Partner="Currency" Type="PerformanceServices.Edm.AdventureWorks.CurrencyRate" />
+    <NavigationProperty Name="CurrencyRate1" Partner="Currency1" Type="PerformanceServices.Edm.AdventureWorks.CurrencyRate" />
+  </EntityType>
+  <EntityType Name="CurrencyRate">
+    <Key>
+      <PropertyRef Name="CurrencyRateID" />
+    </Key>
+    <Property Name="CurrencyRateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CurrencyRateDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="FromCurrencyCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="ToCurrencyCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="AverageRate" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="EndOfDayRate" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Currency" Partner="CurrencyRate" Type="PerformanceServices.Edm.AdventureWorks.Currency">
+      <ReferentialConstraint Property="FromCurrencyCode"  ReferencedProperty="CurrencyCode" />
+      <ReferentialConstraint Property="ToCurrencyCode"  ReferencedProperty="CurrencyCode" />
+    </NavigationProperty>
+    <NavigationProperty Name="Currency1" Partner="CurrencyRate" Type="PerformanceServices.Edm.AdventureWorks.Currency" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="CurrencyRate" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+  </EntityType>
+  <EntityType Name="Customer" m2:HasStream="true">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TerritoryID" Type="Int32" />
+    <Property Name="AccountNumber" Type="String" Nullable="false" MaxLength="10" Unicode="false"   annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="CustomerType" Type="String" Nullable="false" MaxLength="1" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SalesTerritory" Partner="Customer" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritory" >
+      <ReferentialConstraint Property="TerritoryID"  ReferencedProperty="TerritoryID" />
+    </NavigationProperty>
+    <NavigationProperty Name="CustomerAddress" Partner="Customer" Type="PerformanceServices.Edm.AdventureWorks.CustomerAddress" />
+    <NavigationProperty Name="Individual" Partner="Customer" Type="PerformanceServices.Edm.AdventureWorks.Individual" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="Customer" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+    <NavigationProperty Name="Store" Partner="Customer" Type="PerformanceServices.Edm.AdventureWorks.Store" />
+  </EntityType>
+  <EntityType Name="CustomerAddress">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="AddressID" Type="Int32" Nullable="false" />
+    <Property Name="AddressTypeID" Type="Int32" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Address" Partner="CustomerAddress" Type="PerformanceServices.Edm.AdventureWorks.Address">
+      <ReferentialConstraint Property="AddressID"  ReferencedProperty="AddressID" />
+    </NavigationProperty>
+    <NavigationProperty Name="AddressType" Partner="CustomerAddress" Type="PerformanceServices.Edm.AdventureWorks.AddressType" >
+      <ReferentialConstraint Property="AddressTypeID"  ReferencedProperty="AddressTypeID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Customer" Partner="CustomerAddress" Type="PerformanceServices.Edm.AdventureWorks.Customer">
+      <ReferentialConstraint Property="CustomerID"  ReferencedProperty="CustomerID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Individual">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="ContactID" Type="Int32" Nullable="false" />
+    <Property Name="Demographics" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Contact" Partner="Individual" Type="PerformanceServices.Edm.AdventureWorks.Contact">
+      <ReferentialConstraint Property="ContactID"  ReferencedProperty="ContactID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Customer" Partner="Individual" Type="PerformanceServices.Edm.AdventureWorks.Customer">
+      <ReferentialConstraint Property="CustomerID"  ReferencedProperty="CustomerID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="SalesOrderDetail">
+    <Key>
+      <PropertyRef Name="SalesOrderID" />
+      <PropertyRef Name="SalesOrderDetailID" />
+    </Key>
+    <Property Name="SalesOrderID" Type="Int32" Nullable="false" />
+    <Property Name="SalesOrderDetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CarrierTrackingNumber" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="OrderQty" Type="Int16" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="SpecialOfferID" Type="Int32" Nullable="false" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="UnitPriceDiscount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="LineTotal" Type="Decimal" Nullable="false" Precision="38" Scale="6" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="SalesOrderDetail" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader">
+      <ReferentialConstraint Property="SalesOrderID"  ReferencedProperty="SalesOrderID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SpecialOfferProduct" Partner="SalesOrderDetail" Type="PerformanceServices.Edm.AdventureWorks.SpecialOfferProduct" >
+      <ReferentialConstraint Property="SpecialOfferID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="SalesOrderHeader">
+    <Key>
+      <PropertyRef Name="SalesOrderID" />
+    </Key>
+    <Property Name="SalesOrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionNumber" Type="Byte" Nullable="false" />
+    <Property Name="OrderDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="DueDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ShipDate" Type="DateTimeOffset" />
+    <Property Name="Status" Type="Byte" Nullable="false" />
+    <Property Name="OnlineOrderFlag" Type="Boolean" Nullable="false" />
+    <Property Name="SalesOrderNumber" Type="String" Nullable="false" MaxLength="25" Unicode="true"   annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="PurchaseOrderNumber" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="AccountNumber" Type="String" MaxLength="15" Unicode="true"   />
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="ContactID" Type="Int32" Nullable="false" />
+    <Property Name="SalesPersonID" Type="Int32" />
+    <Property Name="TerritoryID" Type="Int32" />
+    <Property Name="BillToAddressID" Type="Int32" Nullable="false" />
+    <Property Name="ShipToAddressID" Type="Int32" Nullable="false" />
+    <Property Name="ShipMethodID" Type="Int32" Nullable="false" />
+    <Property Name="CreditCardID" Type="Int32" />
+    <Property Name="CreditCardApprovalCode" Type="String" MaxLength="15" Unicode="false"   />
+    <Property Name="CurrencyRateID" Type="Int32" />
+    <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="TaxAmt" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Freight" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="TotalDue" Type="Decimal" Nullable="false" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Comment" Type="String" MaxLength="128" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Address" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.Address" >
+      <ReferentialConstraint Property="AddressID"  ReferencedProperty="BillToAddressID" />
+      <ReferentialConstraint Property="AddressID"  ReferencedProperty="ShipToAddressID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Address1" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.Address" />
+    <NavigationProperty Name="Contact" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.Contact" >
+      <ReferentialConstraint Property="ContactID"  ReferencedProperty="ContactID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ShipMethod" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.ShipMethod" >
+      <ReferentialConstraint Property="ShipMethodID"  ReferencedProperty="ShipMethodID" />
+    </NavigationProperty>
+    <NavigationProperty Name="CreditCard" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.CreditCard" >
+      <ReferentialConstraint Property="CreditCardID"  ReferencedProperty="CreditCardID" />
+    </NavigationProperty>
+    <NavigationProperty Name="CurrencyRate" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.CurrencyRate">
+      <ReferentialConstraint Property="CurrencyRateID"  ReferencedProperty="CurrencyRateID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Customer" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.Customer" >
+      <ReferentialConstraint Property="CustomerID"  ReferencedProperty="CustomerID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesOrderDetail" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderDetail" />
+    <NavigationProperty Name="SalesPerson" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.SalesPerson">
+      <ReferentialConstraint Property="SalesPersonID"  ReferencedProperty="SalesPersonID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesTerritory" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritory" >
+      <ReferentialConstraint Property="TerritoryID"  ReferencedProperty="TerritoryID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesOrderHeaderSalesReason" Partner="SalesOrderHeader" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeaderSalesReason" />
+  </EntityType>
+  <EntityType Name="SalesOrderHeaderSalesReason">
+    <Key>
+      <PropertyRef Name="SalesOrderID" />
+      <PropertyRef Name="SalesReasonID" />
+    </Key>
+    <Property Name="SalesOrderID" Type="Int32" Nullable="false" />
+    <Property Name="SalesReasonID" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="SalesOrderHeaderSalesReason" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader">
+      <ReferentialConstraint Property="SalesOrderID"  ReferencedProperty="SalesOrderID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesReason" Partner="SalesOrderHeaderSalesReason" Type="PerformanceServices.Edm.AdventureWorks.SalesReason" >
+      <ReferentialConstraint Property="SalesReasonID"  ReferencedProperty="SalesReasonID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="SalesPerson">
+    <Key>
+      <PropertyRef Name="SalesPersonID" />
+    </Key>
+    <Property Name="SalesPersonID" Type="Int32" Nullable="false" />
+    <Property Name="TerritoryID" Type="Int32" />
+    <Property Name="SalesQuota" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Bonus" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="CommissionPct" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+    <Property Name="SalesYTD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="SalesLastYear" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Employee" Partner="SalesPerson" Type="PerformanceServices.Edm.AdventureWorks.Employee" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="SalesPerson" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+    <NavigationProperty Name="SalesTerritory" Partner="SalesPerson" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritory">
+      <ReferentialConstraint Property="TerritoryID"  ReferencedProperty="TerritoryID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesPersonQuotaHistory" Partner="SalesPerson" Type="PerformanceServices.Edm.AdventureWorks.SalesPersonQuotaHistory" />
+    <NavigationProperty Name="SalesTerritoryHistory" Partner="SalesPerson" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritoryHistory" />
+    <NavigationProperty Name="Store" Partner="SalesPerson" Type="PerformanceServices.Edm.AdventureWorks.Store" />
+  </EntityType>
+  <EntityType Name="SalesPersonQuotaHistory">
+    <Key>
+      <PropertyRef Name="SalesPersonID" />
+      <PropertyRef Name="QuotaDate" />
+    </Key>
+    <Property Name="SalesPersonID" Type="Int32" Nullable="false" />
+    <Property Name="QuotaDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="SalesQuota" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SalesPerson" Partner="SalesPersonQuotaHistory" Type="PerformanceServices.Edm.AdventureWorks.SalesPerson">
+      <ReferentialConstraint Property="SalesPersonID"  ReferencedProperty="SalesPersonID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="SalesReason">
+    <Key>
+      <PropertyRef Name="SalesReasonID" />
+    </Key>
+    <Property Name="SalesReasonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ReasonType" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SalesOrderHeaderSalesReason" Partner="SalesReason" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeaderSalesReason" />
+  </EntityType>
+  <EntityType Name="SalesTaxRate">
+    <Key>
+      <PropertyRef Name="SalesTaxRateID" />
+    </Key>
+    <Property Name="SalesTaxRateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StateProvinceID" Type="Int32" Nullable="false" />
+    <Property Name="TaxType" Type="Byte" Nullable="false" />
+    <Property Name="TaxRate" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="StateProvince" Partner="SalesTaxRate" Type="PerformanceServices.Edm.AdventureWorks.StateProvince" >
+      <ReferentialConstraint Property="StateProvinceID"  ReferencedProperty="StateProvinceID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="SalesTerritory">
+    <Key>
+      <PropertyRef Name="TerritoryID" />
+    </Key>
+    <Property Name="TerritoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="CountryRegionCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="Group" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="SalesYTD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="SalesLastYear" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="CostYTD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="CostLastYear" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="StateProvince" Partner="SalesTerritory" Type="PerformanceServices.Edm.AdventureWorks.StateProvince" />
+    <NavigationProperty Name="Customer" Partner="SalesTerritory" Type="PerformanceServices.Edm.AdventureWorks.Customer" />
+    <NavigationProperty Name="SalesOrderHeader" Partner="SalesTerritory" Type="PerformanceServices.Edm.AdventureWorks.SalesOrderHeader" />
+    <NavigationProperty Name="SalesPerson" Partner="SalesTerritory" Type="PerformanceServices.Edm.AdventureWorks.SalesPerson" />
+    <NavigationProperty Name="SalesTerritoryHistory" Partner="SalesTerritory" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritoryHistory" />
+  </EntityType>
+  <EntityType Name="SalesTerritoryHistory">
+    <Key>
+      <PropertyRef Name="SalesPersonID" />
+      <PropertyRef Name="TerritoryID" />
+      <PropertyRef Name="StartDate" />
+    </Key>
+    <Property Name="SalesPersonID" Type="Int32" Nullable="false" />
+    <Property Name="TerritoryID" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SalesPerson" Partner="SalesTerritoryHistory" Type="PerformanceServices.Edm.AdventureWorks.SalesPerson" >
+      <ReferentialConstraint Property="SalesPersonID"  ReferencedProperty="SalesPersonID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesTerritory" Partner="SalesTerritoryHistory" Type="PerformanceServices.Edm.AdventureWorks.SalesTerritory" >
+      <ReferentialConstraint Property="TerritoryID"  ReferencedProperty="TerritoryID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ShoppingCartItem">
+    <Key>
+      <PropertyRef Name="ShoppingCartItemID" />
+    </Key>
+    <Property Name="ShoppingCartItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ShoppingCartID" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="DateCreated" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="ShoppingCartItem" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="SpecialOffer">
+    <Key>
+      <PropertyRef Name="SpecialOfferID" />
+    </Key>
+    <Property Name="SpecialOfferID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="255" Unicode="true"   />
+    <Property Name="DiscountPct" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+    <Property Name="Type" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Category" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="MinQty" Type="Int32" Nullable="false" />
+    <Property Name="MaxQty" Type="Int32" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="SpecialOfferProduct" Partner="SpecialOffer" Type="PerformanceServices.Edm.AdventureWorks.SpecialOfferProduct" />
+  </EntityType>
+  <EntityType Name="SpecialOfferProduct">
+    <Key>
+      <PropertyRef Name="SpecialOfferID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="SpecialOfferID" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Product" Partner="SpecialOfferProduct" Type="PerformanceServices.Edm.AdventureWorks.Product">
+      <ReferentialConstraint Property="ProductID"  ReferencedProperty="ProductID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesOrderDetail" Partner="SpecialOfferProduct" Type="Collection(PerformanceServices.Edm.AdventureWorks.SalesOrderDetail)" />
+    <NavigationProperty Name="SpecialOffer" Partner="SpecialOfferProduct" Type="PerformanceServices.Edm.AdventureWorks.SpecialOffer" >
+      <ReferentialConstraint Property="SpecialOfferID"  ReferencedProperty="SpecialOfferID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Store">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="SalesPersonID" Type="Int32" />
+    <Property Name="Demographics" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Customer" Partner="Store" Type="PerformanceServices.Edm.AdventureWorks.Customer" >
+      <ReferentialConstraint Property="CustomerID"  ReferencedProperty="CustomerID" />
+    </NavigationProperty>
+    <NavigationProperty Name="SalesPerson" Partner="Store" Type="PerformanceServices.Edm.AdventureWorks.SalesPerson" >
+      <ReferentialConstraint Property="SalesPersonID"  ReferencedProperty="SalesPersonID" />
+    </NavigationProperty>
+    <NavigationProperty Name="StoreContact" Partner="Store" Type="PerformanceServices.Edm.AdventureWorks.StoreContact" />
+  </EntityType>
+  <EntityType Name="StoreContact">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+      <PropertyRef Name="ContactID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="ContactID" Type="Int32" Nullable="false" />
+    <Property Name="ContactTypeID" Type="Int32" Nullable="false" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+    <NavigationProperty Name="Contact" Partner="StoreContact" Type="PerformanceServices.Edm.AdventureWorks.Contact" >
+      <ReferentialConstraint Property="ContactID"  ReferencedProperty="ContactID" />
+    </NavigationProperty>
+    <NavigationProperty Name="ContactType" Partner="StoreContact" Type="PerformanceServices.Edm.AdventureWorks.ContactType" >
+      <ReferentialConstraint Property="ContactTypeID"  ReferencedProperty="ContactTypeID" />
+    </NavigationProperty>
+    <NavigationProperty Name="Store" Partner="StoreContact" Type="PerformanceServices.Edm.AdventureWorks.Store" >
+      <ReferentialConstraint Property="CustomerID"  ReferencedProperty="CustomerID" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="vEmployee">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="JobTitle" />
+      <PropertyRef Name="EmailPromotion" />
+      <PropertyRef Name="AddressLine1" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="StateProvinceName" />
+      <PropertyRef Name="PostalCode" />
+      <PropertyRef Name="CountryRegionName" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="JobTitle" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Phone" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="EmailPromotion" Type="Int32" Nullable="false" />
+    <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="60" Unicode="true"   />
+    <Property Name="AddressLine2" Type="String" MaxLength="60" Unicode="true"   />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="30" Unicode="true"   />
+    <Property Name="StateProvinceName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="PostalCode" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="CountryRegionName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="AdditionalContactInfo" Type="String" MaxLength="Max" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vEmployeeDepartment">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="JobTitle" />
+      <PropertyRef Name="Department" />
+      <PropertyRef Name="GroupName" />
+      <PropertyRef Name="StartDate" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="JobTitle" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Department" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vEmployeeDepartmentHistory">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="Shift" />
+      <PropertyRef Name="Department" />
+      <PropertyRef Name="GroupName" />
+      <PropertyRef Name="StartDate" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="Shift" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Department" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="StartDate" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="EndDate" Type="DateTimeOffset" />
+  </EntityType>
+  <EntityType Name="vJobCandidate">
+    <Key>
+      <PropertyRef Name="JobCandidateID" />
+      <PropertyRef Name="ModifiedDate" />
+    </Key>
+    <Property Name="JobCandidateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeID" Type="Int32" />
+    <Property Name="Name_Prefix" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Name_First" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Name_Middle" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Name_Last" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Name_Suffix" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Skills" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Addr_Type" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Addr_Loc_CountryRegion" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Addr_Loc_State" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Addr_Loc_City" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Addr_PostalCode" Type="String" MaxLength="20" Unicode="true"   />
+    <Property Name="EMail" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="WebSite" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vJobCandidateEducation">
+    <Key>
+      <PropertyRef Name="JobCandidateID" />
+    </Key>
+    <Property Name="JobCandidateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Edu_Level" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Edu_StartDate" Type="DateTimeOffset" />
+    <Property Name="Edu_EndDate" Type="DateTimeOffset" />
+    <Property Name="Edu_Degree" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="Edu_Major" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="Edu_Minor" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="Edu_GPA" Type="String" MaxLength="5" Unicode="true"   />
+    <Property Name="Edu_GPAScale" Type="String" MaxLength="5" Unicode="true"   />
+    <Property Name="Edu_School" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Edu_Loc_CountryRegion" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Edu_Loc_State" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Edu_Loc_City" Type="String" MaxLength="100" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vJobCandidateEmployment">
+    <Key>
+      <PropertyRef Name="JobCandidateID" />
+    </Key>
+    <Property Name="JobCandidateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Emp_StartDate" Type="DateTimeOffset" />
+    <Property Name="Emp_EndDate" Type="DateTimeOffset" />
+    <Property Name="Emp_OrgName" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Emp_JobTitle" Type="String" MaxLength="100" Unicode="true"   />
+    <Property Name="Emp_Responsibility" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Emp_FunctionCategory" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Emp_IndustryCategory" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Emp_Loc_CountryRegion" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Emp_Loc_State" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Emp_Loc_City" Type="String" MaxLength="Max" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vAdditionalContactInfo">
+    <Key>
+      <PropertyRef Name="ContactID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="rowguid" />
+      <PropertyRef Name="ModifiedDate" />
+    </Key>
+    <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="TelephoneNumber" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="TelephoneSpecialInstructions" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Street" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="City" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="StateProvince" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="PostalCode" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="CountryRegion" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="HomeAddressSpecialInstructions" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="EMailAddress" Type="String" MaxLength="128" Unicode="true"   />
+    <Property Name="EMailSpecialInstructions" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="EMailTelephoneNumber" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vStateProvinceCountryRegion">
+    <Key>
+      <PropertyRef Name="StateProvinceID" />
+      <PropertyRef Name="StateProvinceCode" />
+      <PropertyRef Name="IsOnlyStateProvinceFlag" />
+      <PropertyRef Name="StateProvinceName" />
+      <PropertyRef Name="TerritoryID" />
+      <PropertyRef Name="CountryRegionCode" />
+      <PropertyRef Name="CountryRegionName" />
+    </Key>
+    <Property Name="StateProvinceID" Type="Int32" Nullable="false" />
+    <Property Name="StateProvinceCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="IsOnlyStateProvinceFlag" Type="Boolean" Nullable="false" />
+    <Property Name="StateProvinceName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="TerritoryID" Type="Int32" Nullable="false" />
+    <Property Name="CountryRegionCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
+    <Property Name="CountryRegionName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vProductAndDescription">
+    <Key>
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="ProductModel" />
+      <PropertyRef Name="CultureID" />
+      <PropertyRef Name="Description" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ProductModel" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="CultureID" Type="String" Nullable="false" MaxLength="6" Unicode="true"   />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="400" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vProductModelCatalogDescription">
+    <Key>
+      <PropertyRef Name="ProductModelID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="rowguid" />
+      <PropertyRef Name="ModifiedDate" />
+    </Key>
+    <Property Name="ProductModelID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Summary" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Manufacturer" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Copyright" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="ProductURL" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="WarrantyPeriod" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="WarrantyDescription" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="NoOfYears" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="MaintenanceDescription" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="Wheel" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="Saddle" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="Pedal" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="BikeFrame" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="Crankset" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="PictureAngle" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="PictureSize" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="ProductPhotoID" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="Material" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="Color" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="ProductLine" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="Style" Type="String" MaxLength="256" Unicode="true"   />
+    <Property Name="RiderExperience" Type="String" MaxLength="1024" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vProductModelInstructions">
+    <Key>
+      <PropertyRef Name="ProductModelID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="rowguid" />
+      <PropertyRef Name="ModifiedDate" />
+    </Key>
+    <Property Name="ProductModelID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Instructions" Type="String" MaxLength="Max" Unicode="true"   />
+    <Property Name="LocationID" Type="Int32" />
+    <Property Name="SetupHours" Type="Decimal" Precision="9" Scale="4" />
+    <Property Name="MachineHours" Type="Decimal" Precision="9" Scale="4" />
+    <Property Name="LaborHours" Type="Decimal" Precision="9" Scale="4" />
+    <Property Name="LotSize" Type="Int32" />
+    <Property Name="Step" Type="String" MaxLength="1024" Unicode="true"   />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vVendor">
+    <Key>
+      <PropertyRef Name="VendorID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="ContactType" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="EmailPromotion" />
+      <PropertyRef Name="AddressLine1" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="StateProvinceName" />
+      <PropertyRef Name="PostalCode" />
+      <PropertyRef Name="CountryRegionName" />
+    </Key>
+    <Property Name="VendorID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ContactType" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="Phone" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="EmailPromotion" Type="Int32" Nullable="false" />
+    <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="60" Unicode="true"   />
+    <Property Name="AddressLine2" Type="String" MaxLength="60" Unicode="true"   />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="30" Unicode="true"   />
+    <Property Name="StateProvinceName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="PostalCode" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="CountryRegionName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vIndividualCustomer">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="EmailPromotion" />
+      <PropertyRef Name="AddressType" />
+      <PropertyRef Name="AddressLine1" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="StateProvinceName" />
+      <PropertyRef Name="PostalCode" />
+      <PropertyRef Name="CountryRegionName" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="Phone" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="EmailPromotion" Type="Int32" Nullable="false" />
+    <Property Name="AddressType" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="60" Unicode="true"   />
+    <Property Name="AddressLine2" Type="String" MaxLength="60" Unicode="true"   />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="30" Unicode="true"   />
+    <Property Name="StateProvinceName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="PostalCode" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="CountryRegionName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Demographics" Type="String" MaxLength="Max" Unicode="true"   />
+  </EntityType>
+  <EntityType Name="vIndividualDemographics">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="TotalPurchaseYTD" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="DateFirstPurchase" Type="DateTimeOffset" />
+    <Property Name="BirthDate" Type="DateTimeOffset" />
+    <Property Name="MaritalStatus" Type="String" MaxLength="1" Unicode="true"   />
+    <Property Name="YearlyIncome" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Gender" Type="String" MaxLength="1" Unicode="true"   />
+    <Property Name="TotalChildren" Type="Int32" />
+    <Property Name="NumberChildrenAtHome" Type="Int32" />
+    <Property Name="Education" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Occupation" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="HomeOwnerFlag" Type="Boolean" />
+    <Property Name="NumberCarsOwned" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vSalesPerson">
+    <Key>
+      <PropertyRef Name="SalesPersonID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="JobTitle" />
+      <PropertyRef Name="EmailPromotion" />
+      <PropertyRef Name="AddressLine1" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="StateProvinceName" />
+      <PropertyRef Name="PostalCode" />
+      <PropertyRef Name="CountryRegionName" />
+      <PropertyRef Name="SalesYTD" />
+      <PropertyRef Name="SalesLastYear" />
+    </Key>
+    <Property Name="SalesPersonID" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="JobTitle" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Phone" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="EmailPromotion" Type="Int32" Nullable="false" />
+    <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="60" Unicode="true"   />
+    <Property Name="AddressLine2" Type="String" MaxLength="60" Unicode="true"   />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="30" Unicode="true"   />
+    <Property Name="StateProvinceName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="PostalCode" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="CountryRegionName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="TerritoryName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="TerritoryGroup" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="SalesQuota" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="SalesYTD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="SalesLastYear" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+  </EntityType>
+  <EntityType Name="vSalesPersonSalesByFiscalYears">
+    <Key>
+      <PropertyRef Name="Title" />
+      <PropertyRef Name="SalesTerritory" />
+    </Key>
+    <Property Name="SalesPersonID" Type="Int32" />
+    <Property Name="FullName" Type="String" MaxLength="152" Unicode="true"   />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="SalesTerritory" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="C2002" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="C2003" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="C2004" Type="Decimal" Precision="19" Scale="4" />
+  </EntityType>
+  <EntityType Name="vStoreWithDemographics">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="ContactType" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="EmailPromotion" />
+      <PropertyRef Name="AddressType" />
+      <PropertyRef Name="AddressLine1" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="StateProvinceName" />
+      <PropertyRef Name="PostalCode" />
+      <PropertyRef Name="CountryRegionName" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="ContactType" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Title" Type="String" MaxLength="8" Unicode="true"   />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="Suffix" Type="String" MaxLength="10" Unicode="true"   />
+    <Property Name="Phone" Type="String" MaxLength="25" Unicode="true"   />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="EmailPromotion" Type="Int32" Nullable="false" />
+    <Property Name="AddressType" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="AddressLine1" Type="String" Nullable="false" MaxLength="60" Unicode="true"   />
+    <Property Name="AddressLine2" Type="String" MaxLength="60" Unicode="true"   />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="30" Unicode="true"   />
+    <Property Name="StateProvinceName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="PostalCode" Type="String" Nullable="false" MaxLength="15" Unicode="true"   />
+    <Property Name="CountryRegionName" Type="String" Nullable="false" MaxLength="50" Unicode="true"   />
+    <Property Name="AnnualSales" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="AnnualRevenue" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="BankName" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="BusinessType" Type="String" MaxLength="5" Unicode="true"   />
+    <Property Name="YearOpened" Type="Int32" />
+    <Property Name="Specialty" Type="String" MaxLength="50" Unicode="true"   />
+    <Property Name="SquareFeet" Type="Int32" />
+    <Property Name="Brands" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="Internet" Type="String" MaxLength="30" Unicode="true"   />
+    <Property Name="NumberEmployees" Type="Int32" />
+  </EntityType>
+  <EntityType Name="PropertyTestType" >
+    <Property Name="PropertyOne" Type="PerformanceServices.Edm.AdventureWorks.ManyPropertiedComplexType" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="ManyPropertiedComplexType">
+    <Property Name="Property1" Type="Binary" Nullable="false" />
+    <Property Name="Property2" Type="Boolean" Nullable="false" />
+    <Property Name="Property3" Type="Byte" Nullable="false" />
+    <Property Name="Property4" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="Property5" Type="Decimal" Nullable="false" />
+    <Property Name="Property6" Type="GeographyPolygon" Nullable="false" />
+    <Property Name="Property7" Type="GeographyPoint" Nullable="false" />
+    <Property Name="Property8" Type="GeographyLineString" Nullable="false" />
+    <Property Name="Property9" Type="GeographyMultiPoint" Nullable="false" />
+    <Property Name="Property10" Type="GeographyMultiPolygon" Nullable="false" />
+    <Property Name="Property11" Type="GeometryMultiPoint" Nullable="false" />
+    <Property Name="Property12" Type="GeometryPolygon" Nullable="false" />
+    <Property Name="Property13" Type="Guid" Nullable="false" />
+    <Property Name="Property14" Type="Int16" Nullable="false" />
+    <Property Name="Property15" Type="Int32" Nullable="false" />
+    <Property Name="Property16" Type="Int64" Nullable="false" />
+    <Property Name="Property17" Type="Single" Nullable="false" />
+    <Property Name="Property18" Type="String" Nullable="false" />
+    <Property Name="Property19" Type="Duration" Nullable="false" />
+    <Property Name="CollectionProperty1" Type="Collection(Binary)" Nullable="false" />
+    <Property Name="CollectionProperty2" Type="Collection(Boolean)" Nullable="false" />
+    <Property Name="CollectionProperty3" Type="Collection(Byte)" Nullable="false" />
+    <Property Name="CollectionProperty4" Type="Collection(DateTimeOffset)" Nullable="false" />
+    <Property Name="CollectionProperty5" Type="Collection(Decimal)" Nullable="false" />
+    <Property Name="CollectionProperty6" Type="Collection(GeographyPolygon)" Nullable="false" />
+    <Property Name="CollectionProperty7" Type="Collection(GeographyPoint)" Nullable="false" />
+    <Property Name="CollectionProperty8" Type="Collection(GeographyLineString)" Nullable="false" />
+    <Property Name="CollectionProperty9" Type="Collection(GeographyMultiPoint)" Nullable="false" />
+    <Property Name="CollectionProperty10" Type="Collection(GeographyMultiPolygon)" Nullable="false" />
+    <Property Name="CollectionProperty11" Type="Collection(GeometryMultiPoint)" Nullable="false" />
+    <Property Name="CollectionProperty12" Type="Collection(GeometryPolygon)" Nullable="false" />
+    <Property Name="CollectionProperty13" Type="Collection(Guid)" Nullable="false" />
+    <Property Name="CollectionProperty14" Type="Collection(Int16)" Nullable="false" />
+    <Property Name="CollectionProperty15" Type="Collection(Int32)" Nullable="false" />
+    <Property Name="CollectionProperty16" Type="Collection(Int64)" Nullable="false" />
+    <Property Name="CollectionProperty17" Type="Collection(Single)" Nullable="false" />
+    <Property Name="CollectionProperty18" Type="Collection(String)" Nullable="false" />
+    <Property Name="CollectionProperty19" Type="Collection(Duration)" Nullable="false" />
+    <Property Name="ComplexProperty1" Type="PerformanceServices.Edm.AdventureWorks.AddressSpatial" Nullable="false" />
+    <Property Name="ComplexProperty2" Type="PerformanceServices.Edm.AdventureWorks.TimeZone" Nullable="false" />
+    <Property Name="CollectionComplexProperty1" Type="Collection(PerformanceServices.Edm.AdventureWorks.AddressSpatial)" Nullable="false" />
+    <Property Name="CollectionComplexProperty2" Type="Collection(PerformanceServices.Edm.AdventureWorks.TimeZone)" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ManyPropertiedComplexTypeNoCollections">
+    <Property Name="Property1" Type="Binary" Nullable="false" />
+    <Property Name="Property2" Type="Boolean" Nullable="false" />
+    <Property Name="Property3" Type="Byte" Nullable="false" />
+    <Property Name="Property4" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="Property5" Type="Decimal" Nullable="false" />
+    <Property Name="Property6" Type="GeographyPolygon" Nullable="false" />
+    <Property Name="Property7" Type="GeographyPoint" Nullable="false" />
+    <Property Name="Property8" Type="GeographyLineString" Nullable="false" />
+    <Property Name="Property9" Type="GeographyMultiPoint" Nullable="false" />
+    <Property Name="Property10" Type="GeographyMultiPolygon" Nullable="false" />
+    <Property Name="Property11" Type="GeometryMultiPoint" Nullable="false" />
+    <Property Name="Property12" Type="GeometryPolygon" Nullable="false" />
+    <Property Name="Property13" Type="Guid" Nullable="false" />
+    <Property Name="Property14" Type="Int16" Nullable="false" />
+    <Property Name="Property15" Type="Int32" Nullable="false" />
+    <Property Name="Property16" Type="Int64" Nullable="false" />
+    <Property Name="Property17" Type="Single" Nullable="false" />
+    <Property Name="Property18" Type="String" Nullable="false" />
+    <Property Name="Property19" Type="Duration" Nullable="false" />
+    <Property Name="ComplexProperty1" Type="PerformanceServices.Edm.AdventureWorks.AddressSpatial" Nullable="false" />
+    <Property Name="ComplexProperty2" Type="PerformanceServices.Edm.AdventureWorks.TimeZone" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="AddressSpatial">
+    <Property Name="Coordinates" Type="Edm.GeographyMultiPoint" Nullable="false" />
+    <Property Name="StreetCoordinates" Type="Edm.GeographyLineString" Nullable="false" />
+    <Property Name="Region" Type="Edm.GeometryPolygon" Nullable="false" />
+    <Property Name="NeighbouringRegions" Type="Edm.GeographyMultiPolygon" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="TimeZone">
+    <Property Name="Region" Type="Edm.GeographyPolygon" Nullable="false" />
+    <Property Name="Offset" Type="DateTimeOffset" Nullable="false" />
+    <Property Name="StartTime" Type="Duration" Nullable="false" />
+  </ComplexType>
+  <Function Name="CollectionTestFunction"  m2:HttpMethod="GET" >
+    <ReturnType Type="Collection(PerformanceServices.Edm.AdventureWorks.ManyPropertiedComplexTypeNoCollections)" Nullable="false" />
+  </Function>
+</Schema>
+

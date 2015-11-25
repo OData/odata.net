@@ -740,7 +740,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             {
                                 if (argument.Times == 1)
                                 {
-                                    argument.Request.SetHeader("Prefer", "odata.maxpagesize=100");
+                                    argument.Request.SetHeader("Prefer", "odata.maxpagesize=10");
                                 }
                             },
                             RequestedHandler = argument =>
@@ -749,7 +749,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 var prefer = argument.Response.GetHeader("Preference-Applied");
                                 if (!string.IsNullOrEmpty(prefer))
                                 {
-                                    applied = prefer.Contains("odata.maxpagesize=8");
+                                    applied = prefer.Contains("odata.maxpagesize=10");
                                 }
 
                                 if (argument.Times == 1)

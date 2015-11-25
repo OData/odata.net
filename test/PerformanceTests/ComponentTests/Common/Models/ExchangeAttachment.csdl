@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PerformanceServices.Edm.ExchangeAttachment" Alias="Self" xmlns:annotation="http://docs.oasis-open.org/odata/ns/edm/annotation" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:m2="http://docs.oasis-open.org/odata/ns/dataservices/metadata">
+    <EntityType Name="Item">
+        <Property Name="HasAttachments" Type="Boolean" />
+        <Property Name="Attachments"  Type="Collection(PerformanceServices.Edm.ExchangeAttachment.Attachment)" />
+    </EntityType>
+    <ComplexType Name="Attachment">
+        <Property Name="Name" Type="String" />
+        <Property Name="IsInline" Type="Boolean" Nullable="false" />
+        <Property Name="LastModifiedTime" Type="DateTimeOffset" />
+        <Property Name="Content" Type="Binary" />
+    </ComplexType>
+  <EntityContainer Name="ExchangeContainer">
+    <EntitySet Name="Item" EntityType="PerformanceServices.Edm.ExchangeAttachment.Item" />
+  </EntityContainer>
+</Schema>

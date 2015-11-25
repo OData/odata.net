@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(NugetPack)\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="$(NugetPack)\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
+    <ProjectGuid>{1277D018-9DFD-45B4-B9AA-9A6D7229B02C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.OData.Performance</RootNamespace>
+    <AssemblyName>Microsoft.OData.Performance.Service.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RelativeOutputPath>$(RelativeOutputPath)\Performance\bin</RelativeOutputPath>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>65de0577</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>$(NugetPack)\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>$(NugetPack)\xunit.assert.2.1.0\lib\portable-net45+win8+wp8+wpa81\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>$(NugetPack)\xunit.extensibility.core.2.1.0\lib\portable-net45+win8+wp8+wpa81\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>$(NugetPack)\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.performance.core, Version=1.0.0.27, Culture=neutral, PublicKeyToken=67066efe964d3b03, processorArchitecture=MSIL">
+      <HintPath>$(NugetPack)\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0027\lib\net46\xunit.performance.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.performance.execution.desktop, Version=1.0.0.27, Culture=neutral, PublicKeyToken=67066efe964d3b03, processorArchitecture=MSIL">
+      <HintPath>$(NugetPack)\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0027\lib\net46\xunit.performance.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Common\HttpWebRequestMessage.cs" />
+    <Compile Include="Common\HttpWebResponseMessage.cs" />
+    <Compile Include="Common\TestServiceFixture.cs" />
+    <Compile Include="QueryOptionTests.cs" />
+    <Compile Include="SimpleQueryTests.cs" />
+    <Compile Include="UpdateTests.cs" />
+  </ItemGroup>
+  <Choose>
+    <When Condition=" '$(TestType)'=='Private' ">
+      <ItemGroup>
+        <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+          <Project>{989a83cc-b864-4a75-8bf3-5eda99203a86}</Project>
+          <Name>Microsoft.OData.Core</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+    <When Condition=" '$(TestType)'=='Official' ">
+      <ItemGroup>
+        <Reference Include="Microsoft.OData.Core, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+          <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Core.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj">
+      <Project>{df028e55-ce75-4f32-822e-f9ec9c756ae2}</Project>
+      <Name>ODataSamples.Services.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\PerfServiceCore\Microsoft.Test.OData.Services.PerfService.csproj">
+      <Project>{6da1260d-fe35-424b-adfa-158368ad02dc}</Project>
+      <Name>Microsoft.Test.OData.Services.PerfService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\TestService\Microsoft.Test.OData.TestService.csproj">
+      <Project>{7fc34d8c-eb95-4c16-81bf-5cdc8e221536}</Project>
+      <Name>Microsoft.Test.OData.TestService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="..\Framework\TestService\Global.asax;..\Framework\TestService\Web.config" DestinationFolder="$(OutDir)\.." />
+  </Target>
+</Project>

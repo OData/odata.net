@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PerformanceLab" Alias="Self" xmlns:annotation="http://docs.oasis-open.org/odata/ns/edm/annotation" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:m2="http://docs.oasis-open.org/odata/ns/dataservices/metadata">
+  <EntityContainer Name="PerformanceContext">
+    <EntitySet Name="EntityStringSet" EntityType="PerformanceLab.EntityString" />
+    <EntitySet Name="EntityInt32Set" EntityType="PerformanceLab.EntityInt32" />
+    <EntitySet Name="EntityInt64Set" EntityType="PerformanceLab.EntityInt64" />
+    <EntitySet Name="EntityDecimalSet" EntityType="PerformanceLab.EntityDecimal" />
+    <EntitySet Name="EntityDateTimeOffsetSet" EntityType="PerformanceLab.EntityDateTimeOffset" />
+    <EntitySet Name="EntityGuidSet" EntityType="PerformanceLab.EntityGuid" />
+    <EntitySet Name="EntityMixedSet" EntityType="PerformanceLab.EntityMixed" />
+  </EntityContainer>
+  <EntityType Name="EntityString" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="String" Nullable="true" />
+    <Property Name="Property02" Type="String" Nullable="true" />
+    <Property Name="Property03" Type="String" Nullable="true" />
+    <Property Name="Property04" Type="String" Nullable="true" />
+    <Property Name="Property05" Type="String" Nullable="true" />
+    <Property Name="Property06" Type="String" Nullable="true" />
+    <Property Name="Property07" Type="String" Nullable="true" />
+    <Property Name="Property08" Type="String" Nullable="true" />
+    <Property Name="Property09" Type="String" Nullable="true" />
+    <Property Name="Property10" Type="String" Nullable="true" />
+    <Property Name="Property11" Type="String" Nullable="true" />
+    <Property Name="Property12" Type="String" Nullable="true" />
+    <Property Name="Property13" Type="String" Nullable="true" />
+    <Property Name="Property14" Type="String" Nullable="true" />
+    <Property Name="Property15" Type="String" Nullable="true" />
+    <Property Name="Property16" Type="String" Nullable="true" />
+    <Property Name="Property17" Type="String" Nullable="true" />
+    <Property Name="Property18" Type="String" Nullable="true" />
+    <Property Name="Property19" Type="String" Nullable="true" />
+    <Property Name="Property20" Type="String" Nullable="true" />
+  </EntityType>
+  <EntityType Name="EntityInt32" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="Int32" Nullable="true" />
+    <Property Name="Property02" Type="Int32" Nullable="true" />
+    <Property Name="Property03" Type="Int32" Nullable="true" />
+    <Property Name="Property04" Type="Int32" Nullable="true" />
+    <Property Name="Property05" Type="Int32" Nullable="true" />
+    <Property Name="Property06" Type="Int32" Nullable="true" />
+    <Property Name="Property07" Type="Int32" Nullable="true" />
+    <Property Name="Property08" Type="Int32" Nullable="true" />
+    <Property Name="Property09" Type="Int32" Nullable="true" />
+    <Property Name="Property10" Type="Int32" Nullable="true" />
+    <Property Name="Property11" Type="Int32" Nullable="true" />
+    <Property Name="Property12" Type="Int32" Nullable="true" />
+    <Property Name="Property13" Type="Int32" Nullable="true" />
+    <Property Name="Property14" Type="Int32" Nullable="true" />
+    <Property Name="Property15" Type="Int32" Nullable="true" />
+    <Property Name="Property16" Type="Int32" Nullable="true" />
+    <Property Name="Property17" Type="Int32" Nullable="true" />
+    <Property Name="Property18" Type="Int32" Nullable="true" />
+    <Property Name="Property19" Type="Int32" Nullable="true" />
+    <Property Name="Property20" Type="Int32" Nullable="true" />
+  </EntityType>
+  <EntityType Name="EntityInt64" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="Int64" Nullable="true" />
+    <Property Name="Property02" Type="Int64" Nullable="true" />
+    <Property Name="Property03" Type="Int64" Nullable="true" />
+    <Property Name="Property04" Type="Int64" Nullable="true" />
+    <Property Name="Property05" Type="Int64" Nullable="true" />
+    <Property Name="Property06" Type="Int64" Nullable="true" />
+    <Property Name="Property07" Type="Int64" Nullable="true" />
+    <Property Name="Property08" Type="Int64" Nullable="true" />
+    <Property Name="Property09" Type="Int64" Nullable="true" />
+    <Property Name="Property10" Type="Int64" Nullable="true" />
+    <Property Name="Property11" Type="Int64" Nullable="true" />
+    <Property Name="Property12" Type="Int64" Nullable="true" />
+    <Property Name="Property13" Type="Int64" Nullable="true" />
+    <Property Name="Property14" Type="Int64" Nullable="true" />
+    <Property Name="Property15" Type="Int64" Nullable="true" />
+    <Property Name="Property16" Type="Int64" Nullable="true" />
+    <Property Name="Property17" Type="Int64" Nullable="true" />
+    <Property Name="Property18" Type="Int64" Nullable="true" />
+    <Property Name="Property19" Type="Int64" Nullable="true" />
+    <Property Name="Property20" Type="Int64" Nullable="true" />
+  </EntityType>
+  <EntityType Name="EntityDecimal" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="Decimal" Nullable="true" />
+    <Property Name="Property02" Type="Decimal" Nullable="true" />
+    <Property Name="Property03" Type="Decimal" Nullable="true" />
+    <Property Name="Property04" Type="Decimal" Nullable="true" />
+    <Property Name="Property05" Type="Decimal" Nullable="true" />
+    <Property Name="Property06" Type="Decimal" Nullable="true" />
+    <Property Name="Property07" Type="Decimal" Nullable="true" />
+    <Property Name="Property08" Type="Decimal" Nullable="true" />
+    <Property Name="Property09" Type="Decimal" Nullable="true" />
+    <Property Name="Property10" Type="Decimal" Nullable="true" />
+    <Property Name="Property11" Type="Decimal" Nullable="true" />
+    <Property Name="Property12" Type="Decimal" Nullable="true" />
+    <Property Name="Property13" Type="Decimal" Nullable="true" />
+    <Property Name="Property14" Type="Decimal" Nullable="true" />
+    <Property Name="Property15" Type="Decimal" Nullable="true" />
+    <Property Name="Property16" Type="Decimal" Nullable="true" />
+    <Property Name="Property17" Type="Decimal" Nullable="true" />
+    <Property Name="Property18" Type="Decimal" Nullable="true" />
+    <Property Name="Property19" Type="Decimal" Nullable="true" />
+    <Property Name="Property20" Type="Decimal" Nullable="true" />
+  </EntityType>
+  <EntityType Name="EntityDateTimeOffset" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property02" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property03" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property04" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property05" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property06" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property07" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property08" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property09" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property10" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property11" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property12" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property13" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property14" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property15" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property16" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property17" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property18" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property19" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property20" Type="DateTimeOffset" Nullable="true" />
+  </EntityType>
+  <EntityType Name="EntityGuid" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="Guid" Nullable="true" />
+    <Property Name="Property02" Type="Guid" Nullable="true" />
+    <Property Name="Property03" Type="Guid" Nullable="true" />
+    <Property Name="Property04" Type="Guid" Nullable="true" />
+    <Property Name="Property05" Type="Guid" Nullable="true" />
+    <Property Name="Property06" Type="Guid" Nullable="true" />
+    <Property Name="Property07" Type="Guid" Nullable="true" />
+    <Property Name="Property08" Type="Guid" Nullable="true" />
+    <Property Name="Property09" Type="Guid" Nullable="true" />
+    <Property Name="Property10" Type="Guid" Nullable="true" />
+    <Property Name="Property11" Type="Guid" Nullable="true" />
+    <Property Name="Property12" Type="Guid" Nullable="true" />
+    <Property Name="Property13" Type="Guid" Nullable="true" />
+    <Property Name="Property14" Type="Guid" Nullable="true" />
+    <Property Name="Property15" Type="Guid" Nullable="true" />
+    <Property Name="Property16" Type="Guid" Nullable="true" />
+    <Property Name="Property17" Type="Guid" Nullable="true" />
+    <Property Name="Property18" Type="Guid" Nullable="true" />
+    <Property Name="Property19" Type="Guid" Nullable="true" />
+    <Property Name="Property20" Type="Guid" Nullable="true" />
+  </EntityType>
+  <EntityType Name="EntityMixed" OpenType="true">
+    <Key>
+      <PropertyRef Name="Property01" />
+    </Key>
+    <Property Name="Property01" Type="String" Nullable="true" />
+    <Property Name="Property02" Type="String" Nullable="true" />
+    <Property Name="Property03" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property04" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Property05" Type="Decimal" Nullable="true" />
+    <Property Name="Property06" Type="Decimal" Nullable="true" />
+    <Property Name="Property07" Type="Int64" Nullable="true" />
+    <Property Name="Property08" Type="Int64" Nullable="true" />
+    <Property Name="Property09" Type="Int32" Nullable="true" />
+    <Property Name="Property10" Type="Int32" Nullable="true" />
+    <Property Name="Property11" Type="Guid" Nullable="true" />
+    <Property Name="Property12" Type="Guid" Nullable="true" />
+  </EntityType>
+</Schema>
+

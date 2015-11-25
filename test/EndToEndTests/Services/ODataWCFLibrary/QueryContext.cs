@@ -351,7 +351,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         clientSize = ServiceConstants.DefaultPageSize;
                     }
 
-                    this.appliedPageSize = (clientSize > ServiceConstants.DefaultPageSize) ? ServiceConstants.DefaultPageSize : clientSize;
+                    this.appliedPageSize = clientSize;
                 }
                 else
                 {
