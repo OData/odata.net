@@ -144,16 +144,23 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             actual.EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit"));
         }
 
+        #region EditLinkShouldBeNullIfItsReadonlyEntry
+
+        private void EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(string payload, bool odataSimplified)
+        {
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: odataSimplified);
+            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
+            actual.EditLink.Should().BeNull();
+            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+        }
+
         [TestMethod]
         public void EditLinkShouldBeNullIfItsReadonlyEntry()
         {
             const string payload = "{" + ContextUrl + ", " +
                 "\"@odata.readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@odata.id\":\"entryId\"}";
-            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
-            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
-            actual.EditLink.Should().BeNull();
-            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, odataSimplified: false);
         }
 
         [TestMethod]
@@ -163,10 +170,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             const string payload = "{" + ContextUrl + ", " +
                 "\"@readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@id\":\"entryId\"}";
-            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: true);
-            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
-            actual.EditLink.Should().BeNull();
-            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, odataSimplified: true);
         }
 
         [TestMethod]
@@ -176,11 +180,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             const string payload = "{" + ContextUrl + ", " +
                 "\"@odata.readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@odata.id\":\"entryId\"}";
-            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: true);
-            actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
-            actual.EditLink.Should().BeNull();
-            actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
+            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, odataSimplified: true);
         }
+
+        #endregion
 
         [TestMethod]
         public void LinkReadingRequestShouldBeTheSameForJsonFeed()

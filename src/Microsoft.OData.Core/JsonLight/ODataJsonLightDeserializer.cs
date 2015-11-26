@@ -565,7 +565,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Completes the simplified OData annotation name with the OData namespace.
+        /// Completes the simplified OData annotation name with "odata.".
         /// </summary>
         /// <param name="annotationName">The annotation name to be completed.</param>
         /// <returns>The complete OData annotation name.</returns>
