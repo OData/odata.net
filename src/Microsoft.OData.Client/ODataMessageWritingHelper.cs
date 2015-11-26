@@ -34,13 +34,15 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="isBatchPartRequest">if set to <c>true</c> indicates that this is a part of a batch request.</param>
         /// <param name="enableAtom">Whether to enable ATOM.</param>
+        /// <param name="odataSimplified">Whether to enable OData Simplified.</param>
         /// <returns>Newly created message writer settings.</returns>
-        internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool enableAtom)
+        internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool enableAtom, bool odataSimplified)
         {
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
             {
                 CheckCharacters = false,
                 Indent = false,
+                ODataSimplified = odataSimplified,
 
                 // For operations inside batch, we need to dispose the stream. For top level requests,
                 // we do not need to dispose the stream. Since for inner batch requests, the request

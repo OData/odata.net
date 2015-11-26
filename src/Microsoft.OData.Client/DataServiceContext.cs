@@ -587,7 +587,9 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Returns the instance of entity tracker which tracks all the entities and links tracked by the context.</summary>
+        /// <summary>
+        /// Returns the instance of entity tracker which tracks all the entities and links tracked by the context.
+        /// </summary>
         public EntityTracker EntityTracker
         {
             get
@@ -604,20 +606,17 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Disable instance annotation to be materialized.
         /// </summary>
-        public bool DisableInstanceAnnotationMaterialization
-        {
-            get;
-            set;
-        }
+        public bool DisableInstanceAnnotationMaterialization { get; set; }
+
+        /// <summary>
+        /// Whether OData Simplified is enabled.
+        /// </summary>
+        public bool ODataSimplified { get; set; }
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
         /// </summary>
-        internal bool UseDefaultCredentials
-        {
-            get;
-            set;
-        }
+        internal bool UseDefaultCredentials { get; set; }
 
         /// <summary>Gets a value that indicates the type of HTTP implementation to use when accessing the data service in Silverlight.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.HttpStack" /> value that indicates the HTTP implementation to use when accessing the data service.</returns>

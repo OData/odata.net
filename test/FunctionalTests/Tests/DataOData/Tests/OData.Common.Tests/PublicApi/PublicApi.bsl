@@ -6298,6 +6298,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public get; }
 	Microsoft.OData.Client.ODataProtocolVersion MaxProtocolVersion  { public get; }
 	Microsoft.OData.Client.MergeOption MergeOption  { public get; public set; }
+	bool ODataSimplified  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	System.Func`2[[System.String],[System.Uri]] ResolveEntitySet  { public get; public set; }
 	System.Func`2[[System.Type],[System.String]] ResolveName  { public get; public set; }
 	System.Func`2[[System.String],[System.Type]] ResolveType  { public get; public set; }
