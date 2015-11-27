@@ -54,6 +54,8 @@
     <Compile Include="Metadata\CaseInsensitiveResolverUnitTests.cs" />
     <Compile Include="Metadata\ExtensionTestBase.cs" />
     <Compile Include="Metadata\ODataUriResolverUnitTests.cs" />
+    <Compile Include="Metadata\OpenTypeExtensionTestBase.cs" />
+    <Compile Include="Metadata\OpenTypeUnqualifiedExtensionUnitTests.cs" />
     <Compile Include="Metadata\UnqualifiedExtensionUnitTests.cs" />
     <Compile Include="ODataQueryOptionParserUnitTests.cs" />
     <Compile Include="ODataUriParserUnitTests.cs" />
