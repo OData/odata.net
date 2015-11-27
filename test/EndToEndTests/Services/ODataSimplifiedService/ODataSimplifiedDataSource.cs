@@ -25,6 +25,32 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 
         public override void Initialize()
         {
+            var product1 = new Product
+            {
+                ProductId = 11,
+                Quantity = 100,
+                LifeTimeInSeconds = 3600,
+                TheCombo = new NumberCombo
+                {
+                    Small = 80,
+                    Middle = 196,
+                    Large = 3
+                },
+                LargeNumbers = new Collection<decimal> { 36, 12, 9 }
+            };
+            var product2 = new Product
+            {
+                ProductId = 12,
+                Quantity = Int64.MaxValue,
+                LifeTimeInSeconds = Decimal.MaxValue,
+                TheCombo = new NumberCombo
+                {
+                    Small = Int32.MaxValue,
+                    Middle = Int64.MaxValue,
+                    Large = Decimal.MaxValue
+                },
+                LargeNumbers = new Collection<decimal> {Decimal.MinValue, Decimal.MaxValue}
+            };
             this.People.AddRange(new List<Person>()
             {
                 new Person
@@ -37,7 +63,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
                         Road = "Zixing Road",
                         City = "Shanghai"
                     },
-                    Descriptions = new Collection<string> { "Nice", "Tall" }
+                    Descriptions = new Collection<string> { "Nice", "Tall" },
+                    Products = new EntityCollection<Product> { product1, product2 }
                 },
                 new Person
                 {
@@ -91,32 +118,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 
             this.Products.AddRange(new List<Product>
             {
-                new Product
-                {
-                    ProductId = 11,
-                    Quantity = 100,
-                    LifeTimeInSeconds = 3600,
-                    TheCombo = new NumberCombo
-                    {
-                        Small = 80,
-                        Middle = 196,
-                        Large = 3
-                    },
-                    LargeNumbers = new Collection<decimal> { 36, 12, 9 }
-                },
-                new Product
-                {
-                    ProductId = 12,
-                    Quantity = Int64.MaxValue,
-                    LifeTimeInSeconds = Decimal.MaxValue,
-                    TheCombo = new NumberCombo
-                    {
-                        Small = Int32.MaxValue,
-                        Middle = Int64.MaxValue,
-                        Large = Decimal.MaxValue
-                    },
-                    LargeNumbers = new Collection<decimal> { Decimal.MinValue, Decimal.MaxValue }
-                },
+                product1,
+                product2,
                 new Product
                 {
                     ProductId = 13,

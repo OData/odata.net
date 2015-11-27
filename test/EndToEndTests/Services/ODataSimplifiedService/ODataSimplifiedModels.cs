@@ -26,6 +26,8 @@ namespace Microsoft.OData.SampleService.Models.ODataSimplified
         public Address Address { get; set; }
 
         public Collection<string> Descriptions { get; set; }
+
+        public EntityCollection<Product> Products { get; set; }
     }
 
     public class NumberCombo : ClrObject

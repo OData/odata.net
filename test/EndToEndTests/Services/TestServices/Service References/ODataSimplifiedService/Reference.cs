@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 11/27/2015 10:30:39 AM
+// Generation date: 11/27/2015 3:54:39 PM
 namespace Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference
 {
     /// <summary>
@@ -139,6 +139,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceRefer
         <Property Name=""LastName"" Type=""Edm.String"" Nullable=""false"" />
         <Property Name=""Address"" Type=""Microsoft.OData.SampleService.Models.ODataSimplified.Address"" />
         <Property Name=""Descriptions"" Type=""Collection(Edm.String)"" Nullable=""false"" />
+        <NavigationProperty Name=""Products"" Type=""Collection(Microsoft.OData.SampleService.Models.ODataSimplified.Product)"" />
       </EntityType>
       <ComplexType Name=""NumberCombo"">
         <Property Name=""Small"" Type=""Edm.Int32"" Nullable=""false"" />
@@ -156,7 +157,9 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceRefer
         <Property Name=""LargeNumbers"" Type=""Collection(Edm.Decimal)"" Nullable=""false"" />
       </EntityType>
       <EntityContainer Name=""ODataSimplifiedService"">
-        <EntitySet Name=""People"" EntityType=""Microsoft.OData.SampleService.Models.ODataSimplified.Person"" />
+        <EntitySet Name=""People"" EntityType=""Microsoft.OData.SampleService.Models.ODataSimplified.Person"">
+          <NavigationPropertyBinding Path=""Products"" Target=""Products"" />
+        </EntitySet>
         <EntitySet Name=""Products"" EntityType=""Microsoft.OData.SampleService.Models.ODataSimplified.Product"" />
       </EntityContainer>
     </Schema>
@@ -294,6 +297,28 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceRefer
         public PersonSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Person> query)
             : base(query) {}
 
+        /// <summary>
+        /// There are no comments for Products in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Products")]
+        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product> Products
+        {
+            get
+            {
+                if (!this.IsComposable)
+                {
+                    throw new global::System.NotSupportedException("The previous function is not composable.");
+                }
+                if ((this._Products == null))
+                {
+                    this._Products = Context.CreateQuery<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product>(GetPath("Products"));
+                }
+                return this._Products;
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product> _Products;
     }
     /// <summary>
     /// There are no comments for Person in the schema.
@@ -436,6 +461,29 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceRefer
         private global::System.Collections.ObjectModel.ObservableCollection<string> _Descriptions = new global::System.Collections.ObjectModel.ObservableCollection<string>();
         partial void OnDescriptionsChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
         partial void OnDescriptionsChanged();
+        /// <summary>
+        /// There are no comments for Property Products in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Products")]
+        public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product> Products
+        {
+            get
+            {
+                return this._Products;
+            }
+            set
+            {
+                this.OnProductsChanging(value);
+                this._Products = value;
+                this.OnProductsChanged();
+                this.OnPropertyChanged("Products");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product> _Products = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnProductsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference.Product> value);
+        partial void OnProductsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>

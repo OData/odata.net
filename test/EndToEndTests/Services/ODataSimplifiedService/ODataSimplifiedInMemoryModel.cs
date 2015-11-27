@@ -56,7 +56,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             var productsSet = new EdmEntitySet(defaultContainer, "Products", productType);
             defaultContainer.AddElement(productsSet);
 
-            IEnumerable<EdmError> errors = null;
+            var productsProperty = personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "Products",
+                Target = productType,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+            peopleSet.AddNavigationTarget(productsProperty, productsSet);
+
+            IEnumerable<EdmError> errors;
             model.Validate(out errors);
 
             return model;
