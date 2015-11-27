@@ -6,12 +6,7 @@
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Search
 {
-    using System;
     using System.Runtime.CompilerServices;
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,36 +16,42 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Search
     [TestClass]
     public class SearchTests : UriParserTestsBase
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void Word()
         {
             this.ApprovalVerifySearchParser(peopleBase, "bike");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void Phrase()
         {
             this.ApprovalVerifySearchParser(peopleBase, "\"mountain bike\"");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void ImplicitAnd()
         {
             this.ApprovalVerifySearchParser(peopleBase, "mountain bike");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void ImplicitAndWithParenThesis()
         {
             this.ApprovalVerifySearchParser(peopleBase, "(mountain car) (bike NOT P)");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void KeyWord()
         {
             this.ApprovalVerifySearchParser(peopleBase, "mountain OR bike AND NOT clothing");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void KeywordWithParenthesis()
         {

@@ -10,6 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using ApprovalTests;
     using ApprovalTests.Reporters;
@@ -53,6 +54,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
         /// 
         /// Total combinations: t(1) = 2
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void OneWordTest()
         {
@@ -63,6 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
         /// Run tests with one word, and use a lexicon with a max length of 2 to test match information.
         /// Total combinations: t(2) = 1 * 1 * 2 * 4 = 8
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void TwoWordsTest()
         {
@@ -73,6 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
         /// Run tests with one word, and use a lexicon with a max length of 2 to test match information.
         /// Total combinations: t(3) = t(1) * t(2) * 2 * 2 * 4 = 256
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void ThreeWordsTest()
         {
@@ -83,6 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
         /// Run tests with one word, and use a lexicon with a max length of 2 to test match information.
         /// Total combinations: t(4) = (t(1) * t(3) + t(2) * t(2) + t(3) * t(1))* 2 * 4 = 8704
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void FourWordsTest()
         {
