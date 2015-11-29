@@ -133,7 +133,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Atom, 2, tempUri, request: false);
         }
 
-        private void WriteAnnotationAtStartOnTopLevelFeed(string expectedPayload, ODataFormat format, long? count, Uri nextLink, bool request, Uri deltaLink = null)
+        private void WriteAnnotationAtStartOnTopLevelFeed(string expectedPayload, ODataFormat format, long? count, Uri nextLink, bool request, Uri deltaLink = null, bool odataSimplified = false)
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
@@ -146,7 +146,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
                 odataWriter.WriteEnd();
             };
 
-            WriteAnnotationsAndValidatePayload(action, EntitySet, format, expectedPayload, request, createFeedWriter: true);
+            WriteAnnotationsAndValidatePayload(action, EntitySet, format, expectedPayload, request, createFeedWriter: true, odataSimplified: odataSimplified);
         }
 
         [TestMethod]
@@ -883,9 +883,45 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
 
         #endregion
 
-        private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter)
+        #region OData Simplified
+
+        [TestMethod]
+        public void WriteSimplifiedAnnotationAtStartOnTopLevelFeedAsResponseInJsonLight()
         {
-            var writerSettings = new ODataMessageWriterSettings {DisableMessageStreamDisposal = true, EnableAtom = true};
+            string expectedPayload =
+            "{" +
+                "\"@context\":\"http://www.example.com/$metadata#TestEntitySet\"," +
+                "\"@count\":2," +
+                "\"@nextLink\":\"http://tempuri.org/\"," +
+                "\"@Custom.StartAnnotation\":123," +
+                "\"value\":[" +
+                 "]" +
+            "}";
+
+            WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, 2, tempUri, request: false, odataSimplified: true);
+        }
+
+        [TestMethod]
+        public void WriteSimplifiedDeltaLinkAtStartOnTopLevelFeedAsResponseInJsonLight()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@context\":\"http://www.example.com/$metadata#TestEntitySet\"," +
+                "\"@count\":2," +
+                "\"@deltaLink\":\"http://tempuri.org/\"," +
+                "\"@Custom.StartAnnotation\":123," +
+                "\"value\":[" +
+                 "]" +
+            "}";
+
+            WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, 2, null, false, tempUri, odataSimplified: true);
+        }
+
+        #endregion
+
+        private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool odataSimplified = false)
+        {
+            var writerSettings = new ODataMessageWriterSettings {DisableMessageStreamDisposal = true, EnableAtom = true, ODataSimplified = odataSimplified};
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
@@ -921,7 +957,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
 
             Assert.AreEqual(expectedPayload, payload);
         }
-
 
         private void WriteAnnotationAtStartInDeltaFeed(string expectedPayload, long? count, Uri nextLink, Uri deltaLink)
         {

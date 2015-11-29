@@ -397,6 +397,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightMetadataLevel.cs">
       <Link>Microsoft\OData\Core\JsonLight\JsonLightMetadataLevel.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightODataAnnotationWriter.cs">
+      <Link>Microsoft\OData\Core\JsonLight\JsonLightODataAnnotationWriter.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightTypeNameOracle.cs">
       <Link>Microsoft\OData\Core\JsonLight\JsonLightTypeNameOracle.cs</Link>
     </Compile>

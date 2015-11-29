@@ -6,7 +6,6 @@
 
 namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -119,10 +118,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             TopLevelFeedInstanceAnnotationTest(TopLevelFeedWithInstanceAnnotation, streaming: true, isResponse: false, shouldReadAndValidateCustomInstanceAnnotations: false);
         }
 
-        internal static void TopLevelFeedInstanceAnnotationTest(string feedPayload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true)
+        internal static void TopLevelFeedInstanceAnnotationTest(string feedPayload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool odataSimplified = false)
         {
             ODataFeed feedFromReader = null;
-            using (var messageReader = CreateODataMessageReader(feedPayload, contentType, isResponse, shouldReadAndValidateCustomInstanceAnnotations))
+            using (var messageReader = CreateODataMessageReader(feedPayload, contentType, isResponse, shouldReadAndValidateCustomInstanceAnnotations, odataSimplified))
             {
                 var odataReader = messageReader.CreateODataFeedReader(EntitySet, EntityType);
 
@@ -162,15 +161,15 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             ValidateContainsAllExpectedInstanceAnnotations(feedFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
         }
 
-        private static void TopLevelFeedInstanceAnnotationTest(string feedPayload, bool streaming, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true)
+        private static void TopLevelFeedInstanceAnnotationTest(string feedPayload, bool streaming, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool odataSimplified = false)
         {
-            TopLevelFeedInstanceAnnotationTest(feedPayload, GetContentType(streaming), isResponse, shouldReadAndValidateCustomInstanceAnnotations);
+            TopLevelFeedInstanceAnnotationTest(feedPayload, GetContentType(streaming), isResponse, shouldReadAndValidateCustomInstanceAnnotations, odataSimplified);
         }
 
-        private static ODataMessageReader CreateODataMessageReader(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations)
+        private static ODataMessageReader CreateODataMessageReader(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations, bool odataSimplified = false)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false, EnableAtom = true };
+            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false, EnableAtom = true, ODataSimplified = odataSimplified };
             ODataMessageReader messageReader;
             if (isResponse)
             {
@@ -589,11 +588,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             InlineEntryInstanceAnnotationTest(EntryInsideExpandedFeedRequestWithInstanceAnnotation, streaming: false, isResponse: false, shouldReadAndValidateCustomInstanceAnnotations: false);
         }
 
-        internal static void InlineEntryInstanceAnnotationTest(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true)
+        internal static void InlineEntryInstanceAnnotationTest(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool odataSimplified = false)
         {
             ODataEntry entryFromReader = null;
             int depth = 0;
-            using (var messageReader = CreateODataMessageReader(payload, contentType, isResponse, shouldReadAndValidateCustomInstanceAnnotations))
+            using (var messageReader = CreateODataMessageReader(payload, contentType, isResponse, shouldReadAndValidateCustomInstanceAnnotations, odataSimplified))
             {
                 var odataReader = messageReader.CreateODataEntryReader(EntitySet, EntityType);
 
@@ -642,12 +641,92 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             ValidateContainsAllExpectedInstanceAnnotations(entryFromReader.InstanceAnnotations, shouldReadAndValidateCustomInstanceAnnotations);
         }
 
-        private static void InlineEntryInstanceAnnotationTest(string payload, bool streaming, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true)
+        private static void InlineEntryInstanceAnnotationTest(string payload, bool streaming, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool odataSimplified = false)
         {
-            InlineEntryInstanceAnnotationTest(payload, GetContentType(streaming), isResponse, shouldReadAndValidateCustomInstanceAnnotations);
+            InlineEntryInstanceAnnotationTest(payload, GetContentType(streaming), isResponse, shouldReadAndValidateCustomInstanceAnnotations, odataSimplified);
         }
 
         #endregion Reading Instance Annotations from Expanded Entries
+
+        #region OData Simplified
+
+        private const string TopLevelFeedWithSimplifiedInstanceAnnotation =
+        "{" +
+            "\"@context\":\"http://www.example.com/service.svc/$metadata#TestEntitySet\"," +
+            "\"@custom.Int32Annotation1\":123," +
+            "\"value\":[]," +
+            "\"@custom.Int32Annotation2\":456" +
+        "}";
+
+        [TestMethod]
+        public void ShouldReadSimplifiedInstanceAnnotationsOnTopLevelFeedResponseInNonStreamingModeODataSimplified()
+        {
+            // cover "@context"
+            TopLevelFeedInstanceAnnotationTest(TopLevelFeedWithSimplifiedInstanceAnnotation, streaming: false, isResponse: true, odataSimplified: true);
+        }
+
+        [TestMethod]
+        public void ShouldReadFullInstanceAnnotationsOnTopLevelFeedResponseInNonStreamingModeODataSimplified()
+        {
+            // cover "@odata.context"
+            TopLevelFeedInstanceAnnotationTest(TopLevelFeedWithInstanceAnnotation, streaming: false, isResponse: true, odataSimplified: true);
+        }
+
+        private const string ExpandedEntryResponseWithSimplifiedInstanceAnnotation =
+        "{" +
+            "\"@context\":\"http://www.example.com/service.svc/$metadata#TestEntitySet/$entity\"," +
+            "\"ID\":1," +
+            "\"ResourceNavigationProperty\":{" +
+                "\"@custom.Int32Annotation1\":123," +
+                "\"ID\":2," +
+                "\"ResourceNavigationProperty@navigationLink\":\"http://example.com/foo/baz\"," +
+                "\"@custom.Int32Annotation2\":456" +
+            "}" +
+        "}";
+
+        [TestMethod]
+        public void ShouldReadSimplifiedInstanceAnnotationsOnInlineEntryResponseInStreamingModeODataSimplified()
+        {
+            // cover "@navigationLink"
+            InlineEntryInstanceAnnotationTest(ExpandedEntryResponseWithSimplifiedInstanceAnnotation, streaming: true, isResponse: true, odataSimplified: true);
+        }
+
+        [TestMethod]
+        public void ShouldReadFullInstanceAnnotationsOnInlineEntryResponseInStreamingModeODataSimplified()
+        {
+            // cover "@odata.navigationLink"
+            InlineEntryInstanceAnnotationTest(ExpandedEntryResponseWithInstanceAnnotation, streaming: true, isResponse: true, odataSimplified: true);
+        }
+
+        private const string EntryInsideExpandedFeedRequestWithSimplifiedInstanceAnnotation =
+        "{" +
+            "\"@context\":\"http://www.example.com/service.svc/$metadata#TestEntitySet/$entity\"," +
+            "\"ID\":1," +
+            "\"ResourceSetNavigationProperty\":[" +
+                "{" +
+                    "\"@custom.Int32Annotation1\":123," +
+                    "\"ID\":2," +
+                    "\"ResourceNavigationProperty@bind\":\"http://example.com/foo/baz\"," +
+                    "\"@custom.Int32Annotation2\":456" +
+                "}" +
+            "]" +
+        "}";
+
+        [TestMethod]
+        public void ShouldReadSimplifiedInstanceAnnotationsOnInlineEntryInsideFeedRequestInStreamingModeODataSimplified()
+        {
+            // cover "@bind"
+            InlineEntryInstanceAnnotationTest(EntryInsideExpandedFeedRequestWithSimplifiedInstanceAnnotation, streaming: true, isResponse: false, odataSimplified: true);
+        }
+
+        [TestMethod]
+        public void ShouldReadFullInstanceAnnotationsOnInlineEntryInsideFeedRequestInStreamingModeODataSimplified()
+        {
+            // cover "@odata.bind"
+            InlineEntryInstanceAnnotationTest(EntryInsideExpandedFeedRequestWithInstanceAnnotation, streaming: true, isResponse: false, odataSimplified: true);
+        }
+
+        #endregion
 
         private static string GetContentType(bool streaming)
         {

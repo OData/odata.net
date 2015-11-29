@@ -94,5 +94,11 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary> The kind name of the service document entity set element. </summary>
         internal const string ServiceDocumentEntitySetKindName = "EntitySet";
+
+        /// <summary>The simplified OData Context property name.</summary>
+        internal const string SimplifiedODataContextPropertyName = "@context";
+
+        /// <summary>The simplified OData Type property name.</summary>
+        internal const string SimplifiedODataTypePropertyName = "@type";
     }
 }

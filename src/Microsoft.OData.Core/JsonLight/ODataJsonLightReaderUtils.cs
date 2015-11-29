@@ -9,8 +9,6 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using System.Globalization;
-    using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;

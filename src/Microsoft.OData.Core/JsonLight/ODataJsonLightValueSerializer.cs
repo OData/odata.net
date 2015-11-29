@@ -165,7 +165,7 @@ namespace Microsoft.OData.Core.JsonLight
             typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(complexValue, metadataTypeReference, complexValueTypeReference, isOpenPropertyType);
             if (typeName != null)
             {
-                ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
+                this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
             }
 
             // Write custom instance annotations
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 // "{"
                 this.JsonWriter.StartObjectScope();
-                ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
+                this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
                 this.JsonWriter.WriteValuePropertyName();
             }
 

@@ -54,14 +54,14 @@ namespace Microsoft.OData.Core.JsonLight
             string typeName = this.JsonLightOutputContext.TypeNameOracle.GetEntryTypeNameForWriting(entryState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedEntityTypeName, entry);
             if (typeName != null)
             {
-                ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
+                this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
             }
 
             // Write the "@odata.id": "Entity Id"
             Uri id;
             if (entry.MetadataBuilder.TryGetIdForSerialization(out id))
             {
-                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
+                this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
                 if (id != null && !entry.HasNonComputedId)
                 {
                     id = this.MetadataDocumentBaseUri.MakeRelativeUri(id);
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core.JsonLight
             string etag = entry.ETag;
             if (etag != null)
             {
-                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataETag);
+                this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataETag);
                 this.JsonWriter.WriteValue(etag);
             }
         }
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Core.JsonLight
             Uri editLinkUriValue = entry.EditLink;
             if (editLinkUriValue != null && !entryState.EditLinkWritten)
             {
-                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataEditLink);
+                this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataEditLink);
                 this.JsonWriter.WriteValue(this.UriToString(
                     entry.HasNonComputedEditLink
                     ? editLinkUriValue
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Core.JsonLight
             Uri readLinkUriValue = entry.ReadLink;
             if (readLinkUriValue != null && readLinkUriValue != editLinkUriValue && !entryState.ReadLinkWritten)
             {
-                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataReadLink);
+                this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataReadLink);
                 this.JsonWriter.WriteValue(this.UriToString(
                     entry.HasNonComputedReadLink
                     ? readLinkUriValue
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Core.JsonLight
                 Uri mediaEditLinkUriValue = mediaResource.EditLink;
                 if (mediaEditLinkUriValue != null && !entryState.MediaEditLinkWritten)
                 {
-                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaEditLink);
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaEditLink);
                     this.JsonWriter.WriteValue(this.UriToString(
                         mediaResource.HasNonComputedEditLink
                         ? mediaEditLinkUriValue
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Core.JsonLight
                 Uri mediaReadLinkUriValue = mediaResource.ReadLink;
                 if (mediaReadLinkUriValue != null && mediaReadLinkUriValue != mediaEditLinkUriValue && !entryState.MediaReadLinkWritten)
                 {
-                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaReadLink);
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaReadLink);
                     this.JsonWriter.WriteValue(this.UriToString(
                         mediaResource.HasNonComputedReadLink
                         ? mediaReadLinkUriValue
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Core.JsonLight
                 string mediaContentType = mediaResource.ContentType;
                 if (mediaContentType != null && !entryState.MediaContentTypeWritten)
                 {
-                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaContentType);
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaContentType);
                     this.JsonWriter.WriteValue(mediaContentType);
                     entryState.MediaContentTypeWritten = true;
                 }
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Core.JsonLight
                 string mediaETag = mediaResource.ETag;
                 if (mediaETag != null && !entryState.MediaETagWritten)
                 {
-                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaETag);
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaETag);
                     this.JsonWriter.WriteValue(mediaETag);
                     entryState.MediaETagWritten = true;
                 }
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (navigationLinkUrl != null)
             {
                 // The navigation link URL is a property annotation "NavigationLinkName@odata.navigationLinkUrl: 'url'"
-                this.JsonWriter.WritePropertyAnnotationName(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl);
+                this.ODataAnnotationWriter.WritePropertyAnnotationName(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl);
                 this.JsonWriter.WriteValue(this.UriToString(navigationLinkUrl));
             }
         }
@@ -315,7 +315,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(associationLinkUrl != null, "associationLinkUrl != null");
 
             // The association link URL is a property annotation "NavigationLinkName@odata.associationLinkUrl: 'url'"
-            this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataAssociationLinkUrl);
+            this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataAssociationLinkUrl);
             this.JsonWriter.WriteValue(this.UriToString(associationLinkUrl));
         }
 

@@ -7,36 +7,35 @@
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
 {
     #region namespaces
-    using System;
     using System.Runtime.CompilerServices;
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion namespaces
 
     [TestClass]
     public class ExpandNestedSearch : UriParserTestsBase
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void Word()
         {
             this.ApprovalVerifyExpandParser(orderBase, "CustomerForOrder($search=bike)");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void Phrase()
         {
             this.ApprovalVerifyExpandParser(orderBase, "CustomerForOrder($search=\"mountain bike\")");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void ImplicitAnd()
         {
             this.ApprovalVerifyExpandParser(orderBase, "CustomerForOrder($search=mountain bike)");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void KeyWord()
         {
@@ -48,6 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
                "CustomerForOrder($search=mountain OR bike AND NOT clothing)");
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         [TestMethod]
         public void KeywordWithParenthesis()
         {

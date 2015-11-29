@@ -81,6 +81,10 @@
       <Project>{6c3bbbba-360b-40e3-a96e-dd0708da6718}</Project>
       <Name>Microsoft.Test.OData.Services.ODataOperationService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj">
+      <Project>{b34c9a66-22be-4377-896d-009577d5e6ff}</Project>
+      <Name>Microsoft.Test.OData.Services.ODataSimplifiedService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ODataTripPinService\ODataSamples.Services.TripPin.csproj">
       <Project>{58e9bbcb-f264-49f2-b6ec-b291b9eae2c0}</Project>
       <Name>ODataSamples.Services.TripPin</Name>
@@ -146,6 +150,7 @@
     <Compile Include="PublicProvider\ReflectionServiceReference.cs" />
     <Compile Include="PublicProvider\HybridServiceReference.cs" />
     <Compile Include="PublicProvider\EFServiceReference.cs" />
+    <Compile Include="Service References\ODataSimplifiedService\Reference.cs" />
     <Compile Include="Service References\PluggableformatService\Reference.cs" />
     <Compile Include="Service References\TrippinService\Reference.cs" />
     <Compile Include="Service References\AstoriaDefaultServiceReferenceModifiedClientTypes\Reference.cs">

@@ -7,12 +7,8 @@
 namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
-
-    using System;
     using System.Diagnostics;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -20,38 +16,6 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal static class ODataJsonLightWriterUtils
     {
-        /// <summary>
-        /// Writes the odata.type instance annotation with the specified type name.
-        /// </summary>
-        /// <param name="jsonWriter">The JSON writer to write to.</param>
-        /// <param name="typeName">The type name to write.</param>
-        internal static void WriteODataTypeInstanceAnnotation(IJsonWriter jsonWriter, string typeName)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter != null");
-            Debug.Assert(typeName != null, "typeName != null");
-
-            // "@odata.type": #"typename"
-            jsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataType);
-            jsonWriter.WriteValue(PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
-        }
-
-        /// <summary>
-        /// Writes the odata.type propert annotation for the specified property with the specified type name.
-        /// </summary>
-        /// <param name="jsonWriter">The JSON writer to write to.</param>
-        /// <param name="propertyName">The name of the property for which to write the odata.type annotation.</param>
-        /// <param name="typeName">The type name to write.</param>
-        internal static void WriteODataTypePropertyAnnotation(IJsonWriter jsonWriter, string propertyName, string typeName)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter != null");
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            Debug.Assert(typeName != null, "typeName != null");
-
-            // "<propertyName>@odata.type": #"typename"
-            WritePropertyAnnotationName(jsonWriter, propertyName, ODataAnnotationNames.ODataType);
-            jsonWriter.WriteValue(PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
-        }
-
         /// <summary>
         /// Writes the 'value' property name.
         /// </summary>
@@ -89,23 +53,6 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             jsonWriter.WriteName(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotationName);
-        }
-
-        /// <summary>
-        /// For JsonLight writer, always prefix the type name with # for payload writting.
-        /// </summary>
-        /// <param name="typeName">The type name to prefix</param>
-        /// <returns>The (#) prefixed type name no matter it is primitive type or not.</returns>
-        internal static string PrefixTypeName(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName))
-            {
-                return typeName;
-            }
-
-            Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "before prefix");
-
-            return ODataConstants.TypeNamePrefix + typeName;
         }
     }
 }

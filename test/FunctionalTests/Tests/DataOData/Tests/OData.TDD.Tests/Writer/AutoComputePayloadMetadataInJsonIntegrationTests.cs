@@ -158,6 +158,34 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
             PayloadMetadataWithoutOpeningBrace;
 
+        private const string PayloadMetadataWithoutOpeningBraceODataSimplified =
+            "\"@id\":\"http://example.com/id\"," +
+            "\"@etag\":\"etag\"," +
+            "\"@editLink\":\"http://example.com/edit\"," +
+            "\"@readLink\":\"http://example.com/read\"," +
+            "\"@mediaEditLink\":\"http://example.com/mr/edit\"," +
+            "\"@mediaReadLink\":\"http://example.com/mr/read\"," +
+            "\"@mediaContentType\":\"image/png\"," +
+            "\"@mediaEtag\":\"mr etag\"," +
+            "\"ID\":123," +
+            "\"StreamProp1@mediaEditLink\":\"http://example.com/stream/edit\"," +
+            "\"StreamProp1@mediaReadLink\":\"http://example.com/stream/read\"," +
+            "\"StreamProp1@mediaContentType\":\"image/jpeg\"," +
+            "\"StreamProp1@mediaEtag\":\"stream etag\"," +
+            "\"DeferredNavLink@associationLink\":\"http://example.com/association\"," +
+            "\"DeferredNavLink@navigationLink\":\"http://example.com/navigation\"," +
+            "\"ExpandedNavLink@associationLink\":\"http://example.com/expanded/association\"," +
+            "\"ExpandedNavLink@navigationLink\":\"http://example.com/expanded/navigation\"," +
+            "\"ExpandedNavLink\":[]," +
+            "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
+            "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}" +
+        "}";
+
+        private const string PayloadWithAllMetadataODataSimplified =
+            "{" +
+            "\"@context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+            PayloadMetadataWithoutOpeningBraceODataSimplified;
+
         private ODataEntry entryWithOnlyData;
         private ODataEntry entryWithOnlyData2;
         private ODataEntry entryWithOnlyData3;
@@ -333,8 +361,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
 
             this.derivedEntry = new ODataEntry {TypeName = "Namespace.DerivedType", 
                 Properties = new[] { new ODataProperty { Name = "ID", Value = 345 }, new ODataProperty { Name = "Name", Value = "Bar" } },
-        };
+            };
+        }
 
+        [TestMethod]
+        public void WritingSimplifiedODataAnnotationsInFullMetadataMode()
+        {
+            GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", false, odataSimplified: true)
+                .Should().Be(PayloadWithAllMetadataODataSimplified);
         }
 
         [TestMethod]
@@ -1647,10 +1681,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
         private string GetWriterOutputForEntryWithPayloadMetadata(
             string contentType,
             bool autoComputePayloadMetadataInJson,
-            string selectClause = null)
+            string selectClause = null,
+            bool odataSimplified = false)
         {
             ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithPayloadMetadata, this.navLinkWithPayloadMetadata, this.expandedNavLinkWithPayloadMetadata, new ODataFeed() };
-            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause);
+            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause, odataSimplified: odataSimplified);
         }
 
         private string GetWriterOutputForEntryWithOnlyData(
@@ -1662,7 +1697,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause);
         }
 
-        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadataInJson, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null)
+        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadataInJson, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool odataSimplified = false)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
@@ -1670,6 +1705,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
                 AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
+                ODataSimplified = odataSimplified
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$select", selectClause }, { "$expand", expandClause } }).ParseSelectAndExpand();

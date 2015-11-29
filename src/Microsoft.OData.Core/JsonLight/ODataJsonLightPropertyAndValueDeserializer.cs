@@ -12,8 +12,6 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Linq;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
@@ -324,7 +322,8 @@ namespace Microsoft.OData.Core.JsonLight
 
             bool result = false;
             string propertyName = this.JsonReader.GetPropertyName();
-            if (string.CompareOrdinal(propertyName, JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataType) == 0)
+            if (string.CompareOrdinal(propertyName, JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataType) == 0
+                || this.CompareSimplifiedODataAnnotation(JsonLightConstants.SimplifiedODataTypePropertyName, propertyName))
             {
                 // Read over the property name
                 this.JsonReader.ReadNext();
