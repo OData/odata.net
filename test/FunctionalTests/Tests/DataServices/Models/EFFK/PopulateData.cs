@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.EFFK
 
     public static class PopulateData
     {
-        private static string ConnectionString = @"server=.\sqlexpress;integrated security=true;";
+        private static string ConnectionString = @"server=(localdb)\MSSQLLocalDB;integrated security=true;";
         private static EntityConnection entityConnection;
 
         public static EntityConnection EntityConnection
