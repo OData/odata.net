@@ -4,14 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
 namespace AstoriaUnitTests.Tests
 {
     #region Namespaces
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Data.Test.Astoria;
     using System.Globalization;
@@ -35,6 +36,8 @@ namespace AstoriaUnitTests.Tests
         {
             ContextType = typeof(ElevatorDbContext);
             DatabaseName = ContextType.FullName;
+            Database.DefaultConnectionFactory =
+                new SqlConnectionFactory(@"server=" + DataUtil.DefaultDataSource + @";integrated security=true;");
         }
 
         [ClassInitialize]
