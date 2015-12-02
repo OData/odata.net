@@ -7,7 +7,7 @@ category: "6. OData Features"
 
 From ODataLib 6.14.0, we introduce ODataSimplified convention to make `key-as-segment` and `default` convention work side by side. 
 
-Because when user use key-as-segment convention, the url like `/Me/Messages/Microsoft.OutlookServices.EventMessage` will always be parsed by our parser as `{Singleton}/{Navigation}/{Key}` but what customer needs is `{Singleton}/{Navigation}/{Type}`. But when you use ODataSimplified convention, we will try parse type first than key as a default priority.
+Because when user use key-as-segment convention, url like `/Me/Messages/Microsoft.OutlookServices.EventMessage` will always be parsed by uriParser to `{Singleton}/{Navigation}/{Key}` but what customer needs is `{Singleton}/{Navigation}/{Type}`. When you use ODataSimplified convention, we will try parse type first than key as a default priority to slove this problem.
 
 Turn on ODataSimplified is the same way with key-as-segment:
 {% highlight csharp %}
