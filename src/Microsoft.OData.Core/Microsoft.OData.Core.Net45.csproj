@@ -556,6 +556,7 @@
     <Compile Include="UriParser\SemanticAst\WildcardSelectItem.cs" />
     <Compile Include="UriParser\SyntacticAst\AggregateStatementToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AggregateToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\ApplyTransformationToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AllToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AnyToken.cs" />
     <Compile Include="UriParser\SyntacticAst\BinaryOperatorToken.cs" />

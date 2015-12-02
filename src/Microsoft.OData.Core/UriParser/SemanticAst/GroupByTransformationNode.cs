@@ -14,17 +14,17 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 {
     public sealed class GroupByTransformationNode : TransformationNode
     {
-        public GroupByTransformationNode(IList<GroupByPropertyNode> groupingProperties, IEdmTypeReference groupingItemType, AggregateTransformationNode aggregate, IEdmTypeReference itemType, CollectionNode source)
+        public GroupByTransformationNode(IList<GroupByPropertyNode> groupingProperties, IEdmTypeReference groupingItemType, TransformationNode childTransformation, IEdmTypeReference itemType, CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
             ExceptionUtils.CheckArgumentNotNull(groupingItemType, "groupingItemType");
-            // OK for aggregate to be null
+            // OK for childTransformation to be null
             ExceptionUtils.CheckArgumentNotNull(itemType, "itemType");
             // OK for source to be null
 
             this._groupingProperties = groupingProperties;
             this._groupingItemType = groupingItemType;
-            this._aggregate = aggregate;
+            this._childTransformation = childTransformation;
             this._itemType = itemType;
             this._source = source;
         }
@@ -39,13 +39,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        private readonly AggregateTransformationNode _aggregate;
+        private readonly TransformationNode _childTransformation;
 
-        public AggregateTransformationNode Aggregate
+        public TransformationNode ChildTransformation
         {
             get
             {
-                return _aggregate;
+                return _childTransformation;
             }
         }
 

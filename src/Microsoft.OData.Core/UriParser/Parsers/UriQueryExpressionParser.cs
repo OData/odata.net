@@ -315,8 +315,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             this.lexer.NextToken();
 
-            // optional aggregate
-            AggregateToken aggregate = null;
+            // optional child transformation
+            ApplyTransformationToken transformationToken = null;
 
             // "," (comma)
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 if (TokenIdentifierIs(ExpressionConstants.KeywordAggregate))
                 {
-                    aggregate = this.ParseAggregate();
+                    transformationToken = this.ParseAggregate();
                 }
                 else
                 {
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             this.lexer.NextToken();
 
-            return new GroupByToken(properties, aggregate);
+            return new GroupByToken(properties, transformationToken);
         }
 
         // parses $apply filter tranformation (.e.g. filter(ProductName eq 'Aniseed Syrup'))

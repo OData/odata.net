@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
     using Microsoft.OData.Core.UriParser.Visitors;
     using System.Collections.Generic;
 
-    internal sealed class AggregateToken : QueryToken
+    internal sealed class AggregateToken : ApplyTransformationToken
     {
         public AggregateToken(IEnumerable<AggregateStatementToken> statements)
         {

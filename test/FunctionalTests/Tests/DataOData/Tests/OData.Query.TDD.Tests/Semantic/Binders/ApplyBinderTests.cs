@@ -117,7 +117,7 @@
             VerifyIsFakeSingleValueNode(groupingProperties[0].Accessor);
             VerifyIsFakeSingleValueNode(groupingProperties[1].Accessor);
 
-            groupBy.Aggregate.Should().BeNull();
+            groupBy.ChildTransformation.Should().BeNull();
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@
 
             nameNode.Accessor.Should().BeSameAs(FakeBindMethods.FakePersonDogNameNode);
 
-            groupBy.Aggregate.Should().BeNull();
+            groupBy.ChildTransformation.Should().BeNull();
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@
             var transformations = actual.Transformations.ToList();
             var groupBy = transformations[0] as GroupByTransformationNode;            
           
-            var aggregate = groupBy.Aggregate;
+            var aggregate = groupBy.ChildTransformation;
             aggregate.Should().NotBeNull();            
             VerifyDynamicTypeReferenceNames(aggregate.ItemType, new string[] { "TotalPrice" });
         }

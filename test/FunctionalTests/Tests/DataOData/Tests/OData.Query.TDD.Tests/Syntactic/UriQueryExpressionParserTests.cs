@@ -314,9 +314,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
 
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
 
-            groupBy.Aggregate.Should().NotBeNull();
+            groupBy.Child.Should().NotBeNull();
 
-            var aggregate = groupBy.Aggregate;                        
+            var aggregate = groupBy.Child as AggregateToken;                        
             aggregate.Statements.Should().HaveCount(1);
 
             VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", aggregate.Statements.First());      
@@ -449,9 +449,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
 
             
             groupBy.Properties.Should().HaveCount(1);
-            groupBy.Aggregate.Should().NotBeNull();
+            groupBy.Child.Should().NotBeNull();
 
-            var groupByAggregate = groupBy.Aggregate;
+            var groupByAggregate = groupBy.Child as AggregateToken;
             groupByAggregate.Statements.Should().HaveCount(1);
             VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", groupByAggregate.Statements.First());      
 

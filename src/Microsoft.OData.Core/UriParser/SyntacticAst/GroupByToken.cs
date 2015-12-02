@@ -15,18 +15,18 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
     using Microsoft.OData.Core.UriParser.Visitors;
     using System.Collections.Generic;
 
-    internal sealed class GroupByToken : QueryToken
+    internal sealed class GroupByToken : ApplyTransformationToken
     {
-        public GroupByToken(IEnumerable<EndPathToken> properties, AggregateToken aggregate)
+        public GroupByToken(IEnumerable<EndPathToken> properties, ApplyTransformationToken child)
         {
             ExceptionUtils.CheckArgumentNotNull(properties, "properties");
 
             this.properties = properties;
-            this.aggregate = aggregate;
+            this.child = child;
         }
 
         private readonly IEnumerable<EndPathToken> properties;
-        private readonly AggregateToken aggregate;
+        private readonly ApplyTransformationToken child;
 
         /// <summary>
         /// The kind of the query token.
@@ -41,9 +41,9 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             get { return this.properties; }
         }
 
-        public AggregateToken Aggregate
+        public ApplyTransformationToken Child
         {
-            get { return this.aggregate; }
+            get { return this.child; }
         }
 
         /// <summary>

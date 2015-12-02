@@ -1764,6 +1764,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\AggregateToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\AggregateToken.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\ApplyTransformantion.cs">
+      <Link>Microsoft\OData\Core\UriParser\SyntacticAst\ApplyTransformantion.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\GroupByToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\GroupByToken.cs</Link>
     </Compile>

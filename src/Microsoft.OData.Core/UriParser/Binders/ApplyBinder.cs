@@ -174,14 +174,21 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var resultType = new EdmEntityType(string.Empty, "ResultDynamicTypeWrapper", baseType: groupingType, isAbstract: false, isOpen: true);
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
-            AggregateTransformationNode aggregate = null;
-            if (token.Aggregate != null)
+            TransformationNode aggregate = null;
+            if (token.Child != null)
             {
-                aggregate = BindAggregateToken(token.Aggregate);
-
-                foreach (var property in (aggregate.ItemType.Definition as IEdmStructuredType).Properties())
+                if (token.Child.Kind == TreeNodeKinds.QueryTokenKind.Aggregate)
                 {
-                    resultType.AddStructuralProperty(property.Name, property.Type);
+                    aggregate = BindAggregateToken((AggregateToken)token.Child);
+
+                    foreach (var property in (aggregate.ItemType.Definition as IEdmStructuredType).Properties())
+                    {
+                        resultType.AddStructuralProperty(property.Name, property.Type);
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException();
                 }
             }
 

@@ -49,7 +49,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
         public void AggregateSetCorrectly()
         {
             var token = new GroupByToken(properties, aggregate);
-            ((object)token.Aggregate).Should().Be(aggregate);
+            ((object)token.Child).Should().Be(aggregate);
         }
 
         [TestMethod]

@@ -556,6 +556,7 @@
     <Compile Include="UriParser\SyntacticAst\AggregateStatementToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AllToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AnyToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\ApplyTransformationToken.cs" />
     <Compile Include="UriParser\SyntacticAst\BinaryOperatorToken.cs" />
     <Compile Include="UriParser\SyntacticAst\CustomQueryOptionToken.cs" />
     <Compile Include="UriParser\SyntacticAst\DottedIdentifierToken.cs" />
