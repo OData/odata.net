@@ -12,11 +12,17 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
     public abstract class TransformationNode
     {
+        /// <summary>
+        /// Gets kind of transformation: groupby, aggregate, filter etc.
+        /// </summary>
         public abstract TransformationNodeKind Kind
         {
             get;
         }
 
+        /// <summary>
+        /// Gets edm type returned from transformation
+        /// </summary>
         public abstract IEdmTypeReference ItemType
         {
             get;
