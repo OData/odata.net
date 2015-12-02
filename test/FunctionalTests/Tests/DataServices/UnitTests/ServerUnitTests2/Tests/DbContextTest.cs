@@ -230,7 +230,7 @@ end";
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
             {
-                DataSource = @".\SQLEXPRESS",
+                DataSource = DataUtil.DefaultDataSource,
                 InitialCatalog = "master",
                 IntegratedSecurity = true
             };

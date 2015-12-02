@@ -85,7 +85,7 @@ namespace AstoriaUnitTests
             {
                 string dbName = Enum.GetName(typeof(ConnectionType), type);
 
-                string dataSource = @".\SQLEXPRESS";
+                string dataSource = DataUtil.DefaultDataSource;
                 if (!IsSqlExpressInstalled)
                 {
                     dataSource = "tcp:fxbvt3,1432";

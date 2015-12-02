@@ -20,7 +20,7 @@ namespace AstoriaUnitTests.CompoundKeyContext
 
     public static class CompoundKeyContext
     {
-        private static string ConnectionString = @"server=.\sqlexpress;integrated security=true;";
+        private static string ConnectionString = @"server=" + DataUtil.DefaultDataSource + @";integrated security=true;";
         private static EntityConnection entityConnection;
 
         public static EntityConnection EntityConnection

@@ -258,7 +258,7 @@ using System.CodeDom.Compiler;
                 savedConnectionString = NorthwindDefaultTempDbService.ContextConnectionString;
 
                 SqlConnectionStringBuilder sqlBuilder = new SqlConnectionStringBuilder();
-                sqlBuilder.DataSource = @".\SQLEXPRESS";
+                sqlBuilder.DataSource = DataUtil.DefaultDataSource;
                 sqlBuilder.IntegratedSecurity = true;
                 sqlBuilder.MultipleActiveResultSets = true;
                 sqlBuilder.ConnectTimeout = 600;
