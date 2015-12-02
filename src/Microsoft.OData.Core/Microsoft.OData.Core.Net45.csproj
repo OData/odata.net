@@ -470,8 +470,10 @@
     <Compile Include="UriParser\QueryOptionUtils.cs" />
     <Compile Include="UriParser\ReadOnlyEnumerableForUriParser.cs" />
     <Compile Include="UriParser\SearchLexer.cs" />
-    <Compile Include="UriParser\SemanticAst\AggregateNode.cs" />
-    <Compile Include="UriParser\SemanticAst\AggregateStatementNode.cs" />
+    <Compile Include="UriParser\SemanticAst\AggregateTransformationNode.cs" />
+	<Compile Include="UriParser\SemanticAst\TransformationNode.cs" />
+	<Compile Include="UriParser\SemanticAst\FilterTransformationNode.cs" />
+    <Compile Include="UriParser\SemanticAst\AggregateStatement.cs" />
     <Compile Include="UriParser\SemanticAst\AllNode.cs" />
     <Compile Include="UriParser\SemanticAst\AnyNode.cs" />
     <Compile Include="UriParser\SemanticAst\ApplyClause.cs" />
@@ -500,7 +502,7 @@
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedReferenceSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\FilterClause.cs" />
-    <Compile Include="UriParser\SemanticAst\GroupByNode.cs" />
+    <Compile Include="UriParser\SemanticAst\GroupByTransformationNode.cs" />
     <Compile Include="UriParser\SemanticAst\GroupByPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\KeyLookupNode.cs" />
     <Compile Include="UriParser\SemanticAst\KeySegment.cs" />
@@ -585,6 +587,7 @@
     <Compile Include="UriParser\TreeNodeKinds\QueryNodeKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\QueryTokenKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\RequestTargetKind.cs" />
+	<Compile Include="UriParser\TreeNodeKinds\TransformationNodeKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\UnaryOperatorKind.cs" />
     <Compile Include="UriParser\TypePromotionUtils.cs" />
     <Compile Include="UriParser\UriQueryConstants.cs" />
