@@ -52,16 +52,15 @@
             actual.Transformations.Should().HaveCount(1);
 
             var transformations = actual.Transformations.ToList();
-            var aggregate = transformations[0] as AggregateNode;
+            var aggregate = transformations[0] as AggregateTransformationNode;
 
             aggregate.Should().NotBeNull();
-            aggregate.Kind.Should().Be(QueryNodeKind.Aggregate);
+            aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
             aggregate.Statements.Should().NotBeNull();
             aggregate.Statements.Should().HaveCount(1);
 
             var statements = aggregate.Statements.ToList();
             var statement = statements[0];
-            statement.Kind.Should().Be(QueryNodeKind.AggregateStatement);
             VerifyIsFakeSingleValueNode(statement.Expression);
             statement.WithVerb.Should().Be(AggregationVerb.Sum);
             statement.AsAlias.Should().Be("TotalPrice");
@@ -81,13 +80,14 @@
             actual.Transformations.Should().HaveCount(2);
 
             var transformations = actual.Transformations.ToList();
-            var filter = transformations[1] as FilterClause;
+            var filter = transformations[1] as FilterTransformationNode;
 
             filter.Should().NotBeNull();
-            filter.Kind.Should().Be(QueryNodeKind.Filter);
+            filter.Kind.Should().Be(TransformationNodeKind.Filter);
 
-            filter.Expression.Should().NotBeNull();
-            var binaryOperation = filter.Expression as BinaryOperatorNode;
+            var filtareClause = filter.FilterClause;
+            filtareClause.Expression.Should().NotBeNull();
+            var binaryOperation = filtareClause.Expression as BinaryOperatorNode;
             binaryOperation.Should().NotBeNull();
             var propertyAccess = binaryOperation.Left as SingleValuePropertyAccessNode;
             propertyAccess.Should().NotBeNull();
@@ -106,10 +106,10 @@
             actual.Transformations.Should().HaveCount(1);
 
             var transformations = actual.Transformations.ToList();
-            var groupBy = transformations[0] as GroupByNode;
+            var groupBy = transformations[0] as GroupByTransformationNode;
 
             groupBy.Should().NotBeNull();
-            groupBy.Kind.Should().Be(QueryNodeKind.GroupBy);
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
             groupBy.GroupingProperties.Should().NotBeNull();
             groupBy.GroupingProperties.Should().HaveCount(2);
 
@@ -132,10 +132,10 @@
             actual.Transformations.Should().HaveCount(1);
 
             var transformations = actual.Transformations.ToList();
-            var groupBy = transformations[0] as GroupByNode;
+            var groupBy = transformations[0] as GroupByTransformationNode;
 
             groupBy.Should().NotBeNull();
-            groupBy.Kind.Should().Be(QueryNodeKind.GroupBy);
+            groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
             groupBy.GroupingProperties.Should().NotBeNull();
             groupBy.GroupingProperties.Should().HaveCount(1);
 
@@ -166,7 +166,7 @@
             actual.Transformations.Should().HaveCount(1);
 
             var transformations = actual.Transformations.ToList();
-            var groupBy = transformations[0] as GroupByNode;            
+            var groupBy = transformations[0] as GroupByTransformationNode;            
           
             var aggregate = groupBy.Aggregate;
             aggregate.Should().NotBeNull();            
@@ -185,12 +185,12 @@
             actual.Transformations.Should().HaveCount(1);
 
             var transformations = actual.Transformations.ToList();
-            var filter = transformations[0] as FilterClause;
+            var filter = transformations[0] as FilterTransformationNode;
 
             filter.Should().NotBeNull();
-            filter.Kind.Should().Be(QueryNodeKind.Filter);
-            filter.Expression.Should().NotBeNull();
-            filter.Expression.Should().BeSameAs(_booleanPrimitiveNode);
+            filter.Kind.Should().Be(TransformationNodeKind.Filter);
+            filter.FilterClause.Expression.Should().NotBeNull();
+            filter.FilterClause.Expression.Should().BeSameAs(_booleanPrimitiveNode);
         }
 
         [TestMethod]
@@ -209,11 +209,11 @@
             actual.Transformations.Should().HaveCount(3);
 
             var transformations = actual.Transformations.ToList();
-            var groupBy0 = transformations[0] as GroupByNode;
+            var groupBy0 = transformations[0] as GroupByTransformationNode;
             groupBy0.Should().NotBeNull();
-            var aggregate = transformations[1] as AggregateNode;
+            var aggregate = transformations[1] as AggregateTransformationNode;
             aggregate.Should().NotBeNull();
-            var groupBy1 = transformations[2] as GroupByNode;
+            var groupBy1 = transformations[2] as GroupByTransformationNode;
             groupBy1.Should().NotBeNull();            
         }
 

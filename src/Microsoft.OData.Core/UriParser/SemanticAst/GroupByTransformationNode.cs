@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="GroupByNode.cs" company="Microsoft">
+// <copyright file="GroupByTransformationNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,9 +12,9 @@ using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
-    public sealed class GroupByNode : QueryNode
+    public sealed class GroupByTransformationNode : TransformationNode
     {
-        public GroupByNode(IList<GroupByPropertyNode> groupingProperties, IEdmTypeReference groupingItemType, AggregateNode aggregate, IEdmTypeReference itemType, CollectionNode source)
+        public GroupByTransformationNode(IList<GroupByPropertyNode> groupingProperties, IEdmTypeReference groupingItemType, AggregateTransformationNode aggregate, IEdmTypeReference itemType, CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
             ExceptionUtils.CheckArgumentNotNull(groupingItemType, "groupingItemType");
@@ -39,9 +39,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        private readonly AggregateNode _aggregate;
+        private readonly AggregateTransformationNode _aggregate;
 
-        public AggregateNode Aggregate
+        public AggregateTransformationNode Aggregate
         {
             get
             {
@@ -59,11 +59,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        public override QueryNodeKind Kind
+        public override TransformationNodeKind Kind
         {
             get
             {
-                return QueryNodeKind.GroupBy;
+                return TransformationNodeKind.GroupBy;
             }
         }
 
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the type resulting from the grouping properties and aggregate.
         /// </summary>
-        public IEdmTypeReference ItemType
+        public override IEdmTypeReference ItemType
         {
             get
             {

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregateStatementNode2.cs" company="Microsoft">
+// <copyright file="AggregateStatement.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,23 +9,20 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using TreeNodeKinds;
     using Microsoft.OData.Edm;
 
-    public sealed class AggregateStatementNode : QueryNode
+    public sealed class AggregateStatement
     {
-        public AggregateStatementNode(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference, CollectionNode source)
+        public AggregateStatement(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             // OK for from to be null
             ExceptionUtils.CheckArgumentNotNull(asAlias, "asAlias");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
-            // OK for source to be null
-
 
             this._expression = expression;
             this._withVerb = withVerb;
             this._from = from;
             this._asAlias = asAlias;
             this._typeReference = typeReference;
-            this._source = source;
         }
 
         private readonly SingleValueNode _expression;
@@ -64,24 +61,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             get
             {
                 return _from;
-            }
-        }
-
-        private readonly CollectionNode _source;
-
-        public CollectionNode Source
-        {
-            get
-            {
-                return _source;
-            }
-        }
-
-        public override QueryNodeKind Kind
-        {
-            get
-            {
-                return QueryNodeKind.AggregateStatement;
             }
         }
 

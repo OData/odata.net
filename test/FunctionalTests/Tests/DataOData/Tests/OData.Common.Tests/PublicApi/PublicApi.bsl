@@ -5319,16 +5319,22 @@ public abstract class Microsoft.OData.Core.UriParser.Semantic.SingleValueNode : 
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public abstract get; }
 }
 
+public abstract class Microsoft.OData.Core.UriParser.Semantic.TransformationNode {
+	protected TransformationNode ()
+
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public abstract get; }
+	Microsoft.OData.Core.UriParser.TreeNodeKinds.TransformationNodeKind Kind  { public abstract get; }
+}
+
 public sealed class Microsoft.OData.Core.UriParser.Semantic.RangeVariableKind {
 	public static int Entity = 0
 	public static int Nonentity = 1
 }
 
-public class Microsoft.OData.Core.UriParser.Semantic.ApplyClause : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	public ApplyClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] transformations, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+public class Microsoft.OData.Core.UriParser.Semantic.ApplyClause {
+	public ApplyClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.TransformationNode]] transformations, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] Transformations  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.TransformationNode]] Transformations  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
 }
 
@@ -5407,24 +5413,22 @@ public class Microsoft.OData.Core.UriParser.Semantic.ParameterAliasNode : Micros
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
-public sealed class Microsoft.OData.Core.UriParser.Semantic.AggregateNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	public AggregateNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.AggregateStatementNode]] statements, Microsoft.OData.Edm.IEdmTypeReference itemType)
-
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.AggregateStatementNode]] Statements  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.AggregateStatementNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	public AggregateStatementNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.AggregationVerb withVerb, Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode from, string asAlias, Microsoft.OData.Edm.IEdmTypeReference typeReference, Microsoft.OData.Core.UriParser.Semantic.CollectionNode source)
+public sealed class Microsoft.OData.Core.UriParser.Semantic.AggregateStatement {
+	public AggregateStatement (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.AggregationVerb withVerb, Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode from, string asAlias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
 	string AsAlias  { public get; }
 	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
 	Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode From  { public get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
 	Microsoft.OData.Core.UriParser.AggregationVerb WithVerb  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Semantic.AggregateTransformationNode : Microsoft.OData.Core.UriParser.Semantic.TransformationNode {
+	public AggregateTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.AggregateStatement]] statements, Microsoft.OData.Edm.IEdmTypeReference itemType)
+
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Core.UriParser.TreeNodeKinds.TransformationNodeKind Kind  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.AggregateStatement]] Statements  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.AllNode : Microsoft.OData.Core.UriParser.Semantic.LambdaNode {
@@ -5642,23 +5646,30 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSe
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
 }
 
-public sealed class Microsoft.OData.Core.UriParser.Semantic.FilterClause : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
+public sealed class Microsoft.OData.Core.UriParser.Semantic.FilterClause {
 	public FilterClause (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.Semantic.RangeVariable rangeVariable)
 
 	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
 	Microsoft.OData.Core.UriParser.Semantic.RangeVariable RangeVariable  { public get; }
 }
 
-public sealed class Microsoft.OData.Core.UriParser.Semantic.GroupByNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	public GroupByNode (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Semantic.GroupByPropertyNode]] groupingProperties, Microsoft.OData.Edm.IEdmTypeReference groupingItemType, Microsoft.OData.Core.UriParser.Semantic.AggregateNode aggregate, Microsoft.OData.Edm.IEdmTypeReference itemType, Microsoft.OData.Core.UriParser.Semantic.CollectionNode source)
+public sealed class Microsoft.OData.Core.UriParser.Semantic.FilterTransformationNode : Microsoft.OData.Core.UriParser.Semantic.TransformationNode {
+	public FilterTransformationNode (Microsoft.OData.Core.UriParser.Semantic.FilterClause filterClause)
 
-	Microsoft.OData.Core.UriParser.Semantic.AggregateNode Aggregate  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterClause  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Core.UriParser.TreeNodeKinds.TransformationNodeKind Kind  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Semantic.GroupByTransformationNode : Microsoft.OData.Core.UriParser.Semantic.TransformationNode {
+	public GroupByTransformationNode (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Semantic.GroupByPropertyNode]] groupingProperties, Microsoft.OData.Edm.IEdmTypeReference groupingItemType, Microsoft.OData.Core.UriParser.Semantic.AggregateTransformationNode aggregate, Microsoft.OData.Edm.IEdmTypeReference itemType, Microsoft.OData.Core.UriParser.Semantic.CollectionNode source)
+
+	Microsoft.OData.Core.UriParser.Semantic.AggregateTransformationNode Aggregate  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference GroupingItemType  { public get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.GroupByPropertyNode]] GroupingProperties  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Core.UriParser.TreeNodeKinds.TransformationNodeKind Kind  { public virtual get; }
 	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; }
 }
 
@@ -5998,11 +6009,8 @@ public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind : in
 }
 
 public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind : int {
-	Aggregate = 28
-	AggregateStatement = 29
 	All = 14
 	Any = 9
-	Apply = 32
 	BinaryOperator = 4
 	CollectionFunctionCall = 18
 	CollectionNavigationNode = 10
@@ -6015,8 +6023,6 @@ public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind : int {
 	EntityCollectionFunctionCall = 19
 	EntityRangeVariableReference = 16
 	EntitySet = 22
-	Filter = 31
-	GroupBy = 30
 	KeyLookup = 23
 	NamedFunctionParameter = 20
 	None = 0
@@ -6031,6 +6037,12 @@ public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind : int {
 	SingleValueOpenPropertyAccess = 12
 	SingleValuePropertyAccess = 6
 	UnaryOperator = 5
+}
+
+public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.TransformationNodeKind : int {
+	Aggregate = 0
+	Filter = 2
+	GroupBy = 1
 }
 
 public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.UnaryOperatorKind : int {

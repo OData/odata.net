@@ -15,9 +15,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// <summary>
     /// Represents the set of transformations to perform as part of $apply.
     /// </summary>
-    public class ApplyClause : QueryNode
+    public class ApplyClause
     {
-        public ApplyClause(IEnumerable<QueryNode> transformations, IEdmTypeReference typeReference)
+        public ApplyClause(IEnumerable<TransformationNode> transformations, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(transformations, "transformations");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
@@ -26,12 +26,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this._typeReference = typeReference;
         }
 
-        private readonly IEnumerable<QueryNode> _transformations;
+        private readonly IEnumerable<TransformationNode> _transformations;
 
         /// <summary>
         /// The collection of transformations to perform.
         /// </summary>
-        public IEnumerable<QueryNode> Transformations
+        public IEnumerable<TransformationNode> Transformations
         {
             get
             {
@@ -47,14 +47,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             {
 
                 return this._typeReference;
-            }
-        }
-
-        public override QueryNodeKind Kind
-        {
-            get
-            {
-                return QueryNodeKind.Apply;
             }
         }
     }

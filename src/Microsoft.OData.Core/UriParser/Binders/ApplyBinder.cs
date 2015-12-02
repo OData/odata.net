@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             ExceptionUtils.CheckArgumentNotNull(tokens, "tokens");
 
-            List<QueryNode> transformations = new List<QueryNode>();
+            List<TransformationNode> transformations = new List<TransformationNode>();
 
             IEdmTypeReference resultType = null;
             foreach (var token in tokens)
@@ -56,8 +56,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         break;
                     default: //assumes filter
                         var filterClause = this._filterBinder.BindFilter(token);
-                        resultType = filterClause.ItemType;
-                        transformations.Add(filterClause);
+                        var filterNode = new FilterTransformationNode(filterClause);
+                        resultType = filterNode.ItemType;
+                        transformations.Add(filterNode);
                         break;
                 }
             }
@@ -83,9 +84,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this._filterBinder = new FilterBinder(_bindMethod, state);
         }
 
-        private AggregateNode BindAggregateToken(AggregateToken token)
+        private AggregateTransformationNode BindAggregateToken(AggregateToken token)
         {
-            var statements = new List<AggregateStatementNode>();
+            var statements = new List<AggregateStatement>();
             foreach (var statementToken in token.Statements)
             {
                 statements.Add(BindAggregateStatementToken(statementToken));
@@ -93,10 +94,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             var typeReference = CreateAggregateTypeReference(statements);
 
-            return new AggregateNode(statements, typeReference);
+            return new AggregateTransformationNode(statements, typeReference);
         }
 
-        private AggregateStatementNode BindAggregateStatementToken(AggregateStatementToken token)
+        private AggregateStatement BindAggregateStatementToken(AggregateStatementToken token)
         {
             var expression = this._bindMethod(token.Expression) as SingleValueNode;
 
@@ -108,10 +109,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var typeReference = CreateAggregateStatementTypeReference(expression, token.WithVerb);
 
             // TODO: Determine source
-            return new AggregateStatementNode(expression, token.WithVerb, null, token.AsAlias, typeReference, null);
+            return new AggregateStatement(expression, token.WithVerb, null, token.AsAlias, typeReference);
         }
 
-        private static IEdmTypeReference CreateAggregateTypeReference(IEnumerable<AggregateStatementNode> statements)
+        private static IEdmTypeReference CreateAggregateTypeReference(IEnumerable<AggregateStatement> statements)
         {
             var type = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
             foreach (var statement in statements)
@@ -153,7 +154,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
         }
 
-        private GroupByNode BindGroupByToken(GroupByToken token)
+        private GroupByTransformationNode BindGroupByToken(GroupByToken token)
         {
             var properties = new List<GroupByPropertyNode>();
 
@@ -173,7 +174,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var resultType = new EdmEntityType(string.Empty, "ResultDynamicTypeWrapper", baseType: groupingType, isAbstract: false, isOpen: true);
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
-            AggregateNode aggregate = null;
+            AggregateTransformationNode aggregate = null;
             if (token.Aggregate != null)
             {
                 aggregate = BindAggregateToken(token.Aggregate);
@@ -187,7 +188,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var resultingTypeReference = (IEdmTypeReference)ToEdmTypeReference(resultType, true);
 
             // TODO: Determine source
-            return new GroupByNode(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
+            return new GroupByTransformationNode(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
 
         }
 

@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// <summary>
     /// The result of parsing a $filter query option.
     /// </summary>
-    public sealed class FilterClause : QueryNode
+    public sealed class FilterClause
     {
         /// <summary>
         /// The filter expression - this should evaluate to a single boolean value.
@@ -66,14 +66,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             get
             {
                 return this.RangeVariable.TypeReference;
-            }
-        }
-
-        public override QueryNodeKind Kind
-        {
-            get
-            {
-                return QueryNodeKind.Filter;
             }
         }
     }

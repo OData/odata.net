@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregateNode.cs" company="Microsoft">
+// <copyright file="AggregateTransformationNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,9 +10,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using Microsoft.OData.Edm;
     using System.Collections.Generic;
 
-    public sealed class AggregateNode : QueryNode
+      public sealed class AggregateTransformationNode : TransformationNode
     {
-        public AggregateNode(IEnumerable<AggregateStatementNode> statements, IEdmTypeReference itemType)
+        public AggregateTransformationNode(IEnumerable<AggregateStatement> statements, IEdmTypeReference itemType)
         {
             ExceptionUtils.CheckArgumentNotNull(statements, "statements");
             ExceptionUtils.CheckArgumentNotNull(itemType, "itemType");
@@ -21,26 +21,26 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this._itemType = itemType;
         }
 
-        private readonly IEnumerable<AggregateStatementNode> _statements;
+        private readonly IEnumerable<AggregateStatement> _statements;
 
-        public IEnumerable<AggregateStatementNode> Statements
+        public IEnumerable<AggregateStatement> Statements
         {
             get {
                 return _statements;
             }
         }
 
-        public override QueryNodeKind Kind
+        public override TransformationNodeKind Kind
         {
             get
             {
-                return QueryNodeKind.Aggregate;
+                return TransformationNodeKind.Aggregate;
             }
         }
 
         private readonly IEdmTypeReference _itemType;
 
-        public IEdmTypeReference ItemType
+        public override IEdmTypeReference ItemType
         {
             get
             {
