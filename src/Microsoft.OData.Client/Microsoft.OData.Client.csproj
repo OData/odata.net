@@ -179,6 +179,7 @@
       <Link>ALinq\UriParser\SyntacticAst\UnaryOperatorToken.cs</Link>
     </Compile>
     <Compile Include="Annotation\AnnotationHelper.cs" />
+    <Compile Include="Annotation\InstanceAnnotationDictWeakKeyComparer.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="DataServiceActionQueryOfT.cs" />
     <Compile Include="ActionDescriptor.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Serialization\DataServiceClientRequestMessage.cs" />
     <Compile Include="UriEntityOperationParameter.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="WeakDictionary.cs" />
     <Compile Include="WritingEntityReferenceLinkArgs.cs" />
     <Compile Include="WritingEntryArgs.cs" />
     <Compile Include="WritingNavigationLinkArgs.cs" />
