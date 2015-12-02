@@ -4964,6 +4964,13 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "$applg/groupby not support '{0}' as child transformation"
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedGroupByChild(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedGroupByChild, p0);
+        }
+
+        /// <summary>
         /// A string like "Cannot find a suitable overload for function '{0}' that takes '{1}' arguments."
         /// </summary>
         internal static string FunctionCallBinder_CannotFindASuitableOverload(object p0, object p1) {

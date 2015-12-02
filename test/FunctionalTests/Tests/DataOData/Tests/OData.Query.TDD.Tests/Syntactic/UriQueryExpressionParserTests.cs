@@ -370,6 +370,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
         }
 
+        [TestMethod]
+        public void ParseApplyWithGroupByWithChildGroupShouldThrow()
+        {
+            var apply = "groupby((UnitPrice), groupby((UnitPrice)))";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate", 21, apply));
+        }
+
+
         private static void VerifyBinaryOperatorToken<T>(string expectedEndPathIdentifier, BinaryOperatorKind expectedOperator, T expectedLiteralValue, BinaryOperatorToken actual)
         {
             actual.Should().NotBeNull();

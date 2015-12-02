@@ -715,6 +715,7 @@ namespace Microsoft.OData.Core {
         internal const string ApplyBinder_AggregateStatementNotSingleValue = "ApplyBinder_AggregateStatementNotSingleValue";
         internal const string ApplyBinder_GroupByPropertyNotPropertyAccessValue = "ApplyBinder_GroupByPropertyNotPropertyAccessValue";
         internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
+        internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
         internal const string FunctionCallBinder_CannotFindASuitableOverload = "FunctionCallBinder_CannotFindASuitableOverload";
         internal const string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent = "FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent";
         internal const string FunctionCallBinder_CallingFunctionOnOpenProperty = "FunctionCallBinder_CallingFunctionOnOpenProperty";

@@ -188,7 +188,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedGroupByChild(token.Child.Kind));
                 }
             }
 
