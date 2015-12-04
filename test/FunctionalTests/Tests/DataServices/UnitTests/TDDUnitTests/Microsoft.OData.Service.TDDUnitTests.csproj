@@ -62,7 +62,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Microsoft.Spatial\TestData.cs">
+    <Compile Include="..\..\..\..\Microsoft.Spatial.Tests\Utils\TestData.cs">
       <Link>Tests\Server\Util\TestData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\DataOData\Tests\OData.Query.TDD.Tests\TestUtilities\ModelBuildingHelpers.cs">

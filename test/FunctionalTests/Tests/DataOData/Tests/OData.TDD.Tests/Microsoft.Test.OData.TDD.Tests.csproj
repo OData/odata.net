@@ -161,7 +161,6 @@
     <Compile Include="Writer\JsonLight\JsonMinimalMetadataTypeNameOracleTests.cs" />
     <Compile Include="Writer\JsonLight\JsonNoMetadataLevelTests.cs" />
     <Compile Include="Writer\JsonLight\JsonNoMetadataTypeNameOracleTests.cs" />
-    <Compile Include="Writer\JsonLight\ODataJsonLightSpatialWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightWriterEnumIntegrationTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightWriterShortSpanIntegrationTests.cs" />
     <Compile Include="Writer\JsonLight\PropertyAndValueJsonLightWriterIntegrationTests.cs" />

@@ -66,7 +66,7 @@
   <!-- Source files -->
   <ItemGroup>
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
-    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Microsoft.Spatial\Utils\SpatialFactory.cs">
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\SpatialFactory.cs">
       <Link>Common\SpatialFactory.cs</Link>
     </Compile>
     <Compile Include="Atom\TestAtomConstants.cs" />

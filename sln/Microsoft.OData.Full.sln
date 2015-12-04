@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Service.TDDUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj", "{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}"
 EndProject
@@ -101,8 +101,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.Taupo.OData.WCFService", "..\test\FunctionalTests\Tests\DataOData\Common\OData.WCFService\Microsoft.Test.Taupo.OData.WCFService.csproj", "{2A9B8663-D894-48B9-93C1-CD6B397ACAA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.Taupo.OData.Writer.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj", "{DB742DF2-9873-44CF-8439-DA5ACFF69A46}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.TDDUnitTests", "..\test\FunctionalTests\Tests\Microsoft.Spatial\Microsoft.Spatial.TDDUnitTests.csproj", "{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.PluggableFormat", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD248}"
 EndProject
@@ -1018,24 +1016,6 @@ Global
 		{DB742DF2-9873-44CF-8439-DA5ACFF69A46}.Release|x64.Build.0 = Release|x64
 		{DB742DF2-9873-44CF-8439-DA5ACFF69A46}.Release|x86.ActiveCfg = Release|x86
 		{DB742DF2-9873-44CF-8439-DA5ACFF69A46}.Release|x86.Build.0 = Release|x86
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Cover|x64.ActiveCfg = Cover|x64
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Cover|x64.Build.0 = Cover|x64
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Cover|x86.ActiveCfg = Cover|x86
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Cover|x86.Build.0 = Cover|x86
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Debug|x64.ActiveCfg = Debug|x64
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Debug|x64.Build.0 = Debug|x64
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Debug|x86.ActiveCfg = Debug|x86
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Debug|x86.Build.0 = Debug|x86
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Release|x64.ActiveCfg = Release|x64
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Release|x64.Build.0 = Release|x64
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Release|x86.ActiveCfg = Release|x86
-		{E8BFB374-E9F2-427A-A13F-9FAC29EB8384}.Release|x86.Build.0 = Release|x86
 		{1D872F31-6100-4C76-999E-ED948E2CD248}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
 		{1D872F31-6100-4C76-999E-ED948E2CD248}.Cover|Any CPU.Build.0 = Cover|Any CPU
 		{1D872F31-6100-4C76-999E-ED948E2CD248}.Cover|x64.ActiveCfg = Cover|x64

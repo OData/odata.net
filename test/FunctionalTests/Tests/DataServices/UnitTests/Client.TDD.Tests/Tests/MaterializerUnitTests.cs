@@ -5,13 +5,13 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using Microsoft.OData.Client;
 using Microsoft.Spatial;
 using System.Xml.Linq;
 using AstoriaUnitTests.TDD.Common;
 using DataSpatialUnitTests.Utils;
 using Microsoft.OData.Core;
+using Microsoft.Spatial.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Util = Microsoft.OData.Client.Util;
 
