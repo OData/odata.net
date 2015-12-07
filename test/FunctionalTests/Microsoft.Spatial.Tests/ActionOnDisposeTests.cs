@@ -4,50 +4,48 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace DataSpatialUnitTests.Tests
-{
-    using System;
-    using Microsoft.Spatial;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using Xunit;
 
-    [TestClass]
+namespace Microsoft.Spatial.Tests
+{
     public class ActionOnDisposeTests
     {
-        [TestMethod]
+        [Fact]
         public void ActionIsExecutedOnDisposeMethodCall()
         {
             bool actionExecuted = false;
             IDisposable disposable = new ActionOnDispose(() => actionExecuted = true);
-            Assert.IsFalse(actionExecuted);
+            Assert.False(actionExecuted);
             disposable.Dispose();
-            Assert.IsTrue(actionExecuted);
+            Assert.True(actionExecuted);
         }
 
-        [TestMethod]
+        [Fact]
         public void ActionIsExecutedPostUsing()
         {
             bool actionExecuted = false;
             using (IDisposable disposable = new ActionOnDispose(() => actionExecuted = true))
             {
-                Assert.IsFalse(actionExecuted);
+                Assert.False(actionExecuted);
             }
 
-            Assert.IsTrue(actionExecuted);
+            Assert.True(actionExecuted);
         }
 
-        [TestMethod]
+        [Fact]
         public void ActionIsExecutedOnceWhenDisposeIsCalledTwice()
         {
             bool actionExecuted = false;
             IDisposable disposable = new ActionOnDispose(() => actionExecuted = true);
-            Assert.IsFalse(actionExecuted);
+            Assert.False(actionExecuted);
             disposable.Dispose();
-            Assert.IsTrue(actionExecuted);
+            Assert.True(actionExecuted);
 
             // the action should only fire the first time
             actionExecuted = false;
             disposable.Dispose();
-            Assert.IsFalse(actionExecuted);
+            Assert.False(actionExecuted);
         }
     }
 }

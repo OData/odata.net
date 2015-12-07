@@ -41,7 +41,6 @@
     <Compile Include="EdmElementComparerTests.cs" />
     <Compile Include="Csdl\CsdlSemanticsEntityContainerTests.cs" />
     <Compile Include="EdmNavigationPropertyInfoTests.cs" />
-    <Compile Include="EdmUtilTests.cs" />
     <Compile Include="EdmEnumValueParserTests.cs" />
     <Compile Include="EdmxWriterTests.cs" />
     <Compile Include="ExtensionMethodTests.cs" />

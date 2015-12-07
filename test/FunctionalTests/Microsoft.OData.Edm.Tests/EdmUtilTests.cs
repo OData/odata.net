@@ -4,20 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Edm.TDD.Tests
-{
-    using FluentAssertions;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using FluentAssertions;
+using Microsoft.OData.Edm.Library;
+using Xunit;
+
+namespace Microsoft.OData.Edm.Tests
+{
     /// <summary>
     ///Tests EdmUtils functionalities
     ///</summary>
-    [TestClass]
     public class EdmUtilTests
     {
-        [TestMethod]
+        [Fact]
         public void FunctionImportShouldProduceCorrectFullyQualifiedNameAndNotHaveParameters()
         {
             var function = new EdmFunction("d.s", "testFunction", EdmCoreModel.Instance.GetString(true));
@@ -26,7 +25,7 @@ namespace Microsoft.Test.Edm.TDD.Tests
             EdmUtil.FullyQualifiedName(functionImport).Should().Be("d.s.container/testFunction");
         }
 
-        [TestMethod]
+        [Fact]
         public void EntitySetShouldProduceCorrectFullyQualifiedName()
         {
             var entitySet = new EdmEntitySet(new EdmEntityContainer("d.s", "container"), "entitySet", new EdmEntityType("foo", "type"));

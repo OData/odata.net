@@ -203,7 +203,6 @@
     <Compile Include="Evaluation\ODataUriBuilderTests.cs" />
     <Compile Include="Evaluation\EdmStructuredValueSimulator.cs" />
     <Compile Include="Evaluation\TestModel.cs" />
-    <Compile Include="ODataVersionCacheTests.cs" />
     <Compile Include="Query\ODataUriConversionUtilsTests.cs" />
     <Compile Include="RawValueWriterTests.cs" />
     <Compile Include="Evaluation\MissingOperationGeneratorTests.cs" />

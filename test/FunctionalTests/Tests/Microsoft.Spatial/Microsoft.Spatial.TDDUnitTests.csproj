@@ -30,8 +30,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionOnDisposeTests.cs" />
-    <Compile Include="CoordinateSystemTests.cs" />
     <Compile Include="DataServicesSpatialImplementationDataDrivenTests.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -4,88 +4,86 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace DataSpatialUnitTests.Tests
-{
-    using Microsoft.Spatial;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
-    [TestClass]
+namespace Microsoft.Spatial.Tests
+{
     public class CoordinateSystemTests
     {
         private const CoordinateSystem.Topology Geography = CoordinateSystem.Topology.Geography;
         private const CoordinateSystem.Topology Geometry = CoordinateSystem.Topology.Geometry;
 
-        [TestMethod]
+        [Fact]
         public void NotEqualToNull()
         {
-            Assert.IsFalse(CoordinateSystem.DefaultGeometry.Equals(null));
+            Assert.False(CoordinateSystem.DefaultGeometry.Equals(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void EqualWhenEverythingMatches()
         {
-            Assert.AreEqual(Coords(), Coords());
+            Assert.Equal(Coords(), Coords());
         }
 
-        [TestMethod]
+        [Fact]
         public void NotEqualWhenIdsDiffer()
         {
-            Assert.AreNotEqual(Coords(epsgId: 1), Coords(epsgId: 2));
+            Assert.NotEqual(Coords(epsgId: 1), Coords(epsgId: 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void NotEqualWhenFromDifferentTopologies()
         {
-            Assert.AreNotEqual(Coords(topology: Geography), Coords(topology: Geometry));
+            Assert.NotEqual(Coords(topology: Geography), Coords(topology: Geometry));
         }
 
-        [TestMethod]
+        [Fact]
         public void EqualWhenOnlyNameDiffers()
         {
-            Assert.IsTrue(Coords(name:"funny name").Equals(Coords(name:"typical name")));
+            Assert.True(Coords(name:"funny name").Equals(Coords(name:"typical name")));
         }
 
-        [TestMethod]
+        [Fact]
         public void EqualWhenSameInstance()
         {
             var testSubject = Coords();
-            Assert.IsTrue(testSubject.Equals(testSubject));
+            Assert.True(testSubject.Equals(testSubject));
         }
 
-        [TestMethod]
+        [Fact]
         public void GeometryPropertyCaches()
         {
-            Assert.AreSame(CoordinateSystem.Geometry(1), CoordinateSystem.Geometry(1));
+            Assert.Same(CoordinateSystem.Geometry(1), CoordinateSystem.Geometry(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void GeographyPropertyCaches()
         {
-            Assert.AreSame(CoordinateSystem.Geography(1), CoordinateSystem.Geography(1));
+            Assert.Same(CoordinateSystem.Geography(1), CoordinateSystem.Geography(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void GeographyAndGeometyPropertiesReturnDifferentInstancesForSameId()
         {
-            Assert.AreNotEqual(CoordinateSystem.Geography(1), CoordinateSystem.Geometry(1));
+            Assert.NotEqual(CoordinateSystem.Geography(1), CoordinateSystem.Geometry(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void ToWktImplementation()
         {
-            Assert.AreEqual("SRID=1;", CoordinateSystem.Geography(1).ToWktId());
+            Assert.Equal("SRID=1;", CoordinateSystem.Geography(1).ToWktId());
         }
 
-        [TestMethod]
+        [Fact]
         public void ToStringImplementation()
         {
-            Assert.AreEqual("GeographyCoordinateSystem(EpsgId=1)", CoordinateSystem.Geography(1).ToString());
+            Assert.Equal("GeographyCoordinateSystem(EpsgId=1)", CoordinateSystem.Geography(1).ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void GetHashCodeImplementation()
         {
-            Assert.AreEqual(1234, CoordinateSystem.Geography(1234).GetHashCode());
+            Assert.Equal(1234, CoordinateSystem.Geography(1234).GetHashCode());
         }
 
         private static CoordinateSystem Coords(int epsgId = 99, string name = "usual name", CoordinateSystem.Topology topology = Geography)

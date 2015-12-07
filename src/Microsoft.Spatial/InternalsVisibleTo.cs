@@ -8,3 +8,4 @@
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Service.Test.Client.TDDUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests.TDDUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Spatial.TDDUnitTests" + AssemblyRef.TestPublicKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Spatial.Tests" + AssemblyRef.TestPublicKey)]

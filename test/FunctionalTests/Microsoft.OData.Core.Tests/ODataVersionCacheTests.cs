@@ -4,19 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
+using Xunit;
 
-namespace Microsoft.Test.OData.TDD.Tests
+namespace Microsoft.OData.Core.Tests
 {
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-
-    [TestClass]
     public class ODataVersionCacheTests
     {
         private readonly ODataVersionCache<ODataVersion> cache = new ODataVersionCache<ODataVersion>(version => version);
 
-        [TestMethod]
+        [Fact]
         public void CacheV3ShouldBeODataVersionV3()
         {
             this.cache[ODataVersion.V4].Should().Be(ODataVersion.V4);
