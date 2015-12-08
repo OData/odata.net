@@ -40,8 +40,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.Taupo.Edmlib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Query.TDD.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.TDD.Tests\Microsoft.Test.OData.Query.TDD.Tests.csproj", "{1B591F55-379C-4439-B5F7-9AE1F05D6AA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.Edm.TDD.Tests", "..\test\FunctionalTests\Tests\DataEdmLib\TDD\Microsoft.Test.Edm.TDD.Tests.csproj", "{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdmLibTests", "..\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj", "{834DEA16-4215-41D1-99E7-FBE41A3326DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Framework", "..\test\EndToEndTests\Framework\Core\Microsoft.Test.OData.Framework.csproj", "{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}"
@@ -461,24 +459,6 @@ Global
 		{1B591F55-379C-4439-B5F7-9AE1F05D6AA5}.Release|x64.Build.0 = Release|x64
 		{1B591F55-379C-4439-B5F7-9AE1F05D6AA5}.Release|x86.ActiveCfg = Release|x86
 		{1B591F55-379C-4439-B5F7-9AE1F05D6AA5}.Release|x86.Build.0 = Release|x86
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Cover|x64.ActiveCfg = Cover|x64
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Cover|x64.Build.0 = Cover|x64
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Cover|x86.ActiveCfg = Cover|x86
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Cover|x86.Build.0 = Cover|x86
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Debug|x64.ActiveCfg = Debug|x64
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Debug|x64.Build.0 = Debug|x64
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Debug|x86.ActiveCfg = Debug|x86
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Debug|x86.Build.0 = Debug|x86
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Release|x64.ActiveCfg = Release|x64
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Release|x64.Build.0 = Release|x64
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Release|x86.ActiveCfg = Release|x86
-		{D8C45EE2-B8A0-4DEA-AB5C-135891699F64}.Release|x86.Build.0 = Release|x86
 		{834DEA16-4215-41D1-99E7-FBE41A3326DA}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
 		{834DEA16-4215-41D1-99E7-FBE41A3326DA}.Cover|Any CPU.Build.0 = Cover|Any CPU
 		{834DEA16-4215-41D1-99E7-FBE41A3326DA}.Cover|x64.ActiveCfg = Cover|x64
