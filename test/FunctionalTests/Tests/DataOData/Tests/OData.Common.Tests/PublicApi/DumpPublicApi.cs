@@ -379,23 +379,27 @@ namespace Suites.Data.Test
                     {
                         continue;
                     }
-                    else if (attribute is System.Runtime.InteropServices.StructLayoutAttribute)
+                    if (attribute is System.Runtime.InteropServices.StructLayoutAttribute)
                     {
                         continue;
                     }
-                    else if (attribute is System.Runtime.CompilerServices.MethodImplAttribute)
+                    if (attribute is System.Runtime.CompilerServices.CompilerGeneratedAttribute)
                     {
                         continue;
                     }
-                    else if (attribute is System.Runtime.TargetedPatchingOptOutAttribute)
+                    if (attribute is System.Runtime.CompilerServices.MethodImplAttribute)
                     {
                         continue;
                     }
-                    else if (attribute is System.Diagnostics.CodeAnalysis.SuppressMessageAttribute)
+                    if (attribute is System.Runtime.TargetedPatchingOptOutAttribute)
                     {
                         continue;
                     }
-                    else if (isEnum && (attribute is System.SerializableAttribute))
+                    if (attribute is System.Diagnostics.CodeAnalysis.SuppressMessageAttribute)
+                    {
+                        continue;
+                    }
+                    if (isEnum && (attribute is System.SerializableAttribute))
                     {
                         continue;
                     }
