@@ -914,7 +914,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
         #endregion Inlinecount Tests
 
         [TestMethod]
-        public void ShouldWriteAdditionalPropertyWhenFullValidationDisabled()
+        public void ShouldAlwaysWriteAdditionalPropertyWhenWriteResponse()
         {
             var entry = new ODataEntry
             {
@@ -928,16 +928,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
 
             ODataItem[] itemsToWrite = { entry };
 
-            Action action = () => this.GetWriterOutputForContentTypeAndKnobValue(
-                "application/json;odata.metadata=minimal",
-                true,
-                itemsToWrite,
-                Model,
-                EntitySet,
-                EntityType,
-                enableFullValidation: true);
-            action.ShouldThrow<ODataException>().WithMessage(
-                Strings.ValidationUtils_PropertyDoesNotExistOnType("Prop1", "Namespace.EntityType"));
+            string expectedPayload =
+                                  "{\"" +
+                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
+                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
+                                  "}";
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue(
                 "application/json;odata.metadata=minimal",
@@ -946,12 +941,17 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
                 Model,
                 EntitySet,
                 EntityType,
+                enableFullValidation: true);
+            result.Should().Be(expectedPayload);
+
+            result = this.GetWriterOutputForContentTypeAndKnobValue(
+                "application/json;odata.metadata=minimal",
+                true,
+                itemsToWrite,
+                Model,
+                EntitySet,
+                EntityType,
                 enableFullValidation: false);
-            string expectedPayload = 
-                                  "{\"" +
-                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
-                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
-                                  "}";
             result.Should().Be(expectedPayload);
         }
 
