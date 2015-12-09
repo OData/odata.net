@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
-    using System;
-    using TreeNodeKinds;
     #region Namespaces
     using Microsoft.OData.Edm;
     #endregion Namespaces
