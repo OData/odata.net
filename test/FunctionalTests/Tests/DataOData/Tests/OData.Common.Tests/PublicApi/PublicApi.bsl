@@ -396,9 +396,9 @@ public class Microsoft.Spatial.CoordinateSystem {
 	public static readonly Microsoft.Spatial.CoordinateSystem DefaultGeography = GeographyCoordinateSystem(EpsgId=4326)
 	public static readonly Microsoft.Spatial.CoordinateSystem DefaultGeometry = GeometryCoordinateSystem(EpsgId=0)
 
-	System.Nullable`1[[System.Int32]] EpsgId  { [CompilerGeneratedAttribute(),]public get; }
+	System.Nullable`1[[System.Int32]] EpsgId  { public get; }
 	string Id  { public get; }
-	string Name  { [CompilerGeneratedAttribute(),]public get; }
+	string Name  { public get; }
 
 	public bool Equals (Microsoft.Spatial.CoordinateSystem other)
 	public virtual bool Equals (object obj)
@@ -1846,8 +1846,8 @@ public sealed class Microsoft.OData.Edm.ToTraceStringExtensionMethods {
 public class Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair {
 	public EdmReferentialConstraintPropertyPair (Microsoft.OData.Edm.IEdmStructuralProperty dependentProperty, Microsoft.OData.Edm.IEdmStructuralProperty principalProperty)
 
-	Microsoft.OData.Edm.IEdmStructuralProperty DependentProperty  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Edm.IEdmStructuralProperty PrincipalProperty  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Edm.IEdmStructuralProperty DependentProperty  { public get; }
+	Microsoft.OData.Edm.IEdmStructuralProperty PrincipalProperty  { public get; }
 }
 
 public interface Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation : IEdmElement, IEdmNamedElement {
@@ -1997,9 +1997,9 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
-	int LineNumber  { [CompilerGeneratedAttribute(),]public get; }
-	int LinePosition  { [CompilerGeneratedAttribute(),]public get; }
-	string Source  { [CompilerGeneratedAttribute(),]public get; }
+	int LineNumber  { public get; }
+	int LinePosition  { public get; }
+	string Source  { public get; }
 
 	public virtual string ToString ()
 }
@@ -2010,7 +2010,7 @@ DebuggerDisplayAttribute(),
 public class Microsoft.OData.Edm.Csdl.EdmParseException : System.Exception, _Exception, ISerializable {
 	public EdmParseException (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]] parseErrors)
 
-	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Edm.Validation.EdmError]] Errors  { [CompilerGeneratedAttribute(),]public get; }
+	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Edm.Validation.EdmError]] Errors  { public get; }
 }
 
 public class Microsoft.OData.Edm.Csdl.EdmxReader {
@@ -2033,8 +2033,8 @@ public class Microsoft.OData.Edm.Csdl.EdmxWriter {
 public sealed class Microsoft.OData.Edm.Csdl.EdmxReaderSettings {
 	public EdmxReaderSettings ()
 
-	System.Func`2[[System.Uri],[System.Xml.XmlReader]] GetReferencedModelReaderFunc  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	bool IgnoreUnexpectedAttributesAndElements  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Func`2[[System.Uri],[System.Xml.XmlReader]] GetReferencedModelReaderFunc  { public get; public set; }
+	bool IgnoreUnexpectedAttributesAndElements  { public get; public set; }
 }
 
 public class Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter {
@@ -2361,11 +2361,11 @@ public abstract class Microsoft.OData.Edm.Library.EdmOperation : Microsoft.OData
 	protected EdmOperation (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
 	protected EdmOperation (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Expressions.IEdmPathExpression entitySetPathExpression)
 
-	Microsoft.OData.Edm.Expressions.IEdmPathExpression EntitySetPath  { [CompilerGeneratedAttribute(),]public virtual get; }
-	bool IsBound  { [CompilerGeneratedAttribute(),]public virtual get; }
-	string Namespace  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.Expressions.IEdmPathExpression EntitySetPath  { public virtual get; }
+	bool IsBound  { public virtual get; }
+	string Namespace  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationParameter]] Parameters  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public virtual get; }
 	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public abstract get; }
 
 	public void AddParameter (Microsoft.OData.Edm.IEdmOperationParameter parameter)
@@ -2376,10 +2376,10 @@ public abstract class Microsoft.OData.Edm.Library.EdmOperation : Microsoft.OData
 public abstract class Microsoft.OData.Edm.Library.EdmOperationImport : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
 	protected EdmOperationImport (Microsoft.OData.Edm.IEdmEntityContainer container, Microsoft.OData.Edm.IEdmOperation operation, string name, Microsoft.OData.Edm.Expressions.IEdmExpression entitySet)
 
-	Microsoft.OData.Edm.IEdmEntityContainer Container  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
 	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public abstract get; }
-	Microsoft.OData.Edm.Expressions.IEdmExpression EntitySet  { [CompilerGeneratedAttribute(),]public virtual get; }
-	Microsoft.OData.Edm.IEdmOperation Operation  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.Expressions.IEdmExpression EntitySet  { public virtual get; }
+	Microsoft.OData.Edm.IEdmOperation Operation  { public virtual get; }
 
 	protected abstract string OperationArgumentNullParameterName ()
 }
@@ -2442,7 +2442,7 @@ public class Microsoft.OData.Edm.Library.EdmActionImport : Microsoft.OData.Edm.L
 	public EdmActionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmAction action)
 	public EdmActionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmAction action, Microsoft.OData.Edm.Expressions.IEdmExpression entitySetExpression)
 
-	Microsoft.OData.Edm.IEdmAction Action  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.IEdmAction Action  { public virtual get; }
 	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
 
 	protected virtual string OperationArgumentNullParameterName ()
@@ -2643,7 +2643,7 @@ public class Microsoft.OData.Edm.Library.EdmFunction : Microsoft.OData.Edm.Libra
 	public EdmFunction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
 	public EdmFunction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Expressions.IEdmPathExpression entitySetPathExpression, bool isComposable)
 
-	bool IsComposable  { [CompilerGeneratedAttribute(),]public virtual get; }
+	bool IsComposable  { public virtual get; }
 	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
 }
 
@@ -2652,8 +2652,8 @@ public class Microsoft.OData.Edm.Library.EdmFunctionImport : Microsoft.OData.Edm
 	public EdmFunctionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Expressions.IEdmExpression entitySetExpression, bool includeInServiceDocument)
 
 	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmFunction Function  { [CompilerGeneratedAttribute(),]public virtual get; }
-	bool IncludeInServiceDocument  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.IEdmFunction Function  { public virtual get; }
+	bool IncludeInServiceDocument  { public virtual get; }
 
 	protected virtual string OperationArgumentNullParameterName ()
 }
@@ -2699,8 +2699,8 @@ public class Microsoft.OData.Edm.Library.EdmNavigationPropertyBinding : IEdmNavi
 public class Microsoft.OData.Edm.Library.EdmOperationParameter : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
 	public EdmOperationParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type)
 
-	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { [CompilerGeneratedAttribute(),]public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference Type  { [CompilerGeneratedAttribute(),]public virtual get; }
+	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
@@ -2813,13 +2813,13 @@ public sealed class Microsoft.OData.Edm.Library.EdmNavigationProperty : Microsof
 public sealed class Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo {
 	public EdmNavigationPropertyInfo ()
 
-	bool ContainsTarget  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] DependentProperties  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] PrincipalProperties  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Edm.IEdmEntityType Target  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool ContainsTarget  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] DependentProperties  { public get; public set; }
+	string Name  { public get; public set; }
+	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] PrincipalProperties  { public get; public set; }
+	Microsoft.OData.Edm.IEdmEntityType Target  { public get; public set; }
+	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; public set; }
 
 	public Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo Clone ()
 }
@@ -3200,15 +3200,15 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 public class Microsoft.OData.Edm.Validation.EdmError {
 	public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage)
 
-	Microsoft.OData.Edm.Validation.EdmErrorCode ErrorCode  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Edm.EdmLocation ErrorLocation  { [CompilerGeneratedAttribute(),]public get; }
-	string ErrorMessage  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Edm.Validation.EdmErrorCode ErrorCode  { public get; }
+	Microsoft.OData.Edm.EdmLocation ErrorLocation  { public get; }
+	string ErrorMessage  { public get; }
 
 	public virtual string ToString ()
 }
 
 public class Microsoft.OData.Edm.Validation.ObjectLocation : Microsoft.OData.Edm.EdmLocation {
-	object Object  { [CompilerGeneratedAttribute(),]public get; }
+	object Object  { public get; }
 
 	public virtual string ToString ()
 }
@@ -3920,9 +3920,9 @@ public abstract class Microsoft.OData.Core.ODataCollectionWriter {
 public abstract class Microsoft.OData.Core.ODataDeltaLinkBase : Microsoft.OData.Core.ODataItem {
 	protected ODataDeltaLinkBase (System.Uri source, System.Uri target, string relationship)
 
-	string Relationship  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Source  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Target  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Relationship  { public get; public set; }
+	System.Uri Source  { public get; public set; }
+	System.Uri Target  { public get; public set; }
 }
 
 public abstract class Microsoft.OData.Core.ODataDeltaReader {
@@ -3957,9 +3957,9 @@ public abstract class Microsoft.OData.Core.ODataDeltaWriter {
 public abstract class Microsoft.OData.Core.ODataFeedBase : Microsoft.OData.Core.ODataItem {
 	protected ODataFeedBase ()
 
-	System.Nullable`1[[System.Int64]] Count  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Nullable`1[[System.Int64]] Count  { public get; public set; }
 	System.Uri DeltaLink  { public get; public set; }
-	System.Uri Id  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Uri Id  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	System.Uri NextPageLink  { public get; public set; }
 }
@@ -4056,7 +4056,7 @@ public abstract class Microsoft.OData.Core.ODataMessageWriterSettingsBase {
 public abstract class Microsoft.OData.Core.ODataOperation : Microsoft.OData.Core.ODataAnnotatable {
 	protected ODataOperation ()
 
-	System.Uri Metadata  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Uri Metadata  { public get; public set; }
 	System.Uri Target  { public get; public set; }
 	string Title  { public get; public set; }
 }
@@ -4153,9 +4153,9 @@ public abstract class Microsoft.OData.Core.ODataReader {
 public abstract class Microsoft.OData.Core.ODataServiceDocumentElement : Microsoft.OData.Core.ODataAnnotatable {
 	protected ODataServiceDocumentElement ()
 
-	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Title  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Url  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Name  { public get; public set; }
+	string Title  { public get; public set; }
+	System.Uri Url  { public get; public set; }
 }
 
 public abstract class Microsoft.OData.Core.ODataValue : Microsoft.OData.Core.ODataAnnotatable {
@@ -4356,8 +4356,8 @@ public sealed class Microsoft.OData.Core.ODataBatchOperationRequestMessage : IOD
 	public const readonly string ContentId = 
 
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
-	string Method  { [CompilerGeneratedAttribute(),]public virtual get; [CompilerGeneratedAttribute(),]public virtual set; }
-	System.Uri Url  { [CompilerGeneratedAttribute(),]public virtual get; [CompilerGeneratedAttribute(),]public virtual set; }
+	string Method  { public virtual get; public virtual set; }
+	System.Uri Url  { public virtual get; public virtual set; }
 
 	public virtual string GetHeader (string headerName)
 	public virtual System.IO.Stream GetStream ()
@@ -4408,9 +4408,9 @@ public sealed class Microsoft.OData.Core.ODataBatchWriter : IODataBatchOperation
 public sealed class Microsoft.OData.Core.ODataCollectionStart : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataCollectionStart ()
 
-	System.Nullable`1[[System.Int64]] Count  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri NextPageLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Nullable`1[[System.Int64]] Count  { public get; public set; }
+	string Name  { public get; public set; }
+	System.Uri NextPageLink  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataCollectionStartSerializationInfo {
@@ -4422,23 +4422,23 @@ public sealed class Microsoft.OData.Core.ODataCollectionStartSerializationInfo {
 public sealed class Microsoft.OData.Core.ODataCollectionValue : Microsoft.OData.Core.ODataValue {
 	public ODataCollectionValue ()
 
-	System.Collections.IEnumerable Items  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string TypeName  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.IEnumerable Items  { public get; public set; }
+	string TypeName  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataComplexValue : Microsoft.OData.Core.ODataValue {
 	public ODataComplexValue ()
 
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataProperty]] Properties  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string TypeName  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataProperty]] Properties  { public get; public set; }
+	string TypeName  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataDeltaDeletedEntry : Microsoft.OData.Core.ODataItem {
 	public ODataDeltaDeletedEntry (string id, Microsoft.OData.Core.DeltaDeletedEntryReason reason)
 
-	string Id  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[Microsoft.OData.Core.DeltaDeletedEntryReason]] Reason  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Id  { public get; public set; }
+	System.Nullable`1[[Microsoft.OData.Core.DeltaDeletedEntryReason]] Reason  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataDeltaDeletedLink : Microsoft.OData.Core.ODataDeltaLinkBase {
@@ -4474,16 +4474,16 @@ public sealed class Microsoft.OData.Core.ODataEntityReferenceLink : Microsoft.OD
 	public ODataEntityReferenceLink ()
 
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	System.Uri Url  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Uri Url  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataEntityReferenceLinks : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataEntityReferenceLinks ()
 
-	System.Nullable`1[[System.Int64]] Count  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Nullable`1[[System.Int64]] Count  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataEntityReferenceLink]] Links  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri NextPageLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataEntityReferenceLink]] Links  { public get; public set; }
+	System.Uri NextPageLink  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataEntitySetInfo : Microsoft.OData.Core.ODataServiceDocumentElement {
@@ -4502,11 +4502,11 @@ public sealed class Microsoft.OData.Core.ODataEntry : Microsoft.OData.Core.OData
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataFunction]] Functions  { public get; }
 	System.Uri Id  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	bool IsTransient  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool IsTransient  { public get; public set; }
 	Microsoft.OData.Core.ODataStreamReferenceValue MediaResource  { public get; public set; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataProperty]] Properties  { public get; public set; }
 	System.Uri ReadLink  { public get; public set; }
-	string TypeName  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string TypeName  { public get; public set; }
 
 	public void AddAction (Microsoft.OData.Core.ODataAction action)
 	public void AddFunction (Microsoft.OData.Core.ODataFunction function)
@@ -4516,8 +4516,8 @@ public sealed class Microsoft.OData.Core.ODataEnumValue : Microsoft.OData.Core.O
 	public ODataEnumValue (string value)
 	public ODataEnumValue (string value, string typeName)
 
-	string TypeName  { [CompilerGeneratedAttribute(),]public get; }
-	string Value  { [CompilerGeneratedAttribute(),]public get; }
+	string TypeName  { public get; }
+	string Value  { public get; }
 }
 
 [
@@ -4526,20 +4526,20 @@ DebuggerDisplayAttribute(),
 public sealed class Microsoft.OData.Core.ODataError : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataError ()
 
-	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataErrorDetail]] Details  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string ErrorCode  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.ODataInnerError InnerError  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataErrorDetail]] Details  { public get; public set; }
+	string ErrorCode  { public get; public set; }
+	Microsoft.OData.Core.ODataInnerError InnerError  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	string Message  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Target  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Message  { public get; public set; }
+	string Target  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataErrorDetail {
 	public ODataErrorDetail ()
 
-	string ErrorCode  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Message  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Target  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string ErrorCode  { public get; public set; }
+	string Message  { public get; public set; }
+	string Target  { public get; public set; }
 }
 
 [
@@ -4570,9 +4570,9 @@ public sealed class Microsoft.OData.Core.ODataFeedAndEntrySerializationInfo {
 	public ODataFeedAndEntrySerializationInfo ()
 
 	string ExpectedTypeName  { public get; public set; }
-	bool IsFromCollection  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool IsFromCollection  { public get; public set; }
 	string NavigationSourceEntityTypeName  { public get; public set; }
-	Microsoft.OData.Edm.EdmNavigationSourceKind NavigationSourceKind  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Edm.EdmNavigationSourceKind NavigationSourceKind  { public get; public set; }
 	string NavigationSourceName  { public get; public set; }
 }
 
@@ -4594,17 +4594,17 @@ public sealed class Microsoft.OData.Core.ODataInnerError {
 	public ODataInnerError ()
 	public ODataInnerError (System.Exception exception)
 
-	Microsoft.OData.Core.ODataInnerError InnerError  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Message  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string StackTrace  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string TypeName  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.ODataInnerError InnerError  { public get; public set; }
+	string Message  { public get; public set; }
+	string StackTrace  { public get; public set; }
+	string TypeName  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataInstanceAnnotation : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataInstanceAnnotation (string name, Microsoft.OData.Core.ODataValue value)
 
-	string Name  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.ODataValue Value  { [CompilerGeneratedAttribute(),]public get; }
+	string Name  { public get; }
+	Microsoft.OData.Core.ODataValue Value  { public get; }
 }
 
 [
@@ -4622,20 +4622,20 @@ public sealed class Microsoft.OData.Core.ODataMediaType {
 public sealed class Microsoft.OData.Core.ODataMediaTypeFormat {
 	public ODataMediaTypeFormat (Microsoft.OData.Core.ODataMediaType mediaType, Microsoft.OData.Core.ODataFormat format)
 
-	Microsoft.OData.Core.ODataFormat Format  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.ODataMediaType MediaType  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataFormat Format  { public get; }
+	Microsoft.OData.Core.ODataMediaType MediaType  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.ODataMessageInfo {
 	public ODataMessageInfo ()
 
-	System.Text.Encoding Encoding  { [CompilerGeneratedAttribute(),]public get; }
-	System.Func`1[[System.IO.Stream]] GetMessageStream  { [CompilerGeneratedAttribute(),]public get; }
-	System.Func`1[[System.Threading.Tasks.Task`1[[System.IO.Stream]]]] GetMessageStreamAsync  { [CompilerGeneratedAttribute(),]public get; }
-	bool IsResponse  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.ODataMediaType MediaType  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Edm.IEdmModel Model  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.IODataUrlResolver UrlResolver  { [CompilerGeneratedAttribute(),]public get; }
+	System.Text.Encoding Encoding  { public get; }
+	System.Func`1[[System.IO.Stream]] GetMessageStream  { public get; }
+	System.Func`1[[System.Threading.Tasks.Task`1[[System.IO.Stream]]]] GetMessageStreamAsync  { public get; }
+	bool IsResponse  { public get; }
+	Microsoft.OData.Core.ODataMediaType MediaType  { public get; }
+	Microsoft.OData.Edm.IEdmModel Model  { public get; }
+	Microsoft.OData.Core.IODataUrlResolver UrlResolver  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.ODataMessageQuotas {
@@ -4708,15 +4708,15 @@ public sealed class Microsoft.OData.Core.ODataMessageReaderSettings : Microsoft.
 	public ODataMessageReaderSettings (Microsoft.OData.Core.ODataMessageReaderSettings other)
 
 	System.Uri BaseUri  { public get; public set; }
-	bool DisableMessageStreamDisposal  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	bool DisablePrimitiveTypeConversion  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	bool EnableFullValidation  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.ODataVersion MaxProtocolVersion  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool DisableMessageStreamDisposal  { public get; public set; }
+	bool DisablePrimitiveTypeConversion  { public get; public set; }
+	bool EnableFullValidation  { public get; public set; }
+	Microsoft.OData.Core.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
-	bool ODataSimplified  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool ODataSimplified  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
-	Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public get; public set; }
+	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 
 	public void EnableDefaultBehavior ()
 	public void EnableODataServerBehavior ()
@@ -4775,16 +4775,16 @@ public sealed class Microsoft.OData.Core.ODataMessageWriterSettings : Microsoft.
 	public ODataMessageWriterSettings ()
 	public ODataMessageWriterSettings (Microsoft.OData.Core.ODataMessageWriterSettings other)
 
-	bool AutoComputePayloadMetadataInJson  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	bool DisableMessageStreamDisposal  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	bool EnableFullValidation  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string JsonPCallback  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool AutoComputePayloadMetadataInJson  { public get; public set; }
+	bool DisableMessageStreamDisposal  { public get; public set; }
+	bool EnableFullValidation  { public get; public set; }
+	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
-	bool ODataSimplified  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.Core.ODataUri ODataUri  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[Microsoft.OData.Core.ODataVersion]] Version  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
+	System.Nullable`1[[Microsoft.OData.Core.ODataVersion]] Version  { public get; public set; }
 
 	public void EnableDefaultBehavior ()
 	public void EnableODataServerBehavior ()
@@ -4801,8 +4801,8 @@ public sealed class Microsoft.OData.Core.ODataNavigationLink : Microsoft.OData.C
 	public ODataNavigationLink ()
 
 	System.Uri AssociationLinkUrl  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] IsCollection  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Nullable`1[[System.Boolean]] IsCollection  { public get; public set; }
+	string Name  { public get; public set; }
 	System.Uri Url  { public get; public set; }
 }
 
@@ -4828,29 +4828,29 @@ public sealed class Microsoft.OData.Core.ODataPreferenceHeader {
 public sealed class Microsoft.OData.Core.ODataPrimitiveValue : Microsoft.OData.Core.ODataValue {
 	public ODataPrimitiveValue (object value)
 
-	object Value  { [CompilerGeneratedAttribute(),]public get; }
+	object Value  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.ODataProperty : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataProperty ()
 
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Name  { public get; public set; }
 	object Value  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataPropertySerializationInfo {
 	public ODataPropertySerializationInfo ()
 
-	Microsoft.OData.Core.ODataPropertyKind PropertyKind  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.ODataPropertyKind PropertyKind  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataServiceDocument : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataServiceDocument ()
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataEntitySetInfo]] EntitySets  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataFunctionImportInfo]] FunctionImports  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataSingletonInfo]] Singletons  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataEntitySetInfo]] EntitySets  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataFunctionImportInfo]] FunctionImports  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataSingletonInfo]] Singletons  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataSingletonInfo : Microsoft.OData.Core.ODataServiceDocumentElement {
@@ -4860,29 +4860,29 @@ public sealed class Microsoft.OData.Core.ODataSingletonInfo : Microsoft.OData.Co
 public sealed class Microsoft.OData.Core.ODataStreamReferenceValue : Microsoft.OData.Core.ODataValue {
 	public ODataStreamReferenceValue ()
 
-	string ContentType  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string ContentType  { public get; public set; }
 	System.Uri EditLink  { public get; public set; }
-	string ETag  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string ETag  { public get; public set; }
 	System.Uri ReadLink  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataUri {
 	public ODataUri ()
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] CustomQueryOptions  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string DeltaToken  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.UriParser.Semantic.FilterClause Filter  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderBy  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] CustomQueryOptions  { public get; public set; }
+	string DeltaToken  { public get; public set; }
+	Microsoft.OData.Core.UriParser.Semantic.FilterClause Filter  { public get; public set; }
+	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderBy  { public get; public set; }
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ParameterAliasNodes  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataPath Path  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.Boolean]] QueryCount  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri RequestUri  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SearchClause Search  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.UriParser.Semantic.ODataPath Path  { public get; public set; }
+	System.Nullable`1[[System.Boolean]] QueryCount  { public get; public set; }
+	System.Uri RequestUri  { public get; public set; }
+	Microsoft.OData.Core.UriParser.Semantic.SearchClause Search  { public get; public set; }
+	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { public get; public set; }
 	System.Uri ServiceRoot  { public get; public set; }
-	System.Nullable`1[[System.Int64]] Skip  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string SkipToken  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.Int64]] Top  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Nullable`1[[System.Int64]] Skip  { public get; public set; }
+	string SkipToken  { public get; public set; }
+	System.Nullable`1[[System.Int64]] Top  { public get; public set; }
 
 	public Microsoft.OData.Core.ODataUri Clone ()
 }
@@ -4894,7 +4894,7 @@ public sealed class Microsoft.OData.Core.ProjectedPropertiesAnnotation {
 public sealed class Microsoft.OData.Core.SerializationTypeNameAnnotation {
 	public SerializationTypeNameAnnotation ()
 
-	string TypeName  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string TypeName  { public get; public set; }
 }
 
 public enum Microsoft.OData.Core.Atom.AtomSyndicationItemProperty : int {
@@ -4957,74 +4957,74 @@ public sealed class Microsoft.OData.Core.Atom.ExtensionMethods {
 public sealed class Microsoft.OData.Core.Atom.AtomCategoriesMetadata {
 	public AtomCategoriesMetadata ()
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.Boolean]] Fixed  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Href  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Scheme  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { public get; public set; }
+	System.Nullable`1[[System.Boolean]] Fixed  { public get; public set; }
+	System.Uri Href  { public get; public set; }
+	string Scheme  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomCategoryMetadata : Microsoft.OData.Core.ODataAnnotatable {
 	public AtomCategoryMetadata ()
 
-	string Label  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Scheme  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Term  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Label  { public get; public set; }
+	string Scheme  { public get; public set; }
+	string Term  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomEntryMetadata : Microsoft.OData.Core.ODataAnnotatable {
 	public AtomEntryMetadata ()
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Authors  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomCategoryMetadata CategoryWithTypeName  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Contributors  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata EditLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomLinkMetadata]] Links  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.DateTimeOffset]] Published  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Rights  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomFeedMetadata Source  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Summary  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.DateTimeOffset]] Updated  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Authors  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomCategoryMetadata CategoryWithTypeName  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Contributors  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomLinkMetadata EditLink  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomLinkMetadata]] Links  { public get; public set; }
+	System.Nullable`1[[System.DateTimeOffset]] Published  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Rights  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomFeedMetadata Source  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Summary  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
+	System.Nullable`1[[System.DateTimeOffset]] Updated  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomFeedMetadata : Microsoft.OData.Core.ODataAnnotatable {
 	public AtomFeedMetadata ()
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Authors  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Contributors  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomGeneratorMetadata Generator  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Icon  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomLinkMetadata]] Links  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Logo  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata NextPageLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Rights  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri SourceId  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Subtitle  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.DateTimeOffset]] Updated  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Authors  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Contributors  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomGeneratorMetadata Generator  { public get; public set; }
+	System.Uri Icon  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomLinkMetadata]] Links  { public get; public set; }
+	System.Uri Logo  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomLinkMetadata NextPageLink  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Rights  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { public get; public set; }
+	System.Uri SourceId  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Subtitle  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
+	System.Nullable`1[[System.DateTimeOffset]] Updated  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomGeneratorMetadata {
 	public AtomGeneratorMetadata ()
 
-	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Uri Uri  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Version  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Name  { public get; public set; }
+	System.Uri Uri  { public get; public set; }
+	string Version  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomLinkMetadata : Microsoft.OData.Core.ODataAnnotatable {
 	public AtomLinkMetadata ()
 
-	System.Uri Href  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string HrefLang  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Nullable`1[[System.Int32]] Length  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string MediaType  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Relation  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Title  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Uri Href  { public get; public set; }
+	string HrefLang  { public get; public set; }
+	System.Nullable`1[[System.Int32]] Length  { public get; public set; }
+	string MediaType  { public get; public set; }
+	string Relation  { public get; public set; }
+	string Title  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomPersonMetadata : Microsoft.OData.Core.ODataAnnotatable {
@@ -5032,7 +5032,7 @@ public sealed class Microsoft.OData.Core.Atom.AtomPersonMetadata : Microsoft.ODa
 
 	string Email  { public get; public set; }
 	string Name  { public get; public set; }
-	System.Uri Uri  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Uri Uri  { public get; public set; }
 
 	public static Microsoft.OData.Core.Atom.AtomPersonMetadata ToAtomPersonMetadata (string name)
 }
@@ -5040,23 +5040,23 @@ public sealed class Microsoft.OData.Core.Atom.AtomPersonMetadata : Microsoft.ODa
 public sealed class Microsoft.OData.Core.Atom.AtomResourceCollectionMetadata {
 	public AtomResourceCollectionMetadata ()
 
-	string Accept  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomCategoriesMetadata Categories  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Accept  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomCategoriesMetadata Categories  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomStreamReferenceMetadata : Microsoft.OData.Core.ODataAnnotatable {
 	public AtomStreamReferenceMetadata ()
 
-	Microsoft.OData.Core.Atom.AtomLinkMetadata EditLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.Atom.AtomLinkMetadata EditLink  { public get; public set; }
+	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.Atom.AtomTextConstruct : Microsoft.OData.Core.ODataAnnotatable {
 	public AtomTextConstruct ()
 
-	Microsoft.OData.Core.Atom.AtomTextConstructKind Kind  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	string Text  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstructKind Kind  { public get; public set; }
+	string Text  { public get; public set; }
 
 	public static Microsoft.OData.Core.Atom.AtomTextConstruct ToTextConstruct (string text)
 }
@@ -5064,7 +5064,7 @@ public sealed class Microsoft.OData.Core.Atom.AtomTextConstruct : Microsoft.ODat
 public sealed class Microsoft.OData.Core.Atom.AtomWorkspaceMetadata {
 	public AtomWorkspaceMetadata ()
 
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
 }
 
 public enum Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind : int {
@@ -5076,7 +5076,7 @@ public enum Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind : int {
 public sealed class Microsoft.OData.Core.Metadata.ODataEdmPropertyAnnotation {
 	public ODataEdmPropertyAnnotation ()
 
-	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.UriBuilder.ODataUriBuilder {
@@ -5118,8 +5118,8 @@ public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
 public sealed class Microsoft.OData.Core.UriParser.KeyPropertyValue {
 	public KeyPropertyValue ()
 
-	Microsoft.OData.Edm.IEdmProperty KeyProperty  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode KeyValue  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Edm.IEdmProperty KeyProperty  { public get; public set; }
+	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode KeyValue  { public get; public set; }
 }
 
 [
@@ -5130,9 +5130,9 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUnrecognizedPathExceptio
 	public ODataUnrecognizedPathException (string message)
 	public ODataUnrecognizedPathException (string message, System.Exception innerException)
 
-	string CurrentSegment  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] ParsedSegments  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	System.Collections.Generic.IEnumerable`1[[System.String]] UnparsedSegments  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string CurrentSegment  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] ParsedSegments  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] UnparsedSegments  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.UriParser.ODataUriParser {
@@ -5178,7 +5178,7 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUrlConventions {
 public class Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
 	public ODataUriResolver ()
 
-	bool EnableCaseInsensitive  { [CompilerGeneratedAttribute(),]public virtual get; [CompilerGeneratedAttribute(),]public virtual set; }
+	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
 
 	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& leftNode, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
@@ -5233,10 +5233,10 @@ public abstract class Microsoft.OData.Core.UriParser.Semantic.LambdaNode : Micro
 	protected LambdaNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] rangeVariables)
 	protected LambdaNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] rangeVariables, Microsoft.OData.Core.UriParser.Semantic.RangeVariable currentRangeVariable)
 
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Body  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Body  { public get; public set; }
 	Microsoft.OData.Core.UriParser.Semantic.RangeVariable CurrentRangeVariable  { public get; }
 	System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] RangeVariables  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; public set; }
 }
 
 public abstract class Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment : Microsoft.OData.Core.ODataAnnotatable {
@@ -5295,14 +5295,14 @@ public class Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem
 	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption)
 
-	System.Nullable`1[[System.Boolean]] CountOption  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterOption  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderByOption  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath PathToNavigationProperty  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SearchClause SearchOption  { [CompilerGeneratedAttribute(),]public get; }
-	System.Nullable`1[[System.Int64]] SkipOption  { [CompilerGeneratedAttribute(),]public get; }
-	System.Nullable`1[[System.Int64]] TopOption  { [CompilerGeneratedAttribute(),]public get; }
+	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterOption  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderByOption  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath PathToNavigationProperty  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.SearchClause SearchOption  { public get; }
+	System.Nullable`1[[System.Int64]] SkipOption  { public get; }
+	System.Nullable`1[[System.Int64]] TopOption  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
@@ -5345,14 +5345,14 @@ public class Microsoft.OData.Core.UriParser.Semantic.ODataSelectPath : Microsoft
 public class Microsoft.OData.Core.UriParser.Semantic.ODataUnresolvedFunctionParameterAlias : Microsoft.OData.Core.ODataValue {
 	public ODataUnresolvedFunctionParameterAlias (string alias, Microsoft.OData.Edm.IEdmTypeReference type)
 
-	string Alias  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Edm.IEdmTypeReference Type  { [CompilerGeneratedAttribute(),]public get; }
+	string Alias  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public get; }
 }
 
 public class Microsoft.OData.Core.UriParser.Semantic.ParameterAliasNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
 	public ParameterAliasNode (string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
-	string Alias  { [CompilerGeneratedAttribute(),]public get; }
+	string Alias  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
@@ -5472,7 +5472,7 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.ConstantNode : Micro
 	public ConstantNode (object constantValue, string literalText)
 	public ConstantNode (object constantValue, string literalText, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
-	string LiteralText  { [CompilerGeneratedAttribute(),]public get; }
+	string LiteralText  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 	object Value  { public get; }
 
@@ -5525,7 +5525,7 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityCollectionFunc
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityIdSegment {
-	System.Uri Id  { [CompilerGeneratedAttribute(),]public get; }
+	System.Uri Id  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable : Microsoft.OData.Core.UriParser.Semantic.RangeVariable {
@@ -5566,8 +5566,8 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSe
 	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectExpandOption)
 	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectAndExpand, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption, Microsoft.OData.Core.UriParser.Semantic.LevelsClause levelsOption)
 
-	Microsoft.OData.Core.UriParser.Semantic.LevelsClause LevelsOption  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.UriParser.Semantic.LevelsClause LevelsOption  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
@@ -5611,7 +5611,7 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.MetadataSegment : Mi
 public sealed class Microsoft.OData.Core.UriParser.Semantic.NamespaceQualifiedWildcardSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
 	public NamespaceQualifiedWildcardSelectItem (string namespaceName)
 
-	string Namespace  { [CompilerGeneratedAttribute(),]public get; }
+	string Namespace  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
@@ -5699,8 +5699,8 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.OperationSegment : M
 public sealed class Microsoft.OData.Core.UriParser.Semantic.OperationSegmentParameter : Microsoft.OData.Core.ODataAnnotatable {
 	public OperationSegmentParameter (string name, object value)
 
-	string Name  { [CompilerGeneratedAttribute(),]public get; }
-	object Value  { [CompilerGeneratedAttribute(),]public get; }
+	string Name  { public get; }
+	object Value  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.OrderByClause {
@@ -5726,7 +5726,7 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment 
 	public PathTemplateSegment (string literalText)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	string LiteralText  { [CompilerGeneratedAttribute(),]public get; }
+	string LiteralText  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
@@ -5879,8 +5879,8 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.UnaryOperatorNode : 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.UriTemplateExpression {
 	public UriTemplateExpression ()
 
-	Microsoft.OData.Edm.IEdmTypeReference ExpectedType  { [CompilerGeneratedAttribute(),]public get; }
-	string LiteralText  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ExpectedType  { public get; }
+	string LiteralText  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.ValueSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
@@ -6192,20 +6192,20 @@ public sealed class Microsoft.OData.Client.Utility {
 public class Microsoft.OData.Client.BaseEntityType {
 	public BaseEntityType ()
 
-	Microsoft.OData.Client.DataServiceContext Context  { [CompilerGeneratedAttribute(),]protected get; [CompilerGeneratedAttribute(),]protected set; }
+	Microsoft.OData.Client.DataServiceContext Context  { protected get; protected set; }
 }
 
 public class Microsoft.OData.Client.BuildingRequestEventArgs : System.EventArgs {
-	Microsoft.OData.Client.Descriptor Descriptor  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.Descriptor Descriptor  { public get; }
 	System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
-	string Method  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string Method  { public get; public set; }
 	System.Uri RequestUri  { public get; public set; }
 }
 
 public class Microsoft.OData.Client.DataServiceActionQuery {
 	public DataServiceActionQuery (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
 
-	System.Uri RequestUri  { [CompilerGeneratedAttribute(),]public get; }
+	System.Uri RequestUri  { public get; }
 
 	public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
 	public Microsoft.OData.Client.OperationResponse EndExecute (System.IAsyncResult asyncResult)
@@ -6214,19 +6214,19 @@ public class Microsoft.OData.Client.DataServiceActionQuery {
 }
 
 public class Microsoft.OData.Client.DataServiceClientConfigurations {
-	Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration RequestPipeline  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration ResponsePipeline  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration RequestPipeline  { public get; }
+	Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration ResponsePipeline  { public get; }
 }
 
 public class Microsoft.OData.Client.DataServiceClientRequestMessageArgs {
 	public DataServiceClientRequestMessageArgs (string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] headers)
 
 	string ActualMethod  { public get; }
-	System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { [CompilerGeneratedAttribute(),]public get; }
-	string Method  { [CompilerGeneratedAttribute(),]public get; }
-	System.Uri RequestUri  { [CompilerGeneratedAttribute(),]public get; }
-	bool UseDefaultCredentials  { [CompilerGeneratedAttribute(),]public get; }
-	bool UsePostTunneling  { [CompilerGeneratedAttribute(),]public get; }
+	System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
+	string Method  { public get; }
+	System.Uri RequestUri  { public get; }
+	bool UseDefaultCredentials  { public get; }
+	bool UsePostTunneling  { public get; }
 }
 
 public class Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration {
@@ -6286,9 +6286,9 @@ public class Microsoft.OData.Client.DataServiceContext {
 	Microsoft.OData.Client.DataServiceResponsePreference AddAndUpdateResponsePreference  { public get; public set; }
 	bool ApplyingChanges  { public get; }
 	System.Uri BaseUri  { public get; public set; }
-	Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { public get; }
 	System.Net.ICredentials Credentials  { public get; public set; }
-	bool DisableInstanceAnnotationMaterialization  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool DisableInstanceAnnotationMaterialization  { public get; public set; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public get; }
 	Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public get; public set; }
 	Microsoft.OData.Client.EntityTracker EntityTracker  { public get; public set; }
@@ -6298,7 +6298,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public get; }
 	Microsoft.OData.Client.ODataProtocolVersion MaxProtocolVersion  { public get; }
 	Microsoft.OData.Client.MergeOption MergeOption  { public get; public set; }
-	bool ODataSimplified  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	bool ODataSimplified  { public get; public set; }
 	System.Func`2[[System.String],[System.Uri]] ResolveEntitySet  { public get; public set; }
 	System.Func`2[[System.Type],[System.String]] ResolveName  { public get; public set; }
 	System.Func`2[[System.String],[System.Type]] ResolveType  { public get; public set; }
@@ -6407,7 +6407,7 @@ public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.
 	Microsoft.OData.Client.DataServiceContext Context  { public get; }
 	System.Type ElementType  { public virtual get; }
 	System.Linq.Expressions.Expression Expression  { public virtual get; }
-	bool IsComposable  { [CompilerGeneratedAttribute(),]public get; }
+	bool IsComposable  { public get; }
 	System.Linq.IQueryProvider Provider  { public virtual get; }
 	System.Uri RequestUri  { public virtual get; }
 
@@ -6443,8 +6443,8 @@ public class Microsoft.OData.Client.DataServiceQuerySingle`1 {
 	public DataServiceQuerySingle`1 (Microsoft.OData.Client.DataServiceContext context, string path)
 	public DataServiceQuerySingle`1 (Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
 
-	Microsoft.OData.Client.DataServiceContext Context  { [CompilerGeneratedAttribute(),]public get; }
-	bool IsComposable  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.DataServiceContext Context  { public get; }
+	bool IsComposable  { public get; }
 	System.Uri RequestUri  { public get; }
 
 	public string AppendRequestUri (string nextSegment)
@@ -6537,13 +6537,13 @@ public class Microsoft.OData.Client.InvokeResponse : Microsoft.OData.Client.Oper
 public class Microsoft.OData.Client.MessageReaderSettingsArgs {
 	public MessageReaderSettingsArgs (Microsoft.OData.Core.ODataMessageReaderSettingsBase settings)
 
-	Microsoft.OData.Core.ODataMessageReaderSettingsBase Settings  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataMessageReaderSettingsBase Settings  { public get; }
 }
 
 public class Microsoft.OData.Client.MessageWriterSettingsArgs {
 	public MessageWriterSettingsArgs (Microsoft.OData.Core.ODataMessageWriterSettingsBase settings)
 
-	Microsoft.OData.Core.ODataMessageWriterSettingsBase Settings  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataMessageWriterSettingsBase Settings  { public get; }
 }
 
 public class Microsoft.OData.Client.QueryOperationResponse : Microsoft.OData.Client.OperationResponse, IEnumerable {
@@ -6561,15 +6561,15 @@ public class Microsoft.OData.Client.ReceivingResponseEventArgs : System.EventArg
 	public ReceivingResponseEventArgs (Microsoft.OData.Core.IODataResponseMessage responseMessage, Microsoft.OData.Client.Descriptor descriptor)
 	public ReceivingResponseEventArgs (Microsoft.OData.Core.IODataResponseMessage responseMessage, Microsoft.OData.Client.Descriptor descriptor, bool isBatchPart)
 
-	Microsoft.OData.Client.Descriptor Descriptor  { [CompilerGeneratedAttribute(),]public get; }
-	bool IsBatchPart  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.IODataResponseMessage ResponseMessage  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.Descriptor Descriptor  { public get; }
+	bool IsBatchPart  { public get; }
+	Microsoft.OData.Core.IODataResponseMessage ResponseMessage  { public get; }
 }
 
 public class Microsoft.OData.Client.SendingRequest2EventArgs : System.EventArgs {
-	Microsoft.OData.Client.Descriptor Descriptor  { [CompilerGeneratedAttribute(),]public get; }
-	bool IsBatchPart  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.IODataRequestMessage RequestMessage  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.Descriptor Descriptor  { public get; }
+	bool IsBatchPart  { public get; }
+	Microsoft.OData.Core.IODataRequestMessage RequestMessage  { public get; }
 }
 
 public class Microsoft.OData.Client.SendingRequestEventArgs : System.EventArgs {
@@ -6601,7 +6601,7 @@ public sealed class Microsoft.OData.Client.ChangeOperationResponse : Microsoft.O
 public sealed class Microsoft.OData.Client.DataServiceActionQuery`1 {
 	public DataServiceActionQuery`1 (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
 
-	System.Uri RequestUri  { [CompilerGeneratedAttribute(),]public get; }
+	System.Uri RequestUri  { public get; }
 
 	public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
 	public IEnumerable`1 EndExecute (System.IAsyncResult asyncResult)
@@ -6613,7 +6613,7 @@ public sealed class Microsoft.OData.Client.DataServiceActionQuery`1 {
 public sealed class Microsoft.OData.Client.DataServiceActionQuerySingle`1 {
 	public DataServiceActionQuerySingle`1 (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
 
-	System.Uri RequestUri  { [CompilerGeneratedAttribute(),]public get; }
+	System.Uri RequestUri  { public get; }
 
 	public System.IAsyncResult BeginGetValue (System.AsyncCallback callback, object state)
 	public T EndGetValue (System.IAsyncResult asyncResult)
@@ -6636,8 +6636,8 @@ public sealed class Microsoft.OData.Client.DataServiceClientException : System.I
 }
 
 public sealed class Microsoft.OData.Client.DataServiceClientFormat {
-	System.Func`1[[Microsoft.OData.Edm.IEdmModel]] LoadServiceModel  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-	Microsoft.OData.Core.ODataFormat ODataFormat  { [CompilerGeneratedAttribute(),]public get; }
+	System.Func`1[[Microsoft.OData.Edm.IEdmModel]] LoadServiceModel  { public get; public set; }
+	Microsoft.OData.Core.ODataFormat ODataFormat  { public get; }
 
 	[
 	ObsoleteAttribute(),
@@ -6752,17 +6752,17 @@ public sealed class Microsoft.OData.Client.EntityDescriptor : Microsoft.OData.Cl
 	System.Uri EditLink  { public get; }
 	System.Uri EditStreamUri  { public get; }
 	object Entity  { public get; }
-	string ETag  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string ETag  { public get; public set; }
 	System.Uri Identity  { public get; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkInfo]] LinkInfos  { public get; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.OperationDescriptor]] OperationDescriptors  { public get; }
-	Microsoft.OData.Client.EntityDescriptor ParentForInsert  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Client.EntityDescriptor ParentForUpdate  { [CompilerGeneratedAttribute(),]public get; }
-	string ParentPropertyForInsert  { [CompilerGeneratedAttribute(),]public get; }
-	string ParentPropertyForUpdate  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Client.EntityDescriptor ParentForInsert  { public get; }
+	Microsoft.OData.Client.EntityDescriptor ParentForUpdate  { public get; }
+	string ParentPropertyForInsert  { public get; }
+	string ParentPropertyForUpdate  { public get; }
 	System.Uri ReadStreamUri  { public get; }
 	System.Uri SelfLink  { public get; }
-	string ServerTypeName  { [CompilerGeneratedAttribute(),]public get; }
+	string ServerTypeName  { public get; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.StreamDescriptor]] StreamDescriptors  { public get; }
 	string StreamETag  { public get; }
 }
@@ -6826,8 +6826,8 @@ public sealed class Microsoft.OData.Client.LoadCompletedEventArgs : System.Compo
 public sealed class Microsoft.OData.Client.MaterializedEntityArgs {
 	public MaterializedEntityArgs (Microsoft.OData.Core.ODataEntry entry, object entity)
 
-	object Entity  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.ODataEntry Entry  { [CompilerGeneratedAttribute(),]public get; }
+	object Entity  { public get; }
+	Microsoft.OData.Core.ODataEntry Entry  { public get; }
 }
 
 [
@@ -6855,7 +6855,7 @@ AttributeUsageAttribute(),
 public sealed class Microsoft.OData.Client.NamedStreamAttribute : System.Attribute, _Attribute {
 	public NamedStreamAttribute (string name)
 
-	string Name  { [CompilerGeneratedAttribute(),]public get; }
+	string Name  { public get; }
 }
 
 [
@@ -6877,19 +6877,19 @@ public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.
 public sealed class Microsoft.OData.Client.ReadingEntryArgs {
 	public ReadingEntryArgs (Microsoft.OData.Core.ODataEntry entry)
 
-	Microsoft.OData.Core.ODataEntry Entry  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataEntry Entry  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.ReadingFeedArgs {
 	public ReadingFeedArgs (Microsoft.OData.Core.ODataFeed feed)
 
-	Microsoft.OData.Core.ODataFeed Feed  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataFeed Feed  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.ReadingNavigationLinkArgs {
 	public ReadingNavigationLinkArgs (Microsoft.OData.Core.ODataNavigationLink link)
 
-	Microsoft.OData.Core.ODataNavigationLink Link  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataNavigationLink Link  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.StreamDescriptor : Microsoft.OData.Client.Descriptor {
@@ -6905,23 +6905,23 @@ public sealed class Microsoft.OData.Client.UriEntityOperationParameter : Microso
 public sealed class Microsoft.OData.Client.WritingEntityReferenceLinkArgs {
 	public WritingEntityReferenceLinkArgs (Microsoft.OData.Core.ODataEntityReferenceLink entityReferenceLink, object source, object target)
 
-	Microsoft.OData.Core.ODataEntityReferenceLink EntityReferenceLink  { [CompilerGeneratedAttribute(),]public get; }
-	object Source  { [CompilerGeneratedAttribute(),]public get; }
-	object Target  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataEntityReferenceLink EntityReferenceLink  { public get; }
+	object Source  { public get; }
+	object Target  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.WritingEntryArgs {
 	public WritingEntryArgs (Microsoft.OData.Core.ODataEntry entry, object entity)
 
-	object Entity  { [CompilerGeneratedAttribute(),]public get; }
-	Microsoft.OData.Core.ODataEntry Entry  { [CompilerGeneratedAttribute(),]public get; }
+	object Entity  { public get; }
+	Microsoft.OData.Core.ODataEntry Entry  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.WritingNavigationLinkArgs {
 	public WritingNavigationLinkArgs (Microsoft.OData.Core.ODataNavigationLink link, object source, object target)
 
-	Microsoft.OData.Core.ODataNavigationLink Link  { [CompilerGeneratedAttribute(),]public get; }
-	object Source  { [CompilerGeneratedAttribute(),]public get; }
-	object Target  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.ODataNavigationLink Link  { public get; }
+	object Source  { public get; }
+	object Target  { public get; }
 }
 
