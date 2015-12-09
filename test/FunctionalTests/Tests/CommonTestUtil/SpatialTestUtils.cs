@@ -11,7 +11,7 @@ namespace DataSpatialUnitTests.Utils
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.Spatial;
-    using Microsoft.Spatial.Tests.Utils;
+    using Microsoft.Spatial.Tests;
     using System.Text;
     using System.Xml;
     using System.Xml.XPath;

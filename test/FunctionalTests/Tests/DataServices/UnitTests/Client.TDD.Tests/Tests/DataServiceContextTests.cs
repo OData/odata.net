@@ -7,7 +7,6 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
-    using System.Threading;
     using Microsoft.OData.Client;
     using System.IO;
     using System.Linq;
@@ -15,9 +14,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using AstoriaUnitTests.ClientExtensions;
 #endif
     using FluentAssertions;
-    using Microsoft.OData.Core;
 #if !PORTABLELIB
-    using Microsoft.Test.OData.TDD.Tests.Common;
+    using Microsoft.OData.Core.Tests;
 #endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 #if !PORTABLELIB

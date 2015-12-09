@@ -11,7 +11,7 @@ using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Tests.Utils;
+using Microsoft.OData.Edm.Tests;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Semantics

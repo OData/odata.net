@@ -11,15 +11,12 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using System.Xml.Linq;
-    using AstoriaUnitTests.TDD.Common;
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData.Core.Tests;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Service;

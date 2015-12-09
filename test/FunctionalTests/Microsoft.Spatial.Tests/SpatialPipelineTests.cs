@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Spatial.Tests.Utils;
+using Microsoft.Spatial.Tests;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests

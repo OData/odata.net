@@ -6,9 +6,8 @@
 
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
-    using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using AstoriaUnitTests.TDD.Common;
+    using Microsoft.OData.Core.Tests;
     using FluentAssertions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

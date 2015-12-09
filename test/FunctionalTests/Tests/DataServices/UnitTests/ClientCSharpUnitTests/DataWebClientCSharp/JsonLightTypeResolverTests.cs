@@ -11,17 +11,14 @@ namespace AstoriaUnitTests.Tests
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using System.Data.Test.Astoria;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Text;
     using AstoriaUnitTests.ClientExtensions;
-    using AstoriaUnitTests.Stubs;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Core.Tests;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.Test.OData.TDD.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     #endregion Namespaces

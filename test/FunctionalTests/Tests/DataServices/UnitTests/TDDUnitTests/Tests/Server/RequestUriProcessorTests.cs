@@ -13,11 +13,11 @@ namespace AstoriaUnitTests.Tests.Server
     using System.Linq;
     using System.Linq.Expressions;
     using Microsoft.Spatial;
+    using Microsoft.Spatial.Tests;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using DataSpatialUnitTests.Utils;
     using FluentAssertions;
     using Microsoft.Data.Spatial;
-    using Microsoft.Spatial.Tests.Utils;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

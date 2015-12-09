@@ -62,13 +62,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\Microsoft.Spatial.Tests\Utils\TestData.cs">
+    <Compile Include="..\..\..\..\Microsoft.Spatial.Tests\TestData.cs">
       <Link>Tests\Server\Util\TestData.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\DataOData\Tests\OData.Query.TDD.Tests\TestUtilities\ModelBuildingHelpers.cs">
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UrlConventionsConstants.cs">
+      <Link>Tests\Server\Util\UrlConventionsConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UriParser\ModelBuildingHelpers.cs">
       <Link>Tests\Server\Util\ModelBuildingHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\DataOData\Tests\OData.Query.TDD.Tests\TestUtilities\HardCodedTestModel.cs">
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UriParser\HardCodedTestModel.cs">
       <Link>Tests\Server\Util\HardCodedTestModel.cs</Link>
     </Compile>
     <Compile Include="Tests\Server\ClientPreferenceTests.cs" />

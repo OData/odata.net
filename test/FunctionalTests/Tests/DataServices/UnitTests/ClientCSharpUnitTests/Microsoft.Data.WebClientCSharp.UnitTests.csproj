@@ -97,7 +97,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\DataOData\Tests\OData.TDD.Tests\Common\InMemoryMessage.cs">
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\InMemoryMessage.cs">
       <Link>DataWebClientCSharp\InMemoryMessage.cs</Link>
     </Compile>
     <Compile Include="..\ServerUnitTests1\Tests\SpatialTestUtil.cs">

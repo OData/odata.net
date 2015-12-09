@@ -96,9 +96,9 @@
     <Compile Include="Library\DateAndTimeOfDayTests.cs" />
     <Compile Include="Library\EdmTypeDefinitionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scenario\OasisActionsFunctionsRelationshipChangesAcceptanceTests.cs" />
-    <Compile Include="Scenario\OasisRelationshipChangesAcceptanceTests.cs" />
-    <Compile Include="Utils\CsdlBuilder.cs" />
+    <Compile Include="ScenarioTests\OasisActionsFunctionsRelationshipChangesAcceptanceTests.cs" />
+    <Compile Include="ScenarioTests\OasisRelationshipChangesAcceptanceTests.cs" />
+    <Compile Include="CsdlBuilder.cs" />
     <Compile Include="Validation\DuplicateOperationValidatorTests.cs" />
     <Compile Include="Validation\Internal\ValidationHelperTests.cs" />
     <Compile Include="Validation\ValidationRuleSetTests.cs" />

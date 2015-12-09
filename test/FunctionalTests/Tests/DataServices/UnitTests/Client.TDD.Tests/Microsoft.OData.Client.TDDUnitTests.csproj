@@ -49,10 +49,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\DataOData\Tests\OData.TDD.Tests\Common\InMemoryMessage.cs">
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\InMemoryMessage.cs">
       <Link>InMemoryMessage.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\DataOData\Tests\OData.TDD.Tests\Evaluation\EdmStructuredValueSimulator.cs">
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UrlConventionsConstants.cs">
+      <Link>Tests\Server\Util\UrlConventionsConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\Evaluation\EdmStructuredValueSimulator.cs">
       <Link>Tests\Client\Common\EdmStructuredValueSimulator.cs</Link>
     </Compile>
     <Compile Include="..\ClientExtensions\TestDataServiceClientRequestMessage.cs">

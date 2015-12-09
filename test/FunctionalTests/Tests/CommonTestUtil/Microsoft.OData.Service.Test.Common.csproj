@@ -46,12 +46,11 @@
     </Compile>
     <Compile Include="SpatialTestUtils.cs" />
     <Compile Include="TestConstants.cs" />
-    <Compile Include="UrlConventionsConstants.cs" />
     <Compile Include="ODataValueAssertions.cs" />
     <Compile Include="ODataRequestMessageSimulator.cs" />
     <Compile Include="ODataResponseMessageSimulator.cs" />
     <Compile Include="FluentAssertionsExtensions.cs" />
-    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.Spatial.Tests\Utils\PositionData.cs">
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.Spatial.Tests\PositionData.cs">
       <Link>PositionData.cs</Link>
     </Compile>
   </ItemGroup>

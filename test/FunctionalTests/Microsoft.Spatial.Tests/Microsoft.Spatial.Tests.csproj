@@ -82,8 +82,8 @@
     <Compile Include="GmlReaderTests.cs" />
     <Compile Include="GmlWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scenario\SpatialEqualityTests.cs" />
-    <Compile Include="Scenario\SpatialFormatterRoundTripTests.cs" />
+    <Compile Include="ScenarioTests\SpatialEqualityTests.cs" />
+    <Compile Include="ScenarioTests\SpatialFormatterRoundTripTests.cs" />
     <Compile Include="SpatialImplementationTests.cs" />
     <Compile Include="SpatialOperationsTests.cs" />
     <Compile Include="SpatialPipelineTests.cs" />
@@ -91,12 +91,12 @@
     <Compile Include="SpatialValidatorImplementationTests.cs" />
     <Compile Include="SpatialValidatorTests.cs" />
     <Compile Include="TextLexerBaseTests.cs" />
-    <Compile Include="Utils\LoggingPipelines.cs" />
-    <Compile Include="Utils\PositionData.cs" />
-    <Compile Include="Utils\SpatialTestUtils.cs" />
-    <Compile Include="Utils\TestData.cs" />
-    <Compile Include="Utils\TestSpatialFormatter.cs" />
-    <Compile Include="Utils\ThrowingTextReader.cs" />
+    <Compile Include="LoggingPipelines.cs" />
+    <Compile Include="PositionData.cs" />
+    <Compile Include="SpatialTestUtils.cs" />
+    <Compile Include="TestData.cs" />
+    <Compile Include="TestSpatialFormatter.cs" />
+    <Compile Include="ThrowingTextReader.cs" />
     <Compile Include="WellKnownTextSqlFormatterTests.cs" />
   </ItemGroup>
   <ItemGroup>

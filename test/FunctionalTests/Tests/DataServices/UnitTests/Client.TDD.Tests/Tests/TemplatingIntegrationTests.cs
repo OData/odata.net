@@ -8,10 +8,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using Microsoft.OData.Client;
+    using Microsoft.OData.Core.Tests.Evaluation;
     using System.Text;
     using FluentAssertions;
     using Microsoft.OData.Edm.Values;
-    using Microsoft.Test.OData.TDD.Tests.Evaluation;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
