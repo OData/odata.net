@@ -1,3 +1,6 @@
+# Default to Debug
+$CONFIGURATION = 'Debug'
+
 if (($args.Count -eq 0) -or ($args[0] -match 'Nightly')) 
 {
     $TestType = 'Nightly'
@@ -6,17 +9,18 @@ if (($args.Count -eq 0) -or ($args[0] -match 'Nightly'))
 elseif ($args[0] -match 'Rolling')
 {
     $TestType = "Rolling"
-    $CONFIGURATION = 'Debug'
+}
+elseif ($args[0] -match 'E2E')
+{
+    $TestType = "E2E"
 }
 elseif ($args[0] -match 'DisableSkipStrongName')
 {
     $TestType = "DisableSkipStrongName"
-    $CONFIGURATION = 'Debug'
 }
 elseif ($args[0] -match 'SkipStrongName')
 {
     $TestType = "SkipStrongName"
-    $CONFIGURATION = 'Debug'
 }
 else 
 {
@@ -113,11 +117,12 @@ ForEach ($test in $AddtionalNightlyTestSuite)
     $NightlyTestSuite += $test
 }
 
-$E2eTestDlls = ,"Microsoft.Test.OData.Tests.Client.dll"
+$E2eTestDlls = @("Microsoft.Test.OData.Tests.Client.dll")
+$E2eTestSuite = @()
 
 ForEach ($dll in $E2eTestDlls)
 {
-    $E2eTestSuite += " /testcontainer:" + $dll
+    $E2eTestSuite += "/testcontainer:" + $dll
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
@@ -252,14 +257,8 @@ Function RunBuild ($sln)
 {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-    if ($TestType -eq 'Nightly')
-    {
-        $Conf = "/p:Configuration=Release"
-    }
-    else
-    {
-        $Conf = "/p:Configuration=Debug"
-    }
+    $Conf = "/p:Configuration=" + "$Configuration"
+
     & $MSBUILD $slnpath /t:build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
     if($LASTEXITCODE -eq 0)
@@ -281,14 +280,8 @@ Function RunRebuild ($sln)
 {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-    if ($TestType -eq 'Nightly')
-    {
-        $Conf = "/p:Configuration=Release"
-    }
-    else
-    {
-        $Conf = "/p:Configuration=Debug"
-    }
+    $Conf = "/p:Configuration=" + "$Configuration"
+
     & $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
     if($LASTEXITCODE -eq 0)
@@ -482,6 +475,10 @@ Function TestProcess
     elseif ($TestType -eq 'Rolling')
     {
         RunTest -title 'RollingTests' -testdir $RollingTestSuite
+    }
+    elseif ($TestType -eq 'E2E')
+    {
+        # E2E tests run below.
     }
     else
     {
