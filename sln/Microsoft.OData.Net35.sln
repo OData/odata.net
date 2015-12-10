@@ -1,14 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.NetFX35", "..\src\Microsoft.OData.Core\Build.Net35\Microsoft.OData.Core.NetFX35.csproj", "{E7B15F0C-0442-458D-9D16-69F3272420BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm.NetFX35", "..\src\Microsoft.OData.Edm\Build.Net35\Microsoft.OData.Edm.NetFX35.csproj", "{69A15676-2469-4315-9617-F0FFC04D310D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.NetFX35", "..\src\Microsoft.Spatial\Build.Net35\Microsoft.Spatial.NetFX35.csproj", "{1104C2E4-076F-47AA-8121-03015AE70630}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Query.TDD.Tests.NetFX35", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.TDD.Tests.NetFX35\Microsoft.OData.Query.TDD.Tests.NetFX35.csproj", "{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,24 +75,6 @@ Global
 		{1104C2E4-076F-47AA-8121-03015AE70630}.Release|x64.Build.0 = Release|x64
 		{1104C2E4-076F-47AA-8121-03015AE70630}.Release|x86.ActiveCfg = Release|x86
 		{1104C2E4-076F-47AA-8121-03015AE70630}.Release|x86.Build.0 = Release|x86
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Cover|x64.ActiveCfg = Cover|x64
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Cover|x64.Build.0 = Cover|x64
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Cover|x86.ActiveCfg = Cover|x86
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Cover|x86.Build.0 = Cover|x86
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Debug|x64.ActiveCfg = Debug|x64
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Debug|x64.Build.0 = Debug|x64
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Debug|x86.ActiveCfg = Debug|x86
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Debug|x86.Build.0 = Debug|x86
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Release|x64.ActiveCfg = Release|x64
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Release|x64.Build.0 = Release|x64
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Release|x86.ActiveCfg = Release|x86
-		{9A12EC1D-AAA3-4E07-A31E-FD2E127910E1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
