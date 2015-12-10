@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Text;
 using System.Xml;
 using FluentAssertions;
@@ -12,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.Atom
 {
-    public class DefaultNamespaceCompensatingXmlWriterTests
+    public class DefaultNamespaceCompensatingXmlWriterTests : IDisposable
     {
         private readonly StringBuilder builder;
         private readonly DefaultNamespaceCompensatingXmlWriter testSubject;
@@ -21,6 +22,12 @@ namespace Microsoft.OData.Core.Tests.Atom
         {
             this.builder = new StringBuilder();
             this.testSubject = new DefaultNamespaceCompensatingXmlWriter(XmlWriter.Create(this.builder, new XmlWriterSettings { OmitXmlDeclaration = true }));
+        }
+
+        public void Dispose()
+        {
+            this.testSubject.Flush();
+            this.builder.Clear();
         }
 
         [Fact]

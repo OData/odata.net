@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
     /// flag is set on the message writer settings. These tests are not meant to be exhaustive, but
     /// should catch major end-to-end problems. The unit tests for the individual components are more extensive.
     /// </summary>
-    public class WriterTypeNameEndToEndTests
+    public class WriterTypeNameEndToEndTests : IDisposable
     {
         private Lazy<ODataMessageWriter> messageWriter;
         private ODataMessageWriterSettings settings;
@@ -91,6 +91,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                 writerStream.Seek(0, SeekOrigin.Begin);
                 return new StreamReader(writerStream).ReadToEnd();
             });
+        }
+
+        public void Dispose()
+        {
+            if (messageWriter.IsValueCreated)
+            {
+                messageWriter.Value.Dispose();
+            }
         }
 
         [Fact]

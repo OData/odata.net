@@ -15,7 +15,7 @@ using ErrorStrings = Microsoft.OData.Core.Strings;
 
 namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
 {
-    public class FeedAnnotationIntegrationTests
+    public class FeedAnnotationIntegrationTests : IDisposable
     {
         private ODataMessageReader messageReader = null;
         private EdmEntitySet entitySet;
@@ -33,6 +33,14 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
             this.entitySet = edmEntityContainer.AddEntitySet("EntitySet", this.type);
             tmp.AddElement(edmEntityContainer);
             this.model = TestUtils.WrapReferencedModelsToMainModel("Namespace", "Container", tmp);
+        }
+
+        public void Dispose()
+        {
+            if (this.messageReader != null)
+            {
+                this.messageReader.Dispose();
+            }
         }
 
         #region Top-level feeds
