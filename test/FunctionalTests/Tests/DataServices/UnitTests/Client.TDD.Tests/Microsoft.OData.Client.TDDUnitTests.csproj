@@ -61,10 +61,6 @@
     <Compile Include="..\ClientExtensions\TestDataServiceClientRequestMessage.cs">
       <Link>TestDataServiceClientRequestMessage.cs</Link>
     </Compile>
-    <Compile Include="Tests\ALinq\ExpandPathToStringVisitorTests.cs" />
-    <Compile Include="Tests\ALinq\AddNewEndingTokenVisitorTests.cs" />
-    <Compile Include="Tests\ALinq\RemoveWildcardVisitorTests.cs" />
-    <Compile Include="Tests\ALinq\SelectExpandPathBuilderTests.cs" />
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />
     <Compile Include="Tests\Annotation\AnnotationRequestMessage.cs" />

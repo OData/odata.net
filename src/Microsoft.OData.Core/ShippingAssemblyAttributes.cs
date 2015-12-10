@@ -28,5 +28,6 @@ using System.Runtime.CompilerServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.Taupo.OData" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Query" + AssemblyRef.ProductPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests" + AssemblyRef.TestPublicKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Client.Tests" + AssemblyRef.TestPublicKey)]
 #endif
 #pragma warning restore 436

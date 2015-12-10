@@ -1,36 +1,23 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ExpandPathToStringVisitorTests.cs" company="Microsoft">
+// <copyright file="SelectExpandPathToStringVisitorTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
-using System.Reflection;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using Microsoft.OData.Client;
-using Microsoft.OData.Client.Metadata;
-using System.Linq;
-using Microsoft.CSharp;
-using Microsoft.OData.Edm;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
+using Microsoft.OData.Client.ALinq.UriParser;
+using Microsoft.OData.Core.UriParser;
+using Xunit;
 
-namespace AstoriaUnitTests.Tests.ALinq
+namespace Microsoft.OData.Client.Tests.ALinq
 {
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Microsoft.OData.Client.ALinq.UriParser;
-    using Microsoft.OData.Core.UriParser;
-
     /// <summary>
     /// Tests ClientEdmModel functionalities
     /// </summary>
-
-    [TestClass]
-    public class ExpandPathToStringVisitorTests
+    public class SelectExpandPathToStringVisitorTests
     {
-        [TestMethod]
+        [Fact]
         public void SystemTokenThrows()
         {
             SelectExpandPathToStringVisitor visitor = new SelectExpandPathToStringVisitor();
@@ -39,7 +26,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             visitSystemToken.ShouldThrow<NotSupportedException>().WithMessage(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It));
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpandOnlyPathResultsInExpandOnlyTree()
         {
             SelectExpandPathToStringVisitor visitor = new SelectExpandPathToStringVisitor();
@@ -49,7 +36,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             path.Accept(visitor).Should().Be("NavProp($expand=NavProp1)");
         }
 
-        [TestMethod]
+        [Fact]
         public void SingleExpandResultsInSingleExpandTree()
         {
             SelectExpandPathToStringVisitor visitor = new SelectExpandPathToStringVisitor();
@@ -58,7 +45,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             path.Accept(visitor).Should().Be("NavProp");
         }
 
-        [TestMethod]
+        [Fact]
         public void SelectAtTheEndOfPathResultsInSelectQueryOption()
         {
             SelectExpandPathToStringVisitor visitor = new SelectExpandPathToStringVisitor();

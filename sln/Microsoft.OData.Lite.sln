@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj", "{68C25902-0FBD-4694-9EE9-47F2219CE039}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.Tests", "..\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{9F0AB290-8164-4885-BFCA-A6F87AB81740}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cover|Any CPU = Cover|Any CPU
@@ -485,6 +487,18 @@ Global
 		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|x64.ActiveCfg = Release|Any CPU
 		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|Any CPU.Build.0 = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|x64.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|x86.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,27 +5,17 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Reflection;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using Microsoft.OData.Client;
-using Microsoft.OData.Client.Metadata;
 using System.Linq;
-using Microsoft.CSharp;
-using Microsoft.OData.Edm;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq.Expressions;
+using System.Reflection;
 using FluentAssertions;
+using Xunit;
 
-namespace AstoriaUnitTests.Tests.ALinq
+namespace Microsoft.OData.Client.Tests.ALinq
 {
-    using System.Linq.Expressions;
-    using System.Reflection;
-
     /// <summary>
     /// Tests ClientEdmModel functionalities
     /// </summary>
-
-    [TestClass]
     public class SelectExpandPathBuilderTests
     {
         private DataServiceContext dsc;
@@ -35,7 +25,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             this.dsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
         }
 
-        [TestMethod]
+        [Fact]
         public void SingleProjectionBecomesSelect()
         {
             PropertyInfo testProperty1Info = typeof(TestEntity).GetProperties().Single(x => x.Name == "TestProperty1");
@@ -47,7 +37,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             pathBuilder.ProjectionPaths.Single().Should().Be("TestProperty1");
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleSingleLevelProjectionsBecomeSelectClauses()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -63,7 +53,7 @@ namespace AstoriaUnitTests.Tests.ALinq
                 .And.Contain(x => x == "TestProperty2");
         }
 
-        [TestMethod]
+        [Fact]
         public void SingleExpansionBecomesExpand()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -75,7 +65,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             pathBuilder.ExpandPaths.Single().Should().Be("NavProp1");
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleSingleLevelExpansionsBecomeExpandClauses()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -91,7 +81,7 @@ namespace AstoriaUnitTests.Tests.ALinq
                 .And.Contain(x => x == "NavProp2");
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeIsPrePendedAsATypeSegment()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -100,10 +90,10 @@ namespace AstoriaUnitTests.Tests.ALinq
             pathBuilder.PushParamExpression(pe);
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(testProperty1Info, typeof(TestEntity), dsc);
-            pathBuilder.ProjectionPaths.Single().Should().Be("AstoriaUnitTests.Tests.ALinq.SelectExpandPathBuilderTests+TestEntity/TestProperty1");
+            pathBuilder.ProjectionPaths.Single().Should().Be("Microsoft.OData.Client.Tests.ALinq.SelectExpandPathBuilderTests+TestEntity/TestProperty1");
         }
 
-        [TestMethod]
+        [Fact]
         public void ProjectionThroughMultipleNavPropsBecomeExpandOptions()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -117,7 +107,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($select=SubTestProperty)");
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpansionThroughMultipleNavPropsIsExpressedAsExpandOptions()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -131,7 +121,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($expand=NavProp3)");
         }
 
-        [TestMethod]
+        [Fact]
         public void SelectingLowerLevelPropertyIsTranslatedIntoExpandOption()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();
@@ -147,7 +137,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($expand=NavProp3($select=SubTestProperty))");
         }
 
-        [TestMethod]
+        [Fact]
         public void PushingANewParameterExpressionResetsTheBasePath()
         {
             SelectExpandPathBuilder pathBuilder = new SelectExpandPathBuilder();

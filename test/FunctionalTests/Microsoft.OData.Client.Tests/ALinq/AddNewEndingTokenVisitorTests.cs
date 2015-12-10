@@ -5,32 +5,19 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Reflection;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using Microsoft.OData.Client;
-using Microsoft.OData.Client.Metadata;
-using System.Linq;
-using Microsoft.CSharp;
-using Microsoft.OData.Edm;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
+using Microsoft.OData.Client.ALinq.UriParser;
+using Microsoft.OData.Core.UriParser;
+using Xunit;
 
-namespace AstoriaUnitTests.Tests.ALinq
+namespace Microsoft.OData.Client.Tests.ALinq
 {
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Microsoft.OData.Client.ALinq.UriParser;
-    using Microsoft.OData.Core.UriParser;
-
     /// <summary>
     /// Tests ClientEdmModel functionalities
     /// </summary>
-
-    [TestClass]
     public class AddNewEndingTokenVisitorTests
     {
-        [TestMethod]
+        [Fact]
         public void SystemTokensThrowNotSupportedError()
         {
             AddNewEndingTokenVisitor visitor = new AddNewEndingTokenVisitor(new NonSystemToken("stuff", null, null));
@@ -39,7 +26,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             visitSystemToken.ShouldThrow<NotSupportedException>().WithMessage(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It));
         }
 
-        [TestMethod]
+        [Fact]
         public void IfNewTokenIsNullInputIsInvariant()
         {
             AddNewEndingTokenVisitor visitor = new AddNewEndingTokenVisitor(null);
@@ -49,7 +36,7 @@ namespace AstoriaUnitTests.Tests.ALinq
             token.NextToken.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void IfNewTokenIsPresentItIsAddedToEndOfPath()
         {
             AddNewEndingTokenVisitor visitor = new AddNewEndingTokenVisitor(new NonSystemToken("moreStuff", null, null));
