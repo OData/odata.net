@@ -14,7 +14,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 {
     public class ODataJsonLightReaderIntegrationTests
     {

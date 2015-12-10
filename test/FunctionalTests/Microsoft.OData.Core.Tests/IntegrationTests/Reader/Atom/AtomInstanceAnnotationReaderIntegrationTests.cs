@@ -8,11 +8,11 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.IntegrationTests.JsonLight;
+using Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Atom
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.Atom
 {
     public class AtomInstanceAnnotationReaderIntegrationTests
     {

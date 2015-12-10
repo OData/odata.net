@@ -16,7 +16,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 {
     /// <summary>
     /// Writer may modify entry (like entry.MetadataBuilder = builder, looks like a problem), 

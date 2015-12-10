@@ -16,7 +16,7 @@ using Microsoft.OData.Edm.Library;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 {
     public class PropertyAndValueJsonLightReaderIntegrationTests
     {

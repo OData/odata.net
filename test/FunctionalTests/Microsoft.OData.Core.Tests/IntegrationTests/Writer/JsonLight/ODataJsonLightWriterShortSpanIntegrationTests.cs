@@ -15,7 +15,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 {
     public class ODataJsonLightWriterShortSpanIntegrationTests
     {

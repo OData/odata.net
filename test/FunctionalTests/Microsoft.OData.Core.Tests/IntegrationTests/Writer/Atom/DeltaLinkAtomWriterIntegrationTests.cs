@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Atom
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.Atom
 {
     public class DeltaLinkAtomWriterIntegrationTests : DeltaLinkWriterIntegrationTests
     {

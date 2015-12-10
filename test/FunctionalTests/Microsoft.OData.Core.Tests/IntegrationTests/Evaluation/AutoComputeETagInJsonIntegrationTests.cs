@@ -16,7 +16,7 @@ using Microsoft.OData.Edm.Library.Expressions;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 {
     public class AutoComputeETagInJsonIntegrationTests
     {

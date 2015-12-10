@@ -12,7 +12,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 {
     public class PropertyAndValueJsonLightWriterIntegrationTests
     {

@@ -12,7 +12,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
 {
     public class InstanceAnnotationWriterIntegrationTests
     {

@@ -16,7 +16,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Expressions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 {
     public class AutoComputePayloadMetadataInJsonIntegrationTests
     {

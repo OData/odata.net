@@ -11,7 +11,7 @@ using FluentAssertions;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Atom
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.Atom
 {
     public class DeltaLinkAtomReaderIntegrationTests
     {

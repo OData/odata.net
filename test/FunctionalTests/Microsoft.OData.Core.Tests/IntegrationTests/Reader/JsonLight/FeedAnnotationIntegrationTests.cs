@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Library;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.JsonLight
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 {
     public class FeedAnnotationIntegrationTests : IDisposable
     {

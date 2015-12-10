@@ -15,7 +15,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Atom
+namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.Atom
 {
     public class ODataAtomReaderEnumIntegrationTests
     {
