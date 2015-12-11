@@ -281,7 +281,7 @@ Function BuildProcess
     RunBuild ('Microsoft.Odata.Full.sln')
     RunBuild ('Microsoft.OData.Net35.sln')
     RunBuild ('Microsoft.OData.Net45.sln')
-    #RunBuild ('Microsoft.OData.Portable45.sln')
+    RunBuild ('Microsoft.OData.Portable45.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.Odata.E2E.sln')
     Write-Host "Build Done" -ForegroundColor Yellow

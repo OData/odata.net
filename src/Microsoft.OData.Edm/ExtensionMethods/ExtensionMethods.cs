@@ -2413,7 +2413,7 @@ namespace Microsoft.OData.Edm
                 var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
                 if (propEdmType != null)
                 {
-                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
+                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType()));
                 }
                 else
                 {
