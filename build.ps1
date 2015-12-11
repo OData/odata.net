@@ -1,10 +1,15 @@
 # Default to Debug
-$CONFIGURATION = 'Debug'
+$Configuration = 'Debug'
+
+# Color
+$Success = 'Green'
+$Warning = 'Yellow'
+$Err = 'Red'
 
 if (($args.Count -eq 0) -or ($args[0] -match 'Nightly')) 
 {
     $TestType = 'Nightly'
-    $CONFIGURATION = 'Release'
+    $Configuration = 'Release'
 }
 elseif ($args[0] -match 'Rolling')
 {
@@ -24,8 +29,14 @@ elseif ($args[0] -match 'SkipStrongName')
 }
 else 
 {
-    Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor Red
+    Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor $Err
     exit
+}
+
+$Build = 'build'
+if ($args -contains 'rebuild')
+{
+	$Build = 'rebuild'
 }
 
 $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
@@ -41,25 +52,17 @@ $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
 # Fall back to Visual Studio 2015.
-if (!(Test-Path $MSBUILD))
+if (!(Test-Path $MSBUILD) -or !(Test-Path $MSTEST) -or !(Test-Path $FXCOPDIR))
 {
     $MSBUILD = $PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
-}
-
-if (!(Test-Path $MSTEST))
-{
     $MSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe"
-}
-
-if (!(Test-Path $FXCOPDIR))
-{
     $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
 }
 
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
-$TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$CONFIGURATION\Test\Desktop"
+$TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 
@@ -73,25 +76,25 @@ $TestDlls = "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.OData.Service.dll",
     "Microsoft.OData.Service.Test.Common.dll"
 
-$RollingTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll", 
-    "Microsoft.OData.Client.Design.T4.UnitTests.dll", 
-    "AstoriaUnitTests.TDDUnitTests.dll", 
-    "EdmLibTests.dll", 
-    "Microsoft.OData.Client.TDDUnitTests.dll", 
-    "Microsoft.Spatial.TDDUnitTests.dll", 
-    "Microsoft.Test.Edm.TDD.Tests.dll", 
-    "Microsoft.Test.OData.TDD.Tests.dll", 
-    "Microsoft.Test.OData.Query.TDD.Tests.dll", 
-    "Microsoft.Test.Taupo.OData.Common.Tests.dll", 
-    "Microsoft.Test.Taupo.OData.Query.Tests.dll", 
-    "Microsoft.Test.Taupo.OData.Reader.Tests.dll", 
-    "Microsoft.Test.Taupo.OData.Writer.Tests.dll", 
-    "Microsoft.Test.Taupo.OData.Scenario.Tests.dll", 
-    "AstoriaUnitTests.ClientCSharp.dll", 
-    "Microsoft.Data.NamedStream.UnitTests.dll", 
-    "Microsoft.Data.ServerUnitTests1.UnitTests.dll", 
-    "Microsoft.Data.ServerUnitTests2.UnitTests.dll", 
-    "RegressionUnitTests.dll", 
+$RollingTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
+    "Microsoft.OData.Client.Design.T4.UnitTests.dll",
+    "AstoriaUnitTests.TDDUnitTests.dll",
+    "EdmLibTests.dll",
+    "Microsoft.OData.Client.TDDUnitTests.dll",
+    "Microsoft.Spatial.TDDUnitTests.dll",
+    "Microsoft.Test.Edm.TDD.Tests.dll",
+    "Microsoft.Test.OData.TDD.Tests.dll",
+    "Microsoft.Test.OData.Query.TDD.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Common.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Query.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Reader.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Writer.Tests.dll",
+    "Microsoft.Test.Taupo.OData.Scenario.Tests.dll",
+    "AstoriaUnitTests.ClientCSharp.dll",
+    "Microsoft.Data.NamedStream.UnitTests.dll",
+    "Microsoft.Data.ServerUnitTests1.UnitTests.dll",
+    "Microsoft.Data.ServerUnitTests2.UnitTests.dll",
+    "RegressionUnitTests.dll",
     "Microsoft.Test.OData.PluggableFormat.Tests.dll"
 
 $RollingTestSuite = @()
@@ -101,10 +104,10 @@ ForEach($dll in $RollingTestDlls)
 }
 
 $AdditionalNightlyTestDlls = "Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
-        "AstoriaUnitTests.dll", 
-        "AstoriaClientUnitTests.dll", 
-        "Microsoft.Test.OData.User.Tests.dll", 
-        "TestCategoryAttributeCheck.dll"
+    "AstoriaUnitTests.dll",
+    "AstoriaClientUnitTests.dll",
+    "Microsoft.Test.OData.User.Tests.dll",
+    "TestCategoryAttributeCheck.dll"
 
 ForEach($dll in $AdditionalNightlyTestDlls)
 {
@@ -126,18 +129,18 @@ ForEach ($dll in $E2eTestDlls)
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
-        "/rule:$FxCopDir\Rules\NamingRules.dll",
-        "/rule:$FxCopDir\Rules\PerformanceRules.dll",
-        "/rule:$FxCopDir\Rules\SecurityRules.dll",
-        "/rule:$FxCopDir\Rules\GlobalizationRules.dll",
-        "/dictionary:$ENLISTMENT_ROOT\src\CustomDictionary.xml",
-        "/ruleid:-Microsoft.Design#CA1006", 
-        "/ruleid:-Microsoft.Design#CA1016", 
-        "/ruleid:-Microsoft.Design#CA1020", 
-        "/ruleid:-Microsoft.Design#CA1021", 
-        "/ruleid:-Microsoft.Design#CA1045", 
-        "/ruleid:-Microsoft.Design#CA2210", 
-        "/ruleid:-Microsoft.Performance#CA1814"
+    "/rule:$FxCopDir\Rules\NamingRules.dll",
+    "/rule:$FxCopDir\Rules\PerformanceRules.dll",
+    "/rule:$FxCopDir\Rules\SecurityRules.dll",
+    "/rule:$FxCopDir\Rules\GlobalizationRules.dll",
+    "/dictionary:$ENLISTMENT_ROOT\src\CustomDictionary.xml",
+    "/ruleid:-Microsoft.Design#CA1006",
+    "/ruleid:-Microsoft.Design#CA1016",
+    "/ruleid:-Microsoft.Design#CA1020",
+    "/ruleid:-Microsoft.Design#CA1021",
+    "/ruleid:-Microsoft.Design#CA1045",
+    "/ruleid:-Microsoft.Design#CA2210",
+    "/ruleid:-Microsoft.Performance#CA1814"
 $DataWebRulesOption = "/rule:$TESTDIR\DataWebRules.dll"
 
 Function GetDlls
@@ -190,7 +193,7 @@ Function SkipStrongName
         & $SNx64 /Vr $dll | Out-File $SnLog -Append
     }
 
-    Write-Host "SkipStrongName Done" -ForegroundColor Green
+    Write-Host "SkipStrongName Done" -ForegroundColor $Success
 }
 
 Function DisableSkipStrongName
@@ -211,7 +214,7 @@ Function DisableSkipStrongName
         & $SNx64 /Vu $dll | Out-File $SnLog -Append
     }
 
-    Write-Host "DisableSkipStrongName Done" -ForegroundColor Green
+    Write-Host "DisableSkipStrongName Done" -ForegroundColor $Success
 }
 
 Function Cleanup 
@@ -220,54 +223,54 @@ Function Cleanup
     Write-Host "Dropping stale databases..."
     cscript "$ENLISTMENT_ROOT\tools\Scripts\artdbclean.js" //Nologo
     cd $ENLISTMENT_ROOT
-    Write-Host "Clean Done" -ForegroundColor Yellow
+    Write-Host "Clean Done" -ForegroundColor $Success
 }
 
 Function CleanBeforeScorch
 {
-    Write-Host 'killing TaupoAstoriaRunner as it should no longer be running'
+    Write-Host 'Stopping TaupoAstoriaRunner as it should no longer be running'
     taskkill /F /IM "TaupoAstoriaRunner.exe" 1>$null 2>$null
 
-    Write-Host 'killing TaupoConsoleRunner as it should no longer be running'
+    Write-Host 'Stopping TaupoConsoleRunner as it should no longer be running'
     taskkill /F /IM "TaupoConsoleRunner.exe" 1>$null 2>$null
 
-    Write-Host 'killing MSTest as it should no longer be running'
+    Write-Host 'Stopping MSTest as it should no longer be running'
     taskkill /F /IM "MsTest.exe" 1>$null 2>$null
 
-    Write-Host 'killing MSbuild as it should no longer be running'
+    Write-Host 'Stopping MSbuild as it should no longer be running'
     taskkill /F /IM "MSbuild.exe" 1>$null 2>$null
 
     Write-Host 'Stopping code coverage gathering...'
     taskkill /f /im VSPerfMon.exe 1>$null 2>$null
 
-    Write-Host 'Killing WinHttpAutoProxySvc as it overflows due to large amount of web calls'
+    Write-Host 'Stopping WinHttpAutoProxySvc as it overflows due to large amount of web calls'
     taskkill /F /FI "SERVICES eq WinHttpAutoProxySvc" >$null
 
     net stop w3svc 1>$null 2>$null
 
     Write-Host 'Minimize SQLExpress memory footprint'
-    net stop "SQL Server (SQLEXPRESS)"  2>$null
-    net start "SQL Server (SQLEXPRESS)" 2>$null
+    net stop "SQL Server (SQLEXPRESS)" 1>$null 2>$null
+    net start "SQL Server (SQLEXPRESS)" 1>$null 2>$null
     
-    Write-Host "Clean Done" -ForegroundColor Yellow
+    Write-Host "Clean Done" -ForegroundColor $Success
 }
 
-# Incremental build
+# Incremental build and rebuild
 Function RunBuild ($sln)
 {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
     $Conf = "/p:Configuration=" + "$Configuration"
 
-    & $MSBUILD $slnpath /t:build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
+    & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
     if($LASTEXITCODE -eq 0)
     {
-        Write-Host "Build $sln SUCCESS" -ForegroundColor Green
+        Write-Host "Build $sln SUCCESS" -ForegroundColor $Success
     }
     else
     {
-        Write-Host "Build $sln FAILED" -ForegroundColor Red
+        Write-Host "Build $sln FAILED" -ForegroundColor $Err
         Write-Host "For more information, please open the following test result files:"
         Write-Host "$LOGDIR\msbuild.log"
         Cleanup
@@ -275,28 +278,6 @@ Function RunBuild ($sln)
     }
 }
 
-# Rebuild
-Function RunRebuild ($sln)
-{
-    Write-Host "*** Building $sln ***"
-    $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-    $Conf = "/p:Configuration=" + "$Configuration"
-
-    & $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
-        /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
-    if($LASTEXITCODE -eq 0)
-    {
-        Write-Host "Build $sln SUCCESS" -ForegroundColor Green
-    }
-    else
-    {
-        Write-Host "Build $sln FAILED" -ForegroundColor Red
-        Write-Host "For more information, please open the following test result files:"
-        Write-Host "$LOGDIR\msbuild.log"
-        Cleanup
-        exit
-    }
-}
 Function RestoringFile ($file , $target)
 {
     Write-Host "Restoring $file"
@@ -333,7 +314,8 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     # build the command only if failed tests exist
     if ($failedtest1.count -gt 0)
     {
-        Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+        Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append `
+            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     $rerun = "`"$MSTEST`""
@@ -351,16 +333,17 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     # build the command only if failed tests exist
     if ($failedtest2.count -gt 0)
     {
-        Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+        Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append `
+            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
     Write-Output "</Playlist>" | Out-File -Append $playlist
-    Write-Host "There are some test cases failed!" -ForegroundColor Red
-    Write-Host "To replay failed tests, please open the following playlist file:" -ForegroundColor Red
-    Write-Host $playlist -ForegroundColor Red
-    Write-Host "To rerun failed tests, please run the following script:" -ForegroundColor Red
-    Write-Host $reruncmd -ForegroundColor Red
+    Write-Host "There are some test cases failed!" -ForegroundColor $Err
+    Write-Host "To replay failed tests, please open the following playlist file:" -ForegroundColor $Err
+    Write-Host $playlist -ForegroundColor $Err
+    Write-Host "To rerun failed tests, please run the following script:" -ForegroundColor $Err
+    Write-Host $reruncmd -ForegroundColor $Err
 }
 
 Function TestSummary
@@ -409,11 +392,17 @@ Function TestSummary
             $part = 2
         }
     }
-    Write-Host "The summary of $title :" -ForegroundColor Green
-    Write-Host "Passed :`t$pass"  -ForegroundColor Green
-    Write-Host "Failed :`t$fail"  -ForegroundColor Green
-    Write-Host "---------------"  -ForegroundColor Green
-    Write-Host "Total :`t$($pass + $fail)"  -ForegroundColor Green
+
+    Write-Host "Test summary:" -ForegroundColor $Success
+    Write-Host "Passed :`t$pass"  -ForegroundColor $Success
+    $color = $Success
+    if ($fail -ne 0)
+    {
+        $color = $Err
+    }
+    Write-Host "Failed :`t$fail"  -ForegroundColor $color
+    Write-Host "---------------"  -ForegroundColor $Success
+    Write-Host "Total :`t$($pass + $fail)"  -ForegroundColor $Success
     Write-Host "For more information, please open the following test result files:"
     foreach ($trx in $trxfile)
     {
@@ -425,18 +414,17 @@ Function TestSummary
     }
     else
     {
-        Write-Host "Congratulation! All of the tests passed!" -ForegroundColor Green
+        Write-Host "Congratulation! All of the tests passed!" -ForegroundColor $Success
     }
 }
 
-Function RunTest ($title, $testdir)
+Function RunTest($title, $testdir)
 {
     Write-Host "**********Running $title***********"
-    Write-Host "$testdir"
     & $MSTEST $testdir >> $TESTLOG
     if($LASTEXITCODE -ne 0)
     {
-        Write-Host "Run $title FAILED" -ForegroundColor Red
+        Write-Host "Run $title FAILED" -ForegroundColor $Err
     }
 }
 
@@ -448,13 +436,13 @@ Function BuildProcess
     {
         rm $BUILDLOG
     }
-    RunBuild ('Microsoft.Odata.Full.sln')
+    RunBuild ('Microsoft.OData.Full.sln')
     RunBuild ('Microsoft.OData.Net35.sln')
     RunBuild ('Microsoft.OData.Net45.sln')
     RunBuild ('Microsoft.OData.Portable45.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
-    RunBuild ('Microsoft.Odata.E2E.sln')
-    Write-Host "Build Done" -ForegroundColor Yellow
+    RunBuild ('Microsoft.OData.E2E.sln')
+    Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }
 
@@ -482,13 +470,13 @@ Function TestProcess
     }
     else
     {
-        Write-Host 'Error : TestType' -ForegroundColor Red
+        Write-Host 'Error : TestType' -ForegroundColor $Err
         Cleanup
         exit
     }
     RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
     RunTest -title 'E2ETests' -testdir $E2eTestSuite
-    Write-Host "Test Done" -ForegroundColor Yellow
+    Write-Host "Test Done" -ForegroundColor $Success
     TestSummary
     $script:TEST_END_TIME = Get-Date
     cd $ENLISTMENT_ROOT
@@ -497,16 +485,18 @@ Function TestProcess
 Function FxCopProcess
 {
     Write-Host '**********Start To FxCop*********'
-    & $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$LOGDIR\SpatialFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
-    & $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$LOGDIR\CoreFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
-    & $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$LOGDIR\EdmFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
-    & $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll" "/o:$LOGDIR\ClientFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$LOGDIR\SpatialFxCopReport.xml" $DataWebRulesOption `
+        $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$LOGDIR\CoreFxCopReport.xml" $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$LOGDIR\EdmFxCopReport.xml" $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll" "/o:$LOGDIR\ClientFxCopReport.xml" $DataWebRulesOption `
+        $FxCopRulesOptions 1>$null 2>$null
     Write-Host "For more information, please open the following test result files:"
     Write-Host "$LOGDIR\SpatialFxCopReport.xml"
     Write-Host "$LOGDIR\CoreFxCopReport.xml"
     Write-Host "$LOGDIR\EdmFxCopReport.xml"
     Write-Host "$LOGDIR\ClientFxCopReport.xml"
-    Write-Host "FxCop Done" -ForegroundColor Yellow
+    Write-Host "FxCop Done" -ForegroundColor $Success
 }
 # Main Process
 
@@ -537,5 +527,7 @@ TestProcess
 FxCopProcess
 Cleanup
 
-Write-Host "Build time :`t" , (New-TimeSpan $script:BUILD_START_TIME -end $script:BUILD_END_TIME).TotalSeconds , "`tseconds"
-Write-Host "Test time :`t" , (New-TimeSpan $script:TEST_START_TIME -end $script:TEST_END_TIME).TotalSeconds , "`tseconds"
+$buildTime = New-TimeSpan $script:BUILD_START_TIME -end $script:BUILD_END_TIME
+$testTime = New-TimeSpan $script:TEST_START_TIME -end $script:TEST_END_TIME
+Write-Host("Build time:`t" + $buildTime)
+Write-Host("Test time:`t" + $testTime)
