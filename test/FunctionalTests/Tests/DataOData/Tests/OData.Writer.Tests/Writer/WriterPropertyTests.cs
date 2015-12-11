@@ -2129,23 +2129,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             )
                         ));
                     }
-
-                    var propertyInComplexValue2 = duplicateProperty.Value.Properties.First();
-                    propertyInComplexValue2.Name = String.Format(CultureInfo.InvariantCulture, "{0}{1}", propertyInComplexValue2.Name, Guid.NewGuid().ToString().Substring(0, 5));
-
-                    testCases.Add(new PayloadWriterTestDescriptor<ODataPayloadElement>(
-                        this.Settings,
-                        duplicateProperty,
-                        new PayloadWriterTestDescriptor.WriterTestExpectedResultCallback(
-                            (config) =>
-                            {
-                                return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", propertyInComplexValue2.Name, duplicateProperty.Value.FullTypeName),
-                                };
-                            }
-                        )
-                    ));
                 }
             }
             return testCases;
