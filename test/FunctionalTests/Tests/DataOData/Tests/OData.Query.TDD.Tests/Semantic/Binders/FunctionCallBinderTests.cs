@@ -454,16 +454,16 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             FunctionSignatureWithReturnType[] signatures;
             functions.TryGetValue("geo.distance", out signatures);
             signatures.Length.Should().Be(2);
-            signatures[0].ReturnType.Definition.ODataFullName().Should().Be(EdmCoreModel.Instance.GetDouble(true).ODataFullName());
-            signatures[0].ArgumentTypes[0].Definition.ODataFullName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).ODataFullName());
-            signatures[0].ArgumentTypes[1].Definition.ODataFullName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).ODataFullName());
-            signatures[1].ReturnType.Definition.ODataFullName().Should().Be(EdmCoreModel.Instance.GetDouble(true).ODataFullName());
-            signatures[1].ArgumentTypes[0].Definition.ODataFullName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).ODataFullName());
-            signatures[1].ArgumentTypes[1].Definition.ODataFullName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).ODataFullName());
+            signatures[0].ReturnType.Definition.FullTypeName().Should().Be(EdmCoreModel.Instance.GetDouble(true).FullName());
+            signatures[0].ArgumentTypes[0].Definition.FullTypeName().Should()
+                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName());
+            signatures[0].ArgumentTypes[1].Definition.FullTypeName().Should()
+                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName());
+            signatures[1].ReturnType.Definition.FullTypeName().Should().Be(EdmCoreModel.Instance.GetDouble(true).FullName());
+            signatures[1].ArgumentTypes[0].Definition.FullTypeName().Should()
+                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName());
+            signatures[1].ArgumentTypes[1].Definition.FullTypeName().Should()
+                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName());
         }
 
         [TestMethod]

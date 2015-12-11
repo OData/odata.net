@@ -877,7 +877,7 @@ namespace Microsoft.OData.Core
         {
             if (itemTypeReference != null && !(itemTypeReference.IsPrimitive() || itemTypeReference.IsComplex() || itemTypeReference.IsEnum() || itemTypeReference.IsTypeDefinition()))
             {
-                throw new ODataException(Strings.ODataMessageWriter_NonCollectionType(itemTypeReference.ODataFullName()));
+                throw new ODataException(Strings.ODataMessageWriter_NonCollectionType(itemTypeReference.FullName()));
             }
 
             this.VerifyWriterNotDisposedAndNotUsed();

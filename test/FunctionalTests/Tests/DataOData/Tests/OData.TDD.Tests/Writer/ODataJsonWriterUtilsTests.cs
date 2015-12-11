@@ -6,13 +6,10 @@
 
 namespace Microsoft.Test.OData.TDD.Tests.Writer
 {
-    using System;
     using System.IO;
-    using System.Linq;
     using FluentAssertions;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -74,6 +71,28 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, settings);
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, settings);
             stringWriter.GetStringBuilder().ToString().Should().Be("functionName()");
+        }
+
+        [TestMethod]
+        public void WriteError_WritesTargetAndDetails()
+        {
+            var error = new ODataError
+            {
+                Target = "any target",
+                Details =
+                    new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg" } }
+            };
+
+            ODataJsonWriterUtils.WriteError(
+                jsonWriter,
+                enumerable => { },
+                error,
+                includeDebugInformation: false,
+                maxInnerErrorDepth: 0,
+                writingJsonLight: false);
+            var result = stringWriter.GetStringBuilder().ToString();
+            result.Should().Be(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target"","+
+                @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}");
         }
     }
 }

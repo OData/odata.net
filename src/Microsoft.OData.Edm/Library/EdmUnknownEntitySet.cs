@@ -43,6 +43,14 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
+        /// Gets the type of this navigation source.
+        /// </summary>
+        public override IEdmType Type
+        {
+            get { return this.navigationProperty.Type.Definition; }
+        }
+
+        /// <summary>
         /// Finds the entity set that a navigation property targets.
         /// </summary>
         /// <param name="property">The navigation property.</param>

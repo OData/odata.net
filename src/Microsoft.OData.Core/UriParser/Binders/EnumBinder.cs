@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert((typeReference == null) || (modelWhenNoTypeReference == null), "((typeReference == null) || (modelWhenNoTypeReference == null)");
 
             // validate typeReference but allow type name not found in model for delayed throwing.
-            if ((typeReference != null) && !string.Equals(namespaceAndType, typeReference.ODataFullName()))
+            if ((typeReference != null) && !string.Equals(namespaceAndType, typeReference.FullName()))
             {
                 return false;
             }
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 // ODataEnumValue.Value will always be numeric string like '3', '10' instead of 'Cyan', 'Solid,Yellow', etc.
                 // so user code can easily Enum.Parse() them into CLR value.
-                enumValue = new ODataEnumValue(parsedValue.ToString(CultureInfo.InvariantCulture), enumType.ODataFullName());
+                enumValue = new ODataEnumValue(parsedValue.ToString(CultureInfo.InvariantCulture), enumType.FullTypeName());
             }
 
             return success;

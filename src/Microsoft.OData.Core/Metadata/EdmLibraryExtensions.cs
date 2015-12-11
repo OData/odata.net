@@ -15,11 +15,9 @@ namespace Microsoft.OData.Core.Metadata
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Validation;
 #if ASTORIA_SERVER
     using Microsoft.OData.Service;
     using ErrorStrings = Microsoft.OData.Service.Strings;
@@ -1230,59 +1228,6 @@ namespace Microsoft.OData.Core.Metadata
         #region ODataLib and WCF DS Server
 #if !ODATALIB_QUERY && !ASTORIA_CLIENT
         /// <summary>
-        /// Gets the full name of the definition referred to by the type reference.
-        /// </summary>
-        /// <param name="typeReference">The type reference to get the full name for.</param>
-        /// <returns>The full name of this <paramref name="typeReference"/>.</returns>
-        /// <remarks>
-        /// Note that this method is different from the EdmLib FullName extension method in that it also returns
-        /// names for collection types. For EdmLib, collection types are functions and thus don't have a full name.
-        /// The name/string they use in CSDL is just shorthand for them.
-        /// </remarks>
-        internal static string ODataFullName(this IEdmTypeReference typeReference)
-        {
-#if !ASTORIA_SERVER
-#endif
-            Debug.Assert(typeReference != null, "typeReference != null");
-            Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
-            return typeReference.Definition.ODataFullName();
-        }
-
-        /// <summary>
-        /// Gets the full name of the type.
-        /// </summary>
-        /// <param name="type">The type to get the full name for.</param>
-        /// <returns>The full name of the <paramref name="type"/>.</returns>
-        /// <remarks>
-        /// Note that this method is different from the EdmLib FullName extension method in that it also returns
-        /// names for collection types. For EdmLib, collection types are functions and thus don't have a full name.
-        /// The name/string they use in CSDL is just shorthand for them.
-        /// </remarks>
-        internal static string ODataFullName(this IEdmType type)
-        {
-#if !ASTORIA_SERVER
-#endif
-            Debug.Assert(type != null, "type != null");
-
-            // Handle collection type names here since for EdmLib collection values are functions
-            // that do not have a full name
-            IEdmCollectionType collectionType = type as IEdmCollectionType;
-            if (collectionType != null)
-            {
-                string elementTypeName = collectionType.ElementType.ODataFullName();
-                if (elementTypeName == null)
-                {
-                    return null;
-                }
-
-                return GetCollectionTypeName(elementTypeName);
-            }
-
-            var namedDefinition = type as IEdmSchemaElement;
-            return namedDefinition != null ? namedDefinition.FullName() : null;
-        }
-
-        /// <summary>
         /// Gets the Partail name of the definition referred to by the type reference.
         /// </summary>
         /// <param name="typeReference">The type reference to get the partial name for.</param>
@@ -1483,33 +1428,6 @@ namespace Microsoft.OData.Core.Metadata
             Debug.Assert(operationImportGroup.All(f => f.FullName() == fullName), "operationImportGroup.All(f => f.FullName() == fullName)");
             return fullName;
         }
-#endif
-        #endregion
-
-        #region ODataLib Contrib only (stuff that is not yet released)
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
-
-        /// <summary>
-        /// Gets the multiplicity of a navigation property.
-        /// </summary>
-        /// <param name="property">Reference to the calling object.</param>
-        /// <returns>The multiplicity of the navigation property in question.</returns>
-        /// <remarks>This has been added to EdmLib, but EdmLib won't be released for a while.
-        /// If you need to use this functionality before we release EdmLib, then use this method. Change your calls
-        /// to use the real method whenever we release EdmLib again.</remarks>
-        internal static EdmMultiplicity TargetMultiplicityTemporary(this IEdmNavigationProperty property)
-        {
-            Debug.Assert(property != null, "property != null");
-
-            IEdmTypeReference type = property.Type;
-            if (type.IsCollection())
-            {
-                return EdmMultiplicity.Many;
-            }
-
-            return type.IsNullable ? EdmMultiplicity.ZeroOrOne : EdmMultiplicity.One;
-        }
-
 #endif
         #endregion
 
@@ -2241,7 +2159,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             // TODO: Resolve duplication of operationImport and operation
             return JsonLightConstants.FunctionParameterStart +
-                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.ODataFullName()).ToArray()) +
+                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
                 JsonLightConstants.FunctionParameterEnd;
         }
 

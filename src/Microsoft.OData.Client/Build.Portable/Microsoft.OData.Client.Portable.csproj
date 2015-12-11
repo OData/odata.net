@@ -879,6 +879,12 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Client.Portable.cs</LastGenOutput>
     </None>
+    <Compile Include="..\Annotation\InstanceAnnotationDictWeakKeyComparer.cs">
+      <Link>Annotation\InstanceAnnotationDictWeakKeyComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\WeakDictionary.cs">
+      <Link>WeakDictionary.cs</Link>
+    </Compile>
     <Compile Include="Microsoft.OData.Client.Portable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

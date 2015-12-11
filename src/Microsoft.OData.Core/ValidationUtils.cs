@@ -89,7 +89,7 @@ namespace Microsoft.OData.Core
             // Entity types must be assignable
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedEntityTypeReference.EntityDefinition(), payloadEntityTypeReference.EntityDefinition()))
             {
-                throw new ODataException(Strings.ValidationUtils_EntryTypeNotAssignableToExpectedType(payloadEntityTypeReference.ODataFullName(), expectedEntityTypeReference.ODataFullName()));
+                throw new ODataException(Strings.ValidationUtils_EntryTypeNotAssignableToExpectedType(payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
             }
         }
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Core
             // Complex types could be assignable
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedComplexType, payloadComplexType))
             {
-                throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadComplexType.ODataFullName(), expectedComplexType.ODataFullName()));
+                throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadComplexType.FullTypeName(), expectedComplexType.FullTypeName()));
             }
         }
 
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core
                     // See the description of ODataWriterBehavior.AllowNullValuesForNonNullablePrimitiveTypes for more details.
                     if (!expectedItemType.IsNullable && !writerBehavior.AllowNullValuesForNonNullablePrimitiveTypes)
                     {
-                        throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.ODataFullName()));
+                        throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
                     }
                 }
             }
@@ -272,14 +272,14 @@ namespace Microsoft.OData.Core
                     {
                         if (entityType.HasStream)
                         {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(entityType.ODataFullName()));
+                            throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(entityType.FullTypeName()));
                         }
                     }
                     else
                     {
                         if (!entityType.HasStream)
                         {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(entityType.ODataFullName()));
+                            throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(entityType.FullTypeName()));
                         }
                     }
                 }
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Core
             if (!expectedTypeReference.IsODataPrimitiveTypeKind() && !expectedTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 // non-primitive type found for primitive value.
-                throw new ODataException(Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue(expectedTypeReference.ODataFullName()));
+                throw new ODataException(Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue(expectedTypeReference.FullName()));
             }
 
             ValidateMetadataPrimitiveType(expectedTypeReference, valuePrimitiveTypeReference);
@@ -367,9 +367,9 @@ namespace Microsoft.OData.Core
             {
                 // incompatible type name for value!
                 throw new ODataException(Strings.ValidationUtils_IncompatiblePrimitiveItemType(
-                    typeReferenceFromValue.ODataFullName(),
+                    typeReferenceFromValue.FullName(),
                     typeReferenceFromValue.IsNullable,
-                    expectedTypeReference.ODataFullName(),
+                    expectedTypeReference.FullName(),
                     expectedTypeReference.IsNullable));
             }
         }

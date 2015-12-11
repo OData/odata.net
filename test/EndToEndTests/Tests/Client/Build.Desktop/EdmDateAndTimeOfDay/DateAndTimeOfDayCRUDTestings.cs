@@ -342,6 +342,38 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
         }
 
         [TestMethod]
+        public void QueryByDateKey()
+        {
+            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
+
+            foreach (var mimeType in mimeTypes)
+            {
+                var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Calendars(2015-11-11)", UriKind.Absolute));
+                requestMessage.SetHeader("Accept", mimeType);
+                var responseMessage = requestMessage.GetResponse();
+                Assert.AreEqual(200, responseMessage.StatusCode);
+
+                if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+                {
+                    using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
+                    {
+                        var reader = messageReader.CreateODataEntryReader();
+
+                        while (reader.Read())
+                        {
+                            if (reader.State == ODataReaderState.EntryEnd)
+                            {
+                                ODataEntry entry = reader.Item as ODataEntry;
+                                // Verify Date Property
+                                Assert.AreEqual(new Date(2015, 11, 11), entry.Properties.Single(p => p.Name == "Day").Value);
+                            }
+                        }
+                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    }
+                }
+            }
+        }
+        [TestMethod]
         public void ActionTakeDateAndTimeAsParameter()
         {
             var writerSettings = new ODataMessageWriterSettings();

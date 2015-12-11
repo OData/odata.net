@@ -229,35 +229,97 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             this.referencedModel = tmpModel;
         }
 
+        #region ReadSingletonWhichHasEtag
+
+        private void ReadSingletonWhichHasEtagImplementation(string payload, bool odataSimplified)
+        {
+            ODataEntry entry = this.ReadSingleton(payload, odataSimplified);
+
+            entry.ETag.Should().Be("Bla");
+        }
+
         [TestMethod]
         public void ReadSingletonWhichHasEtag()
         {
             const string payload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@odata.etag\":\"Bla\"}";
+            ReadSingletonWhichHasEtagImplementation(payload, odataSimplified: false);
+        }
 
-            ODataEntry entry = this.ReadSingleton(payload);
+        [TestMethod]
+        public void ReadSingletonWhichHasSimplifiedEtagODataSimplified()
+        {
+            // cover "@etag"
+            const string payload = "{" +
+                "\"@context\":\"http://odata.org/test/$metadata#MySingleton\"," +
+                "\"@etag\":\"Bla\"}";
+            ReadSingletonWhichHasEtagImplementation(payload, odataSimplified: true);
+        }
 
-            entry.ETag.Should().Be("Bla");
+        [TestMethod]
+        public void ReadSingletonWhichHasFullEtagODataSimplified()
+        {
+            // cover "@odata.etag"
+            const string payload = "{" +
+                "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
+                "\"@odata.etag\":\"Bla\"}";
+            ReadSingletonWhichHasEtagImplementation(payload, odataSimplified: true);
+        }
+
+        #endregion
+
+        #region ReadSingletonWhichHasStreamPropertyTest
+
+        private void ReadSingletonWhichHasStreamPropertyTestImplementation(string payload, bool odataSimplified)
+        {
+            this.StreamTestSetting();
+            ODataEntry entry = this.ReadSingleton(payload, odataSimplified);
+
+            ODataStreamReferenceValue logo = (ODataStreamReferenceValue)entry.Properties.Single().Value;
+            logo.ContentType.Should().Be("image/jpeg");
+            logo.ETag.Should().Be("stream etag");
         }
 
         [TestMethod]
         public void ReadSingletonWhichHasStreamPropertyTest()
         {
-            this.StreamTestSetting();
             const string payload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"Logo@odata.mediaEditLink\":\"http://example.com/stream/edit\"," +
                 "\"Logo@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
                 "\"Logo@odata.mediaContentType\":\"image/jpeg\"," +
                 "\"Logo@odata.mediaEtag\":\"stream etag\"}";
-
-            ODataEntry entry = this.ReadSingleton(payload);
-
-            ODataStreamReferenceValue logo = (ODataStreamReferenceValue)entry.Properties.Single().Value;
-            logo.ContentType.Should().Be("image/jpeg");
-            logo.ETag.Should().Be("stream etag");
+            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, odataSimplified: false);
         }
+
+        [TestMethod]
+        public void ReadSingletonWhichHasStreamPropertyTestFullODataMediaAnnotationsODataSimplified()
+        {
+            // cover "prop@odata.media*"
+            const string payload = "{" +
+                "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
+                "\"Logo@odata.mediaEditLink\":\"http://example.com/stream/edit\"," +
+                "\"Logo@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
+                "\"Logo@odata.mediaContentType\":\"image/jpeg\"," +
+                "\"Logo@odata.mediaEtag\":\"stream etag\"}";
+            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, odataSimplified: true);
+        }
+
+        [TestMethod]
+        public void ReadSingletonWhichHasStreamPropertyTestSimplifiedODataMediaAnnotationsODataSimplified()
+        {
+            // cover "prop@media*"
+            const string payload = "{" +
+                "\"@context\":\"http://odata.org/test/$metadata#MySingleton\"," +
+                "\"Logo@mediaEditLink\":\"http://example.com/stream/edit\"," +
+                "\"Logo@mediaReadLink\":\"http://example.com/stream/read\"," +
+                "\"Logo@mediaContentType\":\"image/jpeg\"," +
+                "\"Logo@mediaEtag\":\"stream etag\"}";
+            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, odataSimplified: true);
+        }
+
+        #endregion
 
         private void StreamTestSetting()
         {
@@ -336,11 +398,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             this.referencedModel.AddElement(function);
         }
 
-        private ODataEntry ReadSingleton(string payload)
+        private ODataEntry ReadSingleton(string payload, bool odataSimplified = false)
         {
             MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
 
             using (ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
                 ODataFormat.Json,

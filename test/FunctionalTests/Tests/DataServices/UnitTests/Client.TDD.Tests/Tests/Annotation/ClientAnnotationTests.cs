@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     else
                     {
                         Assert.AreEqual("Bob2", annotation2.First());
-                    }
+                    }                    
                 });
             }
         }
@@ -1304,6 +1304,46 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 Assert.AreEqual(false, annotation1);
             });
         }
+        
+        [TestMethod]
+        public void TestInstanceAnnotationsShouldBeEmptyIfNoInstanceAnnotationReturned()
+        {
+             const string FeedPayloadWithoutInstanceAnnotation = @"{
+    ""@odata.context"":""http://odataService/$metadata#People"",
+    ""value"": [
+        {
+            ""@odata.type"": ""#Microsoft.OData.SampleService.Models.TripPin.Person"",
+            ""UserName"":""BobCat"",
+            ""FirstName"": ""Bob"",
+            ""LastName"": ""Cat"",
+            ""Location"": null,
+            ""CompanyLocation"": null,
+            ""Gender"":""Male"",
+            ""Age"":""22"",
+            ""Concurrency"":635548229917715070
+        },
+        {
+            ""@odata.type"": ""#Microsoft.OData.SampleService.Models.TripPin.VipCustomer"",
+            ""UserName"": ""JillJones"",
+            ""FirstName"": ""Jill"",
+            ""LastName"": ""Jones"",
+            ""Location"": null,
+            ""CompanyLocation"": null,
+            ""Gender"":""Male"",
+            ""Age"":""22"",
+            ""Concurrency"":635548229917715070
+        }
+    ]
+}";
+
+             TestAnnotation(FeedPayloadWithoutInstanceAnnotation, () =>
+             {
+                 var getFriendsQueryResponse = dsc.GetFriendsPlus("Russell").Execute() as QueryOperationResponse<PersonPlus>;
+                 var friends = getFriendsQueryResponse.ToList();
+
+                 Assert.AreEqual(0, dsc.InstanceAnnotations.Count);
+             });
+         }
 
         private void TestAnnotation(string response, Action testAction)
         {

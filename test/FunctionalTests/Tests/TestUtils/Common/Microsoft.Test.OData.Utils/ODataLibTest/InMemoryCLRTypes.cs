@@ -25,6 +25,16 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
         public GeographyPoint Home { get; set; }
     }
 
+    /// <summary>
+    /// The class represents the School model type.
+    /// </summary>
+    [Key("SchoolID")]
+    public class School
+    {
+        public int SchoolID { get; set; }
+        public Collection<Person> Students { get; set; }
+    }
+
     public class Address
     {
         public string Street { get; set; }

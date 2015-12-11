@@ -1,0 +1,1 @@
+Path[(EntitySet: Schools)/(Key: SchoolID = 1)/(NavigationProperty: Student)/(Type: Collection([Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]))]

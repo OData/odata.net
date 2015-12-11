@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Nodes
         public void CollectionTypeShouldBeCreatedFromItemType()
         {
             var node = new EntityCollectionCastNode(fakeSource, HardCodedTestModel.GetEmployeeType());
-            node.CollectionType.ODataFullName().Should().Be("Collection(Fully.Qualified.Namespace.Employee)");
+            node.CollectionType.FullName().Should().Be("Collection(Fully.Qualified.Namespace.Employee)");
         }
 
         [TestMethod]

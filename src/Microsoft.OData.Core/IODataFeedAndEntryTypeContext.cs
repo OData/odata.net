@@ -28,6 +28,11 @@ namespace Microsoft.OData.Core
         string NavigationSourceEntityTypeName { get; }
 
         /// <summary>
+        /// The full type name of the navigation source of the feed or entry.
+        /// </summary>
+        string NavigationSourceFullTypeName { get; }
+
+        /// <summary>
         /// The kind of the navigation source of the feed or entry.
         /// </summary>
         EdmNavigationSourceKind NavigationSourceKind { get; }

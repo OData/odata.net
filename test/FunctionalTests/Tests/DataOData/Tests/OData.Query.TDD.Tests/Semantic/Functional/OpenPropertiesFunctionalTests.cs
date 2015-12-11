@@ -73,7 +73,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
 
             var expectedMessage =
                 ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    personType.ODataFullName(),
+                    personType.FullTypeName(),
                     "PhantomProperty");
 
             parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
@@ -120,7 +120,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
 
             var expectedMessage =
                 ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    personType.ODataFullName(),
+                    personType.FullTypeName(),
                     "PhantomProperty1");
 
             parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
@@ -178,7 +178,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
 
             var expectedMessage =
                 ODataErrorStrings.MetadataBinder_HierarchyNotFollowed(
-                    HardCodedTestModel.GetDogType().ODataFullName(),
+                    HardCodedTestModel.GetDogType().FullTypeName(),
                     "<null>");
 
             parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);

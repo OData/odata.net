@@ -14,7 +14,7 @@
     <summary>Contains classes and methods that facilitate geography and geometry spatial operations. Supports OData v4 only.</summary>
     <description>Contains classes and methods that facilitate geography and geometry spatial operations. Support OData v4 only. Targets .NET Core 5, and .NET Portable Lib with support for .NET 4.0, SL 5.0, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
-    <releaseNotes>http://odata.github.io/odata.net/#ODL-6.13.0</releaseNotes>
+    <releaseNotes>http://odata.github.io/odata.net/#ODL-$VersionFullSemantic$</releaseNotes>
   </metadata>
   <files>
     <file src="Net45\Microsoft.Spatial.dll" target="lib\dnx451" />

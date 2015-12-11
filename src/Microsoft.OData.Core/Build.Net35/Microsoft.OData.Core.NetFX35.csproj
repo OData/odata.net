@@ -397,6 +397,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightMetadataLevel.cs">
       <Link>Microsoft\OData\Core\JsonLight\JsonLightMetadataLevel.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightODataAnnotationWriter.cs">
+      <Link>Microsoft\OData\Core\JsonLight\JsonLightODataAnnotationWriter.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightTypeNameOracle.cs">
       <Link>Microsoft\OData\Core\JsonLight\JsonLightTypeNameOracle.cs</Link>
     </Compile>
@@ -576,6 +579,9 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextWriterWrapper.cs">
       <Link>Microsoft\OData\Core\Json\TextWriterWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataErrorDetail.cs">
+      <Link>Microsoft\OData\Core\ODataErrorDetail.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMediaType.cs">
       <Link>Microsoft\OData\Core\ODataMediaType.cs</Link>

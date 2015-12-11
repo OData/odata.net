@@ -76,6 +76,10 @@
       <Project>{9a2beec2-42c7-4ee8-b9d9-95746f197291}</Project>
       <Name>Microsoft.Test.OData.Services.ODataPluggableFormatService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj">
+      <Project>{b34c9a66-22be-4377-896d-009577d5e6ff}</Project>
+      <Name>Microsoft.Test.OData.Services.ODataSimplifiedService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ODataTripPinService\ODataSamples.Services.TripPin.csproj">
       <Project>{58e9bbcb-f264-49f2-b6ec-b291b9eae2c0}</Project>
       <Name>ODataSamples.Services.TripPin</Name>

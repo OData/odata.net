@@ -8,12 +8,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 {
     #region Namespaces
     using System;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -55,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
             ExceptionUtils.CheckArgumentNotNull(source, "source");
 
-            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicityTemporary();
+            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
             if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
             {
                 throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
@@ -79,7 +76,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
 
-            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicityTemporary();
+            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
             if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
             {
                 throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
@@ -112,7 +109,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         public EdmMultiplicity TargetMultiplicity
         {
-            get { return this.NavigationProperty.TargetMultiplicityTemporary(); }
+            get { return this.NavigationProperty.TargetMultiplicity(); }
         }
 
         /// <summary>

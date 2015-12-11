@@ -949,9 +949,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // TODO: change constructor to take single import
             ODataPathSegment segment = new OperationSegment(new[] { singleOperation }, resolvedParameters, targetset)
-                {
-                    Identifier = identifier
-                };
+            {
+                Identifier = identifier
+            };
 
             DetermineEntitySetForSegment(identifier, returnType, segment, targetset, singleOperation);
 
@@ -969,7 +969,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private void CreateNextSegment(string text)
         {
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
-            if (this.TryHandleAsKeySegment(text))
+            // But when use ODataSimplified convention, only do this if the segment should not be interpreted as a type.
+            if (!this.configuration.UrlConventions.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
@@ -1049,6 +1050,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return;
             }
 
+            // OData simplified convention, try to handle it as a key property value after can't parse as type and operation
+            if (this.configuration.UrlConventions.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
+            {
+                return;
+            }
+
             // Try to create an open property if applicable, or throw
             CheckSingleResult(previous.SingleResult, previous.Identifier);
             this.CreateOpenPropertySegment(previous, identifier, parenthesisExpression);
@@ -1117,7 +1124,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (!targetEdmType.IsOrInheritsFrom(previousEdmType) && !previousEdmType.IsOrInheritsFrom(targetEdmType))
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.ODataFullName(), previousEdmType.ODataFullName()));
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
             }
 
             // We want the type of the type segment to be a collection if the previous segment was a collection
@@ -1183,8 +1190,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 var navigationProperty = (IEdmNavigationProperty)property;
                 IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty);
 
-                // If we can't compute the target navigation source, then throw
-                if (navigationSource is IEdmUnknownEntitySet)
+                // Relationship between TargetMultiplicity and navigation property:
+                //  1) EdmMultiplicity.Many <=> collection navigation property
+                //  2) EdmMultiplicity.ZeroOrOne <=> nullable singleton navigation property
+                //  3) EdmMultiplicity.One <=> non-nullable singleton navigation property
+                //
+                // According to OData Spec CSDL 7.1.3:
+                //  1) non-nullable singleton navigation property => navigation source required
+                //  2) the other cases => navigation source optional
+                if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.One
+                    && navigationSource is IEdmUnknownEntitySet)
                 {
                     // Specifically not throwing ODataUriParserException since it's more an an internal server error
                     throw new ODataException(ODataErrorStrings.RequestUriProcessor_TargetEntitySetNotFound(property.Name));

@@ -240,7 +240,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
                 token, parentNode);
 
             getQueryNode.ShouldThrow<ODataException>().WithMessage(
-                Strings.MetadataBinder_PropertyNotDeclared(parentNode.GetEdmTypeReference().ODataFullName(),
+                Strings.MetadataBinder_PropertyNotDeclared(parentNode.GetEdmTypeReference().FullName(),
                                                                                     token.Identifier));
 
         }

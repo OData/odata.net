@@ -49,10 +49,17 @@ namespace Microsoft.OData.Client
         private readonly ClientEdmModel model;
 
         /// <summary> Internal instance annotations in current context </summary>
-        private readonly IDictionary<object, IDictionary<string, object>> instanceAnnotations = new Dictionary<object, IDictionary<string, object>>(EqualityComparer<object>.Default);
+        private readonly WeakDictionary<object, IDictionary<string, object>> instanceAnnotations = new WeakDictionary<object, IDictionary<string, object>>(InstanceAnnotationDictWeakKeyComparer.Default)
+        {
+            RemoveCollectedEntriesRules = new List<Func<object, bool>>
+            {
+                InstanceAnnotationDictWeakKeyComparer.Default.RemoveRule
+            },
+            CreateWeakKey = InstanceAnnotationDictWeakKeyComparer.Default.CreateKey
+        };
 
         /// <summary>metadata annotations for currenct context</summary>
-        private readonly IDictionary<object, IList<IEdmValueAnnotation>> metadataAnnotationsDictionary = new Dictionary<object, IList<IEdmValueAnnotation>>(EqualityComparer<object>.Default);
+        private readonly WeakDictionary<object, IList<IEdmValueAnnotation>> metadataAnnotationsDictionary = new WeakDictionary<object, IList<IEdmValueAnnotation>>(EqualityComparer<object>.Default);
 
         /// <summary>The tracker for user-specified format information.</summary>
         private DataServiceClientFormat formatTracker;
@@ -587,7 +594,9 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Returns the instance of entity tracker which tracks all the entities and links tracked by the context.</summary>
+        /// <summary>
+        /// Returns the instance of entity tracker which tracks all the entities and links tracked by the context.
+        /// </summary>
         public EntityTracker EntityTracker
         {
             get
@@ -604,20 +613,17 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Disable instance annotation to be materialized.
         /// </summary>
-        public bool DisableInstanceAnnotationMaterialization
-        {
-            get;
-            set;
-        }
+        public bool DisableInstanceAnnotationMaterialization { get; set; }
+
+        /// <summary>
+        /// Whether OData Simplified is enabled.
+        /// </summary>
+        public bool ODataSimplified { get; set; }
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
         /// </summary>
-        internal bool UseDefaultCredentials
-        {
-            get;
-            set;
-        }
+        internal bool UseDefaultCredentials { get; set; }
 
         /// <summary>Gets a value that indicates the type of HTTP implementation to use when accessing the data service in Silverlight.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.HttpStack" /> value that indicates the HTTP implementation to use when accessing the data service.</returns>
@@ -686,7 +692,7 @@ namespace Microsoft.OData.Client
         internal bool EnableAtom { get; set; }
 
         /// <summary>The instance annotations in current context</summary>
-        internal IDictionary<object, IDictionary<string, object>> InstanceAnnotations
+        internal WeakDictionary<object, IDictionary<string, object>> InstanceAnnotations
         {
             get
             {
@@ -697,7 +703,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the MetadataAnnotationsDictionary
         /// </summary>
-        internal IDictionary<object, IList<IEdmValueAnnotation>> MetadataAnnotationsDictionary
+        internal WeakDictionary<object, IList<IEdmValueAnnotation>> MetadataAnnotationsDictionary
         {
             get
             {

@@ -104,7 +104,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 }
                 else if (result.Count > 1)
                 {
-                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingPropertiesFound(propertyName, type.ODataFullName()));
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingPropertiesFound(propertyName, type.FullTypeName()));
                 }
             }
 

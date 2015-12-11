@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return new OpenPropertySegment(tokenIn.Identifier);
             }
 
-            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.ODataFullName(), tokenIn.Identifier));
+            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace Microsoft.OData.Core.UriBuilder
                 type = collectionType.ElementType.Definition;
             }
 
-            return "/" + type.ODataFullName();
+            return "/" + type.FullTypeName();
         }
 
         /// <summary>

@@ -2332,7 +2332,7 @@ namespace AstoriaUnitTests.ObjectContextStubs.Hidden
             }
 
             SqlConnectionStringBuilder sqlBuilder = new SqlConnectionStringBuilder();
-            sqlBuilder.DataSource = @".\SQLEXPRESS";
+            sqlBuilder.DataSource = DataUtil.DefaultDataSource;
             sqlBuilder.IntegratedSecurity = true;
             sqlBuilder.MultipleActiveResultSets = true;
             sqlBuilder.ConnectTimeout = 600;

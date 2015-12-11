@@ -151,7 +151,7 @@ namespace Microsoft.OData.Core.Metadata
                 return new EdmCollectionType(resolvedItemType.ToTypeReference(itemTypeReferenceToResolve.IsNullable));
             }
 
-            return MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, typeToResolve.ODataFullName(), customTypeResolver, out typeKind);
+            return MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, typeToResolve.FullTypeName(), customTypeResolver, out typeKind);
         }
     }
 }

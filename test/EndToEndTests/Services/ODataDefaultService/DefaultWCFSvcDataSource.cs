@@ -160,6 +160,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             private set;
         }
 
+        public EntityCollection<Calendar> Calendars
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Returns an entity set of OrderDetail.
         /// </summary>
@@ -210,6 +216,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         {
             this.People = new EntityCollection<Person>();
             this.Orders = new EntityCollection<Order>();
+            this.Calendars = new EntityCollection<Calendar>();
             this.Products = new EntityCollection<Product>();
             this.OrderDetails = new EntityCollection<OrderDetail>();
             this.ProductDetails = new EntityCollection<ProductDetail>();
@@ -581,6 +588,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             this.ProductDetails[1].Reviews.Add(this.ProductReviews[1]);
             this.ProductDetails[1].Reviews.Add(this.ProductReviews[2]);
             this.ProductDetails[1].Reviews.Add(this.ProductReviews[3]);
+
+            this.Calendars.AddRange(new List<Calendar>()
+            {
+                new Calendar()
+                {
+                    Day = new Date(2015, 11, 11)
+                },
+                new Calendar()
+                {
+                    Day = new Date(2015, 11, 12)
+                }
+            });
 
             this.Orders.AddRange(new List<Order>()
             {

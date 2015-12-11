@@ -20,6 +20,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>Singleton instance of the key-as-segment conventions.</summary>
         private static readonly ODataUrlConventions KeyAsSegmentInstance = new ODataUrlConventions(UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ true));
 
+        /// <summary>Singleton instance of the ODataSimplified conventions.</summary>
+        private static readonly ODataUrlConventions ODataSimplifiedInstance = new ODataUrlConventions(UrlConvention.CreateODataSimplifiedConvention());
+
         /// <summary>The url convention to use.</summary>
         private readonly UrlConvention urlConvention;
 
@@ -47,6 +50,14 @@ namespace Microsoft.OData.Core.UriParser
         public static ODataUrlConventions KeyAsSegment
         {
             get { return KeyAsSegmentInstance; }
+        }
+
+        /// <summary>
+        /// An instance of <see cref="ODataUrlConventions"/> which uses ODataSimplified URL conventions. Specifically, this instance will support key as segemnt and default convention.
+        /// </summary>
+        public static ODataUrlConventions ODataSimplified
+        {
+            get { return ODataSimplifiedInstance; }
         }
 
         /// <summary>

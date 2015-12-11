@@ -46,7 +46,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.Indent = true));
            
-            var settings = this.writingHelper.CreateSettings(false, false);
+            var settings = this.writingHelper.CreateSettings(false, false, false);
             settings.Indent.Should().BeTrue();
         }
     }

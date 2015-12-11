@@ -33,6 +33,11 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly SimpleLazy<JsonLightInstanceAnnotationWriter> instanceAnnotationWriter;
 
         /// <summary>
+        /// OData annotation writer.
+        /// </summary>
+        private readonly SimpleLazy<JsonLightODataAnnotationWriter> odataAnnotationWriter;
+
+        /// <summary>
         /// Set to true when odata.context is writen; set to false otherwise.
         /// When value is false, all URIs writen to the payload must be absolute.
         /// </summary>
@@ -51,6 +56,8 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.instanceAnnotationWriter = new SimpleLazy<JsonLightInstanceAnnotationWriter>(() =>
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
+            this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(() =>
+                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified));
 
             if (initContextUriBuilder)
             {
@@ -89,6 +96,17 @@ namespace Microsoft.OData.Core.JsonLight
             get
             {
                 return this.instanceAnnotationWriter.Value;
+            }
+        }
+
+        /// <summary>
+        /// OData annotation writer.
+        /// </summary>
+        internal JsonLightODataAnnotationWriter ODataAnnotationWriter
+        {
+            get
+            {
+                return this.odataAnnotationWriter.Value;
             }
         }
 
@@ -146,11 +164,11 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (string.IsNullOrEmpty(propertyName))
                 {
-                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataContext);
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataContext);
                 }
                 else
                 {
-                    this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataContext);
+                    this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataContext);
                 }
 
                 this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri);

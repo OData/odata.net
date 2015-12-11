@@ -139,10 +139,12 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
                             break;
 
                         case "Local":
+#if !VS2015
                             if (ServiceUtil.IsLocalSqlServerExpressRunning)
+#endif
                             {
                                 _isLocal = true;
-                                _machine = @".\SQLEXPRESS";
+                                _machine = DataUtil.DefaultDataSource;
                             }
                             break;
 

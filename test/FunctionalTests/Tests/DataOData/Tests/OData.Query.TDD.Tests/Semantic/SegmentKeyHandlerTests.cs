@@ -126,7 +126,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
                     HardCodedTestModel.GetPeopleSet()),
                 "10",
                 out keySegment);
-            implicitKeyWithOutRefIntegrityConstraint.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().ODataFullName()));
+            implicitKeyWithOutRefIntegrityConstraint.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().FullTypeName()));
         }
     }
 }

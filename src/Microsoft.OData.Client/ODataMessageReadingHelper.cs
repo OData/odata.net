@@ -53,6 +53,7 @@ namespace Microsoft.OData.Client
             settings.EnableWcfDataServicesClientBehavior(resolveWireTypeName);
 
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
+            settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
             settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
             if (this.responseInfo.IgnoreMissingProperties)

@@ -135,7 +135,7 @@ namespace Microsoft.OData.Service.Serializers
                 this.collectionWriter = this.writer.CreateODataCollectionWriter(isJsonLightResponse ? null : collectionType.ElementType());
 
                 ODataCollectionStart collectionStart = new ODataCollectionStart { Name = this.ComputeContainerName() };
-                collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = collectionType.ODataFullName() });
+                collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = collectionType.FullName() });
 
                 this.collectionWriter.WriteStart(collectionStart);
                 while (elements.HasMoved)

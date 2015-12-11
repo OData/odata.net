@@ -49,6 +49,12 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
                 var peopleset = metadata.AddEntitySet("People", personType);
                 var specialPerson = metadata.AddSingleton("SpecialPerson", personType);
 
+                IEdmEntityType schoolType = metadata.AddEntityType("School", typeof(School), null, false);
+                metadata.AddKeyProperty(schoolType, "SchoolID", typeof(Int32));
+                var schoolSet = metadata.AddEntitySet("Schools", schoolType);
+                var studentNavigation = metadata.AddResourceSetReferenceProperty(schoolType, "Student", peopleset, null);
+                ((EdmEntitySet)schoolSet).AddNavigationTarget(studentNavigation, peopleset);
+
                 IEdmEntityType customerType = metadata.AddEntityType("Customer", typeof(Customer), personType, false, "Microsoft.Test.Taupo.OData.WCFService");
                 metadata.AddPrimitiveProperty(customerType, "City", typeof(string));
                 metadata.AddPrimitiveProperty(customerType, "Birthday", typeof(DateTimeOffset));

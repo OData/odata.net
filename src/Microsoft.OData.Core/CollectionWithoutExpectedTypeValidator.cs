@@ -220,7 +220,7 @@ namespace Microsoft.OData.Core
                         if (commonBaseType != null)
                         {
                             this.primitiveItemType = commonBaseType;
-                            this.itemTypeName = commonBaseType.ODataFullName();
+                            this.itemTypeName = commonBaseType.FullTypeName();
                             return;
                         }
                     }
