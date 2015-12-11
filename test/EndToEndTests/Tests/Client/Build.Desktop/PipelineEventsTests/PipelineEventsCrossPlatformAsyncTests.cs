@@ -36,85 +36,84 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void QueryEntitySetLinqAsync()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetLinqAsync);
+        }
+
+        private static void QueryEntitySetLinqAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryId_Reading)
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
+                .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
+
+            // cover this for Json
+            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
+            {
+                contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(
+                    PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
+            }
+
+            var query = contextWrapper.CreateQuery<Customer>("Customer");
+
+            var customers = Enumerable.Empty<Customer>();
+            var r = query.BeginExecute(
+                result =>
                 {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryId_Reading)
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
-                        .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
+                    customers = query.EndExecute(result);
+                }, null);
 
-                    // cover this for Json
-                    if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-                    {
-                        contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
-                    }
+            while (!r.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
 
-                    DataServiceQuery<Customer> query = contextWrapper.CreateQuery<Customer>("Customer");
-
-                    IEnumerable<Customer> customers = null;
-                    IAsyncResult r = query.BeginExecute(
-                        result =>
-                        {
-                            customers = query.EndExecute(result);
-                        }, null);
-
-                    while (!r.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
-
-                    foreach (Customer customer in customers)
-                    {
-                        PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
-                    }
-                });
+            foreach (Customer customer in customers)
+            {
+                PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
+            }
         }
 
         [TestMethod]
         public void QueryEntitySetExecuteAsync()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryId_Reading)
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
-                        .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetExecuteAsync);
+        }
 
-                    // cover this for Json
-                    if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-                    {
-                        contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
-                    }
+        private static void QueryEntitySetExecuteAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryId_Reading)
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
+                .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
 
-                    IEnumerable<Customer> customers = null;
-                    IAsyncResult r = contextWrapper.BeginExecute<Customer>(
-                         new Uri("Customer", UriKind.Relative),
-                         result =>
-                         {
-                             customers = contextWrapper.EndExecute<Customer>(result);
-                         },
-                         null);
+            // cover this for Json
+            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
+            {
+                contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(
+                    PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
+            }
 
-                    while (!r.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
+            IEnumerable<Customer> customers = null;
+            IAsyncResult r = contextWrapper.BeginExecute<Customer>(
+                new Uri("Customer", UriKind.Relative),
+                result => { customers = contextWrapper.EndExecute<Customer>(result); },
+                null);
 
-                    foreach (Customer customer in customers)
-                    {
-                        PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
-                    }
-                });
+            while (!r.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
+
+            foreach (Customer customer in customers)
+            {
+                PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
+            }
         }
 
         /// <summary>
@@ -123,97 +122,97 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void QueryEntityInstanceExecuteAsync()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Context.IgnoreMissingProperties = true;
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceExecuteAsync);
+        }
 
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Materialized);
+        private static void QueryEntityInstanceExecuteAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Context.IgnoreMissingProperties = true;
 
-                    IEnumerable<SpecialEmployee> specialEmployees = null;
-                    IAsyncResult r = contextWrapper.BeginExecute<SpecialEmployee>(
-                         new Uri("Person(-10)", UriKind.Relative),
-                         result =>
-                         {
-                             specialEmployees = contextWrapper.EndExecute<SpecialEmployee>(result);
-                         },
-                         null);
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Materialized);
 
-                    while (!r.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
+            IEnumerable<SpecialEmployee> specialEmployees = null;
+            IAsyncResult r = contextWrapper.BeginExecute<SpecialEmployee>(
+                new Uri("Person(-10)", UriKind.Relative),
+                result => { specialEmployees = contextWrapper.EndExecute<SpecialEmployee>(result); },
+                null);
 
-                    SpecialEmployee specialEmployee = specialEmployees.Single();
-                    Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate, "Unexpected CarsLicensePlate");
-                    Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
-                });
+            while (!r.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
+
+            SpecialEmployee specialEmployee = specialEmployees.Single();
+            Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate,
+                "Unexpected CarsLicensePlate");
+            Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
         }
 
         [TestMethod]
         public void QueryEntityInstanceBatchAsync()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceBatchAsync);
+        }
+
+        private static void QueryEntityInstanceBatchAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Context.IgnoreMissingProperties = true;
+
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Materialized);
+
+            DataServiceRequest[] requests = new DataServiceRequest[]
+            {
+                contextWrapper.CreateQuery<Person>("Person(-10)"),
+                contextWrapper.CreateQuery<Customer>("Customer"),
+            };
+
+            DataServiceResponse responses = null;
+            IAsyncResult r = contextWrapper.BeginExecuteBatch(
+                result => { responses = contextWrapper.EndExecuteBatch(result); },
+                null,
+                requests);
+
+            while (!r.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
+
+            bool personVerified = false;
+            bool customerVerified = false;
+            foreach (QueryOperationResponse response in responses)
+            {
+                foreach (object p in response)
                 {
-                    contextWrapper.Context.IgnoreMissingProperties = true;
-
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Materialized);
-
-                    DataServiceRequest[] requests = new DataServiceRequest[] {
-                        contextWrapper.CreateQuery<Person>("Person(-10)"),
-                        contextWrapper.CreateQuery<Customer>("Customer"),
-                    };
-
-                    DataServiceResponse responses = null;
-                    IAsyncResult r = contextWrapper.BeginExecuteBatch(
-                        result =>
-                        {
-                            responses = contextWrapper.EndExecuteBatch(result);
-                        },
-                        null,
-                        requests);
-
-                    while (!r.IsCompleted)
+                    SpecialEmployee se1 = p as SpecialEmployee;
+                    Customer c = p as Customer;
+                    if (se1 != null)
                     {
-                        Thread.Sleep(1000);
+                        Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", se1.CarsLicensePlate,
+                            "Unexpected CarsLicensePlate");
+                        Assert.AreEqual(1, se1.BonusLevel, "Unexpected BonusLevel");
+                        personVerified = true;
                     }
 
-                    bool personVerified = false;
-                    bool customerVerified = false;
-                    foreach (QueryOperationResponse response in responses)
+                    if (c != null)
                     {
-                        foreach (object p in response)
-                        {
-                            SpecialEmployee se1 = p as SpecialEmployee;
-                            Customer c = p as Customer;
-                            if (se1 != null)
-                            {
-                                Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", se1.CarsLicensePlate, "Unexpected CarsLicensePlate");
-                                Assert.AreEqual(1, se1.BonusLevel, "Unexpected BonusLevel");
-                                personVerified = true;
-                            }
-
-                            if (c != null)
-                            {
-                                Assert.IsTrue(c.Name.EndsWith("ModifyPropertyValueCustomerEntity_Materialized"), "Unexpected primitive property");
-                                Assert.IsTrue(c.Auditing.ModifiedBy.Equals("ModifyPropertyValueCustomerEntity_Materialized"), "Unexpected complex property");
-                                Assert.IsTrue(c.PrimaryContactInfo.EmailBag.Contains("ModifyPropertyValueCustomerEntity_Materialized"), "Unexpected collection property");
-                                customerVerified = true;
-                            }
-                        }
+                        Assert.IsTrue(c.Name.EndsWith("ModifyPropertyValueCustomerEntity_Materialized"),
+                            "Unexpected primitive property");
+                        Assert.IsTrue(c.Auditing.ModifiedBy.Equals("ModifyPropertyValueCustomerEntity_Materialized"),
+                            "Unexpected complex property");
+                        Assert.IsTrue(c.PrimaryContactInfo.EmailBag.Contains("ModifyPropertyValueCustomerEntity_Materialized"),
+                            "Unexpected collection property");
+                        customerVerified = true;
                     }
+                }
+            }
 
-                    Assert.IsTrue(personVerified && customerVerified, "Some inner request does not completed correctly");
-                });
+            Assert.IsTrue(personVerified && customerVerified, "Some inner request does not completed correctly");
         }
 
         /// <summary>
@@ -412,109 +411,97 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void AddObjectSetLinkTestAsync()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    // These delegates are invoked when the client sends a single request for AddObject+SetLink
-                    contextWrapper.Configurations.RequestPipeline
-                        .OnNavigationLinkStarting(PipelineEventsTestsHelper.ModifyNavigationLink_WritingStart)
-                        .OnNavigationLinkEnding(PipelineEventsTestsHelper.ModifyNavigationLink_WritingEnd)
-                        .OnEntityReferenceLink(PipelineEventsTestsHelper.ModifyReferenceLink);
+            this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTestAsync);
+        }
 
-                    Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(1300);
-                    Customer customer2 = PipelineEventsTestsHelper.CreateNewCustomer(1301);
-                    Customer customer3 = PipelineEventsTestsHelper.CreateNewCustomer(1302);
-                    Customer customer4 = PipelineEventsTestsHelper.CreateNewCustomer(1303);
-                    contextWrapper.AddObject("Customer", customer);
-                    contextWrapper.AddObject("Customer", customer2);
-                    contextWrapper.AddObject("Customer", customer3);
-                    contextWrapper.AddObject("Customer", customer4);
+        private static void AddObjectSetLinkTestAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            // These delegates are invoked when the client sends a single request for AddObject+SetLink
+            contextWrapper.Configurations.RequestPipeline
+                .OnNavigationLinkStarting(PipelineEventsTestsHelper.ModifyNavigationLink_WritingStart)
+                .OnNavigationLinkEnding(PipelineEventsTestsHelper.ModifyNavigationLink_WritingEnd)
+                .OnEntityReferenceLink(PipelineEventsTestsHelper.ModifyReferenceLink);
 
-                    IAsyncResult r1 = contextWrapper.BeginSaveChanges(
-                        result =>
-                        {
-                            contextWrapper.EndSaveChanges(result);
-                        },
-                        null);
+            Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(1300);
+            Customer customer2 = PipelineEventsTestsHelper.CreateNewCustomer(1301);
+            Customer customer3 = PipelineEventsTestsHelper.CreateNewCustomer(1302);
+            Customer customer4 = PipelineEventsTestsHelper.CreateNewCustomer(1303);
+            contextWrapper.AddObject("Customer", customer);
+            contextWrapper.AddObject("Customer", customer2);
+            contextWrapper.AddObject("Customer", customer3);
+            contextWrapper.AddObject("Customer", customer4);
 
-                    while (!r1.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
+            IAsyncResult r1 = contextWrapper.BeginSaveChanges(
+                result => { contextWrapper.EndSaveChanges(result); },
+                null);
 
-                    Order order = PipelineEventsTestsHelper.CreateNewOrder(1300);
-                    contextWrapper.AddObject("Order", order);
-                    contextWrapper.SetLink(order, "Customer", customer);
+            while (!r1.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
 
-                    IAsyncResult r2 = contextWrapper.BeginSaveChanges(
-                        result =>
-                        {
-                            contextWrapper.EndSaveChanges(result);
-                        },
-                        null);
+            Order order = PipelineEventsTestsHelper.CreateNewOrder(1300);
+            contextWrapper.AddObject("Order", order);
+            contextWrapper.SetLink(order, "Customer", customer);
 
-                    while (!r2.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
+            IAsyncResult r2 = contextWrapper.BeginSaveChanges(
+                result => { contextWrapper.EndSaveChanges(result); },
+                null);
 
-                    Assert.AreEqual(1300, order.OrderId, "OrderId should not be altered in the pipeline delegates");
+            while (!r2.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
 
-                    Customer relatedCustomer = null;
-                    IAsyncResult r3 = contextWrapper.BeginExecute<Customer>(
-                         new Uri("Order(1300)/Customer", UriKind.Relative),
-                         result =>
-                         {
-                             relatedCustomer = contextWrapper.EndExecute<Customer>(result).Single();
-                         },
-                         null);
+            Assert.AreEqual(1300, order.OrderId, "OrderId should not be altered in the pipeline delegates");
 
-                    while (!r3.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
+            Customer relatedCustomer = null;
+            IAsyncResult r3 = contextWrapper.BeginExecute<Customer>(
+                new Uri("Order(1300)/Customer", UriKind.Relative),
+                result => { relatedCustomer = contextWrapper.EndExecute<Customer>(result).Single(); },
+                null);
 
-                    Assert.AreEqual(1302, relatedCustomer.CustomerId, "Associated CustomerId should be altered in the pipeline delegates");
+            while (!r3.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
 
-                    contextWrapper.DeleteObject(customer);
-                    contextWrapper.DeleteObject(customer2);
-                    contextWrapper.DeleteObject(customer3);
-                    contextWrapper.DeleteObject(customer4);
-                    contextWrapper.DeleteObject(order);
-                    IAsyncResult r4 = contextWrapper.BeginSaveChanges(
-                        result =>
-                        {
-                            contextWrapper.EndSaveChanges(result);
-                        },
-                        null);
+            Assert.AreEqual(1302, relatedCustomer.CustomerId,
+                "Associated CustomerId should be altered in the pipeline delegates");
 
-                    while (!r4.IsCompleted)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                });
+            contextWrapper.DeleteObject(customer);
+            contextWrapper.DeleteObject(customer2);
+            contextWrapper.DeleteObject(customer3);
+            contextWrapper.DeleteObject(customer4);
+            contextWrapper.DeleteObject(order);
+            IAsyncResult r4 = contextWrapper.BeginSaveChanges(
+                result => { contextWrapper.EndSaveChanges(result); },
+                null);
+
+            while (!r4.IsCompleted)
+            {
+                Thread.Sleep(1000);
+            }
         }
 
         [TestMethod]
         public void CancelRequestTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.RequestPipeline
-                        .OnEntryStarting(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Writing)
-                        .OnEntryEnding(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntry_Writing);
+            this.RunOnAtomAndJsonFormats(CreateContext, CancelRequestTest);
+        }
+        private static void CancelRequestTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.RequestPipeline
+                .OnEntryStarting(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Writing)
+                .OnEntryEnding(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntry_Writing);
 
-                    Customer customer = PipelineEventsTestsHelper.CreateNewCustomer();
-                    contextWrapper.AddObject("Customer", customer);
+            Customer customer = PipelineEventsTestsHelper.CreateNewCustomer();
+            contextWrapper.AddObject("Customer", customer);
 
-                    IAsyncResult result = contextWrapper.BeginSaveChanges(null, null);
-                    contextWrapper.CancelRequest(result);
+            IAsyncResult result = contextWrapper.BeginSaveChanges(null, null);
+            contextWrapper.CancelRequest(result);
 
-                    Assert.IsTrue(customer.Name.EndsWith("ModifyPropertyValueCustomerEntity_Writing"), "Unexpected primitive property");
-                });
+            Assert.IsTrue(customer.Name.EndsWith("ModifyPropertyValueCustomerEntity_Writing"), "Unexpected primitive property");
         }
 
         private DataServiceContextWrapper<DefaultContainer> CreateContext()
