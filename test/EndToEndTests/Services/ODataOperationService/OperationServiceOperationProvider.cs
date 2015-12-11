@@ -15,7 +15,7 @@ using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
 namespace Microsoft.Test.OData.Services.ODataOperationService
 {
-    
+
     public class OperationServiceOperationProvider : ODataReflectionOperationProvider
     {
         public void ResetDataSource()
@@ -77,7 +77,8 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
 
         public Order GetOrderByNote(IEnumerable<Order> orders, IEnumerable<string> notes)
         {
-            return orders.SingleOrDefault(order => order.Notes.Intersect(notes).Any());
+            return orders.SingleOrDefault(order => order.Notes.Intersect(notes).Count() == order.Notes.Count
+                && order.Notes.Count == notes.Count());
         }
 
         public IEnumerable<Customer> GetCustomersByOrders(IEnumerable<Customer> customers, IEnumerable<Order> orders)

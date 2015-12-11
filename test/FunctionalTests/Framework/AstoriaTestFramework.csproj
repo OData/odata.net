@@ -14,6 +14,7 @@
     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;MICROSOFT_ASTORIA;ClientFramework</DefineConstants>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
     <RootNamespace>Microsoft.Data.Test</RootNamespace>
     <ProjectGuid>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</ProjectGuid>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>

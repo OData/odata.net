@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core
 
             // skip the validation on value or type name.
             string stringValue = reader.ReadElementContentValue();
-            string typeName = (enumTypeReference != null) ? enumTypeReference.ODataFullName() : null;
+            string typeName = (enumTypeReference != null) ? enumTypeReference.FullName() : null;
             return new ODataEnumValue(stringValue, typeName);
         }
 

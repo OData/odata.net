@@ -80,12 +80,19 @@ namespace Microsoft.OData.Service.Design
         private readonly bool generateKeyAsSegment;
 
         /// <summary>
+        /// Whether to enable OData simplified.
+        /// </summary>
+        private readonly bool odataSimplified;
+
+        /// <summary>
         /// Prevents a default instance of the <see cref="UrlConvention"/> class from being created.
         /// </summary>
         /// <param name="generateKeyAsSegment">Whether keys should be generated as segments.</param>
-        private UrlConvention(bool generateKeyAsSegment)
+        /// <param name="odataSimplified">Whether to enable OData simplified.</param>
+        private UrlConvention(bool generateKeyAsSegment, bool odataSimplified = false)
         {
             this.generateKeyAsSegment = generateKeyAsSegment;
+            this.odataSimplified = odataSimplified;
         }
 
         /// <summary>
@@ -102,6 +109,17 @@ namespace Microsoft.OData.Service.Design
         }
 
         /// <summary>
+        /// Whether to enable OData simplified.
+        /// </summary>
+        internal bool ODataSimplified
+        {
+            get
+            {
+                return this.odataSimplified;
+            }
+        }
+
+        /// <summary>
         /// Helper for creating an instance with explicit value. Should only be called from unit tests.
         /// </summary>
         /// <param name="generateKeyAsSegment">Whether keys should be generated as segments.</param>
@@ -111,6 +129,15 @@ namespace Microsoft.OData.Service.Design
 #if ODATALIB
 #endif
             return new UrlConvention(generateKeyAsSegment);
+        }
+
+        /// <summary>
+        /// Helper for creating an odata simplified instance.
+        /// </summary>
+        /// <returns>A new UrlConvention instance with the given value.</returns>
+        internal static UrlConvention CreateODataSimplifiedConvention()
+        {
+            return new UrlConvention(false, true);
         }
 
 #if ASTORIA_SERVER

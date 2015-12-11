@@ -498,7 +498,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             var orderByQueryNode = ParseOrderBy("Fully.Qualified.Namespace.ColorPattern'SolidYellow' asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type());
             var enumtypeRef = new EdmEnumTypeReference(Microsoft.OData.Core.UriParser.Metadata.UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
-            orderByQueryNode.Expression.ShouldBeEnumNode(new ODataEnumValue(12L + "", enumtypeRef.ODataFullName()));
+            orderByQueryNode.Expression.ShouldBeEnumNode(new ODataEnumValue(12L + "", enumtypeRef.FullName()));
             orderByQueryNode.Direction.Should().Be(OrderByDirection.Ascending);
         }
 
@@ -632,7 +632,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         public void NegateAnEntityShouldThrow()
         {
             Action parse = () => ParseOrderBy("-MyDog", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_IncompatibleOperandError(HardCodedTestModel.GetPersonMyDogNavProp().Type.ODataFullName(), UnaryOperatorKind.Negate));
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_IncompatibleOperandError(HardCodedTestModel.GetPersonMyDogNavProp().Type.FullName(), UnaryOperatorKind.Negate));
         }
 
         [TestMethod]
@@ -1179,9 +1179,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("FavoriteNumber eq " + UInt16.MaxValue, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
-            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int32");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Int32");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int32");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int32");
         }
 
         [TestMethod]
@@ -1189,9 +1189,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("StockQuantity ne " + UInt32.MaxValue, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
-            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int64");
         }
 
         [TestMethod]
@@ -1199,9 +1199,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("LifeTime ne " + UInt64.MaxValue, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
-            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Decimal");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Decimal");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Decimal");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Decimal");
         }
 
         [TestMethod]
@@ -1209,9 +1209,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("123 ne StockQuantity", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
-            filter.Expression.As<BinaryOperatorNode>().Left.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
         }
 
         [TestMethod]
@@ -1219,9 +1219,9 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("FavoriteNumber eq StockQuantity", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
-            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
         }
 
         [TestMethod]
@@ -1229,11 +1229,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("123 add StockQuantity eq 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
             var addExpr = filter.Expression.As<BinaryOperatorNode>().Left.As<BinaryOperatorNode>();
-            addExpr.Left.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            addExpr.Right.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
+            addExpr.Left.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            addExpr.Right.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int64");
         }
 
         [TestMethod]
@@ -1241,11 +1241,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             FilterClause filter = ParseFilter("FavoriteNumber add StockQuantity eq 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            filter.Expression.As<BinaryOperatorNode>().TypeReference.ODataFullName().Should().Be("Edm.Boolean");
+            filter.Expression.As<BinaryOperatorNode>().TypeReference.FullName().Should().Be("Edm.Boolean");
             var addExpr = filter.Expression.As<BinaryOperatorNode>().Left.As<BinaryOperatorNode>();
-            addExpr.Left.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            addExpr.Right.As<ConvertNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
-            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.ODataFullName().Should().Be("Edm.Int64");
+            addExpr.Left.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            addExpr.Right.As<ConvertNode>().TypeReference.FullName().Should().Be("Edm.Int64");
+            filter.Expression.As<BinaryOperatorNode>().Right.As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int64");
         }
 
         #region operators on temporal type

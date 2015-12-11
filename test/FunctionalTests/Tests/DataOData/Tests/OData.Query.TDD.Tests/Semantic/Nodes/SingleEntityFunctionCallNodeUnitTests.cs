@@ -64,8 +64,8 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         public void EntityTypeReferenceSetCorrectly()
         {
             SingleEntityFunctionCallNode singleEntityFunctionCall = new SingleEntityFunctionCallNode("stuff", new QueryNode[] { new ConstantNode(1) }, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
-            singleEntityFunctionCall.EntityTypeReference.ODataFullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().ODataFullName());
-            singleEntityFunctionCall.TypeReference.ODataFullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().ODataFullName());
+            singleEntityFunctionCall.EntityTypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().FullName());
+            singleEntityFunctionCall.TypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().FullName());
         }
 
         [TestMethod]

@@ -134,7 +134,7 @@ namespace AstoriaUnitTests.Stubs
             if (!connections.ContainsKey(type) || connections[type] == null)
             {
                 string dbName = Enum.GetName(typeof(BaseModelType), type);
-                string dataSource = @".\SQLEXPRESS";
+                string dataSource = DataUtil.DefaultDataSource;
 
                 EntityConnection entityConnection = new EntityConnection(NorthwindDefaultTempDbService.ContextConnectionString);
 

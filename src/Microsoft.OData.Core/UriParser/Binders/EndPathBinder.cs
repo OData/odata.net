@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (parentNode.TypeReference != null && !parentNode.TypeReference.Definition.IsOpenType())
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    parentNode.TypeReference.ODataFullName(),
+                    parentNode.TypeReference.FullName(),
                     endPathToken.Identifier));
             }
 
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
                 var edmNavigationProperty = (IEdmNavigationProperty)property;
                 var singleEntityParentNode = (SingleEntityNode)parentNode;
-                if (edmNavigationProperty.TargetMultiplicityTemporary() == EdmMultiplicity.Many)
+                if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
                     return new CollectionNavigationNode(edmNavigationProperty, singleEntityParentNode);
                 }

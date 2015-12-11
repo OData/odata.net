@@ -223,6 +223,16 @@ namespace Microsoft.Test.OData.Services.TestServices
                 CreateDataServiceContext = (uri) => new PluggableFormatServiceReference.PluggableFormatService(uri)
             };
 
+        private static readonly ServiceDescriptor odataSimplifiedServiceDescriptor =
+            new ServiceDescriptor
+            {
+        #if !SILVERLIGHT && !PORTABLELIB
+                ServiceType = typeof(ODataSimplifiedService),
+        #endif
+                CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ODataSimplifiedService"),
+                CreateDataServiceContext = uri => new ODataSimplifiedServiceReference.ODataSimplifiedService(uri)
+            };
+
         /// <summary>
         /// Gets the ServiceDescriptor for the AstoriaDefault test service.
         /// </summary>
@@ -381,6 +391,14 @@ namespace Microsoft.Test.OData.Services.TestServices
         public static ServiceDescriptor PayloadValueConverterServiceDescriptor
         {
             get { return payloadValueConverterServiceDescriptor; }
+        }
+
+        /// <summary>
+        /// Gets the ODataSimplifiedServiceDescriptor for the ODataSimplified test service.
+        /// </summary>
+        public static ServiceDescriptor ODataSimplifiedServiceDescriptor
+        {
+            get { return odataSimplifiedServiceDescriptor; }
         }
     }
 }

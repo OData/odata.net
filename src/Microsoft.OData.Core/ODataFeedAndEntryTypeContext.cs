@@ -52,6 +52,14 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// The full type name of the navigation source of the feed or entry.
+        /// </summary>
+        public virtual string NavigationSourceFullTypeName
+        {
+            get { return this.ValidateAndReturn(default(string)); }
+        }
+
+        /// <summary>
         /// The kind of the navigation source of the feed or entry.
         /// </summary>
         public virtual EdmNavigationSourceKind NavigationSourceKind
@@ -172,6 +180,25 @@ namespace Microsoft.OData.Core
             public override string NavigationSourceEntityTypeName
             {
                 get { return this.serializationInfo.NavigationSourceEntityTypeName; }
+            }
+
+            /// <summary>
+            /// The full type name of the navigation source of the feed or entry.
+            /// </summary>
+            public override string NavigationSourceFullTypeName
+            {
+                get
+                {
+                    if (this.IsFromCollection)
+                    {
+                        return EdmLibraryExtensions.GetCollectionTypeName(
+                            this.serializationInfo.NavigationSourceEntityTypeName);
+                    }
+                    else
+                    {
+                        return this.serializationInfo.NavigationSourceEntityTypeName;
+                    }
+                }
             }
 
             /// <summary>
@@ -299,6 +326,15 @@ namespace Microsoft.OData.Core
                     }
                 }
 
+                IEdmUnknownEntitySet unknownEntitySet = navigationSource as IEdmUnknownEntitySet;
+                if (unknownEntitySet != null)
+                {
+                    if (unknownEntitySet.Type.TypeKind == EdmTypeKind.Collection)
+                    {
+                        this.isFromCollection = true;
+                    }
+                }
+
                 this.navigationSourceName = this.navigationSource.Name;
                 this.isMediaLinkEntry = this.expectedEntityType.HasStream;
                 this.lazyUrlConvention = new SimpleLazy<UrlConvention>(() => UrlConvention.ForModel(this.model));
@@ -318,6 +354,14 @@ namespace Microsoft.OData.Core
             public override string NavigationSourceEntityTypeName
             {
                 get { return this.navigationSourceEntityType.FullName(); }
+            }
+
+            /// <summary>
+            /// The full type name of the navigation source of the feed or entry.
+            /// </summary>
+            public override string NavigationSourceFullTypeName
+            {
+                get { return this.navigationSource.Type.FullTypeName(); }
             }
 
             /// <summary>

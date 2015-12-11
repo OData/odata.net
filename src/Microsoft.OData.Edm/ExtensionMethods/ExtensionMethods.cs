@@ -2260,6 +2260,14 @@ namespace Microsoft.OData.Edm
                     return collectionType.ElementType.Definition as IEdmEntityType;
                 }
 
+                var unknownEntitySet = entitySetBase as IEdmUnknownEntitySet;
+                if (unknownEntitySet != null)
+                {
+                    // Handle missing navigation target for nullable
+                    // singleton navigation property.
+                    return unknownEntitySet.Type as IEdmEntityType;
+                }
+
                 return null;
             }
 
@@ -2413,7 +2421,7 @@ namespace Microsoft.OData.Edm
                 var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
                 if (propEdmType != null)
                 {
-                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType));
+                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType()));
                 }
                 else
                 {

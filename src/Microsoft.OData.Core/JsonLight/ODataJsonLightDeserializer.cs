@@ -528,7 +528,8 @@ namespace Microsoft.OData.Core.JsonLight
 
             // Must make sure the input odata.context has a '@' prefix
             string propertyName = this.JsonReader.GetPropertyName();
-            if (string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataContext, propertyName) != 0)
+            if (string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataContext, propertyName) != 0
+                && !this.CompareSimplifiedODataAnnotation(JsonLightConstants.SimplifiedODataContextPropertyName, propertyName))
             {
                 if (!failOnMissingContextUriAnnotation || payloadKind == ODataPayloadKind.Unsupported)
                 {
@@ -547,6 +548,35 @@ namespace Microsoft.OData.Core.JsonLight
             // Read over the property name
             this.JsonReader.ReadNext();
             return this.JsonReader.ReadStringValue();
+        }
+
+        /// <summary>
+        /// Compares the JSON property name with the simplified OData annotation property name.
+        /// </summary>
+        /// <param name="simplifiedPropertyName">The simplified OData annotation property name.</param>
+        /// <param name="propertyName">The JSON property name read from the payload.</param>
+        /// <returns>If the JSON property name equals the simplified OData annotation property name.</returns>
+        protected bool CompareSimplifiedODataAnnotation(string simplifiedPropertyName, string propertyName)
+        {
+            Debug.Assert(simplifiedPropertyName.IndexOf('@') == 0, "simplifiedPropertyName must start with '@'.");
+            Debug.Assert(simplifiedPropertyName.IndexOf('.') == -1, "simplifiedPropertyName must not be namespace-qualified.");
+
+            return this.MessageReaderSettings.ODataSimplified && string.CompareOrdinal(simplifiedPropertyName, propertyName) == 0;
+        }
+
+        /// <summary>
+        /// Completes the simplified OData annotation name with "odata.".
+        /// </summary>
+        /// <param name="annotationName">The annotation name to be completed.</param>
+        /// <returns>The complete OData annotation name.</returns>
+        protected string CompleteSimplifiedODataAnnotation(string annotationName)
+        {
+            if (this.MessageReaderSettings.ODataSimplified && annotationName.IndexOf('.') == -1)
+            {
+                annotationName = JsonLightConstants.ODataAnnotationNamespacePrefix + annotationName;
+            }
+
+            return annotationName;
         }
 
         /// <summary>
@@ -652,7 +682,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (!isPropertyAnnotation)
                 {
                     isInstanceAnnotation = IsInstanceAnnotation(nameFromReader);
-                    propertyNameFromReader = isInstanceAnnotation ? nameFromReader.Substring(1) : nameFromReader;
+                    propertyNameFromReader = isInstanceAnnotation ? this.CompleteSimplifiedODataAnnotation(nameFromReader.Substring(1)) : nameFromReader;
                 }
 
                 // If parsedPropertyName is set and is different from the property name the reader is currently on,
@@ -669,6 +699,8 @@ namespace Microsoft.OData.Core.JsonLight
 
                 if (isPropertyAnnotation)
                 {
+                    annotationNameFromReader = this.CompleteSimplifiedODataAnnotation(annotationNameFromReader);
+
                     // If this is a unknown odata annotation targeting a property, we skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
                     // Note that we don't skip over unknown odata annotations targeting another annotation. We don't allow annotations (except odata.type) targeting other annotations,
                     // so this.ProcessPropertyAnnotation() will test and fail for that case.

@@ -59,7 +59,7 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(typeName));
             }
 
-            ValidationUtils.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType.ODataFullName());
+            ValidationUtils.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType.FullTypeName());
             return resolvedType;
         }
 
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Core
                 //   - If the property is dynamic property, ODL does not support dynamic property containing unsigned int value
                 //     since we don't know its underlying type as well as how to serialize it.
                 IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType());
-                return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.ODataFullName();
+                return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
             }
 
             ODataComplexValue complexValue = value as ODataComplexValue;
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ValidationUtils_UnsupportedPrimitiveType(value.GetType().FullName));
             }
 
-            return primitiveTypeReference.ODataFullName();
+            return primitiveTypeReference.FullName();
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Core
             IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, typeKindFromValue);
             if (typeReferenceFromMetadata != null)
             {
-                ValidationUtils.ValidateTypeKind(typeKindFromValue, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.ODataFullName());
+                ValidationUtils.ValidateTypeKind(typeKindFromValue, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.FullTypeName());
             }
 
             IEdmTypeReference typeReferenceFromValue = ValidateMetadataType(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
@@ -240,15 +240,15 @@ namespace Microsoft.OData.Core
                 // Collection types must match exactly.
                 if (!(typeReferenceFromMetadata.Definition.IsElementTypeEquivalentTo(typeReferenceFromValue.Definition)))
                 {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.ODataFullName(), typeReferenceFromMetadata.ODataFullName()));
+                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.FullName(), typeReferenceFromMetadata.FullName()));
                 }
             }
             else
             {
                 // For other types, compare their full type name.
-                if (typeReferenceFromMetadata.ODataFullName() != typeReferenceFromValue.ODataFullName())
+                if (typeReferenceFromMetadata.FullName() != typeReferenceFromValue.FullName())
                 {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.ODataFullName(), typeReferenceFromMetadata.ODataFullName()));
+                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.FullName(), typeReferenceFromMetadata.FullName()));
                 }
             }
 

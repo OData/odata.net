@@ -14,7 +14,7 @@
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 only.</summary>
     <description>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 only. Enables construction of OData producers and consumers. Targets .NET Core 5, and .NET Portable Lib with support for .NET 4.0, SL 5.0, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
-    <releaseNotes>http://odata.github.io/odata.net/#ODL-6.13.0</releaseNotes>
+    <releaseNotes>http://odata.github.io/odata.net/#ODL-$VersionFullSemantic$</releaseNotes>
     <dependencies>
       <dependency id="Microsoft.Spatial" version="[$VersionNuGetSemantic$]" />
       <dependency id="Microsoft.OData.Edm" version="[$VersionNuGetSemantic$]" />

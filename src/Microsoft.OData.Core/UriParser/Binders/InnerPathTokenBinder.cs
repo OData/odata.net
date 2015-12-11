@@ -97,7 +97,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ExceptionUtils.CheckArgumentNotNull(keyBinder, "keyBinder");
 
             // Handle collection navigation property
-            if (property.TargetMultiplicityTemporary() == EdmMultiplicity.Many)
+            if (property.TargetMultiplicity() == EdmMultiplicity.Many)
             {
                 CollectionNavigationNode collectionNavigationNode = new CollectionNavigationNode(property, parent);
 
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     throw new ODataException(
                         ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                            parent.GetEdmTypeReference().ODataFullName(), segmentToken.Identifier));
+                            parent.GetEdmTypeReference().FullName(), segmentToken.Identifier));
                 }
 
                 return new SingleValueOpenPropertyAccessNode(singleValueParent, segmentToken.Identifier);

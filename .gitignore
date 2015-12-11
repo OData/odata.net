@@ -17,6 +17,7 @@ sln/TestResults/
 
 # VS2015 IDE generated files
 sln/*.ide/
+sln/.vs/
 
 # StyleCop files
 StyleCop.Cache

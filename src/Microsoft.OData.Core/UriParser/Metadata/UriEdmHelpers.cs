@@ -63,7 +63,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
             if (!IsRelatedTo(parentType, childType))
             {
                 // If the parentType is an open property, parentType will be null and can't have an ODataFullName.
-                string parentTypeName = (parentType != null) ? parentType.ODataFullName() : "<null>";
+                string parentTypeName = (parentType != null) ? parentType.FullTypeName() : "<null>";
                 throw new ODataException(OData.Core.Strings.MetadataBinder_HierarchyNotFollowed(childType.FullTypeName(), parentTypeName));
             }
         }

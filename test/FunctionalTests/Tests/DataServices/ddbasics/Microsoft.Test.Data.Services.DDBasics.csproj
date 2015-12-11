@@ -12,6 +12,7 @@
     <WarningLevel>4</WarningLevel>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <OutputType>Library</OutputType>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>

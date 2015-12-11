@@ -39,6 +39,17 @@ namespace Microsoft.OData.Core
             set;
         }
 
+        /// <summary>Gets or sets the target of the particular error.</summary>
+        /// <returns>For example, the name of the property in error</returns>
+        public string Target { get; set; }
+
+        /// <summary>
+        /// A collection of JSON objects that MUST contain name/value pairs for code and message, and MAY contain 
+        /// a name/value pair for target, as described above.
+        /// </summary>
+        /// <returns>The error details.</returns>
+        public ICollection<ODataErrorDetail> Details { get; set; }
+
         /// <summary>Gets or sets the implementation specific debugging information to help determine the cause of the error.</summary>
         /// <returns>The implementation specific debugging information.</returns>
         public ODataInnerError InnerError

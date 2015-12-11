@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                 type = collectionType.ElementType.Definition;
             }
 
-            return "/" + type.ODataFullName();
+            return "/" + type.FullTypeName();
         }
 
         /// <summary>

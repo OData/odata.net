@@ -219,7 +219,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (isTopLevel)
                 {
                     // Write the special null marker for top-level null properties.
-                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
                     this.JsonWriter.WriteValue(true);
                 }
                 else
@@ -301,28 +301,28 @@ namespace Microsoft.OData.Core.JsonLight
             Uri mediaEditLink = streamReferenceValue.EditLink;
             if (mediaEditLink != null)
             {
-                this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaEditLink);
+                this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaEditLink);
                 this.JsonWriter.WriteValue(this.UriToString(mediaEditLink));
             }
 
             Uri mediaReadLink = streamReferenceValue.ReadLink;
             if (mediaReadLink != null)
             {
-                this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaReadLink);
+                this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaReadLink);
                 this.JsonWriter.WriteValue(this.UriToString(mediaReadLink));
             }
 
             string mediaContentType = streamReferenceValue.ContentType;
             if (mediaContentType != null)
             {
-                this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaContentType);
+                this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaContentType);
                 this.JsonWriter.WriteValue(mediaContentType);
             }
 
             string mediaETag = streamReferenceValue.ETag;
             if (mediaETag != null)
             {
-                this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaETag);
+                this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaETag);
                 this.JsonWriter.WriteValue(mediaETag);
             }
         }
@@ -340,11 +340,11 @@ namespace Microsoft.OData.Core.JsonLight
                 // We write the type name as an instance annotation (named "odata.type") for top-level properties, but as a property annotation (e.g., "...@odata.type") if not top level.
                 if (isTopLevel)
                 {
-                    ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeNameToWrite);
+                    this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeNameToWrite);
                 }
                 else
                 {
-                    ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, propertyName, typeNameToWrite);
+                    this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(propertyName, typeNameToWrite);
                 }
             }
         }

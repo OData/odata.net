@@ -69,6 +69,7 @@
     <Compile Include="Tests\Annotation\ClientMetadataAnnotationTests.cs" />
     <Compile Include="Tests\Annotation\ClientMetadataAnnotationWithPOCO.cs" />
     <Compile Include="Tests\Annotation\ConstantAnnotationTestsProxy.cs" />
+    <Compile Include="Tests\Annotation\InstanceAnnotationDictWeakKeyComparerTests.cs" />
     <Compile Include="Tests\Annotation\UserDefinedClientProxy.cs" />
     <Compile Include="Tests\ClientKeyGenerationPinningTest.cs" />
     <Compile Include="Tests\ClientPropertyTrackingTests.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Tests\ClientPrimitiveTypeTests.cs" />
     <Compile Include="Tests\MaterializerUnitTests.cs" />
     <Compile Include="Tests\PlatformHelperTests.cs" />
+    <Compile Include="Tests\WeakKeyDictioaryTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

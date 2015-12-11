@@ -12,11 +12,8 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
     using Microsoft.Test.OData.Query.TDD.Tests.TestUtilities;
     using Microsoft.Test.OData.Query.TDD.Tests;
 
@@ -242,7 +239,7 @@ namespace Microsoft.OData.Core.UriParser
             token.Should().BeOfType<CollectionNavigationNode>();
             var navigationPropertyNode = token.As<CollectionNavigationNode>();
             navigationPropertyNode.NavigationProperty.Should().BeSameAs(expectedProperty);
-            navigationPropertyNode.ItemType.ShouldBeEquivalentTo(new EdmEntityTypeReference(expectedProperty.ToEntityType(), expectedProperty.TargetMultiplicityTemporary() == EdmMultiplicity.ZeroOrOne));
+            navigationPropertyNode.ItemType.ShouldBeEquivalentTo(new EdmEntityTypeReference(expectedProperty.ToEntityType(), expectedProperty.TargetMultiplicity() == EdmMultiplicity.ZeroOrOne));
             return new AndConstraint<CollectionNavigationNode>(navigationPropertyNode);
         }
 
@@ -312,9 +309,9 @@ namespace Microsoft.OData.Core.UriParser
             node.Should().BeOfType<ConstantNode>();
             var enumNode = node.As<ConstantNode>();
 
-            enumNode.TypeReference.ODataFullName().Should().Be(enumType.ODataFullName());
+            enumNode.TypeReference.FullName().Should().Be(enumType.FullTypeName());
             ((ODataEnumValue)enumNode.Value).Value.Should().Be(value + "");
-            ((ODataEnumValue)enumNode.Value).TypeName.Should().Be(enumType.ODataFullName());
+            ((ODataEnumValue)enumNode.Value).TypeName.Should().Be(enumType.FullTypeName());
 
             return new AndConstraint<ConstantNode>(enumNode);
         }

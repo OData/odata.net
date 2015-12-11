@@ -137,7 +137,7 @@ namespace Microsoft.OData.Core.Atom
                         Debug.Assert(instanceAnnotation.Value is ODataNullValue, "instanceAnnotation.Value is ODataNullValue");
                         if (expectedType != null && !expectedType.IsNullable)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.TermName, expectedType.ODataFullName()));
+                            throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.TermName, expectedType.FullName()));
                         }
 
                         this.WriteNullAttribute();
@@ -702,7 +702,7 @@ namespace Microsoft.OData.Core.Atom
             // The default behavior is to not write type name for null values.
             if (propertyTypeReference != null && !this.UseDefaultFormatBehavior)
             {
-                string typeName = propertyTypeReference.ODataFullName();
+                string typeName = propertyTypeReference.FullName();
 
                 if (typeName != Metadata.EdmConstants.EdmStringTypeName)
                 {

@@ -368,7 +368,8 @@ namespace Microsoft.OData.Client
             // So we register this action which will be called when enumerating the feed. 
             materializeAtom.SetInstanceAnnotations = (instanceAnnotations) =>
             {
-                if (!this.responseInfo.Context.InstanceAnnotations.ContainsKey(response))
+                if (!this.responseInfo.Context.InstanceAnnotations.ContainsKey(response)
+                    && instanceAnnotations != null && instanceAnnotations.Count > 0)
                 {
                     this.responseInfo.Context.InstanceAnnotations.Add(response, instanceAnnotations);
                 }

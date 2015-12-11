@@ -9,8 +9,6 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using System.Globalization;
-    using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
@@ -57,6 +55,12 @@ namespace Microsoft.OData.Core.JsonLight
 
             /// <summary>The "stacktrace" property of an inner error object.</summary>
             StackTrace = 128,
+
+            /// <summary>The "target" property.</summary>
+            Target = 256,
+
+            /// <summary>The "details" property.</summary>
+            Details = 512
         }
 
         /// <summary>

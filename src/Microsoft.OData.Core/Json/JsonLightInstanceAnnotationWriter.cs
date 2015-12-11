@@ -33,6 +33,16 @@ namespace Microsoft.OData.Core
         private readonly JsonLightTypeNameOracle typeNameOracle;
 
         /// <summary>
+        /// JsonWriter instance to use for writing term names.
+        /// </summary>
+        private readonly IJsonWriter jsonWriter;
+
+        /// <summary>
+        /// OData annotation writer.
+        /// </summary>
+        private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
+
+        /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
         /// </summary>
         /// <param name="valueSerializer">The <see cref="IODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
@@ -43,14 +53,8 @@ namespace Microsoft.OData.Core
             Debug.Assert(valueSerializer != null, "valueSerializer should not be null");
             this.valueSerializer = valueSerializer;
             this.typeNameOracle = typeNameOracle;
-        }
-
-        /// <summary>
-        /// JsonWriter instance to use for writing term names.
-        /// </summary>
-        private IJsonWriter JsonWriter 
-        { 
-            get { return this.valueSerializer.JsonWriter; } 
+            this.jsonWriter = this.valueSerializer.JsonWriter;
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
         }
 
         /// <summary>
@@ -129,7 +133,7 @@ namespace Microsoft.OData.Core
             {
                 if (expectedType != null && !expectedType.IsNullable)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.ODataFullName()));
+                    throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.FullName()));
                 }
 
                 this.WriteInstanceAnnotationName(propertyName, name);
@@ -157,7 +161,7 @@ namespace Microsoft.OData.Core
                 string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {
-                    ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, collectionTypeNameToWrite);
+                    this.odataAnnotationWriter.WriteODataTypePropertyAnnotation(name, collectionTypeNameToWrite);
                 }
 
                 this.WriteInstanceAnnotationName(propertyName, name);
@@ -171,7 +175,7 @@ namespace Microsoft.OData.Core
             string primitiveTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(primitiveValue, expectedType, typeFromValue, treatLikeOpenProperty);
             if (primitiveTypeNameToWrite != null)
             {
-                ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, primitiveTypeNameToWrite);
+                this.odataAnnotationWriter.WriteODataTypePropertyAnnotation(name, primitiveTypeNameToWrite);
             }
 
             this.WriteInstanceAnnotationName(propertyName, name);
@@ -187,11 +191,11 @@ namespace Microsoft.OData.Core
         {
             if (propertyName != null)
             {
-                this.JsonWriter.WritePropertyAnnotationName(propertyName, annotationName);
+                this.jsonWriter.WritePropertyAnnotationName(propertyName, annotationName);
             }
             else
             {
-                this.JsonWriter.WriteInstanceAnnotationName(annotationName);
+                this.jsonWriter.WriteInstanceAnnotationName(annotationName);
             }
         }
     }

@@ -78,6 +78,9 @@
     <Compile Include="..\Service References\PublicProviderEFServiceReference\Reference.cs">
       <Link>Service References\PublicProviderEFServiceReference\Reference.cs</Link>
     </Compile>
+    <Compile Include="..\Service References\ODataSimplifiedService\Reference.cs">
+      <Link>Service References\ODataSimplifiedService\Reference.cs</Link>
+    </Compile>
     <Compile Include="..\Service References\PluggableformatService\Reference.cs">
       <Link>Service References\PluggableformatService\Reference.cs</Link>
     </Compile>

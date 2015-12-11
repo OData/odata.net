@@ -85,7 +85,7 @@ if (enlistmentRoot == null || enlistmentRoot == "")
   WScript.Quit(1);
 }
 
-var serverNames = ["(local)", ".\\SQLEXPRESS"];
+var serverNames = ["(local)", ".\\SQLEXPRESS", "(localdb)\\MSSQLLocalDB"];
 for (var i in serverNames) {
   DropDatabasesForServer(serverNames[i], enlistmentRoot);
 }

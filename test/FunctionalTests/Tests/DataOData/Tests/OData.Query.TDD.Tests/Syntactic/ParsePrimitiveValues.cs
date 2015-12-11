@@ -8,13 +8,11 @@ using System;
 using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Core.UriParser.Parsers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
 {
-    using Microsoft.OData.Core.UriParser.Parsers;
-
     [TestClass]
     public class ParsePrimitiveValues
     {
@@ -56,9 +54,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
 
         private static bool TryParse<T>(string input, IEdmPrimitiveTypeReference asType, out T realResult)
         {
+            realResult = default(T);
+
             object result;
-            bool parseSuceeded = UriPrimitiveTypeParser.TryUriStringToPrimitive(input, asType, out result);
-            realResult = (T)result;
+            var parseSuceeded = UriPrimitiveTypeParser.TryUriStringToPrimitive(input, asType, out result);
+            if (parseSuceeded)
+            {
+                realResult = (T)result;
+            }
+
             return parseSuceeded;
         }
     }

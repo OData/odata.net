@@ -76,7 +76,9 @@
     <Compile Include="ObjectModel\ODataEntityReferenceLinkTests.cs" />
     <Compile Include="ObjectModel\ODataEntityReferenceLinksTests.cs" />
     <Compile Include="Reader\Atom\ODataAtomServiceDocumentDeserializerTests.cs" />
+    <Compile Include="Reader\BufferingJsonReaderTests.cs" />
     <Compile Include="Reader\JsonLight\DateReaderJsonLightTests.cs" />
+    <Compile Include="Reader\JsonLight\ODataJsonLightErrorDeserializerTests.cs" />
     <Compile Include="Reader\JsonLight\ODataJsonLightServiceDocumentDeserializerTests.cs" />
     <Compile Include="Reader\JsonLight\ODataJsonLightSingletonReaderTests.cs" />
     <Compile Include="Reader\JsonLight\ODataJsonLightDeltaReaderTests.cs" />
@@ -144,6 +146,7 @@
     <Compile Include="BinaryValueEncodingTests.cs" />
     <Compile Include="ContextUrlWriterReaderTests.cs" />
     <Compile Include="Writer\FullPayloadValidateTests.cs" />
+    <Compile Include="Writer\JsonLight\ODataJsonLightFeedWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightDeltaWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightInheritComplexCollectionWriterTests.cs" />
     <Compile Include="Writer\JsonLight\ODataJsonLightODataTypeSerializerTests.cs" />

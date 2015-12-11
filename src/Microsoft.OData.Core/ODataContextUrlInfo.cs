@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core
         /// <summary>Whether target is contained</summary>
         private bool isContained;
 
-        /// <summary>The navigation soruce for current target</summary>
+        /// <summary>The navigation source for current target</summary>
         private string navigationSource;
 
         /// <summary>ODataUri information for context Url</summary>
@@ -44,11 +44,22 @@ namespace Microsoft.OData.Core
         /// <summary>The delta kind used for building context Url</summary>
         internal ODataDeltaKind DeltaKind { get; set; }
 
+        /// <summary>Whether target is unknown entity set</summary>
+        internal bool IsUnknownEntitySet { get; set; }
+
         /// <summary>Name of navigation path used for building context Url</summary>
         internal string NavigationPath
         {
             get
             {
+                if (this.IsUnknownEntitySet)
+                {
+                    // If the navigation target is not specified, i.e., UnknownEntitySet,
+                    // the navigation path should be null so that type name will be used
+                    // to build the context Url.
+                    return null;
+                }
+
                 string navigationPath = null;
                 if (this.isContained && this.odataUri != null && this.odataUri.Path != null)
                 {
@@ -63,6 +74,12 @@ namespace Microsoft.OData.Core
 
                 return navigationPath ?? this.navigationSource;
             }
+        }
+
+        /// <summary>Name of the navigation source used for building context Url</summary>
+        internal string NavigationSource
+        {
+            get { return this.navigationSource; }
         }
 
         /// <summary>ResourcePath used for building context Url</summary>
@@ -140,7 +157,7 @@ namespace Microsoft.OData.Core
             }
             else if (itemTypeReference != null)
             {
-                collectionTypeName = EdmLibraryExtensions.GetCollectionTypeName(itemTypeReference.ODataFullName());
+                collectionTypeName = EdmLibraryExtensions.GetCollectionTypeName(itemTypeReference.FullName());
             }
 
             return new ODataContextUrlInfo()
@@ -164,6 +181,7 @@ namespace Microsoft.OData.Core
             return new ODataContextUrlInfo()
             {
                 isContained = kind == EdmNavigationSourceKind.ContainedEntitySet,
+                IsUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = navigationSource.Name,
                 TypeCast = navigationSourceEntityType == expectedEntityTypeName ? null : expectedEntityTypeName,
                 TypeName = navigationSourceEntityType,
@@ -186,9 +204,10 @@ namespace Microsoft.OData.Core
             return new ODataContextUrlInfo()
                 {
                     isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
+                    IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                     navigationSource = typeContext.NavigationSourceName,
                     TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
-                    TypeName = typeContext.NavigationSourceEntityTypeName,
+                    TypeName = typeContext.NavigationSourceFullTypeName,
                     IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                     odataUri = odataUri
                 };
@@ -208,6 +227,7 @@ namespace Microsoft.OData.Core
             ODataContextUrlInfo contextUriInfo = new ODataContextUrlInfo()
             {
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
+                IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,
                 TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
                 TypeName = typeContext.NavigationSourceEntityTypeName,
@@ -300,11 +320,11 @@ namespace Microsoft.OData.Core
             IEdmTypeDefinitionReference typeDefinitionReference = model.ResolveUIntTypeDefinition(primitive.Value);
             if (typeDefinitionReference != null)
             {
-                return typeDefinitionReference.ODataFullName();
+                return typeDefinitionReference.FullName();
             }
 
             IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
-            return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.ODataFullName();
+            return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
         }
 
         private static string CreateApplyUriSegment(ApplyClause applyClause)

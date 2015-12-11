@@ -127,7 +127,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (bindingType != null)
             {
                 // TODO: look up actual container names here?
-                if (bindingType.IsOpenType() && !identifier.Contains("."))
+                // When using extension, there may be function call with unqualified name. So loose the restriction here.
+                if (bindingType.IsOpenType() && !identifier.Contains(".") && resolver.GetType() == typeof(ODataUriResolver))
                 {
                     matchingOperation = null;
                     return false;

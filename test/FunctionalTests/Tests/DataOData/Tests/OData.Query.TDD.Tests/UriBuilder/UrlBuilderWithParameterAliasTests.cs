@@ -52,6 +52,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -80,6 +84,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -104,6 +112,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -125,6 +137,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
         }
 
@@ -148,6 +164,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreNotEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
         #endregion
 
@@ -171,6 +191,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
         }
 
@@ -200,6 +224,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -228,6 +256,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -249,6 +281,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
         }
 
@@ -273,6 +309,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -295,6 +335,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
         }
 
@@ -319,6 +363,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -341,6 +389,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -362,6 +414,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
         }
         #endregion
@@ -388,6 +444,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
             Assert.AreEqual(fullUri, actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            Assert.AreEqual(fullUri, actualUri);
         }
 
         [TestMethod]
@@ -409,6 +469,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
         }
         #endregion
@@ -434,6 +498,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
             actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Assert.AreEqual("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
+
+            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
+            actualUri = uriBuilderWithODataSimplified.BuildUri();
             Assert.AreEqual("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
         }
         #endregion

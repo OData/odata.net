@@ -68,12 +68,12 @@ namespace Microsoft.OData.Core.UriParser
 
                     if (type.IsODataPrimitiveTypeKind() && type.IsNullable)
                     {
-                        builder.Append(type.ODataFullName());
+                        builder.Append(type.FullName());
                         builder.Append(" Nullable=true");
                     }
                     else
                     {
-                        builder.Append(type.ODataFullName());
+                        builder.Append(type.FullName());
                     }
                 }
 

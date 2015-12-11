@@ -81,6 +81,18 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
         }
 
         [TestMethod]
+        public void WriteTopLevelErrorUsesProvidedTarget()
+        {
+            var result = SetupSerializerAndRunTest(null, serializer =>
+            {
+                ODataError error = new ODataError { Target = "error target text" };
+                serializer.WriteTopLevelError(error, includeDebugInformation: false);
+            });
+
+            result.Should().Contain("\"target\":\"error target text\"");
+        }
+        
+        [TestMethod]
         public void WriteTopLevelErrorHasCorrectDefaults()
         {
             var result = SetupSerializerAndRunTest(null, serializer =>
@@ -91,6 +103,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
 
             result.Should().Contain("\"code\":\"\"");
             result.Should().Contain("\"message\":\"\"");
+            result.Should().NotContain("\"target\"");
+            result.Should().NotContain("\"details\"");
         }
 
         [TestMethod]

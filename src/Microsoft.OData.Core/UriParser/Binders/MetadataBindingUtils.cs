@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.ODataFullName(), targetTypeReference.ODataFullName()));
+                    throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
                 }
                 else
                 {

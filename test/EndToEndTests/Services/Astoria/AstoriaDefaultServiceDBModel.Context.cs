@@ -9,14 +9,14 @@
 
 namespace Microsoft.Test.OData.Services.Astoria
 {
-    using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+    using Microsoft.Test.OData.Services.PublicProvider;
+
     public partial class AstoriaDefaultServiceDBEntities : DbContext
     {
         public AstoriaDefaultServiceDBEntities()
-            : base("name=AstoriaDefaultServiceDBEntities")
+            : base(DatabaseHelper.ConnectionString)
         {
         }
     

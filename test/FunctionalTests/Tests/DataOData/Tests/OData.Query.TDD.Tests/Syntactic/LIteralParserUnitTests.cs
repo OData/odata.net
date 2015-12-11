@@ -7,16 +7,10 @@
 namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     [TestClass]
     public class LiteralParserUnitTest
@@ -46,6 +40,24 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
             object output;
             parser.TryParseLiteral(typeof(TimeSpan), "P1D", out output).Should().BeTrue();
             output.ShouldBeEquivalentTo(new TimeSpan(1, 0, 0, 0));
+        }
+
+        [TestMethod]
+        public void TryParseLiteralWithDateForKeyAsSegmentUrlConventionsShouldReturnValidDate()
+        {
+            var parser = LiteralParser.ForKeys(true /*keyAsSegment*/);
+            object output;
+            parser.TryParseLiteral(typeof(Date), "2015-09-28", out output).Should().BeTrue();
+            output.ShouldBeEquivalentTo(new Date(2015, 09, 28));
+        }
+
+        [TestMethod]
+        public void TryParseLiteralWithDateForDefaultUrlConventionsConventionsShouldReturnValidDate()
+        {
+            var parser = LiteralParser.ForKeys(false /*keyAsSegment*/);
+            object output;
+            parser.TryParseLiteral(typeof(Date), "2015-09-28", out output).Should().BeTrue();
+            output.ShouldBeEquivalentTo(new Date(2015, 09, 28));
         }
     }
 }

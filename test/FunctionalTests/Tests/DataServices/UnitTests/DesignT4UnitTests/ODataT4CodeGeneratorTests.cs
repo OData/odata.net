@@ -48,9 +48,15 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             string commonProgramFiles = Environment.GetEnvironmentVariable("CommonProgramFiles");
             string T4TransformToolPathVer11 = commonProgramFiles + "\\Microsoft Shared\\TextTemplating\\11.0\\TextTransform.exe";
             string T4TransformToolPathVer12 = commonProgramFiles + "\\Microsoft Shared\\TextTemplating\\12.0\\TextTransform.exe";
+            string T4TransformToolPathVer14 = commonProgramFiles + "\\Microsoft Shared\\TextTemplating\\14.0\\TextTransform.exe";
+
             if (File.Exists(T4TransformToolPathVer12))
             {
                 T4TransformToolPath = T4TransformToolPathVer12;
+            }
+            else if (File.Exists(T4TransformToolPathVer14))
+            {
+                T4TransformToolPath = T4TransformToolPathVer14;
             }
             else
             {

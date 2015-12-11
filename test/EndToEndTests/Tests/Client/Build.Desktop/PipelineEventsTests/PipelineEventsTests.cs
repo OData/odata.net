@@ -34,43 +34,44 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void QueryEntitySet()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryId_Reading)
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
-                        .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySet);
+        }
 
-                    // cover this for Json
-                    if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-                    {
-                        contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
-                    }
+        private static void QueryEntitySet(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryId_Reading)
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
+                .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
 
-                    var entryResultsLinq = contextWrapper.CreateQuery<Customer>("Customer").ToArray();
-                    foreach (var customer in entryResultsLinq)
-                    {
-                        PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
-                    }
+            // cover this for Json
+            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
+            {
+                contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(
+                    PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
+            }
 
-                    var entryResultsExecute = contextWrapper.Execute<Customer>(new Uri("Customer", UriKind.Relative));
-                    foreach (Customer customer in entryResultsExecute)
-                    {
-                        PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
-                    }
+            var entryResultsLinq = contextWrapper.CreateQuery<Customer>("Customer").ToArray();
+            foreach (var customer in entryResultsLinq)
+            {
+                PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
+            }
 
-                    var customerQuery = contextWrapper.CreateQuery<Customer>("Customer");
-                    DataServiceCollection<Customer> entryResultsCollection = new DataServiceCollection<Customer>(customerQuery);
-                    foreach (Customer customer in entryResultsCollection)
-                    {
-                        PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
-                    }
-                });
+            var entryResultsExecute = contextWrapper.Execute<Customer>(new Uri("Customer", UriKind.Relative));
+            foreach (Customer customer in entryResultsExecute)
+            {
+                PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
+            }
+
+            var customerQuery = contextWrapper.CreateQuery<Customer>("Customer");
+            DataServiceCollection<Customer> entryResultsCollection = new DataServiceCollection<Customer>(customerQuery);
+            foreach (Customer customer in entryResultsCollection)
+            {
+                PipelineEventsTestsHelper.VerifyModfiedCustomerEntry(contextWrapper, customer);
+            }
         }
 
         /// <summary>
@@ -79,19 +80,19 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void QueryEntitySetNull()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryEnded(PipelineEventsTestsHelper.ChangeEntryPropertyToNull_Reading);
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetNull);
+        }
 
-                    var entryResultsExecute = contextWrapper.Execute<Customer>(new Uri("Customer", UriKind.Relative));
-                    foreach (Customer customer in entryResultsExecute)
-                    {
-                        Assert.IsNull(customer.Auditing, "Unexpected property value");
-                    }
-                });
+        private static void QueryEntitySetNull(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryEnded(PipelineEventsTestsHelper.ChangeEntryPropertyToNull_Reading);
+
+            var entryResultsExecute = contextWrapper.Execute<Customer>(new Uri("Customer", UriKind.Relative));
+            foreach (Customer customer in entryResultsExecute)
+            {
+                Assert.IsNull(customer.Auditing, "Unexpected property value");
+            }
         }
 
         /// <summary>
@@ -100,59 +101,67 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void QueryEntityInstance()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
+            this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstance);
+        }
+
+        private static void QueryEntityInstance(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Context.IgnoreMissingProperties = true;
+
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Materialized);
+
+            var specialEmployee =
+                contextWrapper.CreateQuery<Person>("Person").Where(p => p.PersonId == -10).Single() as SpecialEmployee;
+            EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(specialEmployee);
+            Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate,
+                "Unexpected CarsLicensePlate");
+            Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
+
+            specialEmployee = contextWrapper.Execute<SpecialEmployee>(new Uri("Person(-10)", UriKind.Relative)).Single();
+            Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate,
+                "Unexpected CarsLicensePlate");
+            Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
+
+            DataServiceRequest[] requests = new DataServiceRequest[]
+            {
+                contextWrapper.CreateQuery<Person>("Person"),
+                contextWrapper.CreateQuery<Customer>("Customer"),
+            };
+
+            DataServiceResponse responses = contextWrapper.ExecuteBatch(requests);
+            bool personVerified = false;
+            bool customerVerified = false;
+            foreach (QueryOperationResponse response in responses)
+            {
+                foreach (object p in response)
                 {
-                    contextWrapper.Context.IgnoreMissingProperties = true;
-
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Materialized);
-
-                    var specialEmployee = contextWrapper.CreateQuery<Person>("Person").Where(p => p.PersonId == -10).Single() as SpecialEmployee;
-                    EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(specialEmployee);
-                    Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate, "Unexpected CarsLicensePlate");
-                    Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
-
-                    specialEmployee = contextWrapper.Execute<SpecialEmployee>(new Uri("Person(-10)", UriKind.Relative)).Single();
-                    Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate, "Unexpected CarsLicensePlate");
-                    Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
-
-                    DataServiceRequest[] requests = new DataServiceRequest[] {
-                        contextWrapper.CreateQuery<Person>("Person"),
-                        contextWrapper.CreateQuery<Customer>("Customer"),
-                    };
-
-                    DataServiceResponse responses = contextWrapper.ExecuteBatch(requests);
-                    bool personVerified = false;
-                    bool customerVerified = false;
-                    foreach (QueryOperationResponse response in responses)
+                    var specialEmployee1 = p as SpecialEmployee;
+                    Customer c = p as Customer;
+                    if (specialEmployee1 != null)
                     {
-                        foreach (object p in response)
-                        {
-                            var specialEmployee1 = p as SpecialEmployee;
-                            Customer c = p as Customer;
-                            if (specialEmployee1 != null)
-                            {
-                                Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee1.CarsLicensePlate, "Unexpected CarsLicensePlate");
-                                Assert.AreEqual(1, specialEmployee1.BonusLevel, "Unexpected BonusLevel");
-                                personVerified = true;
-                            }
-
-                            if (c != null)
-                            {
-                                Assert.IsTrue(c.Name.EndsWith("ModifyPropertyValueCustomerEntity_Materialized"), "Unexpected primitive property");
-                                Assert.IsTrue(c.Auditing.ModifiedBy.Equals("ModifyPropertyValueCustomerEntity_Materialized"), "Unexpected complex property");
-                                Assert.IsTrue(c.PrimaryContactInfo.EmailBag.Contains("ModifyPropertyValueCustomerEntity_Materialized"), "Unexpected collection property");
-                                customerVerified = true;
-                            }
-                        }
+                        Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee1.CarsLicensePlate,
+                            "Unexpected CarsLicensePlate");
+                        Assert.AreEqual(1, specialEmployee1.BonusLevel, "Unexpected BonusLevel");
+                        personVerified = true;
                     }
 
-                    Assert.IsTrue(personVerified && customerVerified, "Some inner request does not completed correctly");
-                });
+                    if (c != null)
+                    {
+                        Assert.IsTrue(c.Name.EndsWith("ModifyPropertyValueCustomerEntity_Materialized"),
+                            "Unexpected primitive property");
+                        Assert.IsTrue(c.Auditing.ModifiedBy.Equals("ModifyPropertyValueCustomerEntity_Materialized"),
+                            "Unexpected complex property");
+                        Assert.IsTrue(c.PrimaryContactInfo.EmailBag.Contains("ModifyPropertyValueCustomerEntity_Materialized"),
+                            "Unexpected collection property");
+                        customerVerified = true;
+                    }
+                }
+            }
+
+            Assert.IsTrue(personVerified && customerVerified, "Some inner request does not completed correctly");
         }
 
         /// <summary>
@@ -237,21 +246,23 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void LoadPropertyTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Context.IgnoreMissingProperties = true;
-                    SpecialEmployee specialEmployee = contextWrapper.Execute<SpecialEmployee>(new Uri("Person(-10)", UriKind.Relative)).Single();
+            this.RunOnAtomAndJsonFormats(CreateContext, LoadPropertyTest);
+        }
 
-                    contextWrapper.Configurations.ResponsePipeline.OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryId_Reading);
-                    QueryOperationResponse<Car> cars = contextWrapper.LoadProperty(specialEmployee, "Car") as QueryOperationResponse<Car>;
-                    foreach (Car car in cars)
-                    {
-                        EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(car);
-                        Assert.IsTrue(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
-                    }
-                });
+        private static void LoadPropertyTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Context.IgnoreMissingProperties = true;
+            SpecialEmployee specialEmployee =
+                contextWrapper.Execute<SpecialEmployee>(new Uri("Person(-10)", UriKind.Relative)).Single();
+
+            contextWrapper.Configurations.ResponsePipeline.OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryId_Reading);
+            QueryOperationResponse<Car> cars =
+                contextWrapper.LoadProperty(specialEmployee, "Car") as QueryOperationResponse<Car>;
+            foreach (Car car in cars)
+            {
+                EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(car);
+                Assert.IsTrue(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
+            }
         }
 
         /// <summary>
@@ -303,18 +314,20 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void PagingQueryTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnFeedStarted(PipelineEventsTestsHelper.ModifyFeedId_ReadingFeed)
-                        .OnFeedEnded(PipelineEventsTestsHelper.ModifyNextlink_ReadingFeed);
+            this.RunOnAtomAndJsonFormats(CreateContext, PagingQueryTest);
+        }
 
-                    QueryOperationResponse<Customer> entryResultsLinq = contextWrapper.CreateQuery<Customer>("Customer").Execute() as QueryOperationResponse<Customer>;
-                    entryResultsLinq.ToArray();
-                    Assert.AreEqual("http://modifyfeedidmodifynextlink/", entryResultsLinq.GetContinuation().NextLinkUri.AbsoluteUri, "Unexpected next link");
-                });
+        private static void PagingQueryTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnFeedStarted(PipelineEventsTestsHelper.ModifyFeedId_ReadingFeed)
+                .OnFeedEnded(PipelineEventsTestsHelper.ModifyNextlink_ReadingFeed);
+
+            var entryResultsLinq =
+                contextWrapper.CreateQuery<Customer>("Customer").Execute() as QueryOperationResponse<Customer>;
+            entryResultsLinq.ToArray();
+            Assert.AreEqual("http://modifyfeedidmodifynextlink/",
+                entryResultsLinq.GetContinuation().NextLinkUri.AbsoluteUri, "Unexpected next link");
         }
 
         /// <summary>
@@ -323,18 +336,23 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void ProjectionQueryTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyMessageEntry_Reading)
-                        .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyMessageEntry_Materialized);
-                    Message entryResultsExecute = contextWrapper.Execute<Message>(new Uri("Message(FromUsername='1',MessageId=-10)?$select=MessageId,ToUsername,Sender", UriKind.Relative)).Single();
+            this.RunOnAtomAndJsonFormats(CreateContext, ProjectionQueryTest);
+        }
 
-                    Assert.IsNull(entryResultsExecute.ToUsername, "Unexpected ToUsername");
-                    Assert.AreEqual("ModifyMessageEntry_ReadingModifyMessageEntry_Materialized", entryResultsExecute.Body, "Unexpected Body");
-                });
+        private static void ProjectionQueryTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyMessageEntry_Reading)
+                .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyMessageEntry_Materialized);
+            var entryResultsExecute =
+                contextWrapper.Execute<Message>(
+                    new Uri("Message(FromUsername='1',MessageId=-10)?$select=MessageId,ToUsername,Sender",
+                        UriKind.Relative))
+                    .Single();
+
+            Assert.IsNull(entryResultsExecute.ToUsername, "Unexpected ToUsername");
+            Assert.AreEqual("ModifyMessageEntry_ReadingModifyMessageEntry_Materialized", entryResultsExecute.Body,
+                "Unexpected Body");
         }
 
         /// <summary>
@@ -441,75 +459,80 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void AddUpdateObjectStreamTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.RequestPipeline
-                        .OnEntryStarting(PipelineEventsTestsHelper.ModifyPropertyValueCarEntity_Writing)
-                        .OnEntryEnding(PipelineEventsTestsHelper.ModifyPropertyValueCarEntry_Writing);
+            this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateObjectStreamTest);
+        }
 
-                    Car car = PipelineEventsTestsHelper.CreateNewCar();
-                    contextWrapper.AddObject("Car", car);
-                    contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] { 66, 67 }), true, "text/plain", "slug");
-                    contextWrapper.SetSaveStream(car, "Photo", new MemoryStream(new byte[] { 66 }), true, new DataServiceRequestArgs() { ContentType = "text/plain" });
-                    contextWrapper.SaveChanges();
+        private static void AddUpdateObjectStreamTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.RequestPipeline
+                .OnEntryStarting(PipelineEventsTestsHelper.ModifyPropertyValueCarEntity_Writing)
+                .OnEntryEnding(PipelineEventsTestsHelper.ModifyPropertyValueCarEntry_Writing);
 
-                    // when DataServiceResponsePreference.IncludeContent is not set, property modified in OnEntryEnding will not be updated in client
-                    Assert.IsTrue(car.Description.EndsWith("ModifyPropertyValueCarEntity_Writing"), "Unexpected primitive property");
+            Car car = PipelineEventsTestsHelper.CreateNewCar();
+            contextWrapper.AddObject("Car", car);
+            contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] {66, 67}), true, "text/plain", "slug");
+            contextWrapper.SetSaveStream(car, "Photo", new MemoryStream(new byte[] {66}), true,
+                new DataServiceRequestArgs() {ContentType = "text/plain"});
+            contextWrapper.SaveChanges();
 
-                    contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] { 68, 69 }), true, "text/plain", "slug");
-                    contextWrapper.SetSaveStream(car, "Video", new MemoryStream(new byte[] { 66 }), true, new DataServiceRequestArgs() { ContentType = "text/plain" });
-                    car.Description = "update";
-                    contextWrapper.UpdateObject(car);
-                    contextWrapper.SaveChanges();
+            // when DataServiceResponsePreference.IncludeContent is not set, property modified in OnEntryEnding will not be updated in client
+            Assert.IsTrue(car.Description.EndsWith("ModifyPropertyValueCarEntity_Writing"), "Unexpected primitive property");
 
-                    // when DataServiceResponsePreference.IncludeContent is not set, property modified in OnEntryEnding will not be updated in client
-                    Assert.IsTrue(car.Description.EndsWith("ModifyPropertyValueCarEntity_Writing"), "Unexpected primitive property");
+            contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] {68, 69}), true, "text/plain", "slug");
+            contextWrapper.SetSaveStream(car, "Video", new MemoryStream(new byte[] {66}), true,
+                new DataServiceRequestArgs() {ContentType = "text/plain"});
+            car.Description = "update";
+            contextWrapper.UpdateObject(car);
+            contextWrapper.SaveChanges();
 
-                    contextWrapper.DeleteObject(car);
-                    contextWrapper.SaveChanges();
-                });
+            // when DataServiceResponsePreference.IncludeContent is not set, property modified in OnEntryEnding will not be updated in client
+            Assert.IsTrue(car.Description.EndsWith("ModifyPropertyValueCarEntity_Writing"), "Unexpected primitive property");
+
+            contextWrapper.DeleteObject(car);
+            contextWrapper.SaveChanges();
         }
 
         [TestMethod]
         public void AddUpdateBatchTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.RequestPipeline
-                        .OnEntryStarting(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Writing)
-                        .OnEntryEnding(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntry_Writing);
+            this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateBatchTest);
+        }
 
-                    Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(300);
-                    contextWrapper.AddObject("Customer", customer);
+        private static void AddUpdateBatchTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.RequestPipeline
+                .OnEntryStarting(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntity_Writing)
+                .OnEntryEnding(PipelineEventsTestsHelper.ModifyPropertyValueCustomerEntry_Writing);
 
-                    Customer customer2 = PipelineEventsTestsHelper.CreateNewCustomer(301);
-                    contextWrapper.AddObject("Customer", customer2);
+            Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(300);
+            contextWrapper.AddObject("Customer", customer);
 
-                    Order order = PipelineEventsTestsHelper.CreateNewOrder(300);
-                    contextWrapper.AddRelatedObject(customer, "Orders", order);
+            Customer customer2 = PipelineEventsTestsHelper.CreateNewCustomer(301);
+            contextWrapper.AddObject("Customer", customer2);
 
-                    contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
+            Order order = PipelineEventsTestsHelper.CreateNewOrder(300);
+            contextWrapper.AddRelatedObject(customer, "Orders", order);
 
-                    if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-                    {
-                        Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"), "Unexpected primitive property");
-                        Assert.IsTrue(customer2.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"), "Unexpected primitive property");
-                    }
-                    else
-                    {
-                        Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-                        Assert.IsTrue(customer2.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-                    }
+            contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
 
-                    contextWrapper.DeleteObject(customer);
-                    contextWrapper.DeleteObject(customer2);
-                    contextWrapper.DeleteObject(order);
-                    contextWrapper.SaveChanges();
-                });
+            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
+            {
+                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"),
+                    "Unexpected primitive property");
+                Assert.IsTrue(
+                    customer2.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"),
+                    "Unexpected primitive property");
+            }
+            else
+            {
+                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
+                Assert.IsTrue(customer2.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
+            }
+
+            contextWrapper.DeleteObject(customer);
+            contextWrapper.DeleteObject(customer2);
+            contextWrapper.DeleteObject(order);
+            contextWrapper.SaveChanges();
         }
 
         /// <summary>
@@ -518,42 +541,42 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void AddObjectSetLinkTest()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    // These delegates are invoked when the client sends a single request for AddObject+SetLink
-                    contextWrapper.Configurations.RequestPipeline
-                        .OnNavigationLinkStarting(PipelineEventsTestsHelper.ModifyNavigationLink_WritingStart)
-                        .OnNavigationLinkEnding(PipelineEventsTestsHelper.ModifyNavigationLink_WritingEnd)
-                        .OnEntityReferenceLink(PipelineEventsTestsHelper.ModifyReferenceLink);
+            this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTest);
+        }
 
-                    Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(400);
-                    Customer customer2 = PipelineEventsTestsHelper.CreateNewCustomer(401);
-                    Customer customer3 = PipelineEventsTestsHelper.CreateNewCustomer(402);
-                    Customer customer4 = PipelineEventsTestsHelper.CreateNewCustomer(403);
-                    contextWrapper.AddObject("Customer", customer);
-                    contextWrapper.AddObject("Customer", customer2);
-                    contextWrapper.AddObject("Customer", customer3);
-                    contextWrapper.AddObject("Customer", customer4);
-                    contextWrapper.SaveChanges();
+        private static void AddObjectSetLinkTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            // These delegates are invoked when the client sends a single request for AddObject+SetLink
+            contextWrapper.Configurations.RequestPipeline
+                .OnNavigationLinkStarting(PipelineEventsTestsHelper.ModifyNavigationLink_WritingStart)
+                .OnNavigationLinkEnding(PipelineEventsTestsHelper.ModifyNavigationLink_WritingEnd)
+                .OnEntityReferenceLink(PipelineEventsTestsHelper.ModifyReferenceLink);
 
-                    Order order = PipelineEventsTestsHelper.CreateNewOrder(400);
-                    contextWrapper.AddObject("Order", order);
-                    contextWrapper.SetLink(order, "Customer", customer);
-                    contextWrapper.SaveChanges();
+            Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(400);
+            Customer customer2 = PipelineEventsTestsHelper.CreateNewCustomer(401);
+            Customer customer3 = PipelineEventsTestsHelper.CreateNewCustomer(402);
+            Customer customer4 = PipelineEventsTestsHelper.CreateNewCustomer(403);
+            contextWrapper.AddObject("Customer", customer);
+            contextWrapper.AddObject("Customer", customer2);
+            contextWrapper.AddObject("Customer", customer3);
+            contextWrapper.AddObject("Customer", customer4);
+            contextWrapper.SaveChanges();
 
-                    Assert.AreEqual(400, order.OrderId, "OrderId should not be altered in the pipeline delegates");
-                    Customer relatedCustomer = contextWrapper.Execute<Customer>(new Uri("Order(400)/Customer", UriKind.Relative)).Single();
-                    Assert.AreEqual(402, relatedCustomer.CustomerId, "Associated CustomerId should be altered in the pipeline delegates");
+            Order order = PipelineEventsTestsHelper.CreateNewOrder(400);
+            contextWrapper.AddObject("Order", order);
+            contextWrapper.SetLink(order, "Customer", customer);
+            contextWrapper.SaveChanges();
 
-                    contextWrapper.DeleteObject(customer);
-                    contextWrapper.DeleteObject(customer2);
-                    contextWrapper.DeleteObject(customer3);
-                    contextWrapper.DeleteObject(customer4);
-                    contextWrapper.DeleteObject(order);
-                    contextWrapper.SaveChanges();
-                });
+            Assert.AreEqual(400, order.OrderId, "OrderId should not be altered in the pipeline delegates");
+            Customer relatedCustomer = contextWrapper.Execute<Customer>(new Uri("Order(400)/Customer", UriKind.Relative)).Single();
+            Assert.AreEqual(402, relatedCustomer.CustomerId, "Associated CustomerId should be altered in the pipeline delegates");
+
+            contextWrapper.DeleteObject(customer);
+            contextWrapper.DeleteObject(customer2);
+            contextWrapper.DeleteObject(customer3);
+            contextWrapper.DeleteObject(customer4);
+            contextWrapper.DeleteObject(order);
+            contextWrapper.SaveChanges();
         }
 
         [TestMethod]
@@ -627,23 +650,23 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         [TestMethod]
         public void ExpandNullEntry()
         {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                {
-                    contextWrapper.Configurations.ResponsePipeline
-                        .OnEntryStarted(PipelineEventsTestsHelper.ModifyNullableEntryId_Reading)
-                        .OnEntryEnded(PipelineEventsTestsHelper.ModifyNullalbeEntryEditLink_ReadingEnd);
+            this.RunOnAtomAndJsonFormats(CreateContext, ExpandNullEntry);
+        }
 
-                    var entries = contextWrapper.CreateQuery<License>("License").Expand("Driver").Where(c => c.Name == "3").ToArray();
-                    Assert.IsTrue(entries.Count() == 1, "Wrong count");
-                    var license = entries[0];
-                    Assert.IsNull(license.Driver, "Driver is not null");
+        private static void ExpandNullEntry(DataServiceContextWrapper<DefaultContainer> contextWrapper)
+        {
+            contextWrapper.Configurations.ResponsePipeline
+                .OnEntryStarted(PipelineEventsTestsHelper.ModifyNullableEntryId_Reading)
+                .OnEntryEnded(PipelineEventsTestsHelper.ModifyNullalbeEntryEditLink_ReadingEnd);
 
-                    EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(license);
-                    Assert.IsTrue(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
-                    Assert.IsTrue(descriptor.EditLink.AbsoluteUri.Contains("ModifyEntryEditLink"), "Wrong EditLink");
-                });
+            var entries = contextWrapper.CreateQuery<License>("License").Expand("Driver").Where(c => c.Name == "3").ToArray();
+            Assert.IsTrue(entries.Count() == 1, "Wrong count");
+            var license = entries[0];
+            Assert.IsNull(license.Driver, "Driver is not null");
+
+            EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(license);
+            Assert.IsTrue(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
+            Assert.IsTrue(descriptor.EditLink.AbsoluteUri.Contains("ModifyEntryEditLink"), "Wrong EditLink");
         }
 
         private bool OnCustomerFeedStartedCalled = false;

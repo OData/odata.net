@@ -27,8 +27,7 @@ namespace Microsoft.Test.OData.Services.PublicProvider
             const string databaseName = "AstoriaDefaultServiceDB";
             const string resourceName = "Microsoft.Test.OData.Services.Astoria.PublicProvider.AstoriaDefaultServiceDB.bak";
             Log.Trace(string.Format("Ensure database {0} exists", databaseName));
-            string connstr = ConfigurationManager.ConnectionStrings["AstoriaDefaultServiceDBEntities"].ConnectionString;
-            var entityConnBuilder = new EntityConnectionStringBuilder(connstr);
+            var entityConnBuilder = new EntityConnectionStringBuilder(ConnectionString);
             var sqlConnBuilder = new SqlConnectionStringBuilder(entityConnBuilder.ProviderConnectionString)
                 {
                     InitialCatalog = "master"
@@ -86,5 +85,22 @@ namespace Microsoft.Test.OData.Services.PublicProvider
                 }
             }
         }
+
+        internal static string ConnectionString
+        {
+            get { return connectionString; }
+        }
+
+        private static string connectionString = GetConnectionString();
+
+        private static string GetConnectionString()
+        {
+            var connStr = ConfigurationManager.ConnectionStrings["AstoriaDefaultServiceDBEntities"].ConnectionString;
+#if VS2015
+            connStr = connStr.Replace(@".\SQLExpress", @"(LocalDB)\MSSQLLocalDB");
+#endif
+            return connStr;
+        }
+
     }
 }
