@@ -253,7 +253,7 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Convert a primitive value which didn't match any of the known values of the <see cref="TypeCode"/> enumeration.
+        /// Convert a primitive value which didn't match any of the known values of the TypeCode enumeration.
         /// </summary>
         /// <param name="primitiveValue">The value to convert.</param>
         /// <param name="type">The expected primitive type or null.</param>
