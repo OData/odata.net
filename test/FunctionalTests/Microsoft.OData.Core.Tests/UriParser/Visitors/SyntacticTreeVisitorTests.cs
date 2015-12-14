@@ -14,7 +14,8 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Visitors
 {
-    public class SyntacticTreeVisitorTests
+    [TestClass]
+    public class SyntacticTreeVisitorUnitTests
     {
         private class FakeVisitor : SyntacticTreeVisitor<string>
         {
@@ -139,6 +140,30 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken(1)));
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [TestMethod]
+        public void AggregateOperatorNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new List<AggregateStatementToken>()));
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [TestMethod]
+        public void AggregateStatementOperatorNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateStatementToken(new EndPathToken("Identifier", null), AggregationVerb.Sum, "Alias"));
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [TestMethod]
+        public void GroupByOperatorNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(new GroupByToken(new List<EndPathToken>(), null));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
     }

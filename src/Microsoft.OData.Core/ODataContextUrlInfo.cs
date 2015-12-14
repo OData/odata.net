@@ -16,6 +16,7 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
+    using Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -100,7 +101,19 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.odataUri != null ? CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand) : null;
+                if (this.odataUri != null)
+                {
+                    // TODO: Figure out how to deal with $select after $apply
+                    if (this.odataUri.Apply != null)
+                    {
+                        return CreateApplyUriSegment(this.odataUri.Apply);
+                    }
+                    else
+                    {
+                        return CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand);
+                    }
+                }
+                return null;
             }
         }
 
@@ -312,6 +325,30 @@ namespace Microsoft.OData.Core
 
             IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
             return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
+        }
+
+        private static string CreateApplyUriSegment(ApplyClause applyClause)
+        {
+            if (applyClause != null)
+            {
+                return CreatePropertiesUriSegment(applyClause.TypeReference.Definition);
+            }
+
+            return string.Empty;
+        }
+
+        private static string CreatePropertiesUriSegment(IEdmType edmType)
+        {
+            var structedType = edmType as IEdmStructuredType;
+            if (structedType != null)
+            {
+                string contextUri = string.Join(",", structedType.Properties().Select(prop => prop.Name + CreatePropertiesUriSegment(prop.Type.Definition)).ToArray());
+                return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         #region SelectAndExpand Convert

@@ -3,7 +3,6 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-
 namespace Microsoft.OData.Core.UriParser
 {
     #region namespaces
@@ -44,6 +43,11 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Search clause.</summary>
         private SearchClause searchClause;
+
+        /// <summary>
+        /// Apply clause for aggregate queries
+        /// </summary>
+        private ApplyClause applyClause;
         #endregion private fields
 
         #region constructor
@@ -122,6 +126,32 @@ namespace Microsoft.OData.Core.UriParser
 
             this.filterClause = ParseFilterImplementation(filterQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
             return this.filterClause;
+        }
+
+        /// <summary>
+        /// Parses a apply clause on the given full Uri, binding
+        /// the text into semantic nodes using the constructed mode.
+        /// </summary>
+        /// <returns>A <see cref="ApplyClause"/> representing the aggregation query.</returns>
+        public ApplyClause ParseApply()
+        {
+            if (this.applyClause != null)
+            {
+                return this.applyClause;
+            }
+
+            string applyQuery;
+
+            if (!queryOptions.TryGetValue(UriQueryConstants.ApplyQueryOption, out applyQuery)
+                || string.IsNullOrEmpty(applyQuery)
+                || this.targetEdmType == null)
+            {
+                return null;
+            }
+
+            this.applyClause = ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
+
+            return this.applyClause;
         }
 
         /// <summary>
@@ -262,7 +292,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="elementType">Type that the filter clause refers to.</param>
         /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
         /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        private static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        internal static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
@@ -279,6 +309,27 @@ namespace Microsoft.OData.Core.UriParser
             MetadataBinder binder = new MetadataBinder(state);
             FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
             FilterClause boundNode = filterBinder.BindFilter(filterToken);
+
+            return boundNode;
+        }
+
+        internal static ApplyClause ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
+            ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
+            ExceptionUtils.CheckArgumentNotNull(apply, "apply");
+
+            // Get the syntactic representation of the filter expression
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
+            var applyTokens = expressionParser.ParseApply(apply);
+
+            // Bind it to metadata
+            var state = new BindingState(configuration);
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            var binder = new MetadataBinder(state);
+            var applyBinder = new ApplyBinder(binder.Bind, state);
+            var boundNode = applyBinder.BindApply(applyTokens);
 
             return boundNode;
         }

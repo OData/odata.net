@@ -37,6 +37,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public static readonly SingleValueNode FakeSinglePrimitive =
             new ConstantNode("A_STRING");
 
+        public static readonly SingleValueNode FakeSingleIntPrimitive =
+            new ConstantNode(100);
+
         public static readonly SingleValueNode FakeSingleOpenProperty =
             new SingleValueOpenPropertyAccessNode(new ConstantNode(null), "A_OPENPROPERTY");
 
@@ -48,6 +51,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
 
         public static readonly SingleValuePropertyAccessNode FakeSingleValueProperty =
             new SingleValuePropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
+
+        public static readonly SingleValuePropertyAccessNode FakePersonDogNameNode =
+            new SingleValuePropertyAccessNode(
+                new SingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp(),FakePersonNode),HardCodedTestModel.GetAddressCityProperty());
+
 
         public static readonly CollectionPropertyAccessNode FakeCollectionValueProperty =
             new CollectionPropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
@@ -75,6 +83,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public static SingleValueNode BindMethodReturningASinglePrimitive(QueryToken token)
         {
             return FakeSinglePrimitive;
+        }
+
+        public static SingleValueNode BindMethodReturningASingleIntPrimitive(QueryToken token)
+        {
+            return FakeSingleIntPrimitive;
         }
 
         public static SingleValueNode BindMethodReturningASingleOpenProperty(QueryToken token)
@@ -105,6 +118,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public static SingleValuePropertyAccessNode BindSingleValueProperty(QueryToken queryToken)
         {
             return FakeSingleValueProperty;
+        }
+
+        public static SingleValuePropertyAccessNode BindMethodReturnsPersonDogNameNavigation(QueryToken queryToken)
+        {
+            return FakePersonDogNameNode;
         }
 
         public static CollectionPropertyAccessNode BindCollectionProperty(QueryToken queryToken)

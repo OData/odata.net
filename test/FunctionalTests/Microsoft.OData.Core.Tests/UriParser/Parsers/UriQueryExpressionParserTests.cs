@@ -89,6 +89,384 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geometr'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
             parse.ShouldThrow<ODataException>().Where(e => !e.Message.Contains("with reason"));
+        }   
+        
+        private static void VerifyAggregateStatementToken(string expectedEndPathIdentifier, AggregationVerb expectedVerb, string expectedAlias, AggregateStatementToken actual)
+        {
+            actual.Expression.Should().NotBeNull();
+
+            var expression = actual.Expression as EndPathToken;
+            expression.Should().NotBeNull();
+            expression.Identifier.Should().Be(expectedEndPathIdentifier);
+
+            actual.WithVerb.Should().Be(expectedVerb);
+            actual.AsAlias.Should().Be(expectedAlias);
+        }
+
+        [TestMethod]
+        public void ParseApplyWithEmptyStringShouldReturnEmptyCollection()
+        {
+            var actual = this.testSubject.ParseApply(string.Empty);
+            actual.Should().NotBeNull();
+            actual.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        public void ParseApplyWithInvalidTransformationIdentifierShouldThrow()
+        {
+            var apply = "invalid(UnitPrice with sum as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby",0,apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithTrailingNotSlashShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice with sum as TotalPrice),";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.ExpressionLexer_SyntaxError(apply.Length, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithSingleAggregateStatementShouldReturnAggregateToken()
+        {
+            var apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var aggregate = actual.First() as AggregateToken;
+            aggregate.Should().NotBeNull();
+            aggregate.Statements.Should().HaveCount(1);
+
+            VerifyAggregateStatementToken("UnitPrice", AggregationVerb.Sum, "TotalPrice", aggregate.Statements.First());
+        }
+
+        [TestMethod]
+        public void ParseApplyWithMultipleAggregateStatementsShouldReturnAggregateTokens()
+        {
+            var apply = "aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var aggregate = actual.First() as AggregateToken;
+            aggregate.Should().NotBeNull();
+            aggregate.Statements.Should().HaveCount(2);
+
+            var statements = aggregate.Statements.ToList();
+            
+            VerifyAggregateStatementToken("CustomerId", AggregationVerb.Sum, "Total", statements[0]);
+            VerifyAggregateStatementToken("SharePrice", AggregationVerb.CountDistinct, "SharePriceDistinctCount", statements[1]);        
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateMissingOpenParenShouldThrow()
+        {
+            var apply = "aggregate UnitPrice with sum as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(10, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateMissingCloseParenShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice with sum as TotalPrice";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateMissingStatementShouldThrow()
+        {
+            var apply = "aggregate()";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateAfterGroupByMissingStatementShouldThrow()
+        {
+            var apply = "groupby((UnitPrice))/aggregate()";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateStatementMissingWithShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice sum as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_WithExpected(20, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateStatementWithInvalidAggregateExpressionWithShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice mul with sum as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateStatementWithInvalidVerbShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice with invalid as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb("invalid",25, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateStatementMissingAsShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice with sum TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithAggregateStatementMissingAliasShouldThrow()
+        {
+            var apply = "aggregate(UnitPrice with sum as)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+        }
+
+        private static void VerifyGroupByTokenProperties(IEnumerable<string> expectedEndPathIdentifiers, GroupByToken actual)
+        {
+            actual.Should().NotBeNull();
+
+            if (expectedEndPathIdentifiers == null || !expectedEndPathIdentifiers.Any() )
+            {
+                actual.Properties.Should().HaveCount(0);
+            }
+            else
+            {                
+                actual.Properties.Should().HaveCount(expectedEndPathIdentifiers.Count());
+
+                var expectedIdentifierList = expectedEndPathIdentifiers.ToList();
+                var i = 0;
+                foreach (var actualProperty in actual.Properties)
+                {
+                    actualProperty.Should().NotBeNull();
+
+                    var endPathToken = actualProperty as EndPathToken;
+                    endPathToken.Should().NotBeNull();
+                    endPathToken.Identifier.Should().Be(expectedIdentifierList[i]);
+                    i++;
+                }
+            }
+        }
+
+
+        [TestMethod]
+        public void ParseApplyWithSingleGroupByPropertyShouldReturnGroupByToken()
+        {
+            var apply = "groupby((UnitPrice))";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var groupBy = actual.First() as GroupByToken;
+            groupBy.Should().NotBeNull();
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
+        }
+
+        [TestMethod]
+        public void ParseApplyWithMultipleGroupByPropertiesShouldReturnGroupByToken()
+        {
+            var apply = "groupby((UnitPrice, SharePrice, ReservedPrice))";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var groupBy = actual.First() as GroupByToken;
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice", "SharePrice", "ReservedPrice" }, groupBy);       
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByAndAggregateShouldReturnGroupByToken()
+        {
+            var apply = "groupby((UnitPrice), aggregate(SalesPrice with average as RetailPrice))";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var groupBy = actual.First() as GroupByToken;
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
+
+            groupBy.Child.Should().NotBeNull();
+
+            var aggregate = groupBy.Child as AggregateToken;                        
+            aggregate.Statements.Should().HaveCount(1);
+
+            VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", aggregate.Statements.First());      
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByMissingOpenParenShouldThrow()
+        {
+            var apply = "groupby (UnitPrice))";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(9, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByMissingCloseParenShouldThrow()
+        {
+            var apply = "groupby((UnitPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByAndAggregateMissingCloseParenShouldThrow()
+        {
+            var apply = "groupBy((UnitPrice), aggregate(UnitPrice with sum as TotalPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby", 0, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByMissingGroupingShouldThrow()
+        {
+            var apply = "groupby()";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByMissingGroupingParensShouldThrow()
+        {
+            var apply = "groupby(UnitPrice)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByWithEmptyGroupingShouldThrow()
+        {
+            var apply = "groupby(())";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithGroupByWithChildGroupShouldThrow()
+        {
+            var apply = "groupby((UnitPrice), groupby((UnitPrice)))";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate", 21, apply));
+        }
+
+
+        private static void VerifyBinaryOperatorToken<T>(string expectedEndPathIdentifier, BinaryOperatorKind expectedOperator, T expectedLiteralValue, BinaryOperatorToken actual)
+        {
+            actual.Should().NotBeNull();
+            actual.OperatorKind.Should().Be(expectedOperator);
+
+            var left = actual.Left as EndPathToken;
+            left.Should().NotBeNull();
+            left.Identifier.Should().Be(expectedEndPathIdentifier);
+
+            var right = actual.Right as LiteralToken;
+            right.Should().NotBeNull();
+            right.Value.Should().Be(expectedLiteralValue);
+        }
+
+        [TestMethod]
+        public void ParseApplyWithSingleFilterByShouldReturnFilterExpression()
+        {
+            var apply = "filter(UnitPrice eq 5)";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var filter = actual.First() as BinaryOperatorToken;
+            VerifyBinaryOperatorToken<int>("UnitPrice", BinaryOperatorKind.Equal, 5, filter);
+        }
+
+        [TestMethod]
+        public void ParseApplyWithFilterMissingOpenParenShouldThrow()
+        {
+            var apply = "filter UnitPrice eq 5)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(7, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithFilterMissingCloseParenShouldThrow()
+        {
+            var apply = "filter(UnitPrice eq 5";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(apply.Length, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithFilterMissingExpressionShouldThrow()
+        {
+            var apply = "filter()";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(7, apply));
+        }
+
+        [TestMethod]
+        public void ParseApplyWithFilterInvalidExpressionShouldThrow()
+        {
+            var apply = "filter(UnitPrice eq)";
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+        }
+
+
+        [TestMethod]
+        public void ParseApplyWithMultipleTransformationShouldReturnTransformations()
+        {
+            var apply = "groupby((UnitPrice), aggregate(SalesPrice with average as RetailPrice))/filter(UnitPrice eq 5)/aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(3);
+
+            var transformations = actual.ToList();
+
+            // verify groupby
+            var groupBy = transformations[0] as GroupByToken;
+            groupBy.Should().NotBeNull();
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
+
+            
+            groupBy.Properties.Should().HaveCount(1);
+            groupBy.Child.Should().NotBeNull();
+
+            var groupByAggregate = groupBy.Child as AggregateToken;
+            groupByAggregate.Statements.Should().HaveCount(1);
+            VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", groupByAggregate.Statements.First());      
+
+            // verify filter
+            var filter = transformations[1] as BinaryOperatorToken;
+
+            VerifyBinaryOperatorToken<int>("UnitPrice", BinaryOperatorKind.Equal, 5, filter);            
+
+            // verify aggregate         
+            var aggregate = transformations[2] as AggregateToken;
+            aggregate.Should().NotBeNull();
+            aggregate.Statements.Should().HaveCount(2);
+
+            var aggregateStatements = aggregate.Statements.ToList();            
+
+            VerifyAggregateStatementToken("CustomerId", AggregationVerb.Sum, "Total", aggregateStatements[0]);
+            VerifyAggregateStatementToken("SharePrice", AggregationVerb.CountDistinct, "SharePriceDistinctCount", aggregateStatements[1]);
         }
     }
 }

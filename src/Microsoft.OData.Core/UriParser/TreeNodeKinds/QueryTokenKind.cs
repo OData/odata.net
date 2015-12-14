@@ -114,5 +114,25 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// the string literal for search query
         /// </summary>
         StringLiteral = 23,
+
+        /// <summary>
+        /// $apply aggregate token
+        /// </summary>
+        Aggregate = 24,
+
+        /// <summary>
+        /// $apply aggregate statement token
+        /// </summary>
+        AggregateStatement = 25,
+
+        /// <summary>
+        /// $apply groupby token
+        /// </summary>
+        GroupBy = 26,
+
+        /// <summary>
+        /// $apply filter or $filter token
+        /// </summary>
+        Filter = 27
     }
 }

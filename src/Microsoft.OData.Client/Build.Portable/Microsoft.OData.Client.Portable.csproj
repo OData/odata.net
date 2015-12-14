@@ -121,6 +121,18 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ExpandToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\ExpandToken.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\AggregateStatementToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\AggregateStatementToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\AggregateToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\AggregateToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ApplyTransformationToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\ApplyTransformationToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\GroupByToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\GroupByToken.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionCallToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\FunctionCallToken.cs</Link>
     </Compile>
