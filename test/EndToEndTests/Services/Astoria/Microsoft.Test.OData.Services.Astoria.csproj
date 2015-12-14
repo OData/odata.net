@@ -9,7 +9,6 @@
     <RootNamespace>Microsoft.Test.OData.Services.Astoria</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.Astoria</AssemblyName>
     <DefineConstants>$(DefineConstants);TEST_ODATA_SERVICES_ASTORIA</DefineConstants>
-    <DefineConstants Condition="'$(VisualStudioVersion)' == '14.0'">$(DefineConstants);VS2015</DefineConstants>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -20,6 +19,9 @@
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

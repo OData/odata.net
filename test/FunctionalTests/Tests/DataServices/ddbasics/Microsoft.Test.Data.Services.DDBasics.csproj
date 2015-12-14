@@ -12,9 +12,11 @@
     <WarningLevel>4</WarningLevel>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <OutputType>Library</OutputType>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="$(NuGetPack)\Microsoft.TextTemplating.CBT.10.1.0.1\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" Condition="'$(BuildInOSS)' != 'true'" />

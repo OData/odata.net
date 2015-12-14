@@ -10,7 +10,6 @@
     <AssemblyName>Astoria.EFFKModel</AssemblyName>
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>AstoriaUnitTests.EFFK</RootNamespace>
@@ -18,6 +17,9 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -36,7 +36,7 @@ else
 $Build = 'build'
 if ($args -contains 'rebuild')
 {
-	$Build = 'rebuild'
+    $Build = 'rebuild'
 }
 
 $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
