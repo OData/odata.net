@@ -4611,6 +4611,41 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "'as' expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_AsExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_AsExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "'as' expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_WithExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_WithExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Unrecognized with '{0}' at '{1}' in '{2}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_UnrecognizedWithVerb(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_UnrecognizedWithVerb, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "Expression expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_PropertyPathExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_PropertyPathExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "'{0}' expected at position {1} in '{2}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_KeywordOrIdentifierExpected(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_KeywordOrIdentifierExpected, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The URI '{0}' is not valid because it is not based on '{1}'."
         /// </summary>
         internal static string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(object p0, object p1) {
@@ -4891,6 +4926,48 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string MetadataBinder_QueryOptionNotApplicable(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.MetadataBinder_QueryOptionNotApplicable, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate expression '{0}' operation does not support value type '{1}'."
+        /// </summary>
+        internal static string ApplyBinder_AggregateStatementIncompatibleTypeForVerb(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_AggregateStatementIncompatibleTypeForVerb, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate does not support verb '{0}'."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedAggregateVerb(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedAggregateVerb, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate expression '{0}' must evaluate to a single value."
+        /// </summary>
+        internal static string ApplyBinder_AggregateStatementNotSingleValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_AggregateStatementNotSingleValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/groupby grouping expression '{0}' must evaluate to a property access value."
+        /// </summary>
+        internal static string ApplyBinder_GroupByPropertyNotPropertyAccessValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_GroupByPropertyNotPropertyAccessValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply clause does not support type '{0}'."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedType(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedType, p0);
+        }
+
+        /// <summary>
+        /// A string like "$applg/groupby not support '{0}' as child transformation"
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedGroupByChild(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedGroupByChild, p0);
         }
 
         /// <summary>

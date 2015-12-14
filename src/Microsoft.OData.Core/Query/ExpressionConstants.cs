@@ -135,7 +135,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>'geography' constant prefixed to geography literals.</summary>
         internal const string LiteralPrefixGeography = "geography";
 
-
         /// <summary>'binary' constant prefixed to binary literals.</summary>
         internal const string LiteralPrefixBinary = "binary";
 
@@ -195,5 +194,35 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>"all" keyword for expressions.</summary>
         internal const string KeywordAll = "all";
+
+        /// <summary>the apply query option
+        internal const string QueryOptionApply = "$apply";
+
+        /// <summary>"aggregate" keyword for $apply.</summary>
+        internal const string KeywordAggregate = "aggregate";
+
+        /// <summary>"filter" keyword for $apply.</summary>
+        internal const string KeywordFilter= "filter";
+
+        /// <summary>"groupby" keyword for $apply.</summary>
+        internal const string KeywordGroupBy = "groupby";
+
+        /// <summary>"sum" keyword for expressions.</summary>
+        internal const string KeywordSum = "sum";
+
+        /// <summary>"min" keyword for expressions.</summary>
+        internal const string KeywordMin = "min";
+        
+        /// <summary>"average" keyword for expressions.</summary>
+        internal const string KeywordAverage = "average";
+
+        /// <summary>"countdistinct" keyword for expressions.</summary>
+        internal const string KeywordCountDistinct = "countdistinct";
+
+        /// <summary>"as" keyword for alias expressions.</summary>
+        internal const string KeywordAs = "as";
+
+        /// <summary>"with" keyword for aggregate verb expressions.</summary>
+        internal const string KeywordWith = "with";
     }
 }

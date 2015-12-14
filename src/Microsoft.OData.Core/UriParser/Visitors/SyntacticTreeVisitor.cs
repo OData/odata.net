@@ -96,6 +96,36 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Visits an AggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateToken to visit</param>
+        /// <returns>A T bound to this AggregateToken</returns>
+        public virtual T Visit(AggregateToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a GroupByToken
+        /// </summary>
+        /// <param name="tokenIn">The GroupByToken to visit</param>
+        /// <returns>A T bound to this GroupByToken</returns>
+        public virtual T Visit(GroupByToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits an AggregateStatementToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateStatementToken to visit</param>
+        /// <returns>A T bound to this AggregateStatementToken</returns>
+        public virtual T Visit(AggregateStatementToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visits a LambdaToken
         /// </summary>
         /// <param name="tokenIn">The LambdaToken to visit</param>

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.User.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.User.Tests\Microsoft.Test.OData.User.Tests.csproj", "{C4FE2DC2-AB0A-4B32-8E38-4535E6F1585F}"
 EndProject
