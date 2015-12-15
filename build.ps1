@@ -46,16 +46,16 @@ $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 
 # Default to use Visual Studio 2013.
 $MSBUILD = $PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$MSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe"
+$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
 $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Team Tools\Static Analysis Tools\FxCop"
 $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
 # Fall back to Visual Studio 2015.
-if (!(Test-Path $MSBUILD) -or !(Test-Path $MSTEST) -or !(Test-Path $FXCOPDIR))
+if (!(Test-Path $MSBUILD) -or !(Test-Path $VSTEST) -or !(Test-Path $FXCOPDIR))
 {
     $MSBUILD = $PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
-    $MSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe"
+    $VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
     $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
 }
 
@@ -65,6 +65,7 @@ $TESTLOG = $LOGDIR + "\mstest.log"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
+$XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -76,15 +77,15 @@ $TestDlls = "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.OData.Service.dll",
     "Microsoft.OData.Service.Test.Common.dll"
 
-$RollingTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
+$RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll",
+    "Microsoft.OData.Client.Tests.dll",
+    "Microsoft.Test.Data.Services.DDBasics.dll",
     "Microsoft.OData.Client.Design.T4.UnitTests.dll",
     "AstoriaUnitTests.TDDUnitTests.dll",
     "EdmLibTests.dll",
     "Microsoft.OData.Client.TDDUnitTests.dll",
-    "Microsoft.Spatial.TDDUnitTests.dll",
-    "Microsoft.Test.Edm.TDD.Tests.dll",
-    "Microsoft.Test.OData.TDD.Tests.dll",
-    "Microsoft.Test.OData.Query.TDD.Tests.dll",
     "Microsoft.Test.Taupo.OData.Common.Tests.dll",
     "Microsoft.Test.Taupo.OData.Query.Tests.dll",
     "Microsoft.Test.Taupo.OData.Reader.Tests.dll",
@@ -100,18 +101,17 @@ $RollingTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
 $RollingTestSuite = @()
 ForEach($dll in $RollingTestDlls)
 {
-    $RollingTestSuite += "/testcontainer:" + $dll
+    $RollingTestSuite += $TESTDIR + "\" + $dll
 }
 
 $AdditionalNightlyTestDlls = "Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
     "AstoriaUnitTests.dll",
     "AstoriaClientUnitTests.dll",
-    "Microsoft.Test.OData.User.Tests.dll",
     "TestCategoryAttributeCheck.dll"
 
 ForEach($dll in $AdditionalNightlyTestDlls)
 {
-    $AdditionalNightlyTestSuite += "/testcontainer:" + $dll
+    $AdditionalNightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $NightlyTestSuite = $RollingTestSuite
@@ -125,7 +125,7 @@ $E2eTestSuite = @()
 
 ForEach ($dll in $E2eTestDlls)
 {
-    $E2eTestSuite += "/testcontainer:" + $dll
+    $E2eTestSuite += $TESTDIR + "\" + $dll
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
@@ -234,8 +234,8 @@ Function CleanBeforeScorch
     Write-Host 'Stopping TaupoConsoleRunner as it should no longer be running'
     taskkill /F /IM "TaupoConsoleRunner.exe" 1>$null 2>$null
 
-    Write-Host 'Stopping MSTest as it should no longer be running'
-    taskkill /F /IM "MsTest.exe" 1>$null 2>$null
+    Write-Host 'Stopping VSTest as it should no longer be running'
+    taskkill /F /IM "vstest.console.exe" 1>$null 2>$null
 
     Write-Host 'Stopping MSbuild as it should no longer be running'
     taskkill /F /IM "MSbuild.exe" 1>$null 2>$null
@@ -289,7 +289,7 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
     Write-Output "@echo off" | Out-File -Encoding ascii $reruncmd
     Write-Output "cd $TESTDIR" | Out-File -Append -Encoding ascii $reruncmd
-    $rerun = "`"$MSTEST`""
+    $rerun = "`"$VSTEST`""
     if ($TestType -eq 'Nightly')
     {
         foreach ($dll in $NightlyTestSuite) 
@@ -304,29 +304,38 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
             $rerun += " $dll" 
         }
     }
+    if ($failedtest1.count -gt 0)
+    {
+        $rerun += " /Tests:"
+    }
     foreach($case in $failedtest1)
     {
         $name = $case.split('.')[-1]
-        $rerun += " /test:$name"
+        $rerun += $name + ","
         $output = "<Add Test=`"" + $case + "`" />"
         Write-Output $output  | Out-File -Append $playlist
     } 
     # build the command only if failed tests exist
     if ($failedtest1.count -gt 0)
     {
+        $rerun += " " + $XUNITADAPTER
         Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append `
             -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
-    $rerun = "`"$MSTEST`""
+    $rerun = "`"$VSTEST`""
     foreach ($dll in $E2eTestSuite)
     {
         $rerun += " $dll" 
-    }    
+    }
+    if ($failedtest2.count -gt 0)
+    {
+        $rerun += " /Tests:"
+    }
     foreach($case in $failedtest2)
     {
         $name = $case.split('.')[-1]
-        $rerun += " /test:$name"
+        $rerun += $name + ","
         $output = "<Add Test=`"" + $case + "`" />"
         Write-Output $output  | Out-File -Append $playlist
     }
@@ -421,7 +430,7 @@ Function TestSummary
 Function RunTest($title, $testdir)
 {
     Write-Host "**********Running $title***********"
-    & $MSTEST $testdir >> $TESTLOG
+    & $VSTEST $testdir $XUNITADAPTER >> $TESTLOG
     if($LASTEXITCODE -ne 0)
     {
         Write-Host "Run $title FAILED" -ForegroundColor $Err
@@ -436,6 +445,7 @@ Function BuildProcess
     {
         rm $BUILDLOG
     }
+    RunBuild ('Microsoft.OData.Lite.sln')
     RunBuild ('Microsoft.OData.Full.sln')
     RunBuild ('Microsoft.OData.Net35.sln')
     RunBuild ('Microsoft.OData.Net45.sln')

@@ -64,7 +64,7 @@ Here is the usage of each solution file:
 
 ### Testing
 
-Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within Microsoft.OData.Full.sln and Microsoft.OData.E2E.sln, you will need to have *SQL Express installed* and you must open the solution as *Administrator*. Visual Studio must be running administratively to have the permission to start the test services in IIS Express.  You must have SQL Express installed because a test Entity Framework database is needed and it will be automatically initialized if it doesn't exist.
+Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within Microsoft.OData.Full.sln and Microsoft.OData.E2E.sln, you need to open the solution as *Administrator* so that the test services can be started properly. You must have either SQL Express 2008+ (in the case of VS2013) or LocalDB v12.0+ (in the case of VS2015) installed because a test database is needed and it will be automatically initialized by the test code if it doesn't exist.
 
 #### One-click build and test script
 
@@ -72,8 +72,13 @@ In an elevated command prompt "Run as administrator", cd to the root folder:
 ```
 build.cmd
 ```
-The build and test will take about 20 minutes.
+The build and test will take about 15 minutes. Here are some other usages:
 
+ - `build.cmd Nightly`. Build and run all nightly test suites.
+ - `build.cmd Rolling`. Build and run all rolling test suites (with less legacy tests thus faster).
+ - `build.cmd SkipStrongName`. Configure strong name skip of OData libraries on your machine and build (no test run).
+ - `build.cmd DisableSkipStrongName`. Disable strong name skip of OData libraries on your machine and build (no test run).
+ 
 ### Nightly Builds
 
 We keep uploading the daily nightly signed NuGet packages for ODataLib/EdmLib/ClientLib/SpatialLib to our MyGet feed: https://www.myget.org/F/odlnightly.

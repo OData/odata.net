@@ -37,3 +37,12 @@ Your pull request should:
  - Have clear commit messages
  - Include a link to the issue created at the issue tracker or its issue number
  - Include adequate tests
+
+###Test specification
+Now we have introduced the modern xUnit test projects for OData.NET (in `Microsoft.OData.Lite.sln`). **We strongly recommend you to write all new tests with xUnit. And it would be very kind of you to help migrate some existing MSTest cases when you modify them.** Those xUnit projects all adopt the same new intuitive structure that helps contributors to find the corresponding tests for the given product code very easily. Here are some rules to follow when you are organizing the test code:
+
+ - **Project name correspondence** (`X -> X.Tests`). For instance, all the test code of the `Microsoft.OData.Edm` project should be placed in the `Microsoft.OData.Edm.Tests` project.
+ - Path and file name correspondence. (`X/Y/Z/A.cs -> X.Tests/Y/Z/ATests.cs`). For example, the test code of the `CsdlSemanticsEntityContainer` class (in the `Microsoft.OData.Edm/Csdl/Semantics/CsdlSemanticsEntityContainer.cs` file) should be placed in the `Microsoft.OData.Edm.Tests/Csdl/Semantics/CsdlSemanticsEntityContainerTests.cs` file.
+ - **Namespace correspondence** (`X.Tests/Y/Z -> X.Tests.Y.Z`). The namespace of the file should strictly follow the path. For example, the namespace of the `CsdlSemanticsEntityContainerTests.cs` file should be `Microsoft.OData.Edm.Tests.Csdl.Semantics`.
+ - **Utility classes**. The file for a utility class can be placed at the same level of its user or a shared level that is visible to all its users. But the file name must **NOT** be ended with `Tests` to avoid any confusion. For example, `Microsoft.OData.Core.Tests/UriParser/TokenAssertions.cs` is a utility class used by several test classes under the folder `Microsoft.OData.Core.Tests/UriParser`.
+ - **Integration and scenario tests**. Those tests usually involve multiple modules and have some specific scenarios. They should be placed separately in `X.Tests/IntegrationTests` and `X.Tests/ScenarioTests`. There is no hard requirement of the folder structure for those tests. But they should be organized logically and systematically as possible. Please see `Microsoft.OData.Core.Tests/ScenarioTests` for reference.
