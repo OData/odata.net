@@ -6,6 +6,7 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
 using Xunit;
@@ -18,7 +19,9 @@ namespace Microsoft.OData.Core.Tests
         private static readonly ODataFeedAndEntryTypeContext TypeContextWithModel;
         private static readonly ODataFeedAndEntryTypeContext BaseTypeContextThatThrows;
         private static readonly ODataFeedAndEntryTypeContext BaseTypeContextThatWillNotThrow;
+        private static readonly ODataFeedAndEntryTypeContext TypeContextWithEdmUnknowEntitySet;
         private static readonly ODataFeedAndEntrySerializationInfo SerializationInfo;
+        private static readonly ODataFeedAndEntrySerializationInfo SerializationInfoWithEdmUnknowEntitySet;
         private static readonly EdmEntitySet EntitySet;
         private static readonly EdmEntityType EntitySetElementType;
         private static readonly EdmEntityType ExpectedEntityType;
@@ -42,9 +45,11 @@ namespace Microsoft.OData.Core.Tests
             Model.AddElement(ActualEntityType);
             defaultContainer.AddElement(EntitySet);
 
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo {NavigationSourceName = "MyCustomers", NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer"};
+            SerializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "MyCustomers", NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer" };
+            SerializationInfoWithEdmUnknowEntitySet = new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = null, NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer", NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet };
             TypeContextWithoutModel = ODataFeedAndEntryTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
             TypeContextWithModel = ODataFeedAndEntryTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
+            TypeContextWithEdmUnknowEntitySet = ODataFeedAndEntryTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
             BaseTypeContextThatThrows = ODataFeedAndEntryTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
             BaseTypeContextThatWillNotThrow = ODataFeedAndEntryTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: false);
         }
@@ -223,5 +228,37 @@ namespace Microsoft.OData.Core.Tests
             BaseTypeContextThatWillNotThrow.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
         }
         #endregion BaseTypeContextThatWillNotThrow
+
+        #region TypeContextWithEdmUnknowEntitySet
+        [Fact]
+        public void TypeContextWithEdmUnknowEntitySetShouldReturnNullEntitySetName()
+        {
+            TypeContextWithEdmUnknowEntitySet.NavigationSourceName.Should().Be(null);
+        }
+
+        [Fact]
+        public void TypeContextWithEdmUnknowEntitySetShouldReturnEntitySetElementTypeName()
+        {
+            TypeContextWithEdmUnknowEntitySet.NavigationSourceEntityTypeName.Should().Be("ns.MyCustomer");
+        }
+
+        [Fact]
+        public void TypeContextWithEdmUnknowEntitySetShouldReturnExpectedEntityTypeName()
+        {
+            TypeContextWithEdmUnknowEntitySet.ExpectedEntityTypeName.Should().Be("ns.MyVipCustomer");
+        }
+
+        [Fact]
+        public void TypeContextWithEdmUnknowEntitySetShouldReturnFalseForIsMediaLinkEntry()
+        {
+            TypeContextWithEdmUnknowEntitySet.IsMediaLinkEntry.Should().BeFalse();
+        }
+
+        [Fact]
+        public void TypeContextWithEdmUnknowEntitySetShouldReturnDefaultUrlConvention()
+        {
+            TypeContextWithEdmUnknowEntitySet.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
+        }
+        #endregion TypeContextWithEdmUnknowEntitySet
     }
 }

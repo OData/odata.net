@@ -6,6 +6,7 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests
@@ -28,17 +29,17 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
-        public void SettingNullEntitySetNameShouldThrow()
+        public void SettingNullEntitySetNameShouldNotThrow()
         {
-            Action action = () => this.testSubject.NavigationSourceName = null;
-            action.ShouldThrow<ArgumentNullException>().WithMessage("NavigationSourceName", ComparisonMode.Substring);
+            this.testSubject.NavigationSourceName = null;
+            this.testSubject.NavigationSourceName.Should().Be(null);
         }
 
         [Fact]
-        public void SettingEmptyEntitySetNameShouldThrow()
+        public void SettingEmptyEntitySetNameShouldNotThrow()
         {
-            Action action = () => this.testSubject.NavigationSourceName = "";
-            action.ShouldThrow<ArgumentNullException>().WithMessage("NavigationSourceName", ComparisonMode.Substring);
+            this.testSubject.NavigationSourceName = string.Empty;
+            this.testSubject.NavigationSourceName.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -120,7 +121,20 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ValidatingSerializationInfoShouldAllowExpectedTypeNameNotSet()
         {
-            ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "EntitySetElementTypeName"}).Should().NotBeNull();
+            ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "EntitySetElementTypeName" }).Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ValdatingSerializationInfoShouldAllowIfEntitySetNameNotSetWithEdmUnknownEntitySet()
+        {
+            ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo()
+            {
+                ExpectedTypeName = "NS.Type",
+                IsFromCollection = true,
+                NavigationSourceEntityTypeName = "NS.Type",
+                NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet,
+                NavigationSourceName = null
+            });
         }
     }
 }
