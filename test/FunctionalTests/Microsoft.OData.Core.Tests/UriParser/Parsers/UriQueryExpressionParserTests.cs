@@ -5,8 +5,13 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OData.Core.UriParser.Extensions;
+using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
 using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Core.Strings;
@@ -103,7 +108,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             actual.AsAlias.Should().Be(expectedAlias);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithEmptyStringShouldReturnEmptyCollection()
         {
             var actual = this.testSubject.ParseApply(string.Empty);
@@ -111,7 +116,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             actual.Should().BeEmpty();
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithInvalidTransformationIdentifierShouldThrow()
         {
             var apply = "invalid(UnitPrice with sum as TotalPrice)";
@@ -119,7 +124,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby",0,apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithTrailingNotSlashShouldThrow()
         {
             var apply = "aggregate(UnitPrice with sum as TotalPrice),";
@@ -127,7 +132,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.ExpressionLexer_SyntaxError(apply.Length, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithSingleAggregateStatementShouldReturnAggregateToken()
         {
             var apply = "aggregate(UnitPrice with sum as TotalPrice)";
@@ -143,7 +148,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             VerifyAggregateStatementToken("UnitPrice", AggregationVerb.Sum, "TotalPrice", aggregate.Statements.First());
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithMultipleAggregateStatementsShouldReturnAggregateTokens()
         {
             var apply = "aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";
@@ -162,7 +167,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             VerifyAggregateStatementToken("SharePrice", AggregationVerb.CountDistinct, "SharePriceDistinctCount", statements[1]);        
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateMissingOpenParenShouldThrow()
         {
             var apply = "aggregate UnitPrice with sum as TotalPrice)";
@@ -170,7 +175,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(10, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateMissingCloseParenShouldThrow()
         {
             var apply = "aggregate(UnitPrice with sum as TotalPrice";
@@ -178,7 +183,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateMissingStatementShouldThrow()
         {
             var apply = "aggregate()";
@@ -186,7 +191,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateAfterGroupByMissingStatementShouldThrow()
         {
             var apply = "groupby((UnitPrice))/aggregate()";
@@ -194,7 +199,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateStatementMissingWithShouldThrow()
         {
             var apply = "aggregate(UnitPrice sum as TotalPrice)";
@@ -202,7 +207,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_WithExpected(20, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateStatementWithInvalidAggregateExpressionWithShouldThrow()
         {
             var apply = "aggregate(UnitPrice mul with sum as TotalPrice)";
@@ -210,7 +215,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateStatementWithInvalidVerbShouldThrow()
         {
             var apply = "aggregate(UnitPrice with invalid as TotalPrice)";
@@ -218,7 +223,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb("invalid",25, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateStatementMissingAsShouldThrow()
         {
             var apply = "aggregate(UnitPrice with sum TotalPrice)";
@@ -226,7 +231,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithAggregateStatementMissingAliasShouldThrow()
         {
             var apply = "aggregate(UnitPrice with sum as)";
@@ -261,7 +266,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithSingleGroupByPropertyShouldReturnGroupByToken()
         {
             var apply = "groupby((UnitPrice))";
@@ -276,7 +281,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithMultipleGroupByPropertiesShouldReturnGroupByToken()
         {
             var apply = "groupby((UnitPrice, SharePrice, ReservedPrice))";
@@ -290,7 +295,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             VerifyGroupByTokenProperties(new string[] { "UnitPrice", "SharePrice", "ReservedPrice" }, groupBy);       
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByAndAggregateShouldReturnGroupByToken()
         {
             var apply = "groupby((UnitPrice), aggregate(SalesPrice with average as RetailPrice))";
@@ -311,7 +316,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", aggregate.Statements.First());      
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByMissingOpenParenShouldThrow()
         {
             var apply = "groupby (UnitPrice))";
@@ -319,7 +324,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(9, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByMissingCloseParenShouldThrow()
         {
             var apply = "groupby((UnitPrice)";
@@ -327,7 +332,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByAndAggregateMissingCloseParenShouldThrow()
         {
             var apply = "groupBy((UnitPrice), aggregate(UnitPrice with sum as TotalPrice)";
@@ -335,7 +340,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby", 0, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByMissingGroupingShouldThrow()
         {
             var apply = "groupby()";
@@ -343,7 +348,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByMissingGroupingParensShouldThrow()
         {
             var apply = "groupby(UnitPrice)";
@@ -351,7 +356,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByWithEmptyGroupingShouldThrow()
         {
             var apply = "groupby(())";
@@ -359,7 +364,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithGroupByWithChildGroupShouldThrow()
         {
             var apply = "groupby((UnitPrice), groupby((UnitPrice)))";
@@ -382,7 +387,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             right.Value.Should().Be(expectedLiteralValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithSingleFilterByShouldReturnFilterExpression()
         {
             var apply = "filter(UnitPrice eq 5)";
@@ -395,7 +400,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             VerifyBinaryOperatorToken<int>("UnitPrice", BinaryOperatorKind.Equal, 5, filter);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithFilterMissingOpenParenShouldThrow()
         {
             var apply = "filter UnitPrice eq 5)";
@@ -403,7 +408,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_OpenParenExpected(7, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithFilterMissingCloseParenShouldThrow()
         {
             var apply = "filter(UnitPrice eq 5";
@@ -411,7 +416,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(apply.Length, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithFilterMissingExpressionShouldThrow()
         {
             var apply = "filter()";
@@ -419,7 +424,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_ExpressionExpected(7, apply));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithFilterInvalidExpressionShouldThrow()
         {
             var apply = "filter(UnitPrice eq)";
@@ -428,7 +433,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
 
-        [TestMethod]
+        [Fact]
         public void ParseApplyWithMultipleTransformationShouldReturnTransformations()
         {
             var apply = "groupby((UnitPrice), aggregate(SalesPrice with average as RetailPrice))/filter(UnitPrice eq 5)/aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";

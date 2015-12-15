@@ -14,9 +14,9 @@ namespace Microsoft.OData.Core
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
-    using Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -331,24 +331,10 @@ namespace Microsoft.OData.Core
         {
             if (applyClause != null)
             {
-                return CreatePropertiesUriSegment(applyClause.TypeReference.Definition);
+                return applyClause.GetContextUri();
             }
 
             return string.Empty;
-        }
-
-        private static string CreatePropertiesUriSegment(IEdmType edmType)
-        {
-            var structedType = edmType as IEdmStructuredType;
-            if (structedType != null)
-            {
-                string contextUri = string.Join(",", structedType.Properties().Select(prop => prop.Name + CreatePropertiesUriSegment(prop.Type.Definition)).ToArray());
-                return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
-            }
-            else
-            {
-                return string.Empty;
-            }
         }
 
         #region SelectAndExpand Convert

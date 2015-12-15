@@ -1496,16 +1496,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
       <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
     </Compile>
-
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmDynamicType.cs" >
-       <Link>Microsoft\OData\Edm\Interfaces\IEdmDynamicType.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmDynamicComplexType.cs" >
-       <Link>Microsoft\OData\Edm\Library\EdmDynamicComplexType.cs</Link>
-    </Compile>    
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmDynamicEntityType.cs" >
-       <Link>Microsoft\OData\Edm\Library\EdmDynamicEntityType.cs</Link>
-    </Compile>    
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(AssemblyKeysCSharpFilePath)">

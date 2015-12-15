@@ -5,8 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Core.UriParser.Extensions;
+using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
 using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Core.UriParser.Visitors;
@@ -14,8 +17,7 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Visitors
 {
-    [TestClass]
-    public class SyntacticTreeVisitorUnitTests
+    public class SyntacticTreeVisitorTests
     {
         private class FakeVisitor : SyntacticTreeVisitor<string>
         {
@@ -143,7 +145,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void AggregateOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
@@ -151,7 +153,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void AggregateStatementOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
@@ -159,7 +161,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void GroupByOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();

@@ -128,11 +128,6 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>
         /// $apply groupby token
         /// </summary>
-        GroupBy = 26,
-
-        /// <summary>
-        /// $apply filter or $filter token
-        /// </summary>
-        Filter = 27
+        AggregateGroupBy = 26
     }
 }

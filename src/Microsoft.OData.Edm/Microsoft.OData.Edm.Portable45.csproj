@@ -46,9 +46,6 @@
     <Compile Include="Interfaces\Expressions\IEdmEnumMemberExpression.cs" />
     <Compile Include="Library\Expressions\EdmEnumMemberExpression.cs" />
     <Compile Include="Library\TimeOfDay.cs" />
-    <Compile Include="Interfaces\IEdmDynamicType.cs" />
-    <Compile Include="Library\EdmDynamicComplexType.cs" />
-    <Compile Include="Library\EdmDynamicEntityType.cs" />
     <Compile Include="PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />
     <Compile Include="Csdl\CsdlLocation.cs" />
     <Compile Include="Csdl\EdmParseException.cs" />

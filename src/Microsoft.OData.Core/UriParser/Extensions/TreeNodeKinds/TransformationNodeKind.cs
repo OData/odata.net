@@ -4,11 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds
 {
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary>
     /// Enumeration of kinds of transformation nodes.
     /// </summary>

@@ -3,6 +3,7 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
+
 namespace Microsoft.OData.Core.UriParser
 {
     #region namespaces
@@ -10,6 +11,8 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Extensions.Parsers;
+    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Semantic;
@@ -45,7 +48,7 @@ namespace Microsoft.OData.Core.UriParser
         private SearchClause searchClause;
 
         /// <summary>
-        /// Apply clause for aggregate queries
+        /// Apply clause for aggregation queries
         /// </summary>
         private ApplyClause applyClause;
         #endregion private fields
@@ -142,7 +145,7 @@ namespace Microsoft.OData.Core.UriParser
 
             string applyQuery;
 
-            if (!queryOptions.TryGetValue(UriQueryConstants.ApplyQueryOption, out applyQuery)
+            if (!this.TryGetQueryOption(UriQueryConstants.ApplyQueryOption, out applyQuery)
                 || string.IsNullOrEmpty(applyQuery)
                 || this.targetEdmType == null)
             {
@@ -150,7 +153,6 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             this.applyClause = ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
-
             return this.applyClause;
         }
 
@@ -292,7 +294,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="elementType">Type that the filter clause refers to.</param>
         /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
         /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        internal static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        private static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
@@ -313,23 +315,32 @@ namespace Microsoft.OData.Core.UriParser
             return boundNode;
         }
 
-        internal static ApplyClause ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        /// <summary>
+        /// Parses an <paramref name="apply"/> clause on the given <paramref name="elementType"/>, binding
+        /// the text into a metadata-bound or dynamic properties to be applied using the provided model.
+        /// </summary>
+        /// <param name="apply">String representation of the apply expression.</param>
+        /// <param name="configuration">The configuration used for binding.</param>
+        /// <param name="elementType">Type that the apply clause refers to.</param>
+        /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
+        /// <returns>A <see cref="ApplyClause"/> representing the metadata bound apply expression.</returns>
+        private static ApplyClause ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
             ExceptionUtils.CheckArgumentNotNull(apply, "apply");
 
-            // Get the syntactic representation of the filter expression
+            // Get the syntactic representation of the apply expression
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
             var applyTokens = expressionParser.ParseApply(apply);
 
             // Bind it to metadata
-            var state = new BindingState(configuration);
+            BindingState state = new BindingState(configuration);
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
             state.RangeVariables.Push(state.ImplicitRangeVariable);
-            var binder = new MetadataBinder(state);
-            var applyBinder = new ApplyBinder(binder.Bind, state);
-            var boundNode = applyBinder.BindApply(applyTokens);
+            MetadataBinder binder = new MetadataBinder(state);
+            ApplyBinder applyBinder = new ApplyBinder(binder.Bind, state);
+            ApplyClause boundNode = applyBinder.BindApply(applyTokens);
 
             return boundNode;
         }

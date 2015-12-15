@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.Core.UriParser.Visitors
 #endif
 {
+    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
 
@@ -146,10 +147,10 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         T Visit(FunctionParameterToken tokenIn);
 
         /// <summary>
-        /// Visits a AggregateStatementToken
+        /// Visits a AggregateToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateStatementToken to bind</param>
-        /// <returns>A T node bound to this AggregateStatementToken</returns>
+        /// <param name="tokenIn">The AggregateToken to bind</param>
+        /// <returns>A T node bound to this AggregateToken</returns>
         T Visit(AggregateToken tokenIn);
 
         /// <summary>
@@ -159,12 +160,11 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>A T node bound to this AggregateStatementToken</returns>
         T Visit(AggregateStatementToken tokenIn);
 
-
         /// <summary>
-        /// Visits a AggregateStatementToken
+        /// Visits a GroupByToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateStatementToken to bind</param>
-        /// <returns>A T node bound to this AggregateStatementToken</returns>
+        /// <param name="tokenIn">The GroupByToken to bind</param>
+        /// <returns>A T node bound to this GroupByToken</returns>
         T Visit(GroupByToken tokenIn);
     }
 }

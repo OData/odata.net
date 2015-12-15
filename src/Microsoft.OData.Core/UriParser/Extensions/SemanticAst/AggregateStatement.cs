@@ -3,14 +3,23 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-// OData v4 Aggregation Extensions.
-namespace Microsoft.OData.Core.UriParser.Semantic
+
+namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
 {
-    using TreeNodeKinds;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core.UriParser.Extensions;
+    using Microsoft.OData.Core.UriParser.Semantic;
 
     public sealed class AggregateStatement
     {
+        private readonly AggregationVerb withVerb;
+
+        private readonly SingleValueNode expression;
+
+        private readonly string asAlias;
+
+        private readonly SingleValuePropertyAccessNode from;
+
         public AggregateStatement(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
@@ -18,49 +27,42 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             ExceptionUtils.CheckArgumentNotNull(asAlias, "asAlias");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
-            this._expression = expression;
-            this._withVerb = withVerb;
-            this._from = from;
-            this._asAlias = asAlias;
+            this.expression = expression;
+            this.withVerb = withVerb;
+            this.from = from;
+            this.asAlias = asAlias;
             this._typeReference = typeReference;
         }
 
-        private readonly SingleValueNode _expression;
 
         public SingleValueNode Expression
         {
             get {
-                return _expression;
+                return expression;
             }
         }
-
-        private readonly AggregationVerb _withVerb;
 
         public AggregationVerb WithVerb
         {
             get
             {
-                return _withVerb;
+                return withVerb;
             }
         }
-
-        private readonly string _asAlias;
 
         public string AsAlias
         {
             get
             {
-                return _asAlias;
+                return asAlias;
             }
         }
-
-        private readonly SingleValuePropertyAccessNode _from;
 
         public SingleValuePropertyAccessNode From
         {
             get
             {
-                return _from;
+                return from;
             }
         }
 
@@ -74,6 +76,5 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 return this._typeReference;
             }
         }
-
     }
 }

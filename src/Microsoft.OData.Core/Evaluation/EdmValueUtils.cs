@@ -252,7 +252,6 @@ namespace Microsoft.OData.Core.Evaluation
             }
         }
 
-
         /// <summary>
         /// Convert a primitive value which didn't match any of the known values of the TypeCode enumeration.
         /// </summary>

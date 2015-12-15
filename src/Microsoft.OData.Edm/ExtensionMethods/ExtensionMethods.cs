@@ -1266,13 +1266,6 @@ namespace Microsoft.OData.Edm
         public static string FullName(this IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
-
-            // Dynamic types "don't" have names and will not be resolved via the model
-            if (element is IEdmDynamicType)
-            {
-                return null;
-            }
-
             return (element.Namespace ?? String.Empty) + "." + (element.Name ?? String.Empty);
         }
 
@@ -2384,73 +2377,6 @@ namespace Microsoft.OData.Edm
             return result;
         }
         #endregion
-
-        #region DynamicEntityType
-        /// <summary>
-        /// Create DynamicEntityType definition based on CLr type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static IEdmEntityType GetDynamicEntityType(this Type type)
-        {
-            var edmType = new EdmDynamicEntityType(type.Name);
-
-            AddPropertiesToDynamicType(type, edmType);
-
-            return edmType;
-        }
-
-        /// <summary>
-        /// Create DynamicEntityType definition based on CLr type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static IEdmComplexType GetDynamicComplexType(this Type type)
-        {
-            var edmType = new EdmDynamicComplexType(type.Name);
-
-            AddPropertiesToDynamicType(type, edmType);
-
-            return edmType;
-        }
-
-        internal static void AddPropertiesToDynamicType(Type type, EdmStructuredType edmType)
-        {
-            foreach (var prop in type.GetPublicProperties(instanceOnly: false))
-            {
-                var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
-                if (propEdmType != null)
-                {
-                    edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType) || !prop.PropertyType.IsValueType()));
-                }
-                else
-                {
-                    var nestedPropEdmType = prop.PropertyType.GetDynamicComplexType();
-                    edmType.AddStructuralProperty(prop.Name, new EdmComplexTypeReference(nestedPropEdmType, true));
-                }
-            }
-        }
-
-        #endregion
-
-        /// <summary>Checks whether the specified type is a generic nullable type.</summary>
-        /// <param name="type">Type to check.</param>
-        /// <returns>true if <paramref name="type"/> is nullable; false otherwise.</returns>
-        internal static bool IsNullableType(Type type)
-        {
-            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-
-        /// <summary>Gets a non-nullable version of the specified type.</summary>
-        /// <param name="type">Type to get non-nullable version for.</param>
-        /// <returns>
-        /// <paramref name="type"/> if type is a reference type or a 
-        /// non-nullable type; otherwise, the underlying value type.
-        /// </returns>
-        internal static Type GetNonNullableType(Type type)
-        {
-            return Nullable.GetUnderlyingType(type) ?? type;
-        }
 
         internal static bool TryGetRelativeEntitySetPath(IEdmElement element, Collection<EdmError> foundErrors, IEdmPathExpression pathExpression, IEdmModel model, IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType)
         {

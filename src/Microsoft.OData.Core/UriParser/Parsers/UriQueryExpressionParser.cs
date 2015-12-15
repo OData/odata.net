@@ -11,9 +11,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using Microsoft.OData.Core.UriParser.Extensions;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
@@ -195,6 +197,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     default:
                         throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
+
                 // '/' indicates there are more transformations
                 if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Slash)
                 {
@@ -252,10 +255,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         internal AggregateStatementToken ParseAggregateStatement()
         {
             // expression
-            QueryToken expression = this.ParseExpression();
+            var expression = this.ParseExpression();
 
             // "with" verb
-            AggregationVerb verb = this.ParseAggregateWith();
+            var verb = this.ParseAggregateWith();
 
             // "as" alias
             var alias = this.ParseAggregateAs();

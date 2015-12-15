@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Parsers;
@@ -217,7 +218,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             var token = new EndPathToken(OpenPropertyName, new RangeVariableToken("a"));
             EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetPaintingsSet());
             SingleValueNode parentNode = new EntityRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPaintingTypeReference(), entityCollectionNode));
-            var propertyNode = EndPathBinder.GeneratePropertyAccessQueryForOpenType(
+            
+            var state = new BindingState(this.configuration);
+            var metadataBinder = new MetadataBinder(state);
+            var endPathBinder = new EndPathBinder(metadataBinder.Bind, state);
+            var propertyNode = endPathBinder.GeneratePropertyAccessQueryForOpenType(
                 token, parentNode);
 
             propertyNode.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
@@ -229,13 +234,33 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             var token = new EndPathToken("Color", new RangeVariableToken("a"));
             EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             SingleValueNode parentNode = new EntityRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode));
-            Action getQueryNode = () => EndPathBinder.GeneratePropertyAccessQueryForOpenType(
+
+            var state = new BindingState(this.configuration);
+            var metadataBinder = new MetadataBinder(state);
+            var endPathBinder = new EndPathBinder(metadataBinder.Bind, state);
+            Action getQueryNode = () => endPathBinder.GeneratePropertyAccessQueryForOpenType(
                 token, parentNode);
 
             getQueryNode.ShouldThrow<ODataException>().WithMessage(
                 Strings.MetadataBinder_PropertyNotDeclared(parentNode.GetEdmTypeReference().FullName(),
                                                                                     token.Identifier));
+        }
 
+        [Fact]
+        public void ShouldNotThrowIfTypeNotOpenButAggregateApplied()
+        {
+            var token = new EndPathToken("Color", new RangeVariableToken("a"));
+            EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
+            SingleValueNode parentNode = new EntityRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode));
+
+            var state = new BindingState(this.configuration);
+            state.AggregatedProperties = new List<string> { "Color" };
+            var metadataBinder = new MetadataBinder(state);
+            var endPathBinder = new EndPathBinder(metadataBinder.Bind, state);
+            var propertyNode = endPathBinder.GeneratePropertyAccessQueryForOpenType(
+                token, parentNode);
+
+            propertyNode.ShouldBeSingleValueOpenPropertyAccessQueryNode("Color");
         }
 
         /// <summary>

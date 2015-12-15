@@ -126,6 +126,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// Collection of aggregated property names after applying an aggregate transformation.
+        /// </summary>
+        internal List<string> AggregatedProperties { get; set; }
+
+        /// <summary>
         /// Marks the fact that a recursive method was entered, and checks that the depth is allowed.
         /// </summary>
         internal void RecurseEnter()

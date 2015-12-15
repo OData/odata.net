@@ -4,8 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-// OData v4 Aggregation Extensions.
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.Core.UriParser.Extensions
 {
     /// <summary>
     /// Enumeration of verbs used in the aggregation clause

@@ -1,41 +1,49 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregateToken.cs" company="Microsoft">
+// <copyright file="GroupByToken.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-// OData v4 Aggregation Extensions.
 
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
 #endif
 {
+    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
     using System.Collections.Generic;
 
-    internal sealed class AggregateToken : ApplyTransformationToken
+    internal sealed class GroupByToken : ApplyTransformationToken
     {
-        public AggregateToken(IEnumerable<AggregateStatementToken> statements)
+        public GroupByToken(IEnumerable<EndPathToken> properties, ApplyTransformationToken child)
         {
-            ExceptionUtils.CheckArgumentNotNull(statements, "statements");
-            this._statements = statements;
+            ExceptionUtils.CheckArgumentNotNull(properties, "properties");
+
+            this.properties = properties;
+            this.child = child;
         }
 
+        private readonly IEnumerable<EndPathToken> properties;
+        private readonly ApplyTransformationToken child;
+
+        /// <summary>
+        /// The kind of the query token.
+        /// </summary>
         public override QueryTokenKind Kind
         {
-            get { return QueryTokenKind.Aggregate; }
+            get { return QueryTokenKind.AggregateGroupBy; }
         }
 
-        private readonly IEnumerable<AggregateStatementToken> _statements;
-
-        public IEnumerable<AggregateStatementToken> Statements
+        public IEnumerable<EndPathToken> Properties
         {
-            get
-            {
-                return _statements;
-            }
+            get { return this.properties; }
+        }
+
+        public ApplyTransformationToken Child
+        {
+            get { return this.child; }
         }
 
         /// <summary>

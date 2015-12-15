@@ -237,73 +237,10 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.IsFalse(someItemNotTracked, "All items should have been tracked.");
         }
 
-        private static void DataServiceCollectionSubQueryTrackingItems(
-            DataServiceContextWrapper<DefaultContainer> contextWrapper)
-        {
-            var query = from p in contextWrapper.Context.Customer
-                where p.Name != null
-                select new Customer()
-                {
-                    Name = p.Name,
-                    Orders = new DataServiceCollection<Order>(
-                        from r in p.Orders
-                        select new Order()
-                        {
-                            OrderId = r.OrderId,
-                            CustomerId = r.CustomerId
-                        })
-                };
-            var tmpResult0 = query.ToList()[0];
-            DataServiceCollection<Order> collection = tmpResult0.Orders; // the collection tracking items
-            int tmpCount = collection.Count;
-            collection.Load(contextWrapper.Context.Execute(collection.Continuation));
-
-            // for testing newly loaded item's tracking
-            Assert.IsTrue(collection.Count > tmpCount, "Should have loaded another page.");
-            bool someItemNotTracked = false;
-            tmpResult0.Orders.ToList().ForEach(s =>
-            {
-                EntityStates state = contextWrapper.Context.GetEntityDescriptor(s).State;
-                s.CustomerId = s.CustomerId + 1;
-                state = contextWrapper.Context.GetEntityDescriptor(s).State;
-                someItemNotTracked = (state == EntityStates.Unchanged) || someItemNotTracked;
-            });
-            Assert.IsFalse(someItemNotTracked, "All items should have been tracked.");
-        }
-
         [TestMethod]
         public void DataServiceCollectionTrackingItems()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, DataServiceCollectionTrackingItems);
-        }
-
-        private static void DataServiceCollectionTrackingItems(
-            DataServiceContextWrapper<DefaultContainer> contextWrapper)
-        {
-            var query = from p in contextWrapper.Context.Customer
-                where p.CustomerId > -100000
-                // try to get many for paging
-                select new Customer()
-                {
-                    CustomerId = p.CustomerId,
-                    Name = p.Name
-                };
-            DataServiceCollection<Customer> collection = new DataServiceCollection<Customer>(query);
-
-            // the collection to track items
-            int tmpCount = collection.Count;
-            collection.Load(contextWrapper.Context.Execute(collection.Continuation));
-
-            // for testing newly loaded item's tracking
-            Assert.IsTrue(collection.Count > tmpCount, "Should have loaded another page.");
-            bool someItemNotTracked = false;
-            collection.ToList().ForEach(s =>
-            {
-                s.Name = "value to test tracking";
-                EntityStates state = contextWrapper.Context.GetEntityDescriptor(s).State;
-                someItemNotTracked = (state == EntityStates.Unchanged) || someItemNotTracked;
-            });
-            Assert.IsFalse(someItemNotTracked, "All items should have been tracked.");
         }
 
         private static void DataServiceCollectionTrackingItems(

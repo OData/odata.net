@@ -1,64 +1,60 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EndPathTokenUnitTests.cs" company="Microsoft">
+// <copyright file="GroupByTokenTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Visitors;
+using System;
+using System.Collections.Generic;
+using FluentAssertions;
+using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Xunit;
 
-    [TestClass]
-    public class GroupByTokenUnitTests
+namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
+{
+    public class GroupByTokenTests
     {
         private IEnumerable<EndPathToken> properties = new List<EndPathToken>();
 
         private AggregateToken aggregate = new AggregateToken(new List<AggregateStatementToken>());
 
-        [TestMethod]
+        [Fact]
         public void PropertiesCannotBeNull()
         {
             Action action = () => new GroupByToken(null, aggregate);
             action.ShouldThrow<Exception>(Error.ArgumentNull("properties").ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void AggregateCanBeNull()
         {
             Action action = () => new GroupByToken(properties, null);
             action.ShouldNotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void PropertiesSetCorrectly()
         {
             var token = new GroupByToken(properties, null);
             ((object)token.Properties).Should().Be(properties);
         }
 
-        [TestMethod]
+        [Fact]
         public void AggregateSetCorrectly()
         {
             var token = new GroupByToken(properties, aggregate);
             ((object)token.Child).Should().Be(aggregate);
         }
 
-        [TestMethod]
+        [Fact]
         public void KindIsSetCorrectly()
         {
             var token = new GroupByToken(properties, null);
 
-            token.Kind.Should().Be(QueryTokenKind.GroupBy);
-        }        
+            token.Kind.Should().Be(QueryTokenKind.AggregateGroupBy);
+        }
     }
 }
 

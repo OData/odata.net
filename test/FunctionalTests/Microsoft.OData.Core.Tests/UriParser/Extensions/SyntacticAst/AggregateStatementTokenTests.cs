@@ -1,65 +1,61 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EndPathTokenUnitTests.cs" company="Microsoft">
+// <copyright file="AggregateStatementTokenTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.OData.Query.TDD.Tests.Syntactic
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Visitors;
+using System;
+using FluentAssertions;
+using Microsoft.OData.Core.UriParser.Extensions;
+using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Xunit;
 
-    [TestClass]
-    public class AggregateStatementTokenUnitTests
+namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
+{
+    public class AggregateStatementTokenTests
     {
         QueryToken expressionToken = new EndPathToken("Expression", null);
 
-        [TestMethod]
+        [Fact]
         public void ExpressionCannotBeNull()
         {
             Action action = () => new AggregateStatementToken(null, AggregationVerb.Sum, "Alias");
             action.ShouldThrow<Exception>(Error.ArgumentNull("expression").ToString());
-        }      
+        }
 
-        [TestMethod]
+        [Fact]
         public void AliasCannotBeNull()
         {
             Action action = () => new AggregateStatementToken(expressionToken, AggregationVerb.Sum, null);
             action.ShouldThrow<Exception>(Error.ArgumentNull("alias").ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionSetCorrectly()
-        {            
+        {
             var token = new AggregateStatementToken(expressionToken, AggregationVerb.Sum, "Alias");
             token.Expression.Should().Be(expressionToken);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithVerbSetCorrectly()
         {
             var token = new AggregateStatementToken(expressionToken, AggregationVerb.CountDistinct, "Alias");
             token.WithVerb.Should().Be(AggregationVerb.CountDistinct);
         }
 
-        [TestMethod]
+        [Fact]
         public void AliasSetCorrectly()
         {
             var token = new AggregateStatementToken(expressionToken, AggregationVerb.CountDistinct, "Alias");
             token.AsAlias.Should().BeEquivalentTo("Alias");
         }
 
-        [TestMethod]
+        [Fact]
         public void KindIsSetCorrectly()
-        {            
+        {
             var token = new AggregateStatementToken(expressionToken, AggregationVerb.CountDistinct, "Alias");
             token.Kind.Should().Be(QueryTokenKind.AggregateStatement);
         }

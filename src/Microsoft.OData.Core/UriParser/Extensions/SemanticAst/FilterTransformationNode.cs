@@ -3,12 +3,11 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-// OData v4 Aggregation Extensions.
-namespace Microsoft.OData.Core.UriParser.Semantic
+
+namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
 {
     using TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using System.Collections.Generic;
+    using Microsoft.OData.Core.UriParser.Semantic;
 
     public sealed class FilterTransformationNode : TransformationNode
     {
@@ -26,17 +25,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             get
             {
                 return this._filterClause;
-            }
-        }
-
-        /// <summary>
-        /// Gets the type of item returned by this clause.
-        /// </summary>
-        public override IEdmTypeReference ItemType
-        {
-            get
-            {
-                return this.FilterClause.RangeVariable.TypeReference;
             }
         }
 

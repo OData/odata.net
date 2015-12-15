@@ -3,17 +3,17 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-// OData v4 Aggregation Extensions.
 
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
 #endif
 {
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Core.UriParser.Extensions;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.Core.UriParser.Syntactic;
 
     internal sealed class AggregateStatementToken : QueryToken
     {
@@ -22,9 +22,9 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
 
-            this._expression = expression;
-            this._withVerb = withVerb;
-            this._asAlias = alias;
+            this.expression = expression;
+            this.withVerb = withVerb;
+            this.asAlias = alias;
         }
        
         public override QueryTokenKind Kind
@@ -32,25 +32,25 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             get { return QueryTokenKind.AggregateStatement; }
         }
 
-        private readonly AggregationVerb _withVerb;
+        private readonly AggregationVerb withVerb;
 
         public AggregationVerb WithVerb
         {
-            get { return this._withVerb; }
+            get { return this.withVerb; }
         }
 
-        private readonly QueryToken _expression;
+        private readonly QueryToken expression;
 
         public QueryToken Expression
         {
-            get { return this._expression; }
+            get { return this.expression; }
         }
 
-        private readonly string _asAlias;
+        private readonly string asAlias;
 
         public string AsAlias
         {
-            get { return this._asAlias; }
+            get { return this.asAlias; }
         }
        
         /// <summary>
