@@ -66,7 +66,13 @@ Here is the usage of each solution file:
 
 Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within Microsoft.OData.Full.sln and Microsoft.OData.E2E.sln, you will need to have *SQL Express installed* and you must open the solution as *Administrator*. Visual Studio must be running administratively to have the permission to start the test services in IIS Express.  You must have SQL Express installed because a test Entity Framework database is needed and it will be automatically initialized if it doesn't exist.
 
-**One-click build and test script will be available in the future.*
+#### One-click build and test script
+
+In an elevated command prompt "Run as administrator", cd to the root folder:
+```
+build.cmd
+```
+The build and test will take about 20 minutes.
 
 ### Nightly Builds
 
