@@ -414,7 +414,9 @@ namespace Microsoft.OData.Client
                 bool isOpen = false;
                 if (EdmStructuredSchemaElements != null && EdmStructuredSchemaElements.Any())
                 {
-                    IEdmStructuredType edmStructuredType = EdmStructuredSchemaElements.FirstOrDefault(et => et.Name == ClientTypeUtil.GetServerDefinedTypeName(type)) as IEdmStructuredType;
+                    IEdmStructuredType edmStructuredType =
+                        EdmStructuredSchemaElements.FirstOrDefault(
+                            et => (et != null && et.Name == ClientTypeUtil.GetServerDefinedTypeName(type))) as IEdmStructuredType;
                     if (edmStructuredType != null)
                     {
                         isOpen = edmStructuredType.IsOpen;
