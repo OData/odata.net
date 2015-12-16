@@ -1,0 +1,160 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":null}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":null
+}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":null
+}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":null
+}
+
+Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":42}
+
+Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":42
+}
+
+Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":42
+}
+
+Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":42
+}
+
+Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":3.1415}
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":3.1415
+}
+
+Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":3.1415
+}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":3.1415
+}
+
+Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":"foo bar"}
+
+Combination: 14; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":"foo bar"
+}
+
+Combination: 15; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":"foo bar"
+}
+
+Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":"foo bar"
+}
+
+Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[1, 2, "abc"]}
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[1, 2, "abc"]
+}
+
+Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[1, 2, "abc"]
+}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[1, 2, "abc"]
+}
+
+Combination: 21; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[ [1, "abc"], [2, "def"], [[3],[4, 5]] ]}
+
+Combination: 22; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[ [1, "abc"], [2, "def"], [[3],[4, 5]] ]
+}
+
+Combination: 23; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[ [1, "abc"], [2, "def"], [[3],[4, 5]] ]
+}
+
+Combination: 24; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Edm.Untyped","value":[ [1, "abc"], [2, "def"], [[3],[4, 5]] ]
+}
+
+Combination: 29; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestModel.JsonType)","@odata.type":"#Collection(TestModel.JsonType)","value":["foo bar",[1, 2, "abc"],3.1415]}
+
+Combination: 30; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Collection(TestModel.JsonType)","value":[
+    "foo bar",[1, 2, "abc"],3.1415
+  ]
+}
+
+Combination: 31; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Collection(TestModel.JsonType)","@odata.type":"#Collection(TestModel.JsonType)","value":[
+    "foo bar",[1, 2, "abc"],3.1415
+  ]
+}
+
+Combination: 32; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/test/$metadata#Collection(TestModel.JsonType)","value":[
+    "foo bar",[1, 2, "abc"],3.1415
+  ]
+}
+

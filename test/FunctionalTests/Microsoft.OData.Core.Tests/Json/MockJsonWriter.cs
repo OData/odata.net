@@ -144,6 +144,12 @@ namespace Microsoft.OData.Core.Tests.Json
             this.WriteValueVerifier(Convert.ToBase64String(value));
         }
 
+        public void WriteRawValue(string rawValue)
+        {
+            this.WriteValueVerifier.Should().NotBeNull();
+            this.WriteValueVerifier(rawValue);
+        }
+
         public void Flush()
         {
             throw new System.NotImplementedException();

@@ -82,6 +82,13 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmTypeReference expectedTypeReference);
 
         /// <summary>
+        /// Writes an untyped value.
+        /// </summary>
+        /// <param name="value">The untyped value to write.</param>
+        void WriteUntypedValue(
+            ODataUntypedValue value);
+
+        /// <summary>
         /// Creates a <see cref="DuplicatePropertyNamesChecker"/> for checking duplication properties inside complex values.
         /// </summary>
         /// <returns>A new <see cref="DuplicatePropertyNamesChecker"/> instance.</returns>

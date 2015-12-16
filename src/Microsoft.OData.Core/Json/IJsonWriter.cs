@@ -154,6 +154,12 @@ namespace Microsoft.OData.Core.Json
         void WriteValue(TimeOfDay value);
 
         /// <summary>
+        /// Write a raw value.
+        /// </summary>
+        /// <param name="rawValue">Raw value to be written.</param>
+        void WriteRawValue(string rawValue);
+
+        /// <summary>
         /// Clears all buffers for the current writer.
         /// </summary>
         void Flush();
