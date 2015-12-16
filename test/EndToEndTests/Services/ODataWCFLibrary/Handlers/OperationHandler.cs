@@ -73,7 +73,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     ODataWriter resultWriter;
 
                     IEdmNavigationSource entitySource = this.QueryContext.OperationResultSource ?? this.QueryContext.Target.NavigationSource;
-                    // IEdmNavigationSource entitySource = this.QueryContext.OperationResultSource;
 
                     if (this.QueryContext.Target.TypeKind == EdmTypeKind.Collection)
                     {

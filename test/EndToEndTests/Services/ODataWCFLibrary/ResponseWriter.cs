@@ -101,6 +101,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// Writes an OData feed.
         /// </summary>
         /// <param name="writer">The ODataWriter that will write the feed.</param>
+        /// <param name="entityType">The type of the entity in the feed.</param>
         /// <param name="entries">The items from the data store to write to the feed.</param>
         /// <param name="entitySet">The entity set in the model that the feed belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
