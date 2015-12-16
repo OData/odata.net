@@ -4872,6 +4872,12 @@ public sealed class Microsoft.OData.Core.ODataStreamReferenceValue : Microsoft.O
 	System.Uri ReadLink  { public get; public set; }
 }
 
+public sealed class Microsoft.OData.Core.ODataUntypedValue : Microsoft.OData.Core.ODataValue {
+	public ODataUntypedValue ()
+
+	string RawValue  { public get; public set; }
+}
+
 public sealed class Microsoft.OData.Core.ODataUri {
 	public ODataUri ()
 

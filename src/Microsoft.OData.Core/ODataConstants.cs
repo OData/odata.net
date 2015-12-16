@@ -176,6 +176,9 @@ namespace Microsoft.OData.Core
         /// <summary>The token that indicates the payload is a property with null value.</summary>
         internal const string ContextUriFragmentNull = "Edm.Null";
 
+        /// <summary>The token that indicates the payload is a property with an untyped value.</summary>
+        internal const string ContextUriFragmentUntyped = "Edm.Untyped";
+
         /// <summary>The $delta token indicates delta feed.</summary>
         internal const string ContextUriDeltaFeed = "/$delta";
 

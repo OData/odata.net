@@ -310,6 +310,12 @@ namespace Microsoft.OData.Core
                 return enumValue.TypeName;
             }
 
+            var untypedValue = value as ODataUntypedValue;
+            if (untypedValue != null)
+            {
+                return ODataConstants.ContextUriFragmentUntyped;
+            }
+
             ODataPrimitiveValue primitive = value as ODataPrimitiveValue;
             if (primitive == null)
             {

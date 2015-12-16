@@ -703,6 +703,7 @@ ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue=The value of an i
 
 ODataJsonLightValueSerializer_MissingTypeNameOnComplex=A type name was not provided for an instance of ODataComplexValue.
 ODataJsonLightValueSerializer_MissingTypeNameOnCollection=A type name was not provided for an instance of ODataCollectionValue.
+ODataJsonLightValueSerializer_MissingRawValueOnUntyped=A raw value was not provided for an instance of ODataUntypedValue.
 
 AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement=Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute.
 AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType=The value of the 'type' attribute on an 'annotation' element was '{0}', which is incompatible with the '{1}' attribute.

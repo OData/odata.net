@@ -994,6 +994,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUndeclaredPropertyBehaviorKinds.cs">
       <Link>Microsoft\OData\Core\ODataUndeclaredPropertyBehaviorKinds.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUntypedValue.cs">
+      <Link>Microsoft\OData\Core\ODataUntypedValue.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUri.cs">
       <Link>Microsoft\OData\Core\ODataUri.cs</Link>
     </Compile>

@@ -22,6 +22,7 @@
       <Word>Srs</Word>
       <Word>Pos</Word>
       <Word>groupby</Word>
+      <Word>Untyped</Word>
     </Recognized>
     <DiscreteExceptions>
       <Term>OData</Term>

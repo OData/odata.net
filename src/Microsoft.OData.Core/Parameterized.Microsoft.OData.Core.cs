@@ -4463,6 +4463,17 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "A raw value was not provided for an instance of ODataUntypedValue."
+        /// </summary>
+        internal static string ODataJsonLightValueSerializer_MissingRawValueOnUntyped
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+            }
+        }
+
+        /// <summary>
         /// A string like "Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute."
         /// </summary>
         internal static string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement {

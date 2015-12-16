@@ -95,6 +95,11 @@ namespace Microsoft.OData.Core
                 return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, enumValue.TypeName, EdmTypeKind.Enum, isOpenProperty);
             }
 
+            if (value is ODataUntypedValue)
+            {
+                return typeReferenceFromMetadata;
+            }
+
             ODataCollectionValue collectionValue = (ODataCollectionValue)value;
             return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, collectionValue.TypeName, EdmTypeKind.Collection, isOpenProperty);
         }
