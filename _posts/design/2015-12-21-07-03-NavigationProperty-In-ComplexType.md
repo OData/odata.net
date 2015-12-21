@@ -1171,3 +1171,105 @@ builder.EntitySet<Customer>("Customers").HasRequiredBinding(c => c.Location.Regi
 ```
 Make sure the property path can be saved correctly.
 
+### 2.4.4 Navigation property routing
+
+* Path segment
+The navigation path segment class _NavigationPathSegment_ can be re-used for navigation property in complex type. However, the **GetNavigationSource()** in _PropertyAccessPathSegment_ can’t return null directly. It maybe return the previous navigation source if the property is complex type.
+
+* Routing convention
+
+We can provide the one level routing convention for navigation property, but leave other for attribute routing. We can add the following path template in _NavigationRoutingConventions_:
+
+  - ~/entityset/key/property/navigation
+
+  - ~/entityset/key/property/cast/navigation
+
+  - ~/singleton/property/navigation/$count
+
+  - ~/singleton/property/cast/navigation/$count
+
+The convention action name can be:   
+
+**“RequestMethodName” + “NavigationPropertyName” + “In” + “ComplexPropertyName” + “From” + “DeclareTypeName”**
+
+For example, GET ~/Customers(1)/Location/Region
+
+The action name can be _“GetRegionInLocationFromCustomer”_
+
+* Query option
+
+Change the SelectExpandBinder to support expanding the navigation property in complex type. For example:
+
+  - ~/…/Property?$expand=navigation
+  - ~…?&expand=property/navigation
+  
+### 2.4.5 Serialization navigation property in complex type
+
+#### 2.4.5.1 Expand complex property in Entry
+
+1. SelectExpandNode
+In SelectExpandNode, we have the following sets:
+
+* SelectedStructuralProperties
+* SelectedNavigationProperties
+* ExpandedNavigationProperties
+
+These sets are enough to expand a navigation property in entity, but it’s non-enough to expand a navigation property in complex type. Because, we should know which complex property is expanded. That’s, if we have the following request:
+```C#
+GET ~/Customers(1)?$expand=Location/Region
+```
+We should know **“Location”** is an expandable property and it’s expanded with **“Region”**.
+So, for _SelectExpandNode_, we should at least a set to save the expanded structural property. Let’s say it can be:
+```C#
+public ISet<Tuple<IList<IEdmStructuralProperty>, IEdmNavigationProperty, SelectExpandClause>> ExpandedStructuralProperties { get; private set; }
+```
+And we should construct this property in constructor of _SelectExpandNode_ class.
+
+2. Entit type serializer
+
+For entity type serializer, we can use the **ExpandedStructuralProperties** defined in _SelectExpandNode_ to construct the expandable property.
+So, we should do:
+a) In CreateEntry function, before we call **CreateStructuralPropertyBag()** function, we should remove the expanded structure properties from **SelectedStructuralProperties**, and use the except set to build the properties for entry.
+```C#
+var expandableProperties = selectExpandNode.ExpandedStructuralProperties.Select(e => e.Item1.First());
+var selectedStructuralProperties = selectExpandNode.SelectedStructuralProperties.Except(expandableProperties);
+ODataEntry entry = new ODataEntry
+{
+   TypeName = typeName,
+   Properties = CreateStructuralPropertyBag(selectedStructuralProperties, entityInstanceContext),
+ };
+ ```
+   Then, the expanded structural properties exclude from the properties.
+
+b) Provide a new private API to write the expanded structural properties:
+
+```C#
+private void WriteExpandedStructuralProperties(
+            ISet<Tuple<IList<IEdmStructuralProperty>, IEdmNavigationProperty, SelectExpandClause>>
+                structuralPropetiesToExpand,
+            EntityInstanceContext entityInstanceContext,
+            ODataWriter writer)
+{
+      Foreach( expanded structureal property)
+      {
+            Construct an expandable property (new ODataExpandableProperty())
+            WriteStart(expandable property)
+            WriteExpandedNavigationProperties(..)
+            WriteEnd()
+     }
+}
+```
+c) Call WriteExpandedStructuralProperties after WriteStart(entry)
+```C#
+ODataEntry entry = CreateEntry(selectExpandNode, entityInstanceContext);
+if (entry != null)
+{
+     writer.WriteStart(entry);
+     WriteExpandedStructuralProperties(selectExpandNode.ExpandedStructuralProperties, entityInstanceContext, writer);
+      WriteNavigationLinks(selectExpandNode.SelectedNavigationProperties, entityInstanceContext, writer);
+      WriteExpandedNavigationProperties(selectExpandNode.ExpandedNavigationProperties, entityInstanceContext, writer);
+      writer.WriteEnd();
+ }
+
+```
+
