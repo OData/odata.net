@@ -1068,3 +1068,106 @@ Then we can support:
 ```C#
   var location = context.Location.ByKey(1).Addresses.Expand(a=>a.City);
 ```
+
+## 2.4 Web API OData 
+
+### 2.4.1 Model builder
+
+Similar with the entity type and complex type structure, Web API OData has the same configuration class structure. Below picture shows the relationship between complex type configuration, entity type configuration and structural type configuration.
+
+![]({{site.baseurl}}/assets/2015-12-21-WebApi-class-relation1.png)
+
+
+Owing that _NavigationPropertyConfiguration_ is derived from _PropertyConfiguration_, and all properties for type (entity type or complex), either structural properties, or navigation properties are saved in the following dictionary in _StrucutralTypeCofiguration_:
+```C#
+protected internal IDictionary<PropertyInfo, PropertyConfiguration> ExplicitProperties { get; private set; }
+```
+So, form this point, complex type configuration can support navigation property. However, we need to do as follows to allow the customer to define navigation property on complex type:
+
+1. Promote the following public/private APIs from _EntityTypeConfiguration_ to _StructuredTypeConfiguration_.
+```C#
+public virtual NavigationPropertyConfiguration AddNavigationProperty(PropertyInfo navigationProperty, EdmMultiplicity multiplicity)
+public virtual NavigationPropertyConfiguration AddContainedNavigationProperty(PropertyInfo navigationProperty, EdmMultiplicity multiplicity)
+private NavigationPropertyConfiguration AddNavigationProperty(PropertyInfo navigationProperty, EdmMultiplicity multiplicity, bool containsTarget)
+```
+2. Promote the following property from _EntityTypeConfiguration_ to _StructuredTypeConfiguration_
+```C#
+public virtual IEnumerable<NavigationPropertyConfiguration> NavigationProperties
+```
+3. Modify _NaviatonPropertyConfiguration_ class, for example
+  * modify DeclaringEntityType property
+  * add DeclaringComplexType property
+  * modify the constructor
+  * …
+
+4. Modify _EdmTypeBuilder_ class to construct the complex type with navigation property.
+```C#
+         Change
+private void CreateNavigationProperty(EntityTypeConfiguration config)
+        To
+private void CreateNavigationProperty(StructuralTypeConfiguration config)
+```
+5. Promote the following APIs from _EntityTypeConfigurationOfTEntityType_ to _StructuralTypeConfigurationOfTStrucuturalType_.
+```C#
+  * HasMany
+  * HasRequired
+  * HasOptional
+```
+Let’s have an example to illustrate how configure the navigation property in complex type:
+a) We have the three types, **Customer** and **Region** as entity type, **Address** as complex type
+```C#
+public class Customer
+{
+   public int CustomerId { get; set; }
+   public Address Location { get; set; }
+}
+
+public class Address
+{
+   public string Street { get; set; }
+   public Region Region { get; set; }
+}
+
+public class Region
+{
+   public int RegionId { get; set; }
+   public string Name { get; set; }
+}
+```
+Then, we can configure the Edm type by non-convention model builder as:
+```C#
+var builder = new ODataModelBuilder();
+builder.EntityType<Customer>().HasKey(c => c.CustomerId).ComplexProperty(c => c.Location);
+builder.EntityType<Region>().HasKey(r => r.RegionId).Property(r => r.Name);
+var address = builder.ComplexType<Address>();
+address.Property(a => a.Street);
+address.HasRequired(a => a.Region);
+```
+
+### 2.4.2	Convention model builder and conventions
+
+In convention model builder, it is assumed that complex type can’t have navigation property. As a result, the properties type belong to complex type is built as complex type if it’s not enum type or primitive type. 
+As navigation property is allowed in complex type, we should change the flow to assume the structural type of property in complex type as entity type. Once all types are buil, we should re-use the re-discover logic to change the assumed type.
+So, we should do:
+
+1. Modify MapComplexType(…) function, for any implicated added structural types from complex type, mark it as entity type and add them as navigation properties.
+
+2. Re-configure the properties in complex type if the related entity types are re-configured as complex type.
+
+For user codes, it should be same as previous, for example we re-use the CLR classes mentioned in previous section:
+```C#
+var builder = new ODataConventionModelBuilder();
+builder.EntityType<Customer>();
+builder.ComplexType<Address>();
+```
+Use the above codes, the **Region** type should be built as entity type automatically.
+
+### 2.4.3 Navigation Source binding for navigation property in complex type
+
+We should modify some codes in _NavigationSourceConfigurationOfEntityType_ to make navigation source binding to the navigation property in complex type:
+For example:
+```C#
+builder.EntitySet<Customer>("Customers").HasRequiredBinding(c => c.Location.Region, "Regions");
+```
+Make sure the property path can be saved correctly.
+
