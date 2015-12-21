@@ -179,7 +179,7 @@ CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnN
 ### 2.1.4	Construct navigation property binding in complex type
 
 OData spec says:
-{% highlight TXT %}
+{% highlight csharp %}
 13.4.1 Attribute Path
 A navigation property binding MUST name a navigation property of the entity set’s, singleton's, or containment navigation property's entity type or one of its subtypes in the Path attribute. If the navigation property is defined on a subtype, the path attribute MUST contain the QualifiedName of the subtype, followed by a forward slash, followed by the navigation property name. If the navigation property is defined on a complex type used in the definition of the entity set’s entity type, the path attribute MUST contain a forward-slash separated list of complex property names and qualified type names that describe the path leading to the navigation property.
 {% endhighlight %}
@@ -653,7 +653,7 @@ protected abstract bool ReadAtExpandablePropertyEndImplementation();
 {% endhighlight %}
 
 2.	Need a new Scope to identify the expandable property reading
-{% endhighlight %}
+{% highlight csharp %}
 private sealed class JsonLightExpandablePropertyScope : Scope
 {
     …
