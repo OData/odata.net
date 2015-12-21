@@ -201,14 +201,15 @@ City (Entity)
 
 EntitySet: Customers (Customer)
 EntitySet: Cities (City)
+```
 The binding path of the navigation property _“City”_ of entity set _“Customers”_ should be **“Location/NS.Address/City”**. Or we can just remove the type cast if it is not the sub type as **“Location/City”**.
 As a result, we should add a new public API for _EdmNavigationSource_ class to let customer to define the property path for navigation property in complex type:
 ```C#
 public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, IList<IEdmStructuralProperty> path)
 or
 public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, IList<string> path)
-```
 
+```
 Let’s have a detail example to illustrate how the users (developers) to add the navigation binding:
 
 1)	Add a complex type:
