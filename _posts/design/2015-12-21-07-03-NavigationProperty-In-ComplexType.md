@@ -117,3 +117,145 @@ public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdm
 public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmComplexTypeReference type)
 public static IEdmNavigationProperty FindNavigationProperty(this IEdmComplexTypeReference type, string name)
 ```
+
+### 2.1.2	Write navigation property in complex type in CSDL
+
+There is a logic to write the complex type and its declared properties. We can add the navigation properties writing logic after writing declared properties.  So, We should change the function **ProcessComplexType()** in _EdmModelCsdlSerializationVisitor_ class as follows to write navigation properties in complex type:
+```C#
+protected override void ProcessComplexType(IEdmComplexType element)
+{
+  this.BeginElement(element, this.schemaWriter.WriteComplexTypeElementHeader);
+
+  this.VisitProperties(element.DeclaredStructuralProperties());
+  this.VisitProperties(element.DeclaredNavigationProperties());
+
+  this.EndElement(element);
+}
+```
+Then, the complex type in metadata document may have navigation property. Let’s have an example:
+```xml
+  <ComplexType Name="Address">
+    <Property Name="Street" Type="Edm.String" />
+    …
+    <Property Name="Country" Type="Edm.String" />
+    <NavigationProperty Name="Customer" Type="NS.Customer" />
+  </ComplexType>
+```
+### 2.1.3	Read navigation property in complex type in CSDL
+
+Reading/Parse the navigation property in complex type is a lit bit complex. We can analysis the entity type and complex type class inheritance in CSDL. Below picture shows the class relationship between CSDL complex type and CSDL entity type. Both are derived from _CsdlNamedStructuredType_, then derived from _CsdlStructuredType_:
+
+![]({{site.baseurl}}/assets/2015-12-21-CSDL-Class-Relationship.png)
+
+So, we should modify as follows:
+
+* Promote everything about the navigation property from CsdlEntityType to CsdlStructuredType.
+
+* Modify the constructors of CsdlStructuredType, CsldNamedStructuredType, CsdlComplexType to accept the navigation properties. For example:
+```C#
+protected CsdlNamedStructuredType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> properties,   IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
+  : base(properties, navigationProperties, documentation, location)
+{
+  …
+}
+```
+* Modify **CreateRootElementParser()** function in _CsdlDocumentParser_. Add the following templates for Complex type element:
+```C#
+//// <NavigationProperty>
+CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnNavigationPropertyElement, documentationParser,
+  //// <ReferentialConstraint/>
+  CsdlElement<CsdlReferentialConstraint>(CsdlConstants.Element_ReferentialConstraint, this.OnReferentialConstraintElement, documentationParser),
+  //// <OnDelete/>
+  CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement, documentationParser),
+    //// <Annotation/>
+    annotationParser),
+```
+
+* Modify CsdlSemanticsNavigationProperty class to accept CsdlSemanticsStructuredTypeDefinition.
+
+*	Override the ComputeDeclaredProperties() function in CsdlSemanticsComplexTypeDefinition
+
+### 2.1.4	Construct navigation property binding in complex type
+
+OData spec says:
+```TXT
+13.4.1 Attribute Path
+A navigation property binding MUST name a navigation property of the entity set’s, singleton's, or containment navigation property's entity type or one of its subtypes in the Path attribute. If the navigation property is defined on a subtype, the path attribute MUST contain the QualifiedName of the subtype, followed by a forward slash, followed by the navigation property name. If the navigation property is defined on a complex type used in the definition of the entity set’s entity type, the path attribute MUST contain a forward-slash separated list of complex property names and qualified type names that describe the path leading to the navigation property.
+```
+From the highlight part, we can find that the property path is necessary for navigation property binding in complex type.  So, we should save the property path for navigation property in complex type. Let’s have an example to illustrate the property path for navigation property in complex type.
+```C#
+Customer (Entity)
+{
+  …
+  Address Location;
+}
+
+Address (Complex)
+{
+  …
+  City City;
+}
+
+City (Entity)
+{…}
+
+EntitySet: Customers (Customer)
+EntitySet: Cities (City)
+The binding path of the navigation property _“City”_ of entity set _“Customers”_ should be **“Location/NS.Address/City”**. Or we can just remove the type cast if it is not the sub type as **“Location/City”**.
+As a result, we should add a new public API for _EdmNavigationSource_ class to let customer to define the property path for navigation property in complex type:
+```C#
+public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, IList<IEdmStructuralProperty> path)
+or
+public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, IList<string> path)
+```
+
+Let’s have a detail example to illustrate how the users (developers) to add the navigation binding:
+
+1)	Add a complex type:
+```C#
+// complex type address
+ EdmComplexType address = new EdmComplexType("NS", "Address");
+ address.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+      …
+ model.AddElement(address);
+ ```
+ 2)	Add “Customer” entity type:
+```C#
+EdmEntityType customer = new EdmEntityType("NS", "Customer");
+customer.AddKeys(customer.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+…
+var location = customer.AddStructuralProperty("Location", new EdmComplexTypeReference(address, isNullable: true));
+model.AddElement(customer);
+```
+3)	Add “City” entity type
+```C#
+EdmEntityType city = new EdmEntityType("NS", "City");
+city.AddKeys(city.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+…
+model.AddElement(city);	
+```
+4)	Add a navigation property for “Address” complex type
+```C#
+EdmNavigationProperty addressNavProp = address.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+{
+Name = "City",
+TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+Target = city
+});
+```
+5)	Add an entity set and the navigation property binding
+```C#
+EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+model.AddElement(container);
+EdmEntitySet customers = container.AddEntitySet("Customers", customer);
+EdmEntitySet cities = container.AddEntitySet(“Cities”, city);
+customers.AddNavigationTarget(addressNavProp, cities, new[] { location });
+```
+6)	Therefore, we can have the navigation property binding as:
+```xml
+  <EntityContainer Name="Default">
+    <EntitySet Name="Customers" EntityType="NS.Customer">
+      <NavigationPropertyBinding Path="Location/NS.Address/City" Target="Cities" />
+    </EntitySet>
+  </EntityContainer>
+```
