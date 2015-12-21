@@ -4,7 +4,7 @@ title: "7.3 Navigation Property in Complex Type Design"
 description: "Design doc for navigation property, complex type"
 category: "7. Design"
 ---
-<<Inital draft, Improvment frequently>>
+< < Inital draft, Improvment frequently > >
 
 # 1	Design Summary
 ## 1.1 Overview
@@ -595,4 +595,476 @@ public abstract class ODataCollectionExpandablePropertyWriter
   public abstract void WriteEnd();
   …
 }
+```
+
+### 2.2.3	Deserialization navigation property in complex type payload
+
+#### 2.2.3.1	Deserialization process
+
+The deserialization, or parse payload, or read payload is a process to covert the payload string into OData object, for example, ODataEntry, ODataProperty, etc. The process uses a state to track the reading. So, there are many read states transferred from one to anther in one deserialization process. 
+Let’s have look about the basic entry payload deserialization.
+
+![]({{site.baseurl}}/assets/2015-12-21-ODL-DeSerialize-flow.png)
+
+
+2.2.3.2	Single expandable property in entry
+
+Simply input, we should add two states, for example:
+```C#
+public enum ODataReaderState
+{
+      …
+     ExpandablePropertyStart,
+
+     ExpandablePropertyEnd,
+     …
+}
+```
+We will only stop and return such state when we reading property with expanded entry in it. So, the server side can have the following structure to catch the state and figure out the expandable property.
+```C#
+while (reader.Read())
+{
+     switch (reader.State)
+     {
+         case ODataReaderState.EntryStart:
+              break;
+
+         ……
+
+        case ODataReaderState.ExpandablePropertyStart:
+              break;
+
+        case ODataReaderState.ExpandablePropertyEnd:
+              break;
+
+
+        ……
+        
+        default:
+             break;
+     }
+}
+```
+Based on this design, we should do as follows:
+1.	Add the following APIs in ODataReaderCore to start and end reading the expandable property.
+```C#
+protected abstract bool ReadAtExpandablePropertyStartImplementation();
+protected abstract bool ReadAtExpandablePropertyEndImplementation();
+```
+
+2.	Need a new Scope to identify the expandable property reading
+```
+private sealed class JsonLightExpandablePropertyScope : Scope
+{
+    …
+}
+```
+
+#### 2.2.3.3	Collection expandable property in entry
+   
+For collection, it’s same as single expandable property, except that the embed property should have the collection value.
+
+#### 2.2.3.4	Top level expandable property 
+
+The API ODataMessageReader.ReadProperty() is used to read property without navigation property. To support navigation property in complex type, we can’t use it, because it cannot be used to reader expanded entry and feed. Similar to delta entry reader, we should have the following classes to support top level expandable property with navigation property:
+```C#
+public abstract class ODataExpandblePropertyReader
+{
+  public abstract bool Read();  
+  …
+}
+```
+And the implementation:
+```C#
+internal sealed class ODataJsonLightExpandblePropertyReader : ODataExpandblePropertyReader
+{
+
+  public override void Read ()
+  {
+    …
+  }
+}
+```
+
+#### 2.2.3.5	Top level collection of expandable property
+
+Similar to ODataCollectionReader, we can provide ODataCollectionExpandablePropertyReader to writer the top level collection of expandable property.
+```C#
+public abstract class ODataCollectionExpandablePropertyReader
+{
+
+  public abstract void Read(…);
+  …
+}
+```
+
+## 2.3	OData Client
+### 2.3.1 Client Support Operation on Complex type
+Scenario: Suppose that we have type Location, Address, City. Location, City are Entity type, Address is Complex Type. City is the navigation of Address. 
+Then supposedly customers can use following APIs on complex type with NP (navigation property) on client. 
+1.	LINQ Expand
+```C#
+  context.Locations.Expand(a=>a.Address.City); 
+  context.Locations.Bykey(1).Address.Expand(a=>a.City);   
+  context.Locations.Bykey(1).Addresses.Expand(a=>a.City);
+```
+ 
+2.	LoadProperty
+```C#
+  var location = context.Locations.Where(l=>l.ID == 1).Single();
+  var address = location.Address;
+  context.LoadProperty(address, "City");
+```
+3.	AddRelatedObject, UpdateRelatedObject
+```C#
+  var city = new City();
+  context.AddRelatedObject(address, “Cities”, city);
+```
+4.	AddLink, SetLink, DeleteLink
+**NOTE**: 2,3,4 are not applicable to collection value complex type.
+
+### 2.3.2 Materialization
+Materialization happens by converting the response payload to client object. 
+Client defines different materializers to materialize different kind of payload. As shown in following picture:
+*	ODataEntitiesEntityMaterializer: Handle the response of SaveChanges()
+*	ODataReaderEntityMaterializer: Handle response of querying Entry or Feed, and not queried through LoadProperty, e.g. GET ~/Customers
+*	ODataLoadNavigationPropertyMaterializer: When LoadProperty is called
+*	ODataCollectionMaterializer: Handle response of querying collection value property
+*	ODataValueMaterializer: Handle response of querying a value, e.g. GET ~/Customers/$count
+*	ODataPropertyMaterializer: Handle response of querying a property, e.g. GET ~/Customers(1)/Name
+*	ODataLinksMaterializer: Handle response of querying the reference links e.g. GET ~/Customers(1)/Orders(0)/$ref
+
+![]({{site.baseurl}}/assets/2015-12-21-Client-main-flow.png)
+
+The common process of a query is:
+
+![]({{site.baseurl}}/assets/2015-12-21-Client-common-query.png)
+
+The Materialization (Part 2) is driven at the top level by an instance of MaterializeAtom, which implements the enumerable/enumerator. The materializer reads OData object from payload with ODataReader and materialize by calling different materialization policy and tracks materialization activity in an AtomMaterializerLog. Then MaterializeAtom instance applies AtomMaterializerLog onto the context (entityTracker) for each successful call to MoveNext().
+During an entry materialization, MaterializerEntry/MaterializerFeed/MaterializerNavigationLink will be created to record the materializer state for a given ODataEntry, ODataFeed and NavigationLink respectively.
+
+#### 2.3.2.1 Materialization class for complex type with navigation property
+
+As complex type with navigation property will be read as an ODataExpandableProperty in ODataReader. To align with this: 
+1.	Add ExpandablePropertyMaterializationPolicy to be responsible for materializing an ODataExpandableProperty.
+```C#
+public class ExpandableComplexPropertyMaterializationPolicy : StructuralValueMaterializationPolicy
+{
+  private readonly EntryValueMaterializationPolicy entryValueMaterializationPolicy;
+  …
+}
+```
+2.	Add MaterializerExpandableProperty to remember the materializer state of a given ODataExpandableProperty.
+```C#
+internal class MaterializerExpandableProperty
+{
+  /// <summary>The property.</summary>
+  private readonly ODataExpandableProperty ;
+
+  /// <summary>List of navigation links for this entry.</summary>
+  private ICollection<ODataNavigationLink> navigationLinks = ODataMaterializer.EmptyLinks;
+
+  …
+}
+```
+
+#### 2.3.2.2 Materialize complex type property in an entry
+When payload is an entry or a feed, ODataReaderEntityMaterializer will be created to materialize the response. So we need add logic in ODataReaderEntityMaterializer to handle the complex type with navigation property.
+1.	Add ICollection<ODataExpandableProperty> complexProperties to MaterializerEntry. In Materializer.Read(), add state ODataReaderState.ExpandablePropertyStart/ ODataReaderState.ExpandablePropertyEnd to read complex type and its navigation property to complexProperties. And for each complex type having navigation property, create an instance of MaterializerExpandableProperty. Following is a sample:
+
+```C#
+do
+                {
+                    bool inComplexPropertyScope = false;
+                    ODataExpandableProperty complexProperty;
+                    ICollection<ODataNavigationLink> complexPropertyNavigationLinks = ODataMaterializer.EmptyLinks;
+
+                    switch (this.reader.State)
+                    {
+                        case ODataReaderState.NavigationLinkStart:
+                            if (!inExpandablePropertyScope)
+                            {
+                                navigationLinks.Add(this.ReadNavigationLink());
+                            }
+                            else
+                            {
+                                complexPropertyNavigationLinks.Add(this.ReadNavigationLink());
+                            }
+                            break;
+                        case ODataReaderState.EntryEnd:
+                            break;
+                        case ODataReaderState.ExpandablePropertyStart:
+                            complexProperty = (ODataExpandableProperty)this.reader.Item;
+                            entry.AddComplexProperties(complexProperty);
+                            inComplexPropertyScope = true;
+                            break;
+ 
+                        case ODataReaderState.ExpandablePropertyEnd:
+                            inComplexPropertyScope = false; 
+                            MaterializerExpandableProperty.CreateInstance(complexProperty, complexPropertyNavigationLinks);
+                            complexPropertyNavigationLinks = ODataMaterializer.EmptyLinks;
+                            break;
+                        …. 
+
+                    }
+            }
+```
+Then the data flow would be like:
+
+![]({{site.baseurl}}/assets/2015-12-21-Client-data-flow.png)
+
+2.	Materialize
+The materializer will call EntryValueMaterializationPolicy to materialize an entity, and in EntryValueMaterializationPolicy, we can call ExpandableComplexPropertyMaterializationPolicy to handle complex type having navigation property. 
+```C#
+foreach (var property in entry.complexProperties)
+{
+MaterializerExpandableProperty materializerProperty = property.GetAnnotation< MaterializerExpandableProperty>();             this.expandablePropertyMaterializationPolicy.MaterializeExpandableProperty(property, materializerProperty. navigationLinks);
+object value = property.GetMaterializedValue();
+    var prop = actualType.GetProperty(property.Name, this.MaterializerContext.IgnoreMissingProperties);
+    prop.SetValue(entry.ResolvedObject, value, property.Name, true /* allowAdd? */);   
+}
+```
+3.	ApplyLogToContext
+Update the materialization info to DataServiceContext. Will explain more in tracking section. 
+
+#### 2.3.2.3 Materialize top level complex type property
+Currently top level single-value complex type is handled by ODataPropertyMaterializer, and collection-value complex type is handled by ODataCollectionMaterializer, and the readers are:
+
+*	ODataPropertyMaterializer  ODataMessageReader.ReadProperty
+*	ODataCollectionMaterializer  ODataMessageReader. CreateODataCollectionReader
+
+For complex type has navigation property, we have separate reader for it. 
+
+*	Single-value complex type  ODataExpandblePropertyReader
+*	Collection-value complex type  ODataCollectionExpandablePropertyReader
+
+So in ODataPropertyMaterializer/ODataCollectionMaterializer we need add logic to read with _ODataExpandblePropertyReader/ODataCollectionExpandablePropertyReader_ when we found the complex type has navigation property (by visiting the model). 
+
+#### 2.3.2.4 Materialize LoadProperty under complex type property
+When LoadProperty is called, ODataLoadNavigationPropertyMaterializer will be used as materializer. So we need add logic for complex type in this materializer:
+
+1.	Get existing complex type instance from descriptor (Refer to the tracking part)
+2.	Read the payload to ODataEntry or ODataFeed
+3.	Materialize the ODataEntry/ODataFeed and set it as property of the complex type instance
+
+### 2.3.3 Tracking complex type
+#### 2.3.3.1 Existing Entity Tracking
+In order to directly have operations on a materialized entity, we need store the needed info internally in order to generate the Url for a real http request.  For example, company has been materialized to a clr object, and we try to update a property by directly modifying the clr object.
+```C#
+company.TotalAssetsPlus = 100;                  
+TestClientContext.UpdateObject(company);       
+TestClientContext.SaveChanges();
+```
+In this case, we need try to get the company editlink in order to send PATCH against it. And info like editlink can be achieved during company materialization.  For this reason, client will create an EntityDescriptor when materializing an entity, and store the mapping of the materialized entity and its descriptor in EntityTracker. And the entitytracker can be accessed through DataServiceContext.
+
+EntityDescriptor is defined as:
+```C#
+public sealed class EntityDescriptor : Descriptor
+{
+    private Uri identity;          // The id of the entity
+
+        private object entity;    // The materialized value of the entity
+
+        private Uri addToUri;    // uri of the resource set to add the entity to during save
+
+        private Uri selfLink;      // uri to query the entity
+ 
+        private Uri editLink;     // uri to edit the entity.
+
+        private Dictionary<string, LinkInfo> relatedEntityLinks;    // Contains the LinkInfo (navigation and relationship links) for navigation properties
+…
+}
+```
+And in EntityTracker we have:
+
+* Dictionary<object, EntityDescriptor> entityDescriptors:
+The mapping of entity clr object and entity descriptor. With the entity clr object, we can search the dictionary to get its EntityDescriptor, then we can get the editlink/selflink of the entity, and send quest against it.
+
+* Dictionary<Uri, EntityDescriptor> identityToDescriptor
+The mapping of entity id and entity descriptor. When materializing an entity, we will firstly search this dictionary to check if the entity is already been tracked (materialized). If it is already been materialized, it will reuse existing clr object (EntityDescriptor-> entity), and apply new values to it. 
+
+* Dictionary<LinkDescriptor, LinkDescriptor> bindings
+The binding of entity and its navigation property which has been tracked (materialized). For example, if we request Get Customers(1)?$expand=Order, then during materialization, we will create a LinkDescriptor(customer(id=1), “Order”, order, this.model) to track the binding, customer and order is the materialized object. This dictionary can be used for AddLink, SetLink…
+
+So when we try to query an entity, client will work as:
+
+![]({{site.baseurl}}/assets/2015-12-21-Client-query-entity.png)
+
+### 2.3.3.2 Complex type tracking
+Like entity, in order to support LoadProperty, AddRelatedObject, AddLink… on complex type, we need track as well for those complex type having navigation property. But as we do not have an identity for complex type, so we can only track single-value complex type, and the complex type property must be queried inside an entry (Will explain why we has this restriction later). 
+
+1.	Create ComplexTypeDescriptor
+In order to reuse current logic of EntityDescriptor, we can add a base class ResourceDescriptor let EntityDescriptor and ComplexTypeDescriptor inherit from it. 
+
+![]({{site.baseurl}}/assets/2015-12-21-Client-class-relation1.png)
+
+2.	Then for EntiyTracker, it will be like:
+
+![]({{site.baseurl}}/assets/2015-12-21-Client-class-relation2.png)
+
+3.	Then track when complex type property is queried through entry
+**Materializer.Read()**:
+a.	Create ComplexTypeDescriptor while encountering complex type property which is needed to be tracked, complex type identity consists of entity id plus complex property name, for example, ~/Locations(1)/Address.
+b.	Update relatedLinks in ComplexTypeDescriptor by reading navigation links in complex type property (Need ODL support: ODL reader should be able to compute the navigation links for navigation property under single-value complex type).
+c.	Add ComplexTypeDescriptor to EntityDescriptor
+d.	If the navigation link of complex type is expanded in the payload, read the expanded entry or feed, and annotate the navigationlink with MaterializerNavigationLink, same with reading the navigation property of entity.
+
+**Materializer.Materialize:**
+Materialize OData value to client clr object.  
+a.	Update materialized value of complex type property to complexTypeDescritors in EntityDescriptor 
+b.	Create a LinkDescriptor of the materialized complex value and its materialized navigation property value and add it to MaterializerLog. 
+
+**Materializer.ApplyLogToContext():**
+Update entity tracker based on previous materialization. 
+a.	Add or merge EntityDescriptor to EntityTracker, including updating complexTypeDescriptors in EntityDescriptor
+b.	Add or merge each complexTypeDescriptors in EntityDescriptor to Dictionary of complexDescriptors and identityToDescriptors in entityTracker.
+c.	Update complex type navigation links in MaterializerLog to bindings of entityTracker.
+
+4.	We cannot track collection-value complex type property, so following scenario does not work:
+```C#
+var location = TestClientContext.Locations.Where(lo=>lo.ID == 1).Single();
+var addresses = location.Addresses;    //Addresses is collection-value complex type property
+foreach (var addr in addresses) 
+{
+  TestClientContext.LoadProperty(addr, "City");  // Does not work
+}
+```
+Reason:
+We do not have an identity for a complex type instance in a collection, and there is no way for us to know if the incoming complex type has been materialized before. We probably can support this tracking if we allow indexing into collections.
+
+Workaround: 
+Expand city instead, for example, `context.Locations.Bykey(1).Addresses.Expand(a=>a.City)`;
+
+5.	We cannot track if complex type property is queried as individual property
+For example, in following scenario, we are not able to track complex type and use it in LoadProperty: 
+```C#
+var addr = TestClientContext.CreateQuery<Address>("Company/Address").Execute();
+foreach (var d in addr)          // Will materialize Address here. 
+{
+  TestClientContext.LoadProperty(d, "City");   // Does not work
+}
+```
+Reason:
+When querying complex type property directly, we do not have the entity info. We only have the request Uri and the request Uri cannot be used to identify a complex type. For example, Get ~/Locations(1)/Address and Get ~/Company/Location/Address may actually get the same instance.
+
+Workaround:
+Query the entity which includes the complex type. 
+
+### 2.3.4 Public API Implementation related to tracking
+1. LoadProperty
+For example, when customer call context.LoadProperty(address, "City"), client need add logic:
+*	Remove the validation about address must be an entityType
+*	Search dictionary of ResourceDescriptors with object address to get the ComplexTypeDescriptor
+*	Get the navigationlink of City from ComplexTypeDescriptor-> relatedEntityLinks
+*	Generate request with the navigationlink  of City
+
+2. AddRelatedObject, UpdateRelatedObject
+*	Remove the validation about source 
+*	Update the parent Descriptor of EntityDescriptor to ResourceDescriptor so it can accept ComplexTypeDescriptor
+*	For AddRelatedObject, add the LinkDescriptor to the bindings in entityTracker
+
+3. AddLink, SetLink, DeleteLink
+  Similar to Entity, add/set/delete bindings of entitytracker, and get source/target descriptor to generate request.
+        
+### 2.3.5 Serialization
+When we try to add or update an entity from client, we need call ODataWriter to serialize the object to payload. So in class Serializer:
+1.	WriteEntry
+If we do not do any operation to the navigation property under complex type, then this function does not need any change. Meanwhile, if we want to support adding bindings to complex type (only for single-value complex type), like the following scenario:
+
+```C#
+var city = context.Cities.Bykey(1).GetValue();
+Address address = new Address {Street = "Zixing"};
+Location location = new Location {ID=11, Address=address};
+context.AddToLocations(location);
+context.SetLink(address, "City", city);
+context.SaveChanges();
+```
+	Then the process would be like:
+a)	AddToLocations would create an EntityDescriptor for location and add it to entityTracker.ResourceDescriptor
+b)	SetLink would create a LinkDescriptor between address and city and add it to entityTracker.bindings
+c)	In BaseSaveResult->RelatedLinks (EntityDescriptor entityDescriptor) which is try to enumerate the related Modified/Unchanged links for an added item, try to match link.source to the entity or property value in the descriptor. If the link.source is equal to a property value, create a ComplexTypeDescriptor and add it to entityDescriptor and entityTracker. 
+d)	When creating OData objects, go through ComplexTypeDescriptor under EntityDescriptor and create ODataExpandableProperty from them
+e)	Write ODataEntry, and for ODataExpandableProperty, call WriteStart(ODataExpandableProperty property), and call WriteEntityReferenceLink to write the binding.
+
+2.	WriteEntityReferenceLink
+When AddLink/SetLink is called on complex type, this function will be called to write the payload. So the function need update the logic from EntityDescriptor to ResourceDescriptor. 
+
+### 2.3.6 CodeGen
+In order to support .Expand on complex type, we need generate DataServiceQuery for Complex Type.
+For scenario Locations->Address->City, Address is complex type, City is the navigation property of Address:
+ 
+1.	Generate Class for Address: 
+ 
+**If City is single-value navigation property:**
+```C#
+public partial class Address : global::System.ComponentModel.INotifyPropertyChanged
+{
+    public global::Microsoft.OData.Client.City City  { get; set; }
+}
+public partial class AddressSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<Address>
+{
+    public global::Microsoft.OData.Client.CitySingle City { get; }
+}
+```
+
+**If City is collection-value navigation property:**
+```C#
+public partial class Address : global::System.ComponentModel.INotifyPropertyChanged
+{
+    public global::Microsoft.OData.Client.DataServiceCollection<global::ODataClientSample.City> Cities  { get; set; }
+}
+public partial class AddressSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<Address>
+{
+    public global::Microsoft.OData.Client.DataServiceQuery<global::ODataClientSample.City> Cities { get; }
+}
+```
+2.	Add Address to Location:
+**If complex type Address is single-value:**
+```C#
+public partial class Location: global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+{
+public global::ODataClientSample.Address Address {get;set;}
+}
+```
+Then we can support:
+```C#
+var location = context.Locations.Where(l=>l.ID == 1).Single();
+var address = location.Address;
+```
+
+**If complex type Address is collection-value:**
+```C#
+public partial class Location: global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+{
+    public global::System.Collections.ObjectModel.ObservableCollection<Address> Addresses {get;set;}
+}
+```
+Then we can support:
+```C#
+var addresses = location.Addresses;
+```
+
+3.	Add Address to LocationSingle:
+**If complex type Address is single-value:**
+```C#
+public partial class LocationSingle: global::Microsoft.OData.Client.DataServiceQuerySingle<Location>
+{
+  public global::ODataClientSample.AddressSingle Address {get;}
+}
+```
+Then we can support:
+```C#
+var location = context.Location.ByKey(1).Address.Expand(a=>a.City);
+```
+ 
+**If complex type Address is collection-value:**
+```C#
+public partial class LocationSingle: global::Microsoft.OData.Client.DataServiceQuerySingle<Location>
+{
+public global::Microsoft.OData.Client.DataServiceQuery<global::ODataClientSample.Address> Addresses {get;}
+}
+```
+Then we can support:
+```C#
+  var location = context.Location.ByKey(1).Addresses.Expand(a=>a.City);
 ```
