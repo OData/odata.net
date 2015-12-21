@@ -1273,3 +1273,105 @@ if (entry != null)
 
 ```
 
+
+### 2.4.5.2 Top level expanded complex property
+
+We can modify ODataComplexTypeSerializer to support expanded complex property. For example:
+```C#
+GET ~/Customers(1)/Location?$expand=Region
+```
+So, we can do as follows:
+1. Modify _EntityInstanceContext_ to accept complex type instance, or create a new class named _ComplexInstanceContext_.
+
+2. Use the _SelectExpandNode_ into _ODataComplexTypeSerializer_
+
+3. If **ExpandedStructuralProperties** is empty, serialize the complex as normal, otherwise we will serialize an expandable property.
+
+4. Add new function named **CreateExpandableProperty**
+```C#
+private static ODataExpandableProperty CreateExpandableProperty(EntityInstanceContext context)
+{
+        ….            
+}
+```
+5. Create a new function to write the expandable property
+```C#
+private static void WriteExpandableProperty(ODataExpandableProperty property, EntityInstanceContext context, ODataSerializerContext writeContext);
+{
+        Create ODataExpandablePropertyWriter;
+        Call WriteStart(…);
+        WriteExpandedNavigationProperties(…);
+        WriteEnd();
+                  
+ }
+ ```
+  Where, **WriteExpandedNavigationProperties** maybe same as the function in _ODataEntityTypeSerializer_.
+For top level collection of expandable property, we can use the above same logic but create an _ODataCollectionExpandablePropertyWriter_ to write.
+
+
+### 2.4.6 Deserialization navigation property in complex type
+
+### 2.4.6.1 Expand complex property in Entry
+
+As mentioned in OData Core for reader, we have two new reader state:
+```C#
+public enum ODataReaderState
+{
+      …
+     ExpandablePropertyStart,
+
+     ExpandablePropertyEnd,
+     …
+}
+```
+So, we can use them to read the expandable property. 
+1. Create a new class named _ODataExpandablePropertyWithNavigationLinks_
+```C#
+public sealed class ODataExpandablePropertyWithNavigationLinks : ODataItemBase
+{
+       ……
+        public ODataExpandableProperty Property
+        {
+            get { return Item as ODataExpandableProperty; }
+        }
+
+        public IList<ODataNavigationLinkWithItems> NavigationLinks { get; private set; }
+ }
+ ```
+2. Modify **ReadEntryOrFeed()** function in _ODataEntityDeserializer_ by added two case statements into:
+```C#
+while (reader.Read())
+{
+       switch (reader.State)
+        {
+              ….
+              case ODataReaderState.ExpandablePropertyStart:
+                        ....
+                       break;
+
+               case ODataReaderState.ExpandablePropertyEnd:
+                       break;
+  
+         }
+}
+```
+   In **ExpandablePropertyStart**, we can create _ODataExpandablePropertyWithNavigationLinks_ object to push it into Stack. Make sure, we should modify the state transfer to make sure the **NavigationState** can follow up _ExpandablePropertyStart_.
+3. Should modify ODataEntryWithNavigationLinks to accept the ODataExpandablePropertyWithNavigationLinks
+
+4. Add new API named AddExpandedStrucutralProperties()
+```C#
+private void AddExpandedStrucutralProperties(IEdmNavigationProperty navigationProperty, object entityResource,
+            ODataEntryWithNavigationLinks entry, ODataDeserializerContext readContext)
+{
+  …
+}
+```
+ And call it brefore **ApplyNavigationProperties** in **ApplyEntityProperties()**.
+
+#### 2.4.6.2 Top level expanded complex property
+
+Web API doesn’t support to read a top level complex property. So, we shouldn’t support expanded complex property.
+
+#### 2.4.6.3 Expanded complex property as action parameter
+
+TBD.
