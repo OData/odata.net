@@ -4,6 +4,7 @@ title: "7.3 Navigation Property in Complex Type Design"
 description: "Design doc for navigation property, complex type"
 category: "7. Design"
 ---
+<<Inital draft, Improvment frequently>>
 
 # 1	Design Summary
 ## 1.1 Overview
@@ -321,9 +322,11 @@ As navigation property be allowed in complex type, the _SelectExpandBinder_ shou
 *	~/../ complexproperty?$expand=navigation
 
 So, we should modify the codes as follows:
+
 1. Add a flag for Uri resolver to configure whether the navigation property is allowed in complex type
 2. Modify GenerateExpandItem(ExpandTermToken) function in SelectExpandBinder
 3. Modify SelectEpxandPathBinder to add a new function to process the property segment in expand clause.
+
 Let’s have an example: ** $expand=Location/City **
 ```C#
 IDictionary<string, string> queryOptions = new Dictionary<string, string>
@@ -337,8 +340,259 @@ var parser = new ODataQueryOptionParser(_model, _order, _orders, queryOptions);
 var selectAndExpand = parser.ParseSelectAndExpand();
 ```
 Then, _selectAndExpand_ has one SelectedItems with the following OData path with segments:
+
 1. PropertySegment
 2. NavigationPropertySegment 
 
+### 2.2.2	Serialize navigation property in complex type payload
+#### 2.2.2.1	Serialization process
 
+Let’s take a look about the serialization flow about navigation property in entity type. Below picture shows the simple flow about the serialization of entry, includes a) entry without expanded navigation property, b) entry with expanded navigation properties.
 
+![]({{site.baseurl}}/assets/2015-12-21-ODL-Serialize-flow.png)
+
+From the picture, we can find that the serialization flow is more complicated if entry with expanded navigation property. Moreover, there’s no way to expand the navigation property in complex type property, owing that the complex type property is serialized completely in WriteStart process for entry same as other structural properties.
+So, as navigation property be allowed in complex type, we should stop the write process for entry once a complex type property with navigation property is met. Then, we can use the process same as navigation property in entity type to write the complex property with expanded navigation property.
+So far, we have the following proposal, (other proposal please refer to appendix):
+Create a new class, for example ODataExpandableProperty, and add write start API on this class. For example:
+```C#
+public void WriteStart(ODataExpandableProperty property);
+```
+
+#### 2.2.2.2	Single expandable property in entry
+Let’s see how to serialize the entry with complex type property in which the navigation properties are expanded.  Based on the above proposal, the basic serialization flow for entry with expandable property with expanded navigation property should be as follows:
+
+![]({{site.baseurl}}/assets/2015-12-21-Expandable-Serialize-flow.png)
+
+The corresponding server side codes to serialize the navigation property in complex type should be as:
+```C#
+ODataEntry entry1 = new ODataEntry();
+entry1.AddProperty(property); // normal properties
+…
+ODataExpandableProperty expandableProperty = new ODataExpandableProperty();// the property with the NP.
+ODataEntry entry2 = new ODataEntry(); // Expanded entry belongs to above expandable property
+ODataNavigationLink navigationLink =  …
+writer.WriteStart(entry1); // write start of entry1 and normal properties
+writer.WriteStart(expandableProperty); // write the expandable property
+    writer.WriteStart(navigationLink);
+        	writer.WriteStart(entry2); 
+writer.WriteEnd();   // End entry2
+         writer.WriteEnd();  // End navigationLink
+    writer.WriteEnd();  // End pr expandableProperty
+writer.WriteEnd(); // End entry1
+```
+So, we can do as follows:	
+1.	Create a new class
+```C#
+public sealed class ODataExpandableProperty : ODataItem
+{
+   …
+}
+```
+Basically, _ODataExpandableProperty_ can have the same structure of _ODataProperty_, but it should be derived from _ODataItem_, or it can be embedded with _ODataProperty_.
+2.	Add two new abstract APIs in ODataWirter
+```C#
+public abstract void WriteStart(ODataExpandableProperty property);
+public abstract Task WriteStartAsync(ODataExpandableProperty property);
+```
+The users (developers, service) can call these APIs to write the expandable property.
+3.	In ODataWriterCore, give an implementation for the above new abstract APIs.  
+4.	Add new item in WriterState enum type:
+```C#
+internal enum WriterState
+{
+…
+  /// <summary>The writer is currently writing an expandable property.</summary>
+  ExpanableProperty,
+…
+}
+```
+5.	Add two new abstract API as follows in _ODataWirterCore_
+```C#
+protected abstract void StartExpandableProperty(ODataExpandableProperty property);
+protected abstract void EndExpandableProperty(ODataExpandableProperty property);
+```
+Then, to implement them in _ODataAtomWriter & ODataJsonLightWriter_. So far, leave the implementation in _ODataAtomWriter_ to throw **NotImplementedException**.
+
+6.	In ODataJsonLightWriter, we can have the following prototype codes:
+```C#
+protected override void StartExpandableProperty(ODataExpandableProperty property)
+{
+    …    
+}
+```
+7.	In OdataJsonLightPropertySerializer, add new internal API **WriteExpandableProperty(…)** to write the structural properties of the expandable property. 
+8.	Modify the related write scope to make parent of navigation property scope can be expandable property.
+
+Let’s have an example:
+
+Where the model schema can be:
+  * Entity type “NS.Order” has a complex property named “Location” with “NS.Address” complex type
+	* “NS.Address” has a navigation property named “City” with “NS.City” entity type.
+
+So, we can construct all related object as follows:
+```C#
+ODataEntry order = new ODataEntry()
+{
+    TypeName = "NS.Order",
+    Properties = new[]
+    {
+        new ODataProperty {Name = "ID", Value = 1},
+        new ODataProperty {Name = "Amount", Value = 20}
+    },
+};
+
+ODataEntry city = new ODataEntry()
+{
+    TypeName = "NS.City",
+    Properties = new[]
+    {
+        new ODataProperty {Name = "Name", Value = "Minhang"},
+        new ODataProperty {Name = "State", Value = "Shanghai"},
+        new ODataProperty {Name = "Country", Value = "CN"}
+    }
+};
+
+ODataComplexValue location = new ODataComplexValue
+{
+    Properties = new[]
+    {
+        new ODataProperty { Name = "Street", Value = "ZiXing Rd" },
+        new ODataProperty { Name = "ZipCode", Value = "9001"}
+    },
+    TypeName = "NS.Address"
+};
+
+ODataProperty complex = new ODataProperty
+{
+    Name = "Location",
+    Value = location
+};
+
+ODataExpandableProperty expandable = new ODataExpandableProperty
+{
+    Property = complex
+};
+
+ODataNavigationLink navigationLink = new ODataNavigationLink
+{
+    Name = "City",
+    IsCollection = false
+};
+```
+Then, we can write the navigation property in complex type as:
+```C#
+writer.WriteStart(order);
+          writer.WriteStart(expandable);
+
+                writer.WriteStart(navigationLink);
+
+                    writer.WriteStart(city);
+                    writer.WriteEnd();
+
+                writer.WriteEnd(); // end of navigation link
+          writer.WriteEnd();// end of expandable property
+ writer.WriteEnd();
+ ```
+We can have the following payload:
+
+```json
+{
+  "@odata.context":"http://.../$metadata#Orders/$entity",
+  "ID":1,
+  "Amount":20,
+  "Location":{
+       "Street":"ZiXing Rd",
+       "ZipCode":"9001",
+       "City":{
+             "Name":"Minhang",
+             "State":"Shanghai",
+             "Country":"CN"
+    }
+  }
+}
+```
+2.2.2.3	Collection expandable property in entry
+
+We can reuse the ODataExpandableProperty class to serialize the collection expandable property. For example:
+```C#
+ODataComplexValue address1 = new ODataComplexValue()
+ODataComplexValue address2 = new ODataComplexValue()
+ODataProperty addresses = new ODataProperty
+{
+  Name = "Addresses",
+  Value = new ODataCollectionValue
+  {
+    TypeName = "Collection(NS.Address)", 
+   Items = new[] { address1, address2 }
+  }
+};
+ODataExpandableProperty expandable = new ODataExpandableProperty
+{
+  Property = addresses
+};
+```
+Then the service side codes can be as follows:
+```C#
+ODataEntry entry1 = new ODataEntry();
+entry1.AddProperty(property); // normal properties
+…
+ODataExpandableProperty expandableProperty = new ODataExpandableProperty();// the property with the NP.
+ODataEntry entry2 = new ODataEntry(); // Expanded entry belongs to above expandable property
+ODataNavigationLink navigationLink =  …
+writer.WriteStart(entry1); // write start of entry1 and normal properties
+writer.WriteStart(expandableProperty); // write the expandable collection property
+    foreach (item in collection expandable property)
+    {
+            ODataExpandableProperty expandable = new ODataExpandableProperty…
+            writer.WrtierStart(expandable);
+                 writer.WriteStart(navigationLink);
+        	           writer.WriteStart(entry2); 
+           writer.WriteEnd();   // End entry2
+                     writer.WriteEnd();  // End navigationLink
+                writer.WriteEnd();  // End expandable item
+         }
+    writer.WriterEnd(); // End of collection expandable item
+writer.WriteEnd(); // End entry1
+```
+#### 2.2.2.4	Top level expandable property 
+
+The API _ODataMessageWriter.WriteProperty()_ is used to write property without navigation property. To support navigation property in complex type, we can’t use it, because it cannot be used to write expanded entry and feed. Similar to delta entry writer, we should have the following classes to support top level expandable property with navigation property:
+```C#
+public abstract class ODataExpandblePropertyWriter
+{
+  public abstract void WriteStart(ODataExpandableProperty property);
+  public abstract void WriteEnd();
+  …
+}
+```
+And make the implementation in a new class as follows:
+```C#
+internal sealed class ODataJsonLightExpandblePropertyWriter : ODataExpandblePropertyWriter, IODataOutputInStreamErrorListener
+{
+  public override void WriteStart(ODataExpandableProperty property)
+  {
+    …
+  }
+
+  public override void WriteEnd()
+  {
+    …
+  }
+}
+```
+
+#### 2.2.2.5	Top level collection of expandable property
+
+Similar to _ODataCollectionWriter_, we can provide _ODataCollectionExpandablePropertyWriter_ to writer the top level collection of expandable property.
+```C#
+public abstract class ODataCollectionExpandablePropertyWriter
+{
+
+  public abstract void WriteStart(…);
+  public abstract void WriteItem(…);
+  public abstract void EndItem(…);
+  public abstract void WriteEnd();
+  …
+}
+```
