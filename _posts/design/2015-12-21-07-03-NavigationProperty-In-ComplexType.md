@@ -220,7 +220,7 @@ Let’s have a detail example to illustrate how the users (developers) to add th
  address.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
       …
  model.AddElement(address);
- {% endhighlight %}
+{% endhighlight %}
  2)	Add “Customer” entity type:
 {% highlight csharp %}
 EdmEntityType customer = new EdmEntityType("NS", "Customer");
@@ -493,7 +493,7 @@ writer.WriteStart(order);
                 writer.WriteEnd(); // end of navigation link
           writer.WriteEnd();// end of expandable property
  writer.WriteEnd();
- {% endhighlight %}
+{% endhighlight %}
 We can have the following payload:
 
 {% highlight json %}
@@ -1238,7 +1238,7 @@ ODataEntry entry = new ODataEntry
    TypeName = typeName,
    Properties = CreateStructuralPropertyBag(selectedStructuralProperties, entityInstanceContext),
  };
- {% endhighlight %}
+{% endhighlight %}
    Then, the expanded structural properties exclude from the properties.
 
 b) Provide a new private API to write the expanded structural properties:
@@ -1304,7 +1304,7 @@ private static void WriteExpandableProperty(ODataExpandableProperty property, En
         WriteEnd();
                   
  }
- {% endhighlight %}
+{% endhighlight %}
   Where, **WriteExpandedNavigationProperties** maybe same as the function in _ODataEntityTypeSerializer_.
 For top level collection of expandable property, we can use the above same logic but create an _ODataCollectionExpandablePropertyWriter_ to write.
 
@@ -1337,7 +1337,7 @@ public sealed class ODataExpandablePropertyWithNavigationLinks : ODataItemBase
 
         public IList<ODataNavigationLinkWithItems> NavigationLinks { get; private set; }
  }
- {% endhighlight %}
+{% endhighlight %}
 2. Modify **ReadEntryOrFeed()** function in _ODataEntityDeserializer_ by added two case statements into:
 {% highlight csharp %}
 while (reader.Read())
