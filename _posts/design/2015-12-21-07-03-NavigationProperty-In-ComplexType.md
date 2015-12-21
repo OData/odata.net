@@ -103,7 +103,7 @@ public static EdmNavigationProperty CreateNavigationProperty(IEdmComplexType dec
 private static EdmNavigationProperty CreateNavigationProperty(IEdmStructuredType declaringType, EdmNavigationPropertyInfo propertyInfo)
 {% endhighlight %}
   *	e) Make the original CreateNavigationProperty() function and new added public API for complex type to call the new added private function, same as follows:
-  {% highlight csharp %}
+{% highlight csharp %}
 public static EdmNavigationProperty CreateNavigationProperty(IEdmEntityType declaringType, EdmNavigationPropertyInfo propertyInfo)
 {
   return CreateNavigationProperty((IEdmStructuredType)declaringType, propertyInfo);
@@ -134,7 +134,7 @@ protected override void ProcessComplexType(IEdmComplexType element)
 }
 {% endhighlight %}
 Then, the complex type in metadata document may have navigation property. Let’s have an example:
-{% endhighlight %}xml
+{% highlight xml %}
   <ComplexType Name="Address">
     <Property Name="Street" Type="Edm.String" />
     …
@@ -179,7 +179,7 @@ CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnN
 ### 2.1.4	Construct navigation property binding in complex type
 
 OData spec says:
-{% endhighlight %}TXT
+{% highlight TXT %}
 13.4.1 Attribute Path
 A navigation property binding MUST name a navigation property of the entity set’s, singleton's, or containment navigation property's entity type or one of its subtypes in the Path attribute. If the navigation property is defined on a subtype, the path attribute MUST contain the QualifiedName of the subtype, followed by a forward slash, followed by the navigation property name. If the navigation property is defined on a complex type used in the definition of the entity set’s entity type, the path attribute MUST contain a forward-slash separated list of complex property names and qualified type names that describe the path leading to the navigation property.
 {% endhighlight %}
@@ -254,7 +254,7 @@ EdmEntitySet cities = container.AddEntitySet(“Cities”, city);
 customers.AddNavigationTarget(addressNavProp, cities, new[] { location });
 {% endhighlight %}
 6)	Therefore, we can have the navigation property binding as:
-{% endhighlight %}xml
+{% highlight xml %}
   <EntityContainer Name="Default">
     <EntitySet Name="Customers" EntityType="NS.Customer">
       <NavigationPropertyBinding Path="Location/NS.Address/City" Target="Cities" />
@@ -496,7 +496,7 @@ writer.WriteStart(order);
  {% endhighlight %}
 We can have the following payload:
 
-{% endhighlight %}json
+{% highlight json %}
 {
   "@odata.context":"http://.../$metadata#Orders/$entity",
   "ID":1,
