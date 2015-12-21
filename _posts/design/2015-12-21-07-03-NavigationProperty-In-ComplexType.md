@@ -60,13 +60,13 @@ However, we need to do as follows to allow the customer to define navigation pro
 
 1 Promote the following public/private APIs from EdmEntityType to EdmStructuredType.
 
-```C#
+{% highlight csharp %}
 public EdmNavigationProperty AddUnidirectionalNavigation(EdmNavigationPropertyInfo propertyInfo)
 public EdmNavigationProperty AddBidirectionalNavigation(EdmNavigationPropertyInfo propertyInfo, EdmNavigationPropertyInfo partnerInfo)
 private EdmNavigationPropertyInfo FixUpDefaultPartnerInfo(EdmNavigationPropertyInfo propertyInfo, EdmNavigationPropertyInfo partnerInfo)
-```
+{% endhighlight %}
 Then, developers can call as follows to define the navigation property on complex type, for example:
-```C#
+{% highlight csharp %}
 EdmEntityType customer = new EdmEntityType(“NS”, “Customer”);
 ….
 EdmComplexType address = new EdmComplexType("NS", "Address");
@@ -77,13 +77,13 @@ address.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
      TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
      Target = customer
 });
-```
+{% endhighlight %}
 
 2 Modify `EdmNavigationProperty` class.
 
   *	a) Change the private constructor to accept the IEdmStructuredType.
   *	b) Change DeclaringEntityType property as following: 
-```C#
+{% highlight csharp %}
 public IEdmEntityType DeclaringEntityType
 {
   get
@@ -95,34 +95,34 @@ public IEdmEntityType DeclaringEntityType
     return null;
   }
 }
-```
+{% endhighlight %}
   *	c) Add a similar property named DeclaringComplexType, the implementation is same as #b.
   *	d) Add new public APIs as follows:
-```C#
+{% highlight csharp %}
 public static EdmNavigationProperty CreateNavigationProperty(IEdmComplexType declaringType, EdmNavigationPropertyInfo propertyInfo)
 private static EdmNavigationProperty CreateNavigationProperty(IEdmStructuredType declaringType, EdmNavigationPropertyInfo propertyInfo)
-```
+{% endhighlight %}
   *	e) Make the original CreateNavigationProperty() function and new added public API for complex type to call the new added private function, same as follows:
-  ```C#
+  {% highlight csharp %}
 public static EdmNavigationProperty CreateNavigationProperty(IEdmEntityType declaringType, EdmNavigationPropertyInfo propertyInfo)
 {
   return CreateNavigationProperty((IEdmStructuredType)declaringType, propertyInfo);
 }
-```
+{% endhighlight %}
 
 3	Add the following extension methods:
-```C#
+{% highlight csharp %}
 public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmComplexType type)
 public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdmComplexType type)
 public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdmComplexTypeReference type)
 public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmComplexTypeReference type)
 public static IEdmNavigationProperty FindNavigationProperty(this IEdmComplexTypeReference type, string name)
-```
+{% endhighlight %}
 
 ### 2.1.2	Write navigation property in complex type in CSDL
 
 There is a logic to write the complex type and its declared properties. We can add the navigation properties writing logic after writing declared properties.  So, We should change the function **ProcessComplexType()** in _EdmModelCsdlSerializationVisitor_ class as follows to write navigation properties in complex type:
-```C#
+{% highlight csharp %}
 protected override void ProcessComplexType(IEdmComplexType element)
 {
   this.BeginElement(element, this.schemaWriter.WriteComplexTypeElementHeader);
@@ -132,16 +132,16 @@ protected override void ProcessComplexType(IEdmComplexType element)
 
   this.EndElement(element);
 }
-```
+{% endhighlight %}
 Then, the complex type in metadata document may have navigation property. Let’s have an example:
-```xml
+{% endhighlight %}xml
   <ComplexType Name="Address">
     <Property Name="Street" Type="Edm.String" />
     …
     <Property Name="Country" Type="Edm.String" />
     <NavigationProperty Name="Customer" Type="NS.Customer" />
   </ComplexType>
-```
+{% endhighlight %}
 ### 2.1.3	Read navigation property in complex type in CSDL
 
 Reading/Parse the navigation property in complex type is a lit bit complex. We can analysis the entity type and complex type class inheritance in CSDL. Below picture shows the class relationship between CSDL complex type and CSDL entity type. Both are derived from _CsdlNamedStructuredType_, then derived from _CsdlStructuredType_:
@@ -153,15 +153,15 @@ So, we should modify as follows:
 * Promote everything about the navigation property from CsdlEntityType to CsdlStructuredType.
 
 * Modify the constructors of CsdlStructuredType, CsldNamedStructuredType, CsdlComplexType to accept the navigation properties. For example:
-```C#
+{% highlight csharp %}
 protected CsdlNamedStructuredType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> properties,   IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
   : base(properties, navigationProperties, documentation, location)
 {
   …
 }
-```
+{% endhighlight %}
 * Modify **CreateRootElementParser()** function in _CsdlDocumentParser_. Add the following templates for Complex type element:
-```C#
+{% highlight csharp %}
 //// <NavigationProperty>
 CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnNavigationPropertyElement, documentationParser,
   //// <ReferentialConstraint/>
@@ -170,7 +170,7 @@ CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnN
   CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement, documentationParser),
     //// <Annotation/>
     annotationParser),
-```
+{% endhighlight %}
 
 * Modify CsdlSemanticsNavigationProperty class to accept CsdlSemanticsStructuredTypeDefinition.
 
@@ -179,12 +179,12 @@ CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnN
 ### 2.1.4	Construct navigation property binding in complex type
 
 OData spec says:
-```TXT
+{% endhighlight %}TXT
 13.4.1 Attribute Path
 A navigation property binding MUST name a navigation property of the entity set’s, singleton's, or containment navigation property's entity type or one of its subtypes in the Path attribute. If the navigation property is defined on a subtype, the path attribute MUST contain the QualifiedName of the subtype, followed by a forward slash, followed by the navigation property name. If the navigation property is defined on a complex type used in the definition of the entity set’s entity type, the path attribute MUST contain a forward-slash separated list of complex property names and qualified type names that describe the path leading to the navigation property.
-```
+{% endhighlight %}
 From the highlight part, we can find that the property path is necessary for navigation property binding in complex type.  So, we should save the property path for navigation property in complex type. Let’s have an example to illustrate the property path for navigation property in complex type.
-```C#
+{% highlight csharp %}
 Customer (Entity)
 {
   …
@@ -202,65 +202,65 @@ City (Entity)
 
 EntitySet: Customers (Customer)
 EntitySet: Cities (City)
-```
+{% endhighlight %}
 The binding path of the navigation property _“City”_ of entity set _“Customers”_ should be **“Location/NS.Address/City”**. Or we can just remove the type cast if it is not the sub type as **“Location/City”**.
 As a result, we should add a new public API for _EdmNavigationSource_ class to let customer to define the property path for navigation property in complex type:
-```C#
+{% highlight csharp %}
 public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, IList<IEdmStructuralProperty> path)
 or
 public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, IList<string> path)
 
-```
+{% endhighlight %}
 Let’s have a detail example to illustrate how the users (developers) to add the navigation binding:
 
 1)	Add a complex type:
-```C#
+{% highlight csharp %}
 // complex type address
  EdmComplexType address = new EdmComplexType("NS", "Address");
  address.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
       …
  model.AddElement(address);
- ```
+ {% endhighlight %}
  2)	Add “Customer” entity type:
-```C#
+{% highlight csharp %}
 EdmEntityType customer = new EdmEntityType("NS", "Customer");
 customer.AddKeys(customer.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
 …
 var location = customer.AddStructuralProperty("Location", new EdmComplexTypeReference(address, isNullable: true));
 model.AddElement(customer);
-```
+{% endhighlight %}
 3)	Add “City” entity type
-```C#
+{% highlight csharp %}
 EdmEntityType city = new EdmEntityType("NS", "City");
 city.AddKeys(city.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
 …
 model.AddElement(city);	
-```
+{% endhighlight %}
 4)	Add a navigation property for “Address” complex type
-```C#
+{% highlight csharp %}
 EdmNavigationProperty addressNavProp = address.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
 {
 Name = "City",
 TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
 Target = city
 });
-```
+{% endhighlight %}
 5)	Add an entity set and the navigation property binding
-```C#
+{% highlight csharp %}
 EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
 model.AddElement(container);
 EdmEntitySet customers = container.AddEntitySet("Customers", customer);
 EdmEntitySet cities = container.AddEntitySet(“Cities”, city);
 customers.AddNavigationTarget(addressNavProp, cities, new[] { location });
-```
+{% endhighlight %}
 6)	Therefore, we can have the navigation property binding as:
-```xml
+{% endhighlight %}xml
   <EntityContainer Name="Default">
     <EntitySet Name="Customers" EntityType="NS.Customer">
       <NavigationPropertyBinding Path="Location/NS.Address/City" Target="Cities" />
     </EntitySet>
   </EntityContainer>
-```
+{% endhighlight %}
 ### 2.1.5	Validation rules for navigation property in complex type
 
 There’re a lot of validation rules related to navigation property, entity type and complex type. So, we should:
@@ -290,23 +290,23 @@ The navigation property in complex type can be in path/segment or query option. 
 We can use the existing classes _NavigationPropertySegment_ and _NavigationPropertyLinkSegment_ to represent the navigation property of complex type without any change.
 
 However, we should pass the previous navigation source from structural property to the navigation property belong to this.  So, we should change the **CreatePropertySegment()** function in _ODataPathParser_ to save the previous navigation source in property segment as follows:
-```C#
+{% highlight csharp %}
 private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
 {
   …
   segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
   …
 }
-```
+{% endhighlight %}
 
 Let’s have a request example:
-```C#
+{% highlight csharp %}
 http://localhost/Orders(1)/Location/City
-```
+{% endhighlight %}
 Then, the result of Uri parser can be:
-```C#
+{% highlight csharp %}
 ~/EntitySetSegment/KeySegment/PropertySegment/NavigationPropertySegment
-```
+{% endhighlight %}
 #### 2.2.1.2	Parse query option
 
 So far, SelectExpandBinder only supports the following expand clause:
@@ -328,7 +328,7 @@ So, we should modify the codes as follows:
 3. Modify SelectEpxandPathBinder to add a new function to process the property segment in expand clause.
 
 Let’s have an example: ** $expand=Location/City **
-```C#
+{% highlight csharp %}
 IDictionary<string, string> queryOptions = new Dictionary<string, string>
   {
     { "$expand", "Location/City" }
@@ -338,7 +338,7 @@ var _orders = _model.FindDeclaredEntitySet("Orders");
 var parser = new ODataQueryOptionParser(_model, _order, _orders, queryOptions);
 
 var selectAndExpand = parser.ParseSelectAndExpand();
-```
+{% endhighlight %}
 Then, _selectAndExpand_ has one SelectedItems with the following OData path with segments:
 
 1. PropertySegment
@@ -355,9 +355,9 @@ From the picture, we can find that the serialization flow is more complicated if
 So, as navigation property be allowed in complex type, we should stop the write process for entry once a complex type property with navigation property is met. Then, we can use the process same as navigation property in entity type to write the complex property with expanded navigation property.
 So far, we have the following proposal, (other proposal please refer to appendix):
 Create a new class, for example ODataExpandableProperty, and add write start API on this class. For example:
-```C#
+{% highlight csharp %}
 public void WriteStart(ODataExpandableProperty property);
-```
+{% endhighlight %}
 
 #### 2.2.2.2	Single expandable property in entry
 Let’s see how to serialize the entry with complex type property in which the navigation properties are expanded.  Based on the above proposal, the basic serialization flow for entry with expandable property with expanded navigation property should be as follows:
@@ -365,7 +365,7 @@ Let’s see how to serialize the entry with complex type property in which the n
 ![]({{site.baseurl}}/assets/2015-12-21-Expandable-Serialize-flow.png)
 
 The corresponding server side codes to serialize the navigation property in complex type should be as:
-```C#
+{% highlight csharp %}
 ODataEntry entry1 = new ODataEntry();
 entry1.AddProperty(property); // normal properties
 …
@@ -380,25 +380,25 @@ writer.WriteEnd();   // End entry2
          writer.WriteEnd();  // End navigationLink
     writer.WriteEnd();  // End pr expandableProperty
 writer.WriteEnd(); // End entry1
-```
+{% endhighlight %}
 So, we can do as follows:	
 1.	Create a new class
-```C#
+{% highlight csharp %}
 public sealed class ODataExpandableProperty : ODataItem
 {
    …
 }
-```
+{% endhighlight %}
 Basically, _ODataExpandableProperty_ can have the same structure of _ODataProperty_, but it should be derived from _ODataItem_, or it can be embedded with _ODataProperty_.
 2.	Add two new abstract APIs in ODataWirter
-```C#
+{% highlight csharp %}
 public abstract void WriteStart(ODataExpandableProperty property);
 public abstract Task WriteStartAsync(ODataExpandableProperty property);
-```
+{% endhighlight %}
 The users (developers, service) can call these APIs to write the expandable property.
 3.	In ODataWriterCore, give an implementation for the above new abstract APIs.  
 4.	Add new item in WriterState enum type:
-```C#
+{% highlight csharp %}
 internal enum WriterState
 {
 …
@@ -406,21 +406,21 @@ internal enum WriterState
   ExpanableProperty,
 …
 }
-```
+{% endhighlight %}
 5.	Add two new abstract API as follows in _ODataWirterCore_
-```C#
+{% highlight csharp %}
 protected abstract void StartExpandableProperty(ODataExpandableProperty property);
 protected abstract void EndExpandableProperty(ODataExpandableProperty property);
-```
+{% endhighlight %}
 Then, to implement them in _ODataAtomWriter & ODataJsonLightWriter_. So far, leave the implementation in _ODataAtomWriter_ to throw **NotImplementedException**.
 
 6.	In ODataJsonLightWriter, we can have the following prototype codes:
-```C#
+{% highlight csharp %}
 protected override void StartExpandableProperty(ODataExpandableProperty property)
 {
     …    
 }
-```
+{% endhighlight %}
 7.	In OdataJsonLightPropertySerializer, add new internal API **WriteExpandableProperty(…)** to write the structural properties of the expandable property. 
 8.	Modify the related write scope to make parent of navigation property scope can be expandable property.
 
@@ -431,7 +431,7 @@ Where the model schema can be:
 	* “NS.Address” has a navigation property named “City” with “NS.City” entity type.
 
 So, we can construct all related object as follows:
-```C#
+{% highlight csharp %}
 ODataEntry order = new ODataEntry()
 {
     TypeName = "NS.Order",
@@ -479,9 +479,9 @@ ODataNavigationLink navigationLink = new ODataNavigationLink
     Name = "City",
     IsCollection = false
 };
-```
+{% endhighlight %}
 Then, we can write the navigation property in complex type as:
-```C#
+{% highlight csharp %}
 writer.WriteStart(order);
           writer.WriteStart(expandable);
 
@@ -493,10 +493,10 @@ writer.WriteStart(order);
                 writer.WriteEnd(); // end of navigation link
           writer.WriteEnd();// end of expandable property
  writer.WriteEnd();
- ```
+ {% endhighlight %}
 We can have the following payload:
 
-```json
+{% endhighlight %}json
 {
   "@odata.context":"http://.../$metadata#Orders/$entity",
   "ID":1,
@@ -511,11 +511,11 @@ We can have the following payload:
     }
   }
 }
-```
+{% endhighlight %}
 2.2.2.3	Collection expandable property in entry
 
 We can reuse the ODataExpandableProperty class to serialize the collection expandable property. For example:
-```C#
+{% highlight csharp %}
 ODataComplexValue address1 = new ODataComplexValue()
 ODataComplexValue address2 = new ODataComplexValue()
 ODataProperty addresses = new ODataProperty
@@ -531,9 +531,9 @@ ODataExpandableProperty expandable = new ODataExpandableProperty
 {
   Property = addresses
 };
-```
+{% endhighlight %}
 Then the service side codes can be as follows:
-```C#
+{% highlight csharp %}
 ODataEntry entry1 = new ODataEntry();
 entry1.AddProperty(property); // normal properties
 …
@@ -554,20 +554,20 @@ writer.WriteStart(expandableProperty); // write the expandable collection proper
          }
     writer.WriterEnd(); // End of collection expandable item
 writer.WriteEnd(); // End entry1
-```
+{% endhighlight %}
 #### 2.2.2.4	Top level expandable property 
 
 The API _ODataMessageWriter.WriteProperty()_ is used to write property without navigation property. To support navigation property in complex type, we can’t use it, because it cannot be used to write expanded entry and feed. Similar to delta entry writer, we should have the following classes to support top level expandable property with navigation property:
-```C#
+{% highlight csharp %}
 public abstract class ODataExpandblePropertyWriter
 {
   public abstract void WriteStart(ODataExpandableProperty property);
   public abstract void WriteEnd();
   …
 }
-```
+{% endhighlight %}
 And make the implementation in a new class as follows:
-```C#
+{% highlight csharp %}
 internal sealed class ODataJsonLightExpandblePropertyWriter : ODataExpandblePropertyWriter, IODataOutputInStreamErrorListener
 {
   public override void WriteStart(ODataExpandableProperty property)
@@ -580,12 +580,12 @@ internal sealed class ODataJsonLightExpandblePropertyWriter : ODataExpandbleProp
     …
   }
 }
-```
+{% endhighlight %}
 
 #### 2.2.2.5	Top level collection of expandable property
 
 Similar to _ODataCollectionWriter_, we can provide _ODataCollectionExpandablePropertyWriter_ to writer the top level collection of expandable property.
-```C#
+{% highlight csharp %}
 public abstract class ODataCollectionExpandablePropertyWriter
 {
 
@@ -595,7 +595,7 @@ public abstract class ODataCollectionExpandablePropertyWriter
   public abstract void WriteEnd();
   …
 }
-```
+{% endhighlight %}
 
 ### 2.2.3	Deserialization navigation property in complex type payload
 
@@ -610,7 +610,7 @@ Let’s have look about the basic entry payload deserialization.
 2.2.3.2	Single expandable property in entry
 
 Simply input, we should add two states, for example:
-```C#
+{% highlight csharp %}
 public enum ODataReaderState
 {
       …
@@ -619,9 +619,9 @@ public enum ODataReaderState
      ExpandablePropertyEnd,
      …
 }
-```
+{% endhighlight %}
 We will only stop and return such state when we reading property with expanded entry in it. So, the server side can have the following structure to catch the state and figure out the expandable property.
-```C#
+{% highlight csharp %}
 while (reader.Read())
 {
      switch (reader.State)
@@ -644,21 +644,21 @@ while (reader.Read())
              break;
      }
 }
-```
+{% endhighlight %}
 Based on this design, we should do as follows:
 1.	Add the following APIs in ODataReaderCore to start and end reading the expandable property.
-```C#
+{% highlight csharp %}
 protected abstract bool ReadAtExpandablePropertyStartImplementation();
 protected abstract bool ReadAtExpandablePropertyEndImplementation();
-```
+{% endhighlight %}
 
 2.	Need a new Scope to identify the expandable property reading
-```
+{% endhighlight %}
 private sealed class JsonLightExpandablePropertyScope : Scope
 {
     …
 }
-```
+{% endhighlight %}
 
 #### 2.2.3.3	Collection expandable property in entry
    
@@ -667,15 +667,15 @@ For collection, it’s same as single expandable property, except that the embed
 #### 2.2.3.4	Top level expandable property 
 
 The API ODataMessageReader.ReadProperty() is used to read property without navigation property. To support navigation property in complex type, we can’t use it, because it cannot be used to reader expanded entry and feed. Similar to delta entry reader, we should have the following classes to support top level expandable property with navigation property:
-```C#
+{% highlight csharp %}
 public abstract class ODataExpandblePropertyReader
 {
   public abstract bool Read();  
   …
 }
-```
+{% endhighlight %}
 And the implementation:
-```C#
+{% highlight csharp %}
 internal sealed class ODataJsonLightExpandblePropertyReader : ODataExpandblePropertyReader
 {
 
@@ -684,42 +684,42 @@ internal sealed class ODataJsonLightExpandblePropertyReader : ODataExpandbleProp
     …
   }
 }
-```
+{% endhighlight %}
 
 #### 2.2.3.5	Top level collection of expandable property
 
 Similar to ODataCollectionReader, we can provide ODataCollectionExpandablePropertyReader to writer the top level collection of expandable property.
-```C#
+{% highlight csharp %}
 public abstract class ODataCollectionExpandablePropertyReader
 {
 
   public abstract void Read(…);
   …
 }
-```
+{% endhighlight %}
 
 ## 2.3	OData Client
 ### 2.3.1 Client Support Operation on Complex type
 Scenario: Suppose that we have type Location, Address, City. Location, City are Entity type, Address is Complex Type. City is the navigation of Address. 
 Then supposedly customers can use following APIs on complex type with NP (navigation property) on client. 
 1.	LINQ Expand
-```C#
+{% highlight csharp %}
   context.Locations.Expand(a=>a.Address.City); 
   context.Locations.Bykey(1).Address.Expand(a=>a.City);   
   context.Locations.Bykey(1).Addresses.Expand(a=>a.City);
-```
+{% endhighlight %}
  
 2.	LoadProperty
-```C#
+{% highlight csharp %}
   var location = context.Locations.Where(l=>l.ID == 1).Single();
   var address = location.Address;
   context.LoadProperty(address, "City");
-```
+{% endhighlight %}
 3.	AddRelatedObject, UpdateRelatedObject
-```C#
+{% highlight csharp %}
   var city = new City();
   context.AddRelatedObject(address, “Cities”, city);
-```
+{% endhighlight %}
 4.	AddLink, SetLink, DeleteLink
 **NOTE**: 2,3,4 are not applicable to collection value complex type.
 
@@ -747,15 +747,15 @@ During an entry materialization, MaterializerEntry/MaterializerFeed/Materializer
 
 As complex type with navigation property will be read as an ODataExpandableProperty in ODataReader. To align with this: 
 1.	Add ExpandablePropertyMaterializationPolicy to be responsible for materializing an ODataExpandableProperty.
-```C#
+{% highlight csharp %}
 public class ExpandableComplexPropertyMaterializationPolicy : StructuralValueMaterializationPolicy
 {
   private readonly EntryValueMaterializationPolicy entryValueMaterializationPolicy;
   …
 }
-```
+{% endhighlight %}
 2.	Add MaterializerExpandableProperty to remember the materializer state of a given ODataExpandableProperty.
-```C#
+{% highlight csharp %}
 internal class MaterializerExpandableProperty
 {
   /// <summary>The property.</summary>
@@ -766,13 +766,13 @@ internal class MaterializerExpandableProperty
 
   …
 }
-```
+{% endhighlight %}
 
 #### 2.3.2.2 Materialize complex type property in an entry
 When payload is an entry or a feed, ODataReaderEntityMaterializer will be created to materialize the response. So we need add logic in ODataReaderEntityMaterializer to handle the complex type with navigation property.
 1.	Add ICollection<ODataExpandableProperty> complexProperties to MaterializerEntry. In Materializer.Read(), add state ODataReaderState.ExpandablePropertyStart/ ODataReaderState.ExpandablePropertyEnd to read complex type and its navigation property to complexProperties. And for each complex type having navigation property, create an instance of MaterializerExpandableProperty. Following is a sample:
 
-```C#
+{% highlight csharp %}
 do
                 {
                     bool inComplexPropertyScope = false;
@@ -808,14 +808,14 @@ do
 
                     }
             }
-```
+{% endhighlight %}
 Then the data flow would be like:
 
 ![]({{site.baseurl}}/assets/2015-12-21-Client-data-flow.png)
 
 2.	Materialize
 The materializer will call EntryValueMaterializationPolicy to materialize an entity, and in EntryValueMaterializationPolicy, we can call ExpandableComplexPropertyMaterializationPolicy to handle complex type having navigation property. 
-```C#
+{% highlight csharp %}
 foreach (var property in entry.complexProperties)
 {
 MaterializerExpandableProperty materializerProperty = property.GetAnnotation< MaterializerExpandableProperty>();             this.expandablePropertyMaterializationPolicy.MaterializeExpandableProperty(property, materializerProperty. navigationLinks);
@@ -823,7 +823,7 @@ object value = property.GetMaterializedValue();
     var prop = actualType.GetProperty(property.Name, this.MaterializerContext.IgnoreMissingProperties);
     prop.SetValue(entry.ResolvedObject, value, property.Name, true /* allowAdd? */);   
 }
-```
+{% endhighlight %}
 3.	ApplyLogToContext
 Update the materialization info to DataServiceContext. Will explain more in tracking section. 
 
@@ -850,15 +850,15 @@ When LoadProperty is called, ODataLoadNavigationPropertyMaterializer will be use
 ### 2.3.3 Tracking complex type
 #### 2.3.3.1 Existing Entity Tracking
 In order to directly have operations on a materialized entity, we need store the needed info internally in order to generate the Url for a real http request.  For example, company has been materialized to a clr object, and we try to update a property by directly modifying the clr object.
-```C#
+{% highlight csharp %}
 company.TotalAssetsPlus = 100;                  
 TestClientContext.UpdateObject(company);       
 TestClientContext.SaveChanges();
-```
+{% endhighlight %}
 In this case, we need try to get the company editlink in order to send PATCH against it. And info like editlink can be achieved during company materialization.  For this reason, client will create an EntityDescriptor when materializing an entity, and store the mapping of the materialized entity and its descriptor in EntityTracker. And the entitytracker can be accessed through DataServiceContext.
 
 EntityDescriptor is defined as:
-```C#
+{% highlight csharp %}
 public sealed class EntityDescriptor : Descriptor
 {
     private Uri identity;          // The id of the entity
@@ -874,7 +874,7 @@ public sealed class EntityDescriptor : Descriptor
         private Dictionary<string, LinkInfo> relatedEntityLinks;    // Contains the LinkInfo (navigation and relationship links) for navigation properties
 …
 }
-```
+{% endhighlight %}
 And in EntityTracker we have:
 
 * Dictionary<object, EntityDescriptor> entityDescriptors:
@@ -921,14 +921,14 @@ b.	Add or merge each complexTypeDescriptors in EntityDescriptor to Dictionary of
 c.	Update complex type navigation links in MaterializerLog to bindings of entityTracker.
 
 4.	We cannot track collection-value complex type property, so following scenario does not work:
-```C#
+{% highlight csharp %}
 var location = TestClientContext.Locations.Where(lo=>lo.ID == 1).Single();
 var addresses = location.Addresses;    //Addresses is collection-value complex type property
 foreach (var addr in addresses) 
 {
   TestClientContext.LoadProperty(addr, "City");  // Does not work
 }
-```
+{% endhighlight %}
 Reason:
 We do not have an identity for a complex type instance in a collection, and there is no way for us to know if the incoming complex type has been materialized before. We probably can support this tracking if we allow indexing into collections.
 
@@ -937,13 +937,13 @@ Expand city instead, for example, `context.Locations.Bykey(1).Addresses.Expand(a
 
 5.	We cannot track if complex type property is queried as individual property
 For example, in following scenario, we are not able to track complex type and use it in LoadProperty: 
-```C#
+{% highlight csharp %}
 var addr = TestClientContext.CreateQuery<Address>("Company/Address").Execute();
 foreach (var d in addr)          // Will materialize Address here. 
 {
   TestClientContext.LoadProperty(d, "City");   // Does not work
 }
-```
+{% endhighlight %}
 Reason:
 When querying complex type property directly, we do not have the entity info. We only have the request Uri and the request Uri cannot be used to identify a complex type. For example, Get ~/Locations(1)/Address and Get ~/Company/Location/Address may actually get the same instance.
 
@@ -971,14 +971,14 @@ When we try to add or update an entity from client, we need call ODataWriter to 
 1.	WriteEntry
 If we do not do any operation to the navigation property under complex type, then this function does not need any change. Meanwhile, if we want to support adding bindings to complex type (only for single-value complex type), like the following scenario:
 
-```C#
+{% highlight csharp %}
 var city = context.Cities.Bykey(1).GetValue();
 Address address = new Address {Street = "Zixing"};
 Location location = new Location {ID=11, Address=address};
 context.AddToLocations(location);
 context.SetLink(address, "City", city);
 context.SaveChanges();
-```
+{% endhighlight %}
 	Then the process would be like:
 a)	AddToLocations would create an EntityDescriptor for location and add it to entityTracker.ResourceDescriptor
 b)	SetLink would create a LinkDescriptor between address and city and add it to entityTracker.bindings
@@ -996,7 +996,7 @@ For scenario Locations->Address->City, Address is complex type, City is the navi
 1.	Generate Class for Address: 
  
 **If City is single-value navigation property:**
-```C#
+{% highlight csharp %}
 public partial class Address : global::System.ComponentModel.INotifyPropertyChanged
 {
     public global::Microsoft.OData.Client.City City  { get; set; }
@@ -1005,10 +1005,10 @@ public partial class AddressSingle : global::Microsoft.OData.Client.DataServiceQ
 {
     public global::Microsoft.OData.Client.CitySingle City { get; }
 }
-```
+{% endhighlight %}
 
 **If City is collection-value navigation property:**
-```C#
+{% highlight csharp %}
 public partial class Address : global::System.ComponentModel.INotifyPropertyChanged
 {
     public global::Microsoft.OData.Client.DataServiceCollection<global::ODataClientSample.City> Cities  { get; set; }
@@ -1017,57 +1017,57 @@ public partial class AddressSingle : global::Microsoft.OData.Client.DataServiceQ
 {
     public global::Microsoft.OData.Client.DataServiceQuery<global::ODataClientSample.City> Cities { get; }
 }
-```
+{% endhighlight %}
 2.	Add Address to Location:
 **If complex type Address is single-value:**
-```C#
+{% highlight csharp %}
 public partial class Location: global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
 {
 public global::ODataClientSample.Address Address {get;set;}
 }
-```
+{% endhighlight %}
 Then we can support:
-```C#
+{% highlight csharp %}
 var location = context.Locations.Where(l=>l.ID == 1).Single();
 var address = location.Address;
-```
+{% endhighlight %}
 
 **If complex type Address is collection-value:**
-```C#
+{% highlight csharp %}
 public partial class Location: global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
 {
     public global::System.Collections.ObjectModel.ObservableCollection<Address> Addresses {get;set;}
 }
-```
+{% endhighlight %}
 Then we can support:
-```C#
+{% highlight csharp %}
 var addresses = location.Addresses;
-```
+{% endhighlight %}
 
 3.	Add Address to LocationSingle:
 **If complex type Address is single-value:**
-```C#
+{% highlight csharp %}
 public partial class LocationSingle: global::Microsoft.OData.Client.DataServiceQuerySingle<Location>
 {
   public global::ODataClientSample.AddressSingle Address {get;}
 }
-```
+{% endhighlight %}
 Then we can support:
-```C#
+{% highlight csharp %}
 var location = context.Location.ByKey(1).Address.Expand(a=>a.City);
-```
+{% endhighlight %}
  
 **If complex type Address is collection-value:**
-```C#
+{% highlight csharp %}
 public partial class LocationSingle: global::Microsoft.OData.Client.DataServiceQuerySingle<Location>
 {
 public global::Microsoft.OData.Client.DataServiceQuery<global::ODataClientSample.Address> Addresses {get;}
 }
-```
+{% endhighlight %}
 Then we can support:
-```C#
+{% highlight csharp %}
   var location = context.Location.ByKey(1).Addresses.Expand(a=>a.City);
-```
+{% endhighlight %}
 
 ## 2.4 Web API OData 
 
@@ -1079,21 +1079,21 @@ Similar with the entity type and complex type structure, Web API OData has the s
 
 
 Owing that _NavigationPropertyConfiguration_ is derived from _PropertyConfiguration_, and all properties for type (entity type or complex), either structural properties, or navigation properties are saved in the following dictionary in _StrucutralTypeCofiguration_:
-```C#
+{% highlight csharp %}
 protected internal IDictionary<PropertyInfo, PropertyConfiguration> ExplicitProperties { get; private set; }
-```
+{% endhighlight %}
 So, form this point, complex type configuration can support navigation property. However, we need to do as follows to allow the customer to define navigation property on complex type:
 
 1. Promote the following public/private APIs from _EntityTypeConfiguration_ to _StructuredTypeConfiguration_.
-```C#
+{% highlight csharp %}
 public virtual NavigationPropertyConfiguration AddNavigationProperty(PropertyInfo navigationProperty, EdmMultiplicity multiplicity)
 public virtual NavigationPropertyConfiguration AddContainedNavigationProperty(PropertyInfo navigationProperty, EdmMultiplicity multiplicity)
 private NavigationPropertyConfiguration AddNavigationProperty(PropertyInfo navigationProperty, EdmMultiplicity multiplicity, bool containsTarget)
-```
+{% endhighlight %}
 2. Promote the following property from _EntityTypeConfiguration_ to _StructuredTypeConfiguration_
-```C#
+{% highlight csharp %}
 public virtual IEnumerable<NavigationPropertyConfiguration> NavigationProperties
-```
+{% endhighlight %}
 3. Modify _NaviatonPropertyConfiguration_ class, for example
   * modify DeclaringEntityType property
   * add DeclaringComplexType property
@@ -1101,21 +1101,21 @@ public virtual IEnumerable<NavigationPropertyConfiguration> NavigationProperties
   * …
 
 4. Modify _EdmTypeBuilder_ class to construct the complex type with navigation property.
-```C#
+{% highlight csharp %}
          Change
 private void CreateNavigationProperty(EntityTypeConfiguration config)
         To
 private void CreateNavigationProperty(StructuralTypeConfiguration config)
-```
+{% endhighlight %}
 5. Promote the following APIs from _EntityTypeConfigurationOfTEntityType_ to _StructuralTypeConfigurationOfTStrucuturalType_.
-```C#
+{% highlight csharp %}
   * HasMany
   * HasRequired
   * HasOptional
-```
+{% endhighlight %}
 Let’s have an example to illustrate how configure the navigation property in complex type:
 a) We have the three types, **Customer** and **Region** as entity type, **Address** as complex type
-```C#
+{% highlight csharp %}
 public class Customer
 {
    public int CustomerId { get; set; }
@@ -1133,16 +1133,16 @@ public class Region
    public int RegionId { get; set; }
    public string Name { get; set; }
 }
-```
+{% endhighlight %}
 Then, we can configure the Edm type by non-convention model builder as:
-```C#
+{% highlight csharp %}
 var builder = new ODataModelBuilder();
 builder.EntityType<Customer>().HasKey(c => c.CustomerId).ComplexProperty(c => c.Location);
 builder.EntityType<Region>().HasKey(r => r.RegionId).Property(r => r.Name);
 var address = builder.ComplexType<Address>();
 address.Property(a => a.Street);
 address.HasRequired(a => a.Region);
-```
+{% endhighlight %}
 
 ### 2.4.2	Convention model builder and conventions
 
@@ -1155,20 +1155,20 @@ So, we should do:
 2. Re-configure the properties in complex type if the related entity types are re-configured as complex type.
 
 For user codes, it should be same as previous, for example we re-use the CLR classes mentioned in previous section:
-```C#
+{% highlight csharp %}
 var builder = new ODataConventionModelBuilder();
 builder.EntityType<Customer>();
 builder.ComplexType<Address>();
-```
+{% endhighlight %}
 Use the above codes, the **Region** type should be built as entity type automatically.
 
 ### 2.4.3 Navigation Source binding for navigation property in complex type
 
 We should modify some codes in _NavigationSourceConfigurationOfEntityType_ to make navigation source binding to the navigation property in complex type:
 For example:
-```C#
+{% highlight csharp %}
 builder.EntitySet<Customer>("Customers").HasRequiredBinding(c => c.Location.Region, "Regions");
-```
+{% endhighlight %}
 Make sure the property path can be saved correctly.
 
 ### 2.4.4 Navigation property routing
@@ -1215,14 +1215,14 @@ In SelectExpandNode, we have the following sets:
 * ExpandedNavigationProperties
 
 These sets are enough to expand a navigation property in entity, but it’s non-enough to expand a navigation property in complex type. Because, we should know which complex property is expanded. That’s, if we have the following request:
-```C#
+{% highlight csharp %}
 GET ~/Customers(1)?$expand=Location/Region
-```
+{% endhighlight %}
 We should know **“Location”** is an expandable property and it’s expanded with **“Region”**.
 So, for _SelectExpandNode_, we should at least a set to save the expanded structural property. Let’s say it can be:
-```C#
+{% highlight csharp %}
 public ISet<Tuple<IList<IEdmStructuralProperty>, IEdmNavigationProperty, SelectExpandClause>> ExpandedStructuralProperties { get; private set; }
-```
+{% endhighlight %}
 And we should construct this property in constructor of _SelectExpandNode_ class.
 
 2. Entit type serializer
@@ -1230,7 +1230,7 @@ And we should construct this property in constructor of _SelectExpandNode_ class
 For entity type serializer, we can use the **ExpandedStructuralProperties** defined in _SelectExpandNode_ to construct the expandable property.
 So, we should do:
 a) In CreateEntry function, before we call **CreateStructuralPropertyBag()** function, we should remove the expanded structure properties from **SelectedStructuralProperties**, and use the except set to build the properties for entry.
-```C#
+{% highlight csharp %}
 var expandableProperties = selectExpandNode.ExpandedStructuralProperties.Select(e => e.Item1.First());
 var selectedStructuralProperties = selectExpandNode.SelectedStructuralProperties.Except(expandableProperties);
 ODataEntry entry = new ODataEntry
@@ -1238,12 +1238,12 @@ ODataEntry entry = new ODataEntry
    TypeName = typeName,
    Properties = CreateStructuralPropertyBag(selectedStructuralProperties, entityInstanceContext),
  };
- ```
+ {% endhighlight %}
    Then, the expanded structural properties exclude from the properties.
 
 b) Provide a new private API to write the expanded structural properties:
 
-```C#
+{% highlight csharp %}
 private void WriteExpandedStructuralProperties(
             ISet<Tuple<IList<IEdmStructuralProperty>, IEdmNavigationProperty, SelectExpandClause>>
                 structuralPropetiesToExpand,
@@ -1258,9 +1258,9 @@ private void WriteExpandedStructuralProperties(
             WriteEnd()
      }
 }
-```
+{% endhighlight %}
 c) Call WriteExpandedStructuralProperties after WriteStart(entry)
-```C#
+{% highlight csharp %}
 ODataEntry entry = CreateEntry(selectExpandNode, entityInstanceContext);
 if (entry != null)
 {
@@ -1271,15 +1271,15 @@ if (entry != null)
       writer.WriteEnd();
  }
 
-```
+{% endhighlight %}
 
 
 ### 2.4.5.2 Top level expanded complex property
 
 We can modify ODataComplexTypeSerializer to support expanded complex property. For example:
-```C#
+{% highlight csharp %}
 GET ~/Customers(1)/Location?$expand=Region
-```
+{% endhighlight %}
 So, we can do as follows:
 1. Modify _EntityInstanceContext_ to accept complex type instance, or create a new class named _ComplexInstanceContext_.
 
@@ -1288,14 +1288,14 @@ So, we can do as follows:
 3. If **ExpandedStructuralProperties** is empty, serialize the complex as normal, otherwise we will serialize an expandable property.
 
 4. Add new function named **CreateExpandableProperty**
-```C#
+{% highlight csharp %}
 private static ODataExpandableProperty CreateExpandableProperty(EntityInstanceContext context)
 {
         ….            
 }
-```
+{% endhighlight %}
 5. Create a new function to write the expandable property
-```C#
+{% highlight csharp %}
 private static void WriteExpandableProperty(ODataExpandableProperty property, EntityInstanceContext context, ODataSerializerContext writeContext);
 {
         Create ODataExpandablePropertyWriter;
@@ -1304,7 +1304,7 @@ private static void WriteExpandableProperty(ODataExpandableProperty property, En
         WriteEnd();
                   
  }
- ```
+ {% endhighlight %}
   Where, **WriteExpandedNavigationProperties** maybe same as the function in _ODataEntityTypeSerializer_.
 For top level collection of expandable property, we can use the above same logic but create an _ODataCollectionExpandablePropertyWriter_ to write.
 
@@ -1314,7 +1314,7 @@ For top level collection of expandable property, we can use the above same logic
 ### 2.4.6.1 Expand complex property in Entry
 
 As mentioned in OData Core for reader, we have two new reader state:
-```C#
+{% highlight csharp %}
 public enum ODataReaderState
 {
       …
@@ -1323,10 +1323,10 @@ public enum ODataReaderState
      ExpandablePropertyEnd,
      …
 }
-```
+{% endhighlight %}
 So, we can use them to read the expandable property. 
 1. Create a new class named _ODataExpandablePropertyWithNavigationLinks_
-```C#
+{% highlight csharp %}
 public sealed class ODataExpandablePropertyWithNavigationLinks : ODataItemBase
 {
        ……
@@ -1337,9 +1337,9 @@ public sealed class ODataExpandablePropertyWithNavigationLinks : ODataItemBase
 
         public IList<ODataNavigationLinkWithItems> NavigationLinks { get; private set; }
  }
- ```
+ {% endhighlight %}
 2. Modify **ReadEntryOrFeed()** function in _ODataEntityDeserializer_ by added two case statements into:
-```C#
+{% highlight csharp %}
 while (reader.Read())
 {
        switch (reader.State)
@@ -1354,18 +1354,18 @@ while (reader.Read())
   
          }
 }
-```
+{% endhighlight %}
    In **ExpandablePropertyStart**, we can create _ODataExpandablePropertyWithNavigationLinks_ object to push it into Stack. Make sure, we should modify the state transfer to make sure the **NavigationState** can follow up _ExpandablePropertyStart_.
 3. Should modify ODataEntryWithNavigationLinks to accept the ODataExpandablePropertyWithNavigationLinks
 
 4. Add new API named AddExpandedStrucutralProperties()
-```C#
+{% highlight csharp %}
 private void AddExpandedStrucutralProperties(IEdmNavigationProperty navigationProperty, object entityResource,
             ODataEntryWithNavigationLinks entry, ODataDeserializerContext readContext)
 {
   …
 }
-```
+{% endhighlight %}
  And call it brefore **ApplyNavigationProperties** in **ApplyEntityProperties()**.
 
 #### 2.4.6.2 Top level expanded complex property
