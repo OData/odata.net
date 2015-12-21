@@ -260,3 +260,85 @@ customers.AddNavigationTarget(addressNavProp, cities, new[] { location });
     </EntitySet>
   </EntityContainer>
 ```
+### 2.1.5	Validation rules for navigation property in complex type
+
+There’re a lot of validation rules related to navigation property, entity type and complex type. So, we should:
+
+* Remove the old validation rules which disallow the navigation property in complex type.  If any, we have to remove the validation methods from active rules. We can’t remove the validation methods because they are public.
+* Add new validation rules for navigation property in complex type, since it is a bit different with navigation property in entity type, including:
+  -	Partner MUST NOT be specified for navigation property of complex type, according to the spec.
+  -	ContainsTarget is not true for navigation property of complex type, since we are not going to enable it now.
+  
+## 2.2	OData Core
+### 2.2.1	Uri Parser
+The navigation property in complex type can be in path/segment or query option. We have to support all of these. Let’s see some Uri templates for navigation property in complex type:
+
+*	Navigation property segment of complex type:
+  - ~/entityset/key/complexproperty/navigation
+  - ~/entityset/key/complexproperty /…/navigation
+  - ~/entityset/key/complexproperty /…/navigation/property
+  - ~/entityset/key/complexproperty /…/navigation/$count  (for collection)
+* Function/action after navigation property segment of complex type:
+  - ~/entityset/key/complexproperty /…/navigation/boundfunction
+  - ~/entityset/key/complexproperty /…/navigation/boundaction
+* Navigation property in complex type in query options
+  - $expand=property/navigationproperty
+  - $select=property/navigationproperty
+
+#### 2.2.1.1	Parse Path Segments
+We can use the existing classes _NavigationPropertySegment_ and _NavigationPropertyLinkSegment_ to represent the navigation property of complex type without any change.
+
+However, we should pass the previous navigation source from structural property to the navigation property belong to this.  So, we should change the **CreatePropertySegment()** function in _ODataPathParser_ to save the previous navigation source in property segment as follows:
+```C#
+private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
+{
+  …
+  segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
+  …
+}
+```
+
+Let’s have a request example:
+```C#
+http://localhost/Orders(1)/Location/City
+```
+Then, the result of Uri parser can be:
+```C#
+~/EntitySetSegment/KeySegment/PropertySegment/NavigationPropertySegment
+```
+#### 2.2.1.2	Parse query option
+
+So far, SelectExpandBinder only supports the following expand clause:
+* $expand=NavigationProperty[,…]
+* $expand=TypeCast/NavigationProperty/$ref
+*	…
+
+As navigation property be allowed in complex type, the _SelectExpandBinder_ should support more expand and select clauses as follows:
+*	~/../ complexproperty?$select=navigation
+*	$expand= complexproperty /navigation
+*	$expand= complexproperty /typecast/ navigation
+*	~/../ complexproperty?$expand=navigation
+*	~/../ complexproperty?$expand=navigation
+
+So, we should modify the codes as follows:
+1. Add a flag for Uri resolver to configure whether the navigation property is allowed in complex type
+2. Modify GenerateExpandItem(ExpandTermToken) function in SelectExpandBinder
+3. Modify SelectEpxandPathBinder to add a new function to process the property segment in expand clause.
+Let’s have an example: ** $expand=Location/City **
+```C#
+IDictionary<string, string> queryOptions = new Dictionary<string, string>
+  {
+    { "$expand", "Location/City" }
+  };
+var _order = _model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(e => e.Name == "Order");
+var _orders = _model.FindDeclaredEntitySet("Orders");
+var parser = new ODataQueryOptionParser(_model, _order, _orders, queryOptions);
+
+var selectAndExpand = parser.ParseSelectAndExpand();
+```
+Then, _selectAndExpand_ has one SelectedItems with the following OData path with segments:
+1. PropertySegment
+2. NavigationPropertySegment 
+
+
+
