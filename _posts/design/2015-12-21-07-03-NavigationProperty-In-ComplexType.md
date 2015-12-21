@@ -50,9 +50,10 @@ This doc describes the design about supporting the navigation property in comple
 ### 2.1.1 Construct navigation property in complex type
 
 From [OData Spec](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398201):
-  *	_**Entity types**_ are named structured types with a key. They define the named properties and relationships of an entity.
+
+* _**Entity types**_ are named structured types with a key. They define the named properties and relationships of an entity.
   
-  *	_**Complex types**_ are keyless named structured types consisting of a set of properties.
+* _**Complex types**_ are keyless named structured types consisting of a set of properties.
   
 So, both entity types and complex types are structured types with properties, include declared properties and navigation properties. Below picture shows the class relationship between complex type and entity type, navigation property and structural property in ODataLib so far.
 
