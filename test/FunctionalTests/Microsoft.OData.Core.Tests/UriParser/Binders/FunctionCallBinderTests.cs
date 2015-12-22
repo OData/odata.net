@@ -79,10 +79,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             var token = new FunctionCallToken("day", new List<QueryToken>());
             Action bindWithEmptyArguments = () => functionCallBinder.BindFunctionCall(token);
 
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures("day"); // to match the error message... blah
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures("day"); // to match the error message... blah
             bindWithEmptyArguments.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     "day",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("day", signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
 
         [Fact]
@@ -93,10 +93,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             var token = new FunctionCallToken("day", arguments);
             Action bindWithEmptyArguments = () => functionCallBinder.BindFunctionCall(token);
 
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures("day"); // to match the error message... blah
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures("day"); // to match the error message... blah
             bindWithEmptyArguments.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     "day",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("day", signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
 
         [Fact]
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 };
             var signatures = this.GetDuplicateIndexOfFunctionSignatureForTest();
 
-            Action bind = () => FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "IndexOf",
                 new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference())),
@@ -305,7 +305,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
 
             bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NoApplicableFunctionFound(
                     "IndexOf",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("IndexOf", signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("IndexOf", signatures)));
         }
 
         [Fact]
@@ -318,7 +318,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 };
             var signatures = this.GetHardCodedYearFunctionSignatureForTest();
 
-            var result = FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
                 argumentNodes.Select(s => (SingleValueNode)s).ToArray(),
                 signatures);
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                     new ConstantNode(4)
                 };
 
-            Action bind = () => FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
                 new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
 
             bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NoApplicableFunctionFound(
                     "year",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("year", new FunctionSignatureWithReturnType[0])));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("year", new FunctionSignatureWithReturnType[0])));
         }
 
         [Fact]
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                     new ConstantNode(4)
                 };
 
-            Action bind = () => FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
                 new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
@@ -364,108 +364,23 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
 
             bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NoApplicableFunctionFound(
                     "year",
-                    BuiltInFunctions.BuildFunctionSignatureListDescription("year", this.GetHardCodedYearFunctionSignatureForTest())));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription("year", this.GetHardCodedYearFunctionSignatureForTest())));
         }
 
         [Fact]
         public void MatchArgumentsToSignatureWillPickRightSignatureForSomeNullArgumentTypes()
         {
-            var result = FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
                 "substring",
                  new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))), 
                      new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname")}, // open property's TypeReference is null
-                 FunctionCallBinder.GetBuiltInFunctionSignatures("substring"));
+                 FunctionCallBinder.GetUriFunctionSignatures("substring"));
 
             result.ReturnType.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetString(true));
             result.ArgumentTypes.Count().Should().Be(2);
             result.ArgumentTypes.First().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetString(true));
             result.ArgumentTypes.Last().ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(true));
-        }
-
-        //GetBuiltInFunctionSignatures tests
-        [Fact]
-        public void GetBuiltInFunctionSignaturesSubstring()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("substring");
-            result.Length.Should().Be(6);
-
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignaturesDateTimeOffsetYear()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("year");
-            result.Length.Should().Be(4); // DateTimeOffset and Date, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignaturesDateTimeOffsetMonth()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("month");
-            result.Length.Should().Be(4); // DateTimeOffset and Date, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignaturesDateTimeOffsetDay()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("day");
-            result.Length.Should().Be(4); // DateTimeOffset and Date, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignatureHour()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("hour");
-            result.Length.Should().Be(6); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignatureMinute()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("minute");
-            result.Length.Should().Be(6); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignatureSecond()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("second");
-            result.Length.Should().Be(6); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignatureFractionalseconds()
-        {
-            var result = FunctionCallBinder.GetBuiltInFunctionSignatures("fractionalseconds");
-            result.Length.Should().Be(4); // DateTimeOffset, TimeOfDay, Nullable and not Nullable
-        }
-
-        [Fact]
-        public void CreateSpatialSignaturesCorrectly()
-        {
-            var functions = new Dictionary<string, FunctionSignatureWithReturnType[]>(StringComparer.Ordinal);
-            BuiltInFunctions.CreateSpatialFunctions(functions);
-            FunctionSignatureWithReturnType[] signatures;
-            functions.TryGetValue("geo.distance", out signatures);
-            signatures.Length.Should().Be(2);
-            signatures[0].ReturnType.Definition.FullTypeName().Should().Be(EdmCoreModel.Instance.GetDouble(true).FullName());
-            signatures[0].ArgumentTypes[0].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName());
-            signatures[0].ArgumentTypes[1].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName());
-            signatures[1].ReturnType.Definition.FullTypeName().Should().Be(EdmCoreModel.Instance.GetDouble(true).FullName());
-            signatures[1].ArgumentTypes[0].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName());
-            signatures[1].ArgumentTypes[1].Definition.FullTypeName().Should()
-                                          .Be(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName());
-        }
-
-        [Fact]
-        public void GetBuiltInFunctionSignaturesShouldThrowOnIncorrectName()
-        {
-            Action bind = () => FunctionCallBinder.GetBuiltInFunctionSignatures("rarg");
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_UnknownFunction("rarg"));
         }
 
         [Fact]
@@ -688,10 +603,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             FunctionCallToken function = new FunctionCallToken("geo.length", args);
             Action createWithMoreThanOneArg = () => this.functionCallBinder.BindFunctionCall(function);
 
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(function.Name);
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures(function.Name);
             createWithMoreThanOneArg.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     function.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(function.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(function.Name, signatures)));
         }
 
         [Fact]
@@ -758,15 +673,18 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             Action createWithOneArg = () => this.functionCallBinder.BindFunctionCall(functionWithOneArg);
             Action createWithMoreThanTwoArgs = () => this.functionCallBinder.BindFunctionCall(functionWithMoreThanTwoArgs);
 
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(functionWithOneArg.Name);
+            FunctionSignatureWithReturnType[] signatures;
+            BuiltInUriFunctions.TryGetBuiltInFunction(functionWithOneArg.Name, out signatures);
+
             createWithOneArg.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     functionWithOneArg.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(functionWithOneArg.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(functionWithOneArg.Name, signatures)));
 
-            signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(functionWithMoreThanTwoArgs.Name);
+            BuiltInUriFunctions.TryGetBuiltInFunction(functionWithMoreThanTwoArgs.Name, out signatures);
+
             createWithMoreThanTwoArgs.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     functionWithMoreThanTwoArgs.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(functionWithMoreThanTwoArgs.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(functionWithMoreThanTwoArgs.Name, signatures)));
         }
 
         [Fact]
@@ -870,31 +788,36 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             Action createWithGeographyPolyNonGeographyPoint = () => this.functionCallBinder.BindFunctionCall(geographyPolyNonGeographyPointToken);
             Action createWithGarbage = () => this.functionCallBinder.BindFunctionCall(garbageToken);
 
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(geometryPointNonGeometryPolyToken.Name);
+            FunctionSignatureWithReturnType[] signatures;
+            BuiltInUriFunctions.TryGetBuiltInFunction(geometryPointNonGeometryPolyToken.Name, out signatures);
+
             createWithGeometryPointNonGeometryPoly.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     geometryPointNonGeometryPolyToken.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(geometryPointNonGeometryPolyToken.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(geometryPointNonGeometryPolyToken.Name, signatures)));
 
-            signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(geometryPolyNonGeometryPointToken.Name);
+            BuiltInUriFunctions.TryGetBuiltInFunction(geometryPolyNonGeometryPointToken.Name, out signatures);
+
             createWithGeometryPolyNonGeometryPoint.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     geometryPolyNonGeometryPointToken.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(geometryPolyNonGeometryPointToken.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(geometryPolyNonGeometryPointToken.Name, signatures)));
 
-            signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(geographyPointNonGeographyPolyToken.Name);
+            BuiltInUriFunctions.TryGetBuiltInFunction(geographyPointNonGeographyPolyToken.Name, out signatures);
+
             createWithGeographyPointNonGeographyPoly.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     geographyPointNonGeographyPolyToken.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(geographyPointNonGeographyPolyToken.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(geographyPointNonGeographyPolyToken.Name, signatures)));
 
-            signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(geographyPolyNonGeographyPointToken.Name);
+            BuiltInUriFunctions.TryGetBuiltInFunction(geographyPolyNonGeographyPointToken.Name, out signatures);
+
             createWithGeographyPolyNonGeographyPoint.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     geographyPolyNonGeographyPointToken.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(geographyPolyNonGeographyPointToken.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(geographyPolyNonGeographyPointToken.Name, signatures)));
 
+            BuiltInUriFunctions.TryGetBuiltInFunction(garbageToken.Name, out signatures);
 
-            signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(garbageToken.Name);
             createWithGarbage.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     garbageToken.Name,
-                    BuiltInFunctions.BuildFunctionSignatureListDescription(garbageToken.Name, signatures)));
+                    UriFunctionsHelper.BuildFunctionSignatureListDescription(garbageToken.Name, signatures)));
         }
 
         [Fact]
@@ -1285,13 +1208,20 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             functionCallNode.Should().BeNull();
         }
 
+        [Fact]
+        public void GetFunctionSignaturesShouldThrowOnIncorrectName()
+        {
+            Action bind = () => FunctionCallBinder.GetUriFunctionSignatures("rarg");
+
+            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_UnknownFunction("rarg"));
+        }
 
         [Fact]
         public void BuiltInFunctionsCannotHaveParentNodes()
         {
             FunctionCallToken functionCallToken = new FunctionCallToken("substring", null, new EndPathToken("Name", null));
             Action bindWithNonNullParent = () => this.functionCallBinder.BindFunctionCall(functionCallToken);
-            bindWithNonNullParent.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("substring"));
+            bindWithNonNullParent.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("substring"));
         }
 
         [Fact]
@@ -1302,7 +1232,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 null,
                 new EndPathToken("Color", new InnerPathToken("MyDog", null, null)));
             Action bindWithNonEntityBindingType = () => this.functionCallBinder.BindFunctionCall(functionCallToken);
-            bindWithNonEntityBindingType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("ChangeOwner"));
+            bindWithNonEntityBindingType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("ChangeOwner"));
         }
 
         [Fact]
@@ -1324,6 +1254,86 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 new EndPathToken("OpenProperty", new InnerPathToken("MyFavoritePainting", null, null)));
             Action bindOpenFunction = () => this.functionCallBinder.BindFunctionCall(functionCall);
             bindOpenFunction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty("Fully.Qualified.Namespace.FindMyOwner"));
+        }
+
+        [Fact]
+        public void GetUriFunction_CombineCustomFunctionsAndBuiltInFunctions()
+        {
+            const string BUILT_IN_GEODISTANCE_FUNCTION_NAME = "geo.distance";
+
+            try
+            {
+                FunctionSignatureWithReturnType customFunctionSignature =
+                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false),
+                                                        EdmCoreModel.Instance.GetBoolean(false));
+
+                // Add with 'addAsOverload' 'true'
+                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature, true);
+
+                
+                FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
+                    FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
+
+                // Assert
+                FunctionSignatureWithReturnType[] existsBuiltInSignature;
+                BuiltInUriFunctions.TryGetBuiltInFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, out existsBuiltInSignature).Should().BeTrue();
+
+                resultUriFunctionSignatures.Should().NotBeNull();
+                resultUriFunctionSignatures.Length.Should().Be(existsBuiltInSignature.Length + 1);
+                resultUriFunctionSignatures.All(x => x == customFunctionSignature || existsBuiltInSignature.Any(y => x == y)).Should().BeTrue();
+            }
+            finally
+            {
+                // Clean from CustomFunctions cache
+                CustomUriFunctions.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
+            }
+        }
+
+        [Fact]
+        public void GetUriFunction_OnlyBuiltInFunctionsExist()
+        {
+            const string BUILT_IN_FUNCTION_NAME = "geo.intersects";
+
+            FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
+                FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_FUNCTION_NAME);
+
+            // Assert
+            FunctionSignatureWithReturnType[] existsBuiltInSignature;
+            BuiltInUriFunctions.TryGetBuiltInFunction(BUILT_IN_FUNCTION_NAME, out existsBuiltInSignature).Should().BeTrue();
+
+            resultUriFunctionSignatures.Should().NotBeNull();
+            resultUriFunctionSignatures.Length.Should().Be(existsBuiltInSignature.Length);
+            resultUriFunctionSignatures.All(x => existsBuiltInSignature.Any(y => x == y)).Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetUriFunction_OnlyCustomFunctionsExist()
+        {
+            const string CUSTOM_FUNCTION_NAME = "myCustomFunction";
+
+            try
+            {
+                FunctionSignatureWithReturnType customFunctionSignature =
+                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false),
+                                                        EdmCoreModel.Instance.GetBoolean(false));
+
+                // Add with override 'true'
+                CustomUriFunctions.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
+
+
+                FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
+                    FunctionCallBinder.GetUriFunctionSignatures(CUSTOM_FUNCTION_NAME);
+
+                // Assert
+                resultUriFunctionSignatures.Should().NotBeNull();
+                resultUriFunctionSignatures.Length.Should().Be(1);
+                resultUriFunctionSignatures.All(x => x == customFunctionSignature).Should().BeTrue();
+            }
+            finally
+            {
+                // Clean from CustomFunctions cache
+                CustomUriFunctions.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
+            }
         }
 
         private bool RunBindEndPathAsFunctionCall(string endPathIdentifier, out QueryNode functionCallNode)
@@ -1368,14 +1378,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         internal FunctionSignatureWithReturnType[] GetHardCodedYearFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
-            BuiltInFunctions.TryGetBuiltInFunction("year", out signatures);
+            BuiltInUriFunctions.TryGetBuiltInFunction("year", out signatures);
             return signatures;
         }
 
         internal FunctionSignatureWithReturnType[] GetDuplicateIndexOfFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
-            BuiltInFunctions.TryGetBuiltInFunction("indexof", out signatures);
+            BuiltInUriFunctions.TryGetBuiltInFunction("indexof", out signatures);
 
             return new FunctionSignatureWithReturnType[] { signatures[0], signatures[0] };
         }
@@ -1383,7 +1393,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         internal FunctionSignatureWithReturnType GetSingleSubstringFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
-            BuiltInFunctions.TryGetBuiltInFunction("substring", out signatures);
+            BuiltInUriFunctions.TryGetBuiltInFunction("substring", out signatures);
             return signatures[0];
         }
 

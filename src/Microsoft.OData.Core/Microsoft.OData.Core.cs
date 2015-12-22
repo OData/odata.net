@@ -720,7 +720,7 @@ namespace Microsoft.OData.Core {
         internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
         internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
         internal const string FunctionCallBinder_CannotFindASuitableOverload = "FunctionCallBinder_CannotFindASuitableOverload";
-        internal const string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent = "FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent";
+        internal const string FunctionCallBinder_UriFunctionMustHaveHaveNullParent = "FunctionCallBinder_UriFunctionMustHaveHaveNullParent";
         internal const string FunctionCallBinder_CallingFunctionOnOpenProperty = "FunctionCallBinder_CallingFunctionOnOpenProperty";
         internal const string FunctionCallParser_DuplicateParameterOrEntityKeyName = "FunctionCallParser_DuplicateParameterOrEntityKeyName";
         internal const string ODataUriParser_InvalidCount = "ODataUriParser_InvalidCount";
@@ -794,6 +794,9 @@ namespace Microsoft.OData.Core {
         internal const string FunctionOverloadResolver_MultipleOperationOverloads = "FunctionOverloadResolver_MultipleOperationOverloads";
         internal const string FunctionOverloadResolver_FoundInvalidOperation = "FunctionOverloadResolver_FoundInvalidOperation";
         internal const string FunctionOverloadResolver_FoundInvalidOperationImport = "FunctionOverloadResolver_FoundInvalidOperationImport";
+        internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload";
+        internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature";
+        internal const string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists = "CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists";
         internal const string RequestUriProcessor_InvalidValueForEntitySegment = "RequestUriProcessor_InvalidValueForEntitySegment";
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";

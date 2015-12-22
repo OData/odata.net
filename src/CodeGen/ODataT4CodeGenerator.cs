@@ -137,7 +137,7 @@ public static class Configuration
 	// The use of DataServiceCollection enables entity and property tracking. The value must be set to true or false.
 	public const bool UseDataServiceCollection = true;
 
-	// The namespace of the client code generated. It replaces the original namspace in the metadata document, 
+	// The namespace of the client code generated. It replaces the original namespace in the metadata document, 
     // unless the model has several namespaces.
 	public const string NamespacePrefix = "$rootnamespace$";
 

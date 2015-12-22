@@ -1232,7 +1232,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return string.Equals(
                 expected,
                 identifier,
-                this.configuration.EnableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+                this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
     }
 }

@@ -301,7 +301,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(filter, "filter");
 
             // Get the syntactic representation of the filter expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
             QueryToken filterToken = expressionParser.ParseFilter(filter);
 
             // Bind it to metadata
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(apply, "apply");
 
             // Get the syntactic representation of the apply expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
             var applyTokens = expressionParser.ParseApply(apply);
 
             // Bind it to metadata
@@ -389,7 +389,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(orderBy, "orderBy");
 
             // Get the syntactic representation of the orderby expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.OrderByLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.OrderByLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
             var orderByQueryTokens = expressionParser.ParseOrderBy(orderBy);
 
             // Bind it to metadata

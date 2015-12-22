@@ -40,7 +40,7 @@ namespace Microsoft.OData.Core.UriParser
             this.model = model;
             this.Settings = new ODataUriParserSettings();
             this.EnableUriTemplateParsing = false;
-            this.EnableCaseInsensitiveBuiltinIdentifier = false;
+            this.EnableCaseInsensitiveUriFunctionIdentifier = false;
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        internal bool EnableCaseInsensitiveBuiltinIdentifier
+        internal bool EnableCaseInsensitiveUriFunctionIdentifier
         {
             get
             {

@@ -4985,7 +4985,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "$applg/groupby not support '{0}' as child transformation"
+        /// A string like "$apply/groupby not support '{0}' as child transformation"
         /// </summary>
         internal static string ApplyBinder_UnsupportedGroupByChild(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedGroupByChild, p0);
@@ -4999,10 +4999,10 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Found a built-in function '{0}' with a parent token. Built-in functions cannot have parent tokens."
+        /// A string like "Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens."
         /// </summary>
-        internal static string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent, p0);
+        internal static string FunctionCallBinder_UriFunctionMustHaveHaveNullParent(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, p0);
         }
 
         /// <summary>
@@ -5566,6 +5566,27 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string FunctionOverloadResolver_FoundInvalidOperationImport(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionOverloadResolver_FoundInvalidOperationImport, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given custom function '{0}' already exists as a Built-In function. Consider use 'addAsOverloadToBuiltInFunction = true' parameter."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given custom function '{0}' already exists as a Built-In function in one of it's overloads. Thus cannot override the Built-In function."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given function name '{0}' already exists as a custom function with the same overload."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, p0);
         }
 
         /// <summary>

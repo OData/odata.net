@@ -227,7 +227,9 @@
     <Compile Include="ScenarioTests\UriBuilder\TopAndSkipBuilderTests.cs" />
     <Compile Include="ScenarioTests\UriBuilder\UriBuilderTestBase.cs" />
     <Compile Include="ScenarioTests\UriBuilder\UrlBuilderWithParameterAliasTests.cs" />
+    <Compile Include="ScenarioTests\UriParser\BuiltInUriFunctionsTests.cs" />
     <Compile Include="ScenarioTests\UriParser\CountFunctionalTests.cs" />
+    <Compile Include="ScenarioTests\UriParser\CustomUriFunctionsTests.cs" />
     <Compile Include="ScenarioTests\UriParser\EntityIdFunctionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\EntityReferenceFunctionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\EnumFilterFunctionalTests.cs" />

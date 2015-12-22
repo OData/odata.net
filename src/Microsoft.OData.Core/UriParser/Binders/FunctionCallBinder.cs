@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
         /// <param name="signatures">The signatures to match against</param>
         /// <returns>Returns the matching signature or throws</returns>
-        internal static FunctionSignatureWithReturnType MatchSignatureToBuiltInFunction(string functionName, SingleValueNode[] argumentNodes, FunctionSignatureWithReturnType[] signatures)
+        internal static FunctionSignatureWithReturnType MatchSignatureToUriFunction(string functionName, SingleValueNode[] argumentNodes, FunctionSignatureWithReturnType[] signatures)
         {
             FunctionSignatureWithReturnType signature;
             IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                         functionName,
-                        BuiltInFunctions.BuildFunctionSignatureListDescription(functionName, signatures)));
+                        UriFunctionsHelper.BuildFunctionSignatureListDescription(functionName, signatures)));
                 }
             }
 
@@ -140,19 +140,39 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Finds all signatures for the given function name.
+        /// Search in both BuiltIn uri functions and Custom uri functions.
+        /// Combine and return the signatures overloads of the results.
         /// </summary>
         /// <param name="functionName">The function to get the signatures for.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
-        internal static FunctionSignatureWithReturnType[] GetBuiltInFunctionSignatures(string functionName)
+        internal static FunctionSignatureWithReturnType[] GetUriFunctionSignatures(string functionName)
         {
-            // Try to find the function in our built-in functions
-            FunctionSignatureWithReturnType[] signatures;
-            if (!BuiltInFunctions.TryGetBuiltInFunction(functionName, out signatures))
+            FunctionSignatureWithReturnType[] customUriFunctionsSignatures = null;
+            FunctionSignatureWithReturnType[] builtInUriFunctionsSignatures = null;
+
+            // Try to find the function in the user custom functions and in our built-in functions
+            bool customFound = CustomUriFunctions.TryGetCustomFunction(functionName, out customUriFunctionsSignatures);
+            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out builtInUriFunctionsSignatures);
+
+            if (!customFound && !builtInFound)
             {
+                // Not found in both built-in and custom.
                 throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionName));
             }
 
-            return signatures;
+            if (!customFound)
+            {
+                Debug.Assert(builtInUriFunctionsSignatures != null, "No Built-in functions found");
+                return builtInUriFunctionsSignatures;
+            }
+
+            if (!builtInFound)
+            {
+                Debug.Assert(customUriFunctionsSignatures != null, "No Custom functions found");
+                return customUriFunctionsSignatures;
+            }
+
+            return builtInUriFunctionsSignatures.Concat(customUriFunctionsSignatures).ToArray();
         }
 
         /// <summary>
@@ -193,10 +213,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return boundFunction;
             }
 
-            // If there isn't, bind as built-in function
+            // If there isn't, bind as Uri function
             // Bind all arguments
             List<QueryNode> argumentNodes = new List<QueryNode>(functionCallToken.Arguments.Select(ar => this.bindMethod(ar)));
-            return BindAsBuiltInFunction(functionCallToken, argumentNodes);
+            return BindAsUriFunction(functionCallToken, argumentNodes);
         }
 
         /// <summary>
@@ -239,32 +259,32 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Bind this function call token as a built in function
+        /// Bind this function call token as a Uri function
         /// </summary>
         /// <param name="functionCallToken">the function call token to bind</param>
         /// <param name="argumentNodes">list of semantically bound arguments</param>
         /// <returns>A function call node bound to this function.</returns>
-        private QueryNode BindAsBuiltInFunction(FunctionCallToken functionCallToken, List<QueryNode> argumentNodes)
+        private QueryNode BindAsUriFunction(FunctionCallToken functionCallToken, List<QueryNode> argumentNodes)
         {
             if (functionCallToken.Source != null)
             {
-                // the parent must be null for a built in function.
-                throw new ODataException(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent(functionCallToken.Name));
+                // the parent must be null for a Uri function.
+                throw new ODataException(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent(functionCallToken.Name));
             }
 
-            string functionCallTokenName = this.state.Configuration.EnableCaseInsensitiveBuiltinIdentifier ? functionCallToken.Name.ToLowerInvariant() : functionCallToken.Name;
+            string functionCallTokenName = this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier ? functionCallToken.Name.ToLowerInvariant() : functionCallToken.Name;
 
-            // There are some functions (IsOf and Cast for example) that don't necessarily need to be bound to a BuiltInFunctionSignature,
+            // There are some functions (IsOf and Cast for example) that don't necessarily need to be bound to a function signature,
             // for these, we just Bind them directly to a SingleValueFunctionCallNode
             if (IsUnboundFunction(functionCallTokenName))
             {
                 return CreateUnboundFunctionNode(functionCallTokenName, argumentNodes);
             }
 
-            // Do some validation and get potential built-in functions that could match what we saw
-            FunctionSignatureWithReturnType[] signatures = GetBuiltInFunctionSignatures(functionCallTokenName);
+            // Do some validation and get potential Uri functions that could match what we saw
+            FunctionSignatureWithReturnType[] signatures = GetUriFunctionSignatures(functionCallTokenName);
             SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallTokenName, argumentNodes);
-            FunctionSignatureWithReturnType signature = MatchSignatureToBuiltInFunction(functionCallTokenName, argumentNodeArray, signatures);
+            FunctionSignatureWithReturnType signature = MatchSignatureToUriFunction(functionCallTokenName, argumentNodeArray, signatures);
             if (signature.ReturnType != null)
             {
                 TypePromoteArguments(signature, argumentNodes);

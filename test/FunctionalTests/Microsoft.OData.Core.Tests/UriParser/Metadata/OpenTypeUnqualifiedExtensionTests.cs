@@ -149,7 +149,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People?$orderby=Addr/GetZip()",
                 parser => parser.ParseOrderBy(),
                 clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleValuePropertyAccessQueryNode(AddrProperty),
-                Strings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("GetZip"));
+                Strings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("GetZip"));
         }
 
         [Fact]
