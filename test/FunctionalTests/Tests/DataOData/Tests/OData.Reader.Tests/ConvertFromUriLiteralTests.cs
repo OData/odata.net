@@ -809,7 +809,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3d",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int16", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int16", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int16", "76.3d"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -817,7 +817,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3f",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int16", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int16", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int16", "76.3f"),
                 });
             testCases.Add(
 
@@ -827,7 +827,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3m",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int16", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int16", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int16", "76.3m"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -835,7 +835,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3d",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int32", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int32", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int32", "76.3d"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -843,7 +843,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3f",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int32", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int32", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int32", "76.3f"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -851,7 +851,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3m",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int32", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int32", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int32", "76.3m"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -859,7 +859,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3d",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int64", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int64", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int64", "76.3d"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -867,7 +867,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3f",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int64", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int64", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int64", "76.3f"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -875,7 +875,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "76.3m",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Int64", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int64", "76.3"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Int64", "76.3m"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -883,7 +883,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "'string'",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Double", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Double", "string"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Double", "'string'"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -891,7 +891,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "true",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.String", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.String", "True"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.String", "true"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()
@@ -899,7 +899,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     Parameter = "2011-02-04T00:00:00-08:00",
                     Model = edmModel,
                     TypeReference = edmModel.ResolveTypeReference("Edm.Double", false),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Double", "2/4/2011 12:00:00 AM -08:00"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure", "Edm.Double", "2011-02-04T00:00:00-08:00"),
                 });
             testCases.Add(
                 new ConvertFromUriLiteralTestCase()

@@ -117,12 +117,18 @@ namespace Microsoft.OData.Core.UriParser
         /// Verifies that the given <paramref name="primitiveValue"/> is or can be coerced to <paramref name="expectedTypeReference"/>, and coerces it if necessary.
         /// </summary>
         /// <param name="primitiveValue">An EDM primitive value to verify.</param>
+        /// <param name="literalValue">The literal value that was parsed as this primitiveValue.</param>
         /// <param name="model">Model to verify against.</param>
         /// <param name="expectedTypeReference">Expected type reference.</param>
         /// <returns>Coerced version of the <paramref name="primitiveValue"/>.</returns>
-        internal static object VerifyAndCoerceUriPrimitiveLiteral(object primitiveValue, IEdmModel model, IEdmTypeReference expectedTypeReference)
+        internal static object VerifyAndCoerceUriPrimitiveLiteral(
+            object primitiveValue,
+            string literalValue,
+            IEdmModel model, 
+            IEdmTypeReference expectedTypeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(primitiveValue, "primitiveValue");
+            ExceptionUtils.CheckArgumentNotNull(literalValue, "literalValue");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(expectedTypeReference, "expectedTypeReference");
 
@@ -142,7 +148,7 @@ namespace Microsoft.OData.Core.UriParser
             IEdmPrimitiveTypeReference expectedPrimitiveTypeReference = expectedTypeReference.AsPrimitiveOrNull();
             if (expectedPrimitiveTypeReference == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedTypeReference.FullName(), primitiveValue));
+                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedTypeReference.FullName(), literalValue));
             }
 
             object coercedResult = CoerceNumericType(primitiveValue, expectedPrimitiveTypeReference.PrimitiveDefinition());
@@ -167,7 +173,7 @@ namespace Microsoft.OData.Core.UriParser
                 return primitiveValue;
             }
 
-            throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedPrimitiveTypeReference.FullName(), primitiveValue));
+            throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedPrimitiveTypeReference.FullName(), literalValue));
         }
 
         /// <summary>
