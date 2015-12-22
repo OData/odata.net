@@ -14,7 +14,7 @@ namespace Microsoft.OData.Core.UriParser
     /// <summary>
     /// Class representing a function signature using EDM types.
     /// </summary>
-    internal class FunctionSignature
+    public class FunctionSignature
     {
         /// <summary>The argument types for this function signature.</summary>
         private readonly IEdmTypeReference[] argumentTypes;
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// The argument types for this function signature.
         /// </summary>
-        internal IEdmTypeReference[] ArgumentTypes 
+        public IEdmTypeReference[] ArgumentTypes 
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core.UriParser
     /// <summary>
     /// Class representing a function signature using EDM types.
     /// </summary>
-    internal sealed class FunctionSignatureWithReturnType : FunctionSignature
+    public sealed class FunctionSignatureWithReturnType : FunctionSignature
     {
         /// <summary>
         /// The return type of this function signature.
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         /// <param name="returnType">The return type of this function signature.</param>
         /// <param name="argumentTypes">The argument types for this function signature.</param>
-        internal FunctionSignatureWithReturnType(IEdmTypeReference returnType, params IEdmTypeReference[] argumentTypes)
+        public FunctionSignatureWithReturnType(IEdmTypeReference returnType, params IEdmTypeReference[] argumentTypes)
             : base(argumentTypes)
         {
             this.returnType = returnType;
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// The return type of this function signature.
         /// </summary>
-        internal IEdmTypeReference ReturnType 
+        public IEdmTypeReference ReturnType 
         {
             get
             {

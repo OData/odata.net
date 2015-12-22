@@ -75,9 +75,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         public void DistanceOnlyWorksBetweenTwoPoints()
         {
             string functionName = "geo.distance";
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetBuiltInFunctionSignatures(functionName);
+            FunctionSignatureWithReturnType[] signatures;
+            BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out signatures);
+
             Action parseDistanceWithNonPointOperand = () => ParseFilter("geo.distance(LocationGeometryLine, geometry'POINT(10 30)') eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseDistanceWithNonPointOperand.ShouldThrow<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(functionName, BuiltInFunctions.BuildFunctionSignatureListDescription(functionName, signatures)));
+            parseDistanceWithNonPointOperand.ShouldThrow<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(functionName, UriFunctionsHelper.BuildFunctionSignatureListDescription(functionName, signatures)));
         }
 
         [Fact]

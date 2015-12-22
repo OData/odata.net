@@ -5097,6 +5097,18 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriUtils {
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
 }
 
+public class Microsoft.OData.Core.UriParser.CustomUriFunctions {
+	public CustomUriFunctions ()
+
+	public static void AddCustomUriFunction (string customFunctionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType newCustomFunctionSignature, params bool overrideBuiltInFunction)
+	public static bool RemoveCustomUriFunction (string customFunctionName)
+	public static bool RemoveCustomUriFunction (string customFunctionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType customFunctionSignature)
+}
+
+public class Microsoft.OData.Core.UriParser.FunctionSignature {
+	Microsoft.OData.Edm.IEdmTypeReference[] ArgumentTypes  { public get; }
+}
+
 public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
 	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions)
 
@@ -5113,6 +5125,12 @@ public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
 	public System.Nullable`1[[System.Int64]] ParseSkip ()
 	public string ParseSkipToken ()
 	public System.Nullable`1[[System.Int64]] ParseTop ()
+}
+
+public sealed class Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType : Microsoft.OData.Core.UriParser.FunctionSignature {
+	public FunctionSignatureWithReturnType (Microsoft.OData.Edm.IEdmTypeReference returnType, Microsoft.OData.Edm.IEdmTypeReference[] argumentTypes)
+
+	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public get; }
 }
 
 public sealed class Microsoft.OData.Core.UriParser.KeyPropertyValue {

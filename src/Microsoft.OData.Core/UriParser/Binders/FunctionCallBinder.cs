@@ -131,7 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                         functionName,
-                        BuiltInFunctions.BuildFunctionSignatureListDescription(functionName, signatures)));
+                        UriFunctionsHelper.BuildFunctionSignatureListDescription(functionName, signatures)));
                 }
             }
 
@@ -140,16 +140,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Finds all signatures for the given function name.
+        /// Search in BuiltIn uri functions first, and then in custom uri functions.
         /// </summary>
         /// <param name="functionName">The function to get the signatures for.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
-        internal static FunctionSignatureWithReturnType[] GetBuiltInFunctionSignatures(string functionName)
+        internal static FunctionSignatureWithReturnType[] GetUriFunctionSignatures(string functionName)
         {
-            // Try to find the function in our built-in functions
             FunctionSignatureWithReturnType[] signatures;
-            if (!BuiltInFunctions.TryGetBuiltInFunction(functionName, out signatures))
+
+            // Try to find the function in the user custom functions
+            if (!CustomUriFunctions.TryGetCustomFunction(functionName, out signatures))
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionName));
+                // Try to find the function in our built-in functionn
+                if (!BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out signatures))
+                {
+                    throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionName));
+                }
             }
 
             return signatures;
@@ -262,7 +268,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             // Do some validation and get potential built-in functions that could match what we saw
-            FunctionSignatureWithReturnType[] signatures = GetBuiltInFunctionSignatures(functionCallTokenName);
+            FunctionSignatureWithReturnType[] signatures = GetUriFunctionSignatures(functionCallTokenName);
             SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallTokenName, argumentNodes);
             FunctionSignatureWithReturnType signature = MatchSignatureToBuiltInFunction(functionCallTokenName, argumentNodeArray, signatures);
             if (signature.ReturnType != null)
