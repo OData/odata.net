@@ -63,7 +63,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        internal ODataJsonLightDeltaWriter(ODataJsonLightOutputContext jsonLightOutputContext, IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public ODataJsonLightDeltaWriter(ODataJsonLightOutputContext jsonLightOutputContext, IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
 
@@ -115,6 +115,9 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>The writer is currently writing a delta deleted link.</summary>
             DeltaDeletedLink,
 
+            /// <summary>The writer is currently writing an expanded navigation property.</summary>
+            ExpandedNavigationProperty,
+
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
 
@@ -149,17 +152,17 @@ namespace Microsoft.OData.Core.JsonLight
 
         #endregion
 
-        #region Internal Properties
+        #region Public Properties
 
         /// <summary>
         /// The navigation source we are going to write entities for.
         /// </summary>
-        internal IEdmNavigationSource NavigationSource { get; set; }
+        public IEdmNavigationSource NavigationSource { get; set; }
 
         /// <summary>
         /// The entity type we are going to write entities for.
         /// </summary>
-        internal IEdmEntityType EntityType { get; set; }
+        public IEdmEntityType EntityType { get; set; }
 
         #endregion
 
@@ -224,6 +227,19 @@ namespace Microsoft.OData.Core.JsonLight
                 JsonLightDeltaLinkScope jsonLightDeltaLinkScope = this.CurrentScope as JsonLightDeltaLinkScope;
                 Debug.Assert(jsonLightDeltaLinkScope != null, "Asking for JsonLightDeltaLinkScope when the current scope is not an JsonLightDeltaLinkScope.");
                 return jsonLightDeltaLinkScope;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current JsonLightExpandedNavigationPropertyScope.
+        /// </summary>
+        private JsonLightExpandedNavigationPropertyScope CurrentExpandedNavigationPropertyScope
+        {
+            get
+            {
+                JsonLightExpandedNavigationPropertyScope jsonLightExpandedNavigationPropertyScope = this.CurrentScope as JsonLightExpandedNavigationPropertyScope;
+                Debug.Assert(jsonLightExpandedNavigationPropertyScope != null, "Asking for JsonLightExpandedNavigationPropertyScope when the current scope is not an JsonLightExpandedNavigationPropertyScope.");
+                return jsonLightExpandedNavigationPropertyScope;
             }
         }
 
@@ -336,6 +352,52 @@ namespace Microsoft.OData.Core.JsonLight
 
                         return TaskUtils.CompletedTask;
                     });
+        }
+#endif
+
+        /// <summary>
+        /// Start writing a navigation link.
+        /// </summary>
+        /// <param name="navigationLink">The navigation link to write.</param>
+        public override void WriteStart(ODataNavigationLink navigationLink)
+        {
+            this.VerifyCanWriteNavigationLink(true, navigationLink);
+            this.WriteStartNavigationLinkImplementation(navigationLink);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously start writing a navigation link.
+        /// </summary>
+        /// <param name="navigationLink">The navigation link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteStartAsync(ODataNavigationLink navigationLink)
+        {
+            this.VerifyCanWriteNavigationLink(false, navigationLink);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartNavigationLinkImplementation(navigationLink));
+        }
+#endif
+
+        /// <summary>
+        /// Start writing an expanded feed.
+        /// </summary>
+        /// <param name="expandedFeed">The expanded feed to write.</param>
+        public override void WriteStart(ODataFeed expandedFeed)
+        {
+            this.VerifyCanWriteExpandedFeed(true, expandedFeed);
+            this.WriteStartExpandedFeedImplementation(expandedFeed);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously start writing an expanded feed.
+        /// </summary>
+        /// <param name="expandedFeed">The expanded feed to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteStartAsync(ODataFeed expandedFeed)
+        {
+            this.VerifyCanWriteExpandedFeed(false, expandedFeed);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartExpandedFeedImplementation(expandedFeed));
         }
 #endif
 
@@ -543,6 +605,32 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Verifies that calling WriteStart navigation link is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="navigationLink">Navigation link to write.</param>
+        private void VerifyCanWriteNavigationLink(bool synchronousCall, ODataNavigationLink navigationLink)
+        {
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+
+            ExceptionUtils.CheckArgumentNotNull(navigationLink, "navigationLink");
+        }
+
+        /// <summary>
+        /// Verifies that calling WriteStart expanded feed is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="expandedFeed">Expanded feed to write.</param>
+        private void VerifyCanWriteExpandedFeed(bool synchronousCall, ODataFeed expandedFeed)
+        {
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+
+            ExceptionUtils.CheckArgumentNotNull(expandedFeed, "expandedFeed");
+        }
+
+        /// <summary>
         /// Verifies that calling WriteStart delta (deleted) entry is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
@@ -603,6 +691,11 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
+            if (this.State != WriterState.DeltaEntry && newState == WriterState.ExpandedNavigationProperty)
+            {
+                throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty(this.State.ToString(), newState.ToString()));
+            }
+
             switch (this.State)
             {
                 case WriterState.Start:
@@ -630,6 +723,8 @@ namespace Microsoft.OData.Core.JsonLight
                     }
 
                     break;
+                case WriterState.ExpandedNavigationProperty:
+                    throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty(this.State.ToString(), newState.ToString()));
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
                     throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
@@ -678,12 +773,49 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Start writing a navigation link - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="navigationLink">Navigation link to write.</param>
+        private void WriteStartNavigationLinkImplementation(ODataNavigationLink navigationLink)
+        {
+            if (!IsExpandedNavigationPropertyState(this.State))
+            {
+                this.EnterScope(WriterState.ExpandedNavigationProperty, navigationLink);
+            }
+
+            this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope
+                .JsonLightExpandedNavigationPropertyWriter.WriteStart(navigationLink));
+        }
+
+        /// <summary>
+        /// Start writing an expanded feed - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="expandedFeed">Expanded feed to write.</param>
+        private void WriteStartExpandedFeedImplementation(ODataFeed expandedFeed)
+        {
+            if (!IsExpandedNavigationPropertyState(this.State))
+            {
+                throw new ODataException(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState(this.State.ToString()));
+            }
+
+            this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope
+                .JsonLightExpandedNavigationPropertyWriter.WriteStart(expandedFeed));
+        }
+
+        /// <summary>
         /// Start writing a delta entry - implementation of the actual functionality.
         /// </summary>
         /// <param name="entry">Entry/item to write.</param>
         private void WriteStartDeltaEntryImplementation(ODataEntry entry)
         {
             Debug.Assert(entry != null, "entry != null");
+
+            if (IsExpandedNavigationPropertyState(this.State))
+            {
+                this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope
+                    .JsonLightExpandedNavigationPropertyWriter.WriteStart(entry));
+                return;
+            }
 
             this.StartPayloadInStartState();
             this.EnterScope(WriterState.DeltaEntry, entry);
@@ -833,6 +965,16 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private void WriteEndImplementation()
         {
+            if (this.State == WriterState.ExpandedNavigationProperty)
+            {
+                if (this.CurrentExpandedNavigationPropertyScope.JsonLightExpandedNavigationPropertyWriter.WriteEnd())
+                {
+                    this.LeaveScope();
+                }
+
+                return;
+            }
+
             this.InterceptException(() =>
             {
                 Scope currentScope = this.CurrentScope;
@@ -1282,19 +1424,10 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (newState == WriterState.DeltaEntry || newState == WriterState.DeltaDeletedEntry ||
                 newState == WriterState.DeltaLink || newState == WriterState.DeltaDeletedLink ||
-                newState == WriterState.DeltaFeed)
+                newState == WriterState.DeltaFeed || newState == WriterState.ExpandedNavigationProperty)
             {
                 navigationSource = currentScope.NavigationSource;
                 entityType = currentScope.EntityType;
-            }
-
-            WriterState currentState = currentScope.State;
-
-            if ((newState == WriterState.DeltaEntry || newState == WriterState.DeltaDeletedEntry ||
-                newState == WriterState.DeltaLink || newState == WriterState.DeltaDeletedLink) &&
-                currentState == WriterState.DeltaFeed)
-            {
-                this.CurrentDeltaFeedScope.EntryAndLinkCount++;
             }
 
             this.PushScope(newState, item, navigationSource, entityType, selectedProperties, odataUri);
@@ -1339,6 +1472,7 @@ namespace Microsoft.OData.Core.JsonLight
                 state == WriterState.DeltaFeed && item is ODataDeltaFeed ||
                 state == WriterState.DeltaLink && item is ODataDeltaLink ||
                 state == WriterState.DeltaDeletedLink && item is ODataDeltaDeletedLink ||
+                state == WriterState.ExpandedNavigationProperty && item is ODataNavigationLink ||
                 state == WriterState.Start && item == null ||
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
@@ -1360,6 +1494,9 @@ namespace Microsoft.OData.Core.JsonLight
                     break;
                 case WriterState.DeltaDeletedLink:
                     scope = this.CreateDeltaLinkScope(WriterState.DeltaDeletedLink, item, navigationSource, entityType, selectedProperties, odataUri);
+                    break;
+                case WriterState.ExpandedNavigationProperty:
+                    scope = this.CreateExpandedNavigationPropertyScope(item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
@@ -1478,6 +1615,27 @@ namespace Microsoft.OData.Core.JsonLight
                 this.jsonLightOutputContext.MessageWriterSettings.WriterBehavior,
                 selectedProperties,
                 odataUri);
+        }
+
+        /// <summary>
+        /// Create a new expanded navigation property scope.
+        /// </summary>
+        /// <param name="navigationLink">The navigation link for the feed.</param>
+        /// <param name="navigationSource">The navigation source of the parent delta entry.</param>
+        /// <param name="entityType">The entity type of the parent delta entry.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <returns>The newly created scope.</returns>
+        private ExpandedNavigationPropertyScope CreateExpandedNavigationPropertyScope(ODataItem navigationLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        {
+            return new JsonLightExpandedNavigationPropertyScope(
+                navigationLink,
+                navigationSource,
+                entityType,
+                selectedProperties,
+                odataUri,
+                this.CurrentDeltaEntryScope.Entry,
+                this.jsonLightOutputContext);
         }
 
         #endregion
@@ -1631,6 +1789,16 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Determines whether a given writer is writing expanded navigation property.
+        /// </summary>
+        /// <param name="state">The writer state to check.</param>
+        /// <returns>True if the writer is writing expanded navigation property; otherwise false.</returns>
+        private static bool IsExpandedNavigationPropertyState(WriterState state)
+        {
+            return state == WriterState.ExpandedNavigationProperty;
+        }
+
+        /// <summary>
         /// Gets the projected properties annotation for the specified scope.
         /// </summary>
         /// <param name="currentScope">The scope to get the projected properties annotation for.</param>
@@ -1675,7 +1843,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 this.state = state;
                 this.item = item;
@@ -1693,7 +1861,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The writer state of this scope.
             /// </summary>
-            internal WriterState State
+            public WriterState State
             {
                 get
                 {
@@ -1704,7 +1872,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The item attached to this scope.
             /// </summary>
-            internal ODataItem Item
+            public ODataItem Item
             {
                 get
                 {
@@ -1715,12 +1883,12 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The navigation source we are going to write entities for.
             /// </summary>
-            internal IEdmNavigationSource NavigationSource { get; private set; }
+            public IEdmNavigationSource NavigationSource { get; private set; }
 
             /// <summary>
             /// The selected properties for the current scope.
             /// </summary>
-            internal SelectedPropertiesNode SelectedProperties
+            public SelectedPropertiesNode SelectedProperties
             {
                 get
                 {
@@ -1732,7 +1900,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The odata Uri for the current scope.
             /// </summary>
-            internal ODataUri ODataUri
+            public ODataUri ODataUri
             {
                 get
                 {
@@ -1800,7 +1968,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// Checker to detect duplicate property names.
             /// </summary>
-            internal DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+            public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
             {
                 get
                 {
@@ -1811,7 +1979,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// Tracks the write status of the annotations.
             /// </summary>
-            internal InstanceAnnotationWriteTracker InstanceAnnotationWriteTracker
+            public InstanceAnnotationWriteTracker InstanceAnnotationWriteTracker
             {
                 get
                 {
@@ -1858,7 +2026,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>Maintains the write status for each annotation using its key.</summary>
             private InstanceAnnotationWriteTracker instanceAnnotationWriteTracker;
 
-            /// <summary>The type context to answer basic questions regarding the type info of the entry.</summary>
+            /// <summary>The type context to answer basic questions regarding the type info of the feed.</summary>
             private ODataFeedAndEntryTypeContext typeContext;
 
             /// <summary>
@@ -1881,14 +2049,9 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             /// <summary>
-            /// The number of entries and links in this feed seen so far.
-            /// </summary>
-            internal int EntryAndLinkCount { get; set; }
-
-            /// <summary>
             /// Tracks the write status of the annotations.
             /// </summary>
-            internal InstanceAnnotationWriteTracker InstanceAnnotationWriteTracker
+            public InstanceAnnotationWriteTracker InstanceAnnotationWriteTracker
             {
                 get
                 {
@@ -1904,7 +2067,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The context uri info created for this scope.
             /// </summary>
-            internal ODataContextUrlInfo ContextUriInfo { get; set; }
+            public ODataContextUrlInfo ContextUriInfo { get; set; }
 
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the entry.
@@ -1912,7 +2075,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="model">The Edm model to use.</param>
             /// <param name="writingResponse">Whether writing Json payload. Should always be true.</param>
             /// <returns>The type context to answer basic questions regarding the type info of the entry.</returns>
-            internal ODataFeedAndEntryTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse = true)
+            public ODataFeedAndEntryTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse = true)
             {
                 if (this.typeContext == null)
                 {
@@ -1993,6 +2156,26 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// A scope for an expanded navigation property.
+        /// </summary>
+        private abstract class ExpandedNavigationPropertyScope : Scope
+        {
+            /// <summary>
+            /// Constructor to create a new expanded navigation property scope.
+            /// </summary>
+            /// <param name="navigationLink">The navigation link for the feed.</param>
+            /// <param name="navigationSource">The navigation source of the parent delta entry.</param>
+            /// <param name="entityType">The entity type of the parent delta entry.</param>
+            /// <param name="selectedProperties">The selected properties of this scope.</param>
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            protected ExpandedNavigationPropertyScope(ODataItem navigationLink, IEdmNavigationSource navigationSource,
+                IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.ExpandedNavigationProperty, navigationLink, navigationSource, entityType, selectedProperties, odataUri)
+            {
+            }
+        }
+
+        /// <summary>
         /// A scope for a delta entry in JSON Light writer.
         /// </summary>
         private sealed class JsonLightDeltaEntryScope : DeltaEntryScope, IODataJsonLightWriterEntryState
@@ -2011,7 +2194,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightDeltaEntryScope(WriterState state, ODataItem entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public JsonLightDeltaEntryScope(WriterState state, ODataItem entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(state, entry, serializationInfo, navigationSource, entityType, writerBehavior, selectedProperties, odataUri)
             {
             }
@@ -2148,6 +2331,43 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// A scope for an expanded navigation property in JSON Light writer.
+        /// </summary>
+        private sealed class JsonLightExpandedNavigationPropertyScope : ExpandedNavigationPropertyScope
+        {
+            /// <summary>
+            /// The writer for writing expanded navigation property in delta response.
+            /// </summary>
+            private JsonLightExpandedNavigationPropertyWriter jsonLightExpandedNavigationPropertyWriter;
+
+            /// <summary>
+            /// Constructor to create a new expanded navigation property scope.
+            /// </summary>
+            /// <param name="navigationLink">The navigation link for the feed.</param>
+            /// <param name="navigationSource">The navigation source of the parent delta entry.</param>
+            /// <param name="entityType">The entity type of the parent delta entry.</param>
+            /// <param name="selectedProperties">The selected properties of this scope.</param>
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            /// <param name="parentDeltaEntry">The parent delta entry.</param>
+            /// <param name="jsonLightOutputContext">The output context for Json.</param>
+            public JsonLightExpandedNavigationPropertyScope(ODataItem navigationLink, IEdmNavigationSource navigationSource,
+                IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri,
+                ODataEntry parentDeltaEntry, ODataJsonLightOutputContext jsonLightOutputContext)
+                : base(navigationLink, navigationSource, entityType, selectedProperties, odataUri)
+            {
+                this.jsonLightExpandedNavigationPropertyWriter = new JsonLightExpandedNavigationPropertyWriter(navigationSource, entityType, parentDeltaEntry, jsonLightOutputContext);
+            }
+
+            /// <summary>
+            /// The writer for writing expanded navigation property in delta response.
+            /// </summary>
+            public JsonLightExpandedNavigationPropertyWriter JsonLightExpandedNavigationPropertyWriter
+            {
+                get { return this.jsonLightExpandedNavigationPropertyWriter; }
+            }
+        }
+
+        /// <summary>
         /// A scope for a JSON lite feed.
         /// </summary>
         private sealed class JsonLightDeltaFeedScope : DeltaFeedScope
@@ -2160,7 +2380,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightDeltaFeedScope(ODataItem feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public JsonLightDeltaFeedScope(ODataItem feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(feed, navigationSource, entityType, selectedProperties, odataUri)
             {
             }
@@ -2168,12 +2388,12 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// true if the odata.nextLink annotation was already written, false otherwise.
             /// </summary>
-            internal bool NextPageLinkWritten { get; set; }
+            public bool NextPageLinkWritten { get; set; }
 
             /// <summary>
             /// true if the odata.deltaLink annotation was already written, false otherwise.
             /// </summary>
-            internal bool DeltaLinkWritten { get; set; }
+            public bool DeltaLinkWritten { get; set; }
         }
 
         /// <summary>
@@ -2192,7 +2412,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataDeltaSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataDeltaSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(state, link, serializationInfo, navigationSource, entityType, writerBehavior, selectedProperties, odataUri)
             {
             }
@@ -2215,7 +2435,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// Gets the count of items in the stack.
             /// </summary>
-            internal int Count
+            public int Count
             {
                 get
                 {
@@ -2227,7 +2447,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// Pushes the specified scope onto the stack.
             /// </summary>
             /// <param name="scope">The scope.</param>
-            internal void Push(Scope scope)
+            public void Push(Scope scope)
             {
                 Debug.Assert(scope != null, "scope != null");
                 this.scopes.Push(scope);
@@ -2237,7 +2457,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// Pops the current scope off the stack.
             /// </summary>
             /// <returns>The popped scope.</returns>
-            internal Scope Pop()
+            public Scope Pop()
             {
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
                 return this.scopes.Pop();
@@ -2247,7 +2467,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// Peeks at the current scope on the top of the stack.
             /// </summary>
             /// <returns>The current scope at the top of the stack.</returns>
-            internal Scope Peek()
+            public Scope Peek()
             {
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
                 return this.scopes.Peek();
@@ -2269,7 +2489,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// </summary>
             /// <param name="serializationInfo">The DeltaSerializationInfo to convert.</param>
             /// <returns>The converted FeedAndEntrySerializationInfo.</returns>
-            internal static ODataFeedAndEntrySerializationInfo ToFeedAndEntrySerializationInfo(ODataDeltaSerializationInfo serializationInfo)
+            public static ODataFeedAndEntrySerializationInfo ToFeedAndEntrySerializationInfo(ODataDeltaSerializationInfo serializationInfo)
             {
                 if (serializationInfo == null)
                 {
@@ -2290,7 +2510,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// </summary>
             /// <param name="serializationInfo">The DeltaFeedSerializationInfo to convert.</param>
             /// <returns>The converted FeedAndEntrySerializationInfo.</returns>
-            internal static ODataFeedAndEntrySerializationInfo ToFeedAndEntrySerializationInfo(ODataDeltaFeedSerializationInfo serializationInfo)
+            public static ODataFeedAndEntrySerializationInfo ToFeedAndEntrySerializationInfo(ODataDeltaFeedSerializationInfo serializationInfo)
             {
                 if (serializationInfo == null)
                 {
@@ -2311,7 +2531,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// </summary>
             /// <param name="serializationInfo">The DeltaFeedSerializationInfo to convert.</param>
             /// <returns>The converted DeltaSerializationInfo.</returns>
-            internal static ODataDeltaSerializationInfo ToDeltaSerializationInfo(ODataDeltaFeedSerializationInfo serializationInfo)
+            public static ODataDeltaSerializationInfo ToDeltaSerializationInfo(ODataDeltaFeedSerializationInfo serializationInfo)
             {
                 if (serializationInfo == null)
                 {
@@ -2326,7 +2546,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// </summary>
             /// <param name="deltaFeed">The DeltaFeed to convert.</param>
             /// <returns>The converted Feed.</returns>
-            internal static ODataFeed ToODataFeed(ODataDeltaFeed deltaFeed)
+            public static ODataFeed ToODataFeed(ODataDeltaFeed deltaFeed)
             {
                 Debug.Assert(deltaFeed != null, "deltaFeed != null");
 
@@ -2354,6 +2574,121 @@ namespace Microsoft.OData.Core.JsonLight
                     InstanceAnnotations = feedBase.InstanceAnnotations,
                     NextPageLink = feedBase.NextPageLink
                 };
+            }
+        }
+
+        #endregion
+
+        #region JsonLightExpandedNavigationPropertyWriter Class
+
+        /// <summary>
+        /// The writer for writing expanded navigation property in delta response.
+        /// </summary>
+        private sealed class JsonLightExpandedNavigationPropertyWriter
+        {
+            /// <summary>
+            /// The entry writer to write entries, feeds and navigation links.
+            /// </summary>
+            private readonly ODataWriter entryWriter;
+
+            /// <summary>
+            /// The parent delta entry.
+            /// </summary>
+            private readonly ODataEntry parentDeltaEntry;
+
+            /// <summary>
+            /// Current depth of the entry writer.
+            /// </summary>
+            private int currentEntryDepth;
+
+            /// <summary>
+            /// Constructor to create an <see cref="JsonLightExpandedNavigationPropertyWriter"/>.
+            /// </summary>
+            /// <param name="navigationSource">The navigation source of the parent delta entry.</param>
+            /// <param name="entityType">The entity type of the parent delta entry.</param>
+            /// <param name="parentDeltaEntry">The parent delta entry.</param>
+            /// <param name="jsonLightOutputContext">The output context for Json.</param>
+            public JsonLightExpandedNavigationPropertyWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType,
+                ODataEntry parentDeltaEntry, ODataJsonLightOutputContext jsonLightOutputContext)
+            {
+                this.parentDeltaEntry = parentDeltaEntry;
+                this.entryWriter = new ODataJsonLightWriter(jsonLightOutputContext, navigationSource, entityType, /*writingFeed*/ false, writingDelta: true);
+            }
+
+            /// <summary>
+            /// Starts the writing of an entry.
+            /// </summary>
+            /// <param name="entry">The entry or item to write.</param>
+            public void WriteStart(ODataEntry entry)
+            {
+                this.IncreaseEntryDepth();
+                this.entryWriter.WriteStart(entry);
+            }
+
+            /// <summary>
+            /// Starts the writing of a feed.
+            /// </summary>
+            /// <param name="feed">The feed or collection to write.</param>
+            public void WriteStart(ODataFeed feed)
+            {
+                this.IncreaseEntryDepth();
+                this.entryWriter.WriteStart(feed);
+            }
+
+            /// <summary>
+            /// Starts the writing of a navigation link.
+            /// </summary>
+            /// <param name="navigationLink">The navigation link to write.</param>
+            public void WriteStart(ODataNavigationLink navigationLink)
+            {
+                this.IncreaseEntryDepth();
+                this.entryWriter.WriteStart(navigationLink);
+            }
+
+            /// <summary>
+            /// Finishes the writing of a feed, an entry, or a navigation link.
+            /// </summary>
+            /// <returns>True if the status of the entry writer is completed; false otherwise.</returns>
+            public bool WriteEnd()
+            {
+                // This is to match WriteStart(parentDeltaEntry).
+                this.entryWriter.WriteEnd();
+                return this.DecreaseEntryDepth();
+            }
+
+            /// <summary>
+            /// Increase the depth of the entry writer.
+            /// </summary>
+            private void IncreaseEntryDepth()
+            {
+                if (this.currentEntryDepth == 0)
+                {
+                    // This is to ensure the underlying writer has the correct state and scope to
+                    // write a navigation link. The structural properties and instance annotations
+                    // of the delta entry will NOT actually be written to the payload. Only the
+                    // navigation links, expanded feeds and expanded entries will be written.
+                    this.entryWriter.WriteStart(this.parentDeltaEntry);
+                }
+
+                this.currentEntryDepth++;
+            }
+
+            /// <summary>
+            /// Decrease the depth of the entry writer.
+            /// </summary>
+            /// <returns>True if the status of the entry writer is completed; false otherwise.</returns>
+            private bool DecreaseEntryDepth()
+            {
+                this.currentEntryDepth--;
+
+                if (this.currentEntryDepth == 0)
+                {
+                    // Match WriteStart(this.parentDeltaEntry).
+                    this.entryWriter.WriteEnd();
+                    return true;
+                }
+
+                return false;
             }
         }
 
