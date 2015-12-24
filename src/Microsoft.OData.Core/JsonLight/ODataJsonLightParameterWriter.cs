@@ -160,7 +160,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
-            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/false, /*writingParameter*/true, /*listener*/this);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
 
         /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a feed.</summary>
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
-            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/true, /*writingParameter*/true, /*listener*/this);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
     }
 }

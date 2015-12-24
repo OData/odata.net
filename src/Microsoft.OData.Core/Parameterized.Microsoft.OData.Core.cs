@@ -197,6 +197,27 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. Expanded navigation property can only be written within a delta entry."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "WriteStart(expandedFeed) was called in an invalid state ('{0}'); WriteStart(expandedFeed) is only supported in state 'ExpandedNavigationProperty'."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState, p0);
+        }
+
+        /// <summary>
         /// A string like "ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Entry', 'Feed', 'NavigationLink', and 'NavigationLinkWithContent'."
         /// </summary>
         internal static string ODataWriterCore_WriteEndCalledInInvalidState(object p0) {

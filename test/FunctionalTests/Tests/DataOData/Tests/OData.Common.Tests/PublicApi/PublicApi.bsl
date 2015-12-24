@@ -3950,8 +3950,12 @@ public abstract class Microsoft.OData.Core.ODataDeltaWriter {
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteStart (Microsoft.OData.Core.ODataDeltaFeed deltaFeed)
 	public abstract void WriteStart (Microsoft.OData.Core.ODataEntry deltaEntry)
+	public abstract void WriteStart (Microsoft.OData.Core.ODataFeed expandedFeed)
+	public abstract void WriteStart (Microsoft.OData.Core.ODataNavigationLink navigationLink)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataDeltaFeed deltaFeed)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataEntry deltaEntry)
+	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataFeed inlineFeed)
+	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataNavigationLink navigationLink)
 }
 
 public abstract class Microsoft.OData.Core.ODataFeedBase : Microsoft.OData.Core.ODataItem {
