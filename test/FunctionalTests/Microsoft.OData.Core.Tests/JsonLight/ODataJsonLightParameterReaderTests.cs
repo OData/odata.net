@@ -12,6 +12,7 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Library.Values;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
@@ -104,7 +105,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var derivedComplexType = new EdmComplexType("TestModel", "derivedAddress", complexType, false);
             derivedComplexType.AddStructuralProperty("StreetNumber", EdmPrimitiveTypeKind.Int32, false);
             this.referencedModel.AddElement(derivedComplexType);
-            
+
             this.action.AddParameter("address", new EdmComplexTypeReference(complexType, false));
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" } }";
 
@@ -121,7 +122,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var derivedComplexType = new EdmComplexType("TestModel", "derivedAddress", complexType, false);
             derivedComplexType.AddStructuralProperty("StreetNumber", EdmPrimitiveTypeKind.Int32, false);
             this.referencedModel.AddElement(derivedComplexType);
-            
+
             this.action.AddParameter("addresses", EdmCoreModel.GetCollection(new EdmComplexTypeReference(complexType, false)));
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" }, { \"StreetName\": \"Bla2\" }]}";
 
@@ -322,6 +323,181 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
+        public void ReadTwoFeedsWithSameType()
+        {
+            var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
+            this.action.AddParameter("feedA", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            this.action.AddParameter("feedB", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            string payload = "{\"feedA\":[{\"ID\":1}],\"feedB\":[{\"ID\":2}]}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(2);
+            result.Entries.Count.Should().Be(2);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feedA");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            var feedB = result.Feeds.ElementAt(1);
+            feedB.Key.Should().Be("feedB");
+            feedB.Value.Count().Should().Be(1);
+            var entryB = result.Entries.ElementAt(1).Value.First();
+            entryB.Properties.Count().Should().Be(1);
+            entryB.Properties.First().Value.Should().Be(2);
+        }
+
+        [Fact]
+        public void ReadTwoFeedsWithDifferentType()
+        {
+            var entityTypeA = this.referencedModel.EntityType("EntityTypeA").Property("AID", EdmPrimitiveTypeKind.Int32);
+            var entityTypeB = this.referencedModel.EntityType("EntityTypeB").Property("BID", EdmPrimitiveTypeKind.Int32);
+            this.action.AddParameter("feedA", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityTypeA, false)));
+            this.action.AddParameter("feedB", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityTypeB, false)));
+            string payload = "{\"feedA\":[{\"AID\":1}],\"feedB\":[{\"BID\":2}]}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(2);
+            result.Entries.Count.Should().Be(2);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feedA");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            var feedB = result.Feeds.ElementAt(1);
+            feedB.Key.Should().Be("feedB");
+            feedB.Value.Count().Should().Be(1);
+            var entryB = result.Entries.ElementAt(1).Value.First();
+            entryB.Properties.Count().Should().Be(1);
+            entryB.Properties.First().Value.Should().Be(2);
+        }
+
+        [Fact]
+        public void ReadTwoFeedsWithinheritance()
+        {
+            var entityType = this.referencedModel.EntityType("EntityType", "NS").Property("ID", EdmPrimitiveTypeKind.Int32);
+            var dervivedType = this.referencedModel.EntityType("DerivedType", "NS", entityType).Property("Name", EdmPrimitiveTypeKind.String);
+
+            this.action.AddParameter("feedA", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            this.action.AddParameter("feedB", EdmCoreModel.GetCollection(new EdmEntityTypeReference(dervivedType, false)));
+            string payload = "{\"feedA\":[{\"ID\":1}],\"feedB\":[{\"ID\":2,\"Name\":\"testName\"}]}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(2);
+            result.Entries.Count.Should().Be(2);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feedA");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            var feedB = result.Feeds.ElementAt(1);
+            feedB.Key.Should().Be("feedB");
+            feedB.Value.Count().Should().Be(1);
+            var entryB = result.Entries.ElementAt(1).Value.First();
+            entryB.Properties.Count().Should().Be(2);
+            entryB.Properties.First().Value.Should().Be(2);
+            entryB.Properties.ElementAt(1).Value.Should().Be("testName");
+        }
+
+
+        [Fact]
+        public void ReadFeedAndEntry()
+        {
+            var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
+            this.action.AddParameter("feedA", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            this.action.AddParameter("entryB", new EdmEntityTypeReference(entityType, false));
+            string payload = "{\"feedA\":[{\"ID\":1}],\"entryB\":{\"ID\":2}}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(1);
+            result.Entries.Count.Should().Be(2);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feedA");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            var pair = result.Entries.ElementAt(1);
+            pair.Key.Should().Be("entryB");
+            var entryB = pair.Value.First();
+            entryB.Properties.Count().Should().Be(1);
+            entryB.Properties.First().Value.Should().Be(2);
+        }
+
+        [Fact]
+        public void ReadFeedAndComplexType()
+        {
+            var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
+            var complexType = this.referencedModel.ComplexType("ComplexType").Property("Name", EdmPrimitiveTypeKind.String);
+            this.action.AddParameter("feed", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            this.action.AddParameter("complex", new EdmComplexTypeReference(complexType, false));
+            string payload = "{\"feed\":[{\"ID\":1}],\"complex\":{\"Name\":\"ComplexName\"}}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(1);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feed");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            result.Values.Count().Should().Be(1);
+            result.Values.First().Value.Should().BeOfType<ODataComplexValue>();
+        }
+
+        [Fact]
+        public void ReadFeedAndProperty()
+        {
+            var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
+            this.action.AddParameter("feed", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            this.action.AddParameter("property", EdmCoreModel.Instance.GetString(false));
+            string payload = "{\"feed\":[{\"ID\":1}],\"property\":\"value\"}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(1);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feed");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            result.Values.Count().Should().Be(1);
+            result.Values.Should().Contain(keyValuePair => keyValuePair.Key.Equals("property") && keyValuePair.Value.Equals("value"));
+        }
+
+        [Fact]
+        public void ReadFeedAndEnumValue()
+        {
+            var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
+            var enumType = this.referencedModel.EnumType("Color");
+            enumType.AddMember("Blue", new EdmIntegerConstant(0));
+            enumType.AddMember("Red", new EdmIntegerConstant(1));
+            this.action.AddParameter("feed", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
+            this.action.AddParameter("enum", new EdmEnumTypeReference(enumType, false));
+            string payload = "{\"feed\":[{\"ID\":1}],\"enum\":\"Blue\"}";
+
+            var result = this.RunParameterReaderTest(payload);
+
+            result.Feeds.Count.Should().Be(1);
+            var feedA = result.Feeds.First();
+            feedA.Key.Should().Be("feed");
+            feedA.Value.Count().Should().Be(1);
+            var entryA = result.Entries.First().Value.First();
+            entryA.Properties.Count().Should().Be(1);
+            entryA.Properties.First().Value.Should().Be(1);
+            result.Values.Count().Should().Be(1);
+            result.Values.First().Value.Should().BeOfType<ODataEnumValue>();
+        }
+
+        [Fact]
         public void ReadFeedWithMultipleEntries()
         {
             var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
@@ -428,7 +604,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
             var expandEntityType = this.referencedModel.EntityType("ExpandEntityType", "NS").Property("ID", EdmPrimitiveTypeKind.Int32).Property("Name", EdmPrimitiveTypeKind.String);
-            entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() {ContainsTarget = true, Name = "Property1", Target = expandEntityType, TargetMultiplicity = EdmMultiplicity.Many });
+            entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() { ContainsTarget = true, Name = "Property1", Target = expandEntityType, TargetMultiplicity = EdmMultiplicity.Many });
             this.action.AddParameter("feed", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
 
             string payload = "{\"feed\":[{\"ID\":1,\"Property1\":[{\"ID\":1,\"Name\":\"TestName\"}]}]}";
@@ -460,70 +636,70 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     switch (parameterReader.State)
                     {
                         case ODataParameterReaderState.Value:
-                        {
-                            parameterReaderResult.Values.Add(new KeyValuePair<string, object>(parameterReader.Name, parameterReader.Value));
-                            break;
-                        }
-                        case ODataParameterReaderState.Collection:
-                        {
-                            var collection = new ParameterReaderCollection();
-                            parameterReaderResult.Collections.Add(new KeyValuePair<string, ParameterReaderCollection>(parameterReader.Name, collection));
-                            var collectionReader = parameterReader.CreateCollectionReader();
-                            while (collectionReader.Read())
                             {
-                                switch (collectionReader.State)
+                                parameterReaderResult.Values.Add(new KeyValuePair<string, object>(parameterReader.Name, parameterReader.Value));
+                                break;
+                            }
+                        case ODataParameterReaderState.Collection:
+                            {
+                                var collection = new ParameterReaderCollection();
+                                parameterReaderResult.Collections.Add(new KeyValuePair<string, ParameterReaderCollection>(parameterReader.Name, collection));
+                                var collectionReader = parameterReader.CreateCollectionReader();
+                                while (collectionReader.Read())
                                 {
-                                    case ODataCollectionReaderState.Value:
+                                    switch (collectionReader.State)
                                     {
-                                        collection.Items.Add(collectionReader.Item);
-                                        break;
+                                        case ODataCollectionReaderState.Value:
+                                            {
+                                                collection.Items.Add(collectionReader.Item);
+                                                break;
+                                            }
                                     }
                                 }
+                                break;
                             }
-                            break;
-                        }
                         case ODataParameterReaderState.Entry:
-                        {
-                            var entryReader = parameterReader.CreateEntryReader();
-
-                            var entryList = new List<ODataEntry>();
-                            parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
-                            while (entryReader.Read())
                             {
-                                switch (entryReader.State)
-                                {
-                                    case ODataReaderState.EntryEnd:
-                                        entryList.Add((ODataEntry)entryReader.Item);
-                                        break;
+                                var entryReader = parameterReader.CreateEntryReader();
 
+                                var entryList = new List<ODataEntry>();
+                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
+                                while (entryReader.Read())
+                                {
+                                    switch (entryReader.State)
+                                    {
+                                        case ODataReaderState.EntryEnd:
+                                            entryList.Add((ODataEntry)entryReader.Item);
+                                            break;
+
+                                    }
                                 }
+                                break;
                             }
-                            break;
-                        }
                         case ODataParameterReaderState.Feed:
-                        {
-                            var entryReader = parameterReader.CreateFeedReader();
-                            
-                            var entryList = new List<ODataEntry>();
-                            parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
-
-                            var feedList = new List<ODataFeed>();
-                            parameterReaderResult.Feeds.Add(new KeyValuePair<string, IList<ODataFeed>>(parameterReader.Name, feedList));
-
-                            while (entryReader.Read())
                             {
-                                switch (entryReader.State)
+                                var entryReader = parameterReader.CreateFeedReader();
+
+                                var entryList = new List<ODataEntry>();
+                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
+
+                                var feedList = new List<ODataFeed>();
+                                parameterReaderResult.Feeds.Add(new KeyValuePair<string, IList<ODataFeed>>(parameterReader.Name, feedList));
+
+                                while (entryReader.Read())
                                 {
-                                    case ODataReaderState.EntryEnd:
-                                        entryList.Add((ODataEntry)entryReader.Item);
-                                        break;
-                                    case ODataReaderState.FeedEnd:
-                                        feedList.Add((ODataFeed)entryReader.Item);
-                                        break;
+                                    switch (entryReader.State)
+                                    {
+                                        case ODataReaderState.EntryEnd:
+                                            entryList.Add((ODataEntry)entryReader.Item);
+                                            break;
+                                        case ODataReaderState.FeedEnd:
+                                            feedList.Add((ODataFeed)entryReader.Item);
+                                            break;
+                                    }
                                 }
+                                break;
                             }
-                            break;
-                        }
                     }
                 }
             }
@@ -536,7 +712,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             public IList<KeyValuePair<string, object>> Values { get; set; }
             public IList<KeyValuePair<string, ParameterReaderCollection>> Collections { get; set; }
             public IList<KeyValuePair<string, IList<ODataEntry>>> Entries { get; set; }
-            public IList<KeyValuePair<string, IList<ODataFeed>>> Feeds { get; set; } 
+            public IList<KeyValuePair<string, IList<ODataFeed>>> Feeds { get; set; }
 
             public ParameterReaderResult()
             {
