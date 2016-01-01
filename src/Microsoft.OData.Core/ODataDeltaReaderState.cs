@@ -78,5 +78,12 @@ namespace Microsoft.OData.Core
         /// In this state, the Item property of the <see cref="ODataDeltaReader"/> returns null.
         /// </remarks>
         Completed,
+
+        /// <summary>An expanded navigation property was read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
+        /// the current item of the underlying expanded navigation property reader.
+        /// </remarks>
+        ExpandedNavigationProperty,
     }
 }

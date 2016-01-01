@@ -3789,6 +3789,7 @@ public enum Microsoft.OData.Core.ODataDeltaReaderState : int {
 	DeltaFeedStart = 1
 	DeltaLink = 6
 	Exception = 8
+	ExpandedNavigationProperty = 10
 	FeedEnd = 2
 	Start = 0
 }
@@ -3930,6 +3931,7 @@ public abstract class Microsoft.OData.Core.ODataDeltaReader {
 
 	Microsoft.OData.Core.ODataItem Item  { public abstract get; }
 	Microsoft.OData.Core.ODataDeltaReaderState State  { public abstract get; }
+	Microsoft.OData.Core.ODataReaderState SubState  { public abstract get; }
 
 	public abstract bool Read ()
 	public abstract System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()

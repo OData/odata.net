@@ -24,12 +24,14 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="inputContext">The input to read the payload from.</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
+        /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCoreAsync(
             ODataInputContext inputContext, 
-            bool readingFeed, 
+            bool readingFeed,
+            bool readingDelta,
             IODataReaderWriterListener listener)
-            : base(inputContext, readingFeed, listener)
+            : base(inputContext, readingFeed, readingDelta, listener)
         {
         }
 
