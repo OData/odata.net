@@ -418,7 +418,8 @@
     <Compile Include="UriParser\Binders\SelectPathSegmentTokenBinder.cs" />
     <Compile Include="UriParser\Binders\SelectTreeNormalizer.cs" />
     <Compile Include="UriParser\Binders\UnaryOperatorBinder.cs" />
-    <Compile Include="UriParser\BuiltInFunctions.cs" />
+    <Compile Include="UriParser\BuiltInUriFunctions.cs" />
+    <Compile Include="UriParser\CustomUriFunctions.cs" />
     <Compile Include="UriParser\ExceptionUtil.cs" />
     <Compile Include="UriParser\ExpressionLexer.cs" />
     <Compile Include="UriParser\ExpressionLexerLiteralExtensions.cs" />
@@ -579,6 +580,7 @@
     <Compile Include="UriParser\TreeNodeKinds\RequestTargetKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\UnaryOperatorKind.cs" />
     <Compile Include="UriParser\TypePromotionUtils.cs" />
+    <Compile Include="UriParser\UriFunctionsHelper.cs" />
     <Compile Include="UriParser\UriQueryConstants.cs" />
     <Compile Include="UriParser\UriUtils.cs" />
     <Compile Include="UriParser\Visitors\IPathSegmentTokenVisitor.cs" />

@@ -1174,9 +1174,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\UnaryOperatorBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\UnaryOperatorBinder.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\BuiltInFunctions.cs">
-      <Link>Microsoft\OData\Core\UriParser\BuiltInFunctions.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\ExceptionUtil.cs">
       <Link>Microsoft\OData\Core\UriParser\ExceptionUtil.cs</Link>
     </Compile>
@@ -1404,10 +1401,10 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\ExpandedNavigationSelectItem.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ExpandedNavigationSelectItem.cs</Link>
-    </Compile> 
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\ExpandedReferenceSelectItem.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ExpandedReferenceSelectItem.cs</Link>
-    </Compile> 
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\FilterClause.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\FilterClause.cs</Link>
     </Compile>
@@ -1737,6 +1734,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
+      <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\CustomUriFunctions.cs">
+      <Link>Microsoft\OData\Core\UriParser\CustomUriFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\UriFunctionsHelper.cs">
+      <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>
+    </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
       <IncludeInOpenSource>false</IncludeInOpenSource>

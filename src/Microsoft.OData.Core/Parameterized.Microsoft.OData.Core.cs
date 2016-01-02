@@ -5471,6 +5471,27 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "The given custom function '{0}' already exists as a Built-In function. Consider use 'OverrideBuiltInFunction = true' parameter."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given custom function '{0}' already exists as a Built-In function in one of it's overloads. Thus cannot override the Built-In function."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given function name '{0}' already exists as a custom function with the same overload."
+        /// </summary>
+        internal static string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, p0);
+        }
+
+        /// <summary>
         /// A string like "The ODataPathSegment provided (Id = {0}) is not an EntitySetSegment."
         /// </summary>
         internal static string RequestUriProcessor_InvalidValueForEntitySegment(object p0) {

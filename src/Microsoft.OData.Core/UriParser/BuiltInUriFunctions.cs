@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="BuiltInFunctions.cs" company="Microsoft">
+// <copyright file="BuiltInUriFunctions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -20,9 +20,9 @@ namespace Microsoft.OData.Core.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// Class containing definitions of all the built-in functions.
+    /// Class containing definitions of all the built-in functions in OData Protocol.
     /// </summary>
-    internal static class BuiltInFunctions
+    internal static class BuiltInUriFunctions
     {
         /// <summary>
         /// Dictionary of the name of the built-in function and all the signatures.
@@ -40,47 +40,6 @@ namespace Microsoft.OData.Core.UriParser
             Debug.Assert(name != null, "name != null");
 
             return builtInFunctions.TryGetValue(name, out signatures);
-        }
-
-        /// <summary>Builds a description of a list of function signatures.</summary>
-        /// <param name="name">Function name.</param>
-        /// <param name="signatures">Function signatures.</param>
-        /// <returns>A string with ';'-separated list of function signatures.</returns>
-        internal static string BuildFunctionSignatureListDescription(string name, IEnumerable<FunctionSignature> signatures)
-        {
-            Debug.Assert(name != null, "name != null");
-            Debug.Assert(signatures != null, "signatures != null");
-
-            StringBuilder builder = new StringBuilder();
-            string descriptionSeparator = "";
-            foreach (FunctionSignatureWithReturnType signature in signatures)
-            {
-                builder.Append(descriptionSeparator);
-                descriptionSeparator = "; ";
-
-                string parameterSeparator = "";
-                builder.Append(name);
-                builder.Append('(');
-                foreach (IEdmTypeReference type in signature.ArgumentTypes)
-                {
-                    builder.Append(parameterSeparator);
-                    parameterSeparator = ", ";
-
-                    if (type.IsODataPrimitiveTypeKind() && type.IsNullable)
-                    {
-                        builder.Append(type.FullName());
-                        builder.Append(" Nullable=true");
-                    }
-                    else
-                    {
-                        builder.Append(type.FullName());
-                    }
-                }
-
-                builder.Append(')');
-            }
-
-            return builder.ToString();
         }
 
         /// <summary>
