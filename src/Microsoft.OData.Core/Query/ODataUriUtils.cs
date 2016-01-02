@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core.UriParser
             // If we have a typeReference then perform verification and convert if necessary
             if (typeReference != null)
             {
-                result = ODataUriConversionUtils.VerifyAndCoerceUriPrimitiveLiteral(result, model, typeReference);
+                result = ODataUriConversionUtils.VerifyAndCoerceUriPrimitiveLiteral(result, value, model, typeReference);
             }
 
             return result;
