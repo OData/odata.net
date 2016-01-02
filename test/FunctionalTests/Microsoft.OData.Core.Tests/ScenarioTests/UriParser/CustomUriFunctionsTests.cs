@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core.Tests.UriParser;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 {
@@ -508,6 +509,34 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             {
                 // Clean up cache
                 CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
+        }
+
+        #endregion
+
+        #region ODataUriParser
+
+        [Fact]
+        public void ParseWithCustomUriFunction()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myStringFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("mystringfunction", myStringFunction);
+
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mystringfunction(Name, 'BlaBla')");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("mystringfunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("mystringfunction");
             }
         }
 

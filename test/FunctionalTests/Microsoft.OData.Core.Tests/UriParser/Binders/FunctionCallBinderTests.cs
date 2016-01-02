@@ -296,7 +296,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 };
             var signatures = this.GetDuplicateIndexOfFunctionSignatureForTest();
 
-            Action bind = () => FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "IndexOf",
                 new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference())),
@@ -318,7 +318,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 };
             var signatures = this.GetHardCodedYearFunctionSignatureForTest();
 
-            var result = FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
                 argumentNodes.Select(s => (SingleValueNode)s).ToArray(),
                 signatures);
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                     new ConstantNode(4)
                 };
 
-            Action bind = () => FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
                 new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                     new ConstantNode(4)
                 };
 
-            Action bind = () => FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
                 new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         [Fact]
         public void MatchArgumentsToSignatureWillPickRightSignatureForSomeNullArgumentTypes()
         {
-            var result = FunctionCallBinder.MatchSignatureToBuiltInFunction(
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
                 "substring",
                  new SingleValueNode[] { 
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))), 
