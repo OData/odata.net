@@ -782,7 +782,7 @@ ApplyBinder_UnsupportedAggregateVerb=$apply/aggregate does not support verb '{0}
 ApplyBinder_AggregateStatementNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
 ApplyBinder_GroupByPropertyNotPropertyAccessValue=$apply/groupby grouping expression '{0}' must evaluate to a property access value.
 ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
-ApplyBinder_UnsupportedGroupByChild=$applg/groupby not support '{0}' as child transformation
+ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation
 
 FunctionCallBinder_CannotFindASuitableOverload=Cannot find a suitable overload for function '{0}' that takes '{1}' arguments.
 FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent=Found a built-in function '{0}' with a parent token. Built-in functions cannot have parent tokens. 

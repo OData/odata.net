@@ -195,14 +195,14 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>"all" keyword for expressions.</summary>
         internal const string KeywordAll = "all";
 
-        /// <summary>the apply query option
+        /// <summary>the apply query option.</summary>
         internal const string QueryOptionApply = "$apply";
 
         /// <summary>"aggregate" keyword for $apply.</summary>
         internal const string KeywordAggregate = "aggregate";
 
         /// <summary>"filter" keyword for $apply.</summary>
-        internal const string KeywordFilter= "filter";
+        internal const string KeywordFilter = "filter";
 
         /// <summary>"groupby" keyword for $apply.</summary>
         internal const string KeywordGroupBy = "groupby";

@@ -6,27 +6,41 @@
 
 namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
 {
-    using TreeNodeKinds;
     using System.Collections.Generic;
+    using TreeNodeKinds;
 
+    /// <summary>
+    /// Node representing a aggregate transformation.
+    /// </summary>
     public sealed class AggregateTransformationNode : TransformationNode
     {
+        private readonly IEnumerable<AggregateStatement> statements;
+
+        /// <summary>
+        /// Create a AggregateTransformationNode.
+        /// </summary>
+        /// <param name="statements">A list of <see cref="AggregateStatement"/>.</param>
         public AggregateTransformationNode(IEnumerable<AggregateStatement> statements)
         {
             ExceptionUtils.CheckArgumentNotNull(statements, "statements");
 
-            this._statements = statements;
+            this.statements = statements;
         }
 
-        private readonly IEnumerable<AggregateStatement> _statements;
-
+        /// <summary>
+        /// Gets the list of <see cref="AggregateStatement"/>.
+        /// </summary>
         public IEnumerable<AggregateStatement> Statements
         {
-            get {
-                return _statements;
+            get 
+            {
+                return statements;
             }
         }
 
+        /// <summary>
+        /// Gets the kind of the transformation node.
+        /// </summary>
         public override TransformationNodeKind Kind
         {
             get

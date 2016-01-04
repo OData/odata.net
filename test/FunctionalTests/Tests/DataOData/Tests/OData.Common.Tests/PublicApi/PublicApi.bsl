@@ -6062,7 +6062,7 @@ public abstract class Microsoft.OData.Core.UriParser.Extensions.Semantic.Transfo
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Extensions.Semantic.AggregateStatement {
-	public AggregateStatement (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.Extensions.AggregationVerb withVerb, Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode from, string asAlias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+	public AggregateStatement (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.Extensions.AggregationVerb withVerb, Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode from, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
 	string AsAlias  { public get; }
 	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
@@ -6079,8 +6079,7 @@ public sealed class Microsoft.OData.Core.UriParser.Extensions.Semantic.Aggregate
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Extensions.Semantic.ApplyClause {
-	public ApplyClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Extensions.Semantic.TransformationNode]] transformations)
-	public ApplyClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Extensions.Semantic.TransformationNode]] transformations, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Extensions.Semantic.AggregateStatement]] aggregateStatements, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Extensions.Semantic.GroupByPropertyNode]] groupByPropertyNodes)
+	public ApplyClause (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Extensions.Semantic.TransformationNode]] transformations)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Extensions.Semantic.TransformationNode]] Transformations  { public get; }
 }

@@ -21,6 +21,7 @@
       <Word>deltalink</Word>
       <Word>Srs</Word>
       <Word>Pos</Word>
+      <Word>groupby</Word>
     </Recognized>
     <DiscreteExceptions>
       <Term>OData</Term>
@@ -33,6 +34,7 @@
       <Term>NonEntity</Term>
       <Term>UnBound</Term>
       <Term>NonBinding</Term>
+      <Term>GroupBy</Term>
     </DiscreteExceptions>
   </Words>
   <Acronyms>

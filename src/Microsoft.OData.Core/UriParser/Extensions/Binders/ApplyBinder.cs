@@ -41,24 +41,19 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
             ExceptionUtils.CheckArgumentNotNull(tokens, "tokens");
 
             var transformations = new List<TransformationNode>();
-            IEnumerable<AggregateStatement> lastAggregateStatements = null;
-            IEnumerable<GroupByPropertyNode> lastGroupByProperties = null;
             foreach (var token in tokens)
             {
                 switch (token.Kind)
                 {
                     case QueryTokenKind.Aggregate:
                         var aggregate = BindAggregateToken((AggregateToken)(token));
-                        lastAggregateStatements = aggregate.Statements;
-                        lastGroupByProperties = null;
                         transformations.Add(aggregate);
                         aggregateStatementsCache = aggregate.Statements;
                         state.AggregatedProperties =
                             aggregate.Statements.Select(statement => statement.AsAlias).ToList();
                         break;
                     case QueryTokenKind.AggregateGroupBy:
-                        var groupBy = BindGroupByToken((GroupByToken)(token), out lastAggregateStatements);
-                        lastGroupByProperties = groupBy.GroupingProperties;
+                        var groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
                         break;
                     default:
@@ -69,7 +64,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
                 }
             }
 
-            return new ApplyClause(transformations, lastAggregateStatements, lastGroupByProperties);
+            return new ApplyClause(transformations);
         }
 
         private AggregateTransformationNode BindAggregateToken(AggregateToken token)
@@ -127,6 +122,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
                                 ODataErrorStrings.ApplyBinder_AggregateStatementIncompatibleTypeForVerb(expression,
                                     expressionPrimitiveKind));
                     }
+
                 case AggregationVerb.CountDistinct:
                     return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int64, false);
                 case AggregationVerb.Max:
@@ -143,9 +139,8 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
             return aggregateStatementsCache.First(statement => statement.AsAlias.Equals(name)).TypeReference;
         }
 
-        private GroupByTransformationNode BindGroupByToken(GroupByToken token, out IEnumerable<AggregateStatement> aggregateStatements)
+        private GroupByTransformationNode BindGroupByToken(GroupByToken token)
         {
-            aggregateStatements = null;
             var properties = new List<GroupByPropertyNode>();
 
             foreach (var propertyToken in token.Properties)
@@ -179,10 +174,9 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
                 if (token.Child.Kind == QueryTokenKind.Aggregate)
                 {
                     aggregate = BindAggregateToken((AggregateToken)token.Child);
-                    aggregateStatements = ((AggregateTransformationNode)aggregate).Statements;
-                    aggregateStatementsCache = aggregateStatements;
+                    aggregateStatementsCache = ((AggregateTransformationNode)aggregate).Statements;
                     state.AggregatedProperties =
-                        aggregateStatements.Select(statement => statement.AsAlias).ToList();
+                        aggregateStatementsCache.Select(statement => statement.AsAlias).ToList();
                 }
                 else
                 {
@@ -214,7 +208,8 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
                 {
                     node = ((SingleNavigationNode)node).NavigationSource as SingleValueNode;
                 }
-            } while (node != null && IsPropertyNode(node));
+            } 
+            while (node != null && IsPropertyNode(node));
 
             return result;
         }

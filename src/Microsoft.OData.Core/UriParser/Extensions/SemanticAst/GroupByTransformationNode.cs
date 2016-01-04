@@ -10,51 +10,71 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
     using Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Semantic;
 
+    /// <summary>
+    /// Node representing a groupBy transformation.
+    /// </summary>
     public sealed class GroupByTransformationNode : TransformationNode
     {
-        private readonly CollectionNode _source;
+        private readonly CollectionNode source;
 
-        private readonly TransformationNode _childTransformation;
+        private readonly TransformationNode childTransformation;
 
-        private readonly IEnumerable<GroupByPropertyNode> _groupingProperties;
-
+        private readonly IEnumerable<GroupByPropertyNode> groupingProperties;
+        
+        /// <summary>
+        /// Create a GroupByTransformationNode.
+        /// </summary>
+        /// <param name="groupingProperties">A list of <see cref="GroupByPropertyNode"/>.</param>
+        /// <param name="childTransformation">The child <see cref="TransformationNode"/>.</param>
+        /// <param name="source">The <see cref="CollectionNode"/> representing the source.</param>
         public GroupByTransformationNode(
             IList<GroupByPropertyNode> groupingProperties,
             TransformationNode childTransformation,
             CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
-            // OK for source to be null
 
-            this._groupingProperties = groupingProperties;
-            this._childTransformation = childTransformation;
-            this._source = source;
+            this.groupingProperties = groupingProperties;
+            this.childTransformation = childTransformation;
+            this.source = source;
         }
 
+        /// <summary>
+        /// Gets the list of <see cref="GroupByPropertyNode"/>.
+        /// </summary>
         public IEnumerable<GroupByPropertyNode> GroupingProperties
         {
             get
             {
-                return _groupingProperties;
+                return groupingProperties;
             }
         }
 
+        /// <summary>
+        /// Gets the child <see cref="TransformationNode"/>.
+        /// </summary>
         public TransformationNode ChildTransformation
         {
             get
             {
-                return _childTransformation;
+                return childTransformation;
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="CollectionNode"/> representing the source.
+        /// </summary>
         public CollectionNode Source
         {
             get
             {
-                return _source;
+                return source;
             }
         }
 
+        /// <summary>
+        /// Gets the kind of the transformation node.
+        /// </summary>
         public override TransformationNodeKind Kind
         {
             get

@@ -8,6 +8,9 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
 {
     using TreeNodeKinds;
 
+    /// <summary>
+    /// Base class for all transformation nodes.
+    /// </summary>
     public abstract class TransformationNode
     {
         /// <summary>

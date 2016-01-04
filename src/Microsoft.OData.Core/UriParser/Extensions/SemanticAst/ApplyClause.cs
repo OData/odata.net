@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ApplyClause2.cs" company="Microsoft">
+// <copyright file="ApplyClause.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -7,35 +7,52 @@
 namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds;
 
     /// <summary>
     /// Represents the set of transformations to perform as part of $apply.
     /// </summary>
     public sealed class ApplyClause
     {
-        private readonly IEnumerable<TransformationNode> _transformations;
+        private readonly IEnumerable<TransformationNode> transformations;
 
-        private readonly IEnumerable<AggregateStatement> _lastAggregateStatements;
+        private readonly IEnumerable<AggregateStatement> lastAggregateStatements;
 
-        private readonly IEnumerable<GroupByPropertyNode> _lastGroupByPropertyNodes;
+        private readonly IEnumerable<GroupByPropertyNode> lastGroupByPropertyNodes;
 
-        public ApplyClause(IEnumerable<TransformationNode> transformations)
+        /// <summary>
+        /// Create a ApplyClause.
+        /// </summary>
+        /// <param name="transformations">The <see cref="TransformationNode"/>s.</param>
+        public ApplyClause(IList<TransformationNode> transformations)
         {
             ExceptionUtils.CheckArgumentNotNull(transformations, "transformations");
 
-            this._transformations = transformations;
-        }
+            this.transformations = transformations;
 
-        public ApplyClause(
-            IEnumerable<TransformationNode> transformations, 
-            IEnumerable<AggregateStatement> aggregateStatements, 
-            IEnumerable<GroupByPropertyNode> groupByPropertyNodes) 
-            :this(transformations)
-        {
-            this._lastAggregateStatements = aggregateStatements;
-            this._lastGroupByPropertyNodes = groupByPropertyNodes;
+            for (int i = transformations.Count - 1; i >= 0; i--)
+            {
+                if (transformations[i].Kind == TransformationNodeKind.Aggregate)
+                {
+                    lastAggregateStatements = (transformations[i] as AggregateTransformationNode).Statements;
+                    break;
+                }
+                else if (transformations[i].Kind == TransformationNodeKind.GroupBy)
+                {
+                    var groupByTransformationNode =
+                        transformations[i] as GroupByTransformationNode;
+                    lastGroupByPropertyNodes = groupByTransformationNode.GroupingProperties;
+                    var childTransformation = groupByTransformationNode.ChildTransformation;
+                    if (childTransformation != null && childTransformation.Kind == TransformationNodeKind.Aggregate)
+                    {
+                        lastAggregateStatements = (childTransformation as AggregateTransformationNode).Statements;
+                    }
+
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -45,27 +62,29 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         {
             get
             {
-                return this._transformations;
+                return this.transformations;
             }
         }
 
         internal string GetContextUri()
         {
-            return CreatePropertiesUriSegment(_lastGroupByPropertyNodes, _lastAggregateStatements);
+            return CreatePropertiesUriSegment(lastGroupByPropertyNodes, lastAggregateStatements);
         }
 
-        private string CreatePropertiesUriSegment(IEnumerable<GroupByPropertyNode> groupByPropertyNodes, IEnumerable<AggregateStatement> aggregateStatements)
+        private string CreatePropertiesUriSegment(
+            IEnumerable<GroupByPropertyNode> groupByPropertyNodes, 
+            IEnumerable<AggregateStatement> aggregateStatements)
         {
             string result = string.Empty;
             if (groupByPropertyNodes != null)
             {
-                result = string.Join(",",
-                    groupByPropertyNodes
-                        .Select(prop => prop.Name + CreatePropertiesUriSegment(prop.Children, null))
-                        .ToArray());
+                var groupByPropertyArray =
+                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.Children, null))
+                        .ToArray();
+                result = string.Join(",", groupByPropertyArray);
                 result = aggregateStatements == null
                     ? result
-                    : string.Format("{0},{1}", result, CreateAggregatePropertiesUriSegment(aggregateStatements));
+                    : string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, CreateAggregatePropertiesUriSegment(aggregateStatements));
             }
             else
             {
@@ -79,7 +98,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
                 : ODataConstants.ContextUriProjectionStart + result + ODataConstants.ContextUriProjectionEnd;
         }
 
-        private string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateStatement> aggregateStatements)
+        private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateStatement> aggregateStatements)
         {
             if (aggregateStatements != null)
             {

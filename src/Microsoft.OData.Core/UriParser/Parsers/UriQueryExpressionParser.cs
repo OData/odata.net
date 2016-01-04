@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// List of supported $apply keywords
         /// </summary>
-        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy});
+        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy });
 
         /// <summary>
         /// Set of parsed parameters
@@ -215,8 +215,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         // parses $apply aggregate tranformation (.e.g. aggregate(UnitPrice with sum as TotalUnitPrice)
         internal AggregateToken ParseAggregate()
         {
-            // "aggregate"
-            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordAggregate));
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordAggregate), "token identifier is aggregate");
             lexer.NextToken();
 
             // '('
@@ -269,8 +268,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         // parses $apply groupby tranformation (.e.g. groupby(ProductID, CategoryId, aggregate(UnitPrice with sum as TotalUnitPrice))
         internal GroupByToken ParseGroupBy()
         {
-            // "groupby"
-            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordGroupBy));
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordGroupBy), "token identifier is groupby");
             lexer.NextToken();
 
             // '('
@@ -350,8 +348,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         // parses $apply filter tranformation (.e.g. filter(ProductName eq 'Aniseed Syrup'))
         internal QueryToken ParseApplyFilter()
         {
-            // "filter"
-            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordFilter));
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordFilter), "token identifier is filter");
             lexer.NextToken();
 
             // '(' expression ')'

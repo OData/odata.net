@@ -190,6 +190,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Determines the token if represents an aggregated property or not.
         /// </summary>
+        /// <param name="identifier">Tokon identifier.</param>
+        /// <returns>Whether the token represents an aggregated property.</returns>
         private bool IsAggregatedProperty(string identifier)
         {
             return (state.AggregatedProperties != null && state.AggregatedProperties.Contains(identifier));

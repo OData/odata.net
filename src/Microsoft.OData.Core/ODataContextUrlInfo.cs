@@ -113,6 +113,7 @@ namespace Microsoft.OData.Core
                         return CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand);
                     }
                 }
+
                 return null;
             }
         }

@@ -17,6 +17,12 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
 
     internal sealed class AggregateStatementToken : QueryToken
     {
+        private readonly QueryToken expression;
+
+        private readonly AggregationVerb withVerb;
+
+        private readonly string alias;
+
         public AggregateStatementToken(QueryToken expression, AggregationVerb withVerb, string alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
@@ -24,7 +30,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
 
             this.expression = expression;
             this.withVerb = withVerb;
-            this.asAlias = alias;
+            this.alias = alias;
         }
        
         public override QueryTokenKind Kind
@@ -32,25 +38,19 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
             get { return QueryTokenKind.AggregateStatement; }
         }
 
-        private readonly AggregationVerb withVerb;
-
         public AggregationVerb WithVerb
         {
             get { return this.withVerb; }
         }
-
-        private readonly QueryToken expression;
 
         public QueryToken Expression
         {
             get { return this.expression; }
         }
 
-        private readonly string asAlias;
-
         public string AsAlias
         {
-            get { return this.asAlias; }
+            get { return this.alias; }
         }
        
         /// <summary>

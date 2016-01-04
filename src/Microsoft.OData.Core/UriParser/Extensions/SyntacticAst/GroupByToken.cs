@@ -10,13 +10,17 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
 #endif
 {
+    using System.Collections.Generic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
-    using System.Collections.Generic;
 
     internal sealed class GroupByToken : ApplyTransformationToken
     {
+        private readonly IEnumerable<EndPathToken> properties;
+
+        private readonly ApplyTransformationToken child;
+
         public GroupByToken(IEnumerable<EndPathToken> properties, ApplyTransformationToken child)
         {
             ExceptionUtils.CheckArgumentNotNull(properties, "properties");
@@ -24,9 +28,6 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
             this.properties = properties;
             this.child = child;
         }
-
-        private readonly IEnumerable<EndPathToken> properties;
-        private readonly ApplyTransformationToken child;
 
         /// <summary>
         /// The kind of the query token.

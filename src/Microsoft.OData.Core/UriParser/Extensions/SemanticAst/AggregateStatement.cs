@@ -10,38 +10,56 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
     using Microsoft.OData.Core.UriParser.Extensions;
     using Microsoft.OData.Core.UriParser.Semantic;
 
+    /// <summary>
+    /// A aggregate statement representing a aggregation transformation.
+    /// </summary>
     public sealed class AggregateStatement
     {
         private readonly AggregationVerb withVerb;
 
         private readonly SingleValueNode expression;
 
-        private readonly string asAlias;
+        private readonly string alias;
 
         private readonly SingleValuePropertyAccessNode from;
 
-        public AggregateStatement(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference)
+        private readonly IEdmTypeReference typeReference;
+
+        /// <summary>
+        /// Create a AggregateStatement.
+        /// </summary>
+        /// <param name="expression">The aggregation expression.</param>
+        /// <param name="withVerb">The <see cref="AggregationVerb"/>.</param>
+        /// <param name="from">The aggregation from <see cref="SingleValuePropertyAccessNode"/>.</param>
+        /// <param name="alias">The aggregation alias.</param>
+        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate statement.</param>
+        public AggregateStatement(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string alias, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
-            // OK for from to be null
-            ExceptionUtils.CheckArgumentNotNull(asAlias, "asAlias");
+            ExceptionUtils.CheckArgumentNotNull(alias, "alias");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
             this.expression = expression;
             this.withVerb = withVerb;
             this.from = from;
-            this.asAlias = asAlias;
-            this._typeReference = typeReference;
+            this.alias = alias;
+            this.typeReference = typeReference;
         }
 
-
+        /// <summary>
+        /// Gets the aggregation expression.
+        /// </summary>
         public SingleValueNode Expression
         {
-            get {
+            get 
+            {
                 return expression;
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="AggregationVerb"/>.
+        /// </summary>
         public AggregationVerb WithVerb
         {
             get
@@ -50,14 +68,20 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
             }
         }
 
+        /// <summary>
+        /// Gets the aggregation alias.
+        /// </summary>
         public string AsAlias
         {
             get
             {
-                return asAlias;
+                return alias;
             }
         }
 
+        /// <summary>
+        /// Gets the aggregation from <see cref="SingleValuePropertyAccessNode"/>.
+        /// </summary>
         public SingleValuePropertyAccessNode From
         {
             get
@@ -66,14 +90,14 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
             }
         }
 
-        private readonly IEdmTypeReference _typeReference;
-
+        /// <summary>
+        /// Gets the <see cref="IEdmTypeReference"/> of this aggregate statement.
+        /// </summary>
         public IEdmTypeReference TypeReference
         {
             get
             {
-                
-                return this._typeReference;
+                return this.typeReference;
             }
         }
     }
