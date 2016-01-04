@@ -32,6 +32,9 @@ namespace Microsoft.OData.Core
         /// <summary>True if the writer was created for writing a feed; false when it was created for writing an entry.</summary>
         private readonly bool writingFeed;
 
+        /// <summary>True if the writer was created for writing a delta response; false otherwise.</summary>
+        private readonly bool writingDelta;
+
         /// <summary>If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</summary>
         private readonly IODataReaderWriterListener listener;
 
@@ -54,18 +57,22 @@ namespace Microsoft.OData.Core
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">True if the writer is created for writing a feed; false when it is created for writing an entry.</param>
+        /// <param name="writingDelta">True if the writer was created for writing a delta response; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         protected ODataWriterCore(
             ODataOutputContext outputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
             bool writingFeed,
+            bool writingDelta = false,
             IODataReaderWriterListener listener = null)
         {
             Debug.Assert(outputContext != null, "outputContext != null");
+            Debug.Assert(!writingDelta || outputContext.WritingResponse, "writingResponse must be true when writingDelta is true");
 
             this.outputContext = outputContext;
             this.writingFeed = writingFeed;
+            this.writingDelta = writingDelta;
 
             // create a collection validator when writing a top-level feed and a user model is present
             if (this.writingFeed && this.outputContext.Model.IsUserModel())
@@ -1295,6 +1302,15 @@ namespace Microsoft.OData.Core
             }
 
             WriterState currentState = currentScope.State;
+
+            if (this.writingDelta)
+            {
+                // When writing expanded feeds in delta response, we start with the parent delta entry.
+                // But what we really want in the payload are only the navigation links and expanded feeds
+                // so we need to skip writing the top-level delta entry including its structural properties
+                // and instance annotations.
+                skipWriting = currentState == WriterState.Start && newState == WriterState.Entry;
+            }
 
             // When writing a navigation link, check if the link is being projected.
             // If we are projecting properties, but the nav. link is not projected mark it to skip its content.

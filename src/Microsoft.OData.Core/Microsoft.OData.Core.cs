@@ -92,6 +92,9 @@ namespace Microsoft.OData.Core {
         internal const string ODataWriterCore_InvalidTransitionFromExpandedLink = "ODataWriterCore_InvalidTransitionFromExpandedLink";
         internal const string ODataWriterCore_InvalidTransitionFromCompleted = "ODataWriterCore_InvalidTransitionFromCompleted";
         internal const string ODataWriterCore_InvalidTransitionFromError = "ODataWriterCore_InvalidTransitionFromError";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState = "ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState";
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_OnlyTopLevelFeedsSupportCount = "ODataWriterCore_OnlyTopLevelFeedsSupportCount";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
