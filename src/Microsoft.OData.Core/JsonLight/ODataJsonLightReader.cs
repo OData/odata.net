@@ -923,7 +923,12 @@ namespace Microsoft.OData.Core.JsonLight
                 expandedNavigationLinkInfo = parentNavigationLinkScope.NavigationLinkInfo;
             }
 
-            this.jsonLightEntryAndFeedDeserializer.ReadNextLinkAnnotationAtFeedEnd(this.CurrentFeed, expandedNavigationLinkInfo, this.topLevelScope.DuplicatePropertyNamesChecker);
+            if (this.readingParameter == false)
+            {
+                // Only read annotation when not reading parameter
+                this.jsonLightEntryAndFeedDeserializer.ReadNextLinkAnnotationAtFeedEnd(this.CurrentFeed,
+                    expandedNavigationLinkInfo, this.topLevelScope.DuplicatePropertyNamesChecker);
+            }
 
             this.ReplaceScope(ODataReaderState.FeedEnd);
         }
@@ -1175,13 +1180,13 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 ODataPath odataPath = ODataJsonLightContextUriParser.Parse(
                         this.jsonLightEntryAndFeedDeserializer.Model,
-                        UriUtils.UriToString(navigationLinkInfo.NavigationLink.ContextUrl), 
+                        UriUtils.UriToString(navigationLinkInfo.NavigationLink.ContextUrl),
                         navigationLinkInfo.NavigationLink.IsCollection.GetValueOrDefault() ? ODataPayloadKind.Feed : ODataPayloadKind.Entry,
                         this.jsonLightEntryAndFeedDeserializer.MessageReaderSettings.ReaderBehavior,
                         this.jsonLightEntryAndFeedDeserializer.JsonLightInputContext.ReadingResponse).Path;
                 odataUri = new ODataUri()
                 {
-                    Path = odataPath 
+                    Path = odataPath
                 };
             }
 
@@ -1446,7 +1451,7 @@ namespace Microsoft.OData.Core.JsonLight
             internal JsonLightNavigationLinkScope(ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
                 : base(ODataReaderState.NavigationLinkStart, navigationLinkInfo.NavigationLink, navigationSource, expectedEntityType, odataUri)
             {
-                this.NavigationLinkInfo = navigationLinkInfo;   
+                this.NavigationLinkInfo = navigationLinkInfo;
             }
 
             /// <summary>
