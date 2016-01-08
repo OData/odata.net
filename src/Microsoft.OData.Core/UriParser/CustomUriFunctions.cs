@@ -59,15 +59,8 @@ namespace Microsoft.OData.Core.UriParser
         public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, bool overrideBuiltInFunction = false)
         {
             // Parameters validation
-            if (string.IsNullOrEmpty(customFunctionName))
-            {
-                throw Error.ArgumentNull("customFunctionName");
-            }
-
-            if (newCustomFunctionSignature == null)
-            {
-                throw Error.ArgumentNull("newCustomFunctionSignature");
-            }
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
+            ExceptionUtils.CheckArgumentNotNull(newCustomFunctionSignature, "newCustomFunctionSignature");
 
             ValidateFunctionWithReturnType(newCustomFunctionSignature);
 
@@ -160,10 +153,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
         public static bool RemoveCustomUriFunction(string customFunctionName)
         {
-            if (string.IsNullOrEmpty(customFunctionName))
-            {
-                throw Error.ArgumentNull("customFunctionName");
-            }
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
 
             lock (Locker)
             {
@@ -185,7 +175,10 @@ namespace Microsoft.OData.Core.UriParser
         {
             Debug.Assert(name != null, "name != null");
 
-            return CustomFunctions.TryGetValue(name, out signatures);
+            lock (Locker)
+            {
+                return CustomFunctions.TryGetValue(name, out signatures);
+            }
         }
 
         #endregion
@@ -215,7 +208,7 @@ namespace Microsoft.OData.Core.UriParser
                 }
 
                 // Add the custom function as an overload to the same function name
-                // It overrides the BuiltIn function because search is first on CustomFunctions and the on BuiltInFunctions. Another option is to remove the BuiltIn function - seems like a worse option.
+                // It overrides the BuiltIn function because search is first on CustomFunctions and then on BuiltInFunctions. Another option is to remove the BuiltIn function - seems like a worse option.
                 CustomFunctions[customFunctionName] = 
                     existingCustomFunctionOverloads.Concat(new FunctionSignatureWithReturnType[] { newCustomFunctionSignature }).ToArray();
             }
@@ -237,9 +230,9 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             // Check if the arguments are equal
-            for (int argumnetIndex = 0; argumnetIndex < functionOne.ArgumentTypes.Length; argumnetIndex++)
+            for (int argumentIndex = 0; argumentIndex < functionOne.ArgumentTypes.Length; argumentIndex++)
             {
-                if (!functionOne.ArgumentTypes[argumnetIndex].IsEquivalentTo(functionTwo.ArgumentTypes[argumnetIndex]))
+                if (!functionOne.ArgumentTypes[argumentIndex].IsEquivalentTo(functionTwo.ArgumentTypes[argumentIndex]))
                 {
                     return false;
                 }
@@ -260,10 +253,7 @@ namespace Microsoft.OData.Core.UriParser
                 return;
             }
 
-            if (functionSignature.ReturnType == null)
-            {
-                throw new ArgumentNullException("FunctionSignatureWithReturnType must contain a reuturn type.");
-            }
+            ExceptionUtils.CheckArgumentNotNull(functionSignature.ReturnType, "unctionSignatureWithReturnType must contain a reuturn type");
         }
 
         #endregion

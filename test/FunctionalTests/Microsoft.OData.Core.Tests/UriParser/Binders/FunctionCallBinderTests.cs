@@ -1281,7 +1281,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             }
             finally
             {
-                // Clean uo CustomFunctions cache
+                // Clean from CustomFunctions cache
                 CustomUriFunctions.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
             }
         }
