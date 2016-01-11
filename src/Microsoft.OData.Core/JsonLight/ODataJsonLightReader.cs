@@ -968,7 +968,6 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 // Temp ban reading the instance annotation after the feed in parameter payload. (!this.IsReadingNestedPayload => !this.readingParameter)
                 // Nested feed payload won't have a NextLink annotation after the feed itself since the payload is NOT pageable.
-
                 this.jsonLightEntryAndFeedDeserializer.ReadNextLinkAnnotationAtFeedEnd(this.CurrentFeed,
                     expandedNavigationLinkInfo, this.topLevelScope.DuplicatePropertyNamesChecker);
             }
