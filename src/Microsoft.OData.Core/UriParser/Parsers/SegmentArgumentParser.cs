@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private static readonly SegmentArgumentParser Empty = new SegmentArgumentParser();
 
         /// <summary>Whether or not the key was formatted as a segment.</summary>
-        private readonly bool keysAsSegments;
+        private readonly bool keysAsSegment;
 
         /// <summary>Whether Uri template parsing is enabled.</summary>
         private readonly bool enableUriTemplateParsing;
@@ -48,24 +48,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>Initializes a new <see cref="SegmentArgumentParser"/> instance.</summary>
         /// <param name='namedValues'>Named values.</param>
         /// <param name='positionalValues'>Positional values for this instance.</param>
-        /// <param name="keysAsSegments">Whether or not the key was formatted as a segment.</param>
+        /// <param name="keysAsSegment">Whether or not the key was formatted as a segment.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <remarks>
         /// One of namedValues or positionalValues should be non-null, but not both.
         /// </remarks>
-        private SegmentArgumentParser(Dictionary<string, string> namedValues, List<string> positionalValues, bool keysAsSegments, bool enableUriTemplateParsing)
+        private SegmentArgumentParser(Dictionary<string, string> namedValues, List<string> positionalValues, bool keysAsSegment, bool enableUriTemplateParsing)
         {
             Debug.Assert(
                 (namedValues == null) != (positionalValues == null),
                 "namedValues == null != positionalValues == null -- one or the other should be assigned, but not both");
             this.namedValues = namedValues;
             this.positionalValues = positionalValues;
-            this.keysAsSegments = keysAsSegments;
+            this.keysAsSegment = keysAsSegment;
             this.enableUriTemplateParsing = enableUriTemplateParsing;
         }
 
         /// <summary>Whether the values have a name.</summary>
-        internal bool AreValuesNamed
+        public bool AreValuesNamed
         {
             get
             {
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>Checks whether this key has any values.</summary>
-        internal bool IsEmpty
+        public bool IsEmpty
         {
             get
             {
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>Returns a dictionary of named values when they AreValuesNamed is true.</summary>
-        internal IDictionary<string, string> NamedValues
+        public IDictionary<string, string> NamedValues
         {
             get
             {
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>Returns a list of values when they AreValuesNamed is false.</summary>
-        internal IList<string> PositionalValues
+        public IList<string> PositionalValues
         {
             get
             {
@@ -100,8 +100,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
         }
 
+        /// <summary>Whether or not the key was formatted as a segment.</summary>
+        public bool KeyAsSegment
+        {
+            get { return this.keysAsSegment; }
+        }
+
         /// <summary>Number of values in the key.</summary>
-        internal int ValueCount
+        public int ValueCount
         {
             get
             {
@@ -125,7 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="key">the new key</param>
         /// <param name="value">the new value</param>
-        internal void AddNamedValue(string key, string value)
+        public void AddNamedValue(string key, string value)
         {
             CreateIfNull(ref this.namedValues);
             if (!namedValues.ContainsKey(key))
@@ -146,7 +152,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        internal static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        public static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
             return TryParseFromUri(text, true /*allowNamedValues*/, false /*allowNull*/, out instance, enableUriTemplateParsing);
         }
@@ -157,7 +163,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="segmentText">The segment text.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>A key instance with the given segment text as its only value.</returns>
-        internal static SegmentArgumentParser FromSegment(string segmentText, bool enableUriTemplateParsing)
+        public static SegmentArgumentParser FromSegment(string segmentText, bool enableUriTemplateParsing)
         {
             return new SegmentArgumentParser(null, new List<string> { segmentText }, true, enableUriTemplateParsing);
         }
@@ -173,7 +179,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        internal static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
+        public static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
         {
             return TryParseFromUri(text, false /*allowNamedValues*/, true /*allowNull*/, out instance, false);
         }
@@ -183,7 +189,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="keyPairs">The converted key-value pairs.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>true if all values were converted; false otherwise.</returns>
-        internal bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
+        public bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
         {
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
             IList<IEdmStructuralProperty> keyProperties = targetEntityType.Key().ToList();
@@ -252,7 +258,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             Type primitiveClrType = EdmLibraryExtensions.GetPrimitiveClrType((IEdmPrimitiveType)primitiveType.Definition, primitiveType.IsNullable);
-            LiteralParser literalParser = LiteralParser.ForKeys(this.keysAsSegments);
+            LiteralParser literalParser = LiteralParser.ForKeys(this.keysAsSegment);
             return literalParser.TryParseLiteral(primitiveClrType, valueText, out convertedValue);
         }
 

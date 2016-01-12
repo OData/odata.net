@@ -12,6 +12,7 @@ using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Metadata;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
@@ -407,6 +408,109 @@ namespace Microsoft.OData.Core.Tests.UriParser
             aliasNode.Count.Should().Be(1);
             aliasNode["@p1"].ShouldBeConstantQueryNode(32);
         }
+        #endregion
+
+        #region Composite key parse test
+
+        public enum TestUrlConvention
+        {
+            Default,
+            KeyAsSegment,
+            ODataSimplified
+        }
+
+        [Theory]
+        [InlineData(TestUrlConvention.Default, "http://host/tableDefinitions('tableKey')/columnDefinitions(tableId='tableKey',propertyName='columnKey')/Test.ChoiceColumnDefinition/choices(tableId='tableKey',propertyName='columnKey',id=1)")]
+        [InlineData(TestUrlConvention.Default, "http://host/tableDefinitions('tableKey')/columnDefinitions('columnKey')/Test.ChoiceColumnDefinition/choices(1)")]
+        [InlineData(TestUrlConvention.ODataSimplified, "http://host/tableDefinitions/tableKey/columnDefinitions/columnKey/Test.ChoiceColumnDefinition/choices/1")]
+        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/tableDefinitions/tableKey/columnDefinitions/columnKey/Test.ChoiceColumnDefinition/choices/1")]
+        [InlineData(TestUrlConvention.Default, "http://host/tableDefinitions('tableKey')/columnDefinitions(tableId='tableKey',propertyName='columnKey')")]
+        [InlineData(TestUrlConvention.Default, "http://host/tableDefinitions('tableKey')/columnDefinitions('columnKey')")]
+        [InlineData(TestUrlConvention.ODataSimplified, "http://host/tableDefinitions/tableKey/columnDefinitions/columnKey")]
+        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/tableDefinitions/tableKey/columnDefinitions/columnKey")]
+        public void ParseCompositeKeyReference(TestUrlConvention testUrlConvention, string fullUrl)
+        {
+            var model = new EdmModel();
+
+            var tableDefinition = new EdmEntityType("Test", "TableDefinition", null, false, true);
+            var tableDefinitionId = tableDefinition.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false);
+            tableDefinition.AddKeys(tableDefinitionId);
+            model.AddElement(tableDefinition);
+
+            var columnDefinition = new EdmEntityType("Test", "ColumnDefinition", null, false, true);
+            var columnDefinitionTableId = columnDefinition.AddStructuralProperty("tableId", EdmPrimitiveTypeKind.String, true);
+            var columnPropertyName = columnDefinition.AddStructuralProperty("propertyName", EdmPrimitiveTypeKind.String, true);
+            columnDefinition.AddKeys(columnDefinitionTableId, columnPropertyName);
+            model.AddElement(columnDefinition);
+
+            var tableDefinitionColumnDefinitions = tableDefinition.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                ContainsTarget = true,
+                Name = "columnDefinitions",
+                Target = columnDefinition,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                DependentProperties = new[] { tableDefinitionId },
+                PrincipalProperties = new[] { columnDefinitionTableId }
+            });
+
+            var choice = new EdmEntityType("Test", "Choice");
+            var choiceTableId = choice.AddStructuralProperty("tableId", EdmPrimitiveTypeKind.String);
+            var choicePropertyName = choice.AddStructuralProperty("propertyName", EdmPrimitiveTypeKind.String);
+            choice.AddKeys(choiceTableId, choicePropertyName,
+                choice.AddStructuralProperty("id", EdmPrimitiveTypeKind.Int32, false));
+            model.AddElement(choice);
+
+            var choiceColumnDefinition = new EdmEntityType("Test", "ChoiceColumnDefinition", columnDefinition);
+            var choiceColumnDefinitionChoices = choiceColumnDefinition.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    ContainsTarget = true,
+                    Target = choice,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                    Name = "choices",
+                    DependentProperties = new[] { columnPropertyName, columnDefinitionTableId },
+                    PrincipalProperties = new[] { choicePropertyName, choiceTableId }
+                });
+            model.AddElement(choiceColumnDefinition);
+
+            var container = new EdmEntityContainer("Test", "Container");
+            var tableDefinitions = container.AddEntitySet("tableDefinitions", tableDefinition);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("http://host"), new Uri(fullUrl));
+            switch (testUrlConvention)
+            {
+                case TestUrlConvention.Default:
+                    parser.UrlConventions = ODataUrlConventions.Default;
+                    break;
+                case TestUrlConvention.KeyAsSegment:
+                    parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
+                    break;
+                case TestUrlConvention.ODataSimplified:
+                    parser.UrlConventions = ODataUrlConventions.ODataSimplified;
+                    break;
+                default:
+                    Assert.True(false, "Unreachable code path");
+                    break;
+            }
+
+            var path = parser.ParsePath().ToList();
+            path[0].ShouldBeEntitySetSegment(tableDefinitions);
+            path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("id", "tableKey"));
+            path[2].ShouldBeNavigationPropertySegment(tableDefinitionColumnDefinitions);
+            path[3].ShouldBeKeySegment(new KeyValuePair<string, object>("tableId", "tableKey"),
+                new KeyValuePair<string, object>("propertyName", "columnKey"));
+            if (path.Count > 4)
+            {
+                // For tests with a type cast and a second-level navigation property.
+                path[4].ShouldBeTypeSegment(choiceColumnDefinition);
+                path[5].ShouldBeNavigationPropertySegment(choiceColumnDefinitionChoices);
+                path[6].ShouldBeKeySegment(new KeyValuePair<string, object>("tableId", "tableKey"),
+                new KeyValuePair<string, object>("propertyName", "columnKey"),
+                new KeyValuePair<string, object>("id", 1));
+            }
+        }
+
         #endregion
     }
 }

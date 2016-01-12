@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -69,7 +68,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     {
                         rawKeyValuesFromUri.AddNamedValue(
                             keyFromReferentialIntegrityConstraint.PrincipalProperty.Name,
-                            valueFromParent.Value.ToString());
+                            ConvertKeyValueToUriLiteral(valueFromParent.Value, rawKeyValuesFromUri.KeyAsSegment));
                     }
                 }
             }
@@ -95,7 +94,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     {
                         rawKeyValuesFromUri.AddNamedValue(
                             keyFromReferentialIntegrityConstraint.DependentProperty.Name,
-                            valueFromParent.Value.ToString());
+                            ConvertKeyValueToUriLiteral(valueFromParent.Value, rawKeyValuesFromUri.KeyAsSegment));
                     }
                 }
             }
@@ -169,6 +168,30 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return new List<EdmReferentialConstraintPropertyPair>();
             }
+        }
+
+        /// <summary>
+        /// Convert the given key value to a URI literal.
+        /// </summary>
+        /// <param name="value">The key value to convert.</param>
+        /// <param name="keyAsSegment">Whether the KeyAsSegment convention is enabled.</param>
+        /// <returns>The converted URI literal for the given key value.</returns>
+        private static string ConvertKeyValueToUriLiteral(object value, bool keyAsSegment)
+        {
+            // For Default convention,
+            //   ~/Customers('Peter') => key value is "Peter" => URI literal is "'Peter'"
+            //
+            // For KeyAsSegment convention,
+            //   ~/Customers/Peter => key value is "Peter" => URI literal is "Peter"
+            string stringValue = value as string;
+            if (keyAsSegment && stringValue != null)
+            {
+                return stringValue;
+            }
+
+            // All key values are primitives so use this instead of ODataUriUtils.ConvertToUriLiteral()
+            // to improve efficiency.
+            return ODataUriConversionUtils.ConvertToUriPrimitiveLiteral(value, ODataVersion.V4);
         }
     }
 }

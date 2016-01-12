@@ -93,7 +93,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     HardCodedTestModel.GetLionSet()),
                     new KeySegment(new List<KeyValuePair<string, object>>()
                     {
-                        new KeyValuePair<string, object>("ID", "0")
+                        new KeyValuePair<string, object>("ID", 0)
                     }, 
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
