@@ -1256,9 +1256,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             bindOpenFunction.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty("Fully.Qualified.Namespace.FindMyOwner"));
         }
 
-        // Make sure function signatures are first searched in Custom Functions cache, and then in BuiltIn cache
         [Fact]
-        public void GetUriFunction_SearchForCustomFunctionBeforeBuiltIn()
+        public void GetUriFunction_CombineCustomFunctionsAndBuiltInFunctions()
         {
             const string BUILT_IN_GEODISTANCE_FUNCTION_NAME = "geo.distance";
 
@@ -1268,21 +1267,72 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false),
                                                         EdmCoreModel.Instance.GetBoolean(false));
 
-                // Add with override 'true'
+                // Add with 'addAsOverload' 'true'
                 CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature, true);
 
-                // Assert
-                FunctionSignatureWithReturnType[] uriFunctionSignatures =
+                
+                FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
                     FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
 
-                uriFunctionSignatures.Should().NotBeNull();
-                uriFunctionSignatures.Length.Should().Be(1);
-                uriFunctionSignatures[0].Should().Be(customFunctionSignature);
+                // Assert
+                FunctionSignatureWithReturnType[] existsBuiltInSignature;
+                BuiltInUriFunctions.TryGetBuiltInFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, out existsBuiltInSignature).Should().BeTrue();
+
+                resultUriFunctionSignatures.Should().NotBeNull();
+                resultUriFunctionSignatures.Length.Should().Be(existsBuiltInSignature.Length + 1);
+                resultUriFunctionSignatures.All(x => x == customFunctionSignature || existsBuiltInSignature.Any(y => x == y)).Should().BeTrue();
             }
             finally
             {
                 // Clean from CustomFunctions cache
                 CustomUriFunctions.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
+            }
+        }
+
+        [Fact]
+        public void GetUriFunction_OnlyBuiltInFunctionsExist()
+        {
+            const string BUILT_IN_FUNCTION_NAME = "geo.intersects";
+
+            FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
+                FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_FUNCTION_NAME);
+
+            // Assert
+            FunctionSignatureWithReturnType[] existsBuiltInSignature;
+            BuiltInUriFunctions.TryGetBuiltInFunction(BUILT_IN_FUNCTION_NAME, out existsBuiltInSignature).Should().BeTrue();
+
+            resultUriFunctionSignatures.Should().NotBeNull();
+            resultUriFunctionSignatures.Length.Should().Be(existsBuiltInSignature.Length);
+            resultUriFunctionSignatures.All(x => existsBuiltInSignature.Any(y => x == y)).Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetUriFunction_OnlyCustomFunctionsExist()
+        {
+            const string CUSTOM_FUNCTION_NAME = "myCustomFunction";
+
+            try
+            {
+                FunctionSignatureWithReturnType customFunctionSignature =
+                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false),
+                                                        EdmCoreModel.Instance.GetBoolean(false));
+
+                // Add with override 'true'
+                CustomUriFunctions.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
+
+
+                FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
+                    FunctionCallBinder.GetUriFunctionSignatures(CUSTOM_FUNCTION_NAME);
+
+                // Assert
+                resultUriFunctionSignatures.Should().NotBeNull();
+                resultUriFunctionSignatures.Length.Should().Be(1);
+                resultUriFunctionSignatures.All(x => x == customFunctionSignature).Should().BeTrue();
+            }
+            finally
+            {
+                // Clean from CustomFunctions cache
+                CustomUriFunctions.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
             }
         }
 

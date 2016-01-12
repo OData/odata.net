@@ -140,25 +140,39 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Finds all signatures for the given function name.
-        /// Search in BuiltIn uri functions first, and then in custom uri functions.
+        /// Search in both BuiltIn uri functions and Custom uri functions.
+        /// Combine and return the signatures overloads of the results.
         /// </summary>
         /// <param name="functionName">The function to get the signatures for.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
         internal static FunctionSignatureWithReturnType[] GetUriFunctionSignatures(string functionName)
         {
-            FunctionSignatureWithReturnType[] signatures;
+            FunctionSignatureWithReturnType[] customUriFunctionsSignatures = null;
+            FunctionSignatureWithReturnType[] builtInUriFunctionsSignatures = null;
 
-            // Try to find the function in the user custom functions
-            if (!CustomUriFunctions.TryGetCustomFunction(functionName, out signatures))
+            // Try to find the function in the user custom functions and in our built-in functions
+            bool customFound = CustomUriFunctions.TryGetCustomFunction(functionName, out customUriFunctionsSignatures);
+            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out builtInUriFunctionsSignatures);
+
+            if (!customFound && !builtInFound)
             {
-                // Try to find the function in our built-in functionn
-                if (!BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out signatures))
-                {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionName));
-                }
+                // Not found in both built-in and custom.
+                throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionName));
             }
 
-            return signatures;
+            if (!customFound)
+            {
+                Debug.Assert(builtInUriFunctionsSignatures != null, "No Built-in functions found");
+                return builtInUriFunctionsSignatures;
+            }
+
+            if (!builtInFound)
+            {
+                Debug.Assert(customUriFunctionsSignatures != null, "No Custom functions found");
+                return customUriFunctionsSignatures;
+            }
+
+            return builtInUriFunctionsSignatures.Concat(customUriFunctionsSignatures).ToArray();
         }
 
         /// <summary>

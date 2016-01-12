@@ -780,7 +780,7 @@ namespace Microsoft.OData.Core {
         internal const string FunctionOverloadResolver_MultipleOperationOverloads = "FunctionOverloadResolver_MultipleOperationOverloads";
         internal const string FunctionOverloadResolver_FoundInvalidOperation = "FunctionOverloadResolver_FoundInvalidOperation";
         internal const string FunctionOverloadResolver_FoundInvalidOperationImport = "FunctionOverloadResolver_FoundInvalidOperationImport";
-        internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride";
+        internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload";
         internal const string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature = "CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature";
         internal const string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists = "CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists";
         internal const string RequestUriProcessor_InvalidValueForEntitySegment = "RequestUriProcessor_InvalidValueForEntitySegment";

@@ -866,7 +866,7 @@ FunctionOverloadResolver_MultipleOperationOverloads=Multiple action and function
 FunctionOverloadResolver_FoundInvalidOperation=The operation overloads matching '{0}' are invalid. This is most likely an error in the IEdmModel.
 FunctionOverloadResolver_FoundInvalidOperationImport=The operation import overloads matching '{0}' are invalid. This is most likely an error in the IEdmModel.
 
-CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride=The given custom function '{0}' already exists as a Built-In function. Consider use 'OverrideBuiltInFunction = true' parameter.
+CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload=The given custom function '{0}' already exists as a Built-In function. Consider use 'addAsOverloadToBuiltInFunction = true' parameter.
 CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature=The given custom function '{0}' already exists as a Built-In function in one of it's overloads. Thus cannot override the Built-In function.
 CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists=The given function name '{0}' already exists as a custom function with the same overload.
 

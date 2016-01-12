@@ -46,17 +46,17 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>
         /// Add a custom uri function to extend or override the built-in OData protocol of uri functions.
-        /// In case the function signature already exists as a Built-in function, if requested, the new function signature will override it
+        /// In case the function signature already exists as a built-in function, if requested (addAsOverloadToBuiltInFunction = true), the new function signature will be added as another overload.
         /// In case the function name already exists as a custom function, the signature will be added as an another overload.
         /// </summary>
         /// <param name="customFunctionName">The new custom function name</param>
         /// <param name="newCustomFunctionSignature">The new custom function signature</param>
-        /// <param name="overrideBuiltInFunction">If 'True', override the existing built-in function in case signature already exists</param>
+        /// <param name="addAsOverloadToBuiltInFunction">If 'True', add as another overload to the existing built-in function in case signature already exists</param>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        /// <exception cref="ODataException">Throws if built-in function name already exists, and parameter 'overrideBuiltInFunction' is not 'True'</exception>
+        /// <exception cref="ODataException">Throws if built-in function name already exists, and parameter 'addAsOverloadToBuiltInFunction' is not 'True'</exception>
         /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
         /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
-        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, bool overrideBuiltInFunction = false)
+        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, bool addAsOverloadToBuiltInFunction = false)
         {
             // Parameters validation
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
@@ -68,15 +68,15 @@ namespace Microsoft.OData.Core.UriParser
             lock (Locker)
             {
                 // Check if the function does already exists in the Built-In functions
-                // If 'overrideBuiltInFunction' parameter is false - throw expection
+                // If 'addAsOverloadToBuiltInFunction' parameter is false - throw expection
                 // Else, add as a custom function
                 FunctionSignatureWithReturnType[] existingBuiltInFunctionOverload;
                 if (BuiltInUriFunctions.TryGetBuiltInFunction(customFunctionName, out existingBuiltInFunctionOverload))
                 {
-                    // Built-In function with the same signature already exists, but will not be overrided by user request
-                    if (!overrideBuiltInFunction)
+                    // Built-In function with the same signature already exists, and will not be added as an another overload by user request.
+                    if (!addAsOverloadToBuiltInFunction)
                     {
-                        throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride(customFunctionName));
+                        throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(customFunctionName));
                     }
 
                     // Function name exists, check if full siganture exists among the overloads.
@@ -208,13 +208,11 @@ namespace Microsoft.OData.Core.UriParser
                 }
 
                 // Add the custom function as an overload to the same function name
-                // It overrides the BuiltIn function because search is first on CustomFunctions and then on BuiltInFunctions. Another option is to remove the BuiltIn function - seems like a worse option.
                 CustomFunctions[customFunctionName] = 
                     existingCustomFunctionOverloads.Concat(new FunctionSignatureWithReturnType[] { newCustomFunctionSignature }).ToArray();
             }
         }
 
-        // Consider implement this method as the official 'Equals' method of 'FunctionSignatureWithReturnType' class or in another class of IEquatable
         private static bool AreFunctionsSignatureEqual(FunctionSignatureWithReturnType functionOne, FunctionSignatureWithReturnType functionTwo)
         {
             // Check if ReturnTypes are equal
