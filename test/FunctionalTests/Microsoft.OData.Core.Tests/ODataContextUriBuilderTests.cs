@@ -15,6 +15,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.OData.Core.Tests
 {
@@ -263,7 +264,7 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
-        public void ShouldThrowIfEntitySetIsMissingOnFeedResponse()
+        public void ShouldThrowIfEntitySetIsMissingWithoutSerializationInfoOnFeedResponse()
         {
             Action test = () => this.CreateFeedContextUri(ResponseTypeContextWithoutTypeInfo);
             test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
@@ -273,6 +274,26 @@ namespace Microsoft.OData.Core.Tests
         public void ShouldNotWriteContextUriIfEntitySetIsMissingOnFeedRequest()
         {
             this.CreateFeedContextUri(RequestTypeContextWithoutTypeInfo, false).Should().BeNull();
+        }
+
+        [Fact]
+        public void ShouldWriteIfSerializationInfoWithoutNavigationSourceButUnknownSetOnFeedResponse()
+        {
+            this.CreateFeedContextUri(ODataFeedAndEntryTypeContext.Create(
+                serializationInfo: new ODataFeedAndEntrySerializationInfo()
+                {
+                    ExpectedTypeName = "NS.Type",
+                    IsFromCollection = true,
+                    NavigationSourceEntityTypeName = "NS.Type",
+                    NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet,
+                    NavigationSourceName = null
+                },
+                navigationSource: null,
+                navigationSourceEntityType: null,
+                expectedEntityType: null,
+                model: EdmCoreModel.Instance,
+                throwIfMissingTypeInfo: true),
+                isResponse: true);
         }
         #endregion feed context uri
 

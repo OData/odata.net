@@ -247,6 +247,7 @@
     <Compile Include="ScenarioTests\UriParser\SpatialFuntionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\TopAndSkipFunctionalTests.cs" />
     <Compile Include="ScenarioTests\UriParser\VerificationHelpers.cs" />
+    <Compile Include="ScenarioTests\Writer\JsonLight\WriteFeedWithoutNavigationSourceTests.cs" />
     <Compile Include="UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="UriParser\ExpressionLexerTests.cs" />
     <Compile Include="UriParser\Extensions\Binders\ApplyBinderTests.cs" />

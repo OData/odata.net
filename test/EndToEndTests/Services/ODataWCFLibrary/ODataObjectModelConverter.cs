@@ -80,7 +80,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             entry.TypeName = element.GetType().Namespace + "." + typeName;
 
             // TODO: work around for now
-            if (!(entitySource is IEdmContainedEntitySet))
+            if (!(entitySource is IEdmContainedEntitySet) && entitySource != null)
             {
                 Uri entryUri = BuildEntryUri(element, entitySource, targetVersion);
                 if (element.GetType().BaseType != null && entitySource.EntityType().Name != typeName)

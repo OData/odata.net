@@ -40,7 +40,6 @@ namespace Microsoft.OData.Core
 
             set
             {
-                ExceptionUtils.CheckArgumentStringNotNullOrEmpty(value, "NavigationSourceName");
                 this.navigationSourceName = value;
             }
         }
@@ -98,7 +97,11 @@ namespace Microsoft.OData.Core
         {
             if (serializationInfo != null)
             {
-                ExceptionUtils.CheckArgumentNotNull(serializationInfo.NavigationSourceName, "serializationInfo.NavigationSourceName");
+                if (serializationInfo.NavigationSourceKind != EdmNavigationSourceKind.UnknownEntitySet)
+                {
+                    ExceptionUtils.CheckArgumentNotNull(serializationInfo.NavigationSourceName, "serializationInfo.NavigationSourceName");
+                }
+
                 ExceptionUtils.CheckArgumentNotNull(serializationInfo.NavigationSourceEntityTypeName, "serializationInfo.NavigationSourceEntityTypeName");
             }
 
