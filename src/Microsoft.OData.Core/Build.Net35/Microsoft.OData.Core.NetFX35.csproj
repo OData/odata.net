@@ -994,6 +994,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUndeclaredPropertyBehaviorKinds.cs">
       <Link>Microsoft\OData\Core\ODataUndeclaredPropertyBehaviorKinds.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUntypedValue.cs">
+      <Link>Microsoft\OData\Core\ODataUntypedValue.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUri.cs">
       <Link>Microsoft\OData\Core\ODataUri.cs</Link>
     </Compile>
@@ -1734,6 +1737,48 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\AggregationVerb.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\AggregationVerb.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\Binders\ApplyBinder.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\Binders\ApplyBinder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\AggregateTransformationNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\AggregateTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\AggregateStatement.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\AggregateStatement.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\ApplyClause.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\ApplyClause.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\GroupByTransformationNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\GroupByTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\FilterTransformationNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\FilterTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\TransformationNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\TransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SyntacticAst\AggregateToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SyntacticAst\AggregateToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SyntacticAst\GroupByToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SyntacticAst\GroupByToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs">
+      <Link>Microsoft\OData\Core\UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>
     </Compile>

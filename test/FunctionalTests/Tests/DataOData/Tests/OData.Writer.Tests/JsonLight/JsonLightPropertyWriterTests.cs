@@ -6,6 +6,7 @@
 
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -16,6 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
+    using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
     using Microsoft.Test.Taupo.OData.JsonLight;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
@@ -310,6 +312,186 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                });
         }
 
+        [TestMethod, Variation(Description = "Cases for writing properties in JSON Lite with untyped value.")]
+        public void WriteUntypedValueTest()
+        {
+            EdmModel edmModel = new EdmModel();
+
+            var jsonType = new EdmComplexType("TestModel", "JsonType");
+            var jsonTypeRef = new EdmComplexTypeReference(jsonType, isNullable: true);
+            edmModel.AddElement(jsonType);
+
+            var collectionType = new EdmCollectionType(jsonTypeRef);
+            var collectionTypeRef = new EdmCollectionTypeReference(collectionType);
+
+            var entityType = new EdmEntityType("TestModel", "EntityType");
+            entityType.AddStructuralProperty("Value", jsonTypeRef);
+            entityType.AddStructuralProperty("CollectionValue", collectionTypeRef);
+            edmModel.AddElement(entityType);
+
+            var container = new EdmEntityContainer("TestModel", "DefaultContainer");
+            container.AddEntitySet("EntitySet", entityType);
+            edmModel.AddElement(container);
+
+            const string JsonFormat = "$(NL){{{0},\"Value\":{1}}}";
+                
+            IEnumerable<PropertyPayloadTestCase> testCases = new[]
+            {
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Null.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = "null" }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Integer.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = "42" }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Float.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = "3.1415" }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "String.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = "\"foo bar\"" }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Array of elements of mixed types.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = "[1, 2, \"abc\"]" }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Array of arrays.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = "[ [1, \"abc\"], [2, \"def\"], [[3],[4, 5]] ]" }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Negative - empty RawValue",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "Value", 
+                                    Value = new ODataUntypedValue() { RawValue = string.Empty },
+                                },
+                    ExpectedException = ODataExpectedExceptions.ODataException(
+                                            TextRes.ODataJsonLightValueSerializer_MissingRawValueOnUntyped),
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Collection of Edm.Untyped elements.",
+                    Property = new ODataProperty 
+                                {
+                                    Name = "CollectionValue", 
+                                    Value = new ODataCollectionValue()
+                                            {
+                                                TypeName = "Collection(TestModel.JsonType)",
+                                                Items = new object[]
+                                                        {
+                                                            new ODataUntypedValue()
+                                                            { 
+                                                                RawValue = "\"foo bar\"" 
+                                                            },
+                                                            new ODataUntypedValue()
+                                                            {
+                                                                RawValue = "[1, 2, \"abc\"]"
+                                                            },
+                                                            new ODataUntypedValue()
+                                                            {
+                                                                RawValue = "3.1415"
+                                                            }
+                                                        }
+                                            }
+                                },
+                },
+            };
+
+            IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> testDescriptors = testCases.Select(testCase =>
+                new PayloadWriterTestDescriptor<ODataProperty>(
+                    this.Settings,
+                    testCase.Property,
+                    tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                    {
+                        Json = string.Format(
+                            CultureInfo.InvariantCulture,
+                            JsonFormat,
+                            JsonLightWriterUtils.GetMetadataUrlPropertyForEntry("EntitySet"),
+                            GetExpectedJson(testCase.Property.Value)),
+                        FragmentExtractor = (result) => result.RemoveAllAnnotations(false),
+                        ExpectedException2 = testCase.ExpectedException,
+                     })
+                {
+                    DebugDescription = testCase.DebugDescription,
+                    Model = edmModel,
+                });
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    TestWriterUtils.WriteAndVerifyTopLevelContent(
+                        testDescriptor,
+                        testConfiguration,
+                        (messageWriter) => messageWriter.WriteProperty(testDescriptor.PayloadItems.Single()),
+                        this.Assert,
+                        baselineLogger: this.Logger);
+                });
+        }
+
+        /// <summary>
+        /// Gets the expected JSON string from a given <see cref="T:ODataUntypedValue"/> or a
+        /// <see cref="T:ODataCollectionValue"/> whose elements are <see cref="T:ODataUntypedValue"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The expected JSON string.</returns>
+        private static string GetExpectedJson(object value)
+        {
+            ODataUntypedValue untypedValue = value as ODataUntypedValue;
+            if (untypedValue != null)
+            {
+                return untypedValue.RawValue;
+            }
+
+            ODataCollectionValue collectionValue = value as ODataCollectionValue;
+            if (collectionValue != null)
+            {
+                return 
+                    "[" +
+                        string.Join<string>(
+                            ",", 
+                            collectionValue.Items.OfType<ODataUntypedValue>().Select(uv => uv.RawValue)) +
+                     "]";
+            }
+
+            return string.Empty;
+        }
+
         private sealed class PropertyPayloadTestCase
         {
             public string DebugDescription { get; set; }
@@ -317,6 +499,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             public string Json { get; set; }
             public IEdmModel Model { get; set; }
             public string PropertyType { get; set; }
+            public ExpectedException ExpectedException { get; set; }
         }
     }
 }

@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Core.UriParser.Visitors
 {
     using System;
+    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
     using Microsoft.OData.Core.UriParser.Syntactic;
 
     /// <summary>
@@ -91,6 +92,36 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="tokenIn">The LiteralToken to visit</param>
         /// <returns>A ConstantNode bound to this LambdaToken</returns>
         public virtual T Visit(LiteralToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits an AggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateToken to visit</param>
+        /// <returns>A T bound to this AggregateToken</returns>
+        public virtual T Visit(AggregateToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a GroupByToken
+        /// </summary>
+        /// <param name="tokenIn">The GroupByToken to visit</param>
+        /// <returns>A T bound to this GroupByToken</returns>
+        public virtual T Visit(GroupByToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits an AggregateStatementToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateStatementToken to visit</param>
+        /// <returns>A T bound to this AggregateStatementToken</returns>
+        public virtual T Visit(AggregateStatementToken tokenIn)
         {
             throw new NotImplementedException();
         }

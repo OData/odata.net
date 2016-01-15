@@ -58,7 +58,7 @@ using System.Diagnostics.CodeAnalysis;
 // Normalize strings to uppercase
 [module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.ODataPreferenceHeader.#ReturnContent")]
 [module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.ExpandOptionParser.#BuildExpandTermToken(Microsoft.OData.Core.UriParser.Syntactic.PathSegmentToken,System.String)")]
-[module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.FunctionCallBinder.#BindAsBuiltInFunction(Microsoft.OData.Core.UriParser.Syntactic.FunctionCallToken,System.Collections.Generic.List`1<Microsoft.OData.Core.UriParser.Semantic.QueryNode>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.FunctionCallBinder.#BindAsUriFunction(Microsoft.OData.Core.UriParser.Syntactic.FunctionCallToken,System.Collections.Generic.List`1<Microsoft.OData.Core.UriParser.Semantic.QueryNode>)")]
 
 [module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", MessageId = "NonEntity", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
 
@@ -75,6 +75,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.EnumBinder.#bindMethod")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.Evaluation.ODataEntryMetadataContext+ODataEntryMetadataContextWithoutModel.#serializationInfo")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.Evaluation.ODataMetadataContext.#metadataLevel")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightReader.#readingParameter")]
 
 // Already public APIs thus cannot be changed.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "Microsoft.OData.Core.ODataBatchOperationRequestMessage.#ContentId")]
@@ -103,3 +104,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.ODataAsynchronousReader.#ParseResponseLine(System.String)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaReader.#IsTopLevel")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaWriter.#IsTopLevel")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.Core.UriParser.FunctionSignature.#ArgumentTypes")]

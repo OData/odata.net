@@ -425,7 +425,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseFilter("MyPeople/Any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
 
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("Any"));
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("Any"));
         }
 
         [Fact]

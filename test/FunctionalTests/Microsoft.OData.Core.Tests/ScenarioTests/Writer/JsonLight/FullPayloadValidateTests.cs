@@ -347,11 +347,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData1,
                 this.containedNavLink,
                 this.entryWithOnlyData2,
-                this.containedNavLink, 
+                this.containedNavLink,
                 this.entryWithOnlyData3
             };
 
@@ -386,9 +386,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData2,
-                this.containedNavLink, 
+                this.containedNavLink,
                 this.entryWithOnlyData3,
             };
 
@@ -422,9 +422,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.expandedCollectionNavLink,
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData2,
-                this.containedNavLink, 
+                this.containedNavLink,
                 this.entryWithOnlyData3
             };
 
@@ -458,8 +458,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             ODataItem[] itemsToWrite = new ODataItem[]
             {
                 this.entryWithOnlyData1,
-                this.containedCollectionNavLink, 
-                new ODataFeed(), 
+                this.containedCollectionNavLink,
+                new ODataFeed(),
                 this.entryWithOnlyData2,
                 this.expandedNavLink,
                 this.entryWithOnlyData3
@@ -537,11 +537,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData1,
                 this.containedNavLink,
                 this.entryWithOnlyData2,
-                this.containedNavLink, 
+                this.containedNavLink,
                 this.entryWithOnlyData3
             };
 
@@ -576,9 +576,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData2,
-                this.containedNavLink, 
+                this.containedNavLink,
                 this.entryWithOnlyData3,
             };
 
@@ -662,10 +662,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 this.entryWithOnlyData2,
                 new ODataNavigationLinkEnd(),
                 this.containedCollectionNavLink,
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData2,
-                new ODataNavigationLinkEnd(), 
-                this.containedNavLink, 
+                new ODataNavigationLinkEnd(),
+                this.containedNavLink,
                 this.entryWithOnlyData3,
             };
 
@@ -780,7 +780,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                feed, 
+                feed,
                 this.entryWithOnlyData1,
             };
 
@@ -806,7 +806,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataFeed(),
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
                 feed
@@ -907,7 +907,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         #endregion Inlinecount Tests
 
         [Fact]
-        public void ShouldWriteAdditionalPropertyWhenFullValidationDisabled()
+        public void ShouldAlwaysWriteAdditionalPropertyWhenWriteResponse()
         {
             var entry = new ODataEntry
             {
@@ -921,16 +921,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             ODataItem[] itemsToWrite = { entry };
 
-            Action action = () => this.GetWriterOutputForContentTypeAndKnobValue(
-                "application/json;odata.metadata=minimal",
-                true,
-                itemsToWrite,
-                Model,
-                EntitySet,
-                EntityType,
-                enableFullValidation: true);
-            action.ShouldThrow<ODataException>().WithMessage(
-                Strings.ValidationUtils_PropertyDoesNotExistOnType("Prop1", "Namespace.EntityType"));
+            string expectedPayload =
+                                  "{\"" +
+                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
+                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
+                                  "}";
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue(
                 "application/json;odata.metadata=minimal",
@@ -939,12 +934,17 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
+                enableFullValidation: true);
+            result.Should().Be(expectedPayload);
+
+            result = this.GetWriterOutputForContentTypeAndKnobValue(
+                "application/json;odata.metadata=minimal",
+                true,
+                itemsToWrite,
+                Model,
+                EntitySet,
+                EntityType,
                 enableFullValidation: false);
-            string expectedPayload = 
-                                  "{\"" +
-                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
-                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
-                                  "}";
             result.Should().Be(expectedPayload);
         }
 
@@ -964,8 +964,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             ODataItem[] itemsToWrite = new ODataItem[]
             {
                 this.entryWithOnlyData1,
-                this.containedCollectionNavLink, 
-                new ODataFeed(), 
+                this.containedCollectionNavLink,
+                new ODataFeed(),
                 entryWithOnlyData2WithSerializationInfo,
             };
 

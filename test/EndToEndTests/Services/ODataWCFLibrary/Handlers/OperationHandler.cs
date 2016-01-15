@@ -79,7 +79,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         IEdmEntitySetBase entitySet = (IEdmEntitySetBase)entitySource;
 
                         resultWriter = messageWriter.CreateODataFeedWriter(entitySet, (IEdmEntityType)this.QueryContext.Target.ElementType);
-                        ResponseWriter.WriteFeed(resultWriter, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
+                        ResponseWriter.WriteFeed(resultWriter, (IEdmEntityType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
                     }
                     else
                     {
@@ -151,48 +151,48 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     switch (parameterReader.State)
                     {
                         case ODataParameterReaderState.Value:
-                        {
-                            object clrValue = ODataObjectModelConverter.ConvertPropertyValue(parameterReader.Value);
-                            parameterValues.Add(Expression.Constant(clrValue));
-                            break;
-                        }
-                        case ODataParameterReaderState.Collection:
-                        {
-                            ODataCollectionReader collectionReader = parameterReader.CreateCollectionReader();
-                            object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadCollectionParameterValue(collectionReader));
-                            parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
-                            break;
-                        }
-                        case ODataParameterReaderState.Entry:
-                        {
-                            var entryReader = parameterReader.CreateEntryReader();
-                            object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadEntryParameterValue(entryReader));
-                            parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
-                            break;
-                        }
-                        case ODataParameterReaderState.Feed:
-                        {
-                            IList collectionList = null;
-                            var feedReader = parameterReader.CreateFeedReader();
-                            while (feedReader.Read())
                             {
-                                if (feedReader.State == ODataReaderState.EntryEnd)
-                                {
-                                    object clrItem = ODataObjectModelConverter.ConvertPropertyValue(feedReader.Item);
-                                    if (collectionList == null)
-                                    {
-                                        Type itemType = clrItem.GetType();
-                                        Type listType = typeof(List<>).MakeGenericType(new[] {itemType});
-                                        collectionList = (IList)Utility.QuickCreateInstance(listType);
-                                    }
-
-                                    collectionList.Add(clrItem);
-                                }
+                                object clrValue = ODataObjectModelConverter.ConvertPropertyValue(parameterReader.Value);
+                                parameterValues.Add(Expression.Constant(clrValue));
+                                break;
                             }
+                        case ODataParameterReaderState.Collection:
+                            {
+                                ODataCollectionReader collectionReader = parameterReader.CreateCollectionReader();
+                                object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadCollectionParameterValue(collectionReader));
+                                parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
+                                break;
+                            }
+                        case ODataParameterReaderState.Entry:
+                            {
+                                var entryReader = parameterReader.CreateEntryReader();
+                                object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadEntryParameterValue(entryReader));
+                                parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
+                                break;
+                            }
+                        case ODataParameterReaderState.Feed:
+                            {
+                                IList collectionList = null;
+                                var feedReader = parameterReader.CreateFeedReader();
+                                while (feedReader.Read())
+                                {
+                                    if (feedReader.State == ODataReaderState.EntryEnd)
+                                    {
+                                        object clrItem = ODataObjectModelConverter.ConvertPropertyValue(feedReader.Item);
+                                        if (collectionList == null)
+                                        {
+                                            Type itemType = clrItem.GetType();
+                                            Type listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                                            collectionList = (IList)Utility.QuickCreateInstance(listType);
+                                        }
 
-                            parameterValues.Add(Expression.Constant(collectionList, collectionList.GetType()));
-                            break;
-                        }
+                                        collectionList.Add(clrItem);
+                                    }
+                                }
+
+                                parameterValues.Add(Expression.Constant(collectionList, collectionList.GetType()));
+                                break;
+                            }
                     }
                 }
 

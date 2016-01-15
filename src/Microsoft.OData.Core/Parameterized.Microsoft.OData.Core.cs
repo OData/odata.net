@@ -197,6 +197,27 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. Expanded navigation property can only be written within a delta entry."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "WriteStart(expandedFeed) was called in an invalid state ('{0}'); WriteStart(expandedFeed) is only supported in state 'ExpandedNavigationProperty'."
+        /// </summary>
+        internal static string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState, p0);
+        }
+
+        /// <summary>
         /// A string like "ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Entry', 'Feed', 'NavigationLink', and 'NavigationLinkWithContent'."
         /// </summary>
         internal static string ODataWriterCore_WriteEndCalledInInvalidState(object p0) {
@@ -4442,6 +4463,17 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "A raw value was not provided for an instance of ODataUntypedValue."
+        /// </summary>
+        internal static string ODataJsonLightValueSerializer_MissingRawValueOnUntyped
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+            }
+        }
+
+        /// <summary>
         /// A string like "Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute."
         /// </summary>
         internal static string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement {
@@ -4608,6 +4640,41 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string UriQueryExpressionParser_RangeVariableAlreadyDeclared(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_RangeVariableAlreadyDeclared, p0);
+        }
+
+        /// <summary>
+        /// A string like "'as' expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_AsExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_AsExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "'as' expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_WithExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_WithExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Unrecognized with '{0}' at '{1}' in '{2}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_UnrecognizedWithVerb(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_UnrecognizedWithVerb, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "Expression expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_PropertyPathExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_PropertyPathExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "'{0}' expected at position {1} in '{2}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_KeywordOrIdentifierExpected(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_KeywordOrIdentifierExpected, p0, p1, p2);
         }
 
         /// <summary>
@@ -4894,6 +4961,48 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "$apply/aggregate expression '{0}' operation does not support value type '{1}'."
+        /// </summary>
+        internal static string ApplyBinder_AggregateStatementIncompatibleTypeForVerb(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_AggregateStatementIncompatibleTypeForVerb, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate does not support verb '{0}'."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedAggregateVerb(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedAggregateVerb, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate expression '{0}' must evaluate to a single value."
+        /// </summary>
+        internal static string ApplyBinder_AggregateStatementNotSingleValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_AggregateStatementNotSingleValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/groupby grouping expression '{0}' must evaluate to a property access value."
+        /// </summary>
+        internal static string ApplyBinder_GroupByPropertyNotPropertyAccessValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_GroupByPropertyNotPropertyAccessValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply clause does not support type '{0}'."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedType(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedType, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/groupby not support '{0}' as child transformation"
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedGroupByChild(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedGroupByChild, p0);
+        }
+
+        /// <summary>
         /// A string like "Cannot find a suitable overload for function '{0}' that takes '{1}' arguments."
         /// </summary>
         internal static string FunctionCallBinder_CannotFindASuitableOverload(object p0, object p1) {
@@ -4901,10 +5010,10 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Found a built-in function '{0}' with a parent token. Built-in functions cannot have parent tokens."
+        /// A string like "Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens."
         /// </summary>
-        internal static string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent, p0);
+        internal static string FunctionCallBinder_UriFunctionMustHaveHaveNullParent(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, p0);
         }
 
         /// <summary>

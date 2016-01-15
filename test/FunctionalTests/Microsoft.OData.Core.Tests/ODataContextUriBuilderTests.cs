@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OData.Core.UriParser.Extensions.Semantic;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.OData.Core.Tests
 {
@@ -90,6 +92,38 @@ namespace Microsoft.OData.Core.Tests
             expectClause = "Districts";
 
             this.CreateFeedContextUri(selectClause, null).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectClause));
+        }
+
+        [Fact]
+        public void FeedContextUriWithApplyAggreagate()
+        {
+            string applyClause = "aggregate(Id with sum as TotalId)";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(TotalId)");
+        }
+
+        [Fact]
+        public void FeedContextUriWithApplyGroupBy()
+        {
+            string applyClause = "groupby((Name, Address/Street))";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,Address(Street))");
+        }
+
+        [Fact]
+        public void FeedContextUriWithApplyFilter()
+        {
+            string applyClause = "filter(Id eq 1)";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities");
+        }
+
+        [Fact]
+        public void FeedContextUriWithApply()
+        {
+            string applyClause = "groupby((Name), aggregate(Id with sum as TotalId))";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,TotalId)");
         }
 
         [Fact]
@@ -230,7 +264,7 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
-        public void ShouldThrowIfEntitySetIsMissingOnFeedResponse()
+        public void ShouldThrowIfEntitySetIsMissingWithoutSerializationInfoOnFeedResponse()
         {
             Action test = () => this.CreateFeedContextUri(ResponseTypeContextWithoutTypeInfo);
             test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
@@ -240,6 +274,26 @@ namespace Microsoft.OData.Core.Tests
         public void ShouldNotWriteContextUriIfEntitySetIsMissingOnFeedRequest()
         {
             this.CreateFeedContextUri(RequestTypeContextWithoutTypeInfo, false).Should().BeNull();
+        }
+
+        [Fact]
+        public void ShouldWriteIfSerializationInfoWithoutNavigationSourceButUnknownSetOnFeedResponse()
+        {
+            this.CreateFeedContextUri(ODataFeedAndEntryTypeContext.Create(
+                serializationInfo: new ODataFeedAndEntrySerializationInfo()
+                {
+                    ExpectedTypeName = "NS.Type",
+                    IsFromCollection = true,
+                    NavigationSourceEntityTypeName = "NS.Type",
+                    NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet,
+                    NavigationSourceName = null
+                },
+                navigationSource: null,
+                navigationSourceEntityType: null,
+                expectedEntityType: null,
+                model: EdmCoreModel.Instance,
+                throwIfMissingTypeInfo: true),
+                isResponse: true);
         }
         #endregion feed context uri
 
@@ -578,12 +632,17 @@ namespace Microsoft.OData.Core.Tests
             EdmEntityContainer defaultContainer = new EdmEntityContainer("TestModel", "DefaultContainer");
             this.edmModel.AddElement(defaultContainer);
 
+            EdmComplexType addressType = new EdmComplexType("TestModel", "Address");
+            addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetString(/*isNullable*/false));
+            addressType.AddStructuralProperty("Zip", EdmCoreModel.Instance.GetString(/*isNullable*/false));
+
             this.cityType = new EdmEntityType("TestModel", "City");
             EdmStructuralProperty cityIdProperty = cityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
             cityType.AddKeys(cityIdProperty);
             cityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
             cityType.AddStructuralProperty("Size", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
             cityType.AddStructuralProperty("Restaurants", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(/*isNullable*/false)));
+            cityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
             this.edmModel.AddElement(cityType);
 
             this.capitolCityType = new EdmEntityType("TestModel", "CapitolCity", cityType);
@@ -647,6 +706,14 @@ namespace Microsoft.OData.Core.Tests
             SelectExpandClause selectExpandClause = new ODataQueryOptionParser(edmModel, this.cityType, this.citySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
             ODataFeedAndEntryTypeContext typeContext = ODataFeedAndEntryTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, this.edmModel, true);
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(typeContext, false, new ODataUri() { SelectAndExpand = selectExpandClause });
+            Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Feed, info);
+            return contextUrl;
+        }
+        private Uri CreateFeedContextUri(string applyClauseString)
+        {
+            ApplyClause applyClause = new ODataQueryOptionParser(edmModel, this.cityType, this.citySet, new Dictionary<string, string> { { "$apply", applyClauseString } }).ParseApply();
+            ODataFeedAndEntryTypeContext typeContext = ODataFeedAndEntryTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, this.edmModel, true);
+            ODataContextUrlInfo info = ODataContextUrlInfo.Create(typeContext, false, new ODataUri() { Apply = applyClause });
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Feed, info);
             return contextUrl;
         }

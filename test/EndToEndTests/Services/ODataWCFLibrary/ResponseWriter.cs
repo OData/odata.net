@@ -101,18 +101,30 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// Writes an OData feed.
         /// </summary>
         /// <param name="writer">The ODataWriter that will write the feed.</param>
+        /// <param name="entityType">The type of the entity in the feed.</param>
         /// <param name="entries">The items from the data store to write to the feed.</param>
         /// <param name="entitySet">The entity set in the model that the feed belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <param name="selectExpandClause">The SelectExpandClause.</param>
-        public static void WriteFeed(ODataWriter writer, IEnumerable entries, IEdmEntitySetBase entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, long? count, Uri deltaLink, Uri nextPageLink, Dictionary<string, string> incomingHeaders = null)
+        public static void WriteFeed(ODataWriter writer, IEdmEntityType entityType, IEnumerable entries, IEdmEntitySetBase entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, long? count, Uri deltaLink, Uri nextPageLink, Dictionary<string, string> incomingHeaders = null)
         {
             var feed = new ODataFeed
             {
-                Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name),
+                Id = entitySet == null ? null : new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name),
                 DeltaLink = deltaLink,
                 NextPageLink = nextPageLink
             };
+
+            if (entitySet == null)
+            {
+                feed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+                {
+                    NavigationSourceEntityTypeName = entityType.FullTypeName(),
+                    NavigationSourceName = null,
+                    NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet,
+                    IsFromCollection = true
+                });
+            }
 
             if (count.HasValue)
             {
@@ -185,8 +197,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                                 }
                                 else
                                 {
-                                    
-                                    WriteFeed(writer, collectionValue, targetSource as IEdmEntitySetBase, targetVersion, ((ExpandedNavigationSelectItem)expandedItem).SelectAndExpand, count, null, null);
+
+                                    WriteFeed(writer, null, collectionValue, targetSource as IEdmEntitySetBase, targetVersion, ((ExpandedNavigationSelectItem)expandedItem).SelectAndExpand, count, null, null);
                                 }
                             }
                             else
@@ -197,7 +209,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                                 }
                                 else
                                 {
-                                    WriteEntry(writer, propertyValue, targetSource, targetVersion, ((ExpandedNavigationSelectItem)expandedItem).SelectAndExpand);                                   
+                                    WriteEntry(writer, propertyValue, targetSource, targetVersion, ((ExpandedNavigationSelectItem)expandedItem).SelectAndExpand);
                                 }
                             }
                         }
@@ -213,7 +225,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="writer">The ODataWriter that will write the ReferenceLink.</param>
         public static void WriteReferenceLink(ODataWriter writer, object element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
         {
-            ODataEntry entry = ODataObjectModelConverter.ConvertToODataEntityReferenceLink (element, entitySource, targetVersion);
+            ODataEntry entry = ODataObjectModelConverter.ConvertToODataEntityReferenceLink(element, entitySource, targetVersion);
             entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationByEntry", new ODataPrimitiveValue(true)));
             writer.WriteStart(entry);
             writer.WriteEnd();
@@ -225,7 +237,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="writer">The ODataWriter that will write the ReferenceLinks.</param>
         public static void WriteReferenceLinks(ODataWriter writer, IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
         {
-            IEnumerable<ODataEntry> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks (element, entitySource, targetVersion);
+            IEnumerable<ODataEntry> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks(element, entitySource, targetVersion);
             var feed = new ODataFeed { };
             writer.WriteStart(feed);
             foreach (var entry in links)

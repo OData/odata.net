@@ -46,6 +46,36 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
+        /// Start writing a navigation link.
+        /// </summary>
+        /// <param name="navigationLink">The navigation link to write.</param>
+        public abstract void WriteStart(ODataNavigationLink navigationLink);
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously start writing a navigation link.
+        /// </summary>
+        /// <param name="navigationLink">The navigation link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public abstract Task WriteStartAsync(ODataNavigationLink navigationLink);
+#endif
+
+        /// <summary>
+        /// Start writing an expanded feed.
+        /// </summary>
+        /// <param name="expandedFeed">The expanded feed to write.</param>
+        public abstract void WriteStart(ODataFeed expandedFeed);
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously start writing an expanded feed.
+        /// </summary>
+        /// <param name="expandedFeed">The expanded feed to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public abstract Task WriteStartAsync(ODataFeed expandedFeed);
+#endif
+
+        /// <summary>
         /// Start writing a delta entry.
         /// </summary>
         /// <param name="deltaEntry">The delta entry to write.</param>

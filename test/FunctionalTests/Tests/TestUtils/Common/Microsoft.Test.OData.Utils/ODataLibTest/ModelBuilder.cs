@@ -8,9 +8,9 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
     using System;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.OData.Utils.ODataLibOM;
@@ -73,6 +73,27 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
 
             model.AddElement(entityType);
             return entityType;
+        }
+
+        /// <summary>
+        /// Creates a new enum type with the specified name.
+        /// </summary>
+        /// <param name="model">The <see cref="EntityModelSchema"/> to create the enum type in.</param>
+        /// <param name="localName">The local name (without namespace) for the enum type to create.</param>
+        /// <param name="namespaceName">The (optional) namespace name for the type to create.</param>
+        /// <param name="underlyingType">The (optional) underlying type of the enum.</param>
+        /// <param name="isFlags">If the enum type is flag (optional).</param>
+        /// <returns>The newly created enum type instance.</returns>
+        public static EdmEnumType EnumType(this EdmModel model, string localName, string namespaceName = null, EdmPrimitiveTypeKind underlyingType = EdmPrimitiveTypeKind.Int32, bool isFlags = false)
+        {
+            ExceptionUtilities.CheckArgumentNotNull(model, "model");
+            ExceptionUtilities.CheckStringArgumentIsNotNullOrEmpty(localName, "localName");
+
+            namespaceName = namespaceName ?? ModelNamespace;
+            EdmEnumType enumType = new EdmEnumType(namespaceName, localName, underlyingType, isFlags);
+
+            model.AddElement(enumType);
+            return enumType;
         }
 
         /// <summary>

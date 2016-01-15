@@ -11,9 +11,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using Microsoft.OData.Core.UriParser.Extensions;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
@@ -30,6 +32,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// The maximum number of recursion nesting allowed.
         /// </summary>
         private readonly int maxDepth;
+
+        /// <summary>
+        /// List of supported $apply keywords
+        /// </summary>
+        private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy });
 
         /// <summary>
         /// Set of parsed parameters
@@ -196,6 +203,194 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return this.ParseExpressionText(filter);
         }
 
+        internal IEnumerable<QueryToken> ParseApply(string apply)
+        {
+            Debug.Assert(apply != null, "apply != null");
+
+            List<QueryToken> transformationTokens = new List<QueryToken>();
+
+            if (string.IsNullOrEmpty(apply))
+            {
+                return transformationTokens;
+            }
+
+            this.recursionDepth = 0;
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
+
+            while (true)
+            {
+                switch (this.lexer.CurrentToken.GetIdentifier())
+                {
+                    case ExpressionConstants.KeywordAggregate:
+                        transformationTokens.Add(ParseAggregate());
+                        break;
+                    case ExpressionConstants.KeywordFilter:
+                        transformationTokens.Add(ParseApplyFilter());
+                        break;
+                    case ExpressionConstants.KeywordGroupBy:
+                        transformationTokens.Add(ParseGroupBy());
+                        break;
+                    default:
+                        throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                }
+
+                // '/' indicates there are more transformations
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Slash)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            this.lexer.ValidateToken(ExpressionTokenKind.End);
+
+            return new ReadOnlyCollection<QueryToken>(transformationTokens);
+        }
+
+        // parses $apply aggregate tranformation (.e.g. aggregate(UnitPrice with sum as TotalUnitPrice)
+        internal AggregateToken ParseAggregate()
+        {
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordAggregate), "token identifier is aggregate");
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // series of statements separates by commas
+            var statements = new List<AggregateStatementToken>();
+            while (true)
+            {
+                statements.Add(this.ParseAggregateStatement());
+
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            return new AggregateToken(statements);
+        }
+
+        internal AggregateStatementToken ParseAggregateStatement()
+        {
+            // expression
+            var expression = this.ParseExpression();
+
+            // "with" verb
+            var verb = this.ParseAggregateWith();
+
+            // "as" alias
+            var alias = this.ParseAggregateAs();
+
+            return new AggregateStatementToken(expression, verb, alias.Text);
+        }
+
+        // parses $apply groupby tranformation (.e.g. groupby(ProductID, CategoryId, aggregate(UnitPrice with sum as TotalUnitPrice))
+        internal GroupByToken ParseGroupBy()
+        {
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordGroupBy), "token identifier is groupby");
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // properties
+            var properties = new List<EndPathToken>();
+            while (true)
+            {
+                var expression = this.ParsePrimary() as EndPathToken;
+
+                if (expression == null)
+                {
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                }
+
+                properties.Add(expression);
+
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // optional child transformation
+            ApplyTransformationToken transformationToken = null;
+
+            // "," (comma)
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
+            {
+                this.lexer.NextToken();
+
+                if (TokenIdentifierIs(ExpressionConstants.KeywordAggregate))
+                {
+                    transformationToken = this.ParseAggregate();
+                }
+                else
+                {
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(ExpressionConstants.KeywordAggregate, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                }
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            return new GroupByToken(properties, transformationToken);
+        }
+
+        // parses $apply filter tranformation (.e.g. filter(ProductName eq 'Aniseed Syrup'))
+        internal QueryToken ParseApplyFilter()
+        {
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordFilter), "token identifier is filter");
+            lexer.NextToken();
+
+            // '(' expression ')'
+            return this.ParseParenExpression();
+        }
+
         /// <summary>
         /// Parse expression text into Token.
         /// </summary>
@@ -206,7 +401,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(expressionText != null, "expressionText != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByExpression(expressionText);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(expressionText);
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 
@@ -223,7 +418,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(orderBy != null, "orderBy != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByExpression(orderBy);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(orderBy);
 
             List<OrderByToken> orderByTokens = new List<OrderByToken>();
             while (true)
@@ -268,11 +463,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Creates a new <see cref="ExpressionLexer"/> for the given filter or orderby expression.
+        /// Creates a new <see cref="ExpressionLexer"/> for the given filter, orderby or apply expression.
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
-        private static ExpressionLexer CreateLexerForFilterOrOrderByExpression(string expression)
+        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
         {
             return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*parsingFunctionParameters*/);
         }
@@ -781,6 +976,60 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             return new InnerPathToken(propertyName, parent, null);
         }
+
+        private AggregationVerb ParseAggregateWith()
+        {
+            if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_WithExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();
+
+            AggregationVerb verb;
+
+            switch (lexer.CurrentToken.GetIdentifier())
+            {
+                case ExpressionConstants.KeywordAverage:
+                    verb = AggregationVerb.Average;
+                    break;
+                case ExpressionConstants.KeywordCountDistinct:
+                    verb = AggregationVerb.CountDistinct;
+                    break;
+                case ExpressionConstants.KeywordMax:
+                    verb = AggregationVerb.Max;
+                    break;
+                case ExpressionConstants.KeywordMin:
+                    verb = AggregationVerb.Min;
+                    break;
+                case ExpressionConstants.KeywordSum:
+                    verb = AggregationVerb.Sum;
+                    break;
+                default:
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();
+
+            return verb;
+        }
+
+        private StringLiteralToken ParseAggregateAs()
+        {
+            if (!TokenIdentifierIs(ExpressionConstants.KeywordAs))
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_AsExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();
+
+            var alias = new StringLiteralToken(lexer.CurrentToken.Text);
+
+            lexer.NextToken();
+
+            return alias;
+        }
+
 
         /// <summary>
         /// Checks that the current token has the specified identifier.

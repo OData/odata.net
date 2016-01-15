@@ -41,24 +41,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// This method generates a <see cref="SingleValueOpenPropertyAccessNode"/> for properties of open type
-        /// </summary>
-        /// <param name="endPathToken">EndPathToken to bind into an open property node.</param>
-        /// <param name="parentNode">Parent node of this open property</param>
-        /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
-        internal static SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
-        {
-            if (parentNode.TypeReference != null && !parentNode.TypeReference.Definition.IsOpenType())
-            {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
-                    parentNode.TypeReference.FullName(),
-                    endPathToken.Identifier));
-            }
-
-            return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
-        }
-
-        /// <summary>
         /// Generates a bound query node representing an <see cref="IEdmProperty"/> given an already semantically bound parent node.
         /// </summary>
         /// <param name="parentNode">The semantically bound source node of this end path token</param>
@@ -112,6 +94,28 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             return NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
+        }
+
+        /// <summary>
+        /// This method generates a <see cref="SingleValueOpenPropertyAccessNode"/> for properties of open type
+        /// </summary>
+        /// <param name="endPathToken">EndPathToken to bind into an open property node.</param>
+        /// <param name="parentNode">Parent node of this open property</param>
+        /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
+        internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
+        {
+            if (parentNode.TypeReference == null || 
+                parentNode.TypeReference.Definition.IsOpenType() || 
+                IsAggregatedProperty(endPathToken.Identifier))
+            {
+                return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
+            }
+            else
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
+                    parentNode.TypeReference.FullName(),
+                    endPathToken.Identifier));
+            }
         }
 
         /// <summary>
@@ -181,6 +185,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 RangeVariable implicitRangeVariable = state.ImplicitRangeVariable;
                 return NodeFactory.CreateRangeVariableReferenceNode(implicitRangeVariable);
             }
+        }
+
+        /// <summary>
+        /// Determines the token if represents an aggregated property or not.
+        /// </summary>
+        /// <param name="identifier">Tokon identifier.</param>
+        /// <returns>Whether the token represents an aggregated property.</returns>
+        private bool IsAggregatedProperty(string identifier)
+        {
+            return (state.AggregatedProperties != null && state.AggregatedProperties.Contains(identifier));
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Microsoft.OData.Core.Atom
             IEdmNavigationSource navigationSource, 
             IEdmEntityType expectedEntityType, 
             bool readingFeed)
-            : base(atomInputContext, readingFeed, null /*listener*/)
+            : base(atomInputContext, readingFeed, false /*readingDelta*/, null /*listener*/)
         {
             Debug.Assert(atomInputContext != null, "atomInputContext != null");
             Debug.Assert(

@@ -22,6 +22,14 @@ namespace Microsoft.OData.Core
         /// <returns>The current state of the reader.</returns>
         public abstract ODataDeltaReaderState State { get; }
 
+        /// <summary>Gets the current sub state of the reader. </summary>
+        /// <returns>The current sub state of the reader.</returns>
+        /// <remarks>
+        /// The sub state is a complement to the current state if the current state itself is not enough to determine
+        /// the real state of the reader. The sub state is only meaningful in ExpandedNavigationProperty state.
+        /// </remarks>
+        public abstract ODataReaderState SubState { get; }
+
         /// <summary>Gets the most recent <see cref="T:Microsoft.OData.Core.ODataItem" /> that has been read. </summary>
         /// <returns>The most recent <see cref="T:Microsoft.OData.Core.ODataItem" /> that has been read.</returns>
         public abstract ODataItem Item { get; }

@@ -20,29 +20,36 @@ namespace Microsoft.OData.Core.UriParser
     /// <summary>
     /// Class represents functions signatures of custom uri functions.
     /// </summary>
-    public class CustomUriFunctions
+    public static class CustomUriFunctions
     {
         #region Static Fields
 
         /// <summary>
         /// Dictionary of the name of the custom function and all the signatures.
         /// </summary>
-        private static Dictionary<string, FunctionSignatureWithReturnType[]> CustomFunctions;
+        private static readonly Dictionary<string, FunctionSignatureWithReturnType[]> CustomFunctions
+            = new Dictionary<string, FunctionSignatureWithReturnType[]>(StringComparer.Ordinal);
 
-        private static object Locker = new object();
-
-        #endregion
-
-        #region Static Ctor
-
-        static CustomUriFunctions()
-        {
-            CustomFunctions = new Dictionary<string, FunctionSignatureWithReturnType[]>();
-        }
+        private static readonly object Locker = new object();
 
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Add a custom uri function to extend uri functions.
+        /// In case the function name already exists as a custom function, the signature will be added as an another overload.
+        /// </summary>
+        /// <param name="customFunctionName">The new custom function name</param>
+        /// <param name="newCustomFunctionSignature">The new custom function signature</param>
+        /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
+        /// <exception cref="ODataException">Throws if built-in function name already exists.</exception>
+        /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
+        /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
+        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature)
+        {
+            AddCustomUriFunction(customFunctionName, newCustomFunctionSignature, false);
+        }
 
         /// <summary>
         /// Add a custom uri function to extend or override the built-in OData protocol of uri functions.
@@ -56,7 +63,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <exception cref="ODataException">Throws if built-in function name already exists, and parameter 'addAsOverloadToBuiltInFunction' is not 'True'</exception>
         /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
         /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
-        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, bool addAsOverloadToBuiltInFunction = false)
+        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, bool addAsOverloadToBuiltInFunction)
         {
             // Parameters validation
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
@@ -100,15 +107,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
         public static bool RemoveCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType customFunctionSignature)
         {
-            if (string.IsNullOrEmpty(customFunctionName))
-            {
-                throw Error.ArgumentNull("customFunctionName");
-            }
-
-            if (customFunctionSignature == null)
-            {
-                throw Error.ArgumentNull("customFunctionSignature");
-            }
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
+            ExceptionUtils.CheckArgumentNotNull(customFunctionSignature, "customFunctionSignature");
 
             ValidateFunctionWithReturnType(customFunctionSignature);
 
@@ -215,6 +215,9 @@ namespace Microsoft.OData.Core.UriParser
 
         private static bool AreFunctionsSignatureEqual(FunctionSignatureWithReturnType functionOne, FunctionSignatureWithReturnType functionTwo)
         {
+            Debug.Assert(functionOne != null, "functionOne != null");
+            Debug.Assert(functionTwo != null, "functionTwo != null");
+
             // Check if ReturnTypes are equal
             if (!functionOne.ReturnType.IsEquivalentTo(functionTwo.ReturnType))
             {
@@ -251,7 +254,7 @@ namespace Microsoft.OData.Core.UriParser
                 return;
             }
 
-            ExceptionUtils.CheckArgumentNotNull(functionSignature.ReturnType, "unctionSignatureWithReturnType must contain a reuturn type");
+            ExceptionUtils.CheckArgumentNotNull(functionSignature.ReturnType, "functionSignatureWithReturnType must contain a return type");
         }
 
         #endregion

@@ -305,7 +305,12 @@ namespace Microsoft.OData.Core.JsonLight
                         }
                         else
                         {
-                            if (item != null)
+                            ODataUntypedValue untypedValue = item as ODataUntypedValue;
+                            if (untypedValue != null)
+                            {
+                                this.WriteUntypedValue(untypedValue);
+                            }
+                            else if (item != null)
                             {
                                 this.WritePrimitiveValue(item, expectedItemTypeReference);
                             }
@@ -363,6 +368,23 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 this.JsonWriter.WritePrimitiveValue(value);
             }
+        }
+
+        /// <summary>
+        /// Writes an untyped value.
+        /// </summary>
+        /// <param name="value">The untyped value to write.</param>
+        public void WriteUntypedValue(
+            ODataUntypedValue value)
+        {
+            Debug.Assert(value != null, "value != null");
+
+            if (string.IsNullOrEmpty(value.RawValue))
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+            }
+
+            this.JsonWriter.WriteRawValue(value.RawValue);
         }
 
         /// <summary>

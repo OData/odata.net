@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The scope associated with the top level of this payload.</summary>
         private readonly JsonLightTopLevelScope topLevelScope;
 
-        /// <summary>true if the reader was created for reading parameter; false otherwise.</summary>
+        /// <summary>true if the reader is created for reading parameter; false otherwise.</summary>
         private readonly bool readingParameter;
 
         /// <summary>
@@ -46,6 +46,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="expectedEntityType">The expected entity type for the entry to be read (in case of entry reader) or entries in the feed to be read (in case of feed reader).</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
         /// <param name="readingParameter">true if the reader is created for reading a parameter; false otherwise.</param>
+        /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the Json reader will notify the implementer of the interface of relevant state changes in the Json reader.</param>
         internal ODataJsonLightReader(
             ODataJsonLightInputContext jsonLightInputContext,
@@ -53,8 +54,9 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmEntityType expectedEntityType,
             bool readingFeed,
             bool readingParameter = false,
+            bool readingDelta = false,
             IODataReaderWriterListener listener = null)
-            : base(jsonLightInputContext, readingFeed, listener)
+            : base(jsonLightInputContext, readingFeed, readingDelta, listener)
         {
             Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
             Debug.Assert(
@@ -452,7 +454,25 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
-            if (this.jsonLightInputContext.ReadingResponse)
+            // For nested payload (e.g., expanded feed or entry in delta $entity payload),
+            // we usually don't have a context URL for the feed or entry:
+            // {
+            //   "@odata.context":"...", <--- this context URL is for delta entity only
+            //   "value": [
+            //     {
+            //       ...
+            //       "NavigationProperty": <--- usually we don't have a context URL for this
+            //       [ <--- nested payload start
+            //         {...}
+            //       ] <--- nested payload end
+            //     }
+            //    ]
+            // }
+            //
+            // The consequence is that the entry we read out from a nested payload doesn't
+            // have an entity metadata builder thus you cannot compute read link, edit link,
+            // etc. from the entry object.
+            if (this.jsonLightInputContext.ReadingResponse && !this.IsReadingNestedPayload)
             {
                 Debug.Assert(this.jsonLightEntryAndFeedDeserializer.ContextUriParseResult != null, "We should have failed by now if we don't have parse results for context URI.");
 
@@ -546,7 +566,29 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.PopScope(ODataReaderState.FeedEnd);
 
-            if (this.readingParameter && isTopLevelFeed)
+            // When we finish a top-level feed in a nested payload (inside parameter or delta payload),
+            // we can directly turn the reader into Completed state because we don't have any JSON token
+            // (e.g., EndObject in a normal feed payload) left in the stream.
+            //
+            // Nested feed payload:
+            // [
+            //   {...},
+            //   ...
+            // ]
+            // EOF <--- current reader position
+            //
+            // Normal feed payload:
+            // {
+            //   "@odata.context":"...",
+            //   ...,
+            //   "value": [
+            //     {...},
+            //     ...
+            //   ],
+            //   "@odata.nextLink":"..."
+            // } <--- current reader position
+            // EOF
+            if (this.IsReadingNestedPayload && isTopLevelFeed)
             {
                 // replace the 'Start' scope with the 'Completed' scope
                 this.ReplaceScope(ODataReaderState.Completed);
@@ -563,7 +605,6 @@ namespace Microsoft.OData.Core.JsonLight
 
                 // read the end-of-payload
                 this.jsonLightEntryAndFeedDeserializer.ReadPayloadEnd(this.IsReadingNestedPayload);
-                Debug.Assert(this.IsReadingNestedPayload || this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput, "Expected JSON reader to have reached the end of input when not reading a nested payload.");
 
                 // replace the 'Start' scope with the 'Completed' scope
                 this.ReplaceScope(ODataReaderState.Completed);
@@ -923,7 +964,13 @@ namespace Microsoft.OData.Core.JsonLight
                 expandedNavigationLinkInfo = parentNavigationLinkScope.NavigationLinkInfo;
             }
 
-            this.jsonLightEntryAndFeedDeserializer.ReadNextLinkAnnotationAtFeedEnd(this.CurrentFeed, expandedNavigationLinkInfo, this.topLevelScope.DuplicatePropertyNamesChecker);
+            if (!this.IsReadingNestedPayload)
+            {
+                // Temp ban reading the instance annotation after the feed in parameter payload. (!this.IsReadingNestedPayload => !this.readingParameter)
+                // Nested feed payload won't have a NextLink annotation after the feed itself since the payload is NOT pageable.
+                this.jsonLightEntryAndFeedDeserializer.ReadNextLinkAnnotationAtFeedEnd(this.CurrentFeed,
+                    expandedNavigationLinkInfo, this.topLevelScope.DuplicatePropertyNamesChecker);
+            }
 
             this.ReplaceScope(ODataReaderState.FeedEnd);
         }
@@ -1158,7 +1205,10 @@ namespace Microsoft.OData.Core.JsonLight
                     : navigationPropertyType.AsEntity().EntityDefinition();
             }
 
-            if (this.jsonLightInputContext.ReadingResponse)
+            // Since we don't have the entity metadata builder for the entry read out from a nested payload
+            // as stated in ReadAtFeedEndImplementationSynchronously(), we cannot access it here which otherwise
+            // would lead to an exception.
+            if (this.jsonLightInputContext.ReadingResponse && !this.IsReadingNestedPayload)
             {
                 // Hookup the metadata builder to the navigation link.
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
@@ -1175,13 +1225,13 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 ODataPath odataPath = ODataJsonLightContextUriParser.Parse(
                         this.jsonLightEntryAndFeedDeserializer.Model,
-                        UriUtils.UriToString(navigationLinkInfo.NavigationLink.ContextUrl), 
+                        UriUtils.UriToString(navigationLinkInfo.NavigationLink.ContextUrl),
                         navigationLinkInfo.NavigationLink.IsCollection.GetValueOrDefault() ? ODataPayloadKind.Feed : ODataPayloadKind.Entry,
                         this.jsonLightEntryAndFeedDeserializer.MessageReaderSettings.ReaderBehavior,
                         this.jsonLightEntryAndFeedDeserializer.JsonLightInputContext.ReadingResponse).Path;
                 odataUri = new ODataUri()
                 {
-                    Path = odataPath 
+                    Path = odataPath
                 };
             }
 
@@ -1207,7 +1257,9 @@ namespace Microsoft.OData.Core.JsonLight
 
             // NOTE: the current entry will be null for an expanded null entry; no template
             //       expansion for null entries.
-            if (this.CurrentEntry != null)
+            //       there is no entity metadata builder for an entry from a nested payload
+            //       as stated in ReadAtFeedEndImplementationSynchronously().
+            if (this.CurrentEntry != null && !this.IsReadingNestedPayload)
             {
                 ODataEntityMetadataBuilder builder = this.jsonLightEntryAndFeedDeserializer.MetadataContext.GetEntityMetadataBuilderForReader(this.CurrentEntryState, this.jsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
                 if (builder != this.CurrentEntry.MetadataBuilder)
@@ -1446,7 +1498,7 @@ namespace Microsoft.OData.Core.JsonLight
             internal JsonLightNavigationLinkScope(ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
                 : base(ODataReaderState.NavigationLinkStart, navigationLinkInfo.NavigationLink, navigationSource, expectedEntityType, odataUri)
             {
-                this.NavigationLinkInfo = navigationLinkInfo;   
+                this.NavigationLinkInfo = navigationLinkInfo;
             }
 
             /// <summary>

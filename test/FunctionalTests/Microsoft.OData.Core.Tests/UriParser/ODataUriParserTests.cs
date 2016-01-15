@@ -12,6 +12,7 @@ using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Metadata;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
@@ -407,6 +408,109 @@ namespace Microsoft.OData.Core.Tests.UriParser
             aliasNode.Count.Should().Be(1);
             aliasNode["@p1"].ShouldBeConstantQueryNode(32);
         }
+        #endregion
+
+        #region Composite key parse test
+
+        public enum TestUrlConvention
+        {
+            Default,
+            KeyAsSegment,
+            ODataSimplified
+        }
+
+        [Theory]
+        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')/Test.DetailedOrder/details(customerId='customerId',orderId='orderId',id=1)")]
+        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')/Test.DetailedOrder/details(1)")]
+        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
+        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
+        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
+        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')")]
+        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers/customerId/orders/orderId")]
+        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId")]
+        public void ParseCompositeKeyReference(TestUrlConvention testUrlConvention, string fullUrl)
+        {
+            var model = new EdmModel();
+
+            var customer = new EdmEntityType("Test", "Customer", null, false, true);
+            var customerId = customer.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false);
+            customer.AddKeys(customerId);
+            model.AddElement(customer);
+
+            var order = new EdmEntityType("Test", "Order", null, false, true);
+            var orderCustomerId = order.AddStructuralProperty("customerId", EdmPrimitiveTypeKind.String, true);
+            var orderOrderId = order.AddStructuralProperty("orderId", EdmPrimitiveTypeKind.String, true);
+            order.AddKeys(orderCustomerId, orderOrderId);
+            model.AddElement(order);
+
+            var customerOrders = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                ContainsTarget = true,
+                Name = "orders",
+                Target = order,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                DependentProperties = new[] { customerId },
+                PrincipalProperties = new[] { orderCustomerId }
+            });
+
+            var detail = new EdmEntityType("Test", "Detail");
+            var detailCustomerId = detail.AddStructuralProperty("customerId", EdmPrimitiveTypeKind.String);
+            var detailOrderId = detail.AddStructuralProperty("orderId", EdmPrimitiveTypeKind.String);
+            detail.AddKeys(detailCustomerId, detailOrderId,
+                detail.AddStructuralProperty("id", EdmPrimitiveTypeKind.Int32, false));
+            model.AddElement(detail);
+
+            var detailedOrder = new EdmEntityType("Test", "DetailedOrder", order);
+            var detailedOrderDetails = detailedOrder.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    ContainsTarget = true,
+                    Target = detail,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                    Name = "details",
+                    DependentProperties = new[] { orderOrderId, orderCustomerId },
+                    PrincipalProperties = new[] { detailOrderId, detailCustomerId }
+                });
+            model.AddElement(detailedOrder);
+
+            var container = new EdmEntityContainer("Test", "Container");
+            var customers = container.AddEntitySet("customers", customer);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("http://host"), new Uri(fullUrl));
+            switch (testUrlConvention)
+            {
+                case TestUrlConvention.Default:
+                    parser.UrlConventions = ODataUrlConventions.Default;
+                    break;
+                case TestUrlConvention.KeyAsSegment:
+                    parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
+                    break;
+                case TestUrlConvention.ODataSimplified:
+                    parser.UrlConventions = ODataUrlConventions.ODataSimplified;
+                    break;
+                default:
+                    Assert.True(false, "Unreachable code path");
+                    break;
+            }
+
+            var path = parser.ParsePath().ToList();
+            path[0].ShouldBeEntitySetSegment(customers);
+            path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("id", "customerId"));
+            path[2].ShouldBeNavigationPropertySegment(customerOrders);
+            path[3].ShouldBeKeySegment(new KeyValuePair<string, object>("customerId", "customerId"),
+                new KeyValuePair<string, object>("orderId", "orderId"));
+            if (path.Count > 4)
+            {
+                // For tests with a type cast and a second-level navigation property.
+                path[4].ShouldBeTypeSegment(detailedOrder);
+                path[5].ShouldBeNavigationPropertySegment(detailedOrderDetails);
+                path[6].ShouldBeKeySegment(new KeyValuePair<string, object>("customerId", "customerId"),
+                new KeyValuePair<string, object>("orderId", "orderId"),
+                new KeyValuePair<string, object>("id", 1));
+            }
+        }
+
         #endregion
     }
 }

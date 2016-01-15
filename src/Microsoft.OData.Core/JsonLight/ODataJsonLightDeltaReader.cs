@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="jsonLightInputContext">The input to read the payload from.</param>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read (in case of entry reader) or entries in the feed to be read (in case of feed reader).</param>
-        internal ODataJsonLightDeltaReader(
+        public ODataJsonLightDeltaReader(
             ODataJsonLightInputContext jsonLightInputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType expectedEntityType)
@@ -77,8 +77,24 @@ namespace Microsoft.OData.Core.JsonLight
             get
             {
                 this.jsonLightInputContext.VerifyNotDisposed();
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                return this.scopes.Peek().State;
+                return this.CurrentScope.State;
+            }
+        }
+
+        /// <summary>Gets the current sub state of the reader. </summary>
+        /// <returns>The current sub state of the reader.</returns>
+        /// <remarks>
+        /// The sub state is a complement to the current state if the current state itself is not enough to determine
+        /// the real state of the reader. The sub state is only meaningful in ExpandedNavigationProperty state.
+        /// </remarks>
+        public override ODataReaderState SubState
+        {
+            get
+            {
+                this.jsonLightInputContext.VerifyNotDisposed();
+                return this.State == ODataDeltaReaderState.ExpandedNavigationProperty
+                    ? this.CurrentJsonLightExpandedNavigationPropertyScope.SubState
+                    : ODataReaderState.Start;
             }
         }
 
@@ -89,8 +105,9 @@ namespace Microsoft.OData.Core.JsonLight
             get
             {
                 this.jsonLightInputContext.VerifyNotDisposed();
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                return this.scopes.Peek().Item;
+                return this.State == ODataDeltaReaderState.ExpandedNavigationProperty
+                    ? this.CurrentJsonLightExpandedNavigationPropertyScope.Item
+                    : this.CurrentScope.Item;
             }
         }
 
@@ -174,13 +191,28 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Returns current scope cast to JsonLightExpandedNavigationPropertyScope
+        /// </summary>
+        private JsonLightExpandedNavigationPropertyScope CurrentJsonLightExpandedNavigationPropertyScope
+        {
+            get
+            {
+                Debug.Assert(this.State == ODataDeltaReaderState.ExpandedNavigationProperty,
+                    "This property can only be accessed in ExpandedNavigationProperty state.");
+                return (JsonLightExpandedNavigationPropertyScope)this.CurrentScope;
+            }
+        }
+
+        /// <summary>
         /// Returns current scope cast to JsonLightDeltaFeedScope
         /// </summary>
         private JsonLightDeltaFeedScope CurrentJsonLightDeltaFeedScope
         {
             get
             {
-                return ((JsonLightDeltaFeedScope)this.CurrentScope);
+                Debug.Assert(this.State == ODataDeltaReaderState.DeltaFeedStart,
+                    "This property can only be accessed in DeltaFeedStart state.");
+                return (JsonLightDeltaFeedScope)this.CurrentScope;
             }
         }
 
@@ -262,7 +294,7 @@ namespace Microsoft.OData.Core.JsonLight
         public override Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(new Scope(ODataDeltaReaderState.Exception, null, null, null, null)));
+            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(CreateExceptionScope()));
         }
 #endif
 
@@ -386,7 +418,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    this.EnterScope(new Scope(ODataDeltaReaderState.Exception, null, null, null, null));
+                    this.EnterScope(CreateExceptionScope());
                 }
 
                 throw;
@@ -465,6 +497,10 @@ namespace Microsoft.OData.Core.JsonLight
                     result = this.ReadAtFeedEndImplementation();
                     break;
 
+                case ODataDeltaReaderState.ExpandedNavigationProperty:
+                    result = this.ReadAtExpandedNavigationPropertyImplementation();
+                    break;
+
                 case ODataDeltaReaderState.Exception:    // fall through
                 case ODataDeltaReaderState.Completed:
                     throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
@@ -515,6 +551,10 @@ namespace Microsoft.OData.Core.JsonLight
 
                 case ODataDeltaReaderState.FeedEnd:
                     result = this.ReadAtFeedEndImplementationAsync();
+                    break;
+
+                case ODataDeltaReaderState.ExpandedNavigationProperty:
+                    result = this.ReadAtExpandedNavigationPropertyImplementationAsync();
                     break;
 
                 case ODataDeltaReaderState.Exception:    // fall through
@@ -603,6 +643,15 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtDeltaEntryEndImplementationSynchronously();
         }
 
+        /// <summary>
+        /// Implementation of the reader logic when in state 'ExpandedNavigationProperty'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        private bool ReadAtExpandedNavigationPropertyImplementation()
+        {
+            return this.ReadAtExpandedNavigationPropertyImplementationSynchronously();
+        }
+
         #endregion
 
         #region ReadAt<...>ImplementationAsync Methods
@@ -659,6 +708,15 @@ namespace Microsoft.OData.Core.JsonLight
         private Task<bool> ReadAtDeltaEntryEndImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaEntryEndImplementationSynchronously);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'ExpandedNavigationProperty'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false</returns>
+        private Task<bool> ReadAtExpandedNavigationPropertyImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtExpandedNavigationPropertyImplementationSynchronously);
         }
 #endif
 
@@ -811,8 +869,31 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Read other annotations and properties for this entry.
-            while (this.jsonLightEntryAndFeedDeserializer.ReadEntryContent(this.CurrentDeltaEntryState) != null)
+            while (true)
             {
+                ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo =
+                    this.jsonLightEntryAndFeedDeserializer.ReadEntryContent(this.CurrentDeltaEntryState);
+                if (navigationLinkInfo == null)
+                {
+                    // There is no content left in this entry.
+                    break;
+                }
+
+                if (!navigationLinkInfo.IsExpanded)
+                {
+                    // No need to enter ExpandedNavigationProperty state
+                    // if there is no actual expanded feed or entry to read.
+                    continue;
+                }
+
+                this.EnterScope(new JsonLightExpandedNavigationPropertyScope(
+                    navigationLinkInfo,
+                    this.CurrentNavigationSource,
+                    this.CurrentEntityType,
+                    this.CurrentScope.ODataUri,
+                    this.jsonLightInputContext));
+
+                return true;
             }
 
             // Transit to DeltaEntryEnd state.
@@ -835,11 +916,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="scope">The scope for the DeltaEntryEnd state.</param>
         private void EndDeltaEntry(Scope scope)
         {
-            Debug.Assert(this.scopes.Count > 0, "Stack must always be non-empty.");
-            Debug.Assert(scope != null, "scope != null");
-            Debug.Assert(scope.State == ODataDeltaReaderState.DeltaEntryEnd, "scope.State == ODataDeltaReaderState.DeltaEntryEnd");
-
-            this.scopes.Pop();
+            this.PopScope(ODataDeltaReaderState.DeltaEntryStart);
             this.EnterScope(scope);
         }
 
@@ -862,10 +939,45 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightEntryAndFeedDeserializer.JsonReader.Read();
 
             // Return to DeltaFeedStart.
-            this.scopes.Pop();
+            this.PopScope(ODataDeltaReaderState.DeltaEntryEnd);
             Debug.Assert(this.State == ODataDeltaReaderState.DeltaFeedStart, "We should get back to DeltaFeedStart now.");
 
             return this.ReadAtDeltaFeedStartImplementationSynchronously();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'ExpandedNavigationProperty'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        private bool ReadAtExpandedNavigationPropertyImplementationSynchronously()
+        {
+            Debug.Assert(this.State == ODataDeltaReaderState.ExpandedNavigationProperty,
+                "this.State == ODataDeltaReaderState.ExpandedNavigationProperty");
+
+            if (this.SubState == ODataReaderState.Completed)
+            {
+                // Leave ExpandedNavigationProperty state if the inner reader finished reading.
+                this.PopScope(ODataDeltaReaderState.ExpandedNavigationProperty);
+
+                // We always have delta payload left to read.
+                return true;
+            }
+
+            if (this.SubState == ODataReaderState.Exception)
+            {
+                // Go into Exception state if the inner reader ran into an exception.
+                this.EnterScope(CreateExceptionScope());
+
+                // Should not call Read() again if exception happened.
+                return false;
+            }
+
+            // We place the call to Read() AFTER the two conditions above because we want to
+            // enable the user to catch the Completed state and do something he wants.
+            this.CurrentJsonLightExpandedNavigationPropertyScope.ExpandedNavigationPropertyReader.Read();
+
+            // We always have expanded payload or delta payload left to read.
+            return true;
         }
 
         /// <summary>
@@ -1529,6 +1641,15 @@ namespace Microsoft.OData.Core.JsonLight
             return null;
         }
 
+        /// <summary>
+        /// Creates a new scope with Exception state.
+        /// </summary>
+        /// <returns>The newly created scope.</returns>
+        private static Scope CreateExceptionScope()
+        {
+            return new Scope(ODataDeltaReaderState.Exception, null, null, null, null);
+        }
+
         #endregion
 
         #region Scope Classes
@@ -1555,7 +1676,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected entity type for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            internal Scope(ODataDeltaReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
+            public Scope(ODataDeltaReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
             {
                 Debug.Assert(
                     state == ODataDeltaReaderState.Exception && item == null ||
@@ -1564,6 +1685,7 @@ namespace Microsoft.OData.Core.JsonLight
                     (state == ODataDeltaReaderState.DeltaEntryStart || state == ODataDeltaReaderState.DeltaEntryEnd) && (item == null || item is ODataEntry) ||
                     (state == ODataDeltaReaderState.DeltaFeedStart || state == ODataDeltaReaderState.FeedEnd) && item is ODataDeltaFeed ||
                     state == ODataDeltaReaderState.DeltaLink && (item == null || item is ODataDeltaLink) ||
+                    state == ODataDeltaReaderState.ExpandedNavigationProperty && item == null ||
                     state == ODataDeltaReaderState.Start && item == null ||
                     state == ODataDeltaReaderState.Completed && item == null,
                     "Reader state and associated item do not match.");
@@ -1578,7 +1700,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The reader state of this scope.
             /// </summary>
-            internal ODataDeltaReaderState State
+            public ODataDeltaReaderState State
             {
                 get
                 {
@@ -1589,7 +1711,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The item attached to this scope.
             /// </summary>
-            internal ODataItem Item
+            public ODataItem Item
             {
                 get
                 {
@@ -1600,7 +1722,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The odataUri parsed based on the context url to this scope.
             /// </summary>
-            internal ODataUri ODataUri
+            public ODataUri ODataUri
             {
                 get
                 {
@@ -1611,13 +1733,13 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The navigation source we are reading entries from (possibly null).
             /// </summary>
-            internal IEdmNavigationSource NavigationSource { get; private set; }
+            public IEdmNavigationSource NavigationSource { get; private set; }
 
             /// <summary>
             /// The entity type for this scope. Can be either the expected one if the real one
             /// was not found yet, or the one specified in the payload itself (the real one).
             /// </summary>
-            internal IEdmEntityType EntityType { get; set; }
+            public IEdmEntityType EntityType { get; set; }
         }
 
         /// <summary>
@@ -1637,7 +1759,7 @@ namespace Microsoft.OData.Core.JsonLight
             ///   it's the expected base type of the entries in the feed.
             ///   note that it might be a more derived type than the base type of the entity set for the feed.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightDeltaFeedScope(ODataDeltaFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public JsonLightDeltaFeedScope(ODataDeltaFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(ODataDeltaReaderState.DeltaFeedStart, feed, navigationSource, expectedEntityType, odataUri)
             {
                 this.SelectedProperties = selectedProperties;
@@ -1646,7 +1768,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// The selected properties that should be expanded during template evaluation.
             /// </summary>
-            internal SelectedPropertiesNode SelectedProperties { get; private set; }
+            public SelectedPropertiesNode SelectedProperties { get; private set; }
         }
 
         /// <summary>
@@ -1666,7 +1788,7 @@ namespace Microsoft.OData.Core.JsonLight
             ///   it's the expected base type the entries in the expanded link (either the single entry
             ///   or entries in the expanded feed).
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightDeltaLinkScope(ODataDeltaReaderState state, ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
+            public JsonLightDeltaLinkScope(ODataDeltaReaderState state, ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
                 : base(state, link, navigationSource, expectedEntityType, odataUri)
             {
                 Debug.Assert(
@@ -1699,7 +1821,7 @@ namespace Microsoft.OData.Core.JsonLight
             ///   this type will be assumed. Otherwise the specified type name must be
             ///   the expected type or a more derived type.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightDeltaEntryScope(
+            public JsonLightDeltaEntryScope(
                 ODataDeltaReaderState readerState,
                 ODataItem entry,
                 IEdmNavigationSource navigationSource,
@@ -1789,6 +1911,68 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// A reader scope; keeping track of the current reader state and an item associated with this state.
+        /// </summary>
+        private sealed class JsonLightExpandedNavigationPropertyScope : Scope
+        {
+            /// <summary>
+            /// The underlying reader for reading expanded feed or entry.
+            /// </summary>
+            private readonly ODataReader expandedNavigationPropertyReader;
+
+            /// <summary>
+            /// Constructor creating a new reader scope.
+            /// </summary>
+            /// <param name="navigationLinkInfo">The navigation link info attached to this scope.</param>
+            /// <param name="parentNavigationSource">The parent navigation source for the scope.</param>
+            /// <param name="parentEntityType">The parent type for the scope.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            /// <param name="jsonLightInputContext">The input context for Json.</param>
+            /// <remarks>The <paramref name="parentEntityType"/> has the following meaning
+            ///   it's the expected base type the entries in the expanded link (either the single entry
+            ///   or entries in the expanded feed).
+            /// In all cases the specified type must be an entity type.</remarks>
+            public JsonLightExpandedNavigationPropertyScope(ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo, IEdmNavigationSource parentNavigationSource, IEdmEntityType parentEntityType, ODataUri odataUri, ODataJsonLightInputContext jsonLightInputContext)
+                : base(ODataDeltaReaderState.ExpandedNavigationProperty, null /*item*/, parentNavigationSource, parentEntityType, odataUri)
+            {
+                Debug.Assert(navigationLinkInfo != null, "navigationLinkInfo != null");
+                Debug.Assert(navigationLinkInfo.NavigationProperty != null, "navigationLinkInfo.NavigationProperty != null");
+                Debug.Assert(parentNavigationSource != null, "parentNavigationSource != null");
+                Debug.Assert(parentEntityType != null, "parentEntityType != null");
+                Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
+
+                IEdmNavigationSource navigationSource = parentNavigationSource.FindNavigationTarget(navigationLinkInfo.NavigationProperty);
+                IEdmEntityType entityType = navigationLinkInfo.NavigationProperty.ToEntityType();
+                bool readingFeed = navigationLinkInfo.NavigationProperty.Type.IsCollection();
+                this.expandedNavigationPropertyReader = new ODataJsonLightReader(jsonLightInputContext, navigationSource, entityType, readingFeed, readingDelta: true);
+            }
+
+            /// <summary>
+            /// The current state of the underlying expanded navigation property reader.
+            /// </summary>
+            public ODataReaderState SubState
+            {
+                get { return this.expandedNavigationPropertyReader.State; }
+            }
+
+            /// <summary>
+            /// The current item of the underlying expanded navigation property reader.
+            /// </summary>
+            public new ODataItem Item
+            {
+                get { return this.expandedNavigationPropertyReader.Item; }
+            }
+
+            /// <summary>
+            /// The underlying reader for reading expanded feed or entry.
+            /// </summary>
+            public ODataReader ExpandedNavigationPropertyReader
+            {
+                get { return this.expandedNavigationPropertyReader; }
+            }
+        }
+
+        /// <summary>
         /// A reader top-level scope; keeping track of the current reader state and an item associated with this state.
         /// </summary>
         private sealed class JsonLightTopLevelScope : Scope
@@ -1801,7 +1985,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
             ///   it's the expected base type of the top-level entry or entries in the top-level feed.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightTopLevelScope(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+            public JsonLightTopLevelScope(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
                 : base(ODataDeltaReaderState.Start, /*item*/ null, navigationSource, expectedEntityType, null)
             {
             }

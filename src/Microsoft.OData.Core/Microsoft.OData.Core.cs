@@ -92,6 +92,9 @@ namespace Microsoft.OData.Core {
         internal const string ODataWriterCore_InvalidTransitionFromExpandedLink = "ODataWriterCore_InvalidTransitionFromExpandedLink";
         internal const string ODataWriterCore_InvalidTransitionFromCompleted = "ODataWriterCore_InvalidTransitionFromCompleted";
         internal const string ODataWriterCore_InvalidTransitionFromError = "ODataWriterCore_InvalidTransitionFromError";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState = "ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState";
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_OnlyTopLevelFeedsSupportCount = "ODataWriterCore_OnlyTopLevelFeedsSupportCount";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
@@ -645,6 +648,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue = "ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue";
         internal const string ODataJsonLightValueSerializer_MissingTypeNameOnComplex = "ODataJsonLightValueSerializer_MissingTypeNameOnComplex";
         internal const string ODataJsonLightValueSerializer_MissingTypeNameOnCollection = "ODataJsonLightValueSerializer_MissingTypeNameOnCollection";
+        internal const string ODataJsonLightValueSerializer_MissingRawValueOnUntyped = "ODataJsonLightValueSerializer_MissingRawValueOnUntyped";
         internal const string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement = "AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement";
         internal const string AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType = "AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType";
         internal const string AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement = "AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement";
@@ -668,6 +672,11 @@ namespace Microsoft.OData.Core {
         internal const string UriQueryExpressionParser_CloseParenOrOperatorExpected = "UriQueryExpressionParser_CloseParenOrOperatorExpected";
         internal const string UriQueryExpressionParser_CannotCreateStarTokenFromNonStar = "UriQueryExpressionParser_CannotCreateStarTokenFromNonStar";
         internal const string UriQueryExpressionParser_RangeVariableAlreadyDeclared = "UriQueryExpressionParser_RangeVariableAlreadyDeclared";
+        internal const string UriQueryExpressionParser_AsExpected = "UriQueryExpressionParser_AsExpected";
+        internal const string UriQueryExpressionParser_WithExpected = "UriQueryExpressionParser_WithExpected";
+        internal const string UriQueryExpressionParser_UnrecognizedWithVerb = "UriQueryExpressionParser_UnrecognizedWithVerb";
+        internal const string UriQueryExpressionParser_PropertyPathExpected = "UriQueryExpressionParser_PropertyPathExpected";
+        internal const string UriQueryExpressionParser_KeywordOrIdentifierExpected = "UriQueryExpressionParser_KeywordOrIdentifierExpected";
         internal const string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri = "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri";
         internal const string UriQueryPathParser_SyntaxError = "UriQueryPathParser_SyntaxError";
         internal const string UriQueryPathParser_TooManySegments = "UriQueryPathParser_TooManySegments";
@@ -705,8 +714,14 @@ namespace Microsoft.OData.Core {
         internal const string MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease = "MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease";
         internal const string MetadataBinder_IllegalSegmentType = "MetadataBinder_IllegalSegmentType";
         internal const string MetadataBinder_QueryOptionNotApplicable = "MetadataBinder_QueryOptionNotApplicable";
+        internal const string ApplyBinder_AggregateStatementIncompatibleTypeForVerb = "ApplyBinder_AggregateStatementIncompatibleTypeForVerb";
+        internal const string ApplyBinder_UnsupportedAggregateVerb = "ApplyBinder_UnsupportedAggregateVerb";
+        internal const string ApplyBinder_AggregateStatementNotSingleValue = "ApplyBinder_AggregateStatementNotSingleValue";
+        internal const string ApplyBinder_GroupByPropertyNotPropertyAccessValue = "ApplyBinder_GroupByPropertyNotPropertyAccessValue";
+        internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
+        internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
         internal const string FunctionCallBinder_CannotFindASuitableOverload = "FunctionCallBinder_CannotFindASuitableOverload";
-        internal const string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent = "FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent";
+        internal const string FunctionCallBinder_UriFunctionMustHaveHaveNullParent = "FunctionCallBinder_UriFunctionMustHaveHaveNullParent";
         internal const string FunctionCallBinder_CallingFunctionOnOpenProperty = "FunctionCallBinder_CallingFunctionOnOpenProperty";
         internal const string FunctionCallParser_DuplicateParameterOrEntityKeyName = "FunctionCallParser_DuplicateParameterOrEntityKeyName";
         internal const string ODataUriParser_InvalidCount = "ODataUriParser_InvalidCount";

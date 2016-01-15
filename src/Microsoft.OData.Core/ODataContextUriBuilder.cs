@@ -223,7 +223,8 @@ namespace Microsoft.OData.Core
             // at least requires EdmUnknownEntitySet to be present; otherwise validate its navigation
             // path as before.
             if (!contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationPath) ||
-                contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource))
+                contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource) &&
+                string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
                 throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed);
             }

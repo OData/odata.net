@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -100,7 +101,20 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.odataUri != null ? CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand) : null;
+                if (this.odataUri != null)
+                {
+                    // TODO: Figure out how to deal with $select after $apply
+                    if (this.odataUri.Apply != null)
+                    {
+                        return CreateApplyUriSegment(this.odataUri.Apply);
+                    }
+                    else
+                    {
+                        return CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand);
+                    }
+                }
+
+                return null;
             }
         }
 
@@ -296,6 +310,12 @@ namespace Microsoft.OData.Core
                 return enumValue.TypeName;
             }
 
+            var untypedValue = value as ODataUntypedValue;
+            if (untypedValue != null)
+            {
+                return ODataConstants.ContextUriFragmentUntyped;
+            }
+
             ODataPrimitiveValue primitive = value as ODataPrimitiveValue;
             if (primitive == null)
             {
@@ -312,6 +332,16 @@ namespace Microsoft.OData.Core
 
             IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
             return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
+        }
+
+        private static string CreateApplyUriSegment(ApplyClause applyClause)
+        {
+            if (applyClause != null)
+            {
+                return applyClause.GetContextUri();
+            }
+
+            return string.Empty;
         }
 
         #region SelectAndExpand Convert

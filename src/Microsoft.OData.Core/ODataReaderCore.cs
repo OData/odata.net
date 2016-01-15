@@ -29,8 +29,11 @@ namespace Microsoft.OData.Core
         /// <summary>The input to read the payload from.</summary>
         private readonly ODataInputContext inputContext;
 
-        /// <summary>true if the reader was created for reading a feed; false when it was created for reading an entry.</summary>
+        /// <summary>true if the reader is created for reading a feed; false when it is created for reading an entry.</summary>
         private readonly bool readingFeed;
+
+        /// <summary>true if the reader is created for reading expanded navigation property in delta response; false otherwise.</summary>
+        private readonly bool readingDelta;
 
         /// <summary>Stack of reader scopes to keep track of the current context of the reader.</summary>
         private readonly Stack<Scope> scopes = new Stack<Scope>();
@@ -52,16 +55,19 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="inputContext">The input to read the payload from.</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
+        /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCore(
             ODataInputContext inputContext,
             bool readingFeed,
+            bool readingDelta,
             IODataReaderWriterListener listener)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
 
             this.inputContext = inputContext;
             this.readingFeed = readingFeed;
+            this.readingDelta = readingDelta;
             this.listener = listener;
             this.currentEntryDepth = 0;
 
@@ -274,13 +280,15 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns true if we are reading a nested payload, e.g. an entry or a feed within a parameters payload.
+        /// Returns true if we are reading a nested payload,
+        /// e.g. an expanded entry or feed within a delta payload, 
+        /// or an entry or a feed within a parameters payload.
         /// </summary>
         protected bool IsReadingNestedPayload
         {
             get
             {
-                return this.listener != null;
+                return this.readingDelta || this.listener != null;
             }
         }
 
@@ -455,7 +463,7 @@ namespace Microsoft.OData.Core
             IEdmEntityTypeReference targetEntityTypeReference =
                 (IEdmEntityTypeReference)ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.Entity,
-                /*defaultPrimitivePayloadType*/ null,
+                    /*defaultPrimitivePayloadType*/ null,
                     this.CurrentEntityType.ToTypeReference(),
                     entityTypeNameFromPayload,
                     this.inputContext.Model,

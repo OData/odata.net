@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core.Tests
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
             var fullMetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
-            this.operationWithFullBuilder = new TestODataOperation { Metadata = ContextUri};
+            this.operationWithFullBuilder = new TestODataOperation { Metadata = ContextUri };
             this.operationWithFullBuilder.SetMetadataBuilder(fullMetadataBuilder, MetadataDocumentUri);
         }
 

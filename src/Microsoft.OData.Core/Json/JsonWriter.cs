@@ -370,6 +370,16 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
+        /// Write a raw value.
+        /// </summary>
+        /// <param name="rawValue">Raw value to be written.</param>
+        public void WriteRawValue(string rawValue)
+        {
+            this.WriteValueSeparator();
+            this.writer.Write(rawValue);
+        }
+
+        /// <summary>
         /// Clears all buffers for the current writer.
         /// </summary>
         public void Flush()

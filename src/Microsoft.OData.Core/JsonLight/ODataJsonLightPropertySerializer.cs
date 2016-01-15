@@ -190,7 +190,8 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,
                 owningType,
-                !this.bypassValidation);
+                !(this.bypassValidation || this.WritingResponse));
+
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
 
             ODataValue value = property.ODataValue;
@@ -274,6 +275,14 @@ namespace Microsoft.OData.Core.JsonLight
 
                 // passing false for 'isTopLevel' because the outer wrapping object has already been written.
                 this.JsonLightValueSerializer.WriteCollectionValue(collectionValue, propertyTypeReference, isTopLevel, false /*isInUri*/, isOpenPropertyType);
+                return;
+            }
+
+            ODataUntypedValue untypedValue = value as ODataUntypedValue;
+            if (untypedValue != null)
+            {
+                this.JsonWriter.WriteName(wirePropertyName);
+                this.JsonLightValueSerializer.WriteUntypedValue(untypedValue);
             }
             else
             {

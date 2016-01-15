@@ -1221,7 +1221,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             FunctionCallToken functionCallToken = new FunctionCallToken("substring", null, new EndPathToken("Name", null));
             Action bindWithNonNullParent = () => this.functionCallBinder.BindFunctionCall(functionCallToken);
-            bindWithNonNullParent.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("substring"));
+            bindWithNonNullParent.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("substring"));
         }
 
         [Fact]
@@ -1232,7 +1232,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 null,
                 new EndPathToken("Color", new InnerPathToken("MyDog", null, null)));
             Action bindWithNonEntityBindingType = () => this.functionCallBinder.BindFunctionCall(functionCallToken);
-            bindWithNonEntityBindingType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent("ChangeOwner"));
+            bindWithNonEntityBindingType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("ChangeOwner"));
         }
 
         [Fact]

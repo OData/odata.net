@@ -213,7 +213,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return boundFunction;
             }
 
-            // If there isn't, bind as built-in function
+            // If there isn't, bind as Uri function
             // Bind all arguments
             List<QueryNode> argumentNodes = new List<QueryNode>(functionCallToken.Arguments.Select(ar => this.bindMethod(ar)));
             return BindAsUriFunction(functionCallToken, argumentNodes);
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Bind this function call token as a built in function
+        /// Bind this function call token as a Uri function
         /// </summary>
         /// <param name="functionCallToken">the function call token to bind</param>
         /// <param name="argumentNodes">list of semantically bound arguments</param>
@@ -268,13 +268,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             if (functionCallToken.Source != null)
             {
-                // the parent must be null for a built in function.
-                throw new ODataException(ODataErrorStrings.FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent(functionCallToken.Name));
+                // the parent must be null for a Uri function.
+                throw new ODataException(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent(functionCallToken.Name));
             }
 
-            string functionCallTokenName = this.state.Configuration.EnableCaseInsensitiveBuiltinIdentifier ? functionCallToken.Name.ToLowerInvariant() : functionCallToken.Name;
+            string functionCallTokenName = this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier ? functionCallToken.Name.ToLowerInvariant() : functionCallToken.Name;
 
-            // There are some functions (IsOf and Cast for example) that don't necessarily need to be bound to a BuiltInFunctionSignature,
+            // There are some functions (IsOf and Cast for example) that don't necessarily need to be bound to a function signature,
             // for these, we just Bind them directly to a SingleValueFunctionCallNode
             if (IsUnboundFunction(functionCallTokenName))
             {

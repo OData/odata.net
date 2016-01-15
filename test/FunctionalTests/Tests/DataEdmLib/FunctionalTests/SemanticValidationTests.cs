@@ -82,7 +82,7 @@ namespace EdmLibTests.FunctionalTests
                 typeof(IEdmDateValue),
                 typeof(IEdmDateConstantExpression),
                 typeof(IEdmTimeOfDayValue),
-                typeof(IEdmTimeOfDayConstantExpression),
+                typeof(IEdmTimeOfDayConstantExpression)
             };
 
             foreach (Type skip in skips)

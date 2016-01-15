@@ -28,13 +28,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             out ExpandToken expandTree, 
             out SelectToken selectTree)
         {
-            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier)
+            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit
             };
             selectTree = selectParser.ParseSelect();
 
-            SelectExpandParser expandParser = new SelectExpandParser(expandClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(expandClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

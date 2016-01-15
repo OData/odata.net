@@ -5,8 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Core.UriParser.Extensions;
+using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
 using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Core.UriParser.Visitors;
@@ -139,6 +142,30 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken(1)));
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [Fact]
+        public void AggregateOperatorNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new List<AggregateStatementToken>()));
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [Fact]
+        public void AggregateStatementOperatorNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateStatementToken(new EndPathToken("Identifier", null), AggregationVerb.Sum, "Alias"));
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [Fact]
+        public void GroupByOperatorNotImplemented()
+        {
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(new GroupByToken(new List<EndPathToken>(), null));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
     }

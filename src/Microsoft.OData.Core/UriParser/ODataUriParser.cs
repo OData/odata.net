@@ -9,6 +9,7 @@ namespace Microsoft.OData.Core.UriParser
     using System;
     using System.Linq;
     using System.Collections.Generic;
+    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Semantic;
@@ -331,6 +332,16 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Parses the $apply.
+        /// </summary>
+        /// <returns>ApplyClause representing $apply.</returns>
+        public ApplyClause ParseApply()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseApply();
+        }
+
+        /// <summary>
         /// Parses a $skiptoken query option
         /// </summary>
         /// <returns>A value representing that skip token option, null if $skiptoken query does not exist.</returns>
@@ -365,6 +376,7 @@ namespace Microsoft.OData.Core.UriParser
             FilterClause filter = this.ParseFilter();
             OrderByClause orderBy = this.ParseOrderBy();
             SearchClause search = this.ParseSearch();
+            ApplyClause apply = this.ParseApply();
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
             bool? count = this.ParseCount();
@@ -374,7 +386,7 @@ namespace Microsoft.OData.Core.UriParser
             // TODO:  check it shouldn't be empty
             List<QueryNode> boundQueryOptions = new List<QueryNode>();
 
-            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, skip, top, count);
+            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, count);
             odataUri.ServiceRoot = this.serviceRoot;
             odataUri.SkipToken = skipToken;
             odataUri.DeltaToken = deltaToken;

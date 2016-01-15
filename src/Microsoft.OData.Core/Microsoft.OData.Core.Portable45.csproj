@@ -220,6 +220,7 @@
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="ODataErrorDetail.cs" />
+    <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />
     <Compile Include="ODataMediaTypeResolver.cs" />
     <Compile Include="MediaTypeUtils.cs" />
@@ -602,6 +603,20 @@
     <Compile Include="ValidationUtils.cs" />
     <Compile Include="WriterUtils.cs" />
     <Compile Include="WriterValidationUtils.cs" />
+    <Compile Include="UriParser\Extensions\AggregationVerb.cs" />
+    <Compile Include="UriParser\Extensions\Binders\ApplyBinder.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\AggregateTransformationNode.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\TransformationNode.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\FilterTransformationNode.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\AggregateStatement.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\ApplyClause.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\GroupByTransformationNode.cs" />
+    <Compile Include="UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateToken.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\GroupByToken.cs" />
+	<Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
       <Link>EdmValueParser.cs</Link>
     </Compile>
