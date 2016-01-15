@@ -113,5 +113,8 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
 
         /// <summary>TimeOfDay literal.</summary>
         TimeOfDayLiteral = 34,
+
+        /// <summary>CustomType Literal.</summary>
+        CustomTypeLiteral = 35
     }
 }

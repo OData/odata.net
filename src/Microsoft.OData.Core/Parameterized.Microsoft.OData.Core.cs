@@ -5471,10 +5471,10 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The given custom function '{0}' already exists as a Built-In function. Consider use 'OverrideBuiltInFunction = true' parameter."
+        /// A string like "The given custom function '{0}' already exists as a Built-In function. Consider use 'addAsOverloadToBuiltInFunction = true' parameter."
         /// </summary>
-        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNoOverride, p0);
+        internal static string CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload, p0);
         }
 
         /// <summary>
@@ -5773,6 +5773,29 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string UriQueryExpressionParser_UnrecognizedLiteralWithReason(object p0, object p1, object p2, object p3, object p4) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_UnrecognizedLiteralWithReason, p0, p1, p2, p3, p4);
+        }
+
+        /// <summary>
+        /// A string like "The given uri custom type parser already exists."
+        /// </summary>
+        internal static string UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
+            }
+        }
+
+        /// <summary>
+        /// A string like "An existing custom UriTypePraser is already registered to the given EdmTypeReference '{0}'."
+        /// </summary>
+        internal static string UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given type literal prefix '{0}' already exists as a custom uri type literal prefix."
+        /// </summary>
+        internal static string CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, p0);
         }
 
         /// <summary>

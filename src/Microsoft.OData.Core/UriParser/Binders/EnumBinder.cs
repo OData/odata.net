@@ -17,6 +17,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
 
     /// <summary>
     /// Enum binder
@@ -95,8 +96,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             // now, find out the value
-            UriPrimitiveTypeParser.TryRemovePrefix(namespaceAndType, ref text);
-            UriPrimitiveTypeParser.TryRemoveQuotes(ref text);
+            UriParserHelper.TryRemovePrefix(namespaceAndType, ref text);
+            UriParserHelper.TryRemoveQuotes(ref text);
 
             // parse string or int value to edm enum value
             string enumValueString = text;

@@ -15,6 +15,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -104,37 +106,27 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             switch (lexer.CurrentToken.Kind)
             {
                 case ExpressionTokenKind.BooleanLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetBoolean(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName);
                 case ExpressionTokenKind.DateLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetDate(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTypeName);
-                case ExpressionTokenKind.DateTimeOffsetLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName);
+                case ExpressionTokenKind.DecimalLiteral:
+                case ExpressionTokenKind.StringLiteral:
+                case ExpressionTokenKind.Int64Literal:
+                case ExpressionTokenKind.IntegerLiteral:
+                case ExpressionTokenKind.DoubleLiteral:
+                case ExpressionTokenKind.SingleLiteral:
+                case ExpressionTokenKind.GuidLiteral:
+                case ExpressionTokenKind.BinaryLiteral:
+                case ExpressionTokenKind.GeographyLiteral:
+                case ExpressionTokenKind.GeometryLiteral:
+                case ExpressionTokenKind.QuotedLiteral:
+                case ExpressionTokenKind.CustomTypeLiteral:
+                    IEdmTypeReference literalEdmTypeReference = lexer.CurrentToken.GetLiteralEdmTypeReference();
+
+                    // Why not using EdmTypeReference.FullName? (literalEdmTypeReference.FullName)                  
+                    string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
+                    return ParseTypedLiteral(lexer, literalEdmTypeReference, edmConstantName);
                 case ExpressionTokenKind.DurationLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDurationTypeName);
-                case ExpressionTokenKind.DecimalLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetDecimal(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDecimalTypeName);
-                case ExpressionTokenKind.NullLiteral:
-                    return ParseNullLiteral(lexer);
-                case ExpressionTokenKind.StringLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetString(true), Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName);
-                case ExpressionTokenKind.Int64Literal:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetInt64(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmInt64TypeName);
-                case ExpressionTokenKind.IntegerLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetInt32(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmInt32TypeName);
-                case ExpressionTokenKind.DoubleLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetDouble(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDoubleTypeName);
-                case ExpressionTokenKind.SingleLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetSingle(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmSingleTypeName);
-                case ExpressionTokenKind.GuidLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetGuid(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmGuidTypeName);
-                case ExpressionTokenKind.BinaryLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetBinary(true), Microsoft.OData.Core.Metadata.EdmConstants.EdmBinaryTypeName);
-                case ExpressionTokenKind.GeographyLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmGeographyTypeName);
-                case ExpressionTokenKind.GeometryLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geometry, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmGeometryTypeName);
-                case ExpressionTokenKind.QuotedLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetString(true), Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName);
+
                 case ExpressionTokenKind.BracketedExpression:
                     {
                         // TODO: need a BracketLiteralToken for real complex type vaule like [\"Barky\",\"Junior\"]  or {...}
@@ -145,8 +137,52 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 case ExpressionTokenKind.TimeOfDayLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmTimeOfDayTypeName);
+                case ExpressionTokenKind.DateTimeOffsetLiteral:
+                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName);
+                case ExpressionTokenKind.NullLiteral:
+                    return ParseNullLiteral(lexer);
+
                 default:
                     return null;
+            }
+        }
+
+        internal static string GetEdmConstantNames(IEdmTypeReference edmTypeReference)
+        {
+            Debug.Assert(edmTypeReference != null, "Cannot be null");
+            
+            switch (edmTypeReference.PrimitiveKind())
+            {
+                case EdmPrimitiveTypeKind.Boolean:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName;
+                case EdmPrimitiveTypeKind.Date:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTypeName;
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName;
+                case EdmPrimitiveTypeKind.Duration:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDurationTypeName;
+                case EdmPrimitiveTypeKind.Decimal:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDecimalTypeName;
+                case EdmPrimitiveTypeKind.String:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName;
+                case EdmPrimitiveTypeKind.Int64:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmInt64TypeName;
+                case EdmPrimitiveTypeKind.Int32:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmInt32TypeName;
+                case EdmPrimitiveTypeKind.Double:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDoubleTypeName;
+                case EdmPrimitiveTypeKind.Single:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmSingleTypeName;
+                case EdmPrimitiveTypeKind.Guid:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGuidTypeName;
+                case EdmPrimitiveTypeKind.Binary:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmBinaryTypeName;
+                case EdmPrimitiveTypeKind.Geography:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGeographyTypeName;
+                case EdmPrimitiveTypeKind.Geometry:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGeometryTypeName;
+                default:
+                    return edmTypeReference.Definition.FullTypeName();
             }
         }
 
@@ -249,6 +285,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new ODataException(message);
         }
 
+
+        /// <summary>Creates an exception for a parse error.</summary>
+        /// <param name="message">Message text.</param>
+        /// <param name="parseException">Type Parsing exception</param>
+        /// <returns>A new Exception.</returns>
+        private static Exception ParseError(string message, UriTypeParsingException parseException)
+        {
+            return new ODataException(message, parseException);
+        }
+
         /// <summary>
         /// Parses parameter alias into token.
         /// </summary>
@@ -269,23 +315,26 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="targetTypeReference">Expected type to be parsed.</param>
         /// <param name="targetTypeName">The EDM type name of the expected type to be parsed.</param>
         /// <returns>The literal token produced by building the given literal.</returns>
-        private static LiteralToken ParseTypedLiteral(ExpressionLexer lexer, IEdmPrimitiveTypeReference targetTypeReference, string targetTypeName)
+        private static LiteralToken ParseTypedLiteral(ExpressionLexer lexer, IEdmTypeReference targetTypeReference, string targetTypeName)
         {
             Debug.Assert(lexer != null, "lexer != null");
 
-            object targetValue;
-            string reason;
-            if (!UriPrimitiveTypeParser.TryUriStringToPrimitive(lexer.CurrentToken.Text, targetTypeReference, out targetValue, out reason))
+            UriTypeParsingException typeParsingExcpetion;
+            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(lexer.CurrentToken.Text, targetTypeReference, out typeParsingExcpetion);
+
+            if (targetValue == null)
             {
                 string message;
 
-                if (reason == null)
+                if (typeParsingExcpetion == null)
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeName,
                         lexer.CurrentToken.Text,
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText);
+
+                    throw ParseError(message);
                 }
                 else
                 {
@@ -294,10 +343,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         lexer.CurrentToken.Text,
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText,
-                        reason);
-                }
+                        typeParsingExcpetion.ParsingFailureReason);
 
-                throw ParseError(message);
+                    throw ParseError(message, typeParsingExcpetion);
+                }
             }
 
             LiteralToken result = new LiteralToken(targetValue, lexer.CurrentToken.Text);
