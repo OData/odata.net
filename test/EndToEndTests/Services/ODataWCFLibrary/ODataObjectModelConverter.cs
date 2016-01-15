@@ -138,6 +138,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 link.Id = Url;
             }
 
+            // This is workaround now to make Photo/$ref works or it will fail validation as it is MediaEntity but no stream
+            if (Utility.IsMediaEntity(element.GetType()))
+            {
+                var streamProvider = DataSourceManager.GetCurrentDataSource().StreamProvider;
+                link.MediaResource = new ODataStreamReferenceValue()
+                {
+                    ContentType = streamProvider.GetContentType(element),
+                    ETag = streamProvider.GetETag(element),
+                };
+            }
             return link;
         }
 

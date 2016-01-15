@@ -2023,7 +2023,6 @@ namespace AstoriaUnitTests.Tests
                             "/Items(1)?$expand=Icon/$value", 
                             "/Items(1)?$expand=Icon/$count", 
                             //"/Items(1)?$expand=Icon/Name", 
-                            "/Items(1)?$expand=*", 
                     })
                     {
                         Exception e = SendRequest(typeof(PhotoDataService), request, "GET", queryString, null, null, null, null, null, null, 400);

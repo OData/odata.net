@@ -5264,6 +5264,38 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Term '{0}' is not valid in a $expand expression, as only level option is allowed when expand navigation property is star."
+        /// </summary>
+        internal static string UriExpandParser_TermIsNotValidForStar(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_TermIsNotValidForStar, p0);
+        }
+
+        /// <summary>
+        /// A string like "Term '{0}' is not valid in a $expand expression, no option is allowed when expand navigation property is */$ref."
+        /// </summary>
+        internal static string UriExpandParser_TermIsNotValidForStarRef(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_TermIsNotValidForStarRef, p0);
+        }
+
+        /// <summary>
+        /// A string like "Can not get parent entity type for Term '{0}' to auto populate all navigation properties."
+        /// </summary>
+        internal static string UriExpandParser_ParentEntityIsNull(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_ParentEntityIsNull, p0);
+        }
+
+        /// <summary>
+        /// A string like "Term '{0}' is not valid in a $expand expression as multiple stars are not allowed."
+        /// </summary>
+        internal static string UriExpandParser_TermWithMultipleStarNotAllowed(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriExpandParser_TermWithMultipleStarNotAllowed, p0);
+        }
+
+        /// <summary>
         /// A string like "Term '{0}' is not valid in a $select or $expand expression."
         /// </summary>
         internal static string UriSelectParser_TermIsNotValid(object p0) {
@@ -5802,6 +5834,38 @@ namespace Microsoft.OData.Core {
         internal static string ExceptionUtils_ArgumentStringNullOrEmpty {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExceptionUtils_ArgumentStringNullOrEmpty);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Only $ref is allowed with star in expand option."
+        /// </summary>
+        internal static string ExpressionToken_OnlyRefAllowWithStarInExpand
+        {          
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpressionToken_OnlyRefAllowWithStarInExpand);
+            }
+        }
+
+        /// <summary>
+        /// A string like "No property is allowed after $ref segment."
+        /// </summary>
+        internal static string ExpressionToken_NoPropAllowedAfterRef
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpressionToken_NoPropAllowedAfterRef);
+            }
+        }
+
+        /// <summary>
+        /// A string like "No segment is allowed before star in $expand."
+        /// </summary>
+        internal static string ExpressionToken_NoSegmentAllowedBeforeStarInExpand
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
             }
         }
 

@@ -364,8 +364,8 @@ namespace Microsoft.OData.Core.UriParser
             ExpandToken expandTree;
             SelectToken selectTree;
 
-            // syntactic pass
-            SelectExpandSyntacticParser.Parse(select, expand, configuration, out expandTree, out selectTree);
+            // syntactic pass , pass in the expand parent entity type name, in case expand option contains star, will get all the parent entity navigation properties (both declared and dynamical).
+            SelectExpandSyntacticParser.Parse(select, expand, elementType, configuration, out expandTree, out selectTree);
 
             // semantic pass
             SelectExpandSemanticBinder binder = new SelectExpandSemanticBinder();

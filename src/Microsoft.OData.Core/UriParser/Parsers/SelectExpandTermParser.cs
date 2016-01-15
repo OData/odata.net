@@ -111,9 +111,25 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A parsed PathSegmentToken representing the next segment in this path.</returns>
         private PathSegmentToken ParseSegment(PathSegmentToken previousSegment, bool allowRef)
         {
+            // TODO $count is defined in specification for expand, it is not supported now. Also note $count is not supported with star as expand option.
             if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal) && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment))
             {
                 throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text, this.lexer.ExpressionText));
+            }
+
+            // Some check here to throw exception, both prop1/*/prop2 and */$ref/prop will throw exception, both are for $expand cases
+            if (!isSelect)
+            {
+                if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && this.lexer.CurrentToken.GetIdentifier() != UriQueryConstants.RefSegment)
+                {
+                    // Star can only be followed with $ref
+                    throw new ODataException(ODataErrorStrings.ExpressionToken_OnlyRefAllowWithStarInExpand);
+                }
+                else if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.RefSegment)
+                {
+                    // $ref should not have more property followed.
+                    throw new ODataException(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
+                }
             }
 
             string propertyName;
@@ -124,11 +140,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
             else if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Star)
             {
-                if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash)
+                // "*/$ref" is supported in expand
+                if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash && isSelect)
                 {
                     throw new ODataException(ODataErrorStrings.ExpressionToken_IdentifierExpected(this.lexer.Position));
                 }
-
+                else if (previousSegment != null && !isSelect)
+                {
+                    // expand option like "customer?$expand=VIPCUstomer/*" is not allowed as specification does not allowed any property before *.
+                    throw new ODataException(ODataErrorStrings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
+                }
+                
                 propertyName = this.lexer.CurrentToken.Text;
                 this.lexer.NextToken();
             }

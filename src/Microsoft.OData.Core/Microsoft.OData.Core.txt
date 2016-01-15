@@ -832,6 +832,10 @@ Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An inst
 
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
 
+UriExpandParser_TermIsNotValidForStar=Term '{0}' is not valid in a $expand expression, as only $level option is allowed when the expanded navigation property is star.
+UriExpandParser_TermIsNotValidForStarRef=Term '{0}' is not valid in a $expand expression, no option is allowed when the expanded navigation property is */$ref.
+UriExpandParser_ParentEntityIsNull=Cannot get parent entity type for term '{0}' to auto populate all navigation properties.
+UriExpandParser_TermWithMultipleStarNotAllowed=Term '{0}' is not valid in a $expand expression as multiple stars are not allowed.
 UriSelectParser_TermIsNotValid=Term '{0}' is not valid in a $select or $expand expression.
 UriSelectParser_InvalidTopOption=Top option must be a non-negative integer, it is set to '{0}' instead.
 UriSelectParser_InvalidSkipOption=Skip option must be a non-negative integer, it is set to '{0}' instead.
@@ -920,6 +924,9 @@ ExceptionUtils_CheckIntegerPositive=A positive integer value was expected, but t
 ExceptionUtils_CheckLongPositive=A positive long value was expected; however, the value '{0}' is not a valid positive long value.
 ExceptionUtils_ArgumentStringNullOrEmpty=Value cannot be null or empty.
 
+ExpressionToken_OnlyRefAllowWithStarInExpand=Only $ref is allowed with star in $expand option.
+ExpressionToken_NoPropAllowedAfterRef=No property is allowed after $ref segment.
+ExpressionToken_NoSegmentAllowedBeforeStarInExpand=No segment is allowed before star in $expand.
 ExpressionToken_IdentifierExpected=An identifier was expected at position {0}.
 
 ExpressionLexer_UnterminatedStringLiteral=There is an unterminated string literal at position {0} in '{1}'.
