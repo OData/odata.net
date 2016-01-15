@@ -7,15 +7,14 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Net;
     using System.Text;
     using System.Web;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
+    using Microsoft.Spatial;
 
     /// <summary>
     /// Class for handling incoming client query requests.
@@ -217,6 +216,92 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     deltaWriter.WriteStart(navigationEntry);
                     deltaWriter.WriteEnd();
                     deltaWriter.WriteDeltaDeletedEntry(deletedEntry);
+                    deltaWriter.WriteEnd();
+                }
+            }
+            else if (deltaToken == "expanded")
+            {
+                originalUri = new Uri(ServiceConstants.ServiceBaseUri, "Customers?$expand=Orders");
+                using (var messageWriter = this.CreateMessageWriter(responseMessage))
+                {
+                    var customerSet = this.DataSource.Model.FindDeclaredEntitySet("Customers");
+                    var orderSet = this.DataSource.Model.FindDeclaredEntitySet("Orders");
+                    var peopleSet = this.DataSource.Model.FindDeclaredEntitySet("People");
+                    var customerType = customerSet.EntityType();
+                    ODataDeltaWriter deltaWriter = messageWriter.CreateODataDeltaWriter(customerSet, customerType);
+
+                    // Delta feed and entry
+                    var deltaFeed = new ODataDeltaFeed
+                    {
+                        DeltaLink = new Uri(ServiceConstants.ServiceBaseUri, "$delta?$token=expanded")
+                    };
+                    var deltaEntry = new ODataEntry
+                    {
+                        Id = new Uri(ServiceConstants.ServiceBaseUri, customerSet.Name + "(1)"),
+                        Properties = new[] { new ODataProperty { Name = "FirstName", Value = "GGGG" } }
+                    };
+
+                    // Expanded feed
+                    var navigationLink = new ODataNavigationLink()
+                    {
+                        Name = "Orders",
+                        IsCollection = true,
+                    };
+                    var expandedFeed = new ODataFeed();
+                    var expandedEntry = new ODataEntry
+                    {
+                        Id = new Uri(ServiceConstants.ServiceBaseUri, orderSet.Name + "(8)"),
+                        Properties = new[]
+                        {
+                            new ODataProperty { Name = "OrderDate", Value = new DateTimeOffset(2011, 3, 4, 16, 03, 57, TimeSpan.FromHours(-8)) },
+                            new ODataProperty { Name = "OrderID", Value = 8 },
+                            new ODataProperty { Name = "OrderShelfLifes", Value = new ODataCollectionValue { Items = new[] { new TimeSpan(1) } } },
+                            new ODataProperty { Name = "ShelfLife", Value = new TimeSpan(1) },
+                            new ODataProperty { Name = "ShipDate", Value = new Date(2014, 8, 12) },
+                            new ODataProperty { Name = "ShipTime", Value = new TimeOfDay(6, 5, 30, 0) },
+                        }
+                    };
+
+                    // Expanded entry
+                    var navigationLinkSingle = new ODataNavigationLink()
+                    {
+                        Name = "Parent",
+                        IsCollection = false,
+                    };
+                    var expandedEntrySingle = new ODataEntry
+                    {
+                        Id = new Uri(ServiceConstants.ServiceBaseUri, peopleSet.Name + "(2)"),
+                        Properties = new[]
+                        {
+                            new ODataProperty { Name = "FirstName", Value = "Jill" },
+                            new ODataProperty { Name = "LastName", Value = "Jones" },
+                            new ODataProperty { Name = "Numbers", Value = new ODataCollectionValue() },
+                            new ODataProperty { Name = "Emails", Value = new ODataCollectionValue() },
+                            new ODataProperty { Name = "PersonID", Value = 2 },
+                            new ODataProperty { Name = "Home", Value = GeographyPoint.Create(15.0, 161.8) },
+                        }
+                    };
+
+                    // Delta feed and entry
+                    deltaWriter.WriteStart(deltaFeed);
+                    deltaWriter.WriteStart(deltaEntry);
+
+                    // Expanded feed
+                    deltaWriter.WriteStart(navigationLink);
+                    deltaWriter.WriteStart(expandedFeed);
+                    deltaWriter.WriteStart(expandedEntry);
+                    deltaWriter.WriteEnd();
+                    deltaWriter.WriteEnd();
+                    deltaWriter.WriteEnd();
+
+                    // Expanded entry
+                    deltaWriter.WriteStart(navigationLinkSingle);
+                    deltaWriter.WriteStart(expandedEntrySingle);
+                    deltaWriter.WriteEnd();
+                    deltaWriter.WriteEnd();
+
+                    // Delta feed and entry
+                    deltaWriter.WriteEnd();
                     deltaWriter.WriteEnd();
                 }
             }
