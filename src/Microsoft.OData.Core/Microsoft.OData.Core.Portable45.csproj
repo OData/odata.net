@@ -420,6 +420,7 @@
     <Compile Include="UriParser\Binders\UnaryOperatorBinder.cs" />
     <Compile Include="UriParser\BuiltInUriFunctions.cs" />
     <Compile Include="UriParser\CustomUriFunctions.cs" />
+    <Compile Include="UriParser\CustomUriTypePrefixLiterals.cs" />
     <Compile Include="UriParser\ExceptionUtil.cs" />
     <Compile Include="UriParser\ExpressionLexer.cs" />
     <Compile Include="UriParser\ExpressionLexerLiteralExtensions.cs" />
@@ -463,8 +464,13 @@
     <Compile Include="UriParser\Parsers\SelectExpandParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandSyntacticParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandTermParser.cs" />
+    <Compile Include="UriParser\Parsers\TypeParsers\Common\IUriTypeParser.cs" />
+    <Compile Include="UriParser\Parsers\TypeParsers\Common\UriTypeParsingException.cs" />
+    <Compile Include="UriParser\Parsers\TypeParsers\DefaultUriTypeParser.cs" />
+    <Compile Include="UriParser\Parsers\TypeParsers\UriCustomTypeParsers.cs" />
+    <Compile Include="UriParser\Parsers\TypeParsers\UriPrimitiveTypeParser.cs" />
+    <Compile Include="UriParser\Parsers\UriParserHelper.cs" />
     <Compile Include="UriParser\Parsers\UriPathParser.cs" />
-    <Compile Include="UriParser\Parsers\UriPrimitiveTypeParser.cs" />
     <Compile Include="UriParser\Parsers\UriQueryExpressionParser.cs" />
     <Compile Include="UriParser\Parsers\UriTemplateParser.cs" />
     <Compile Include="UriParser\QueryNodeUtils.cs" />
@@ -616,7 +622,7 @@
     <Compile Include="UriParser\Extensions\SyntacticAst\AggregateToken.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\GroupByToken.cs" />
-	<Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
+    <Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
       <Link>EdmValueParser.cs</Link>
     </Compile>

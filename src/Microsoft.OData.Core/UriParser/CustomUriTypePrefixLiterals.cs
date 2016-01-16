@@ -21,13 +21,13 @@ namespace Microsoft.OData.Core.UriParser
     /// Extends the uri parsing system of Literal Prefix.
     /// With this class, you can add a custom literal prefix for any EdmType.
     /// </summary>
-    public class CustomUriTypePrefixLiterals
+    public static class CustomUriTypePrefixLiterals
     {
         #region Fields
 
         private static Dictionary<string, IEdmTypeReference> PrefixLiteralsOfEdmTypes;
 
-        private static object Locker;
+        private static readonly object Locker;
 
         #endregion
 

@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
     /// <summary>
     /// Parser which consumes the URI format of primitive types and converts it to primitive types.
     /// </summary>
-    internal class UriPrimitiveTypeParser : IUriTypeParser
+    internal sealed class UriPrimitiveTypeParser : IUriTypeParser
     {
         #region Singletons
 

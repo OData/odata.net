@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;

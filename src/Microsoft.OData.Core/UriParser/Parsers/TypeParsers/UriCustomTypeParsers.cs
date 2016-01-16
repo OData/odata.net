@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
@@ -25,7 +24,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
     /// Add a UriCustomTypeParser thourgh this class.
     /// This class is also used as an UriTypeParser.
     /// </summary>
-    public class UriCustomTypeParsers : IUriTypeParser
+    public sealed class UriCustomTypeParsers : IUriTypeParser
     {
         #region Fields
 
@@ -35,7 +34,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         /// </summary>
         private static List<IUriTypeParser> CustomUriTypeParsers;
 
-        private static object Locker = new object();
+        private static readonly object Locker = new object();
 
         /// <summary>
         /// "Registered" UriTypeParser to an EdmType. These parses will be called when the text has to be parsed to the
@@ -234,7 +233,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
 
         #endregion
 
-        private class UriTypeParserPerEdmType
+        private sealed class UriTypeParserPerEdmType
         {
             internal IEdmTypeReference EdmTypeOfUriParser { get; set; }
 

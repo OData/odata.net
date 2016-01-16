@@ -12,13 +12,11 @@ using FluentAssertions;
 using Xunit;
 using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-//[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Test the public API of UriCustomTypeParser class
     /// </summary>
-    //[Collection("as")]
     public class UriCustomTypeParserUnitTests
     {
         #region Consts
@@ -294,7 +292,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 // Add again as general TypeParser (with no specific EdmType)
                 UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
 
-
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
             }
@@ -417,11 +414,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
             IEdmTypeReference intTypeReference = EdmCoreModel.Instance.GetInt32(false);
 
-
             UriCustomTypeParsers.AddCustomUriTypeParser(customIntBooleanUriTypePraser);
             UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customIntBooleanUriTypePraser);
             UriCustomTypeParsers.AddCustomUriTypeParser(intTypeReference, customIntBooleanUriTypePraser);
-
 
             bool isRemoved = UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntBooleanUriTypePraser);
             isRemoved.Should().BeTrue();
@@ -859,7 +854,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             output.Should().BeNull();
         }
 
-
         #endregion
 
         #region Custom Type Parsers
@@ -919,11 +913,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 {
                     return 55;
                 }
-                //else
-                //{
-                //    parsingException = new UriTypeParsingException("Failed to convert int.", "Value must be bla bla bla");
-                //    return null;
-                //}
 
                 return null;
             }
@@ -999,32 +988,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 return null;
             }
         }
-
-        //internal class MyCustomIntToStringUriTypeParser : IUriTypeParser
-        //{
-        //    public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
-        //    {
-        //        parsingException = null;
-
-        //        if (!targetType.IsEquivalentTo(EdmCoreModel.Instance.GetString(true)))
-        //        {
-        //            return null;
-        //        }
-        //        if (text == null)
-        //        {
-        //            return null;
-        //        }
-
-        //        int textIntValue;
-        //        // Simulates a bug in a client Parser
-        //        if (int.TryParse(text, out textIntValue))
-        //        {
-        //            return text;
-        //        }
-
-        //        return null;
-        //    }
-        //}
 
         internal class HeatBeatCustomUriTypeParser : IUriTypeParser
         {

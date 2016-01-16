@@ -13,19 +13,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks; 
 
     #endregion
 
-#if ORCAS
-    [Serializable]
-#endif
+////#if ORCAS // Not working in .Net3.5 solution, why ??
+////    [Serializable]
+////#endif
+
     /// <summary>
     /// Throw this expcetion when the parser can parse the target type but failed to do so.
     /// Do not throw when parser is not able to parse the target type.
     /// </summary>
     [DebuggerDisplay("{Message};{ParsingFailureReason}")]
-    public class UriTypeParsingException : ODataException
+    public sealed class UriTypeParsingException : ODataException
     {
         /// <summary>
         /// Creates an Excpetion when parsing is failed

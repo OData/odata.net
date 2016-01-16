@@ -90,7 +90,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(VALID_TYPE_PREFIX_LITERAL_LETTERS);
                 CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(VALID_TYPE_PREFIX_LITERAL_POINT);
             }
-
         }
 
         // AddCustom type prefix literal
@@ -162,7 +161,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             {
                 CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(FIRST_TYPE_PREFIX_LITERAL).Should().BeTrue();
                 CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(SECOND_TYPE_PREFIX_LITERAL).Should().BeTrue();
-
             }
         }
 
