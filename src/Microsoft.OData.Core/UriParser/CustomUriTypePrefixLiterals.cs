@@ -11,8 +11,8 @@ namespace Microsoft.OData.Core.UriParser
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion

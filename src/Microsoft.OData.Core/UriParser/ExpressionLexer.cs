@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -15,8 +16,8 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 

@@ -15,11 +15,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
     using System.Text;
     using System.Xml;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces

@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
 {
-    #region NameSpaces
+    #region Namespaces
 
     using System;
     using System.Collections.Generic;
