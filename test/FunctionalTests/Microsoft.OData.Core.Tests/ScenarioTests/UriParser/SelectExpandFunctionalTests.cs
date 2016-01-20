@@ -461,7 +461,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         {
             const string expandClauseText = "MyDog/$ref/MyPeople";
             Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+            readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
         }
 
         [Fact]

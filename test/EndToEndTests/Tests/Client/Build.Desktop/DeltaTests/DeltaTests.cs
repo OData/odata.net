@@ -142,6 +142,62 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
         }
 
         [TestMethod]
+        public void RequestDeltaLink_Expanded()
+        {
+            var customersSet = Model.FindDeclaredEntitySet("Customers");
+            var customerType = customersSet.EntityType();
+
+            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
+
+            foreach (var mimeType in deltaMimeTypes)
+            {
+                var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "$delta?$token=expanded", UriKind.Absolute));
+                requestMessage.SetHeader("Accept", mimeType);
+                var responseMessage = requestMessage.GetResponse();
+                Assert.AreEqual(200, responseMessage.StatusCode);
+
+                // Currently don't test full metadata because the delta reader doesn't support reading
+                // annotations on expanded navigation properties, metadata reference properties and paging.
+                if (mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata))
+                {
+                    using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
+                    {
+                        var deltaReader = messageReader.CreateODataDeltaReader(customersSet, customerType);
+
+                        while (deltaReader.Read())
+                        {
+                            if (deltaReader.State == ODataDeltaReaderState.FeedEnd)
+                            {
+                                Assert.IsNotNull(deltaReader.Item as ODataDeltaFeed);
+                            }
+                            else if (deltaReader.State == ODataDeltaReaderState.DeltaEntryEnd)
+                            {
+                                Assert.IsNotNull(deltaReader.Item as ODataEntry);
+                            }
+                            else if (deltaReader.State == ODataDeltaReaderState.ExpandedNavigationProperty)
+                            {
+                                switch (deltaReader.SubState)
+                                {
+                                    case ODataReaderState.FeedEnd:
+                                        Assert.IsNotNull(deltaReader.Item as ODataFeed);
+                                        break;
+                                    case ODataReaderState.EntryEnd:
+                                        Assert.IsNotNull(deltaReader.Item as ODataEntry);
+                                        break;
+                                    case ODataReaderState.NavigationLinkEnd:
+                                        Assert.IsNotNull(deltaReader.Item as ODataNavigationLink);
+                                        break;
+                                }
+                            }
+                        }
+
+                        Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void RequestDeltaLink_Projection()
         {
             var customersSet = Model.FindDeclaredEntitySet("Customers");

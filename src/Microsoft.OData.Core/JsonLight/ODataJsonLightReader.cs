@@ -496,7 +496,13 @@ namespace Microsoft.OData.Core.JsonLight
                 this.topLevelScope.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
 
                 bool isReordering = this.jsonLightInputContext.JsonReader is ReorderingJsonReader;
-                this.jsonLightEntryAndFeedDeserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, /*forFeedStart*/true, /*readAllFeedProperties*/isReordering);
+                if (!this.IsReadingNestedPayload)
+                {
+                    // Skip top-level feed annotations for nested feeds.
+                    this.jsonLightEntryAndFeedDeserializer.ReadTopLevelFeedAnnotations(
+                        feed, duplicatePropertyNamesChecker, /*forFeedStart*/true, /*readAllFeedProperties*/isReordering);
+                }
+
                 this.ReadFeedStart(feed, selectedProperties);
                 return true;
             }

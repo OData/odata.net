@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Parse the raw select and expand clause syntax.
@@ -16,14 +17,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Parse the raw select and expand strings into Abstract Syntax Trees
         /// </summary>
-        /// <param name="selectClause">The raw select string</param>
+        /// <param name="selectClause">the raw select string</param>
         /// <param name="expandClause">the raw expand string</param>
-        /// <param name="configuration">Configuration parameters</param>
+        /// <param name="parentEntityType">the parent entity type for expand option</param>
+        /// <param name="configuration">the OData URI parser configuration</param>
         /// <param name="expandTree">the resulting expand AST</param>
         /// <param name="selectTree">the resulting select AST</param>
         public static void Parse(
             string selectClause, 
-            string expandClause, 
+            string expandClause,
+            IEdmStructuredType parentEntityType,
             ODataUriParserConfiguration configuration, 
             out ExpandToken expandTree, 
             out SelectToken selectTree)
@@ -34,7 +37,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             };
             selectTree = selectParser.ParseSelect();
 
-            SelectExpandParser expandParser = new SelectExpandParser(expandClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expandClause, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

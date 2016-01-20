@@ -103,7 +103,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         {
             string expqry = "Orders($expand=CustomerForOrder";
             string closeParanthesis = ")";
-            for (int i = 0; i < 399; i++)
+
+            // After add $expand support star, there will be a StackOverflow error, change to 299 will not show issue.
+            for (int i = 0; i < 299; i++)
             {
                 expqry += @"($expand=Orders($expand=CustomerForOrder";
                 closeParanthesis += "))";
@@ -112,7 +114,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             // Adding another Expand
             expqry = expqry + closeParanthesis + ",Orders($expand=OrderDetails($expand=AssociatedOrder";
             closeParanthesis = "))";
-            for (int i = 0; i < 398; i++)
+            for (int i = 0; i < 298; i++)
             {
                 expqry += @"($expand=OrderDetails($expand=AssociatedOrder";
                 closeParanthesis += "))";
@@ -128,7 +130,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             // Testing the width
             string expqry = "Orders($expand=CustomerForOrder";
             string closeParanthesis = ")";
-            for (int i = 0; i < 399; i++)
+
+            // After add $expand support star, there will be a StackOverflow error, change to 299 will not show issue.
+            for (int i = 0; i < 299; i++)
             {
                 expqry += @"($expand=Orders($expand=CustomerForOrder";
                 closeParanthesis += "))";

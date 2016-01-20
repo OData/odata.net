@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             ExpandOptionParser optionParser = new ExpandOptionParser(5);
             var termToken = optionParser.BuildExpandTermToken(pathToken, "");
 
-            termToken.PathToNavProp.Should().Be(pathToken);
+            termToken.ElementAt(0).PathToNavProp.Should().Be(pathToken);
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 MaxSearchDepth = 9,
                 MaxOrderByDepth = 9
             };
-            return optionParser.BuildExpandTermToken(pathToken, optionsText);
+            return optionParser.BuildExpandTermToken(pathToken, optionsText).ElementAt(0);
         }
     }
 }

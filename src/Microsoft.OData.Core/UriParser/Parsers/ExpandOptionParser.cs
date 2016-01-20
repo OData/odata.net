@@ -8,8 +8,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm;
+    using Microsoft.Spatial;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -19,6 +23,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// </summary>
     internal sealed class ExpandOptionParser
     {
+        /// <summary>
+        /// The URI resolver which will resolve different kinds of Uri parsing context
+        /// </summary>
+        private readonly ODataUriResolver resolver;
+
+        /// <summary>
+        /// The parent entity type for expand option in case expand option is star, get all parent navigation properties
+        /// </summary>
+        private readonly IEdmStructuredType parentEntityType;
+        
         /// <summary>
         /// Max recursion depth. As we recurse, each new instance of this class will have this lowered by 1.
         /// </summary>
@@ -47,6 +61,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// Creates an instance of this class to parse options.
+        /// </summary>
+        /// <param name="resolver">The URI resolver which will resolve different kinds of Uri parsing context</param>
+        /// <param name="parentEntityType">The parent entity type for expand option</param>
+        /// <param name="maxRecursionDepth">Max recursion depth left.</param>
+        /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
+        internal ExpandOptionParser(ODataUriResolver resolver, IEdmStructuredType parentEntityType, int maxRecursionDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier)
+        {
+            this.resolver = resolver;
+            this.parentEntityType = parentEntityType;
+        }
+
+        /// <summary>
         /// The maximum depth for $filter nested in $expand.
         /// </summary>
         internal int MaxFilterDepth { get; set; }
@@ -67,11 +95,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="pathToken">The PathSegmentToken representing the parsed expand path whose options we are now parsing.</param>
         /// <param name="optionsText">A string of the text between the parenthesis after an expand option.</param>
-        /// <returns>An expand term token based on the path token, and all available expand options.</returns>
-        internal ExpandTermToken BuildExpandTermToken(PathSegmentToken pathToken, string optionsText)
+        /// <returns>The list of expand term tokens based on the path token, and all available expand options.</returns>
+        internal List<ExpandTermToken> BuildExpandTermToken(PathSegmentToken pathToken, string optionsText)
         {
             // Setup a new lexer for parsing the optionsText
             this.lexer = new ExpressionLexer(optionsText ?? "", true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/);
+
+            // $expand option with star only support $ref option, $expand option property could be "*" or "*/$ref", special logic will be adopted.
+            if (pathToken.Identifier == UriQueryConstants.Star || (pathToken.Identifier == UriQueryConstants.RefSegment && pathToken.NextToken.Identifier == UriQueryConstants.Star))
+            {
+                return BuildStarExpandTermToken(pathToken);
+            }
 
             QueryToken filterOption = null;
             IEnumerable<OrderByToken> orderByOptions = null;
@@ -188,27 +222,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                         case ExpressionConstants.QueryOptionLevels:
                             {
-                                // advance to the equal sign
-                                this.lexer.NextToken();
-                                string levelsText = this.ReadQueryOption();
-                                long level;
-
-                                if (string.Equals(
-                                    ExpressionConstants.KeywordMax,
-                                    levelsText,
-                                    this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
-                                {
-                                    levelsOption = long.MinValue;
-                                }
-                                else if (!long.TryParse(levelsText, out level) || level < 0)
-                                {
-                                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidLevelsOption(levelsText));
-                                }
-                                else
-                                {
-                                    levelsOption = level;
-                                }
-
+                                levelsOption = ResolveLevelOption();
                                 break;
                             }
 
@@ -241,7 +255,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string expandText = this.ReadQueryOption();
 
-                                SelectExpandParser innerExpandParser = new SelectExpandParser(expandText, this.maxRecursionDepth - 1, enableCaseInsensitiveBuiltinIdentifier);
+                                // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future. 
+                                IEdmStructuredType targetEntityType = null;
+                                if (this.resolver != null && this.parentEntityType != null)
+                                {
+                                    var parentProperty = this.resolver.ResolveProperty(parentEntityType, pathToken.Identifier) as IEdmNavigationProperty;
+
+                                    // it is a navigation property, need to find the type. Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)", find navigation property Trips of Friends, then get Entity type of Trips.
+                                    if (parentProperty != null)
+                                    { 
+                                        targetEntityType = parentProperty.ToEntityType();
+                                    }
+                                }
+
+                                SelectExpandParser innerExpandParser = new SelectExpandParser(resolver, expandText, targetEntityType, this.maxRecursionDepth - 1, enableCaseInsensitiveBuiltinIdentifier);
                                 expandOption = innerExpandParser.ParseExpand();
                                 break;
                             }
@@ -263,7 +290,153 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
             }
 
-            return new ExpandTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, levelsOption, searchOption, selectOption, expandOption);
+            // TODO, there should be some check here in case pathToken identifier is $ref, select, expand and levels options are not allowed.
+            List<ExpandTermToken> expandTermTokenList = new List<ExpandTermToken>();
+            ExpandTermToken currentToken = new ExpandTermToken(pathToken, filterOption, orderByOptions, topOption,
+                skipOption, countOption, levelsOption, searchOption, selectOption, expandOption);
+            expandTermTokenList.Add(currentToken);
+
+            return expandTermTokenList;
+        }
+
+
+        /// <summary>
+        /// Building off of a PathSegmentToken whose value is star, only nested level options is allowed.
+        /// </summary>
+        /// <param name="pathToken">The PathSegmentToken representing the parsed expand path whose options we are now parsing.</param>
+        /// <returns>An expand term token based on the path token, and all available expand options.</returns>
+        private List<ExpandTermToken> BuildStarExpandTermToken(PathSegmentToken pathToken)
+        {
+            List<ExpandTermToken> expandTermTokenList = new List<ExpandTermToken>();
+            long? levelsOption = null;
+            bool isRefExpand = (pathToken.Identifier == UriQueryConstants.RefSegment);
+
+            // Based on the specification, 
+            //   For star in expand, this will be supported,
+            //   $expand=*
+            //   $expand=EntitySet($expand=* )
+            //   $expand=*/$ref 
+            //   $expand=*,EntitySet
+            //   $expand=EntitySet, *
+            //   $expand=*/$ref,EntitySet
+            //   Parenthesized set of expand options for star expand option supported are $level per specification.
+            //   And this will throw exception,
+            //   $expand= * /$count
+            //   Parenthesized set of expand options for star expand option which will also cause exception are $filter, $select, $orderby, $skip, $top, $count, $search, and $expand per specification. 
+            // And level is not supported with "*/$ref".
+
+            // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
+            {
+                // advance past the '('
+                this.lexer.NextToken();
+
+                // Check for (), which is not allowed.
+                if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
+                {
+                    throw new ODataException(ODataErrorStrings.UriParser_MissingExpandOption(pathToken.Identifier));
+                }
+
+                // Only level option is supported by expand.
+                while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+                {
+                    string text = this.enableCaseInsensitiveBuiltinIdentifier
+                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text;
+                    switch (text)
+                    {
+                        case ExpressionConstants.QueryOptionLevels:
+                            {
+                                if (!isRefExpand) 
+                                { 
+                                    levelsOption = ResolveLevelOption();
+                                }
+                                else
+                                {
+                                    // no option is allowed when expand with star per specification
+                                    throw new ODataException(ODataErrorStrings.UriExpandParser_TermIsNotValidForStarRef(this.lexer.ExpressionText));
+                                }
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                throw new ODataException(ODataErrorStrings.UriExpandParser_TermIsNotValidForStar(this.lexer.ExpressionText));
+                            }
+                    }
+                }
+
+                // Move past the ')'
+                this.lexer.NextToken();
+            }
+
+            // Either there was no '(' at all or we just read past the ')' so we should be at the end
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
+            {
+                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+            }
+
+            // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
+            var entityType = parentEntityType as IEdmEntityType;
+            if (entityType == null)
+            {
+                throw new ODataException(ODataErrorStrings.UriExpandParser_ParentEntityIsNull(this.lexer.ExpressionText));
+            }
+
+            foreach (var navigationProperty in entityType.NavigationProperties())
+            {
+                var tmpPathToken = default(PathSegmentToken);
+
+                // create path token for each navigation properties.
+                if (pathToken.Identifier.Equals(UriQueryConstants.RefSegment))
+                {
+                    tmpPathToken = new NonSystemToken(navigationProperty.Name, null, pathToken.NextToken.NextToken);
+                    tmpPathToken = new NonSystemToken(UriQueryConstants.RefSegment, null, tmpPathToken);
+                }
+                else
+                {
+                    tmpPathToken = new NonSystemToken(navigationProperty.Name, null, pathToken.NextToken);
+                }
+
+                ExpandTermToken currentToken = new ExpandTermToken(tmpPathToken, null, null,
+                    null, null, null, levelsOption, null, null, null);
+                expandTermTokenList.Add(currentToken);
+            }
+
+            return expandTermTokenList;
+        }
+
+        /// <summary>
+        /// Parse the level option in the expand option text.
+        /// </summary>
+        /// <returns>The level option for expand in long type</returns>
+        private long? ResolveLevelOption()
+        {
+            long? levelsOption = null;
+
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string levelsText = this.ReadQueryOption();
+            long level;
+
+            if (string.Equals(
+                ExpressionConstants.KeywordMax,
+                levelsText,
+                this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                levelsOption = long.MinValue;
+            }
+            else if (!long.TryParse(levelsText, NumberStyles.None, CultureInfo.InvariantCulture, out level) || level < 0)
+            {
+                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidLevelsOption(levelsText));
+            }
+            else
+            {
+                levelsOption = level;
+            }
+
+            return levelsOption;
         }
 
         /// <summary>

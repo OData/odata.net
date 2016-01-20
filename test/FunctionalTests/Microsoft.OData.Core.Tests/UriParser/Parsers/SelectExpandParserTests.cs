@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Parsers;
 using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
@@ -199,6 +200,116 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
         #endregion
 
+        #region Star Expand Testing
+        [Fact]
+        public void ParseStarInExpand()
+        {
+            var results = this.StarExpandTesting("*", "Persons");
+            results.ExpandTerms.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ParseStarWithRefInExpand()
+        {
+            var results = this.StarExpandTesting("*/$ref", "Persons");
+            results.ExpandTerms.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ParseStarWithEntitySetInExpand()
+        {
+            var results = this.StarExpandTesting("*/$ref,CityHall", "Cities");
+            results.ExpandTerms.Should().HaveCount(3);
+            results.ExpandTerms.First().PathToNavProp.Identifier.ShouldBeEquivalentTo("CityHall");
+            results.ExpandTerms.Last().PathToNavProp.Identifier.ShouldBeEquivalentTo("$ref");
+        }
+
+        [Fact]
+        public void ParseStarWithMultipleEntitySetInExpand()
+        {
+            var results = this.StarExpandTesting("CityHall($levels=2),*/$ref,PoliceStation($select=Id, Address)", "Cities");
+            results.ExpandTerms.Should().HaveCount(3);
+            results.ExpandTerms.First().PathToNavProp.Identifier.ShouldBeEquivalentTo("CityHall");
+            results.ExpandTerms.Last().PathToNavProp.Identifier.ShouldBeEquivalentTo("$ref");
+        }
+
+        [Fact]
+        public void NestedStarExpand()
+        {
+            var results = this.StarExpandTesting("Friend($expand=*)", "Persons");
+            results.ExpandTerms.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ParseStarWithOptions()
+        {
+            var results = this.StarExpandTesting("*($levels=2)", "Persons");
+            results.ExpandTerms.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void ParseStarInvalidWithOptions()
+        {
+            Action action = () => this.StarExpandTesting("*($select=*)", "Persons");
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_TermIsNotValidForStar("($select=*)"));
+        }
+
+        [Fact]
+        public void ParseStarRefWithInvalidOptions()
+        {
+            Action action = () => this.StarExpandTesting("*/$ref($levels=2)", "Persons");
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_TermIsNotValidForStarRef("($levels=2)"));
+        }
+
+        [Fact]
+        public void ParseMultipleStarInExpand()
+        {
+            Action action = () => this.StarExpandTesting("*, Friend, */$ref", "Persons");
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_TermWithMultipleStarNotAllowed("*, Friend, */$ref"));
+        }
+
+        private ExpandToken StarExpandTesting(string expand, String entitySetType)
+        {
+            IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
+
+            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(EdmCoreModel.Instance)
+            {
+                Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
+            };
+            var parentEntityType = configuration.Resolver.ResolveNavigationSource(model, entitySetType).EntityType();
+            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            {
+                MaxPathDepth = configuration.Settings.PathLimit,
+                MaxFilterDepth = configuration.Settings.FilterLimit,
+                MaxOrderByDepth = configuration.Settings.OrderByLimit,
+                MaxSearchDepth = configuration.Settings.SearchLimit
+            };
+            return expandParser.ParseExpand();
+        }
+
+        [Fact]
+        public void ParentEntityTypeIsNullForExpandStar()
+        {
+            var expand = "*";
+
+            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(EdmCoreModel.Instance)
+            {
+                Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
+            };
+
+            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, null, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            {
+                MaxPathDepth = configuration.Settings.PathLimit,
+                MaxFilterDepth = configuration.Settings.FilterLimit,
+                MaxOrderByDepth = configuration.Settings.OrderByLimit,
+                MaxSearchDepth = configuration.Settings.SearchLimit
+            };
+
+            Action action = () => expandParser.ParseExpand();
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriExpandParser_ParentEntityIsNull(""));
+        }
+        #endregion
+
         #region Limit Test
         [Fact]
         public void PathLimitTest()
@@ -252,8 +363,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             {
                 Settings = { PathLimit = 2, FilterLimit = 7, OrderByLimit = 7, SearchLimit = 7, SelectExpandLimit = 5 }
             };
-
-            SelectExpandSyntacticParser.Parse(select, expand, configuration, out expandTree, out selectTree);
+            SelectExpandSyntacticParser.Parse(select, expand, null , configuration, out expandTree, out selectTree);
         }
         #endregion
     }

@@ -753,6 +753,10 @@ namespace Microsoft.OData.Core {
         internal const string Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity = "Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity";
         internal const string Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
+        internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
+        internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
+        internal const string UriExpandParser_ParentEntityIsNull = "UriExpandParser_ParentEntityIsNull";
+        internal const string UriExpandParser_TermWithMultipleStarNotAllowed = "UriExpandParser_TermWithMultipleStarNotAllowed";
         internal const string UriSelectParser_TermIsNotValid = "UriSelectParser_TermIsNotValid";
         internal const string UriSelectParser_InvalidTopOption = "UriSelectParser_InvalidTopOption";
         internal const string UriSelectParser_InvalidSkipOption = "UriSelectParser_InvalidSkipOption";
@@ -825,6 +829,9 @@ namespace Microsoft.OData.Core {
         internal const string ExceptionUtils_CheckIntegerPositive = "ExceptionUtils_CheckIntegerPositive";
         internal const string ExceptionUtils_CheckLongPositive = "ExceptionUtils_CheckLongPositive";
         internal const string ExceptionUtils_ArgumentStringNullOrEmpty = "ExceptionUtils_ArgumentStringNullOrEmpty";
+        internal const string ExpressionToken_OnlyRefAllowWithStarInExpand = "ExpressionToken_OnlyRefAllowWithStarInExpand";
+        internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
+        internal const string ExpressionToken_NoSegmentAllowedBeforeStarInExpand = "ExpressionToken_NoSegmentAllowedBeforeStarInExpand";
         internal const string ExpressionToken_IdentifierExpected = "ExpressionToken_IdentifierExpected";
         internal const string ExpressionLexer_UnterminatedStringLiteral = "ExpressionLexer_UnterminatedStringLiteral";
         internal const string ExpressionLexer_InvalidCharacter = "ExpressionLexer_InvalidCharacter";

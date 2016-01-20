@@ -204,35 +204,49 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void StarThenSlashShouldThrowInExpand()
         {
             Action parse = () => this.ParseExpandTerm("*/");
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_IdentifierExpected("0"));
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_IdentifierExpected("2"));
         }
 
         [Fact]
         public void StarResultsInStarTokenInExpand()
         {
             var result = this.ParseExpandTerm("*");
-            result.ShouldBeNonSystemToken("*"); // TODO: Makes sense to throw here, right?
+            result.ShouldBeNonSystemToken("*"); 
         }
 
         [Fact]
         public void SpaceAroundStarIsOkInExpand()
         {
             var result = this.ParseExpandTerm("   * ");
-            result.ShouldBeNonSystemToken("*"); // TODO: Makes sense to throw here, right?
+            result.ShouldBeNonSystemToken("*"); 
         }
 
         [Fact]
         public void StarCannotBeInMiddleOfPathInExpand()
         {
             Action parse = () => this.ParseExpandTerm("foo/*/bar");
-            parse.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_IdentifierExpected("4"));
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
         }
+
+        [Fact]
+        public void StarWithRefIsOkInExpand()
+        {
+            var result = this.ParseExpandTerm("*/$ref");
+            result.ShouldBeNonSystemToken("$ref").And.NextToken.ShouldBeNonSystemToken("*");
+        }
+
+        [Fact]
+        public void PropertyAfterStarWithRefIsOkInExpand()
+        {
+            Action parse = () => this.ParseExpandTerm("*/$ref/prop");
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_NoPropAllowedAfterRef);
+        } 
 
         [Fact]
         public void StarAfterNavPropIsOkInExpand()
         {
-            var result = this.ParseExpandTerm("navprop/*");
-            result.ShouldBeNonSystemToken("*").And.NextToken.ShouldBeNonSystemToken("navprop"); // TODO: Makes sense to throw here, right?
+            Action parse = () => this.ParseExpandTerm("navprop/*");
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
         } 
 
         [Fact]
@@ -323,7 +337,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             lexer = new ExpressionLexer(term, true /*moveToFirstToken*/, true/*useSemicolonDelimiter*/);
             var parser = new SelectExpandTermParser(lexer, 100 /*maxPathLength*/, false /*isSelect*/);
-            return parser.ParseTerm();
+            return parser.ParseTerm(allowRef: true);
         }
 
         #endregion
