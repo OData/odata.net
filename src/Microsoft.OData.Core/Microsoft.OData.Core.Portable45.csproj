@@ -148,6 +148,7 @@
     <Compile Include="IODataResponseMessageAsync.cs" />
     <Compile Include="IODataUrlResolver.cs" />
     <Compile Include="IPrimitiveTypeConverter.cs" />
+    <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="InstanceAnnotationWriteTracker.cs" />
     <Compile Include="InternalErrorCodes.cs" />
     <Compile Include="InternalErrorCodesCommon.cs" />

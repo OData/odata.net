@@ -414,7 +414,7 @@ namespace Microsoft.OData.Core.Atom
                     {
                         // Undeclared navigation link with content which we should read anyway.
                         // If we are to ignore value properties, then skip the content and read the link only as deferred link, otherwise fail.
-                        if (this.atomInputContext.MessageReaderSettings.IgnoreUndeclaredValueProperties)
+                        if (this.atomInputContext.MessageReaderSettings.ShouldIgnoreUndeclaredProperty())
                         {
                             // The reader is positioned on some element inside the link (either </m:inline> or <entry> or <feed>)
                             // So we need to read until we find the end-element for the link and skip everything in between.

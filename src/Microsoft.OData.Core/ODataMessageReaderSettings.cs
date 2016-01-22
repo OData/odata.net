@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Configuration settings for OData message readers.
     /// </summary>
-    public sealed class ODataMessageReaderSettings : ODataMessageReaderSettingsBase
+    public sealed class ODataMessageReaderSettings : ODataMessageReaderSettingsBase, IMessageValidationSetting
     {
         /// <summary>
         /// A instance representing any knobs that control the behavior of the readers
@@ -299,17 +299,6 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty);
-            }
-        }
-
-        /// <summary>
-        /// Whether or not to ignore any undeclared value properties in the payload. Computed from the UndeclaredPropertyBehaviorKinds enum property.
-        /// </summary>
-        internal bool IgnoreUndeclaredValueProperties
-        {
-            get
-            {
-                return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
             }
         }
 

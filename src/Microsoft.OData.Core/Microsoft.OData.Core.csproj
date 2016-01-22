@@ -600,6 +600,7 @@
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitor.cs" />
     <Compile Include="UriUtils.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="ValidationUtils.cs" />
     <Compile Include="WriterUtils.cs" />
     <Compile Include="WriterValidationUtils.cs" />

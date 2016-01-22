@@ -79,13 +79,13 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</param>
-        /// <param name="throwOnMissingProperty">Whether throw exception on missing property.</param>
+        /// <param name="messageValidationSetting">The message validation setting, null: expects exception on missing property.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidatePropertyDefined(
             string propertyName,
             IEdmStructuredType owningStructuredType,
-            bool throwOnMissingProperty = true)
+            IMessageValidationSetting messageValidationSetting)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -97,7 +97,8 @@ namespace Microsoft.OData.Core
             IEdmProperty property = owningStructuredType.FindProperty(propertyName);
 
             // verify that the property is declared if the type is not an open type.
-            if (throwOnMissingProperty && !owningStructuredType.IsOpen && property == null)
+            if (((messageValidationSetting == null) || messageValidationSetting.ShouldThrowOnUndeclaredProperty())
+                && !owningStructuredType.IsOpen && property == null)
             {
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
             }
@@ -122,7 +123,7 @@ namespace Microsoft.OData.Core
                 return null;
             }
 
-            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType);
+            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType, null);
             if (property == null)
             {
                 // We don't support open navigation properties
@@ -460,7 +461,7 @@ namespace Microsoft.OData.Core
             {
                 return;
             }
-            
+
             if (expectedPropertyTypeReference != null)
             {
                 if (expectedPropertyTypeReference.IsNonEntityCollectionType())

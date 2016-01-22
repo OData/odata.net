@@ -182,7 +182,7 @@ namespace Microsoft.OData.Core
             IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (messageReaderSettings.IgnoreUndeclaredValueProperties)
+                if (messageReaderSettings.ShouldIgnoreUndeclaredProperty())
                 {
                     ignoreProperty = true;
                 }

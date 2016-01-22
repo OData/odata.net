@@ -187,11 +187,11 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
+            // !this.WritingResponse => null => to throw on undeclared property
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,
                 owningType,
-                !(this.bypassValidation || this.WritingResponse));
-
+                this.WritingResponse ? this.JsonLightOutputContext.MessageWriterSettings : null);
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
 
             ODataValue value = property.ODataValue;

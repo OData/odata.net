@@ -299,7 +299,7 @@ namespace Microsoft.OData.Core.Atom
                 this.WriteFeedLink(
                     feed,
                     AtomConstants.AtomNextRelationAttributeValue,
-                    nextPageLink, 
+                    nextPageLink,
                     (feedMetadata) => feedMetadata == null ? null : feedMetadata.NextPageLink);
             }
         }
@@ -317,9 +317,9 @@ namespace Microsoft.OData.Core.Atom
             {
                 // <atom:link rel="http://docs.oasis-open.org/odata/ns/delta" href="delta-link" />
                 this.WriteFeedLink(
-                    feed, 
-                    AtomConstants.AtomDeltaRelationAttributeValue, 
-                    deltaLink, 
+                    feed,
+                    AtomConstants.AtomDeltaRelationAttributeValue,
+                    deltaLink,
                     (feedMetadata) => feedMetadata == null ? null : feedMetadata.Links.FirstOrDefault(link => link.Relation == AtomConstants.AtomDeltaRelationAttributeValue));
             }
         }
@@ -368,7 +368,7 @@ namespace Microsoft.OData.Core.Atom
 
             WriterValidationUtils.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(streamProperty);
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(streamProperty.Name, owningType);
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(streamProperty.Name, owningType, this.MessageWriterSettings);
             WriterValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty, this.WritingResponse);
             ODataStreamReferenceValue streamReferenceValue = (ODataStreamReferenceValue)streamProperty.Value;
             WriterValidationUtils.ValidateStreamReferenceValue(streamReferenceValue, false /*isDefaultStream*/);
