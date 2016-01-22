@@ -65,6 +65,10 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs" target="src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\InternalErrorCodesCommon.cs" target="src\Microsoft.OData.Core\InternalErrorCodesCommon.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\TaskUtils.cs" target="src\Microsoft.OData.Core\TaskUtils.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs" target="src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\AggregateToken.cs" target="src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\AggregateToken.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" target="src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\GroupByToken.cs" target="src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\GroupByToken.cs" />    
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs" target="src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\ReadOnlyEnumerableForUriParser.cs" target="src\Microsoft.OData.Core\UriParser\ReadOnlyEnumerableForUriParser.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\NamedValue.cs" target="src\Microsoft.OData.Core\UriParser\NamedValue.cs" />
