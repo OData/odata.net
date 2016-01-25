@@ -105,7 +105,9 @@ namespace Microsoft.OData.Client.Metadata
             this.DeclaringClrType = propertyInfo.DeclaringType;
 
             MethodInfo propertyGetMethod = propertyInfo.GetGetMethod();
-            MethodInfo propertySetMethod = propertyInfo.GetSetMethod();
+
+            // Add the parameter to make set method is returned even it is not public.
+            MethodInfo propertySetMethod = propertyInfo.GetSetMethod(true);
 
             ParameterExpression instance = Expression.Parameter(typeof(Object), "instance");
             ParameterExpression value = Expression.Parameter(typeof(Object), "value");
