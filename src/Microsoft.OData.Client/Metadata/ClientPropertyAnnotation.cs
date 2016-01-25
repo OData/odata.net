@@ -106,8 +106,12 @@ namespace Microsoft.OData.Client.Metadata
 
             MethodInfo propertyGetMethod = propertyInfo.GetGetMethod();
 
-            // Add the parameter to make set method is returned even it is not public.
+            // Add the parameter to make set method is returned even it is not public. Portable lib does not support this.
+#if PORTABLELIB
+            MethodInfo propertySetMethod = propertyInfo.GetSetMethod();
+#else
             MethodInfo propertySetMethod = propertyInfo.GetSetMethod(true);
+#endif
 
             ParameterExpression instance = Expression.Parameter(typeof(Object), "instance");
             ParameterExpression value = Expression.Parameter(typeof(Object), "value");
