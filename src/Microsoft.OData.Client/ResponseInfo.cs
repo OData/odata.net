@@ -66,11 +66,27 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return this.Context.IgnoreMissingProperties
-                    ?
-                    ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty
-                    :
-                    ODataUndeclaredPropertyBehaviorKinds.None;
+                // DsContxt.UndeclaredPropertyBehavior    DsContxt.IgnoreMissingProperty    ODL behavior ODL UndeclaredPropertyBehaviorKinds    Materializer behavior
+                // .None (let IgnoreMissingProperty decide)    True    Read&write    .SupportUndeclaredValueProperty    Silently ignore
+                // .None (let IgnoreMissingProperty decide)    False    Throw exception    .None    Throw exception
+                // .Ignore    ignore    .IgnoreUndeclaredValueProperty    Silently ignore
+                // .Support    Read&write    .SupportUndeclaredValueProperty    Silently ignore
+                if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.None)
+                {
+                    return this.Context.IgnoreMissingProperties
+                        ?
+                        ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty
+                        :
+                        ODataUndeclaredPropertyBehaviorKinds.None;
+                }
+                else if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Discard)
+                {
+                    return ODataUndeclaredPropertyBehaviorKinds.DiscardUndeclaredValueProperty;
+                }
+                else
+                {
+                    return ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+                }
             }
         }
 

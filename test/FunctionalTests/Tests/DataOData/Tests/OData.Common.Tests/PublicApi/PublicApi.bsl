@@ -6199,6 +6199,12 @@ public enum Microsoft.OData.Client.TrackingMode : int {
 	None = 0
 }
 
+public enum Microsoft.OData.Client.UndeclaredPropertyBehavior : int {
+	Discard = 1
+	None = 0
+	Support = 2
+}
+
 public abstract class Microsoft.OData.Client.DataServiceClientRequestMessage : IODataRequestMessage {
 	public DataServiceClientRequestMessage (string actualMethod)
 
@@ -6409,6 +6415,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	System.Func`2[[System.String],[System.Type]] ResolveType  { public get; public set; }
 	Microsoft.OData.Client.SaveChangesOptions SaveChangesDefaultOptions  { public get; public set; }
 	int Timeout  { public get; public set; }
+	Microsoft.OData.Client.UndeclaredPropertyBehavior UndeclaredPropertyBehavior  { public get; public set; }
 	Microsoft.OData.Client.DataServiceUrlConventions UrlConventions  { public get; public set; }
 	bool UsePostTunneling  { public get; public set; }
 
