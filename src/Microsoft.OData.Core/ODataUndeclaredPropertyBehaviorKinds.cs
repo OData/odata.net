@@ -45,9 +45,22 @@ namespace Microsoft.OData.Core
         /// </remarks>
         ReportUndeclaredLinkProperty = 2,
 
+        #region For 6.15~ release
         /// <summary>
         /// Reading/writing undeclared properties will be supported.
         /// </summary>
-        SupportUndeclaredValueProperty = 4,
+        SupportUndeclaredValueProperty = 128,
+
+        /// <summary>
+        /// Truely ignore undeclared property.
+        /// (Since IgnoreUndeclaredValueProperty is already interpreted as supporting undeclared property)
+        /// </summary>
+        DiscardUndeclaredValueProperty = 256,
+
+        /// <summary>
+        /// Throw exception on undeclared value property.
+        /// </summary>
+        ThrowOnUndeclaredValueProperty = 512,
+        #endregion
     }
 }

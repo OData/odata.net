@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core
         /// <param name="value">The value in question to resolve the type for.</param>
         /// <param name="isOpenProperty">true if the type name belongs to an open property, false otherwise.</param>
         /// <returns>A type for the <paramref name="value"/> or null if no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeNameForValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataValue value, bool isOpenProperty)
+        internal static IEdmTypeReference ResolveAndValidateTypeNameForValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataAnnotatable value, bool isOpenProperty)
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(value != null, "value != null");

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The value of this property, accessed and set by both <seealso cref="Value"/> and <seealso cref="ODataValue"/>.
         /// </summary>
-        private ODataValue odataValue;
+        private ODataValue odataOrUntypedValue; // normal ODataValue or ODataUntypedValue
 
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataProperty"/>.
@@ -26,10 +26,10 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets the property name.</summary>
         /// <returns>The property name.</returns>
-        public string Name 
-        { 
-            get; 
-            set; 
+        public string Name
+        {
+            get;
+            set;
         }
 
         /// <summary>Gets or sets the property value.</summary>
@@ -38,19 +38,34 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                if (this.odataValue == null)
+                if (this.odataOrUntypedValue == null)
                 {
                     return null;
                 }
 
-                return this.odataValue.FromODataValue();
+                ODataUntypedValue tmpValue = this.odataOrUntypedValue as ODataUntypedValue;
+                if (tmpValue != null)
+                {
+                    return tmpValue;
+                }
+
+                return ((ODataValue)this.odataOrUntypedValue).FromODataValue();
             }
 
             set
             {
-                this.odataValue = value.ToODataValue();
+                ODataUntypedValue tmpValue = value as ODataUntypedValue;
+                if (tmpValue != null)
+                {
+                    this.odataOrUntypedValue = tmpValue;
+                }
+                else
+                {
+                    this.odataOrUntypedValue = value.ToODataValue();
+                }
             }
         }
+
 
         /// <summary>
         /// Collection of custom instance annotations.
@@ -73,7 +88,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.odataValue;
+                return (ODataValue)this.odataOrUntypedValue;
             }
         }
 

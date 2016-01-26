@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
@@ -195,6 +196,183 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Check if a property value type in non-open entity is deterministic .
+        /// </summary>
+        /// <param name="jsonReaderNodeType">The current JsonReader NodeType.</param>
+        /// <param name="jsonReaderValue">The current JsonReader Value</param>
+        /// <param name="payloadTypeName">The 'odata.type' annotation in payload.</param>
+        /// <param name="payloadTypeReference">The payloadTypeReference of 'odata.type'.</param>
+        /// <returns>True if property value type is deterministic.</returns>
+        protected static bool IsKnownValueTypeForNonOpenEntityOrComplex(JsonNodeType jsonReaderNodeType, object jsonReaderValue, string payloadTypeName, IEdmTypeReference payloadTypeReference)
+        {
+            if (string.IsNullOrEmpty(payloadTypeName))
+            {
+                bool isNullValue = (jsonReaderNodeType == JsonNodeType.PrimitiveValue) && (jsonReaderValue == null);
+                bool isBoolValue = (jsonReaderNodeType == JsonNodeType.PrimitiveValue) && (jsonReaderValue is bool);
+
+                // non-open: string or numeric, complex, collection, spatial will be unknown
+                return isNullValue || isBoolValue;
+            }
+            else
+            {
+                return (payloadTypeReference != null);
+            }
+        }
+
+        /// <summary>
+        /// Check if a property value type in open entity is deterministic .
+        /// </summary>
+        /// <param name="jsonReaderNodeType">The current JsonReader NodeType.</param>
+        /// <param name="jsonReaderValue">The current JsonReader Value</param>
+        /// <param name="payloadTypeName">The 'odata.type' annotation in payload.</param>
+        /// <param name="payloadTypeReference">The payloadTypeReference of 'odata.type'.</param>
+        /// <returns>True if property value type is deterministic.</returns>
+        protected static bool IsKnownValueTypeForOpenEntityOrComplex(JsonNodeType jsonReaderNodeType, object jsonReaderValue, string payloadTypeName, IEdmTypeReference payloadTypeReference)
+        {
+            if (string.IsNullOrEmpty(payloadTypeName))
+            {
+                // open: bool, null, string or numeric will be *known*
+                return (jsonReaderNodeType == JsonNodeType.PrimitiveValue);
+            }
+            else
+            {
+                return (payloadTypeReference != null);
+            }
+        }
+
+        /// <summary>
+        /// Try to read or peek the odata.type annotation.
+        /// </summary>
+        /// <param name="duplicatePropertyNamesChecker">The current level's DuplicatePropertyNamesChecker.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="insideComplexValue">If inside complex value.</param>
+        /// <returns>The odata.type value or null.</returns>
+        protected string TryReadOrPeekPayloadType(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string propertyName, bool insideComplexValue)
+        {
+            string payloadTypeName = ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName);
+            bool valueIsJsonObject = this.JsonReader.NodeType == JsonNodeType.StartObject;
+            if (string.IsNullOrEmpty(payloadTypeName) && valueIsJsonObject)
+            {
+                try
+                {
+                    this.JsonReader.StartBuffering();
+
+                    // If we have an object value initialize the duplicate property names checker
+                    duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+
+                    // Read the payload type name 
+                    string typeName;
+                    bool typeNameFoundInPayload = this.TryReadPayloadTypeFromObject(
+                        duplicatePropertyNamesChecker,
+                        insideComplexValue,
+                        out typeName);
+                    if (typeNameFoundInPayload)
+                    {
+                        payloadTypeName = typeName;
+                    }
+                }
+                finally
+                {
+                    this.JsonReader.StopBuffering();
+                }
+            }
+
+            return payloadTypeName;
+        }
+
+        /// <summary>
+        /// Reads a non-open entity or complex type's undeclared property, may return OdataUntypedValue.
+        /// </summary>
+        /// <param name="duplicatePropertyNamesChecker">duplicatePropertyNamesChecker.</param>
+        /// <param name="propertyName">Now this name can't be found in model.</param>
+        /// <param name="isTopLevelPropertyValue">bool</param>
+        /// <returns>The read result.</returns>
+        protected object InnerReadNonOpenUndeclaredProperty(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string propertyName, bool isTopLevelPropertyValue)
+        {
+            // Now we know the property name is undeclared, but not sure if property value type is known/unknown.
+            // For any Property in NON-OPEN complex / entity :
+            // Property name,     Property value type,     Deserialized result
+            // unknown,     known,     Primitive/ODataValue
+            // unknown,     Unknown(string/numeric, no/unrecognized odata.type),     ODataUntypedValue
+            // known,     Inconsistent with model,     Throw exception
+            bool insideComplexValue = false;
+            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName);
+            string payloadTypeName = this.TryReadOrPeekPayloadType(duplicatePropertyNamesChecker, propertyName, insideComplexValue);
+            EdmTypeKind payloadTypeKind;
+            IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
+                this.Model,
+                null, // expectedTypeReference
+                payloadTypeName,
+                EdmTypeKind.Complex,
+                this.MessageReaderSettings.ReaderBehavior,
+                out payloadTypeKind);
+            IEdmTypeReference payloadTypeReference = null;
+            if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
+            {
+                // only try resolving for known type (the below will throw on unknown type name) :
+                SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+                EdmTypeKind targetTypeKind;
+                payloadTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+                    EdmTypeKind.None,
+                    /*defaultPrimitivePayloadType*/ null,
+                    null, // expectedTypeReference 
+                    payloadTypeName,
+                    this.Model,
+                    this.MessageReaderSettings,
+                    this.GetNonEntityValueKind,
+                    out targetTypeKind,
+                    out serializationTypeNameAnnotation);
+            }
+
+            object propertyValue = null;
+            bool isKnownValueType = IsKnownValueTypeForNonOpenEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
+            if (isKnownValueType)
+            {
+                bool validateNullValue = true;
+                if (ODataJsonReaderCoreUtils.TryReadNullValue(this.JsonReader, this.JsonLightInputContext, payloadTypeReference, validateNullValue, propertyName))
+                {
+                    if (isTopLevelPropertyValue)
+                    {
+                        // For a top-level property value a special null marker object has to be used to indicate  a null value.
+                        // If we find a null value for a property at the top-level, it is an invalid payload
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue(ODataAnnotationNames.ODataNull, JsonLightConstants.ODataNullAnnotationTrueValue));
+                    }
+
+                    propertyValue = null;
+                }
+                else
+                {
+                    this.JsonReader.AssertNotBuffering();
+                    propertyValue = this.ReadNonEntityValueImplementation(
+                        outterPayloadTypeName,
+                        payloadTypeReference,
+                        /*duplicatePropertyNamesChecker*/ null,
+                        /*collectionValidator*/ null,
+                        false, // validateNullValue
+                        isTopLevelPropertyValue,
+                        insideComplexValue,
+                        propertyName);
+                }
+            }
+            else
+            {
+                StringBuilder builder = new StringBuilder();
+                this.JsonReader.SkipValue(builder);
+                ODataUntypedValue tmp = new ODataUntypedValue()
+                {
+                    RawValue = builder.ToString()
+                };
+                propertyValue = tmp;
+            }
+
+            this.JsonReader.AssertNotBuffering();
+            Debug.Assert(
+                this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
+                "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
+            return propertyValue;
+        }
+
+        /// <summary>
         /// Gets and validates the type name annotation for the specified property.
         /// </summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the entry content.</param>
@@ -301,6 +479,36 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyAnnotationName));
+        }
+
+        /// <summary>
+        /// Determines the value kind for a non-entity value (that is top-level property value, property value on a complex type, item in a collection)
+        /// </summary>
+        /// <returns>The type kind of the property value.</returns>
+        /// <remarks>
+        /// Doesn't move the JSON reader.
+        /// </remarks>
+        protected EdmTypeKind GetNonEntityValueKind()
+        {
+            // If we get here, we did not find a type name in the payload and don't have an expected type.
+            // This can only happen for error cases when using open properties (for declared properties we always
+            // have an expected type and for open properties we always require a type). We then decide based on 
+            // the node type of the reader.
+            // PrimitiveValue       - we know that it is a primitive value; 
+            // StartArray           - we know that we have a collection;
+            // Other                - for a JSON object value (and if we did not already find a payload type name)
+            //                        we have already started reading the object to find a type name (and have failed)
+            //                        and might thus be on a Property or EndObject node.
+            //                        Also note that in this case we can't distinguish whether what we are looking at is 
+            //                        a complex value or a spatial value (both are JSON objects). We will report 
+            //                        'Complex' in that case which will fail we an appropriate error message 
+            //                        also for spatial ('value without type name found').
+            switch (this.JsonReader.NodeType)
+            {
+                case JsonNodeType.PrimitiveValue: return EdmTypeKind.Primitive;
+                case JsonNodeType.StartArray: return EdmTypeKind.Collection;
+                default: return EdmTypeKind.Complex;
+            }
         }
 
         /// <summary>
@@ -818,50 +1026,107 @@ namespace Microsoft.OData.Core.JsonLight
                                     edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(propertyName, complexValueTypeReference.ComplexDefinition(), this.MessageReaderSettings, out ignoreProperty);
                                 }
 
-                                if (ignoreProperty
-                                    && (this.JsonReader.NodeType == JsonNodeType.StartObject || this.JsonReader.NodeType == JsonNodeType.StartArray))
+                                // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.
+                                // If the property has an annotation to ignore null values, we need to omit the property in requests.
+                                ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null
+                                    ? ODataNullValueBehaviorKind.Default
+                                    : this.Model.NullValueReadBehaviorKind(edmProperty);
+                                object propertyValue = null;
+                                bool toAddPropertyValue = false;
+                                if (this.MessageReaderSettings.NeedRunLegacyPropertyHandling())
+                                {
+                                    if (ignoreProperty
+                                       && (this.JsonReader.NodeType == JsonNodeType.StartObject || this.JsonReader.NodeType == JsonNodeType.StartArray))
+                                    {
+                                        this.JsonReader.SkipValue();
+                                    }
+                                    else
+                                    {
+                                        // Read the property value
+                                        propertyValue = this.ReadNonEntityValueImplementation(
+                                            ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName),
+                                            edmProperty == null ? null : edmProperty.Type,
+                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*collectionValidator*/ null,
+                                            nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
+                                            /*isTopLevelPropertyValue*/ false,
+                                            /*insideComplexValue*/ false,
+                                            propertyName,
+                                            edmProperty == null);
+                                        toAddPropertyValue = true;
+                                    }
+                                }
+                                else if (ignoreProperty)
                                 {
                                     this.JsonReader.SkipValue();
                                 }
                                 else
                                 {
-                                    // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.
-                                    // If the property has an annotation to ignore null values, we need to omit the property in requests.
-                                    ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null
-                                        ? ODataNullValueBehaviorKind.Default
-                                        : this.Model.NullValueReadBehaviorKind(edmProperty);
-
-                                    // Read the property value
-                                    object propertyValue = this.ReadNonEntityValueImplementation(
-                                        ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName),
-                                        edmProperty == null ? null : edmProperty.Type,
-                                        /*duplicatePropertyNamesChecker*/ null,
-                                        /*collectionValidator*/ null,
-                                        nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
-                                        /*isTopLevelPropertyValue*/ false,
-                                        /*insideComplexValue*/ false,
-                                        propertyName,
-                                        edmProperty == null);
-
-                                    if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
+                                    IEdmProperty propertyTmp = complexValueTypeReference == null
+                                        ?
+                                        null
+                                        :
+                                        complexValueTypeReference.FindProperty(propertyName);
+                                    if (propertyTmp == null)
                                     {
-                                        duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-                                        property.Value = propertyValue;
-                                        var propertyAnnotations = duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
-                                        if (propertyAnnotations != null)
+                                        if (this.MessageReaderSettings.ShouldThrowOnUndeclaredProperty())
                                         {
-                                            foreach (var annotation in propertyAnnotations)
+                                            IEdmStructuredType owningStructuredType = (complexValueTypeReference != null)
+                                                ?
+                                                (complexValueTypeReference.Definition as IEdmStructuredType)
+                                                : null;
+                                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, (owningStructuredType != null) ? owningStructuredType.FullTypeName() : null));
+                                        }
+                                        else if (this.MessageReaderSettings.ShouldSupportUndeclaredProperty())
+                                        {
+                                            bool isTopLevelPropertyValue = false;
+                                            propertyValue = this.InnerReadNonOpenUndeclaredProperty(duplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
+                                            toAddPropertyValue = true;
+                                        }
+                                        else
+                                        {
+                                            Debug.Assert(
+                                                this.MessageReaderSettings.ShouldIgnoreUndeclaredProperty(),
+                                                "this.MessageReaderSettings.ShouldIgnoreUndeclaredProperty()");
+                                            this.JsonReader.SkipValue();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Read the property value
+                                        propertyValue = this.ReadNonEntityValueImplementation(
+                                            ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName),
+                                            edmProperty == null ? null : edmProperty.Type,
+                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*collectionValidator*/ null,
+                                            nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
+                                            /*isTopLevelPropertyValue*/ false,
+                                            /*insideComplexValue*/ false,
+                                            propertyName,
+                                            edmProperty == null);
+                                        toAddPropertyValue = true;
+                                    }
+                                }
+
+                                if (toAddPropertyValue
+                                    && (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null))
+                                {
+                                    duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+                                    property.Value = propertyValue;
+                                    var propertyAnnotations = duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
+                                    if (propertyAnnotations != null)
+                                    {
+                                        foreach (var annotation in propertyAnnotations)
+                                        {
+                                            if (annotation.Value != null)
                                             {
-                                                if (annotation.Value != null)
-                                                {
-                                                    // annotation.Value == null indicates that this annotation should be skipped.
-                                                    property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                                                }
+                                                // annotation.Value == null indicates that this annotation should be skipped.
+                                                property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
                                             }
                                         }
-
-                                        properties.Add(property);
                                     }
+
+                                    properties.Add(property);
                                 }
 
                                 break;
@@ -1262,36 +1527,6 @@ namespace Microsoft.OData.Core.JsonLight
                                 throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
                         }
                     });
-            }
-        }
-
-        /// <summary>
-        /// Determines the value kind for a non-entity value (that is top-level property value, property value on a complex type, item in a collection)
-        /// </summary>
-        /// <returns>The type kind of the property value.</returns>
-        /// <remarks>
-        /// Doesn't move the JSON reader.
-        /// </remarks>
-        private EdmTypeKind GetNonEntityValueKind()
-        {
-            // If we get here, we did not find a type name in the payload and don't have an expected type.
-            // This can only happen for error cases when using open properties (for declared properties we always
-            // have an expected type and for open properties we always require a type). We then decide based on 
-            // the node type of the reader.
-            // PrimitiveValue       - we know that it is a primitive value; 
-            // StartArray           - we know that we have a collection;
-            // Other                - for a JSON object value (and if we did not already find a payload type name)
-            //                        we have already started reading the object to find a type name (and have failed)
-            //                        and might thus be on a Property or EndObject node.
-            //                        Also note that in this case we can't distinguish whether what we are looking at is 
-            //                        a complex value or a spatial value (both are JSON objects). We will report 
-            //                        'Complex' in that case which will fail we an appropriate error message 
-            //                        also for spatial ('value without type name found').
-            switch (this.JsonReader.NodeType)
-            {
-                case JsonNodeType.PrimitiveValue: return EdmTypeKind.Primitive;
-                case JsonNodeType.StartArray: return EdmTypeKind.Collection;
-                default: return EdmTypeKind.Complex;
             }
         }
 

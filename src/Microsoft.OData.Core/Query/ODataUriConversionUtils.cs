@@ -224,13 +224,13 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
-                model, 
+                model,
                 context =>
-            {
-                ODataWriter writer = context.CreateODataEntryWriter(null, null);
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+                {
+                    ODataWriter writer = context.CreateODataEntryWriter(null, null);
+                    writer.WriteStart(entry);
+                    writer.WriteEnd();
+                });
         }
 
         /// <summary>
@@ -245,20 +245,20 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
-                model, 
+                model,
                 context =>
-            {
-                ODataWriter writer = context.CreateODataFeedWriter(null, null);
-                writer.WriteStart(new ODataFeed());
-
-                foreach (var entry in entries)
                 {
-                    writer.WriteStart(entry);
-                    writer.WriteEnd();
-                }
+                    ODataWriter writer = context.CreateODataFeedWriter(null, null);
+                    writer.WriteStart(new ODataFeed());
 
-                writer.WriteEnd();
-            });
+                    foreach (var entry in entries)
+                    {
+                        writer.WriteStart(entry);
+                        writer.WriteEnd();
+                    }
+
+                    writer.WriteEnd();
+                });
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core.Json
 #else
     internal
 #endif
-    class JsonReader
+ class JsonReader
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -109,6 +109,11 @@ namespace Microsoft.OData.Core.Json
         /// The last reported node type.
         /// </summary>
         private JsonNodeType nodeType;
+
+        /// <summary>
+        /// The json raw string or char of the last reported node.
+        /// </summary>
+        private string nodeRawValue;
 
         /// <summary>
         /// The value of the last reported node.
@@ -216,6 +221,17 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
+        /// Gets json raw string/char.
+        /// </summary>
+        public virtual string RawValue
+        {
+            get
+            {
+                return this.nodeRawValue;
+            }
+        }
+
+        /// <summary>
         /// if it is IEEE754 compatible
         /// </summary>
         public virtual bool IsIeee754Compatible
@@ -235,6 +251,7 @@ namespace Microsoft.OData.Core.Json
         {
             // Reset the node value.
             this.nodeValue = null;
+            this.nodeRawValue = null;
 
 #if DEBUG
             // Reset the node type to None - so that we can verify that the Read method actually sets it.
@@ -258,6 +275,7 @@ namespace Microsoft.OData.Core.Json
             if (this.characterBuffer[this.tokenStartIndex] == ',')
             {
                 commaFound = true;
+                this.TryAppendJsonRawValue(this.characterBuffer[this.tokenStartIndex]);
                 this.tokenStartIndex++;
 
                 // Note that validity of the comma is verified below depending on the current scope.
@@ -274,6 +292,7 @@ namespace Microsoft.OData.Core.Json
                     "The SkipWhitespaces didn't correctly skip all whitespace characters from the input.");
             }
 
+            string RawValueTmp = null;
             switch (currentScope.Type)
             {
                 case ScopeType.Root:
@@ -289,7 +308,8 @@ namespace Microsoft.OData.Core.Json
                     }
 
                     // We expect a "value" - start array, start object or primitive value
-                    this.nodeType = this.ParseValue();
+                    this.nodeType = this.ParseValue(out RawValueTmp);
+                    this.TryAppendJsonRawValue(RawValueTmp);
                     break;
 
                 case ScopeType.Array:
@@ -301,6 +321,7 @@ namespace Microsoft.OData.Core.Json
                     // We might see end of array here
                     if (this.characterBuffer[this.tokenStartIndex] == ']')
                     {
+                        this.TryAppendJsonRawValue(this.characterBuffer[this.tokenStartIndex]);
                         this.tokenStartIndex++;
 
                         // End of array is only valid when there was no comma before it.
@@ -320,7 +341,8 @@ namespace Microsoft.OData.Core.Json
                     }
 
                     // We expect element which is a "value" - start array, start object or primitive value
-                    this.nodeType = this.ParseValue();
+                    this.nodeType = this.ParseValue(out RawValueTmp);
+                    this.TryAppendJsonRawValue(RawValueTmp);
                     break;
 
                 case ScopeType.Object:
@@ -332,6 +354,7 @@ namespace Microsoft.OData.Core.Json
                     // We might see end of object here
                     if (this.characterBuffer[this.tokenStartIndex] == '}')
                     {
+                        this.TryAppendJsonRawValue(this.characterBuffer[this.tokenStartIndex]);
                         this.tokenStartIndex++;
 
                         // End of object is only valid when there was no comma before it.
@@ -352,7 +375,8 @@ namespace Microsoft.OData.Core.Json
                         }
 
                         // We expect a property here
-                        this.nodeType = this.ParseProperty();
+                        this.nodeType = this.ParseProperty(out RawValueTmp);
+                        this.TryAppendJsonRawValue(RawValueTmp);
                         break;
                     }
 
@@ -363,7 +387,8 @@ namespace Microsoft.OData.Core.Json
                     }
 
                     // We expect the property value, which is a "value" - start array, start object or primitive value
-                    this.nodeType = this.ParseValue();
+                    this.nodeType = this.ParseValue(out RawValueTmp);
+                    this.TryAppendJsonRawValue(RawValueTmp);
                     break;
 
                 default:
@@ -379,6 +404,24 @@ namespace Microsoft.OData.Core.Json
                 "Read should never go back to None and EndOfInput should be reported by directly returning.");
 
             return true;
+        }
+
+        /// <summary>
+        /// Appends current JSON raw string.
+        /// </summary>
+        /// <param name="rawValue">The string.</param>
+        private void TryAppendJsonRawValue(string rawValue)
+        {
+            this.nodeRawValue += rawValue;
+        }
+
+        /// <summary>
+        /// Appends current JSON raw string.
+        /// </summary>
+        /// <param name="rawValue">The char.</param>
+        private void TryAppendJsonRawValue(char rawValue)
+        {
+            this.nodeRawValue += rawValue;
         }
 
         /// <summary>
@@ -406,8 +449,9 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Parses a "value", that is an array, object or primitive value.
         /// </summary>
+        /// <param name="rawValue">The raw string, out parameter.</param>
         /// <returns>The node type to report to the user.</returns>
-        private JsonNodeType ParseValue()
+        private JsonNodeType ParseValue(out string rawValue)
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
@@ -424,12 +468,14 @@ namespace Microsoft.OData.Core.Json
                     // Start of object
                     this.PushScope(ScopeType.Object);
                     this.tokenStartIndex++;
+                    rawValue = currentCharacter.ToString();
                     return JsonNodeType.StartObject;
 
                 case '[':
                     // Start of array
                     this.PushScope(ScopeType.Array);
                     this.tokenStartIndex++;
+                    rawValue = currentCharacter.ToString();
                     return JsonNodeType.StartArray;
 
                 case '"':
@@ -437,15 +483,16 @@ namespace Microsoft.OData.Core.Json
                     // String primitive value
                     bool hasLeadingBackslash;
                     this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                    rawValue = string.Format(CultureInfo.InvariantCulture, "{0}{1}{0}", currentCharacter, this.nodeValue);
                     break;
 
                 case 'n':
-                    this.nodeValue = this.ParseNullPrimitiveValue();
+                    this.nodeValue = this.ParseNullPrimitiveValue(out rawValue);
                     break;
 
                 case 't':
                 case 'f':
-                    this.nodeValue = this.ParseBooleanPrimitiveValue();
+                    this.nodeValue = this.ParseBooleanPrimitiveValue(out rawValue);
                     break;
 
                 default:
@@ -453,7 +500,7 @@ namespace Microsoft.OData.Core.Json
                     // The JSON spec doesn't allow numbers to start with ., but WCF DS does. We will follow the WCF DS behavior for compatibility.
                     if (Char.IsDigit(currentCharacter) || (currentCharacter == '-') || (currentCharacter == '.'))
                     {
-                        this.nodeValue = this.ParseNumberPrimitiveValue();
+                        this.nodeValue = this.ParseNumberPrimitiveValue(out rawValue);
                         break;
                     }
                     else
@@ -470,8 +517,9 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Parses a property name and the colon after it.
         /// </summary>
+        /// <param name="rawValue">The raw string, out parameter.</param>
         /// <returns>The node type to report to the user.</returns>
-        private JsonNodeType ParseProperty()
+        private JsonNodeType ParseProperty(out string rawValue)
         {
             // Increase the count of values under the object (the number of properties).
             Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type == ScopeType.Object, "Property can only occur in an object.");
@@ -480,7 +528,7 @@ namespace Microsoft.OData.Core.Json
             this.PushScope(ScopeType.Property);
 
             // Parse the name of the property
-            this.nodeValue = this.ParseName();
+            this.nodeValue = this.ParseName(out rawValue);
 
             if (string.IsNullOrEmpty((string)this.nodeValue))
             {
@@ -496,6 +544,7 @@ namespace Microsoft.OData.Core.Json
 
             // Consume the colon.
             Debug.Assert(this.characterBuffer[this.tokenStartIndex] == ':', "The above should verify that there's a colon.");
+            rawValue += ":";
             this.tokenStartIndex++;
 
             return JsonNodeType.Property;
@@ -663,16 +712,17 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Parses the null primitive value.
         /// </summary>
+        /// <param name="rawValue">The raw string, out parameter.</param>
         /// <returns>Always returns null if successful. Otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the 'n' character.</remarks>
-        private object ParseNullPrimitiveValue()
+        private object ParseNullPrimitiveValue(out string rawValue)
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && this.characterBuffer[this.tokenStartIndex] == 'n',
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
-            string token = this.ParseName();
+            string token = this.ParseName(out rawValue);
 
             if (!string.Equals(token, JsonConstants.JsonNullLiteral))
             {
@@ -685,22 +735,23 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Parses the true or false primitive values.
         /// </summary>
+        /// <param name="rawValue">The raw string, out parameter.</param>
         /// <returns>true of false boolean value if successful. Otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the 't' or 'f' character.</remarks>
-        private object ParseBooleanPrimitiveValue()
+        private object ParseBooleanPrimitiveValue(out string rawValue)
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == 't' || this.characterBuffer[this.tokenStartIndex] == 'f'),
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
-            string token = this.ParseName();
+            string token = this.ParseName(out rawValue);
 
             if (string.Equals(token, JsonConstants.JsonFalseLiteral))
             {
                 return false;
             }
-            
+
             if (string.Equals(token, JsonConstants.JsonTrueLiteral))
             {
                 return true;
@@ -712,9 +763,10 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Parses the number primitive values.
         /// </summary>
+        /// <param name="rawValue">The raw string, out parameter.</param>
         /// <returns>Parse value to Int32, Decimal or Double. Otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dot or dash.</remarks>
-        private object ParseNumberPrimitiveValue()
+        private object ParseNumberPrimitiveValue(out string rawValue)
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
@@ -743,6 +795,7 @@ namespace Microsoft.OData.Core.Json
 
             // We now have all the characters which belong to the number, consume it into a string.
             string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            rawValue = numberString;
             double doubleValue;
             int intValue;
             decimal decimalValue;
@@ -760,31 +813,34 @@ namespace Microsoft.OData.Core.Json
             {
                 return decimalValue;
             }
-            
+
             if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
             {
                 return doubleValue;
             }
-            
+
             throw JsonReaderExtensions.CreateException(Strings.JsonReader_InvalidNumberFormat(numberString));
         }
 
         /// <summary>
         /// Parses a name token.
         /// </summary>
+        /// <param name="rawValue">The raw string, out parameter.</param>
         /// <returns>The value of the name token.</returns>
         /// <remarks>Name tokens are (for backward compat reasons) either
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private string ParseName()
+        private string ParseName(out string rawValue)
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
             char firstCharacter = this.characterBuffer[this.tokenStartIndex];
             if ((firstCharacter == '"') || (firstCharacter == '\''))
             {
-                return this.ParseStringPrimitiveValue();
+                string ret = this.ParseStringPrimitiveValue();
+                rawValue = string.Format(CultureInfo.InvariantCulture, "{0}{1}{0}", firstCharacter, ret);
+                return ret;
             }
 
             int currentCharacterTokenRelativeIndex = 0;
@@ -809,7 +865,8 @@ namespace Microsoft.OData.Core.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
-            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            rawValue = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            return rawValue;
         }
 
         /// <summary>
@@ -946,7 +1003,7 @@ namespace Microsoft.OData.Core.Json
             {
                 return false;
             }
-            
+
             // We need to make sure we have more room in the buffer to read characters into
             if (this.storedCharacterCount == this.characterBuffer.Length)
             {
@@ -989,7 +1046,7 @@ namespace Microsoft.OData.Core.Json
 
                     // And switch the buffers
                     this.characterBuffer = newCharacterBuffer;
-                    
+
                     // Note that the number of characters stored in the buffer remains unchanged
                     // as well as the token start index which is 0.
                 }

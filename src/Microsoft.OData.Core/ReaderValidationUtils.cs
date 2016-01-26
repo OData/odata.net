@@ -182,13 +182,30 @@ namespace Microsoft.OData.Core
             IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (messageReaderSettings.ShouldIgnoreUndeclaredProperty())
+                if (messageReaderSettings.NeedRunLegacyPropertyHandling())
+                {
+                    if (messageReaderSettings.NeedIgnoreLegacyUndeclaredProperty())
+                    {
+                        ignoreProperty = true;
+                    }
+                    else
+                    {
+                        throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                    }
+                }
+                else if (messageReaderSettings.ShouldIgnoreUndeclaredProperty())
                 {
                     ignoreProperty = true;
                 }
-                else
+                else if (messageReaderSettings.ShouldThrowOnUndeclaredProperty())
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                }
+                else
+                {
+                    Debug.Assert(
+                        messageReaderSettings.ShouldSupportUndeclaredProperty(),
+                        "messageReaderSettings.ShouldSupportUndeclaredProperty()");
                 }
             }
 

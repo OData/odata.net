@@ -3848,10 +3848,12 @@ public enum Microsoft.OData.Core.ODataReaderState : int {
 FlagsAttribute(),
 ]
 public enum Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds : int {
+	DiscardUndeclaredValueProperty = 256
 	IgnoreUndeclaredValueProperty = 1
 	None = 0
 	ReportUndeclaredLinkProperty = 2
-	SupportUndeclaredValueProperty = 4
+	SupportUndeclaredValueProperty = 128
+	ThrowOnUndeclaredValueProperty = 512
 }
 
 public enum Microsoft.OData.Core.ODataVersion : int {

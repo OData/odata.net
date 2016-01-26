@@ -95,12 +95,23 @@ namespace Microsoft.OData.Core
             }
 
             IEdmProperty property = owningStructuredType.FindProperty(propertyName);
-
-            // verify that the property is declared if the type is not an open type.
-            if (((messageValidationSetting == null) || messageValidationSetting.ShouldThrowOnUndeclaredProperty())
-                && !owningStructuredType.IsOpen && property == null)
+            if ((messageValidationSetting == null)
+                || messageValidationSetting.NeedRunLegacyPropertyHandling())
             {
-                throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                if (((messageValidationSetting == null) || messageValidationSetting.EnableFullValidation)
+                    && !owningStructuredType.IsOpen && property == null)
+                {
+                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                }
+            }
+            else
+            {
+                // verify that the property is declared if the type is not an open type.
+                if (((messageValidationSetting == null) || messageValidationSetting.ShouldThrowOnUndeclaredProperty())
+                    && !owningStructuredType.IsOpen && property == null)
+                {
+                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                }
             }
 
             return property;

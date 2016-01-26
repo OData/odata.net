@@ -617,7 +617,7 @@
     <Compile Include="UriParser\Extensions\SyntacticAst\AggregateToken.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\GroupByToken.cs" />
-	<Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
+    <Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
       <Link>EdmValueParser.cs</Link>
     </Compile>

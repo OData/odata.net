@@ -928,7 +928,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                undeclaredPropertyBehaviorKinds: ODataUndeclaredPropertyBehaviorKinds.None);
+                enableFullValidation: true);
             action.ShouldThrow<ODataException>().WithMessage(
                 Strings.ValidationUtils_PropertyDoesNotExistOnType("Prop1", "Namespace.EntityType"));
 
@@ -939,7 +939,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                undeclaredPropertyBehaviorKinds: ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
+                enableFullValidation: false);
             string expectedPayload =
                                   "{\"" +
                                     "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
@@ -993,7 +993,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string selectClause = null,
             string expandClause = null,
             string resourcePath = null,
-            ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None)
+            bool enableFullValidation = true)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
@@ -1001,8 +1001,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
                 AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
-                EnableFullValidation = true,
-                UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds
+                EnableFullValidation = enableFullValidation
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
