@@ -117,6 +117,7 @@
     <Compile Include="JsonLight\ODataJsonLightDeserializerTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerSkipUndeclaredTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerTests.cs" />
+    <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerUndeclaredTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedSerializerSkipUndecalredTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedSerializerTests.cs" />

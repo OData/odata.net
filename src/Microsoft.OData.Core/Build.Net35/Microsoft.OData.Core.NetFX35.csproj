@@ -487,6 +487,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightPropertySerializer.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightPropertySerializer.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightRawAnnotationSet.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightRawAnnotationSet.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightReader.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightReader.cs</Link>
     </Compile>

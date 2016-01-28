@@ -512,6 +512,35 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Adds an ODataJsonLightRawAnnotationSet to the property's value (ODataAnnotatable) if it has raw annotation.
+        /// </summary>
+        /// <param name="annotationCollector">The PropertyAnnotationCollector that temporarily stores raw annotations .</param>
+        /// <param name="property">The target property.</param>
+        /// <returns>True if annotation is added to property value.</returns>
+        protected static bool TryAttachRawAnnotationSetToPropertyValue(
+            DuplicatePropertyNamesChecker.PropertyAnnotationCollector annotationCollector,
+            ODataProperty property)
+        {
+            if (annotationCollector != null)
+            {
+                ODataJsonLightRawAnnotationSet rawAnnotations =
+                    annotationCollector.GetPropertyRawAnnotationSet(property.Name);
+                if (rawAnnotations != null)
+                {
+                    ODataUntypedValue untypedValue = property.Value as ODataUntypedValue;
+                    ODataAnnotatable valueTmp = (ODataAnnotatable)untypedValue ?? (ODataAnnotatable)property.ODataValue;
+                    if (valueTmp != null)
+                    {
+                        valueTmp.SetAnnotation(rawAnnotations);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Tries to read an annotation as OData type name annotation.
         /// </summary>
         /// <param name="payloadTypeName">The read value of the annotation (string).</param>
@@ -1113,6 +1142,11 @@ namespace Microsoft.OData.Core.JsonLight
                                 {
                                     duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
                                     property.Value = propertyValue;
+                                    if (duplicatePropertyNamesChecker != null)
+                                    {
+                                        TryAttachRawAnnotationSetToPropertyValue(duplicatePropertyNamesChecker.AnnotationCollector, property);
+                                    }
+
                                     var propertyAnnotations = duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
                                     if (propertyAnnotations != null)
                                     {

@@ -173,7 +173,6 @@ namespace Microsoft.OData.Core.Json
             }
         }
 
-#if DEBUG
         /// <summary>
         /// Flag indicating whether buffering is on or off; debug-only for use in asserts.
         /// </summary>
@@ -184,7 +183,7 @@ namespace Microsoft.OData.Core.Json
                 return this.isBuffering;
             }
         }
-#endif
+
         /// <summary>
         /// Reads the next node from the input.
         /// </summary>

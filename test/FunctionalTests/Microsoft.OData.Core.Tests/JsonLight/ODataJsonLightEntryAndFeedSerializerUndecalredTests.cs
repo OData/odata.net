@@ -18,9 +18,6 @@
         private EdmModel serverModel;
         private EdmEntityType serverEntityType;
         private EdmEntityType serverOpenEntityType;
-        private string serverEntityTypeName;
-        private string serverOpenEntityTypeName;
-        private string serverComplexTypeName;
         private EdmEntitySet serverEntitySet;
         private EdmEntitySet serverOpenEntitySet;
 
@@ -30,11 +27,9 @@
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
             this.serverModel.AddElement(addressType);
-            this.serverComplexTypeName = "Server.NS.Address";
 
             // non-open entity type
             this.serverEntityType = new EdmEntityType("Server.NS", "ServerEntityType");
-            this.serverEntityTypeName = "Server.NS.ServerEntityType";
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
@@ -42,7 +37,6 @@
             // open entity type
             this.serverOpenEntityType = new EdmEntityType("Server.NS", "ServerOpenEntityType",
                 baseType: null, isAbstract: false, isOpen: true);
-            this.serverOpenEntityTypeName = "Server.NS.ServerOpenEntityType";
             this.serverModel.AddElement(this.serverOpenEntityType);
             this.serverOpenEntityType.AddKeys(this.serverOpenEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverOpenEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));

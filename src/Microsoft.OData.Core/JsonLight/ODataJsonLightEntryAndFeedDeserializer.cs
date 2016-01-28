@@ -1034,7 +1034,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entryState">The entry state for the entry to add the property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="propertyValue">The value of the property to add.</param>
-        private static void AddEntryProperty(IODataJsonLightReaderEntryState entryState, string propertyName, object propertyValue)
+        /// <returns>The added ODataProperty.</returns>
+        private static ODataProperty AddEntryProperty(IODataJsonLightReaderEntryState entryState, string propertyName, object propertyValue)
         {
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -1058,6 +1059,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEntry entry = entryState.Entry;
             Debug.Assert(entry != null, "entry != null");
             entry.Properties = entry.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+            return property;
         }
 
         /// <summary>
@@ -1399,7 +1401,12 @@ namespace Microsoft.OData.Core.JsonLight
             if (needAddPropertyValue)
             {
                 ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
-                AddEntryProperty(entryState, propertyName, propertyValue);
+                ODataProperty property = AddEntryProperty(entryState, propertyName, propertyValue);
+                bool isTruelyUndeclaredPropertyInOpenEntity = (propertyValue is ODataUntypedValue);
+                if (isTruelyUndeclaredPropertyInOpenEntity && (entryState.DuplicatePropertyNamesChecker != null))
+                {
+                    TryAttachRawAnnotationSetToPropertyValue(entryState.DuplicatePropertyNamesChecker.AnnotationCollector, property);
+                }
             }
 
             this.JsonReader.AssertNotBuffering();
@@ -1554,7 +1561,13 @@ namespace Microsoft.OData.Core.JsonLight
                 // new logic: 
                 // will read non-open entity's undeclared primitives as *ODataUntypedValue* instead of ODataValue.
                 object propertyValue = this.InnerReadNonOpenUndeclaredProperty(entryState.DuplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
-                AddEntryProperty(entryState, propertyName, propertyValue);
+                ODataProperty property = AddEntryProperty(entryState, propertyName, propertyValue);
+                if (entryState.DuplicatePropertyNamesChecker != null)
+                {
+                    TryAttachRawAnnotationSetToPropertyValue(
+                        entryState.DuplicatePropertyNamesChecker.AnnotationCollector,
+                        property);
+                }
             }
             else
             {

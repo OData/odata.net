@@ -19,9 +19,6 @@
         private EdmModel serverModel;
         private EdmEntityType serverEntityType;
         private EdmEntityType serverOpenEntityType;
-        private string serverEntityTypeName;
-        private string serverOpenEntityTypeName;
-        private string serverComplexTypeName;
         private EdmEntitySet serverEntitySet;
         private EdmEntitySet serverOpenEntitySet;
 
@@ -31,11 +28,9 @@
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
             this.serverModel.AddElement(addressType);
-            this.serverComplexTypeName = "Server.NS.Address";
 
             // non-open entity type
             this.serverEntityType = new EdmEntityType("Server.NS", "ServerEntityType");
-            this.serverEntityTypeName = "Server.NS.ServerEntityType";
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
@@ -43,7 +38,6 @@
             // open entity type
             this.serverOpenEntityType = new EdmEntityType("Server.NS", "ServerOpenEntityType",
                 baseType: null, isAbstract: false, isOpen: true);
-            this.serverOpenEntityTypeName = "Server.NS.ServerOpenEntityType";
             this.serverModel.AddElement(this.serverOpenEntityType);
             this.serverOpenEntityType.AddKeys(this.serverOpenEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverOpenEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
@@ -367,7 +361,7 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "UndeclaredAddress1", Value = 
+                        new ODataProperty{Name = "UndeclaredAddress1", Value =
                             new ODataUntypedValue(){RawValue=@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}"}
                         },
                     },
@@ -391,7 +385,7 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "UndeclaredCollection1", Value = 
+                        new ODataProperty{Name = "UndeclaredCollection1", Value =
                             new ODataUntypedValue(){RawValue=@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]"}
                         },
                     },
@@ -682,7 +676,7 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "UndeclaredAddress1", Value = 
+                        new ODataProperty{Name = "UndeclaredAddress1", Value =
                             new ODataUntypedValue(){RawValue=@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}"}
                         },
                     },
@@ -706,7 +700,7 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "UndeclaredCollection1", Value = 
+                        new ODataProperty{Name = "UndeclaredCollection1", Value =
                             new ODataUntypedValue(){RawValue=@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]"}
                         },
                     },
