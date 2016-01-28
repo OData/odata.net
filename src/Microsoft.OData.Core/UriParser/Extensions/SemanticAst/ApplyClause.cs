@@ -71,6 +71,16 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
             return CreatePropertiesUriSegment(lastGroupByPropertyNodes, lastAggregateStatements);
         }
 
+        internal List<string> GetLastAggregatedPropertyNames()
+        {
+            if (lastAggregateStatements != null)
+            {
+                return lastAggregateStatements.Select(statement => statement.AsAlias).ToList();
+            }
+
+            return null;
+        }
+
         private string CreatePropertiesUriSegment(
             IEnumerable<GroupByPropertyNode> groupByPropertyNodes, 
             IEnumerable<AggregateStatement> aggregateStatements)

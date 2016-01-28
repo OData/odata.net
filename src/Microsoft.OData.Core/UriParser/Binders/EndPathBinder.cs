@@ -194,7 +194,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Whether the token represents an aggregated property.</returns>
         private bool IsAggregatedProperty(string identifier)
         {
-            return (state.AggregatedProperties != null && state.AggregatedProperties.Contains(identifier));
+            return (state.AggregatedPropertyNames != null && state.AggregatedPropertyNames.Contains(identifier));
         }
     }
 }
