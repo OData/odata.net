@@ -165,7 +165,7 @@ namespace Microsoft.OData.Client
                 collectionElementType = this.ResolveTypeForMaterialization(collectionElementType, collectionItemTypeName).ElementType;
             }
 
-            Type clrCollectionType = WebUtil.GetBackingTypeForCollectionProperty(expectedType, collectionElementType);
+            Type clrCollectionType = WebUtil.GetBackingTypeForCollectionProperty(expectedType);
             return this.clientEdmModel.GetClientTypeAnnotation(clrCollectionType);
         }
 

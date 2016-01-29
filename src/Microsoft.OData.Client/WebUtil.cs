@@ -168,13 +168,11 @@ namespace Microsoft.OData.Client
         /// Resolves and creates if necessary a backing type for the <paramref name="collectionPropertyType"/>.
         /// </summary>
         /// <param name="collectionPropertyType">Type of a collection property as defined by the user - can be just an interface or generic type.</param>
-        /// <param name="collectionItemType">Type of items stored in the collection.</param>
         /// <returns>Resolved concrete type that can be instantiated and will back the collection property. Can be the <paramref name="collectionPropertyType"/> type.</returns>
-        internal static Type GetBackingTypeForCollectionProperty(Type collectionPropertyType, Type collectionItemType)
+        internal static Type GetBackingTypeForCollectionProperty(Type collectionPropertyType)
         {
             Debug.Assert(collectionPropertyType != null, "collectionPropertyType != null");
             Debug.Assert(ClientTypeUtil.GetImplementationType(collectionPropertyType, typeof(ICollection<>)) != null, "The type backing a collection has to implement ICollection<> interface.");
-            Debug.Assert(collectionItemType != null, "collectionItemType != null");
 
             Type collectionBackingType = null;
 
@@ -183,7 +181,7 @@ namespace Microsoft.OData.Client
             // Note that we don't check here if the type we created can be assigned to the user's type. This should be done by the caller (if requested)
             if (collectionPropertyType.IsInterface())
             {
-                collectionBackingType = typeof(ObservableCollection<>).MakeGenericType(collectionItemType);
+                collectionBackingType = typeof(ObservableCollection<>).MakeGenericType(collectionPropertyType.GetGenericArguments()[0]);
             }
             else
             {

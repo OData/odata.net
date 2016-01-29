@@ -78,13 +78,14 @@ namespace Microsoft.OData.Client.Materialization
             {
                 // TODO: Find better way to parse Enum
                 string enumValueStr = enumValue.Value.Trim();
-                if (!Enum.IsDefined(enumType, enumValueStr))
+                Type underlyingType = Nullable.GetUnderlyingType(enumType) ?? enumType;
+                if (!Enum.IsDefined(underlyingType, enumValueStr))
                 {
-                    tmpValue = Enum.Parse(enumType, ClientTypeUtil.GetClientFieldName(enumType, enumValueStr), false);
+                    tmpValue = Enum.Parse(underlyingType, ClientTypeUtil.GetClientFieldName(underlyingType, enumValueStr), false);
                 }
                 else
                 {
-                    tmpValue = Enum.Parse(enumType, enumValueStr, false);
+                    tmpValue = Enum.Parse(underlyingType, enumValueStr, false);
                 }
             }
 

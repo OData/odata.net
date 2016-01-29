@@ -77,7 +77,7 @@ namespace Microsoft.OData.Client.Materialization
                 collectionICollectionType = typeof(ICollection<>).MakeGenericType(new Type[] { collectionItemType });
             }
 
-            Type clrCollectionType = WebUtil.GetBackingTypeForCollectionProperty(collectionICollectionType, collectionItemType);
+            Type clrCollectionType = WebUtil.GetBackingTypeForCollectionProperty(collectionICollectionType);
             object collectionInstance = this.CollectionValueMaterializationPolicy.CreateCollectionInstance((IEdmCollectionTypeReference)expectedClientType, clrCollectionType);
 
             // Enumerator over our collection reader was created, then ApplyDataCollections was refactored to 

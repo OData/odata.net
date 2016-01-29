@@ -63,7 +63,7 @@
     </Compile>
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />
-    <Compile Include="Tests\Annotation\AnnotationRequestMessage.cs" />
+    <Compile Include="Tests\CustomizedHttpWebRequestMessage.cs" />
     <Compile Include="Tests\Annotation\AnnotationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientMetadataAnnotationTests.cs" />
     <Compile Include="Tests\Annotation\ClientMetadataAnnotationWithPOCO.cs" />
@@ -83,6 +83,8 @@
     <Compile Include="Tests\Materialization\ComplexValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\CollectionValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\EntryValueMaterializationPolicyUnitTests.cs" />
+    <Compile Include="Tests\Materialization\ODataMaterializerTests.cs" />
+    <Compile Include="Tests\Materialization\ODataMaterializerTestsProxy.cs" />
     <Compile Include="Tests\Materialization\PrimitiveValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\PrimitivePropertyConverterTests.cs" />
     <Compile Include="Tests\Materialization\TestEntityTracker.cs" />
