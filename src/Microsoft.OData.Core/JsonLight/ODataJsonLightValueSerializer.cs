@@ -350,7 +350,7 @@ namespace Microsoft.OData.Core.JsonLight
             value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value, expectedTypeReference);
 
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
-            ODataPayloadValueConverter converter = this.Model.GetPayloadValueConverter();
+            ODataPayloadValueConverter converter = this.JsonLightOutputContext.PayloadValueConverter;
 
             // Skip validation if user has set custom PayloadValueConverter
             if (expectedTypeReference != null && converter.GetType() == typeof(ODataPayloadValueConverter))
