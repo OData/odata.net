@@ -313,14 +313,14 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     // write "odata.actions" metadata
                     IEnumerable<ODataAction> actions = feed.Actions;
-                    if (actions != null)
+                    if (actions != null && actions.Any())
                     {
                         this.jsonLightEntryAndFeedSerializer.WriteOperations(actions.Cast<ODataOperation>(), /*isAction*/ true);
                     }
 
                     // write "odata.functions" metadata
                     IEnumerable<ODataFunction> functions = feed.Functions;
-                    if (functions != null)
+                    if (functions != null && functions.Any())
                     {
                         this.jsonLightEntryAndFeedSerializer.WriteOperations(functions.Cast<ODataOperation>(), /*isAction*/ false);
                     }

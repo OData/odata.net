@@ -1293,7 +1293,7 @@ namespace Microsoft.OData.Core
             IEdmNavigationSource navigationSource = null;
             IEdmEntityType entityType = null;
             SelectedPropertiesNode selectedProperties = currentScope.SelectedProperties;
-            ODataUri odataUri = currentScope.ODataUri.Clone();
+            ODataUri odataUri = currentScope.ODataUri;
 
             if (newState == WriterState.Entry || newState == WriterState.Feed)
             {
@@ -1328,6 +1328,8 @@ namespace Microsoft.OData.Core
 
                     if (this.outputContext.WritingResponse)
                     {
+                        odataUri = currentScope.ODataUri.Clone();
+
                         IEdmEntityType currentEntityType = currentScope.EntityType;
                         IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null, !this.outputContext.MessageWriterSettings.EnableFullValidation);
                         if (navigationProperty != null)
