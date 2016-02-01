@@ -317,6 +317,7 @@ namespace Microsoft.OData.Core.UriParser
                     (serializer) => serializer.WriteCollectionValue(
                         collectionValue,
                         null /*metadataTypeReference*/,
+                        null /*valueTypeReference*/,
                         false /*isTopLevelProperty*/,
                         true /*isInUri*/,
                         false /*isOpenPropertyType*/));

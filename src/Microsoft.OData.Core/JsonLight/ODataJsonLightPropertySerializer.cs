@@ -136,13 +136,28 @@ namespace Microsoft.OData.Core.JsonLight
         private bool IsOpenProperty(ODataProperty property, IEdmStructuredType owningType, IEdmProperty edmProperty)
         {
             Debug.Assert(property != null, "property != null");
+
+            bool isOpenProperty;
+
             if (property.SerializationInfo != null)
             {
-                return property.SerializationInfo.PropertyKind == ODataPropertyKind.Open;
+                isOpenProperty = property.SerializationInfo.PropertyKind == ODataPropertyKind.Open;
+            }
+            else
+            {
+                isOpenProperty = (!this.WritingResponse && owningType == null) // Treat property as dynamic property when writing request and owning type is null
+                || (owningType != null && owningType.IsOpen && edmProperty == null);
             }
 
-            return (!this.WritingResponse && owningType == null) // Treat property as dynamic property when writing request and owning type is null
-                || (owningType != null && owningType.IsOpen && edmProperty == null);
+            if (isOpenProperty)
+            {
+                if (this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation)
+                {
+                    ValidationUtils.ValidateOpenPropertyValue(property.Name, property.ODataValue);
+                }
+            }
+
+            return isOpenProperty;
         }
 
         /// <summary>
@@ -175,17 +190,7 @@ namespace Microsoft.OData.Core.JsonLight
             WriterValidationUtils.ValidatePropertyName(propertyName, bypassValidation);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
 
-            if (property.InstanceAnnotations.Any())
-            {
-                if (isTopLevel)
-                {
-                    this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations);
-                }
-                else
-                {
-                    this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, propertyName);
-                }
-            }
+            WriteInstanceAnnotation(property, isTopLevel);
 
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,
@@ -211,90 +216,78 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
-            string wirePropertyName = isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
-
             if (value is ODataNullValue || value == null)
             {
-                WriterValidationUtils.ValidateNullPropertyValue(propertyTypeReference, propertyName, this.MessageWriterSettings.WriterBehavior, this.Model, this.bypassValidation);
-
-                if (isTopLevel)
-                {
-                    // Write the special null marker for top-level null properties.
-                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
-                    this.JsonWriter.WriteValue(true);
-                }
-                else
-                {
-                    this.JsonWriter.WriteName(wirePropertyName);
-                    this.JsonLightValueSerializer.WriteNullValue();
-                }
-
+                this.WriteNullProperty(property, propertyTypeReference, isTopLevel);
                 return;
             }
 
             bool isOpenPropertyType = this.IsOpenProperty(property, owningType, edmProperty);
-            if (isOpenPropertyType && this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation)
+
+            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
+            if (primitiveValue != null)
             {
-                ValidationUtils.ValidateOpenPropertyValue(propertyName, value);
+                this.WritePrimitiveProperty(property, primitiveValue, propertyTypeReference, isTopLevel, isOpenPropertyType);
+                return;
             }
 
             ODataComplexValue complexValue = value as ODataComplexValue;
             if (complexValue != null)
             {
-                if (!isTopLevel)
-                {
-                    this.JsonWriter.WriteName(wirePropertyName);
-                }
-
-                this.JsonLightValueSerializer.WriteComplexValue(complexValue, propertyTypeReference, isTopLevel, isOpenPropertyType, this.CreateDuplicatePropertyNamesChecker());
+                this.WriteComplexProperty(property, complexValue, propertyTypeReference, isTopLevel, isOpenPropertyType);
                 return;
             }
 
-            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, propertyTypeReference, value, isOpenPropertyType);
             ODataEnumValue enumValue = value as ODataEnumValue;
             if (enumValue != null)
             {
-                // This is a work around, needTypeOnWire always = true for client side: 
-                // ClientEdmModel's reflection can't know a property is open type even if it is, so here 
-                // make client side always write 'odata.type' for enum.
-                bool needTypeOnWire = string.Equals(this.JsonLightOutputContext.Model.GetType().Name, "ClientEdmModel", StringComparison.OrdinalIgnoreCase);
-                string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(
-                    enumValue, propertyTypeReference, typeFromValue, needTypeOnWire ? true /* leverage this flag to write 'odata.type' */ : isOpenPropertyType);
-                this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
-                this.JsonWriter.WriteName(wirePropertyName);
-                this.JsonLightValueSerializer.WriteEnumValue(enumValue, propertyTypeReference);
+                this.WriteEnumProperty(property, enumValue, propertyTypeReference, isTopLevel, isOpenPropertyType);
                 return;
             }
 
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                string collectionTypeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
-                this.WritePropertyTypeName(wirePropertyName, collectionTypeNameToWrite, isTopLevel);
-                this.JsonWriter.WriteName(wirePropertyName);
-
-                // passing false for 'isTopLevel' because the outer wrapping object has already been written.
-                this.JsonLightValueSerializer.WriteCollectionValue(collectionValue, propertyTypeReference, isTopLevel, false /*isInUri*/, isOpenPropertyType);
+                this.WriteCollectionProperty(property, collectionValue, propertyTypeReference, isTopLevel, isOpenPropertyType);
                 return;
-            }
-
-            ODataUntypedValue untypedValue = value as ODataUntypedValue;
-            if (untypedValue != null)
-            {
-                this.JsonWriter.WriteName(wirePropertyName);
-                this.JsonLightValueSerializer.WriteUntypedValue(untypedValue);
             }
             else
             {
-                ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
-                Debug.Assert(primitiveValue != null, "primitiveValue != null");
-
-                string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(primitiveValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
-                this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
-
-                this.JsonWriter.WriteName(wirePropertyName);
-                this.JsonLightValueSerializer.WritePrimitiveValue(primitiveValue.Value, propertyTypeReference);
+                ODataUntypedValue untypedValue = value as ODataUntypedValue;
+                this.WriteUntypedProperty(property, untypedValue, isTopLevel);
+                return;
             }
+        }
+
+        /// <summary>
+        /// Writes instance annotation for property
+        /// </summary>
+        /// <param name="property">The property to handle.</param>
+        /// <param name="isTopLevel">If writing top level property.</param>
+        private void WriteInstanceAnnotation(ODataProperty property, bool isTopLevel)
+        {
+            if (property.InstanceAnnotations.Any())
+            {
+                if (isTopLevel)
+                {
+                    this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations);
+                }
+                else
+                {
+                    this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, property.Name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determines the property name in wire
+        /// </summary>
+        /// <param name="isTopLevel">If the property is top level.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The property name will be written in wire</returns>
+        private string GetWirePropertyName(bool isTopLevel, string propertyName)
+        {
+            return isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
         }
 
         /// <summary>
@@ -334,6 +327,156 @@ namespace Microsoft.OData.Core.JsonLight
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataMediaETag);
                 this.JsonWriter.WriteValue(mediaETag);
             }
+        }
+
+        /// <summary>
+        /// Writes a Null property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="propertyTypeReference">The metadata type reference of the property.</param>
+        /// <param name="isTopLevel">True when writing a top-level property; false for nested properties.</param>
+        private void WriteNullProperty(
+            ODataProperty property,
+            IEdmTypeReference propertyTypeReference,
+            bool isTopLevel)
+        {
+            WriterValidationUtils.ValidateNullPropertyValue(propertyTypeReference, property.Name, this.MessageWriterSettings.WriterBehavior, this.Model, this.bypassValidation);
+
+            if (isTopLevel)
+            {
+                // Write the special null marker for top-level null properties.
+                this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
+                this.JsonWriter.WriteValue(true);
+            }
+            else
+            {
+                this.JsonWriter.WriteName(property.Name);
+                this.JsonLightValueSerializer.WriteNullValue();
+            }
+        }
+
+        /// <summary>
+        /// Writes a complex property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="complexValue">The complex value to be written</param>
+        /// <param name="propertyTypeReference">The metadata type reference of the property.</param>
+        /// <param name="isTopLevel">True when writing a top-level property; false for nested properties.</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WriteComplexProperty(
+            ODataProperty property,
+            ODataComplexValue complexValue,
+            IEdmTypeReference propertyTypeReference,
+            bool isTopLevel,
+            bool isOpenPropertyType)
+        {
+            if (!isTopLevel)
+            {
+                this.JsonWriter.WriteName(property.Name);
+            }
+
+            this.JsonLightValueSerializer.WriteComplexValue(complexValue, propertyTypeReference, isTopLevel, isOpenPropertyType, this.CreateDuplicatePropertyNamesChecker());
+        }
+
+        /// <summary>
+        /// Writes a enum property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="enumValue">The enum value to be written.</param>
+        /// <param name="propertyTypeReference">The metadata type reference of the property.</param>
+        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WriteEnumProperty(
+            ODataProperty property,
+            ODataEnumValue enumValue,
+            IEdmTypeReference propertyTypeReference,
+            bool isTopLevel,
+            bool isOpenPropertyType)
+        {
+            string wirePropertyName = GetWirePropertyName(isTopLevel, property.Name);
+
+            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeForEnumValue(this.Model, enumValue, isOpenPropertyType);
+
+            // This is a work around, needTypeOnWire always = true for client side: 
+            // ClientEdmModel's reflection can't know a property is open type even if it is, so here 
+            // make client side always write 'odata.type' for enum.
+            bool needTypeOnWire = string.Equals(this.JsonLightOutputContext.Model.GetType().Name, "ClientEdmModel", StringComparison.OrdinalIgnoreCase);
+            string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(
+                enumValue, propertyTypeReference, typeFromValue, needTypeOnWire || isOpenPropertyType);
+
+            this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
+            this.JsonWriter.WriteName(wirePropertyName);
+            this.JsonLightValueSerializer.WriteEnumValue(enumValue, propertyTypeReference);
+        }
+
+        /// <summary>
+        /// Writes a collection property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="collectionValue">The collection value to be written</param>
+        /// <param name="propertyTypeReference">The metadata type reference of the property.</param>
+        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WriteCollectionProperty(
+            ODataProperty property,
+            ODataCollectionValue collectionValue,
+            IEdmTypeReference propertyTypeReference,
+            bool isTopLevel,
+            bool isOpenPropertyType)
+        {
+            string wirePropertyName = GetWirePropertyName(isTopLevel, property.Name);
+
+            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, propertyTypeReference, collectionValue, isOpenPropertyType);
+            string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
+
+            this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
+            this.JsonWriter.WriteName(wirePropertyName);
+
+            // passing false for 'isTopLevel' because the outer wrapping object has already been written.
+            this.JsonLightValueSerializer.WriteCollectionValue(collectionValue, propertyTypeReference, typeFromValue, isTopLevel, false /*isInUri*/, isOpenPropertyType);
+            return;
+        }
+
+        /// <summary>
+        /// Writes a untyped property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="untypedValue">The untyped value to be written</param>
+        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
+        private void WriteUntypedProperty(
+            ODataProperty property,
+            ODataUntypedValue untypedValue,
+            bool isTopLevel)
+        {
+            Debug.Assert(untypedValue != null, "untypedValue != null");
+
+            this.JsonWriter.WriteName(GetWirePropertyName(isTopLevel, property.Name));
+            this.JsonLightValueSerializer.WriteUntypedValue(untypedValue);
+        }
+
+        /// <summary>
+        /// Writes a primitive property.
+        /// </summary>
+        /// <param name="property">The property to write out.</param>
+        /// <param name="primitiveValue">The primitive value to be written</param>
+        /// <param name="propertyTypeReference">The metadata type reference of the property.</param>
+        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private void WritePrimitiveProperty(
+            ODataProperty property,
+            ODataPrimitiveValue primitiveValue,
+            IEdmTypeReference propertyTypeReference,
+            bool isTopLevel,
+            bool isOpenPropertyType)
+        {
+            string wirePropertyName = GetWirePropertyName(isTopLevel, property.Name);
+
+            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeForPrimitiveValue(primitiveValue);
+            string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(primitiveValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
+
+            this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
+            this.JsonWriter.WriteName(wirePropertyName);
+            this.JsonLightValueSerializer.WritePrimitiveValue(primitiveValue.Value, propertyTypeReference);
         }
 
         /// <summary>

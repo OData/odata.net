@@ -64,44 +64,97 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Resolves and validates the Edm type for the given <paramref name="value"/>.
+        /// Resolve a primitive value type name 
+        /// </summary>
+        /// <param name="primitiveValue">The value to get the type name from.</param>
+        /// <returns>A type for primitive value</returns>
+        internal static IEdmTypeReference ResolveAndValidateTypeForPrimitiveValue(ODataPrimitiveValue primitiveValue)
+        {
+            return EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType());
+        }
+
+        /// <summary>
+        /// Resolve a type name against the provided <paramref name="model"/>. If not payload type name is specified,
+        /// derive the type from the model type (if available).
+        /// </summary>
+        /// <param name="model">The model to use.</param>
+        /// <param name="enumValue">The value in question to resolve the type for.</param>
+        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
+        /// <returns>A type for the <paramref name="enumValue"/> or null if no type name is specified and no metadata is available.</returns>
+        internal static IEdmTypeReference ResolveAndValidateTypeForEnumValue(IEdmModel model, ODataEnumValue enumValue, bool isOpenPropertyType)
+        {
+            Debug.Assert(model != null, "model != null");
+
+            ValidateIfTypeNameMissing(enumValue.TypeName, model, isOpenPropertyType);
+             
+            // starting from enum type, we want to skip validation (but still let the above makes sure open type's enum value has .TypeName)
+            return null;
+        }
+
+        /// <summary>
+        /// Resolve a type name against the provided <paramref name="model"/>. If not payload type name is specified,
+        /// derive the type from the model type (if available).
         /// </summary>
         /// <param name="model">The model to use.</param>
         /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
-        /// <param name="value">The value in question to resolve the type for.</param>
-        /// <param name="isOpenProperty">true if the type name belongs to an open property, false otherwise.</param>
-        /// <returns>A type for the <paramref name="value"/> or null if no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeNameForValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataValue value, bool isOpenProperty)
+        /// <param name="complexValue">The value in question to resolve the type for.</param>
+        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
+        /// <returns>A type for the <paramref name="complexValue"/> or null if no type name is specified and no metadata is available.</returns>
+        internal static IEdmTypeReference ResolveAndValidateTypeForComplexValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataComplexValue complexValue, bool isOpenPropertyType)
         {
             Debug.Assert(model != null, "model != null");
-            Debug.Assert(value != null, "value != null");
 
-            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
-            if (primitiveValue != null)
+            var typeName = complexValue.TypeName;
+
+            ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
+
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex);
+            if (typeReferenceFromMetadata != null)
             {
-                Debug.Assert(primitiveValue.Value != null, "primitiveValue.Value != null");
-                return EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType());
+                ValidationUtils.ValidateTypeKind(EdmTypeKind.Complex, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.FullTypeName());
             }
 
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
+            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
+            return typeReferenceFromValue;
+        }
+
+        /// <summary>
+        /// Resolve a type name against the provided <paramref name="model"/>. If not payload type name is specified,
+        /// derive the type from the model type (if available).
+        /// </summary>
+        /// <param name="model">The model to use.</param>
+        /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
+        /// <param name="collectionValue">The value in question to resolve the type for.</param>
+        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
+        /// <returns>A type for the <paramref name="collectionValue"/> or null if no type name is specified and no metadata is available.</returns>
+        internal static IEdmTypeReference ResolveAndValidateTypeForCollectionValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataCollectionValue collectionValue, bool isOpenPropertyType)
+        {
+            Debug.Assert(model != null, "model != null");
+
+            var typeName = collectionValue.TypeName;
+
+            ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
+
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection);
+            if (typeReferenceFromMetadata != null)
             {
-                return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, complexValue.TypeName, EdmTypeKind.Complex, isOpenProperty);
+                ValidationUtils.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.FullTypeName());
             }
 
-            ODataEnumValue enumValue = value as ODataEnumValue;
-            if (enumValue != null)
+            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
+            if (typeReferenceFromValue != null)
             {
-                return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, enumValue.TypeName, EdmTypeKind.Enum, isOpenProperty);
+                // update nullability from metadata
+                if (typeReferenceFromMetadata != null)
+                {
+                    typeReferenceFromValue = typeReferenceFromMetadata;
+                }
+
+                // validate that the collection type represents a valid Collection type (e.g., is unordered).
+                typeReferenceFromValue = ValidationUtils.ValidateCollectionType(typeReferenceFromValue);
             }
 
-            if (value is ODataUntypedValue)
-            {
-                return typeReferenceFromMetadata;
-            }
-
-            ODataCollectionValue collectionValue = (ODataCollectionValue)value;
-            return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, collectionValue.TypeName, EdmTypeKind.Collection, isOpenProperty);
+            return typeReferenceFromValue;
         }
 
         /// <summary>
@@ -154,54 +207,18 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Resolve a type name against the provided <paramref name="model"/>. If not payload type name is specified,
-        /// derive the type from the model type (if available).
+        /// Validate if type name is missing
         /// </summary>
+        /// <param name="typeName">Type name of the property to be validated.</param>
         /// <param name="model">The model to use.</param>
-        /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
-        /// <param name="typeName">The type name to be resolved.</param>
-        /// <param name="typeKindFromValue">The expected type kind of the resolved type.</param>
-        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
-        /// <returns>A type for the <paramref name="typeName"/> or null if no type name is specified and no metadata is available.</returns>
-        private static IEdmTypeReference ResolveAndValidateTypeFromNameAndMetadata(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, string typeName, EdmTypeKind typeKindFromValue, bool isOpenPropertyType)
+        /// <param name="isOpenPropertyType">If the property is open.</param>
+        private static void ValidateIfTypeNameMissing(string typeName, IEdmModel model, bool isOpenPropertyType)
         {
-            Debug.Assert(model != null, "model != null");
-            Debug.Assert(
-                typeKindFromValue == EdmTypeKind.Complex || typeKindFromValue == EdmTypeKind.Collection || typeKindFromValue == EdmTypeKind.Enum,
-                "Only complex or collection or enum types are supported by this method. This method assumes that the types in question don't support inheritance.");
-
             // if we have metadata, the type name of an open property value must not be null
             if (typeName == null && model.IsUserModel() && isOpenPropertyType)
             {
                 throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             }
-
-            // starting from enum type, we want to skip validation (but still let the above makes sure open type's enum value has .TypeName)
-            if (typeKindFromValue == EdmTypeKind.Enum)
-            {
-                return null;
-            }
-
-            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, typeKindFromValue);
-            if (typeReferenceFromMetadata != null)
-            {
-                ValidationUtils.ValidateTypeKind(typeKindFromValue, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.FullTypeName());
-            }
-
-            IEdmTypeReference typeReferenceFromValue = ValidateMetadataType(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
-            if (typeKindFromValue == EdmTypeKind.Collection && typeReferenceFromValue != null)
-            {
-                // update nullability from metadata
-                if (typeReferenceFromMetadata != null)
-                {
-                    typeReferenceFromValue = typeReferenceFromMetadata;
-                }
-
-                // validate that the collection type represents a valid Collection type (e.g., is unordered).
-                typeReferenceFromValue = ValidationUtils.ValidateCollectionType(typeReferenceFromValue);
-            }
-
-            return typeReferenceFromValue;
         }
 
         /// <summary>
@@ -210,7 +227,7 @@ namespace Microsoft.OData.Core
         /// <param name="typeReferenceFromMetadata">The (optional) type from the metadata definition (the expected type).</param>
         /// <param name="typeReferenceFromValue">The (optional) type from the value (the actual type).</param>
         /// <returns>The type as derived from the <paramref name="typeReferenceFromMetadata"/> and/or <paramref name="typeReferenceFromValue"/>.</returns>
-        private static IEdmTypeReference ValidateMetadataType(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue)
+        private static IEdmTypeReference ResolveTypeFromMetadataAndValue(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue)
         {
             if (typeReferenceFromMetadata == null)
             {

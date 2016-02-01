@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             // Resolve the type name to the type; if no type name is specified we will use the 
             // type inferred from metadata.
-            IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType);
+            IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeForComplexValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType);
             Debug.Assert(
                 metadataTypeReference == null || complexValueTypeReference == null || EdmLibraryExtensions.IsAssignableFrom(metadataTypeReference, complexValueTypeReference),
                 "Complex property types must be the same as or inherit from the ones from metadata (unless open).");
@@ -213,13 +213,14 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="collectionValue">The collection value to write.</param>
         /// <param name="metadataTypeReference">The metadata type reference for the collection.</param>
+        /// <param name="valueTypeReference">The value type reference for the collection.</param>
         /// <param name="isTopLevelProperty">Whether or not a top-level property is being written.</param>
         /// <param name="isInUri">Whether or not the value is being written for a URI.</param>
-        /// <param name="isOpenPropertyType">true if the type name belongs to an open property.</param>
+        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
         /// <remarks>The current recursion depth is measured by the number of complex and collection values between 
         /// this one and the top-level payload, not including this one.</remarks>
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
-        public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
             Debug.Assert(collectionValue != null, "collectionValue != null");
             Debug.Assert(!isTopLevelProperty || !isInUri, "Cannot be a top level property and in a uri");
@@ -246,17 +247,26 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            // resolve the type name to the type; if no type name is specified we will use the 
-            // type inferred from metadata
-            IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType);
-            typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, metadataTypeReference, collectionTypeReference, isOpenPropertyType);
-            bool useValueProperty = isInUri && !string.IsNullOrEmpty(typeName);
-            if (useValueProperty)
+            if (valueTypeReference == null)
             {
-                // "{"
-                this.JsonWriter.StartObjectScope();
-                this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
-                this.JsonWriter.WriteValuePropertyName();
+                valueTypeReference = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType);               
+            }
+
+            bool useValueProperty = false;
+            if (isInUri)
+            {
+                // resolve the type name to the type; if no type name is specified we will use the 
+                // type inferred from metadata
+                typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, metadataTypeReference, valueTypeReference, isOpenPropertyType);
+                if (!string.IsNullOrEmpty(typeName))
+                {
+                    useValueProperty = true;
+
+                    // "{"
+                    this.JsonWriter.StartObjectScope();
+                    this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
+                    this.JsonWriter.WriteValuePropertyName();
+                }
             }
 
             // [
@@ -267,7 +277,7 @@ namespace Microsoft.OData.Core.JsonLight
             IEnumerable items = collectionValue.Items;
             if (items != null)
             {
-                IEdmTypeReference expectedItemTypeReference = collectionTypeReference == null ? null : collectionTypeReference.ElementType();
+                IEdmTypeReference expectedItemTypeReference = valueTypeReference == null ? null : ((IEdmCollectionTypeReference)valueTypeReference).ElementType();
 
                 DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null;
                 foreach (object item in items)
