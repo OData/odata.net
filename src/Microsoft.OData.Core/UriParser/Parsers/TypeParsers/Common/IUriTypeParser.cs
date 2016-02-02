@@ -9,10 +9,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
     #region Namespaces
 
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
     using Microsoft.OData.Edm;
 
     #endregion
@@ -25,19 +21,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
     public interface IUriTypeParser
     {
         /// <summary>
-        /// Parse the given text of EdmType 'targetType' to it's object instance.
-        /// Return 'Null' if the text could not be parsed to the requested 'targetType'.
-        /// Assign 'parsingException' paramter only in case the text could be parsed to the requested 'targetType', but failed during the parsing proccess.
+        /// Parse the given text of EdmType <paramref name="targetType"/> to it's object instance.
+        /// Return 'Null' if the text could not be parsed to the requested <paramref name="targetType"/>.
+        /// Assign <paramref name="parsingException"/> paramter only in case the text could be parsed to the requested <paramref name="targetType"/>, but failed during the parsing proccess.
         /// </summary>
-        /// <param name="text">Part of the uri which has to be parsed to a value of EdmType 'targetType'</param>
+        /// <param name="text">Part of the uri which has to be parsed to a value of EdmType <paramref name="targetType"/></param>
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
-        /// <param name="parsingException">Assign the exception only in case the text could be parsed to the 'targetType' but failed during the parsing process</param>
+        /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
         /// <returns>If the parsing proceess has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
         object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException);
 
         // Consider add this API:
         // bool TryParseUriStringToType(string text, IEdmTypeReference targetType,out object targetValue, out UriTypeParsingException parsingException);
-        //      This can be problematic because of the the 'bool' return type + the out exception parameter.The 'Try' fuction could return 'false' with null exception because it doesn't support the given type
-        //      And this not a 'standart' function and it can confuse the clients. Standart 'Try' function assign the out Exception paramter when return value is 'false'.
+        //      This can be problematic because of the the 'bool' return type + the out exception parameter. The 'Try' function could return 'false' with null exception because it doesn't support the given type,
+        //      bnd this not a 'standart' function so it can confuse the developers. Standart 'Try' function assign the out Exception paramter when return value is 'false'.
     }
 }

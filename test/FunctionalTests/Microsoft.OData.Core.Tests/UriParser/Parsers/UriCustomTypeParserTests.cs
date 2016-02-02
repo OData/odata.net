@@ -1,17 +1,18 @@
-﻿using Microsoft.OData.Core;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Xunit;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Core;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
 using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+
 namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 {
     /// <summary>

@@ -280,8 +280,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
         private bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue)
         {
-            UriTypeParsingException excpetion;
-            return TryUriStringToPrimitive(text, targetType, out targetValue, out excpetion);
+            UriTypeParsingException excepetion;
+            return TryUriStringToPrimitive(text, targetType, out targetValue, out excepetion);
         }
 
         /// <summary>

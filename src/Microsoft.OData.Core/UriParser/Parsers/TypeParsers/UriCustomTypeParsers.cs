@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+﻿    //---------------------------------------------------------------------
 // <copyright file="UriCustomTypeParsers.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -28,19 +28,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
     {
         #region Fields
 
+        private static readonly object Locker = new object();
+
         /// <summary>
         /// Used for General UriTypeParsers. These parsers will be called for every text that has to parsed.
         /// The parses could parse multiple EdmTypes.
         /// </summary>
-        private static List<IUriTypeParser> CustomUriTypeParsers;
-
-        private static readonly object Locker = new object();
+        private static List<IUriTypeParser> CustomUriTypeParsers = new List<IUriTypeParser>();
 
         /// <summary>
         /// "Registered" UriTypeParser to an EdmType. These parses will be called when the text has to be parsed to the
         /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performace.
         /// </summary>
-        private static List<UriTypeParserPerEdmType> UriCustomTypeParserPerEdmType;
+        private static List<UriTypeParserPerEdmType> UriCustomTypeParserPerEdmType = new List<UriTypeParserPerEdmType>();
         //// Consider use Dictionary<EmdTypeReference,IUriTypeParser> which is a better solution.
         //// the problem with dictionary - Generate an HashCode for an EdmTypeReference.
 
@@ -50,12 +50,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
 
         // Internal Singleton so only interal assemblies could parse by the custom parsers.
         private static UriCustomTypeParsers SingleInstance;
-
-        static UriCustomTypeParsers()
-        {
-            CustomUriTypeParsers = new List<IUriTypeParser>();
-            UriCustomTypeParserPerEdmType = new List<UriTypeParserPerEdmType>();
-        }
 
         private UriCustomTypeParsers() 
         {
@@ -84,9 +78,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         /// If no parser is registered, try to parse with the general parsers.
         /// This method is public becuase of the Interface, but the Singleton instance in internal so it could not be accessed by clients. 
         /// </summary>
-        /// <param name="text">Part of the Uri which has to be parsed to a value of EdmType 'targetType'</param>
+        /// <param name="text">Part of the Uri which has to be parsed to a value of EdmType <paramref name="targetType"/></param>
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
-        /// <param name="parsingException">Assign the exception only in case the text could be parsed to the 'targetType' but failed during the parsing process</param>
+        /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
         /// <returns>If parsing proceess has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
         public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
         {
@@ -135,7 +129,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         /// Add a custom 'IUriTypeParser' which will be called to parse uri values during the uri parsing proccess.
         /// </summary>
         /// <param name="uriCustomTypeParser">The custom uri parser</param>
-        /// <exception cref="ArgumentNullException">uriCustomTypeParser is null</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="uriCustomTypeParser"/> is null</exception>
         /// <exception cref="ODataException">The given IUriTypeParser instance already exists</exception>
         public static void AddCustomUriTypeParser(IUriTypeParser uriCustomTypeParser)
         {
@@ -157,8 +151,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         /// </summary>
         /// <param name="edmTypeReference">The EdmType the UriTypeParser can parse.</param>
         /// <param name="uriCustomTypeParser">The custom uri type parser to add.</param>
-        /// <exception cref="ArgumentNullException">UriCustomTypeParser is null.</exception>
-        /// <exception cref="ArgumentNullException">EdmTypeReference is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="uriCustomTypeParser "/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="edmTypeReference"/> is null.</exception>
         /// <exception cref="ODataException">Another UriTypeParser is already registered for the given EdmType</exception>
         public static void AddCustomUriTypeParser(IEdmTypeReference edmTypeReference, IUriTypeParser uriCustomTypeParser)
         {

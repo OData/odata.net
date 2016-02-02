@@ -7,16 +7,14 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Diagnostics;
-    using System.Text;
-    using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -97,13 +95,13 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The literal token produced by building the given literal.</returns>
         private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmTypeReference targetTypeReference)
         {
-            UriTypeParsingException typeParsingExcpetion;
-            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingExcpetion);
+            UriTypeParsingException typeParsingExcepetion;
+            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingExcepetion);
             if (targetValue == null)
             {
                 string message;
 
-                if (typeParsingExcpetion == null)
+                if (typeParsingExcepetion == null)
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeReference.FullName(),
@@ -120,10 +118,10 @@ namespace Microsoft.OData.Core.UriParser
                         expressionLexer.CurrentToken.Text,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText,
-                        typeParsingExcpetion.ParsingFailureReason);
+                        typeParsingExcepetion.ParsingFailureReason);
 
-                    throw new ODataException(message, typeParsingExcpetion);
-                }              
+                    throw new ODataException(message, typeParsingExcepetion);
+                }
             }
 
             expressionLexer.NextToken();

@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
     public sealed class UriTypeParsingException : ODataException
     {
         /// <summary>
-        /// Creates an Excpetion when parsing is failed
+        /// Creates an Excepetion when parsing is failed.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="parsingFailureReason">The reason of parsing failure</param>
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
         }
 
         /// <summary>
-        /// Creates an Excpetion when parsing is failed
+        /// Creates an Excepetion when parsing is failed.
         /// </summary>
         /// <param name="message">Exception message</param>
         /// <param name="innerException">Inner Exception</param>

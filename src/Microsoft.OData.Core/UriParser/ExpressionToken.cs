@@ -9,10 +9,9 @@ namespace Microsoft.OData.Core.UriParser
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
 
     #endregion Namespaces
 
@@ -118,15 +117,8 @@ namespace Microsoft.OData.Core.UriParser
                     return this.LiteralEdmType;
                 default:
                     IEdmTypeReference edmTypeReference = UriParserHelper.GetLiteralEdmTypeReference(this.Kind);
-                    if (edmTypeReference != null)
-                    {
-                        return edmTypeReference;
-                    }
-
-                    break;
+                    return edmTypeReference;
             }
-
-            return null;
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Microsoft.OData.Core.UriParser
 
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
@@ -25,19 +24,9 @@ namespace Microsoft.OData.Core.UriParser
     {
         #region Fields
 
-        private static Dictionary<string, IEdmTypeReference> PrefixLiteralsOfEdmTypes;
+        private static readonly object Locker = new object();
 
-        private static readonly object Locker;
-
-        #endregion
-
-        #region Ctor
-
-        static CustomUriTypePrefixLiterals()
-        {
-            PrefixLiteralsOfEdmTypes = new Dictionary<string, IEdmTypeReference>();
-            Locker = new object();
-        }
+        private static Dictionary<string, IEdmTypeReference> PrefixLiteralsOfEdmTypes = new Dictionary<string, IEdmTypeReference>();
 
         #endregion
 
@@ -47,7 +36,7 @@ namespace Microsoft.OData.Core.UriParser
         /// Add a type prefix literal for the given EdmType.
         /// </summary>
         /// <example>filter=MyProperty eq MyCustomLiteral'VALUE'.
-        /// "MyCustomLiteral" is the literalPrefixName and the literalEdmTypeReference is the type of the "VALUE".</example>
+        /// "MyCustomLiteral" is the literalPrefixName and the <paramref name="literalEdmTypeReference"/> is the type of the "VALUE".</example>
         /// <param name="typePrefixLiteralName">The custom name of the new type prefix literal name</param>
         /// <param name="literalEdmTypeReference">The edm type of the custom literal</param>
         /// <exception cref="ArgumentNullException">Arguments are null or empty</exception>
@@ -79,8 +68,8 @@ namespace Microsoft.OData.Core.UriParser
         /// Remove the given type prefix literal.
         /// </summary>
         /// <param name="typePrefixLiteralName">The custom name of the new type prefix literal name</param>
-        /// <returns>'true' if the prefix litral is successfully found and removed; otherwise, 'false'.</returns>
-        /// <exception cref="ArgumentNullException">Argumnet is null or empty</exception>
+        /// <returns>'true' if the prefix literal is successfully found and removed; otherwise, 'false'.</returns>
+        /// <exception cref="ArgumentNullException">Argument is null or empty</exception>
         public static bool RemoveCustomUriTypePrefixLiteral(string typePrefixLiteralName)
         {
             // Arguments validation
@@ -88,7 +77,7 @@ namespace Microsoft.OData.Core.UriParser
 
             UriParserHelper.ValidatePrefixLiteral(typePrefixLiteralName);
 
-            // Try to remove the custom uri literal to cache
+            // Try to remove the custom uri literal from cache
             lock (Locker)
             {
                 return PrefixLiteralsOfEdmTypes.Remove(typePrefixLiteralName);

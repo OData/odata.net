@@ -281,7 +281,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return CreateUnboundFunctionNode(functionCallTokenName, argumentNodes);
             }
 
-            // Do some validation and get potential built-in functions that could match what we saw
+            // Do some validation and get potential Uri functions that could match what we saw
             FunctionSignatureWithReturnType[] signatures = GetUriFunctionSignatures(functionCallTokenName);
             SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallTokenName, argumentNodes);
             FunctionSignatureWithReturnType signature = MatchSignatureToUriFunction(functionCallTokenName, argumentNodeArray, signatures);

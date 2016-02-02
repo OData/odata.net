@@ -13,8 +13,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Text;
     using System.Xml;
     using Edm.Library;
-    using Microsoft.Spatial;
     using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
+    using Microsoft.Spatial;
 
     /// <summary>Use this class to parse literals from keys, etags, skiptokens, and filter/orderby expression constants.</summary>
     internal abstract class LiteralParser

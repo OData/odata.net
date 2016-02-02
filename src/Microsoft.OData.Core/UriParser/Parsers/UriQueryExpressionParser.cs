@@ -16,9 +16,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Syntactic;
+
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -131,8 +132,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     // Why not using EdmTypeReference.FullName? (literalEdmTypeReference.FullName)                  
                     string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
                     return ParseTypedLiteral(lexer, literalEdmTypeReference, edmConstantName);
-                case ExpressionTokenKind.DurationLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDurationTypeName);
 
                 case ExpressionTokenKind.BracketedExpression:
                     {
@@ -141,11 +140,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         lexer.NextToken();
                         return result;
                     }
-
+                case ExpressionTokenKind.DurationLiteral:
                 case ExpressionTokenKind.TimeOfDayLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmTimeOfDayTypeName);
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName);
+                    IEdmTypeReference literalEdmPrimitiveTypeReference = lexer.CurrentToken.GetLiteralEdmTypeReference();
+                    EdmPrimitiveTypeKind literalEdmPrimitiveTypeKind = literalEdmPrimitiveTypeReference.PrimitiveKind();
+
+                    string edmPrimitiveConstantName = GetEdmConstantNames(literalEdmPrimitiveTypeReference);
+                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(literalEdmPrimitiveTypeKind, false), edmPrimitiveConstantName);
+
                 case ExpressionTokenKind.NullLiteral:
                     return ParseNullLiteral(lexer);
 
@@ -162,6 +165,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 case EdmPrimitiveTypeKind.Boolean:
                     return Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName;
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmTimeOfDayTypeName;
                 case EdmPrimitiveTypeKind.Date:
                     return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTypeName;
                 case EdmPrimitiveTypeKind.DateTimeOffset:
