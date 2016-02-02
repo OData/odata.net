@@ -210,7 +210,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
                 // Verift Deleted
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("VehicleGPSSet('000')", 404) as ODataEntry;
+                ODataEntry deletedEntry = this.QueryEntityItem("VehicleGPSSet('000')", 204) as ODataEntry;
                 Assert.IsNull(deletedEntry);
             }
             #endregion
@@ -405,7 +405,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
                 // Verift Deleted
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("VehicleGPSSetInGPS('000')", 404) as ODataEntry;
+                ODataEntry deletedEntry = this.QueryEntityItem("VehicleGPSSetInGPS('000')", 204) as ODataEntry;
                 Assert.IsNull(deletedEntry);
             }
             #endregion

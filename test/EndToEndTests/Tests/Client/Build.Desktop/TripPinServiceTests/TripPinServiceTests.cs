@@ -1830,7 +1830,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "Me/Photo",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
-                ExpectedStatusCode = 404,
+                ExpectedStatusCode = 204,
             }.Execute();
 
             var target = new QueryEntryHelper(this)
@@ -1891,7 +1891,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "People('russellwhyte')/Trips(0)",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
-                ExpectedStatusCode = 404
+                ExpectedStatusCode = 204
             }.Execute();
         }
 
@@ -2374,7 +2374,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 if (response.StatusCode == 204)
                 {
                     // delete succeeded
-                    validationHelper.ExpectedStatusCode = 404;
+                    validationHelper.ExpectedStatusCode = 204;
                     Assert.IsNull(validationHelper.Execute());
                 }
                 else

@@ -190,16 +190,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(-9)", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(404, responseMessage.StatusCode);
-            ODataError error;
-            using (var reader = new ODataMessageReader(responseMessage, GetAvroReaderSettings()))
-            {
-                error = reader.ReadError();
-            }
-
-            Assert.IsNotNull(error);
-            Assert.AreEqual("NotFound", error.ErrorCode);
-            Assert.AreEqual("An server side error occured.", error.Message);
+            
+            // This is not an error case per standard, and no content should be returned. 
+            Assert.AreEqual(204, responseMessage.StatusCode);
         }
 
         [TestMethod]

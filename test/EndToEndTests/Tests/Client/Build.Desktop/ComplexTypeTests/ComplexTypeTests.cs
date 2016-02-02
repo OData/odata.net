@@ -367,7 +367,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntry("People(101)", 404);
+                ODataEntry deletedEntry = this.QueryEntry("People(101)", 204);
                 Assert.IsNull(deletedEntry);
             }
         }
@@ -816,7 +816,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntry("Accounts(10086)", 404);
+                ODataEntry deletedEntry = this.QueryEntry("Accounts(10086)", 204);
                 Assert.IsNull(deletedEntry);
             }
         }

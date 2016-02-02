@@ -842,7 +842,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101904)", 404) as ODataEntry;
+                ODataEntry deletedEntry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101904)", 204) as ODataEntry;
                 Assert.IsNull(deletedEntry);
             }
         }
