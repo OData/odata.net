@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client
             this.IsBatchPart = isBatchPart;
         }
 
-        /// <summary>The web request reported through this event. The handler may modify or replace it.</summary>
+        /// <summary>The web request reported through this event. The handler may modify it.</summary>
         public IODataRequestMessage RequestMessage
         {
             get;

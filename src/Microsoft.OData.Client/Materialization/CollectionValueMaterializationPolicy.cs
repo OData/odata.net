@@ -141,8 +141,8 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(collectionProperty.Value != null, "Collection should have already been checked for nullness");
             Debug.Assert(collectionInstance != null, "collectionInstance != null");
             Debug.Assert(WebUtil.IsCLRTypeCollection(collectionInstance.GetType(), this.materializerContext.Model), "collectionInstance must be a CollectionValue");
-            Debug.Assert(
-                ClientTypeUtil.GetImplementationType(collectionInstance.GetType(), typeof(ICollection<>)).GetGenericArguments()[0] == collectionItemType,
+            Debug.Assert(collectionItemType.IsAssignableFrom(
+                ClientTypeUtil.GetImplementationType(collectionInstance.GetType(), typeof(ICollection<>)).GetGenericArguments()[0]),
                 "collectionItemType has to match the collectionInstance generic type.");
             Debug.Assert(!ClientTypeUtil.TypeIsEntity(collectionItemType, this.materializerContext.Model), "CollectionValues cannot contain entities");
             Debug.Assert(addValueToBackingICollectionInstance != null, "AddValueToBackingICollectionInstance != null");
@@ -178,8 +178,8 @@ namespace Microsoft.OData.Client.Materialization
         {
             Debug.Assert(collectionInstance != null, "collectionInstance != null");
             Debug.Assert(WebUtil.IsCLRTypeCollection(collectionInstance.GetType(), this.materializerContext.Model), "collectionInstance must be a CollectionValue");
-            Debug.Assert(
-                ClientTypeUtil.GetImplementationType(collectionInstance.GetType(), typeof(ICollection<>)).GetGenericArguments()[0] == collectionItemType,
+            Debug.Assert(collectionItemType.IsAssignableFrom(
+                ClientTypeUtil.GetImplementationType(collectionInstance.GetType(), typeof(ICollection<>)).GetGenericArguments()[0]),
                 "collectionItemType has to match the collectionInstance generic type.");
             Debug.Assert(!ClientTypeUtil.TypeIsEntity(collectionItemType, this.materializerContext.Model), "CollectionValues cannot contain entities");
             Debug.Assert(addValueToBackingICollectionInstance != null, "AddValueToBackingICollectionInstance != null");

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
+namespace Microsoft.OData.Client.TDDUnitTests.Tests
 {
     using System.Collections.Generic;
     using System.IO;
@@ -12,17 +12,17 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     using Microsoft.OData.Client;
     using Microsoft.OData.Core;
 
-    public class AnnotationRequestMessage : HttpWebRequestMessage
+    public class CustomizedHttpWebRequestMessage : HttpWebRequestMessage
     {
         public string Response { get; set; }
         public Dictionary<string, string> CutomizedHeaders { get; set; }
 
-        public AnnotationRequestMessage(DataServiceClientRequestMessageArgs args)
+        public CustomizedHttpWebRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args)
         {
         }
 
-        public AnnotationRequestMessage(DataServiceClientRequestMessageArgs args, string response, Dictionary<string, string> headers)
+        public CustomizedHttpWebRequestMessage(DataServiceClientRequestMessageArgs args, string response, Dictionary<string, string> headers)
             : base(args)
         {
             this.Response = response;

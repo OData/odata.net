@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
             }
 
             Debug.Assert(cachedEdmType != null, "cachedEdmType != null");
-            this.ValidateComplexTypeHasProperties(type, cachedEdmType);
+            this.ValidateComplexType(type, cachedEdmType);
             return cachedEdmType.EdmType;
         }
 
@@ -334,11 +334,10 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="type">The type in question</param>
         /// <param name="cachedEdmType">The EdmTypeCacheValue of the type in question.</param>
-        private void ValidateComplexTypeHasProperties(Type type, EdmTypeCacheValue cachedEdmType)
+        private void ValidateComplexType(Type type, EdmTypeCacheValue cachedEdmType)
         {
             Debug.Assert(cachedEdmType != null, "cachedEdmType != null");
 
-            // Note that if the type is an entity type, it has at least the key properties, thus there is no need to validate it here.
             if (cachedEdmType.EdmType.TypeKind == EdmTypeKind.Complex)
             {
                 bool? hasProperties = cachedEdmType.HasProperties;
@@ -353,7 +352,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                if (hasProperties == false)
+                if (hasProperties == false && (type == typeof(System.Object) || type.IsGenericType()))
                 {
                     throw c.Error.InvalidOperation(c.Strings.ClientType_NoSettableFields(type.ToString()));
                 }

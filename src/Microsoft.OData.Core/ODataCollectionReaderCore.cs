@@ -461,7 +461,7 @@ namespace Microsoft.OData.Core
                 Debug.Assert(
                    state == ODataCollectionReaderState.Start && item == null ||
                    state == ODataCollectionReaderState.CollectionStart && item is ODataCollectionStart ||
-                   state == ODataCollectionReaderState.Value && (item == null || item is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(item.GetType())) ||
+                   state == ODataCollectionReaderState.Value && (item == null || item is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(item.GetType()) || item is ODataEnumValue) ||
                    state == ODataCollectionReaderState.CollectionEnd && item is ODataCollectionStart ||
                    state == ODataCollectionReaderState.Exception && item == null ||
                    state == ODataCollectionReaderState.Completed && item == null,

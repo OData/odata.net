@@ -254,7 +254,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             SingleValueNode parentNode = new EntityRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode));
 
             var state = new BindingState(this.configuration);
-            state.AggregatedProperties = new List<string> { "Color" };
+            state.AggregatedPropertyNames = new List<string> { "Color" };
             var metadataBinder = new MetadataBinder(state);
             var endPathBinder = new EndPathBinder(metadataBinder.Bind, state);
             var propertyNode = endPathBinder.GeneratePropertyAccessQueryForOpenType(

@@ -39,6 +39,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(Customer), null, ODataFormat.Atom);
             
             var customersRead = new List<Customer>();
+
+            // This line will call ODataEntityMaterializer.ReadImplementation() which will reconstruct the entity, and will get non-public setter called.
             while (entriesMaterializer.Read())
             {
                 customersRead.Add(entriesMaterializer.CurrentValue as Customer);
@@ -52,7 +54,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public class Customer
         {
             public int ID { get; set; }
-            public string Description { get; set; }
+
+            // Mark setter to be non-public to test entity can still be constructed.
+            public string Description { get; private set; }
+
+            public Customer()
+            {
+            }
+
+            public Customer(int id, string desc)
+            {
+                this.ID = id;
+                this.Description = desc;
+            }
         }
     }
 }

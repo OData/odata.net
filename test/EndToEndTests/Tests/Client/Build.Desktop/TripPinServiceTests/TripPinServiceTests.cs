@@ -740,7 +740,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             {
                                 if (argument.Times == 1)
                                 {
-                                    argument.Request.SetHeader("Prefer", "odata.maxpagesize=100");
+                                    argument.Request.SetHeader("Prefer", "odata.maxpagesize=10");
                                 }
                             },
                             RequestedHandler = argument =>
@@ -749,7 +749,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 var prefer = argument.Response.GetHeader("Preference-Applied");
                                 if (!string.IsNullOrEmpty(prefer))
                                 {
-                                    applied = prefer.Contains("odata.maxpagesize=8");
+                                    applied = prefer.Contains("odata.maxpagesize=10");
                                 }
 
                                 if (argument.Times == 1)
@@ -1830,7 +1830,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "Me/Photo",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
-                ExpectedStatusCode = 404,
+                ExpectedStatusCode = 204,
             }.Execute();
 
             var target = new QueryEntryHelper(this)
@@ -1891,7 +1891,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "People('russellwhyte')/Trips(0)",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
-                ExpectedStatusCode = 404
+                ExpectedStatusCode = 204
             }.Execute();
         }
 
@@ -2374,7 +2374,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 if (response.StatusCode == 204)
                 {
                     // delete succeeded
-                    validationHelper.ExpectedStatusCode = 404;
+                    validationHelper.ExpectedStatusCode = 204;
                     Assert.IsNull(validationHelper.Execute());
                 }
                 else

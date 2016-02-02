@@ -1062,6 +1062,77 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void AggregatedPropertyTreatedAsOpenProperty()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "Total"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            filterClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void AggregatedPropertiesTreatedAsOpenProperty()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "Total ge 10 and Max le 2"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total, StockQuantity with max as Max)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+            var leftBinaryOperatorNode =
+                binaryOperatorNode.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).And;
+            var rightBinaryOperatorNode =
+                binaryOperatorNode.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual).And;
+            leftBinaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+            rightBinaryOperatorNode.Left.As<ConvertNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Max");
+        }
+
+        [Fact]
+        public void AggregatedPropertyTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "Total asc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void AggregatedPropertiesTreatedAsOpenPropertyInOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "Total asc, Max desc"},
+                    {"$apply", "aggregate(FavoriteNumber with sum as Total, StockQuantity with max as Max)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            orderByClause.Direction.Should().Be(OrderByDirection.Ascending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+            orderByClause = orderByClause.ThenBy;
+            orderByClause.Direction.Should().Be(OrderByDirection.Descending);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Max");
+        }
+
+        [Fact]
         public void ActionsThrowOnClosedInOrderby()
         {
             Action parseWithAction = () => ParseOrderBy("Move asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

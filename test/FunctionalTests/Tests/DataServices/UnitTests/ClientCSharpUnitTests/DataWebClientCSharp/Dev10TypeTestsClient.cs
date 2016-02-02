@@ -24,11 +24,10 @@ namespace AstoriaUnitTests.Tests
         {
             Tuple<Type, bool, string>[] typeList = new Tuple<Type, bool, string>[]
             {
-                Tuple.Create(typeof(Dev10TypeDef.EntityWithBigIntProperty),         true, "Contains:The complex type 'System.Numerics.BigInteger' has no settable properties."),
                 Tuple.Create(typeof(Dev10TypeDef.EntityWithDynamicComplexProperty), true, "Contains:The type 'AstoriaUnitTests.Tests.UnitTestModule+Dev10TypeTests+ComplexTypeWithDynamicInterface' is not supported by the client library."),
                 Tuple.Create(typeof(Dev10TypeDef.EntityWithDynamicInterface),       true, "Contains:The type 'AstoriaUnitTests.Tests.UnitTestModule+Dev10TypeTests+EntityWithDynamicInterface' is not supported by the client library."),
                 Tuple.Create(typeof(Dev10TypeDef.EntityWithDynamicProperties),      true, "Contains:The complex type 'System.Object' has no settable properties."),
-                Tuple.Create(typeof(Dev10TypeDef.EntityWithTupleProperty),          true, "Contains:The type 'System.Tuple`2[System.String,System.String]' is not supported by the client library.")
+                Tuple.Create(typeof(Dev10TypeDef.EntityWithTupleProperty),          true, "Contains:The type 'System.Tuple`2[System.String,System.String]' is not supported by the client library.")                
             };
 
             TestUtil.RunCombinations(typeList, (typedef) =>

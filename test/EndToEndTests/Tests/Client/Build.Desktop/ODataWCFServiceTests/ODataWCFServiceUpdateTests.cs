@@ -79,7 +79,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the delete
             Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-            ODataEntry deletedEntry = this.QueryEntityItem("Orders(101)", 404) as ODataEntry;
+            ODataEntry deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataEntry;
             Assert.IsNull(deletedEntry);
         }
 
@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the delete
             Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-            ODataEntry deletedEntry = this.QueryEntityItem("Orders(101)", 404) as ODataEntry;
+            ODataEntry deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataEntry;
             Assert.IsNull(deletedEntry);
         }
 

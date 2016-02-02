@@ -294,7 +294,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="elementType">Type that the filter clause refers to.</param>
         /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
         /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        private static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        private FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
@@ -308,6 +308,11 @@ namespace Microsoft.OData.Core.UriParser
             BindingState state = new BindingState(configuration);
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
             state.RangeVariables.Push(state.ImplicitRangeVariable);
+            if (applyClause != null)
+            {
+                state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
+            }
+
             MetadataBinder binder = new MetadataBinder(state);
             FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
             FilterClause boundNode = filterBinder.BindFilter(filterToken);
@@ -381,7 +386,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="elementType">Type that the orderby clause refers to.</param>
         /// <param name="navigationSource">NavigationSource that the elements are from.</param>
         /// <returns>An <see cref="OrderByClause"/> representing the metadata bound orderby expression.</returns>
-        private static OrderByClause ParseOrderByImplementation(string orderBy, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        private OrderByClause ParseOrderByImplementation(string orderBy, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(configuration.Model, "model");
@@ -396,6 +401,11 @@ namespace Microsoft.OData.Core.UriParser
             BindingState state = new BindingState(configuration);
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
             state.RangeVariables.Push(state.ImplicitRangeVariable);
+            if (applyClause != null)
+            {
+                state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
+            }
+
             MetadataBinder binder = new MetadataBinder(state);
             OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
             OrderByClause orderByClause = orderByBinder.BindOrderBy(state, orderByQueryTokens);

@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
                         var aggregate = BindAggregateToken((AggregateToken)(token));
                         transformations.Add(aggregate);
                         aggregateStatementsCache = aggregate.Statements;
-                        state.AggregatedProperties =
+                        state.AggregatedPropertyNames =
                             aggregate.Statements.Select(statement => statement.AsAlias).ToList();
                         break;
                     case QueryTokenKind.AggregateGroupBy:
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Parsers
                 {
                     aggregate = BindAggregateToken((AggregateToken)token.Child);
                     aggregateStatementsCache = ((AggregateTransformationNode)aggregate).Statements;
-                    state.AggregatedProperties =
+                    state.AggregatedPropertyNames =
                         aggregateStatementsCache.Select(statement => statement.AsAlias).ToList();
                 }
                 else

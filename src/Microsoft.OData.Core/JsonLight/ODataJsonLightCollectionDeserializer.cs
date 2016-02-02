@@ -184,8 +184,9 @@ namespace Microsoft.OData.Core.JsonLight
                 expectedItemTypeReference == null ||
                 expectedItemTypeReference.IsODataPrimitiveTypeKind() ||
                 expectedItemTypeReference.IsODataComplexTypeKind() ||
+                expectedItemTypeReference.IsODataEnumTypeKind() ||
                 expectedItemTypeReference.IsODataTypeDefinitionTypeKind(),
-                "If an expected type is specified, it must be a primitive, complex type or type definition.");
+                "If an expected type is specified, it must be a primitive, complex type, enum type or type definition.");
             this.JsonReader.AssertNotBuffering();
 
             object item = this.ReadNonEntityValue(

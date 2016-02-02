@@ -1361,7 +1361,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
         {
             dsc.Configurations.RequestPipeline.OnMessageCreating = (args) =>
             {
-                return new AnnotationRequestMessage(args,
+                return new CustomizedHttpWebRequestMessage(args,
                     response,
                     new Dictionary<string, string>()
                     {

@@ -48,3 +48,6 @@ sln/packages/
 # Test artifacts
 test/FunctionalTests/Tests/Data/Northwind/Northwind.csdl1.csdl
 test/FunctionalTests/Tests/Data/Northwind/Northwind.csdl2.csdl
+
+# Symbol
+*.pdb

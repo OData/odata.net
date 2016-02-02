@@ -193,14 +193,14 @@ namespace Microsoft.OData.Core.JsonLight
 
             // write "odata.actions" metadata
             IEnumerable<ODataAction> actions = entry.Actions;
-            if (actions != null)
+            if (actions != null && actions.Any())
             {
                 this.WriteOperations(actions.Cast<ODataOperation>(), /*isAction*/ true);
             }
 
             // write "odata.functions" metadata
             IEnumerable<ODataFunction> functions = entry.Functions;
-            if (functions != null)
+            if (functions != null && functions.Any())
             {
                 this.WriteOperations(functions.Cast<ODataOperation>(), /*isAction*/ false);
             }

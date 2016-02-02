@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("Products(101)", 404) as ODataEntry;
+                ODataEntry deletedEntry = this.QueryEntityItem("Products(101)", 204) as ODataEntry;
                 Assert.IsNull(deletedEntry);
             }
         }
