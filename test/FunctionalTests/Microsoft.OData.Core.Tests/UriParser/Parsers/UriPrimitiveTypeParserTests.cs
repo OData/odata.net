@@ -5,9 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Core.UriParser.Parsers;
 using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+using Microsoft.OData.Edm;
+using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Parsers
@@ -18,14 +21,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void InvalidDateTimeOffsetShouldReturnFalse()
         {
             object output;
-            UriPrimitiveTypeParser.TryUriStringToPrimitive("Ct >dvDTrz", EdmCoreModel.Instance.GetDateTimeOffset(true), out output).Should().BeFalse();
+            this.TryParseUriStringToPrimitiveType("Ct >dvDTrz", EdmCoreModel.Instance.GetDateTimeOffset(true), out output).Should().BeFalse();
         }
 
         [Fact]
         public void InvalidDateShouldReturnFalse()
         {
             object output;
-            UriPrimitiveTypeParser.TryUriStringToPrimitive("-1000-00-01", EdmCoreModel.Instance.GetDate(true), out output).Should().BeFalse();
+            this.TryParseUriStringToPrimitiveType("-1000-00-01", EdmCoreModel.Instance.GetDate(true), out output).Should().BeFalse();
         }
 
         [Fact]
@@ -40,7 +43,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             };
             foreach (var s in list)
             {
-                UriPrimitiveTypeParser.TryUriStringToPrimitive(s, EdmCoreModel.Instance.GetTimeOfDay(true), out output).Should().BeFalse();
+                this.TryParseUriStringToPrimitiveType(s, EdmCoreModel.Instance.GetTimeOfDay(true), out output).Should().BeFalse();
             }
         }
 
@@ -48,7 +51,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void TryUriStringToPrimitiveWithValidDurationLiteralShouldReturnValidTimeSpan()
         {
             object output;
-            UriPrimitiveTypeParser.TryUriStringToPrimitive("duration'P1D'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeTrue();
+            this.TryParseUriStringToPrimitiveType("duration'P1D'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeTrue();
             output.ShouldBeEquivalentTo(new TimeSpan(1, 0, 0, 0));
         }
 
@@ -56,14 +59,26 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void TryUriStringToPrimitiveWithInvalidDurationLiteralShouldReturnFalse()
         {
             object output;
-            UriPrimitiveTypeParser.TryUriStringToPrimitive("duration'P1Y'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeFalse();
+            this.TryParseUriStringToPrimitiveType("duration'P1Y'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeFalse();
         }
 
         [Fact(Skip = "This test currently fails.")]
         public void TryUriStringToPrimitiveWithOverflowingDurationLiteralShouldReturnFalse()
         {
             object output;
-            UriPrimitiveTypeParser.TryUriStringToPrimitive("duration'P999999999D'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeFalse();
+            this.TryParseUriStringToPrimitiveType("duration'P999999999D'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeFalse();
         }
+
+        #region Private Methods
+
+        private bool TryParseUriStringToPrimitiveType(string text, IEdmTypeReference targetType, out object targetValue)
+        {
+            UriTypeParsingException exception;
+
+            return UriPrimitiveTypeParser.Instance.TryParseUriStringToType(text, targetType, out targetValue, out exception);
+        }
+
+        #endregion
+
     }
 }

@@ -1309,9 +1309,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\UriPathParser.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\UriPathParser.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\UriPrimitiveTypeParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\UriPrimitiveTypeParser.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\UriQueryExpressionParser.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\UriQueryExpressionParser.cs</Link>
     </Compile>
@@ -1775,7 +1772,7 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs">
       <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs</Link>
     </Compile>
@@ -1784,6 +1781,27 @@
     </Compile>
     <Compile Include="..\UriParser\CustomUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\CustomUriFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\CustomUriTypePrefixLiterals.cs">
+      <Link>Microsoft\OData\Core\UriParser\CustomUriTypePrefixLiterals.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\TypeParsers\Common\IUriTypeParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\Common\IUriTypeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\TypeParsers\Common\UriTypeParsingException.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\Common\UriTypeParsingException.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\TypeParsers\DefaultUriTypeParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\DefaultUriTypeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\TypeParsers\UriCustomTypeParsers.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\UriCustomTypeParsers.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\TypeParsers\UriPrimitiveTypeParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\UriPrimitiveTypeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriParserHelper.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\UriParserHelper.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\UriFunctionsHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>

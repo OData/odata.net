@@ -889,6 +889,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <Property Name=""ID2"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""AngerLevel"" Type=""Edm.Double"" />
         <Property Name=""AttackDates"" Type=""Collection(Edm.DateTimeOffset)"" />
+        <Property Name=""LionHeartbeat"" Type=""Fully.Qualified.Namespace.Heartbeat"" />
         <NavigationProperty Name=""DogThatIAte"" Type=""Fully.Qualified.Namespace.Dog"" Nullable=""false"" Partner=""LionWhoAteMe"">
           <ReferentialConstraint Property=""ID1"" ReferencedProperty=""ID"" />
         </NavigationProperty>
@@ -996,6 +997,9 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <NavigationProperty Name=""LionWhoAteMe"" Type=""Fully.Qualified.Namespace.Lion"" Nullable=""false"" Partner=""DogThatIAte"" />
         <NavigationProperty Name=""LionsISaw"" Type=""Collection(Fully.Qualified.Namespace.Lion)"" Nullable=""false"" Partner=""DogsSeenMe"" />
       </EntityType>
+      <ComplexType Name=""Heartbeat"">
+        <Property Name=""Frequency"" Type=""Edm.Double"" />
+      </ComplexType>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
@@ -2284,5 +2288,11 @@ namespace Microsoft.OData.Core.Tests.UriParser
         {
             return (IEdmStructuralProperty)GetPersonType().FindProperty("Prop.With.Periods");
         }
+
+        public static IEdmComplexType GetHeatbeatComplexType()
+        {
+            return TestModel.FindType("Fully.Qualified.Namespace.Heartbeat") as IEdmComplexType;
+        }
+
     }
 }

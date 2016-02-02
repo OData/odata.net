@@ -5949,6 +5949,29 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "The given uri custom type parser already exists."
+        /// </summary>
+        internal static string UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
+            }
+        }
+
+        /// <summary>
+        /// A string like "An existing custom UriTypePraser is already registered to the given EdmTypeReference '{0}'."
+        /// </summary>
+        internal static string UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, p0);
+        }
+
+        /// <summary>
+        /// A string like "The given type literal prefix '{0}' already exists as a custom uri type literal prefix."
+        /// </summary>
+        internal static string CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, p0);
+        }
+
+        /// <summary>
         /// A string like "The value '{0}' is not a valid duration value."
         /// </summary>
         internal static string ValueParser_InvalidDuration(object p0) {

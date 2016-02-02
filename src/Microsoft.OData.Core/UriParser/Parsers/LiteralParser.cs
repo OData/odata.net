@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Text;
     using System.Xml;
     using Edm.Library;
+    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
     using Microsoft.Spatial;
 
     /// <summary>Use this class to parse literals from keys, etags, skiptokens, and filter/orderby expression constants.</summary>
@@ -300,14 +301,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 if (this.prefix != null)
                 {
-                    if (!UriPrimitiveTypeParser.TryRemovePrefix(this.prefix, ref text))
+                    if (!UriParserHelper.TryRemovePrefix(this.prefix, ref text))
                     {
                         return false;
                     }
                 }
 
                 bool shouldBeQuoted = this.prefix != null || ValueOfTypeCanContainQuotes(this.expectedType);
-                if (shouldBeQuoted && !UriPrimitiveTypeParser.TryRemoveQuotes(ref text))
+                if (shouldBeQuoted && !UriParserHelper.TryRemoveQuotes(ref text))
                 {
                     return false;
                 }
@@ -574,12 +575,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryRemoveFormatting(ref string text)
             {
-                if (!UriPrimitiveTypeParser.TryRemovePrefix(ExpressionConstants.LiteralPrefixBinary, ref text))
+                if (!UriParserHelper.TryRemovePrefix(ExpressionConstants.LiteralPrefixBinary, ref text))
                 {
                     return false;
                 }
 
-                if (!UriPrimitiveTypeParser.TryRemoveQuotes(ref text))
+                if (!UriParserHelper.TryRemoveQuotes(ref text))
                 {
                     return false;
                 }
@@ -624,7 +625,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryRemoveFormatting(ref string text)
             {
-                return UriPrimitiveTypeParser.TryRemoveQuotes(ref text);
+                return UriParserHelper.TryRemoveQuotes(ref text);
             }
         }
 

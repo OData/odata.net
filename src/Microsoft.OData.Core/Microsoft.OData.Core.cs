@@ -843,6 +843,9 @@ namespace Microsoft.OData.Core {
         internal const string ExpressionLexer_InvalidEscapeSequence = "ExpressionLexer_InvalidEscapeSequence";
         internal const string UriQueryExpressionParser_UnrecognizedLiteral = "UriQueryExpressionParser_UnrecognizedLiteral";
         internal const string UriQueryExpressionParser_UnrecognizedLiteralWithReason = "UriQueryExpressionParser_UnrecognizedLiteralWithReason";
+        internal const string UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists = "UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists";
+        internal const string UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists = "UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists";
+        internal const string CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists = "CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
         internal const string JsonReader_UnexpectedComma = "JsonReader_UnexpectedComma";

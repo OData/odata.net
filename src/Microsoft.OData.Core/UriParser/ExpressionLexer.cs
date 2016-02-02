@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -14,8 +15,10 @@ namespace Microsoft.OData.Core.UriParser
     using System.Text;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -694,29 +697,7 @@ namespace Microsoft.OData.Core.UriParser
             this.token.Text = this.Text.Substring(tokenPos, this.textPos - tokenPos);
             this.token.Position = tokenPos;
 
-            // Handle type-prefixed literals such as binary, datetime or guid.
             this.HandleTypePrefixedLiterals();
-
-            // Handle keywords.
-            if (this.token.Kind == ExpressionTokenKind.Identifier)
-            {
-                if (ExpressionLexerUtils.IsInfinityOrNaNDouble(this.token.Text))
-                {
-                    this.token.Kind = ExpressionTokenKind.DoubleLiteral;
-                }
-                else if (ExpressionLexerUtils.IsInfinityOrNanSingle(this.token.Text))
-                {
-                    this.token.Kind = ExpressionTokenKind.SingleLiteral;
-                }
-                else if (this.token.Text == ExpressionConstants.KeywordTrue || this.token.Text == ExpressionConstants.KeywordFalse)
-                {
-                    this.token.Kind = ExpressionTokenKind.BooleanLiteral;
-                }
-                else if (this.token.Text == ExpressionConstants.KeywordNull)
-                {
-                    this.token.Kind = ExpressionTokenKind.NullLiteral;
-                }
-            }
 
             return this.token;
         }
@@ -739,51 +720,48 @@ namespace Microsoft.OData.Core.UriParser
             return false;
         }
 
-        /// <summary>Handles lexemes that are formed by an identifier followed by a quoted string.</summary>
+        /// <summary>Handles lexeres that are formed by identifiers.</summary>
         /// <remarks>This method modified the token field as necessary.</remarks>
         private void HandleTypePrefixedLiterals()
         {
-            ExpressionTokenKind id = this.token.Kind;
-            if (id != ExpressionTokenKind.Identifier)
+            if (this.token.Kind != ExpressionTokenKind.Identifier)
             {
                 return;
             }
 
-            bool quoteFollows = this.ch == '\'';
-            if (!quoteFollows)
+            // Get literal of quoted values
+            if (this.ch == '\'')
             {
-                return;
-            }
+                // Get custom literal if exists.
+                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriTypePrefixLiterals.GetCustomEdmTypeByLiteralPrefix(this.token.Text);
+                if (edmTypeOfCustomLiteral != null)
+                {
+                    this.token.SetCustomEdmTypeLiteral(edmTypeOfCustomLiteral);
+                }
+                else
+                {
+                    // Get built in type literal prefix for quated values
+                    this.token.Kind = this.GetBuiltInTypesLiteralPrefixWithQuotedValue(this.token.Text);
+                }
 
-            string tokenText = this.token.Text;
-            if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDuration, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.DurationLiteral;
-            }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.BinaryLiteral;
-            }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGeography, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.GeographyLiteral;
-            }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGeometry, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.GeometryLiteral;
-            }
-            else if (string.Equals(tokenText, ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
-            {
-                // typed null literals are not supported.
-                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+                this.HandleQuotedValues();
             }
             else
             {
-                // treat as quoted literal
-                id = ExpressionTokenKind.QuotedLiteral;
+                // Handle keywords.
+                // Get built in type literal prefix.
+                ExpressionTokenKind? regularTokenKind = GetBuiltInTypesLiteralPrefix(this.token.Text);
+                if (regularTokenKind.HasValue)
+                {
+                    this.token.Kind = regularTokenKind.Value;
+                }
             }
+        }
 
-            int tokenPos = this.token.Position;
+        private void HandleQuotedValues()
+        {
+            int startPosition = this.token.Position;
+
             do
             {
                 this.NextChar();
@@ -796,8 +774,72 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             this.NextChar();
-            this.token.Kind = id;
-            this.token.Text = this.Text.Substring(tokenPos, this.textPos - tokenPos);
+
+            // Update token.Text to include the literal + the quated value
+            this.token.Text = this.Text.Substring(startPosition, this.textPos - startPosition);
+        }
+
+        /// <summary>
+        /// Get type-prefixed literals such as double, boolean...
+        /// </summary>
+        /// <param name="tokenText">Token texk</param>
+        /// <returns>ExpressionTokenKind by the token text</returns>
+        private ExpressionTokenKind? GetBuiltInTypesLiteralPrefix(string tokenText)
+        {
+            if (ExpressionLexerUtils.IsInfinityOrNaNDouble(tokenText))
+            {
+                return ExpressionTokenKind.DoubleLiteral;
+            }
+            else if (ExpressionLexerUtils.IsInfinityOrNanSingle(tokenText))
+            {
+                return ExpressionTokenKind.SingleLiteral;
+            }
+            else if (tokenText == ExpressionConstants.KeywordTrue || tokenText == ExpressionConstants.KeywordFalse)
+            {
+                return ExpressionTokenKind.BooleanLiteral;
+            }
+            else if (tokenText == ExpressionConstants.KeywordNull)
+            {
+                return ExpressionTokenKind.NullLiteral;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get type-prefixed literals with quoted values duration, binary and spatial types.
+        /// </summary>
+        /// <param name="tokenText">Token text</param>
+        /// <returns>ExpressionTokenKind</returns>
+        /// <example>geometry'POINT (79 84)'. 'geometry' is the tokenText </example>
+        private ExpressionTokenKind GetBuiltInTypesLiteralPrefixWithQuotedValue(string tokenText)
+        {
+            if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDuration, StringComparison.OrdinalIgnoreCase))
+            {
+                return ExpressionTokenKind.DurationLiteral;
+            }
+            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase))
+            {
+                return ExpressionTokenKind.BinaryLiteral;
+            }
+            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGeography, StringComparison.OrdinalIgnoreCase))
+            {
+                return ExpressionTokenKind.GeographyLiteral;
+            }
+            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGeometry, StringComparison.OrdinalIgnoreCase))
+            {
+                return ExpressionTokenKind.GeometryLiteral;
+            }
+            else if (string.Equals(tokenText, ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
+            {
+                // typed null literals are not supported.
+                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+            }
+            else
+            {
+                // treat as quoted literal
+                return ExpressionTokenKind.QuotedLiteral;
+            }
         }
 
         /// <summary>Parses a token that starts with a digit.</summary>
@@ -816,7 +858,7 @@ namespace Microsoft.OData.Core.UriParser
                 {
                     this.NextChar();
                 }
-                while (this.ch.HasValue && UriPrimitiveTypeParser.IsCharHexDigit(this.ch.Value));
+                while (this.ch.HasValue && UriParserHelper.IsCharHexDigit(this.ch.Value));
             }
             else
             {
