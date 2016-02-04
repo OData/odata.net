@@ -59,8 +59,7 @@ namespace Microsoft.OData.Performance
         private string GetServicePath()
         {
             var dllPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            var parentPath = Directory.GetParent(dllPath).FullName;
-            return parentPath;
+            return Directory.GetParent(dllPath).FullName;
         }
     }
 }

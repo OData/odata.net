@@ -21,13 +21,18 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void QueryOptionsWithoutExpand()
+        public void QueryOptionsWithoutExpand_20()
         {
+            int RequestsPerIteration = 20;
+
             foreach (var iteration in Benchmark.Iterations)
             {
                 using (iteration.StartMeasurement())
                 {
-                    QueryAndVerify("LargePeopleSet?$filter=Age gt 20&$select=FirstName,Age&$orderby=Age", "odata.maxpagesize=1000");
+                    for (int i = 0; i < RequestsPerIteration; i++)
+                    {
+                        QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue", "odata.maxpagesize=100");
+                    }
                 }
             }
         }
