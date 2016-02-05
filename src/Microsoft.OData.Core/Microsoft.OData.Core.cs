@@ -780,7 +780,7 @@ namespace Microsoft.OData.Core {
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";
-        internal const string PathParser_TypeCastOnlyAllowedAfterEntityCollection = "PathParser_TypeCastOnlyAllowedAfterEntityCollection";
+        internal const string PathParser_TypeCastOnlyAllowedAfterStructuralCollection = "PathParser_TypeCastOnlyAllowedAfterStructuralCollection";
         internal const string ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink = "ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink";
         internal const string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";

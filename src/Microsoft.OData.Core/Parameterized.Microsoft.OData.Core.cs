@@ -5465,10 +5465,11 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Type cast segment '{0}' after a collection which is not of entity type is not allowed."
+        /// A string like "Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed."
         /// </summary>
-        internal static string PathParser_TypeCastOnlyAllowedAfterEntityCollection(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PathParser_TypeCastOnlyAllowedAfterEntityCollection, p0);
+        internal static string PathParser_TypeCastOnlyAllowedAfterStructuralCollection(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PathParser_TypeCastOnlyAllowedAfterStructuralCollection, p0);
         }
 
         /// <summary>

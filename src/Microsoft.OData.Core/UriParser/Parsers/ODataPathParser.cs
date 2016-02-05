@@ -1123,7 +1123,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterEntityCollection(identifier));
+                    // Complex collection supports type cast too.
+                    var actualComplexTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmComplexType;
+                    if (actualComplexTypeOfTheTypeSegment != null)
+                    {
+                        actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmComplexTypeReference(actualComplexTypeOfTheTypeSegment, false));
+                    }
+                    else
+                    {
+                        throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterStructuralCollection(identifier));
+                    }
                 }
             }
 

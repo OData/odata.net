@@ -860,7 +860,7 @@ UriParserMetadata_MultipleMatchingParametersFound=More than one parameters match
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
-PathParser_TypeCastOnlyAllowedAfterEntityCollection=Type cast segment '{0}' after a collection which is not of entity type is not allowed.
+PathParser_TypeCastOnlyAllowedAfterStructuralCollection=Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed.
 
 ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink=A feed may contain a next page link, a delta link or neither, but must not contain both.
 
