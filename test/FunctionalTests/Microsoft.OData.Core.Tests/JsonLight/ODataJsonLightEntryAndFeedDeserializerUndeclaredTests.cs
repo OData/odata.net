@@ -204,7 +204,7 @@
             UndeclaredAddress1Value.TypeName.Should().Be("Server.NS.Address");
             UndeclaredAddress1Value.Properties.Count().Should().Be(2);
             UndeclaredAddress1Value.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>()
+                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUndeclaredPropertyValue>()
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
 
             // roundtrip test: writer
@@ -261,7 +261,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("null");
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be("null");
 
             // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Core.Evaluation.NoOpEntityMetadataBuilder(entry);
@@ -286,10 +286,10 @@
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name)).Value.As<ODataUntypedValue>().RawValue.Should().Be("12.3"); // numeric
+            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name)).Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be("12.3"); // numeric
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>() // string
+                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUndeclaredPropertyValue>() // string
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
@@ -306,7 +306,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"{""@odata.type"":""Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}");
         }
 
@@ -323,7 +323,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"{""@odata.type"":""Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":'abc'},""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}");
         }
 
@@ -339,7 +339,7 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUndeclaredPropertyValue>().RawValue
               .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
         }
@@ -428,7 +428,7 @@
 
             entry.Properties.Count().Should().Be(4);
             entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+                .Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
         }
 
@@ -442,7 +442,7 @@
             {
                 entry = reader.Item as ODataEntry;
             });
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"{""@odata.type"":""Server.NS.AddressUndeclared"",""Street"":""No.999,Zixing Rd Minhang""}");
         }
 
@@ -458,7 +458,7 @@
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value.As<ODataUntypedValue>()
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value.As<ODataUndeclaredPropertyValue>()
                 .RawValue.Should().Be(@"{}");
         }
 
@@ -474,7 +474,7 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
         }
@@ -491,10 +491,10 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>()
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUndeclaredPropertyValue>()
                 .RawValue.Should().Be(@"[]");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet"))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
+                .Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
         #endregion

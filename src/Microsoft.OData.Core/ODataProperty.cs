@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The value of this property, accessed and set by both <seealso cref="Value"/> and <seealso cref="ODataValue"/>.
         /// </summary>
-        private ODataValue odataOrUntypedValue; // normal ODataValue or ODataUntypedValue
+        private ODataAnnotatable odataOrUndeclaredValue;
 
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataProperty"/>.
@@ -38,30 +38,30 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                if (this.odataOrUntypedValue == null)
+                if (this.odataOrUndeclaredValue == null)
                 {
                     return null;
                 }
 
-                ODataUntypedValue tmpValue = this.odataOrUntypedValue as ODataUntypedValue;
+                ODataUndeclaredPropertyValue tmpValue = this.odataOrUndeclaredValue as ODataUndeclaredPropertyValue;
                 if (tmpValue != null)
                 {
                     return tmpValue;
                 }
 
-                return ((ODataValue)this.odataOrUntypedValue).FromODataValue();
+                return ((ODataValue)this.odataOrUndeclaredValue).FromODataValue();
             }
 
             set
             {
-                ODataUntypedValue tmpValue = value as ODataUntypedValue;
+                ODataUndeclaredPropertyValue tmpValue = value as ODataUndeclaredPropertyValue;
                 if (tmpValue != null)
                 {
-                    this.odataOrUntypedValue = tmpValue;
+                    this.odataOrUndeclaredValue = tmpValue;
                 }
                 else
                 {
-                    this.odataOrUntypedValue = value.ToODataValue();
+                    this.odataOrUndeclaredValue = value.ToODataValue();
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return (ODataValue)this.odataOrUntypedValue;
+                return (ODataValue)this.odataOrUndeclaredValue;
             }
         }
 

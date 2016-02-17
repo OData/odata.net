@@ -300,14 +300,14 @@
                 Properties = new[]
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataUntypedValue(){RawValue="12.3"}},
+                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataUndeclaredPropertyValue(){RawValue="12.3"}},
                         new ODataProperty{Name = "Address", Value = new ODataComplexValue()
                         {
                             TypeName = "Server.NS.Address",
                             Properties= new []
                             {
                                 new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUntypedValue(){RawValue="12.0"}},
+                                new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUndeclaredPropertyValue(){RawValue="12.0"}},
                             },
                         }},
                     },
@@ -337,7 +337,7 @@
                             Properties= new []
                             {
                                 new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUntypedValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
+                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUndeclaredPropertyValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
                             },
                         }},
                     },
@@ -362,7 +362,7 @@
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
                         new ODataProperty{Name = "UndeclaredAddress1", Value =
-                            new ODataUntypedValue(){RawValue=@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}"}
+                            new ODataUndeclaredPropertyValue(){RawValue=@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}"}
                         },
                     },
             };
@@ -386,7 +386,7 @@
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
                         new ODataProperty{Name = "UndeclaredCollection1", Value =
-                            new ODataUntypedValue(){RawValue=@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]"}
+                            new ODataUndeclaredPropertyValue(){RawValue=@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]"}
                         },
                     },
             };
@@ -615,14 +615,14 @@
                 Properties = new[]
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataUntypedValue(){RawValue="12.3"}},
+                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataUndeclaredPropertyValue(){RawValue="12.3"}},
                         new ODataProperty{Name = "Address", Value = new ODataComplexValue()
                         {
                             TypeName = "Server.NS.Address",
                             Properties= new []
                             {
                                 new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUntypedValue(){RawValue="12.0"}},
+                                new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUndeclaredPropertyValue(){RawValue="12.0"}},
                             },
                         }},
                     },
@@ -652,7 +652,7 @@
                             Properties= new []
                             {
                                 new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUntypedValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
+                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUndeclaredPropertyValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
                             },
                         }},
                     },
@@ -677,7 +677,7 @@
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
                         new ODataProperty{Name = "UndeclaredAddress1", Value =
-                            new ODataUntypedValue(){RawValue=@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}"}
+                            new ODataUndeclaredPropertyValue(){RawValue=@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}"}
                         },
                     },
             };
@@ -701,7 +701,7 @@
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
                         new ODataProperty{Name = "UndeclaredCollection1", Value =
-                            new ODataUntypedValue(){RawValue=@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]"}
+                            new ODataUndeclaredPropertyValue(){RawValue=@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]"}
                         },
                     },
             };

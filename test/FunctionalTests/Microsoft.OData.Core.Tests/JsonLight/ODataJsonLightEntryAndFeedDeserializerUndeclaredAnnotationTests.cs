@@ -94,7 +94,7 @@
                 .ODataValue as ODataComplexValue;
             undeclaredComplex1Val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Should().BeNull(); // normal dynamic property in open entity has no raw ODataJsonLightRawAnnotationSet.
 
-            ODataUntypedValue undeclaredComplex1Innerstr = undeclaredComplex1Val.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value as ODataUntypedValue;
+            ODataUndeclaredPropertyValue undeclaredComplex1Innerstr = undeclaredComplex1Val.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value as ODataUndeclaredPropertyValue;
             undeclaredComplex1Innerstr.RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Innerstr.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Count().Should().Be(4);
             undeclaredComplex1Innerstr.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.First().Value.Should().Be("\"od unkown value _234\"");
@@ -143,7 +143,7 @@
             undeclaredComplex1Val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.First().Value.Should().Be("\"od unkown value 1\"");
             undeclaredComplex1Val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Last().Value.Should().Be("\"custom annotation value 1\"");
 
-            ODataUntypedValue undeclaredComplex1Innerstr = undeclaredComplex1Val.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value as ODataUntypedValue;
+            ODataUndeclaredPropertyValue undeclaredComplex1Innerstr = undeclaredComplex1Val.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value as ODataUndeclaredPropertyValue;
             undeclaredComplex1Innerstr.RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Innerstr.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Count().Should().Be(4);
             undeclaredComplex1Innerstr.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.First().Value.Should().Be("\"od unkown value _234\"");
@@ -176,7 +176,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            ODataUntypedValue val = entry.Properties.Last().Value.As<ODataUntypedValue>();
+            ODataUndeclaredPropertyValue val = entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>();
             val.Should().NotBeNull();
             val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Count().Should().Be(3);
             val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.First().Value.Should().Be("\"NS1.unknownTypeName123\"");
@@ -305,7 +305,7 @@
             UndeclaredAddress1Value.TypeName.Should().Be("Server.NS.Address");
             UndeclaredAddress1Value.Properties.Count().Should().Be(2);
             UndeclaredAddress1Value.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>()
+                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUndeclaredPropertyValue>()
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
 
             UndeclaredAddress1Value.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Count().Should().Be(2);
@@ -370,7 +370,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            ODataUntypedValue val = entry.Properties.Last().Value.As<ODataUntypedValue>();
+            ODataUndeclaredPropertyValue val = entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>();
             val.RawValue.Should().Be("null");
             val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Count().Should().Be(3);
             val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.First().Value.Should().Be("\"unknown odata.xxx value1\"");
@@ -399,10 +399,10 @@
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name)).Value.As<ODataUntypedValue>().RawValue.Should().Be("12.3"); // numeric
+            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name)).Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be("12.3"); // numeric
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>() // string
+                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUndeclaredPropertyValue>() // string
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
@@ -419,7 +419,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}");
         }
 
@@ -436,7 +436,7 @@
             });
 
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"{""@odata.type"":""#Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":'abc'},""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}");
         }
 
@@ -452,7 +452,7 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUndeclaredPropertyValue>().RawValue
               .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
         }
@@ -541,8 +541,8 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            ODataUntypedValue val = entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
-                .Value.As<ODataUntypedValue>();
+            ODataUndeclaredPropertyValue val = entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUndeclaredPropertyValue>();
             val.RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.Count().Should().Be(2);
             val.GetAnnotation<ODataJsonLightRawAnnotationSet>().Annotations.First().Value.Should().Be("\"unknown odata.xxx value1\"");
@@ -570,7 +570,7 @@
             {
                 entry = reader.Item as ODataEntry;
             });
-            entry.Properties.Last().Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Last().Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"{""@odata.type"":""#Server.NS.AddressUndeclared"",""Street"":""No.999,Zixing Rd Minhang""}");
         }
 
@@ -586,7 +586,7 @@
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value.As<ODataUntypedValue>()
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value.As<ODataUndeclaredPropertyValue>()
                 .RawValue.Should().Be(@"{}");
         }
 
@@ -602,7 +602,7 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUndeclaredPropertyValue>().RawValue
                 .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
         }
@@ -619,10 +619,10 @@
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>()
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUndeclaredPropertyValue>()
                 .RawValue.Should().Be(@"[]");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet"))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
+                .Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
         #endregion
@@ -646,7 +646,7 @@
 
             entry.Properties.Count().Should().Be(4);
             entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
-                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+                .Value.As<ODataUndeclaredPropertyValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             entry.Properties.Last().Value.As<ODataComplexValue>().Properties.Count().Should().Be(2);
         }
 

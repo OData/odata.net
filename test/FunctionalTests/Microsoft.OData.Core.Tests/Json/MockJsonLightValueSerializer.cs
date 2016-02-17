@@ -66,6 +66,12 @@ namespace Microsoft.OData.Core.Tests.Json
             this.WritePrimitiveVerifier(value, expectedTypeReference);
         }
 
+        public void WriteUndeclaredPropertyValue(ODataUndeclaredPropertyValue value)
+        {
+            this.WritePrimitiveVerifier.Should().NotBeNull("WriteUntypedValue was called.");
+            this.WritePrimitiveVerifier(value, null);
+        }
+
         public void WriteUntypedValue(ODataUntypedValue value)
         {
             this.WritePrimitiveVerifier.Should().NotBeNull("WriteUntypedValue was called.");

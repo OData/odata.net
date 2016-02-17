@@ -358,7 +358,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 StringBuilder builder = new StringBuilder();
                 this.JsonReader.SkipValue(builder);
-                ODataUntypedValue tmp = new ODataUntypedValue()
+                ODataUndeclaredPropertyValue tmp = new ODataUndeclaredPropertyValue()
                 {
                     RawValue = builder.ToString()
                 };
@@ -527,7 +527,7 @@ namespace Microsoft.OData.Core.JsonLight
                     annotationCollector.GetPropertyRawAnnotationSet(property.Name);
                 if (rawAnnotations != null)
                 {
-                    ODataUntypedValue untypedValue = property.Value as ODataUntypedValue;
+                    ODataUndeclaredPropertyValue untypedValue = property.Value as ODataUndeclaredPropertyValue;
                     ODataAnnotatable valueTmp = (ODataAnnotatable)untypedValue ?? (ODataAnnotatable)property.ODataValue;
                     if (valueTmp != null)
                     {

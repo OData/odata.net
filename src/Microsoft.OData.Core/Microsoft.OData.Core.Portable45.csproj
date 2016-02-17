@@ -222,6 +222,7 @@
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="ODataErrorDetail.cs" />
+    <Compile Include="ODataUndeclaredPropertyValue.cs" />
     <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />
     <Compile Include="ODataMediaTypeResolver.cs" />

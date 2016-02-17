@@ -82,6 +82,13 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmTypeReference expectedTypeReference);
 
         /// <summary>
+        /// Writes an undeclared property value.
+        /// </summary>
+        /// <param name="value">The undeclared property value to write.</param>
+        void WriteUndeclaredPropertyValue(
+            ODataUndeclaredPropertyValue value);
+
+        /// <summary>
         /// Writes an untyped value.
         /// </summary>
         /// <param name="value">The untyped value to write.</param>
