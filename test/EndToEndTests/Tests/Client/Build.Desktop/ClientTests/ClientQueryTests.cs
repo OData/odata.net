@@ -9,6 +9,9 @@ namespace Microsoft.Test.OData.Tests.Client
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
+    using System.Text;
+    using System.Threading.Tasks;
     using Microsoft.OData.Client;
     using Microsoft.Test.OData.Framework;
     using Microsoft.Test.OData.Framework.Client;
@@ -26,6 +29,196 @@ namespace Microsoft.Test.OData.Tests.Client
         public ClientQueryTests()
             : base(ServiceDescriptors.AstoriaDefaultService)
         {
+        }
+
+        /// <summary>
+        /// Tests discarding undeclared properties.
+        /// </summary>
+        [TestMethod]
+        public void TestDiscardUndeclaredProperties()
+        {
+            // start the in-process http server
+            bool started = false;
+            HttpListener listener = null;
+            Task serverTask = Task.Run(() =>
+            {
+                started = true;
+                listener = RunHttpServerWithExtraProperties();
+            });
+            while (!started)
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+
+            System.Threading.Thread.Sleep(800);
+
+            // run test:
+            DefaultContainer cxt = new DefaultContainer(new Uri("http://localhost:8012/"));
+            cxt.Format.UseJson();
+            cxt.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support; // overwrite .IgnoreMissingProperties
+            var query1 = from p in cxt.Product
+                         select p;
+
+            // this query is expected to succeed, given the fix of 
+            // 'ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty' in ODataMessageReadingHelper.cs
+            var product1 = query1.FirstOrDefault();
+            Assert.AreEqual(1895, product1.ProductId);
+            Assert.AreEqual(product1.Description, "chhtest_onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu");
+
+            // stop the in-process http server
+            while (listener == null)
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+
+            listener.Close();
+        }
+
+        /// <summary>
+        /// Tests discarding undeclared properties.
+        /// </summary>
+        [TestMethod]
+        public void TestThrowOnUndeclaredProperties()
+        {
+            // start the in-process http server
+            bool started = false;
+            HttpListener listener = null;
+            Task serverTask = Task.Run(() =>
+            {
+                started = true;
+                listener = RunHttpServerWithExtraProperties();
+            });
+            while (!started)
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+
+            System.Threading.Thread.Sleep(800);
+
+            // run test:
+            DefaultContainer cxt = new DefaultContainer(new Uri("http://localhost:8012/"));
+            cxt.Format.UseJson();
+            cxt.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.None;
+            cxt.IgnoreMissingProperties = false;
+            var query1 = from p in cxt.Product
+                         select p;
+
+            // this query is expected to succeed, given the fix of 
+            // 'ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty' in ODataMessageReadingHelper.cs
+
+            try
+            {
+                var product1 = query1.FirstOrDefault();
+                Assert.Fail("exception should have been thrown.");
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(
+                    "The property 'undeclProp1' does not exist on type "
+                        + "'Microsoft.Test.OData.Services.AstoriaDefaultService.Product'. "
+                        + "Make sure to only use property names that are defined by the type.",
+                    ex.Message);
+            }
+
+            // stop the in-process http server
+            while (listener == null)
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+
+            listener.Close();
+        }
+
+        /// <summary>
+        /// regression test for  https://github.com/OData/odata.net/issues/352
+        /// </summary>
+        [TestMethod]
+        public void TestRegressionIgnoreMissingProperties()
+        {
+            // start the in-process http server
+            bool started = false;
+            HttpListener listener = null;
+            Task serverTask = Task.Run(() =>
+            {
+                started = true;
+                listener = RunHttpServerWithExtraProperties();
+            });
+            while (!started)
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+
+            System.Threading.Thread.Sleep(800);
+
+            // run test:
+            DefaultContainer cxt = new DefaultContainer(new Uri("http://localhost:8012/"));
+            cxt.Format.UseJson();
+            cxt.IgnoreMissingProperties = true;
+            var query1 = from p in cxt.Product
+                         select p;
+
+            // this query is expected to succeed, given the fix of 
+            // 'ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty' in ODataMessageReadingHelper.cs
+            var product1 = query1.FirstOrDefault();
+            Assert.AreEqual(1895, product1.ProductId);
+            Assert.AreEqual(product1.Description, "chhtest_onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu");
+
+            // stop the in-process http server
+            while (listener == null)
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+
+            listener.Close();
+        }
+
+        public HttpListener RunHttpServerWithExtraProperties()
+        {
+            var listener = new HttpListener();
+            listener.Prefixes.Add("http://localhost:8012/");
+            listener.Prefixes.Add("http://127.0.0.1:8012/");
+            listener.Start();
+            var context = listener.GetContext(); //Block until a connection comes in
+            context.Response.StatusCode = 200;
+            context.Response.SendChunked = true;
+            context.Response.Headers.Add("Content-Type", "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8");
+            string content =  // extra undeclared properties: undeclProp1, and CprStatu@odata.navigationLinkUrl
+@"{
+    ""@odata.context"": ""http://localhost:9090/AstoriaDefault635894184563744962/$metadata#Product"",
+    ""value"": [
+        {
+            ""@odata.etag"": ""W/\""'assrfsssfdtrmdajadchvrqehsszybuiyiu%C3%9Flhmazsuemptziruotkqcy%C3%9F%C3%9Fp'\"""",
+            ""ProductId"": 1895,
+            ""Description"": ""chhtest_onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu"",
+            ""undeclProp1"":""undecl value"",
+            ""CprStatu@odata.navigationLinkUrl"":""FileContacts('530')/CprStatu"",
+            ""Dimensions"": {
+                ""Width"": -7.922816251426434,
+                ""Height"": -0.492988348718789,
+                ""Depth"": -7.87020594567727
+            },
+            ""BaseConcurrency"": ""assrfsssfdtrmdajadchvrqehsszybuiyiußlhmazsuemptziruotkqcyßßp"",
+            ""ComplexConcurrency"": {
+                ""Token"": null,
+                ""QueriedDateTime"": ""2013-01-10T06:27:51.1667673Z""
+            },
+            ""NestedComplexConcurrency"": {
+                ""ModifiedDate"": ""2018-12-31T23:59:59.9999999Z"",
+                ""ModifiedBy"": ""gsrqilravbargkknoljssfn"",
+                ""Concurrency"": {
+                    ""Token"": ""ahahaha~~--!!"",
+                    ""QueriedDateTime"": ""2011-09-01T06:31:58.336924Z""
+                }
+            }
+        }
+    ]
+}";
+            content += "\n";
+            var bytes = Encoding.UTF8.GetBytes(content);
+            context.Response.OutputStream.Write(bytes, 0, bytes.Length);
+            context.Response.OutputStream.Flush();
+            context.Response.Close();
+            return listener;
         }
 
         [TestMethod]
@@ -130,7 +323,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
             string[] errorUrls =
             {
-                "/Login?$filter=contains(Username, 1)", 
+                "/Login?$filter=contains(Username, 1)",
                 "/Person?$filter=contains(Name, \"m\")",
                 "/Car?$filter=contains(VIN, '12')"
             };
@@ -207,18 +400,18 @@ namespace Microsoft.Test.OData.Tests.Client
             DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
             var query = from p in contextWrapper.Context.Customer
-                where p.Name != null
-                select new Customer()
-                {
-                    Name = p.Name,
-                    Orders = new DataServiceCollection<Order>(
-                        from r in p.Orders
-                        select new Order()
+                        where p.Name != null
+                        select new Customer()
                         {
-                            OrderId = r.OrderId,
-                            CustomerId = r.CustomerId
-                        })
-                };
+                            Name = p.Name,
+                            Orders = new DataServiceCollection<Order>(
+                                from r in p.Orders
+                                select new Order()
+                                {
+                                    OrderId = r.OrderId,
+                                    CustomerId = r.CustomerId
+                                })
+                        };
             var tmpResult0 = query.ToList()[0];
             DataServiceCollection<Order> collection = tmpResult0.Orders; // the collection tracking items
             int tmpCount = collection.Count;
@@ -247,13 +440,13 @@ namespace Microsoft.Test.OData.Tests.Client
             DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
             var query = from p in contextWrapper.Context.Customer
-                where p.CustomerId > -100000
-                // try to get many for paging
-                select new Customer()
-                {
-                    CustomerId = p.CustomerId,
-                    Name = p.Name
-                };
+                        where p.CustomerId > -100000
+                        // try to get many for paging
+                        select new Customer()
+                        {
+                            CustomerId = p.CustomerId,
+                            Name = p.Name
+                        };
             DataServiceCollection<Customer> collection = new DataServiceCollection<Customer>(query);
 
             // the collection to track items

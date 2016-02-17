@@ -921,11 +921,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             ODataItem[] itemsToWrite = { entry };
 
-            string expectedPayload =
-                                  "{\"" +
-                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
-                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
-                                  "}";
+            Action action = () => this.GetWriterOutputForContentTypeAndKnobValue(
+                "application/json;odata.metadata=minimal",
+                true,
+                itemsToWrite,
+                Model,
+                EntitySet,
+                EntityType,
+                enableFullValidation: true);
+            action.ShouldThrow<ODataException>().WithMessage(
+                Strings.ValidationUtils_PropertyDoesNotExistOnType("Prop1", "Namespace.EntityType"));
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue(
                 "application/json;odata.metadata=minimal",
@@ -934,17 +939,12 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                enableFullValidation: true);
-            result.Should().Be(expectedPayload);
-
-            result = this.GetWriterOutputForContentTypeAndKnobValue(
-                "application/json;odata.metadata=minimal",
-                true,
-                itemsToWrite,
-                Model,
-                EntitySet,
-                EntityType,
                 enableFullValidation: false);
+            string expectedPayload =
+                                  "{\"" +
+                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
+                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
+                                  "}";
             result.Should().Be(expectedPayload);
         }
 

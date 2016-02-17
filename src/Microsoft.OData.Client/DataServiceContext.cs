@@ -32,6 +32,27 @@ namespace Microsoft.OData.Client
     #endregion Namespaces
 
     /// <summary>
+    /// Indicates DataServiceContext's behavior on undeclared property in entity/complex value.
+    /// </summary>
+    public enum UndeclaredPropertyBehavior
+    {
+        /// <summary>
+        /// The default value, implies respecting existing DataServiceContext.IgnoreMissingProperties boolean.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Sliently discard undeclared property.
+        /// </summary>
+        Discard = 1,
+
+        /// <summary>
+        /// Supports undeclared property.
+        /// </summary>
+        Support = 2,
+    }
+
+    /// <summary>
     /// The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
@@ -98,6 +119,9 @@ namespace Microsoft.OData.Client
 
         /// <summary>Options when deserializing properties to the target type.</summary>
         private bool ignoreMissingProperties = true;
+
+        /// <summary>Options that can overwrite ignoreMissingProperties.</summary>
+        private UndeclaredPropertyBehavior undeclaredPropertyBehavior;
 
         /// <summary>Used to specify a strategy to send entity parameter.</summary>
         private EntityParameterSendOption entityParameterSendOption;
@@ -433,6 +457,14 @@ namespace Microsoft.OData.Client
         {
             get { return this.ignoreMissingProperties; }
             set { this.ignoreMissingProperties = value; }
+        }
+
+        /// <summary>Gets or sets undeclaredPropertyBehaviorKinds.whether to respect IgnoreMissingProperties boolean, or directly ignore/support undeclared properties.</summary>
+        /// <returns>UndeclaredPropertyBehavior.</returns>
+        public UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        {
+            get { return this.undeclaredPropertyBehavior; }
+            set { this.undeclaredPropertyBehavior = value; }
         }
 
         /// <summary>Gets or sets a function to override the default type resolution strategy used by the client library when you send entities to a data service.</summary>

@@ -89,7 +89,7 @@ namespace Microsoft.OData.Core.Atom
                 expectedPropertyTypeReference,
                 /*nullValueReadBehaviorKind*/ ODataNullValueBehaviorKind.Default);
             this.AssertRecursionDepthIsZero();
-        
+
             Debug.Assert(property != null, "If we don't ignore null values the property must not be null.");
 
             this.ReadPayloadEnd();
@@ -367,7 +367,7 @@ namespace Microsoft.OData.Core.Atom
                     case EdmTypeKind.Collection:
                         IEdmCollectionTypeReference collectionTypeReference = ValidationUtils.ValidateCollectionType(targetTypeReference);
                         result = this.ReadCollectionValue(
-                            collectionTypeReference, 
+                            collectionTypeReference,
                             payloadTypeName,
                             serializationTypeNameAnnotation);
                         break;
@@ -445,6 +445,7 @@ namespace Microsoft.OData.Core.Atom
                                 {
                                     // Lookup the property in metadata
                                     edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(this.XmlReader.LocalName, structuredType, this.MessageReaderSettings, out ignoreProperty);
+
                                     if (edmProperty != null && edmProperty.PropertyKind == EdmPropertyKind.Navigation)
                                     {
                                         throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties(edmProperty.Name, structuredType));
@@ -462,13 +463,13 @@ namespace Microsoft.OData.Core.Atom
                                 {
                                     // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.
                                     // If the property has an annotation to ignore null values, we need to omit the property in requests.
-                                    ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null 
-                                        ? ODataNullValueBehaviorKind.Default 
+                                    ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null
+                                        ? ODataNullValueBehaviorKind.Default
                                         : this.Model.NullValueReadBehaviorKind(edmProperty);
                                     ODataProperty property = this.ReadProperty(
                                         false,
                                         edmProperty == null ? null : edmProperty.Name,
-                                        edmProperty == null ? null : edmProperty.Type, 
+                                        edmProperty == null ? null : edmProperty.Type,
                                         nullValueReadBehaviorKind);
                                     Debug.Assert(
                                         property != null || nullValueReadBehaviorKind == ODataNullValueBehaviorKind.IgnoreValue,
@@ -522,8 +523,8 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         private ODataProperty ReadProperty(
             bool isTop,
-            string expectedPropertyName, 
-            IEdmTypeReference expectedPropertyTypeReference, 
+            string expectedPropertyName,
+            IEdmTypeReference expectedPropertyTypeReference,
             ODataNullValueBehaviorKind nullValueReadBehaviorKind)
         {
             Debug.Assert(
@@ -545,8 +546,8 @@ namespace Microsoft.OData.Core.Atom
             property.Name = propertyName;
 
             object propertyValue = this.ReadNonEntityValueImplementation(
-                expectedPropertyTypeReference, 
-                /*duplicatePropertyNamesChecker*/ null, 
+                expectedPropertyTypeReference,
+                /*duplicatePropertyNamesChecker*/ null,
                 /*collectionValidator*/ null,
                 nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 propertyName);
@@ -627,8 +628,8 @@ namespace Microsoft.OData.Core.Atom
         /// Note that this method will not read null values, those should be handled by the caller already.
         /// </remarks>
         private ODataComplexValue ReadComplexValue(
-            IEdmComplexTypeReference complexTypeReference, 
-            string payloadTypeName, 
+            IEdmComplexTypeReference complexTypeReference,
+            string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
@@ -687,7 +688,7 @@ namespace Microsoft.OData.Core.Atom
         /// Note that this method will not read null values, those should be handled by the caller already.
         /// </remarks>
         private ODataCollectionValue ReadCollectionValue(
-            IEdmCollectionTypeReference collectionTypeReference, 
+            IEdmCollectionTypeReference collectionTypeReference,
             string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation)
         {
@@ -771,7 +772,7 @@ namespace Microsoft.OData.Core.Atom
                             }
                             else if (this.XmlReader.NamespaceEquals(this.XmlReader.ODataNamespace))
                             {
-                                throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement(this.XmlReader.LocalName, this.XmlReader.ODataMetadataNamespace));  
+                                throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement(this.XmlReader.LocalName, this.XmlReader.ODataMetadataNamespace));
                             }
                             else
                             {

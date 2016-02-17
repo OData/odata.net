@@ -371,6 +371,23 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Writes an undeclared property value.
+        /// </summary>
+        /// <param name="value">The undeclared property value to write.</param>
+        public void WriteUndeclaredPropertyValue(
+            ODataUndeclaredPropertyValue value)
+        {
+            Debug.Assert(value != null, "value != null");
+
+            if (string.IsNullOrEmpty(value.RawValue))
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+            }
+
+            this.JsonWriter.WriteRawValue(value.RawValue);
+        }
+
+        /// <summary>
         /// Writes an untyped value.
         /// </summary>
         /// <param name="value">The untyped value to write.</param>

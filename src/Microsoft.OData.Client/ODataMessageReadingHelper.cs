@@ -54,12 +54,9 @@ namespace Microsoft.OData.Client
 
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
             settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
-            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
-            if (this.responseInfo.IgnoreMissingProperties)
-            {
-                settings.UndeclaredPropertyBehaviorKinds |= ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty;
-            }
+            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;
+            settings.UndeclaredPropertyBehaviorKinds |= this.responseInfo.UndeclaredPropertyBehaviorKinds;
 
             if (this.responseInfo.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
             {

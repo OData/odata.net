@@ -36,9 +36,9 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="expectedEntityType">The expected entity type for the entry to be read (in case of entry reader) or entries in the feed to be read (in case of feed reader).</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
         internal ODataAtomReader(
-            ODataAtomInputContext atomInputContext, 
-            IEdmNavigationSource navigationSource, 
-            IEdmEntityType expectedEntityType, 
+            ODataAtomInputContext atomInputContext,
+            IEdmNavigationSource navigationSource,
+            IEdmEntityType expectedEntityType,
             bool readingFeed)
             : base(atomInputContext, readingFeed, false /*readingDelta*/, null /*listener*/)
         {
@@ -412,21 +412,31 @@ namespace Microsoft.OData.Core.Atom
                     if (navigationProperty == null && this.atomInputContext.Model.IsUserModel() &&
                         this.atomInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties)
                     {
-                        // Undeclared navigation link with content which we should read anyway.
-                        // If we are to ignore value properties, then skip the content and read the link only as deferred link, otherwise fail.
-                        if (this.atomInputContext.MessageReaderSettings.IgnoreUndeclaredValueProperties)
+                        if (this.atomInputContext.MessageReaderSettings.NeedRunLegacyPropertyHandling())
                         {
-                            // The reader is positioned on some element inside the link (either </m:inline> or <entry> or <feed>)
-                            // So we need to read until we find the end-element for the link and skip everything in between.
-                            this.atomEntryAndFeedDeserializer.SkipNavigationLinkContentOnExpansion();
+                            // Undeclared navigation link with content which we should read anyway.
+                            // If we are to ignore value properties, then skip the content and read the link only as deferred link, otherwise fail.
+                            if (this.atomInputContext.MessageReaderSettings.NeedIgnoreLegacyUndeclaredProperty())
+                            {
+                                // The reader is positioned on some element inside the link (either </m:inline> or <entry> or <feed>)
+                                // So we need to read until we find the end-element for the link and skip everything in between.
+                                this.atomEntryAndFeedDeserializer.SkipNavigationLinkContentOnExpansion();
 
-                            // And report it as a deferred link.
-                            this.ReadAtNonExpandedNavigationLinkStart();
-                            return true;
+                                // And report it as a deferred link.
+                                this.ReadAtNonExpandedNavigationLinkStart();
+                                return true;
+                            }
+                            else
+                            {
+                                throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(currentNavigationLink.Name, this.LinkParentEntityScope.EntityType.FullTypeName()));
+                            }
                         }
                         else
                         {
-                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(currentNavigationLink.Name, this.LinkParentEntityScope.EntityType.FullTypeName()));
+                            // ignore for atom
+                            this.atomEntryAndFeedDeserializer.SkipNavigationLinkContentOnExpansion();
+                            this.ReadAtNonExpandedNavigationLinkStart();
+                            return true;
                         }
                     }
                 }

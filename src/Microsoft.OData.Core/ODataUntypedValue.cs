@@ -9,6 +9,8 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// OData representation of an untyped value.
     /// </summary>
+    /// <remarks>ODataUndeclaredPropertyValue and ODataUntypedValue may look similar 
+    /// but ODataUntypedValue represents a declared Edm.Untyped value.</remarks>
     public sealed class ODataUntypedValue : ODataValue
     {
         /// <summary>Gets or sets the raw untyped value.</summary>

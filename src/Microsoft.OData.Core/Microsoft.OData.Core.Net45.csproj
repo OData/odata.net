@@ -149,6 +149,7 @@
     <Compile Include="IODataResponseMessageAsync.cs" />
     <Compile Include="IODataUrlResolver.cs" />
     <Compile Include="IPrimitiveTypeConverter.cs" />
+    <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="InstanceAnnotationWriteTracker.cs" />
     <Compile Include="InternalErrorCodes.cs" />
     <Compile Include="InternalErrorCodesCommon.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="JsonLight\ODataJsonLightPayloadKindDetectionDeserializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightPropertyAndValueDeserializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightPropertySerializer.cs" />
+    <Compile Include="JsonLight\ODataJsonLightRawAnnotationSet.cs" />
     <Compile Include="JsonLight\ODataJsonLightReader.cs" />
     <Compile Include="JsonLight\ODataJsonLightReaderNavigationLinkInfo.cs" />
     <Compile Include="JsonLight\ODataJsonLightReaderUtils.cs" />
@@ -221,6 +223,7 @@
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="ODataErrorDetail.cs" />
+    <Compile Include="ODataUndeclaredPropertyValue.cs" />
     <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />
     <Compile Include="ODataMediaTypeResolver.cs" />

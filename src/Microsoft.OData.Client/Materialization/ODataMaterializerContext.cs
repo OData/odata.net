@@ -8,6 +8,7 @@ namespace Microsoft.OData.Client.Materialization
 {
     using System;
     using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -37,7 +38,10 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         public bool IgnoreMissingProperties
         {
-            get { return this.ResponseInfo.IgnoreMissingProperties; }
+            get
+            {
+                return this.ResponseInfo.ShouldMaterializerIgnoreUndeclaredValueProperty;
+            }
         }
 
         /// <summary>

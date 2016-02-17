@@ -3848,9 +3848,12 @@ public enum Microsoft.OData.Core.ODataReaderState : int {
 FlagsAttribute(),
 ]
 public enum Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds : int {
+	DiscardUndeclaredValueProperty = 256
 	IgnoreUndeclaredValueProperty = 1
 	None = 0
 	ReportUndeclaredLinkProperty = 2
+	SupportUndeclaredValueProperty = 128
+	ThrowOnUndeclaredValueProperty = 512
 }
 
 public enum Microsoft.OData.Core.ODataVersion : int {
@@ -4709,19 +4712,19 @@ public sealed class Microsoft.OData.Core.ODataMessageReader : IDisposable {
 	public System.Threading.Tasks.Task`1[[System.Object]] ReadValueAsync (Microsoft.OData.Edm.IEdmTypeReference expectedTypeReference)
 }
 
-public sealed class Microsoft.OData.Core.ODataMessageReaderSettings : Microsoft.OData.Core.ODataMessageReaderSettingsBase {
+public sealed class Microsoft.OData.Core.ODataMessageReaderSettings : Microsoft.OData.Core.ODataMessageReaderSettingsBase, IMessageValidationSetting {
 	public ODataMessageReaderSettings ()
 	public ODataMessageReaderSettings (Microsoft.OData.Core.ODataMessageReaderSettings other)
 
 	System.Uri BaseUri  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool DisablePrimitiveTypeConversion  { public get; public set; }
-	bool EnableFullValidation  { public get; public set; }
+	bool EnableFullValidation  { public virtual get; public virtual set; }
 	Microsoft.OData.Core.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
-	Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public get; public set; }
+	Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 
 	public void EnableDefaultBehavior ()
@@ -4777,18 +4780,19 @@ public sealed class Microsoft.OData.Core.ODataMessageWriter : IDisposable {
 	public System.Threading.Tasks.Task WriteValueAsync (object value)
 }
 
-public sealed class Microsoft.OData.Core.ODataMessageWriterSettings : Microsoft.OData.Core.ODataMessageWriterSettingsBase {
+public sealed class Microsoft.OData.Core.ODataMessageWriterSettings : Microsoft.OData.Core.ODataMessageWriterSettingsBase, IMessageValidationSetting {
 	public ODataMessageWriterSettings ()
 	public ODataMessageWriterSettings (Microsoft.OData.Core.ODataMessageWriterSettings other)
 
 	bool AutoComputePayloadMetadataInJson  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
-	bool EnableFullValidation  { public get; public set; }
+	bool EnableFullValidation  { public virtual get; public virtual set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.Core.ODataUri ODataUri  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
+	Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.Core.ODataVersion]] Version  { public get; public set; }
 
@@ -4870,6 +4874,12 @@ public sealed class Microsoft.OData.Core.ODataStreamReferenceValue : Microsoft.O
 	System.Uri EditLink  { public get; public set; }
 	string ETag  { public get; public set; }
 	System.Uri ReadLink  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.Core.ODataUndeclaredPropertyValue : Microsoft.OData.Core.ODataValue {
+	public ODataUndeclaredPropertyValue ()
+
+	string RawValue  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataUntypedValue : Microsoft.OData.Core.ODataValue {
@@ -6195,6 +6205,12 @@ public enum Microsoft.OData.Client.TrackingMode : int {
 	None = 0
 }
 
+public enum Microsoft.OData.Client.UndeclaredPropertyBehavior : int {
+	Discard = 1
+	None = 0
+	Support = 2
+}
+
 public abstract class Microsoft.OData.Client.DataServiceClientRequestMessage : IODataRequestMessage {
 	public DataServiceClientRequestMessage (string actualMethod)
 
@@ -6405,6 +6421,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	System.Func`2[[System.String],[System.Type]] ResolveType  { public get; public set; }
 	Microsoft.OData.Client.SaveChangesOptions SaveChangesDefaultOptions  { public get; public set; }
 	int Timeout  { public get; public set; }
+	Microsoft.OData.Client.UndeclaredPropertyBehavior UndeclaredPropertyBehavior  { public get; public set; }
 	Microsoft.OData.Client.DataServiceUrlConventions UrlConventions  { public get; public set; }
 	bool UsePostTunneling  { public get; public set; }
 

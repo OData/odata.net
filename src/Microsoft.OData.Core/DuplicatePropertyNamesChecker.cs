@@ -10,8 +10,9 @@ namespace Microsoft.OData.Core
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Text;
+    using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.JsonLight;
-
     #endregion Namespaces
 
     /// <summary>
@@ -49,6 +50,11 @@ namespace Microsoft.OData.Core
         private Dictionary<string, DuplicationRecord> propertyNameCache;
 
         /// <summary>
+        /// The annotation collector.
+        /// </summary>
+        private PropertyAnnotationCollector annotationCollector = new PropertyAnnotationCollector();
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
@@ -84,6 +90,17 @@ namespace Microsoft.OData.Core
 
             /// <summary>A navigation link or association link was reported.</summary>
             NavigationProperty,
+        }
+
+        /// <summary>
+        /// The raw annotation collector.
+        /// </summary>
+        public PropertyAnnotationCollector AnnotationCollector
+        {
+            get
+            {
+                return this.annotationCollector;
+            }
         }
 
         /// <summary>
@@ -575,6 +592,142 @@ namespace Microsoft.OData.Core
 
             Debug.Assert(duplicationRecord != null, "duplicationRecord != null");
             return duplicationRecord;
+        }
+
+        /// <summary>
+        /// An independent annotation collector to collect the raw json annotations.
+        /// </summary>
+        internal sealed class PropertyAnnotationCollector
+        {
+            /// <summary>
+            /// The raw annotations.
+            /// </summary>
+            private Dictionary<string, Dictionary<string, string>> propertyAnnotations =
+                new Dictionary<string, Dictionary<string, string>>(StringComparer.Ordinal);
+
+            /// <summary>
+            /// If should collect annotation.
+            /// </summary>
+            private bool shouldCollectAnnotation;
+
+            /// <summary>
+            /// Gets or sets if should collect annotation;
+            /// </summary>
+            public bool ShouldCollectAnnotation
+            {
+                get
+                {
+                    return this.shouldCollectAnnotation;
+                }
+
+                set
+                {
+                    this.shouldCollectAnnotation = value;
+                }
+            }
+
+            /// <summary>
+            /// Tries to peek and collect a raw annotation value from BufferingJsonReader.
+            /// </summary>
+            /// <param name="jsonReader">The BufferingJsonReader.</param>
+            /// <param name="propertyName">The property name.</param>
+            /// <param name="annotationName">The annotation name.</param>
+            public void TryPeekAndCollectAnnotationRawValue(
+                BufferingJsonReader jsonReader,
+                string propertyName,
+                string annotationName)
+            {
+                if (this.shouldCollectAnnotation)
+                {
+                    this.PeekAndCollectAnnotationRawValue(jsonReader, propertyName, annotationName);
+                }
+            }
+
+            /// <summary>
+            /// Tries to add property annotation raw json.
+            /// </summary>
+            /// <param name="propertyName">The property name.</param>
+            /// <param name="annotationName">The annotation name.</param>
+            /// <param name="rawValue">The raw json string.</param>
+            public void TryAddPropertyAnnotationRawValue(string propertyName, string annotationName, string rawValue)
+            {
+                if (this.shouldCollectAnnotation)
+                {
+                    this.AddPropertyAnnotationRawValue(propertyName, annotationName, rawValue);
+                }
+            }
+
+            /// <summary>
+            /// Gets an ODataJsonLightRawAnnotationSet that can be attached to ODataValue or ODataUntypedValue.
+            /// </summary>
+            /// <param name="propertyName">The property name.</param>
+            /// <returns>An ODataJsonLightRawAnnotationSet instance.</returns>
+            public ODataJsonLightRawAnnotationSet GetPropertyRawAnnotationSet(string propertyName)
+            {
+                Dictionary<string, string> annotations = null;
+                if (!this.propertyAnnotations.TryGetValue(propertyName, out annotations))
+                {
+                    return null;
+                }
+
+                ODataJsonLightRawAnnotationSet ret = new ODataJsonLightRawAnnotationSet();
+                ret.Annotations = annotations;
+                return ret;
+            }
+
+            /// <summary>
+            /// Peeks and collects a raw annotation value from BufferingJsonReader.
+            /// </summary>
+            /// <param name="jsonReader">The BufferingJsonReader.</param>
+            /// <param name="propertyName">The property name.</param>
+            /// <param name="annotationName">The annotation name.</param>
+            private void PeekAndCollectAnnotationRawValue(
+                BufferingJsonReader jsonReader,
+                string propertyName,
+                string annotationName)
+            {
+                if (jsonReader.IsBuffering)
+                {
+                    return; // only need to collect annotation for not-buffering pass reading.
+                }
+
+                try
+                {
+                    jsonReader.StartBuffering();
+                    if (jsonReader.NodeType == JsonNodeType.Property)
+                    {
+                        jsonReader.Read(); // read over annotation name
+                    }
+
+                    StringBuilder builder = new StringBuilder();
+                    jsonReader.SkipValue(builder);
+                    string annotationRawValue = builder.ToString();
+                    this.AddPropertyAnnotationRawValue(propertyName, annotationName, annotationRawValue);
+                }
+                finally
+                {
+                    jsonReader.StopBuffering();
+                }
+            }
+
+            /// <summary>
+            /// Add property annotation raw json.
+            /// </summary>
+            /// <param name="propertyName">The property name.</param>
+            /// <param name="annotationName">The annotation name.</param>
+            /// <param name="rawValue">The raw json string.</param>
+            private void AddPropertyAnnotationRawValue(string propertyName, string annotationName, string rawValue)
+            {
+                Debug.Assert(annotationName != null, "annotationName != null");
+                Dictionary<string, string> annotations = null;
+                if (!this.propertyAnnotations.TryGetValue(propertyName, out annotations))
+                {
+                    annotations = new Dictionary<string, string>(StringComparer.Ordinal);
+                    this.propertyAnnotations[propertyName] = annotations;
+                }
+
+                annotations[annotationName] = rawValue;
+            }
         }
 
         /// <summary>

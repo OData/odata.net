@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.Json
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using System.Text;
     using Microsoft.OData.Core.JsonLight;
 
 #if SPATIAL
@@ -194,6 +195,16 @@ namespace Microsoft.OData.Core.Json
         /// </remarks>
         internal static void SkipValue(this JsonReader jsonReader)
         {
+            SkipValue(jsonReader, null);
+        }
+
+        /// <summary>
+        /// Skips over a JSON value (primitive, object or array), and append raw string to StringBuilder.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <param name="jsonRawValueStringBuilder">The StringBuilder to receive JSON raw string.</param>
+        internal static void SkipValue(this JsonReader jsonReader, StringBuilder jsonRawValueStringBuilder)
+        {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             int depth = 0;
@@ -217,6 +228,11 @@ namespace Microsoft.OData.Core.Json
                             jsonReader.NodeType != JsonNodeType.EndOfInput,
                             "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
                         break;
+                }
+
+                if (jsonRawValueStringBuilder != null)
+                {
+                    jsonRawValueStringBuilder.Append(jsonReader.RawValue);
                 }
 
                 jsonReader.ReadNext();

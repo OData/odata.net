@@ -28,6 +28,72 @@ namespace Microsoft.OData.Core
         /// <summary>Maximum batch boundary length supported (not includeding leading CRLF or '-').</summary>
         private const int MaxBoundaryLength = 70;
 
+        #region undeclared property setting logic
+
+        /// <summary>
+        /// Retuns if should run legacy property handling logic of ~ 6.14 release.
+        /// </summary>
+        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
+        /// <remarks>The legacy handling is for backward compatability, 
+        /// should be cleaned up in next breaking change release.</remarks>
+        /// <returns>True if if should run legacy property handling logic.</returns>
+        internal static bool NeedRunLegacyPropertyHandling(this IMessageValidationSetting messageValidationSetting)
+        {
+            // ignore messageValidationSetting.EnableFullValidation
+            return !ShouldIgnoreUndeclaredProperty(messageValidationSetting)
+                && !ShouldSupportUndeclaredProperty(messageValidationSetting)
+                && !ShouldThrowOnUndeclaredProperty(messageValidationSetting);
+        }
+
+        /// <summary>
+        /// Retuns if should run legacy property handling logic of ~ 6.14 release.
+        /// </summary>
+        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
+        /// <returns>True if if should run legacy property handling logic.</returns>
+        internal static bool NeedIgnoreLegacyUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
+        {
+            // ignore messageValidationSetting.EnableFullValidation
+            return messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
+                ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
+        }
+
+        /// <summary>
+        /// Retuns if undeclared property should be ignored.
+        /// </summary>
+        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
+        /// <returns>True if undeclared property should be ignored.</returns>
+        internal static bool ShouldIgnoreUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
+        {
+            // ignore messageValidationSetting.EnableFullValidation
+            return messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
+                ODataUndeclaredPropertyBehaviorKinds.DiscardUndeclaredValueProperty);
+        }
+
+        /// <summary>
+        /// Retuns if undeclared property should be supported: read undeclared prmitive value into ODataUntypdValue.
+        /// </summary>
+        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
+        /// <returns>True if undeclared property should be supported.</returns>
+        internal static bool ShouldSupportUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
+        {
+            // ignore messageValidationSetting.EnableFullValidation
+            return messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
+                ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+        }
+
+        /// <summary>
+        /// Retuns if undeclared property should lead to an exception.
+        /// </summary>
+        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
+        /// <returns>True if undeclared property should cause exception.</returns>
+        internal static bool ShouldThrowOnUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
+        {
+            // ignore messageValidationSetting.EnableFullValidation
+            return messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
+                          ODataUndeclaredPropertyBehaviorKinds.ThrowOnUndeclaredValueProperty);
+        }
+        #endregion
+
         /// <summary>
         /// Validates that an open property value is supported.
         /// </summary>

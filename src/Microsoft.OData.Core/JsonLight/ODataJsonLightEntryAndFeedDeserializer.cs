@@ -12,12 +12,12 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Text;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
     #endregion Namespaces
 
     /// <summary>
@@ -1034,7 +1034,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entryState">The entry state for the entry to add the property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="propertyValue">The value of the property to add.</param>
-        private static void AddEntryProperty(IODataJsonLightReaderEntryState entryState, string propertyName, object propertyValue)
+        /// <returns>The added ODataProperty.</returns>
+        private static ODataProperty AddEntryProperty(IODataJsonLightReaderEntryState entryState, string propertyName, object propertyValue)
         {
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -1058,6 +1059,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEntry entry = entryState.Entry;
             Debug.Assert(entry != null, "entry != null");
             entry.Properties = entry.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+            return property;
         }
 
         /// <summary>
@@ -1252,6 +1254,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// Read an open property.
         /// </summary>
         /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// or null if no metadata is available.</param>
         /// <param name="propertyName">The name of the open property to read.</param>
         /// <param name="propertyWithValue">true if the property has a value, false if it doesn't.</param>
         /// <remarks>
@@ -1259,7 +1263,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// Post-Condition: JsonNodeType.Property:    the next property of the entry
         ///                 JsonNodeType.EndObject:   the end-object node of the entry
         /// </remarks>
-        private void ReadOpenProperty(IODataJsonLightReaderEntryState entryState, string propertyName, bool propertyWithValue)
+        private void InnerReadOpenUndeclaredProperty(IODataJsonLightReaderEntryState entryState, IEdmStructuredType owningStructuredType, string propertyName, bool propertyWithValue)
         {
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -1271,21 +1275,139 @@ namespace Microsoft.OData.Core.JsonLight
                 throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue(propertyName));
             }
 
-            string propertyTypeName = ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
+            object propertyValue = null;
+            bool needAddPropertyValue = false;
+            if (this.MessageReaderSettings.NeedRunLegacyPropertyHandling())
+            {
+                string propertyTypeName = ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
+                propertyValue = this.ReadNonEntityValue(
+                    propertyTypeName,
+                    /*expectedValueTypeReference*/ null,
+                    /*duplicatePropertyNamesChecker*/ null,
+                    /*collectionValidator*/ null,
+                    /*validateNullValue*/ true,
+                    /*isTopLevelPropertyValue*/ false,
+                    /*insideComplexValue*/ false,
+                    propertyName,
+                    true);
+                needAddPropertyValue = true;
+            }
+            else
+            {
+                // Now we know the property name is undeclared, but not sure if property value type is known/unknown.
+                // For any Property in OPEN complex / entity :
+                // Property name     Property value type     Deserialized result
+                // unknown     Known (including string/numeric)     Primitive/ODataValue
+                // unknown     Unknown(no/unrecognized odata.type)     ODataUntypedValue
+                // known     inconsistent with model     Throw exception
+                bool insideComplexValue = false;
+                string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
+                string payloadTypeName = TryReadOrPeekPayloadType(entryState.DuplicatePropertyNamesChecker, propertyName, insideComplexValue);
+                EdmTypeKind payloadTypeKind;
+                IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
+                    this.Model,
+                    null, // expectedTypeReference
+                    payloadTypeName,
+                    EdmTypeKind.Complex,
+                    this.MessageReaderSettings.ReaderBehavior,
+                    out payloadTypeKind);
+                IEdmTypeReference payloadTypeReference = null;
+                if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
+                {
+                    // only try resolving for known type (the below will throw on unknown type name) :
+                    SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+                    EdmTypeKind targetTypeKind;
+                    payloadTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+                        EdmTypeKind.None,
+                        /*defaultPrimitivePayloadType*/ null,
+                        null, // expectedTypeReference 
+                        payloadTypeName,
+                        this.Model,
+                        this.MessageReaderSettings,
+                        this.GetNonEntityValueKind,
+                        out targetTypeKind,
+                        out serializationTypeNameAnnotation);
+                }
 
-            object propertyValue = this.ReadNonEntityValue(
-                propertyTypeName,
-                /*expectedValueTypeReference*/ null,
-                /*duplicatePropertyNamesChecker*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                propertyName,
-                true);
+                bool isKnownValueType = IsKnownValueTypeForOpenEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
+                if (isKnownValueType)
+                {
+                    bool validateNullValue = true;
+                    if (ODataJsonReaderCoreUtils.TryReadNullValue(this.JsonReader, this.JsonLightInputContext, payloadTypeReference, validateNullValue, propertyName))
+                    {
+                        bool isTopLevelPropertyValue = false;
+                        if (isTopLevelPropertyValue)
+                        {
+                            // For a top-level property value a special null marker object has to be used to indicate  a null value.
+                            // If we find a null value for a property at the top-level, it is an invalid payload
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue(ODataAnnotationNames.ODataNull, JsonLightConstants.ODataNullAnnotationTrueValue));
+                        }
 
-            ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
-            AddEntryProperty(entryState, propertyName, propertyValue);
+                        propertyValue = null;
+                    }
+                    else
+                    {
+                        this.JsonReader.AssertNotBuffering();
+                        propertyValue = this.ReadNonEntityValue(
+                            outterPayloadTypeName,
+                            /*expectedValueTypeReference*/ null,
+                            /*duplicatePropertyNamesChecker*/ null,
+                            /*collectionValidator*/ null,
+                            /*validateNullValue*/ true,
+                            /*isTopLevelPropertyValue*/ false,
+                            /*insideComplexValue*/ false,
+                            propertyName);
+                    }
+
+                    needAddPropertyValue = true;
+                }
+                else if (this.MessageReaderSettings.ShouldThrowOnUndeclaredProperty())
+                {
+                    // throw specific exceptions for backward compatibility
+                    if (!string.IsNullOrEmpty(payloadTypeName) && payloadTypeReference == null)
+                    {
+                        throw new ODataException(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName(payloadTypeName));
+                    }
+
+                    if (string.IsNullOrEmpty(payloadTypeName)
+                        && (this.JsonReader.NodeType == JsonNodeType.StartObject
+                            || this.JsonReader.NodeType == JsonNodeType.StartArray))
+                    {
+                        throw new ODataException(ODataErrorStrings.ReaderValidationUtils_ValueWithoutType);
+                    }
+
+                    throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                }
+                else if (this.MessageReaderSettings.ShouldSupportUndeclaredProperty())
+                {
+                    StringBuilder builder = new StringBuilder();
+                    this.JsonReader.SkipValue(builder);
+                    propertyValue = new ODataUndeclaredPropertyValue()
+                    {
+                        RawValue = builder.ToString()
+                    };
+                    needAddPropertyValue = true;
+                }
+                else
+                {
+                    Debug.Assert(
+                        this.MessageReaderSettings.ShouldIgnoreUndeclaredProperty(),
+                        "this.MessageReaderSettings.ShouldIgnoreUndeclaredProperty()");
+                    this.JsonReader.SkipValue();
+                    needAddPropertyValue = false;
+                }
+            }
+
+            if (needAddPropertyValue)
+            {
+                ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
+                ODataProperty property = AddEntryProperty(entryState, propertyName, propertyValue);
+                bool isTruelyUndeclaredPropertyInOpenEntity = (propertyValue is ODataUndeclaredPropertyValue);
+                if (isTruelyUndeclaredPropertyInOpenEntity && (entryState.DuplicatePropertyNamesChecker != null))
+                {
+                    TryAttachRawAnnotationSetToPropertyValue(entryState.DuplicatePropertyNamesChecker.AnnotationCollector, property);
+                }
+            }
 
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(
@@ -1330,7 +1452,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (entryState.EntityType.IsOpen)
                 {
                     // Open property - read it as such.
-                    this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+                    this.InnerReadOpenUndeclaredProperty(entryState, entryState.EntityType, propertyName, propertyWithValue);
                     return null;
                 }
             }
@@ -1360,7 +1482,8 @@ namespace Microsoft.OData.Core.JsonLight
                     // If the property is expanded, ignore the content if we're asked to do so.
                     if (propertyWithValue)
                     {
-                        if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
+                        if ((this.MessageReaderSettings.NeedRunLegacyPropertyHandling() && !this.MessageReaderSettings.NeedIgnoreLegacyUndeclaredProperty())
+                            || this.MessageReaderSettings.ShouldThrowOnUndeclaredProperty())
                         {
                             throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
                         }
@@ -1404,7 +1527,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (entryState.EntityType.IsOpen)
             {
                 // Open property - read it as such.
-                this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+                this.InnerReadOpenUndeclaredProperty(entryState, entryState.EntityType, propertyName, propertyWithValue);
                 return null;
             }
 
@@ -1415,7 +1538,8 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Property with value can only be ignored if we're asked to do so.
-            if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
+            if ((this.MessageReaderSettings.NeedRunLegacyPropertyHandling() && !this.MessageReaderSettings.NeedIgnoreLegacyUndeclaredProperty())
+                || this.MessageReaderSettings.ShouldThrowOnUndeclaredProperty())
             {
                 throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
             }
@@ -1424,8 +1548,36 @@ namespace Microsoft.OData.Core.JsonLight
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
             ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
 
-            // Read it as such.
-            this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+            if (this.MessageReaderSettings.NeedRunLegacyPropertyHandling())
+            {
+                // legacy logic: 
+                // will read non-open entity's undeclared primitives as ODataValue instead of ODataUntypedValue.
+                this.InnerReadOpenUndeclaredProperty(entryState, entryState.EntityType, propertyName, propertyWithValue);
+            }
+            else if (this.MessageReaderSettings.ShouldSupportUndeclaredProperty())
+            {
+                bool isTopLevelPropertyValue = false; // for undeclared: least verification
+
+                // new logic: 
+                // will read non-open entity's undeclared primitives as *ODataUntypedValue* instead of ODataValue.
+                object propertyValue = this.InnerReadNonOpenUndeclaredProperty(entryState.DuplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
+                ODataProperty property = AddEntryProperty(entryState, propertyName, propertyValue);
+                if (entryState.DuplicatePropertyNamesChecker != null)
+                {
+                    TryAttachRawAnnotationSetToPropertyValue(
+                        entryState.DuplicatePropertyNamesChecker.AnnotationCollector,
+                        property);
+                }
+            }
+            else
+            {
+                // Ignore the property value
+                Debug.Assert(
+                    this.MessageReaderSettings.ShouldIgnoreUndeclaredProperty(),
+                    "this.MessageReaderSettings.ShouldIgnoreUndeclaredProperty()");
+                this.JsonReader.SkipValue();
+            }
+
             return null;
         }
 

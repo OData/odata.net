@@ -367,6 +367,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\IPrimitiveTypeConverter.cs">
       <Link>Microsoft\OData\Core\IPrimitiveTypeConverter.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\IMessageValidationSetting.cs">
+      <Link>Microsoft\OData\Core\IMessageValidationSetting.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\InstanceAnnotationWriteTracker.cs">
       <Link>Microsoft\OData\Core\InstanceAnnotationWriteTracker.cs</Link>
     </Compile>
@@ -483,6 +486,9 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightPropertySerializer.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightPropertySerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightRawAnnotationSet.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightRawAnnotationSet.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightReader.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightReader.cs</Link>
@@ -993,6 +999,9 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUndeclaredPropertyBehaviorKinds.cs">
       <Link>Microsoft\OData\Core\ODataUndeclaredPropertyBehaviorKinds.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUndeclaredPropertyValue.cs">
+      <Link>Microsoft\OData\Core\ODataUndeclaredPropertyValue.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUntypedValue.cs">
       <Link>Microsoft\OData\Core\ODataUntypedValue.cs</Link>
