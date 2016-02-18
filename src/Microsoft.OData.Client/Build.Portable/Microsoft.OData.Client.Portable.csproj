@@ -872,7 +872,7 @@
     <Content Include="Microsoft.OData.Client.Portable.txt" />
   </ItemGroup>
   <Target Name="BuildTextFile">
-    <Exec Command="copy $(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt + Microsoft.OData.Client.Portable.txt Microsoft.OData.Client.txt /B" />
+    <Exec Command="copy &quot;$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt&quot; + Microsoft.OData.Client.Portable.txt Microsoft.OData.Client.txt /B" />
   </Target>
   <ItemGroup>
     <None Include="Microsoft.OData.Client.Portable.tt">
