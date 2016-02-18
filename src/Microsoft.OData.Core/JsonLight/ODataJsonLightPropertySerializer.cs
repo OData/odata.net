@@ -280,17 +280,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Determines the property name in wire
-        /// </summary>
-        /// <param name="isTopLevel">If the property is top level.</param>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>The property name will be written in wire</returns>
-        private string GetWirePropertyName(bool isTopLevel, string propertyName)
-        {
-            return isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
-        }
-
-        /// <summary>
         /// Writes a stream property.
         /// </summary>
         /// <param name="propertyName">The name of the property to write.</param>
@@ -499,6 +488,17 @@ namespace Microsoft.OData.Core.JsonLight
                     this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(propertyName, typeNameToWrite);
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines the property name in wire
+        /// </summary>
+        /// <param name="isTopLevel">If the property is top level.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The property name will be written in wire</returns>
+        private static string GetWirePropertyName(bool isTopLevel, string propertyName)
+        {
+            return isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
         }
     }
 }
