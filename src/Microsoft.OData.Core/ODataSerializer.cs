@@ -16,6 +16,9 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal abstract class ODataSerializer
     {
+        /// <summary>The writer validator used during serializing.</summary>
+        protected readonly IWriterValidator WriterValidator;
+
         /// <summary>
         /// The output context to write to.
         /// </summary>
@@ -30,6 +33,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(outputContext != null, "outputContext != null");
 
             this.outputContext = outputContext;
+            this.WriterValidator = outputContext.WriterValidator;
         }
 
         /// <summary>

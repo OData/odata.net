@@ -309,20 +309,14 @@ namespace Microsoft.OData.Core
         /// <param name="value">The value to check.</param>
         /// <param name="valuePrimitiveTypeReference">The primitive type reference for the value - some callers have this already, so we save the lookup here.</param>
         /// <param name="expectedTypeReference">The expected type for the value.</param>
-        /// <param name="bypassValidation">Bypass the validation if it is true.</param>
         /// <remarks>
         /// Some callers have the primitive type reference already resolved (from the value type)
         /// so this method is an optimized version to not lookup the primitive type reference again.
         /// </remarks>
-        internal static void ValidateIsExpectedPrimitiveType(object value, IEdmPrimitiveTypeReference valuePrimitiveTypeReference, IEdmTypeReference expectedTypeReference, bool bypassValidation = false)
+        internal static void ValidateIsExpectedPrimitiveType(object value, IEdmPrimitiveTypeReference valuePrimitiveTypeReference, IEdmTypeReference expectedTypeReference)
         {
             Debug.Assert(value != null, "value != null");
             Debug.Assert(expectedTypeReference != null, "expectedTypeReference != null");
-
-            if (bypassValidation)
-            {
-                return;
-            }
 
             if (valuePrimitiveTypeReference == null)
             {

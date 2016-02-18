@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             // Resolve the type name to the type; if no type name is specified we will use the 
             // type inferred from metadata.
-            IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeForComplexValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType);
+            IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeForComplexValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType, this.WriterValidator);
             Debug.Assert(
                 metadataTypeReference == null || complexValueTypeReference == null || EdmLibraryExtensions.IsAssignableFrom(metadataTypeReference, complexValueTypeReference),
                 "Complex property types must be the same as or inherit from the ones from metadata (unless open).");
@@ -249,7 +249,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (valueTypeReference == null)
             {
-                valueTypeReference = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType);               
+                valueTypeReference = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType, this.WriterValidator);               
             }
 
             bool useValueProperty = false;
@@ -282,7 +282,7 @@ namespace Microsoft.OData.Core.JsonLight
                 DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null;
                 foreach (object item in items)
                 {
-                    ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
+                    this.WriterValidator.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
 
                     ODataComplexValue itemAsComplexValue = item as ODataComplexValue;
                     if (itemAsComplexValue != null)
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core.JsonLight
             // Skip validation if user has set custom PayloadValueConverter
             if (expectedTypeReference != null && converter.GetType() == typeof(ODataPayloadValueConverter))
             {
-                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference, !this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation);
+                this.WriterValidator.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference);
             }
 
             value = converter.ConvertToPayloadValue(value, expectedTypeReference);

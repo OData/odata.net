@@ -1778,9 +1778,12 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs">
       <Link>Microsoft\OData\Core\UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="..\IWriterValidator.cs">
+      <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>
@@ -1790,6 +1793,15 @@
     </Compile>
     <Compile Include="..\UriParser\UriFunctionsHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\ValidatorFactory.cs">
+      <Link>ValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidatorFullValidation.cs">
+      <Link>Microsoft\OData\Core\WriterValidatorFullValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidatorMinimalValidation.cs">
+      <Link>Microsoft\OData\Core\WriterValidatorMinimalValidation.cs</Link>
     </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">

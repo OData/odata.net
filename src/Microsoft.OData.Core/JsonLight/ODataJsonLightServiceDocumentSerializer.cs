@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.JsonLight
         private void WriteServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, string kind)
         {
             // validate that the resource has a non-null url.
-            ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);
+            this.WriterValidator.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);
 
             // "{"
             this.JsonWriter.StartObjectScope();

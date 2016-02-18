@@ -393,7 +393,7 @@ namespace Microsoft.OData.Core
 
             this.InterceptException(() =>
             {
-                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
+                this.outputContext.WriterValidator.ValidateCollectionItem(item, true /* isNullable */);
                 this.WriteCollectionItem(item, this.expectedItemType);
             });
         }

@@ -43,6 +43,11 @@ namespace Microsoft.OData.Core
         private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
 
         /// <summary>
+        /// The writer validator used during writing.
+        /// </summary>
+        private readonly IWriterValidator writerValidator;
+
+        /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
         /// </summary>
         /// <param name="valueSerializer">The <see cref="IODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
@@ -55,6 +60,8 @@ namespace Microsoft.OData.Core
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
+            this.writerValidator =
+                ValidatorFactory.CreateWriterValidator(this.valueSerializer.Settings.EnableFullValidation);
         }
 
         /// <summary>
@@ -157,7 +164,7 @@ namespace Microsoft.OData.Core
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty);
+                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty, this.writerValidator);
                 string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromCollectionValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {

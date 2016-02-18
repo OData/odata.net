@@ -873,7 +873,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (jsonLightOutputContext.Model != null && jsonLightOutputContext.Model != EdmCoreModel.Instance)
                 {
-                    entityTypeFromEntry = TypeNameOracle.ResolveAndValidateTypeName(this.jsonLightOutputContext.Model, entry.TypeName, EdmTypeKind.Entity) as IEdmEntityType;
+                    entityTypeFromEntry = TypeNameOracle.ResolveAndValidateTypeName(this.jsonLightOutputContext.Model, entry.TypeName, EdmTypeKind.Entity, this.jsonLightOutputContext.WriterValidator) as IEdmEntityType;
                 }
             }
 
@@ -1002,7 +1002,7 @@ namespace Microsoft.OData.Core.JsonLight
                     case WriterState.DeltaFeed:
                         {
                             ODataDeltaFeed feed = (ODataDeltaFeed)currentScope.Item;
-                            WriterValidationUtils.ValidateFeedAtEnd(DeltaConverter.ToODataFeed(feed), /*writingResponse*/ false);
+                            this.jsonLightOutputContext.WriterValidator.ValidateFeedAtEnd(DeltaConverter.ToODataFeed(feed), /*writingResponse*/ false);
                             this.EndDeltaFeed(feed);
                         }
 

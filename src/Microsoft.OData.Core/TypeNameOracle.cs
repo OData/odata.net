@@ -26,8 +26,9 @@ namespace Microsoft.OData.Core
         /// <param name="model">The model to use.</param>
         /// <param name="typeName">The type name to validate.</param>
         /// <param name="expectedTypeKind">The expected type kind for the given type name.</param>
+        /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>The type with the given name and kind if a user model was available, otherwise null.</returns>
-        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind)
+        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
 
@@ -59,7 +60,7 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(typeName));
             }
 
-            ValidationUtils.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType.FullTypeName());
+            writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType);
             return resolvedType;
         }
 
@@ -99,8 +100,9 @@ namespace Microsoft.OData.Core
         /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
         /// <param name="complexValue">The value in question to resolve the type for.</param>
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
+        /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>A type for the <paramref name="complexValue"/> or null if no type name is specified and no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeForComplexValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataComplexValue complexValue, bool isOpenPropertyType)
+        internal static IEdmTypeReference ResolveAndValidateTypeForComplexValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataComplexValue complexValue, bool isOpenPropertyType, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
 
@@ -108,13 +110,13 @@ namespace Microsoft.OData.Core
 
             ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
 
-            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex);
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex, writerValidator);
             if (typeReferenceFromMetadata != null)
             {
-                ValidationUtils.ValidateTypeKind(EdmTypeKind.Complex, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.FullTypeName());
+                writerValidator.ValidateTypeKind(EdmTypeKind.Complex, typeReferenceFromMetadata.TypeKind(), typeFromValue);
             }
 
-            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
+            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference(), writerValidator);
             return typeReferenceFromValue;
         }
 
@@ -126,8 +128,9 @@ namespace Microsoft.OData.Core
         /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
         /// <param name="collectionValue">The value in question to resolve the type for.</param>
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
+        /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>A type for the <paramref name="collectionValue"/> or null if no type name is specified and no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeForCollectionValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataCollectionValue collectionValue, bool isOpenPropertyType)
+        internal static IEdmTypeReference ResolveAndValidateTypeForCollectionValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataCollectionValue collectionValue, bool isOpenPropertyType, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
 
@@ -135,13 +138,13 @@ namespace Microsoft.OData.Core
 
             ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
 
-            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection);
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection, writerValidator);
             if (typeReferenceFromMetadata != null)
             {
-                ValidationUtils.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), typeFromValue == null ? null : typeFromValue.FullTypeName());
+                writerValidator.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), typeFromValue);
             }
 
-            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
+            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference(), writerValidator);
             if (typeReferenceFromValue != null)
             {
                 // update nullability from metadata
@@ -151,7 +154,7 @@ namespace Microsoft.OData.Core
                 }
 
                 // validate that the collection type represents a valid Collection type (e.g., is unordered).
-                typeReferenceFromValue = ValidationUtils.ValidateCollectionType(typeReferenceFromValue);
+                typeReferenceFromValue = writerValidator.ValidateCollectionType(typeReferenceFromValue);
             }
 
             return typeReferenceFromValue;
@@ -226,8 +229,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="typeReferenceFromMetadata">The (optional) type from the metadata definition (the expected type).</param>
         /// <param name="typeReferenceFromValue">The (optional) type from the value (the actual type).</param>
+        /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>The type as derived from the <paramref name="typeReferenceFromMetadata"/> and/or <paramref name="typeReferenceFromValue"/>.</returns>
-        private static IEdmTypeReference ResolveTypeFromMetadataAndValue(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue)
+        private static IEdmTypeReference ResolveTypeFromMetadataAndValue(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue, IWriterValidator writerValidator)
         {
             if (typeReferenceFromMetadata == null)
             {
@@ -243,36 +247,7 @@ namespace Microsoft.OData.Core
 
             Debug.Assert(typeReferenceFromValue.TypeKind() == typeReferenceFromMetadata.TypeKind(), "typeReferenceFromValue.TypeKind() == typeReferenceFromMetadata.TypeKind()");
 
-            // Make sure the types are the same
-            if (typeReferenceFromValue.IsODataPrimitiveTypeKind())
-            {
-                // Primitive types must match exactly except for nullability
-                ValidationUtils.ValidateMetadataPrimitiveType(typeReferenceFromMetadata, typeReferenceFromValue);
-            }
-            else if (typeReferenceFromMetadata.IsEntity())
-            {
-                ValidationUtils.ValidateEntityTypeIsAssignable((IEdmEntityTypeReference)typeReferenceFromMetadata, (IEdmEntityTypeReference)typeReferenceFromValue);
-            }
-            else if (typeReferenceFromMetadata.IsComplex())
-            {
-                ValidationUtils.ValidateComplexTypeIsAssignable(typeReferenceFromMetadata.Definition as IEdmComplexType, typeReferenceFromValue.Definition as IEdmComplexType);
-            }
-            else if (typeReferenceFromMetadata.IsCollection())
-            {
-                // Collection types must match exactly.
-                if (!(typeReferenceFromMetadata.Definition.IsElementTypeEquivalentTo(typeReferenceFromValue.Definition)))
-                {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.FullName(), typeReferenceFromMetadata.FullName()));
-                }
-            }
-            else
-            {
-                // For other types, compare their full type name.
-                if (typeReferenceFromMetadata.FullName() != typeReferenceFromValue.FullName())
-                {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.FullName(), typeReferenceFromMetadata.FullName()));
-                }
-            }
+            writerValidator.ValidateTypeReference(typeReferenceFromMetadata, typeReferenceFromValue);
 
             return typeReferenceFromValue;
         }

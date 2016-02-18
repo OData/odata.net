@@ -30,11 +30,6 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly ODataJsonLightValueSerializer jsonLightValueSerializer;
 
         /// <summary>
-        /// Whether to bypass validation.
-        /// </summary>
-        private bool bypassValidation;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
@@ -43,7 +38,6 @@ namespace Microsoft.OData.Core.JsonLight
             : base(jsonLightOutputContext, initContextUriBuilder)
         {
             this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this, initContextUriBuilder);
-            this.bypassValidation = !jsonLightOutputContext.MessageWriterSettings.EnableFullValidation;
         }
 
         /// <summary>
@@ -151,10 +145,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (isOpenProperty)
             {
-                if (this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation)
-                {
-                    ValidationUtils.ValidateOpenPropertyValue(property.Name, property.ODataValue);
-                }
+                this.WriterValidator.ValidateOpenPropertyValue(property.Name, property.ODataValue);
             }
 
             return isOpenProperty;
@@ -179,7 +170,7 @@ namespace Microsoft.OData.Core.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            WriterValidationUtils.ValidatePropertyNotNull(property);
+            this.WriterValidator.ValidatePropertyNotNull(property);
 
             string propertyName = property.Name;
             if (projectedProperties.ShouldSkipProperty(propertyName))
@@ -187,15 +178,16 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
-            WriterValidationUtils.ValidatePropertyName(propertyName, bypassValidation);
+            this.WriterValidator.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
 
             WriteInstanceAnnotation(property, isTopLevel);
 
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
+            bool throwOnMissingProperty = this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation && !this.WritingResponse;
+            IEdmProperty edmProperty = this.WriterValidator.ValidatePropertyDefined(
                 propertyName,
                 owningType,
-                !(this.bypassValidation || this.WritingResponse));
+                throwOnMissingProperty);
 
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
 
@@ -211,7 +203,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                WriterValidationUtils.ValidateStreamReferenceProperty(property, edmProperty, this.WritingResponse, this.bypassValidation);
+                this.WriterValidator.ValidateStreamReferenceProperty(property, edmProperty, this.WritingResponse);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
                 return;
             }
@@ -329,7 +321,7 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmTypeReference propertyTypeReference,
             bool isTopLevel)
         {
-            WriterValidationUtils.ValidateNullPropertyValue(propertyTypeReference, property.Name, this.MessageWriterSettings.WriterBehavior, this.Model, this.bypassValidation);
+            this.WriterValidator.ValidateNullPropertyValue(propertyTypeReference, property.Name, this.MessageWriterSettings.WriterBehavior, this.Model);
 
             if (isTopLevel)
             {
@@ -415,7 +407,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             string wirePropertyName = GetWirePropertyName(isTopLevel, property.Name);
 
-            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, propertyTypeReference, collectionValue, isOpenPropertyType);
+            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, propertyTypeReference, collectionValue, isOpenPropertyType, this.WriterValidator);
             string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
 
             this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);

@@ -26,6 +26,9 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener
     {
+        /// <summary>The writer validator to use.</summary>
+        protected readonly IWriterValidator WriterValidator;
+
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
 
@@ -73,6 +76,7 @@ namespace Microsoft.OData.Core
             this.outputContext = outputContext;
             this.writingFeed = writingFeed;
             this.writingDelta = writingDelta;
+            this.WriterValidator = outputContext.WriterValidator;
 
             // create a collection validator when writing a top-level feed and a user model is present
             if (this.writingFeed && this.outputContext.Model.IsUserModel())
@@ -785,7 +789,7 @@ namespace Microsoft.OData.Core
             }
 
             // TODO: Clean up handling of expected types/sets during writing
-            return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity);
+            return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity, this.WriterValidator);
         }
 
         /// <summary>
@@ -890,7 +894,7 @@ namespace Microsoft.OData.Core
                         if (parentNavigationLinkScope != null)
                         {
                             // Validate the consistency of entity types in the expanded feed/entry
-                            WriterValidationUtils.ValidateEntryInExpandedLink(entityType, parentNavigationLinkScope.EntityType);
+                            this.WriterValidator.ValidateEntryInExpandedLink(entityType, parentNavigationLinkScope.EntityType);
                             entryScope.EntityTypeFromMetadata = parentNavigationLinkScope.EntityType;
                         }
                         else if (this.CurrentFeedValidator != null)
@@ -979,7 +983,7 @@ namespace Microsoft.OData.Core
                         if (!this.SkipWriting)
                         {
                             ODataFeed feed = (ODataFeed)currentScope.Item;
-                            WriterValidationUtils.ValidateFeedAtEnd(feed, !this.outputContext.WritingResponse);
+                            this.WriterValidator.ValidateFeedAtEnd(feed, !this.outputContext.WritingResponse);
                             this.EndFeed(feed);
                         }
 
@@ -1074,7 +1078,7 @@ namespace Microsoft.OData.Core
             {
                 this.InterceptException(() =>
                 {
-                    WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
+                    this.WriterValidator.ValidateEntityReferenceLink(entityReferenceLink);
                     this.WriteEntityReferenceInNavigationLinkContent((ODataNavigationLink)this.CurrentScope.Item, entityReferenceLink);
                 });
             }
@@ -1158,7 +1162,7 @@ namespace Microsoft.OData.Core
                 this.InterceptException(() =>
                 {
                     IEdmNavigationProperty navigationProperty =
-                        WriterValidationUtils.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind, !this.outputContext.MessageWriterSettings.EnableFullValidation);
+                        this.WriterValidator.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind);
                     if (navigationProperty != null)
                     {
                         this.CurrentScope.EntityType = navigationProperty.ToEntityType();
@@ -1331,7 +1335,7 @@ namespace Microsoft.OData.Core
                         odataUri = currentScope.ODataUri.Clone();
 
                         IEdmEntityType currentEntityType = currentScope.EntityType;
-                        IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null, !this.outputContext.MessageWriterSettings.EnableFullValidation);
+                        IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null);
                         if (navigationProperty != null)
                         {
                             entityType = navigationProperty.ToEntityType();
