@@ -359,6 +359,46 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithPrimitiveCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("MyDates/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
+        }
+
+        [Fact]
+        public void ParseFilterWithComplexCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("PreviousAddresses/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
+        }
+       
+        [Fact]
+        public void ParseFilterWithEnumCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("FavoriteColors/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteColorsProp());
+        }
+        
+        [Fact]
+        public void ParseFilterWithEntityCollectionCount()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                And.Left.ShouldBeCollectionCountNode().
+                    And.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

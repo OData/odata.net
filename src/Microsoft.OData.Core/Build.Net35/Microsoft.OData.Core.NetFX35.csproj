@@ -1345,6 +1345,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\BinaryOperatorNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\BinaryOperatorNode.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\CollectionCountNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionCountNode.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\CollectionFunctionCallNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionFunctionCallNode.cs</Link>
     </Compile>

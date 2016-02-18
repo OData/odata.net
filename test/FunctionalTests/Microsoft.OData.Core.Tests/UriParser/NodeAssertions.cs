@@ -206,6 +206,13 @@ namespace Microsoft.OData.Core.Tests.UriParser
             return new AndConstraint<SingleValueOpenPropertyAccessNode>(propertyAccessNode);
         }
 
+        public static AndConstraint<CollectionCountNode> ShouldBeCollectionCountNode(this QueryNode token)
+        {
+            token.Should().BeOfType<CollectionCountNode>();
+            var propertyAccessNode = token.As<CollectionCountNode>();
+            return new AndConstraint<CollectionCountNode>(propertyAccessNode);
+        }
+        
         public static AndConstraint<CollectionOpenPropertyAccessNode> ShouldBeCollectionOpenPropertyAccessQueryNode(this QueryNode token, string expectedPropertyName)
         {
             token.Should().BeOfType<CollectionOpenPropertyAccessNode>();

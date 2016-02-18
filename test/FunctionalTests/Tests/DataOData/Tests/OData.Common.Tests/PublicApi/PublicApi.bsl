@@ -5447,6 +5447,15 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.BinaryOperatorNode :
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
+public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionCountNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
+	public CollectionCountNode (Microsoft.OData.Core.UriParser.Semantic.CollectionNode source)
+
+	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
 public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionFunctionCallNode : Microsoft.OData.Core.UriParser.Semantic.CollectionNode {
 	public CollectionFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionType, Microsoft.OData.Core.UriParser.Semantic.QueryNode source)
 
@@ -6040,6 +6049,7 @@ public abstract class Microsoft.OData.Core.UriParser.Visitors.QueryNodeVisitor`1
 	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.AllNode nodeIn)
 	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.AnyNode nodeIn)
 	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.BinaryOperatorNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionCountNode nodeIn)
 	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionFunctionCallNode nodeIn)
 	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionNavigationNode nodeIn)
 	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionOpenPropertyAccessNode nodeIn)

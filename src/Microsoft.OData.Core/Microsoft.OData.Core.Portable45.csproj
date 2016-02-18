@@ -476,6 +476,7 @@
     <Compile Include="UriParser\SemanticAst\BatchReferenceSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BatchSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BinaryOperatorNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionCountNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionFunctionCallNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionNavigationNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionNode.cs" />

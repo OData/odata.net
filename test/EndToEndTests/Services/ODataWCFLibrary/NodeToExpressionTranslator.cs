@@ -9,6 +9,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -36,6 +38,33 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
         public IODataDataSource DataSource { get; set; }
 
+        /// <summary>
+        /// MethodInfo for Queryable.AsQueryable
+        /// </summary>
+        private static MethodInfo _queryableAsQueryableMethod = GenericMethodOf(_ => Queryable.AsQueryable<int>(default(IEnumerable<int>)));
+
+        /// <summary>
+        /// MethodInfo for Queryable.LongCount
+        /// </summary>
+        private static MethodInfo _countMethod = GenericMethodOf(_ => Queryable.LongCount<int>(default(IQueryable<int>)));
+
+        /// <summary>
+        /// Helper method to get the MethodInfo from the body of the given lambda expression.
+        /// </summary>
+        /// <typeparam name="TReturn">The function type paramenter.</typeparam>
+        /// <param name="lambda">Lambda expression.</param>
+        /// <returns>Returns the MethodInfo from the body of the given lambda expression.</returns>
+        private static MethodInfo GenericMethodOf<TReturn>(Expression<Func<object, TReturn>> expression)
+        {
+            LambdaExpression lambdaExpression = expression as LambdaExpression;
+
+            Contract.Assert(expression.NodeType == ExpressionType.Lambda);
+            Contract.Assert(lambdaExpression != null);
+            Contract.Assert(lambdaExpression.Body.NodeType == ExpressionType.Call);
+
+            return (lambdaExpression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
+        }
+        
         /// <summary>
         /// Visit an AllNode
         /// </summary>
@@ -160,6 +189,48 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             this.CheckArgumentNull(nodeIn, "SearchTermNode");
 
             return new SearchHelper(nodeIn.Text, this.ImplicitVariableParameterExpression).Build();
+        }
+
+        /// <summary>
+        /// Visit a CollectionCountNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public override Expression Visit(CollectionCountNode nodeIn)
+        {
+            this.CheckArgumentNull(nodeIn, "CollectionCountNode");
+
+            Type propType = null;
+            Expression propExpr = null;
+            
+            // Element of collection could be primitive type or enum or complex or entity type 
+            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum() || nodeIn.Source.ItemType.IsComplex())
+            {
+                var collection = nodeIn.Source as CollectionPropertyAccessNode;
+                propExpr = Visit(collection);
+                var def = collection.Property.Type.AsCollection();
+                propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
+            }
+            else if (nodeIn.Source.ItemType.IsEntity())
+            {
+                var collection = nodeIn.Source as CollectionNavigationNode;
+                propExpr = Visit(collection);
+                var def = collection.NavigationProperty.Type.AsCollection();
+                propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
+            }
+            else
+            {
+                // Should no such case as collection is either primitive or complex or entity.
+                throw new NotImplementedException();
+            }
+
+            // Per standard, collection can not be null, but could be an empty collection, so null is not considered here.
+            var asQuerableMethod = _queryableAsQueryableMethod.MakeGenericMethod(propType);
+            Expression asQuerableExpression = Expression.Call(null, asQuerableMethod, propExpr);
+
+            var countMethod = _countMethod.MakeGenericMethod(propType);
+            var countExpression = Expression.Call(null, countMethod, asQuerableExpression);
+            return countExpression;
         }
 
         /// <summary>

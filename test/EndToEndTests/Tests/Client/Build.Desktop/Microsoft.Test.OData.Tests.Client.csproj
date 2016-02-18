@@ -178,6 +178,7 @@
     <Compile Include="QueryCountTests.cs" />
     <Compile Include="QueryOptionTests\QueryOptionOnCollectionTypePropertyTests.cs" />
     <Compile Include="QueryOptionTests\QueryOptionTestsHelper.cs" />
+    <Compile Include="QueryOptionTests\FilterQueryTests.cs" />
     <Compile Include="QueryOptionTests\SearchQueryTests.cs" />
     <Compile Include="RegressionTests\ODataLibRegressionTests.cs" />
     <Compile Include="SingletonTests\SingletonClientTests.cs" />

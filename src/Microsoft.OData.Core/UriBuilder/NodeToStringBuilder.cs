@@ -85,7 +85,20 @@ namespace Microsoft.OData.Core.UriBuilder
         }
 
         /// <summary>
-        /// Translates a <see cref="CollectionPropertyAccessNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="CollectionCountNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(CollectionCountNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+
+            String source = this.TranslateNode(node.Source);
+            return string.Concat(source, ExpressionConstants.SymbolForwardSlash, UriQueryConstants.CountSegment);
+        }
+
+        /// <summary>
+        /// Translates a <see cref="CollectionNavigationNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
