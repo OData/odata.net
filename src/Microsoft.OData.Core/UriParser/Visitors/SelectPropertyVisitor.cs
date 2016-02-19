@@ -137,12 +137,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             {
                 pathSoFar.Add(lastSegment);
 
+                bool hasCollectionInPath = false;
+
                 // try create a complex type property path.
                 while (true)
                 {
-                    // no need to go on if the current property is not of complex type.
+                    // no need to go on if the current property is not of complex type or collection of complex type.
                     currentLevelType = lastSegment.EdmType as IEdmStructuredType;
-                    if (currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex)
+                    var collectionType = lastSegment.EdmType as IEdmCollectionType;
+                    if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex) 
+                        && (collectionType == null || collectionType.ElementType.TypeKind() != EdmTypeKind.Complex))
                     {
                         break;
                     }
@@ -153,8 +157,22 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                         break;
                     }
 
-                    // first try bind the segment as property.
-                    lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model, currentLevelType, resolver);
+                    lastSegment = null;
+
+                    // This means last segment a collection of complex type,
+                    // current segment can only be type cast and cannot be proprty name.
+                    if (currentLevelType == null)
+                    {
+                        currentLevelType = collectionType.ElementType.Definition as IEdmStructuredType;
+                        hasCollectionInPath = true;
+                    }
+                    else if (!hasCollectionInPath)
+                    {
+                        // If there is no collection type in the path yet, will try to bind property for the next token
+                        // first try bind the segment as property.
+                        lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
+                            currentLevelType, resolver);
+                    }
 
                     // then try bind the segment as type cast.
                     if (lastSegment == null)
