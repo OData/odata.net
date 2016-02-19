@@ -1595,7 +1595,7 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
         /// <summary>
         /// There are no comments for GetVehicleSpeed in the schema.
         /// </summary>
-        public  global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetVehicleSpeed()
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetVehicleSpeed()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);

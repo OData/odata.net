@@ -252,6 +252,14 @@ namespace Microsoft.OData.Service.Design.UnitTests
         }
 
         [TestMethod]
+        public void GetClrTypeNameShouldReadEntitySingleTypeNameForEntityType()
+        {
+            EdmEntityType entityType = new EdmEntityType("Namespace", "name");
+            IEdmTypeReference edmTypeReference = new EdmTypeReferenceForTest(entityType, false);
+            ODataT4CodeGenerator.Utils.GetClrTypeName(edmTypeReference, false, template, context, isEntitySingleType:true).Should().Be("global::NamespacePrefix.nameSingle");
+        }
+
+        [TestMethod]
         public void GetClrTypeNameShouldReturnObjectModelCollectionStructureTemplate()
         {
             EdmPrimitiveType primitiveType = new EdmPrimitiveType(EdmPrimitiveTypeKind.String);
