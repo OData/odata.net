@@ -302,8 +302,8 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         SingleValueCast = 27,
 
         /// <summary>
-        /// Node describing count of a collection contains entity or complex or primitve type.
+        /// Node describing count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
-        CollectionCountNode = 28,
+        CollectionCount = 28,
     }
 }

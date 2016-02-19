@@ -141,12 +141,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return boundFunction;
                 }
 
-                // Collection with $count segment is supported.
-                // TODO collection with any or all expression is not supported yet.
+                // Collection with any or all expression is already supported and handled separately.
+                // Add support of collection with $count segment.
                 CollectionNode colNode = parent as CollectionNode;
                 if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
                 {
-                    // create path token for each navigation properties.
+                    // create a collection count node for collection node property.
                     return new CollectionCountNode(colNode);
                 }
 

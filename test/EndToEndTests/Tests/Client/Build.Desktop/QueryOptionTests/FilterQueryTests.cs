@@ -13,11 +13,12 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using System.Threading.Tasks;
     using Microsoft.OData.Core;
     using Microsoft.Test.OData.Services.TestServices;
+    using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class FilterQueryTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class FilterQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public FilterQueryTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -46,6 +47,13 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
                 // $count collection of enum type
                 details = this.TestsHelper.QueryFeed("Products?$filter=CoverColors/$count lt 2", mimeType);
+                if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+                {
+                    Assert.AreEqual(2, details.Count);
+                }
+
+                // $count collection of complex type
+                details = this.TestsHelper.QueryFeed("People?$filter=Addresses/$count eq 2", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(2, details.Count);

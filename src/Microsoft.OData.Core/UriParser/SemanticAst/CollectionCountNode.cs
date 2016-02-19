@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     public sealed class CollectionCountNode : SingleValueNode
     {
         /// <summary>
-        /// The collection to be counted, could be any type of collection includes entityColNavigationProperty, complexColProperty or primitiveColProperty.
+        /// The collection to be counted, could be any type of collection includes primitive type, enum type, complex type or entity type collection.
         /// </summary>
         private readonly CollectionNode source;
         
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Constructs a new <see cref="CollectionCountNode"/>.
         /// </summary>
         /// <param name="source">The value containing the property.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input source or property is null.</exception>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
         public CollectionCountNode(CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
@@ -48,11 +48,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
         
         /// <summary>
-        /// Gets the type of the single value this node represents.
+        /// Gets the value type this node represents.
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
-            // Same type as IQueryable LongCount method return type
+            // The value type is same type as the type returned by IQueryable LongCount method
             get { return EdmCoreModel.Instance.GetInt64(false); }
         }
 
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                return InternalQueryNodeKind.CollectionCountNode;
+                return InternalQueryNodeKind.CollectionCount;
             }
         }
 

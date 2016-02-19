@@ -360,6 +360,32 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
                         },
                     },
+                    Addresses = new Collection<Address>
+                    {
+                        new HomeAddress()
+                        {
+                            City = "Tokyo",
+                            PostalCode = "98052",
+                            Street = "1 Microsoft Way",
+                            FamilyName = "Cats",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+                            },
+                        },
+                        new Address()
+                        {
+                            City = "Shanghai",
+                            PostalCode = "200000",
+                            Street = "999 Zixing Road",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+                            },
+                        },
+                    },
                     Annotations = new List<InstanceAnnotationType>(){new DisplayNameAnnotation(this.GetType().Namespace, "EmailAddresses", "Emails")}
                 },
                 new Customer()
@@ -412,7 +438,33 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     Numbers = new Collection<string> { "555-555-5555" },
                     Emails = new Collection<string> { "def@test.msn" },
                     PersonID = 5,
-                    Home = GeographyPoint.Create(-16.0, -261.8)
+                    Home = GeographyPoint.Create(-16.0, -261.8),
+                    Addresses = new Collection<Address>
+                    {
+                        new HomeAddress()
+                        {
+                            City = "Tokyo",
+                            PostalCode = "98052",
+                            Street = "2 Microsoft Way",
+                            FamilyName = "Cats",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+                            },
+                        },
+                        new Address()
+                        {
+                            City = "Shanghai",
+                            PostalCode = "200000",
+                            Street = "999 Zixing Road",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+                            },
+                        },
+                    }
                 }
             });
 

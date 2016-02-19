@@ -10,7 +10,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Collections.Generic;
     using System.IO;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -56,13 +55,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <returns>Returns the MethodInfo from the body of the given lambda expression.</returns>
         private static MethodInfo GenericMethodOf<TReturn>(Expression<Func<object, TReturn>> expression)
         {
-            LambdaExpression lambdaExpression = expression as LambdaExpression;
+            Debug.Assert(expression.NodeType == ExpressionType.Lambda, "cannot call GenericMethodOf with non LambdaExpression");
+            Debug.Assert(expression != null, "LambdaExpression can not be null");
+            Debug.Assert(expression.Body.NodeType == ExpressionType.Call, "LambdaExpression body node type should be call");
 
-            Contract.Assert(expression.NodeType == ExpressionType.Lambda);
-            Contract.Assert(lambdaExpression != null);
-            Contract.Assert(lambdaExpression.Body.NodeType == ExpressionType.Call);
-
-            return (lambdaExpression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
+            return (expression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
         }
         
         /// <summary>
@@ -206,22 +203,22 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             // Element of collection could be primitive type or enum or complex or entity type 
             if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum() || nodeIn.Source.ItemType.IsComplex())
             {
-                var collection = nodeIn.Source as CollectionPropertyAccessNode;
+                var collection = (CollectionPropertyAccessNode)nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.Property.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
             }
             else if (nodeIn.Source.ItemType.IsEntity())
             {
-                var collection = nodeIn.Source as CollectionNavigationNode;
+                var collection = (CollectionNavigationNode)nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.NavigationProperty.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
             }
             else
             {
-                // Should no such case as collection is either primitive or complex or entity.
-                throw new NotImplementedException();
+                // Should no such case as collection item is either primitive or enum or complex or entity.
+                throw new NotSupportedException(string.Format("Filter based on count of collection with item of type {0} is not supported yet.", nodeIn.Source.ItemType));
             }
 
             // Per standard, collection can not be null, but could be an empty collection, so null is not considered here.

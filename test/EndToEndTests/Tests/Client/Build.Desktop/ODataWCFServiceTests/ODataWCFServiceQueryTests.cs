@@ -453,7 +453,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Dictionary<string, int> testCases = new Dictionary<string, int>()
             {
                 { "Customers?$select=PersonID,FirstName", 2 },
-                { "Customers?$select=*", 11 },
+                { "Customers?$select=*", 12 },
             };
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
