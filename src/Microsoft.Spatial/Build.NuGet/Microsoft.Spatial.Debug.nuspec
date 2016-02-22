@@ -28,6 +28,10 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45\Microsoft.Spatial.pdb" target="lib\dnxcore50" />
     <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45\Microsoft.Spatial.xml" target="lib\dnxcore50" />
     <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45\1041\Microsoft.Spatial.resources.dll" target="lib\dnxcore50\ja" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45.Profile111\Microsoft.Spatial.dll" target="lib\portable-net45+win+wpa81" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45.Profile111\Microsoft.Spatial.pdb" target="lib\portable-net45+win+wpa81" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45.Profile111\Microsoft.Spatial.xml" target="lib\portable-net45+win+wpa81" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial.Portable45.Profile111\1041\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win+wpa81\ja" />
     <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

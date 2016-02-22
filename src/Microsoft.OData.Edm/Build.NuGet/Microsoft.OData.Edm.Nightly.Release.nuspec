@@ -52,6 +52,18 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1041\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ja" />
     <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1042\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ko" />
     <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1049\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ru" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.dll" target="lib\portable-net45+win+wpa81" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.pdb" target="lib\portable-net45+win+wpa81" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.xml" target="lib\portable-net45+win+wpa81" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\2052\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\zh-Hans" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1028\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\zh-Hant" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1031\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\de" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\3082\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\es" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1036\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\fr" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1040\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\it" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1041\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\ja" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1042\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\ko" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1049\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\ru" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm\" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
