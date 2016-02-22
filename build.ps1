@@ -450,6 +450,7 @@ Function BuildProcess
     RunBuild ('Microsoft.OData.Net35.sln')
     RunBuild ('Microsoft.OData.Net45.sln')
     RunBuild ('Microsoft.OData.Portable45.sln')
+    RunBuild ('Microsoft.OData.Portable45.Profile111.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.OData.E2E.sln')
     Write-Host "Build Done" -ForegroundColor $Success
