@@ -698,7 +698,7 @@ namespace Microsoft.OData.Core.JsonLight
                         this.MessageReaderSettings,
                         validateNullValue,
                         propertyName,
-                        this.Model.GetPayloadValueConverter());
+                        this.JsonLightInputContext.PayloadValueConverter);
                 }
                 else
                 {

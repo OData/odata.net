@@ -406,7 +406,7 @@ namespace Microsoft.OData.Core.JsonLight
                     this.MessageReaderSettings,
                     /*validateNullValue*/ true,
                     annotationName,
-                    this.Model.GetPayloadValueConverter());
+                    this.JsonLightInputContext.PayloadValueConverter);
         }
 
         /// <summary>

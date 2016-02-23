@@ -15,8 +15,7 @@ namespace Microsoft.OData.Core
 #endif
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
 
     #endregion Namespaces
@@ -48,6 +47,9 @@ namespace Microsoft.OData.Core
         /// <summary>The type resolver to use.</summary>
         private readonly EdmTypeResolver edmTypeResolver;
 
+        /// <summary>The payload value converter to use.</summary>
+        private readonly ODataPayloadValueConverter payloadValueConverter;
+
         /// <summary>Set to true if the input was disposed.</summary>
         private bool disposed;
 
@@ -75,9 +77,10 @@ namespace Microsoft.OData.Core
             this.messageReaderSettings = messageReaderSettings;
             this.readingResponse = readingResponse;
             this.synchronous = synchronous;
-            this.model = model;
+            this.model = model ?? EdmCoreModel.Instance;
             this.urlResolver = urlResolver;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ReaderBehavior);
+            this.payloadValueConverter = this.model.GetPayloadValueConverter();
         }
 
         /// <summary>
@@ -143,6 +146,17 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.edmTypeResolver;
+            }
+        }
+
+        /// <summary>
+        /// The payload value converter to use.
+        /// </summary>
+        internal ODataPayloadValueConverter PayloadValueConverter
+        {
+            get
+            {
+                return this.payloadValueConverter;
             }
         }
 
