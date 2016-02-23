@@ -201,15 +201,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             Expression propExpr = null;
             
             // Element of collection could be primitive type or enum or complex or entity type 
-            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum() || nodeIn.Source.ItemType.IsComplex())
+            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum()
+                || (nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionPropertyAccess)))
             {
+                // This does not handle complex collection cast case, if it is a complex collection cast, the Kind will be CollectionPropertyCast and node.Source is CollectionPropertyCastNode
                 var collection = (CollectionPropertyAccessNode)nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.Property.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
             }
-            else if (nodeIn.Source.ItemType.IsEntity())
+            else if (nodeIn.Source.ItemType.IsEntity() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionNavigationNode))
             {
+                // This does not handle entity collection cast case, if it is a entity collection cast, the Kind will be EntityCollectionCast and node.Source is EntityCollectionCastNode
                 var collection = (CollectionNavigationNode)nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.NavigationProperty.Type.AsCollection();

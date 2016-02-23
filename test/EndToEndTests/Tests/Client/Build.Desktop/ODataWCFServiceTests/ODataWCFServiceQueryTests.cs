@@ -384,9 +384,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             Dictionary<string, bool> testCases = new Dictionary<string, bool>()
             {
-                { "Customers(2)?$expand=Orders", false /*single property selected*/ },
-                { "Orders(7)?$expand=CustomerForOrder", false /*single property selected*/ },
-                { "Orders(7)?$select=OrderID&$expand=CustomerForOrder($select=PersonID)", true /*single property selected*/ }
+                { "Customers(1)?$expand=Orders", false /*single property selected*/ },
+                { "Orders(8)?$expand=CustomerForOrder", false /*single property selected*/ },
+                { "Orders(8)?$select=OrderID&$expand=CustomerForOrder($select=PersonID)", true /*single property selected*/ }
             };
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -425,11 +425,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                             var order = entries.SingleOrDefault(e => e.Id.AbsoluteUri.Contains("Orders"));
                             Assert.IsNotNull(order);
-                            Assert.AreEqual(7, order.Properties.Single(p => p.Name == "OrderID").Value);
+                            Assert.AreEqual(8, order.Properties.Single(p => p.Name == "OrderID").Value);
 
                             var customer = entries.SingleOrDefault(e => e.Id.AbsoluteUri.Contains("Customers"));
                             Assert.IsNotNull(customer);
-                            Assert.AreEqual(2, customer.Properties.Single(p => p.Name == "PersonID").Value);
+                            Assert.AreEqual(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
 
                             if (testCase.Value /*single property selected*/)
                             {

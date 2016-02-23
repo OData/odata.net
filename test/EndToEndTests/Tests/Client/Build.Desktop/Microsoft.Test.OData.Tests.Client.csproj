@@ -176,6 +176,7 @@
     <Compile Include="PublicProviderTests\EFServiceTests.cs" />
     <Compile Include="PublicProviderTests\HybridServiceTests.cs" />
     <Compile Include="QueryCountTests.cs" />
+    <Compile Include="QueryOptionTests\OrderbyQueryTests.cs" />
     <Compile Include="QueryOptionTests\QueryOptionOnCollectionTypePropertyTests.cs" />
     <Compile Include="QueryOptionTests\QueryOptionTestsHelper.cs" />
     <Compile Include="QueryOptionTests\FilterQueryTests.cs" />
