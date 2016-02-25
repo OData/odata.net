@@ -7,14 +7,13 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Diagnostics;
-    using System.Text;
-    using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -93,21 +92,23 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="expressionLexer">The expression lexer.</param>
         /// <param name="targetTypeReference">Expected type to be parsed.</param>
         /// <returns>The literal token produced by building the given literal.</returns>
-        private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmPrimitiveTypeReference targetTypeReference)
+        private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmTypeReference targetTypeReference)
         {
-            object targetValue;
-            string reason;
-            if (!UriPrimitiveTypeParser.TryUriStringToPrimitive(expressionLexer.CurrentToken.Text, targetTypeReference, out targetValue, out reason))
+            UriTypeParsingException typeParsingException;
+            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
+            if (targetValue == null)
             {
                 string message;
 
-                if (reason == null)
+                if (typeParsingException == null)
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeReference.FullName(),
                         expressionLexer.CurrentToken.Text,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText);
+
+                    throw new ODataException(message);
                 }
                 else
                 {
@@ -116,10 +117,10 @@ namespace Microsoft.OData.Core.UriParser
                         expressionLexer.CurrentToken.Text,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText,
-                        reason);
-                }
+                        typeParsingException.ParsingFailureReason);
 
-                throw new ODataException(message);
+                    throw new ODataException(message, typeParsingException);
+                }
             }
 
             expressionLexer.NextToken();
@@ -138,43 +139,29 @@ namespace Microsoft.OData.Core.UriParser
 
             switch (expressionLexer.CurrentToken.Kind)
             {
-                case ExpressionTokenKind.BooleanLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetBoolean(false));
-                case ExpressionTokenKind.DecimalLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDecimal(false));
                 case ExpressionTokenKind.NullLiteral:
                     return ParseNullLiteral(expressionLexer);
+                case ExpressionTokenKind.BooleanLiteral:
+                case ExpressionTokenKind.DecimalLiteral:
                 case ExpressionTokenKind.StringLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetString(true));
                 case ExpressionTokenKind.Int64Literal:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetInt64(false));
                 case ExpressionTokenKind.IntegerLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetInt32(false));
                 case ExpressionTokenKind.DoubleLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDouble(false));
                 case ExpressionTokenKind.SingleLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetSingle(false));
                 case ExpressionTokenKind.GuidLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetGuid(false));
                 case ExpressionTokenKind.BinaryLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetBinary(true));
                 case ExpressionTokenKind.DateLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDate(false));
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDateTimeOffset(false));
                 case ExpressionTokenKind.DurationLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false));
                 case ExpressionTokenKind.GeographyLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false));
                 case ExpressionTokenKind.GeometryLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geometry, false));
                 case ExpressionTokenKind.QuotedLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetString(true));
                 case ExpressionTokenKind.TimeOfDayLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetTimeOfDay(false));
+                case ExpressionTokenKind.CustomTypeLiteral:
+                    return ParseTypedLiteral(expressionLexer, expressionLexer.CurrentToken.GetLiteralEdmTypeReference());
+                default:
+                    return null;
             }
-
-            return null;
         }
     }
 }

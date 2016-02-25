@@ -7,9 +7,12 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Diagnostics;
+    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
@@ -34,6 +37,9 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Position of token.</summary>
         internal int Position;
+
+        /// <summary>The edm type of the expression token literal.</summary>
+        private IEdmTypeReference LiteralEdmType;
 
         /// <summary>Checks whether this token is a valid token for a key value.</summary>
         internal bool IsKeyValueToken
@@ -95,6 +101,24 @@ namespace Microsoft.OData.Core.UriParser
         {
             return this.Kind == ExpressionTokenKind.Identifier
                 && string.Equals(this.Text, id, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        }
+
+        internal void SetCustomEdmTypeLiteral(IEdmTypeReference edmType)
+        {
+            this.Kind = ExpressionTokenKind.CustomTypeLiteral;
+            this.LiteralEdmType = edmType;
+        }
+
+        internal IEdmTypeReference GetLiteralEdmTypeReference()
+        {
+            Debug.Assert(this.Kind != ExpressionTokenKind.CustomTypeLiteral || this.LiteralEdmType != null, "ExpressionTokenKind is marked as CustomTypeLiteral but not EdmType was set");
+
+            if (this.LiteralEdmType == null && this.Kind != ExpressionTokenKind.CustomTypeLiteral)
+            {
+                this.LiteralEdmType = UriParserHelper.GetLiteralEdmTypeReference(this.Kind);
+            }
+
+            return this.LiteralEdmType;
         }
     }
 }

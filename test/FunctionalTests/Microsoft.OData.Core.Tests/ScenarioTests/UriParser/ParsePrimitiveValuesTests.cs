@@ -6,9 +6,10 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Core.UriParser.Parsers;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
@@ -56,7 +57,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             realResult = default(T);
 
             object result;
-            var parseSuceeded = UriPrimitiveTypeParser.TryUriStringToPrimitive(input, asType, out result);
+            UriTypeParsingException exception;
+            bool parseSuceeded = UriPrimitiveTypeParser.Instance.TryParseUriStringToType(input, asType, out result, out exception);
             if (parseSuceeded)
             {
                 realResult = (T)result;

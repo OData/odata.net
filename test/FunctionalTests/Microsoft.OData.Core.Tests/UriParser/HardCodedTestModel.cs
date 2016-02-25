@@ -103,6 +103,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullyQualifiedNamespaceOpenAddress = new EdmComplexType("Fully.Qualified.Namespace", "OpenAddress", null, false, true);
             var FullyQualifiedNamespaceHomeAddress = new EdmComplexType("Fully.Qualified.Namespace", "HomeAddress", FullyQualifiedNamespaceAddress);
 
+            var FullyQualifiedNamespaceHeartbeat = new EdmComplexType("Fully.Qualified.Namespace", "Heartbeat");
+
             var FullyQualifiedNamespacePersonTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespacePerson, true);
             var FullyQualifiedNamespaceEmployeeTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceEmployee, true);
             var FullyQualifiedNamespaceManagerTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceManager, true);
@@ -123,6 +125,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullyQualifiedNamespaceLion_ID2 = FullyQualifiedNamespaceLion.AddStructuralProperty("ID2", EdmCoreModel.Instance.GetInt32(false));
             FullyQualifiedNamespaceLion.AddStructuralProperty("AngerLevel", EdmCoreModel.Instance.GetDouble(true));
             FullyQualifiedNamespaceLion.AddStructuralProperty("AttackDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDateTimeOffset(true))));
+            FullyQualifiedNamespaceLion.AddStructuralProperty("LionHeartbeat", new EdmComplexTypeReference(FullyQualifiedNamespaceHeartbeat, true));
             FullyQualifiedNamespaceLion.AddKeys(new IEdmStructuralProperty[] { FullyQualifiedNamespaceLion_ID1, FullyQualifiedNamespaceLion_ID2, });
             model.AddElement(FullyQualifiedNamespaceLion);
 
@@ -334,6 +337,9 @@ namespace Microsoft.OData.Core.Tests.UriParser
             model.AddElement(FullyQualifiedNamespaceHomeAddress);
 
             model.AddElement(FullyQualifiedNamespaceOpenAddress);
+
+            FullyQualifiedNamespaceHeartbeat.AddStructuralProperty("Frequency", EdmCoreModel.Instance.GetDouble(true));
+            model.AddElement(FullyQualifiedNamespaceHeartbeat);
 
             FullyQualifiedNamespacePet1.AddKeys(FullyQualifiedNamespacePet1.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int64, false));
             FullyQualifiedNamespacePet1.AddStructuralProperty("SingleID", EdmPrimitiveTypeKind.Single, false);
@@ -889,6 +895,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <Property Name=""ID2"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""AngerLevel"" Type=""Edm.Double"" />
         <Property Name=""AttackDates"" Type=""Collection(Edm.DateTimeOffset)"" />
+        <Property Name=""LionHeartbeat"" Type=""Fully.Qualified.Namespace.Heartbeat"" />
         <NavigationProperty Name=""DogThatIAte"" Type=""Fully.Qualified.Namespace.Dog"" Nullable=""false"" Partner=""LionWhoAteMe"">
           <ReferentialConstraint Property=""ID1"" ReferencedProperty=""ID"" />
         </NavigationProperty>
@@ -996,6 +1003,9 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <NavigationProperty Name=""LionWhoAteMe"" Type=""Fully.Qualified.Namespace.Lion"" Nullable=""false"" Partner=""DogThatIAte"" />
         <NavigationProperty Name=""LionsISaw"" Type=""Collection(Fully.Qualified.Namespace.Lion)"" Nullable=""false"" Partner=""DogsSeenMe"" />
       </EntityType>
+      <ComplexType Name=""Heartbeat"">
+        <Property Name=""Frequency"" Type=""Edm.Double"" />
+      </ComplexType>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
@@ -2284,5 +2294,11 @@ namespace Microsoft.OData.Core.Tests.UriParser
         {
             return (IEdmStructuralProperty)GetPersonType().FindProperty("Prop.With.Periods");
         }
+
+        public static IEdmComplexType GetHeatbeatComplexType()
+        {
+            return TestModel.FindType("Fully.Qualified.Namespace.Heartbeat") as IEdmComplexType;
+        }
+
     }
 }

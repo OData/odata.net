@@ -7,13 +7,16 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
+    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -304,7 +307,7 @@ namespace Microsoft.OData.Core.UriParser
             if (skipQuery != null)
             {
                 int skipValue;
-                if (!UriPrimitiveTypeParser.TryUriStringToNonNegativeInteger(skipQuery, out skipValue))
+                if (!TryUriStringToNonNegativeInteger(skipQuery, out skipValue))
                 {
                     throw new ODataException(Strings.SyntacticTree_InvalidSkipQueryOptionValue(skipQuery));
                 }
@@ -317,7 +320,7 @@ namespace Microsoft.OData.Core.UriParser
             if (topQuery != null)
             {
                 int topValue;
-                if (!UriPrimitiveTypeParser.TryUriStringToNonNegativeInteger(topQuery, out topValue))
+                if (!TryUriStringToNonNegativeInteger(topQuery, out topValue))
                 {
                     throw new ODataException(Strings.SyntacticTree_InvalidTopQueryOptionValue(topQuery));
                 }
@@ -370,6 +373,35 @@ namespace Microsoft.OData.Core.UriParser
             throw new ODataException(Strings.SyntacticTree_InvalidCountQueryOptionValue(
                     count,
                     string.Join(", ", new string[] { ExpressionConstants.KeywordTrue, ExpressionConstants.KeywordFalse })));
+        }
+
+
+        /// <summary>
+        /// Try to parse a string value into a non-negative integer.
+        /// </summary>
+        /// <param name="text">The string value to parse.</param>
+        /// <param name="nonNegativeInteger">The non-negative integer value parsed from the <paramref name="text"/>.</param>
+        /// <returns>True if <paramref name="text"/> could successfully be parsed into a non-negative integer; otherwise returns false.</returns>
+        private static bool TryUriStringToNonNegativeInteger(string text, out int nonNegativeInteger)
+        {
+            Debug.Assert(text != null, "text != null");
+
+            object valueAsObject;
+            UriTypeParsingException exception;
+            if (!UriPrimitiveTypeParser.Instance.TryParseUriStringToType(text, EdmCoreModel.Instance.GetInt32(false), out valueAsObject, out exception))
+            {
+                nonNegativeInteger = -1;
+                return false;
+            }
+
+            nonNegativeInteger = (int)valueAsObject;
+
+            if (nonNegativeInteger < 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

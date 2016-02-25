@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
         /// <summary>
         /// Gets or sets the value indicating whether or not to verify an exact match of the exception message, or just
-        /// that the message is contained within the actual excpetion message.
+        /// that the message is contained within the actual exception message.
         /// </summary>
         public bool ExactMatch { get; private set; }
 
