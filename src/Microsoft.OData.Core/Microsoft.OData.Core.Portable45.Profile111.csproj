@@ -10,7 +10,7 @@
     <TransparentAssembly>true</TransparentAssembly>
     <SecurityMigration>false</SecurityMigration>
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
-    <ProjectGuid>{F80863C0-1863-456A-80DD-CEFA17697FD1}</ProjectGuid>
+    <ProjectGuid>{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}</ProjectGuid>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
@@ -18,15 +18,14 @@
     <EnableLocalization>true</EnableLocalization>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
   <!-- References -->
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.Portable45.Profile111.csproj">
-      <Project>{8087F595-537B-4D35-9093-C9A79A4D93C4}</Project>
+      <Project>{0EA3792B-B967-44BB-8B7C-0625ED6231FA}</Project>
       <Name>Microsoft.OData.Edm</Name>
     </ProjectReference>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.Portable45.Profile111.csproj">
-      <Project>{BE8B8A4C-F717-419A-BB33-1F7B4F92D22A}</Project>
+      <Project>{0852538C-EF36-4720-950E-320150C1AF9C}</Project>
       <Name>Microsoft.Spatial</Name>
     </ProjectReference>
   </ItemGroup>

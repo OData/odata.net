@@ -10,7 +10,7 @@
     <TransparentAssembly>true</TransparentAssembly>
     <SecurityMigration>false</SecurityMigration>
     <RootNamespace>Microsoft.Spatial</RootNamespace>
-    <ProjectGuid>{3DE4CB71-34BA-4B16-A3EF-825397DA0FA3}</ProjectGuid>
+    <ProjectGuid>{0852538C-EF36-4720-950E-320150C1AF9C}</ProjectGuid>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
@@ -19,7 +19,6 @@
   </PropertyGroup>
   <!-- References -->
   <Import Project="..\Build.props" />
-  <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
   <!-- Generated files -->
   <ItemGroup>
     <TextStringResource Include="Microsoft.Spatial.txt">

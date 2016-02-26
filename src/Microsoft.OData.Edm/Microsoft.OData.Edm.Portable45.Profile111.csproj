@@ -11,7 +11,7 @@
     <SecurityMigration>false</SecurityMigration>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>Microsoft.OData.Edm</RootNamespace>
-    <ProjectGuid>{60BDFC78-84F7-490D-96BC-83EDA0DCCA30}</ProjectGuid>
+    <ProjectGuid>{0EA3792B-B967-44BB-8B7C-0625ED6231FA}</ProjectGuid>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
@@ -24,7 +24,6 @@
     <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">false</CodeAnalysisUseAdditionalODataRules>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
   <!-- Generated files -->
   <ItemGroup>
     <TextStringResource Include="Microsoft.OData.Edm.txt">
