@@ -745,6 +745,8 @@ UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not v
 UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.
 UriQueryPathParser_TooManySegments=Too many segments in URI.
 
+UriUtils_DateTimeOffsetInvalidFormat=The DateTimeOffset text '{0}' should be in format 'yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?' and each field value is within valid range.
+
 SelectionItemBinder_NonNavigationPathToken=Inner or start path segments must be navigation properties in $select.
 
 MetadataBinder_UnsupportedQueryTokenKind=An unsupported query token kind '{0}' was found.

@@ -84,7 +84,7 @@ namespace AstoriaUnitTests.Tests
         {
             string dateTimeOffsetStr = "2013-11-04T19:09:26";
             Action test = () => PlatformHelper.ConvertStringToDateTimeOffset(dateTimeOffsetStr);
-            test.ShouldThrow<InvalidOperationException>(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(dateTimeOffsetStr));
+            test.ShouldThrow<FormatException>(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(dateTimeOffsetStr));
         }
 
         [TestMethod]

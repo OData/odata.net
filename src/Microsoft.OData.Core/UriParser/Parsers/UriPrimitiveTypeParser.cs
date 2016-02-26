@@ -113,7 +113,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             else if (targetTypeKind == EdmPrimitiveTypeKind.DateTimeOffset)
             {
                 DateTimeOffset dateTimeOffsetValue;
-                bool result = UriUtils.TryUriStringToDateTimeOffset(text, out dateTimeOffsetValue);
+                bool result = UriUtils.ConvertUriStringToDateTimeOffset(text, out dateTimeOffsetValue);
                 targetValue = dateTimeOffsetValue;
                 return result;
             }

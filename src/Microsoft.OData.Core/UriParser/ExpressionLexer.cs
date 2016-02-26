@@ -956,7 +956,7 @@ namespace Microsoft.OData.Core.UriParser
             string datetimeOffsetStr = ParseLiteral(tokenPos);
 
             DateTimeOffset tmpdatetimeOffsetValue;
-            if (UriUtils.TryUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
+            if (UriUtils.ConvertUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
             {
                 return true;
             }
