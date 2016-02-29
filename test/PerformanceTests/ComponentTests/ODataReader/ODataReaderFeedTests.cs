@@ -20,51 +20,51 @@ namespace Microsoft.OData.Performance
         private static readonly IEdmEntityType TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
 
         [Benchmark]
-        public void ReadBasicEntry_1000()
+        public void ReadFeed()
         { 
-            ReadFeedTestAndMeasure("BasicEntry.json", 1000, true);
+            ReadFeedTestAndMeasure("Entry.json", 1000, true);
         }
 
         [Benchmark]
-        public void ReadEntryExcludeSpatial_1000()
+        public void ReadFeedIncludeSpatial()
         {
-            ReadFeedTestAndMeasure("EntryExcludeSpatialData.json", 1000, true); 
+            ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, true); 
         }
 
         [Benchmark]
-        public void ReadEntryWithExpansions_100()
+        public void ReadFeedWithExpansions()
         {
             ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, true);
         }
 
         [Benchmark]
-        public void ReadEntryWithExpansionsExcludeSpatial_100()
+        public void ReadFeedIncludeSpatialWithExpansions()
         {
-            ReadFeedTestAndMeasure("EntryWithExpansionsExcludeSpatial.json", 100, true);
+            ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, true);
         }
 
         [Benchmark]
-        public void ReadBasicEntryNoValidation_1000()
+        public void ReadFeed_NoValidation()
         {
-            ReadFeedTestAndMeasure("BasicEntry.json", 1000, false);
+            ReadFeedTestAndMeasure("Entry.json", 1000, false);
         }
 
         [Benchmark]
-        public void ReadEntryExcludeSpatialDataNoValidation_1000()
+        public void ReadFeedIncludeSpatial_NoValidation()
         {
-            ReadFeedTestAndMeasure("EntryExcludeSpatialData.json", 1000, false);
+            ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, false);
         }
 
         [Benchmark]
-        public void ReadEntryWithExpansionsNoValidation_100()
+        public void ReadFeedWithExpansions_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, false);
         }
 
         [Benchmark]
-        public void ReadEntryWithExpansionsExcludeSpatialNoValidation_100()
+        public void ReadFeedIncludeSpatialWithExpansions_NoValidation()
         {
-            ReadFeedTestAndMeasure("EntryWithExpansionsExcludeSpatial.json", 100, false);
+            ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, false);
         }
 
         private void ReadFeedTestAndMeasure(string templateFile, int entryCount, bool isFullValidation)

@@ -78,10 +78,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Models\EntityWithDifferentPropertyType.csdl" />
     <EmbeddedResource Include="Common\Models\ExchangeAttachment.csdl" />
-    <EmbeddedResource Include="ODataReader\PayloadTemplate\BasicEntry.json" />
+    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatial.json" />
+    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatialWithExpansions.json" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryWithExpansions.json" />
-    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryWithExpansionsExcludeSpatial.json" />
-    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryExcludeSpatialData.json" />
+    <EmbeddedResource Include="ODataReader\PayloadTemplate\Entry.json" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(TestType)'=='Private' ">

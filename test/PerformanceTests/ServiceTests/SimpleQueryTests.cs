@@ -21,7 +21,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void QuerySimpleEntitySet_100()
+        public void QuerySimpleEntitySet()
         {
             int RequestsPerIteration = 100;
 
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void QuerySingleEntity_100()
+        public void QuerySingleEntity()
         {
             int RequestsPerIteration = 100;
 

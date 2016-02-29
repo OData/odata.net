@@ -1983,13 +1983,13 @@
     <Property Name="Property3" Type="Byte" Nullable="false" />
     <Property Name="Property4" Type="DateTimeOffset" Nullable="false" />
     <Property Name="Property5" Type="Decimal" Nullable="false" />
-    <Property Name="Property6" Type="GeographyPolygon" Nullable="false" />
-    <Property Name="Property7" Type="GeographyPoint" Nullable="false" />
-    <Property Name="Property8" Type="GeographyLineString" Nullable="false" />
-    <Property Name="Property9" Type="GeographyMultiPoint" Nullable="false" />
-    <Property Name="Property10" Type="GeographyMultiPolygon" Nullable="false" />
-    <Property Name="Property11" Type="GeometryMultiPoint" Nullable="false" />
-    <Property Name="Property12" Type="GeometryPolygon" Nullable="false" />
+    <Property Name="Property6" Type="GeographyPolygon" Nullable="true" />
+    <Property Name="Property7" Type="GeographyPoint" Nullable="true" />
+    <Property Name="Property8" Type="GeographyLineString" Nullable="true" />
+    <Property Name="Property9" Type="GeographyMultiPoint" Nullable="true" />
+    <Property Name="Property10" Type="GeographyMultiPolygon" Nullable="true" />
+    <Property Name="Property11" Type="GeometryMultiPoint" Nullable="true" />
+    <Property Name="Property12" Type="GeometryPolygon" Nullable="true" />
     <Property Name="Property13" Type="Guid" Nullable="false" />
     <Property Name="Property14" Type="Int16" Nullable="false" />
     <Property Name="Property15" Type="Int32" Nullable="false" />
@@ -2002,13 +2002,13 @@
     <Property Name="CollectionProperty3" Type="Collection(Byte)" Nullable="false" />
     <Property Name="CollectionProperty4" Type="Collection(DateTimeOffset)" Nullable="false" />
     <Property Name="CollectionProperty5" Type="Collection(Decimal)" Nullable="false" />
-    <Property Name="CollectionProperty6" Type="Collection(GeographyPolygon)" Nullable="false" />
-    <Property Name="CollectionProperty7" Type="Collection(GeographyPoint)" Nullable="false" />
-    <Property Name="CollectionProperty8" Type="Collection(GeographyLineString)" Nullable="false" />
-    <Property Name="CollectionProperty9" Type="Collection(GeographyMultiPoint)" Nullable="false" />
-    <Property Name="CollectionProperty10" Type="Collection(GeographyMultiPolygon)" Nullable="false" />
-    <Property Name="CollectionProperty11" Type="Collection(GeometryMultiPoint)" Nullable="false" />
-    <Property Name="CollectionProperty12" Type="Collection(GeometryPolygon)" Nullable="false" />
+    <Property Name="CollectionProperty6" Type="Collection(GeographyPolygon)" Nullable="true" />
+    <Property Name="CollectionProperty7" Type="Collection(GeographyPoint)" Nullable="true" />
+    <Property Name="CollectionProperty8" Type="Collection(GeographyLineString)" Nullable="true" />
+    <Property Name="CollectionProperty9" Type="Collection(GeographyMultiPoint)" Nullable="true" />
+    <Property Name="CollectionProperty10" Type="Collection(GeographyMultiPolygon)" Nullable="true" />
+    <Property Name="CollectionProperty11" Type="Collection(GeometryMultiPoint)" Nullable="true" />
+    <Property Name="CollectionProperty12" Type="Collection(GeometryPolygon)" Nullable="true" />
     <Property Name="CollectionProperty13" Type="Collection(Guid)" Nullable="false" />
     <Property Name="CollectionProperty14" Type="Collection(Int16)" Nullable="false" />
     <Property Name="CollectionProperty15" Type="Collection(Int32)" Nullable="false" />
@@ -2016,9 +2016,9 @@
     <Property Name="CollectionProperty17" Type="Collection(Single)" Nullable="false" />
     <Property Name="CollectionProperty18" Type="Collection(String)" Nullable="false" />
     <Property Name="CollectionProperty19" Type="Collection(Duration)" Nullable="false" />
-    <Property Name="ComplexProperty1" Type="PerformanceServices.Edm.AdventureWorks.AddressSpatial" Nullable="false" />
+    <Property Name="ComplexProperty1" Type="PerformanceServices.Edm.AdventureWorks.AddressSpatial" Nullable="true" />
     <Property Name="ComplexProperty2" Type="PerformanceServices.Edm.AdventureWorks.TimeZone" Nullable="false" />
-    <Property Name="CollectionComplexProperty1" Type="Collection(PerformanceServices.Edm.AdventureWorks.AddressSpatial)" Nullable="false" />
+    <Property Name="CollectionComplexProperty1" Type="Collection(PerformanceServices.Edm.AdventureWorks.AddressSpatial)" Nullable="true" />
     <Property Name="CollectionComplexProperty2" Type="Collection(PerformanceServices.Edm.AdventureWorks.TimeZone)" Nullable="false" />
   </ComplexType>
   <ComplexType Name="ManyPropertiedComplexTypeNoCollections">

@@ -21,7 +21,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void QueryOptionsWithoutExpand_20()
+        public void QueryOptionsWithoutExpand()
         {
             int RequestsPerIteration = 20;
 
@@ -38,13 +38,13 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void ExpandNavigationProperty()
+        public void QueryOptionsWithExpand()
         {
             foreach (var iteration in Benchmark.Iterations)
             {
                 using (iteration.StartMeasurement())
                 {
-                    QueryAndVerify("CompanySet?$expand=Employees", "odata.maxpagesize=100");
+                    QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue&$expand=Employees", "odata.maxpagesize=100");
                 }
             }
         }
@@ -60,6 +60,7 @@ namespace Microsoft.OData.Performance
                 }
             }
         }
+
         private void QueryAndVerify(string query, string preferHeader)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = serviceFixture.ServiceBaseUri };

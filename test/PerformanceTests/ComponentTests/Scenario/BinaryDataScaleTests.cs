@@ -16,11 +16,12 @@ namespace Microsoft.OData.Performance
 
     public class BinaryDataScaleTests : WriteReadFeedTestBase
     {
-        private static IEdmModel exchangeAttachmentModel = TestUtils.GetExchangeAttachmentModel();
-        private static IEdmEntitySet testEntitySet = exchangeAttachmentModel.EntityContainer.FindEntitySet("Item");
-        private static IEdmEntityType testEntityType = exchangeAttachmentModel.FindDeclaredType("PerformanceServices.Edm.ExchangeAttachment.Item") as IEdmEntityType;
+        private static IEdmModel ExchangeAttachmentModel = TestUtils.GetExchangeAttachmentModel();
+        private static IEdmEntitySet TestEntitySet = ExchangeAttachmentModel.EntityContainer.FindEntitySet("Item");
+        private static IEdmEntityType TestEntityType = ExchangeAttachmentModel.FindDeclaredType("PerformanceServices.Edm.ExchangeAttachment.Item") as IEdmEntityType;
         private const int NumberOfEntries = 10;
-        private static Stream WriteStream = new MemoryStream();
+        private const int MaxStreamSize = 64 * 1024;
+        private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
         public void WriteFeedBinaryData_4MB()
@@ -33,7 +34,7 @@ namespace Microsoft.OData.Performance
 
                 using (iteration.StartMeasurement())
                 {
-                    WriteFeed(WriteStream, exchangeAttachmentModel, NumberOfEntries, entry, testEntitySet);
+                    WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, entry, TestEntitySet);
                 }
             }
         }
@@ -43,14 +44,14 @@ namespace Microsoft.OData.Performance
         {
             var entry = CreateEntry(4 * 1024);
 
+            WriteStream.SetLength(0);
+            WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, entry, TestEntitySet);
+
             foreach (var iteration in Benchmark.Iterations)
             {
-                WriteStream.SetLength(0);
-                WriteFeed(WriteStream, exchangeAttachmentModel, NumberOfEntries, entry, testEntitySet);
-
                 using (iteration.StartMeasurement())
                 {
-                    ReadFeed(WriteStream, exchangeAttachmentModel, testEntitySet, testEntityType);
+                    ReadFeed(WriteStream, ExchangeAttachmentModel, TestEntitySet, TestEntityType);
                 }
             }
         }

@@ -23,7 +23,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void PostEntity_100()
+        public void PostEntity()
         {
             int RequestsPerIteration = 100;
 
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void DeleteEntity_100()
+        public void DeleteEntity()
         {
             int RequestsPerIteration = 100;
 
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void PutEntity_100()
+        public void PutEntity()
         {
             int RequestsPerIteration = 100;
 
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
-        public void PatchEntity_100()
+        public void PatchEntity()
         {
             int RequestsPerIteration = 100;
 
