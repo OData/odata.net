@@ -5104,10 +5104,10 @@ public enum Microsoft.OData.Core.UriParser.OrderByDirection : int {
 }
 
 public sealed class Microsoft.OData.Core.UriParser.CustomUriFunctions {
-	public static void AddCustomUriFunction (string customFunctionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType newCustomFunctionSignature)
-	public static void AddCustomUriFunction (string customFunctionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType newCustomFunctionSignature, bool addAsOverloadToBuiltInFunction)
-	public static bool RemoveCustomUriFunction (string customFunctionName)
-	public static bool RemoveCustomUriFunction (string customFunctionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType customFunctionSignature)
+	public static void AddCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
+	public static void AddCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature, bool addAsOverloadToBuiltInFunction)
+	public static bool RemoveCustomUriFunction (string functionName)
+	public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
 }
 
 public sealed class Microsoft.OData.Core.UriParser.CustomUriTypePrefixLiterals {
@@ -5120,10 +5120,6 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriUtils {
 	public static object ConvertFromUriLiteral (string value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version)
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
-}
-
-public class Microsoft.OData.Core.UriParser.FunctionSignature {
-	Microsoft.OData.Edm.IEdmTypeReference[] ArgumentTypes  { public get; }
 }
 
 public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
@@ -5145,9 +5141,10 @@ public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
 	public System.Nullable`1[[System.Int64]] ParseTop ()
 }
 
-public sealed class Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType : Microsoft.OData.Core.UriParser.FunctionSignature {
+public sealed class Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType {
 	public FunctionSignatureWithReturnType (Microsoft.OData.Edm.IEdmTypeReference returnType, Microsoft.OData.Edm.IEdmTypeReference[] argumentTypes)
 
+	Microsoft.OData.Edm.IEdmTypeReference[] ArgumentTypes  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public get; }
 }
 

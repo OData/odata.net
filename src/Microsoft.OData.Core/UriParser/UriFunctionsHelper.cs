@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="name">Function name.</param>
         /// <param name="signatures">Function signatures.</param>
         /// <returns>A string with ';'-separated list of function signatures.</returns>
-        public static string BuildFunctionSignatureListDescription(string name, IEnumerable<FunctionSignature> signatures)
+        public static string BuildFunctionSignatureListDescription(string name, IEnumerable<FunctionSignatureWithReturnType> signatures)
         {
             Debug.Assert(name != null, "name != null");
             Debug.Assert(signatures != null, "signatures != null");

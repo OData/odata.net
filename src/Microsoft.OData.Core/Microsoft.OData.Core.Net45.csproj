@@ -429,6 +429,7 @@
     <Compile Include="UriParser\ExpressionLexerUtils.cs" />
     <Compile Include="UriParser\ExpressionToken.cs" />
     <Compile Include="UriParser\FunctionSignature.cs" />
+    <Compile Include="UriParser\FunctionSignatureWithReturnType.cs" />
     <Compile Include="UriParser\InternalErrorCodes.cs" />
     <Compile Include="UriParser\KeyPropertyValue.cs" />
     <Compile Include="UriParser\LiteralUtils.cs" />

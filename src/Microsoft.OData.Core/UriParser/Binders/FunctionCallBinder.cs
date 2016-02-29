@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="signature">The signature to match the types to.</param>
         /// <param name="argumentNodes">The types to promote.</param>
-        internal static void TypePromoteArguments(FunctionSignature signature, List<QueryNode> argumentNodes)
+        internal static void TypePromoteArguments(FunctionSignatureWithReturnType signature, List<QueryNode> argumentNodes)
         {
             // Convert all argument nodes to the best signature argument type
             Debug.Assert(signature.ArgumentTypes.Length == argumentNodes.Count, "The best signature match doesn't have the same number of arguments.");
