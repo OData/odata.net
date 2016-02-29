@@ -520,6 +520,11 @@ namespace Microsoft.OData.Edm
                 Interlocked.CompareExchange(ref typeCodeMap, new TypeCodeMap(), null);
             }
 
+            if (type.IsEnum())
+            {
+                type = Enum.GetUnderlyingType(type);
+            }
+
             return typeCodeMap.GetTypeCode(type);
 #else
             return Type.GetTypeCode(type);
