@@ -38,6 +38,8 @@ namespace Microsoft.OData.Performance
                 throw new InvalidOperationException("Failed to start service:" + ServiceRoot);
             }
 
+            System.Threading.Thread.Sleep(2000);
+
             ServiceBaseUri = new Uri("http://localhost" + ":" + ServicePort + "/" + ServiceRoot + "/");
         }
 
