@@ -20,13 +20,13 @@
   <Import Project="..\Build.props" />
   <!-- References -->
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.Portable45.Profile111.csproj">
+    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.Portable45.Profile111.csproj">
       <Project>{0EA3792B-B967-44BB-8B7C-0625ED6231FA}</Project>
-      <Name>Microsoft.OData.Edm</Name>
+      <Name>Microsoft.OData.Edm.Portable45.Profile111</Name>
     </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.Portable45.Profile111.csproj">
+    <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.Portable45.Profile111.csproj">
       <Project>{0852538C-EF36-4720-950E-320150C1AF9C}</Project>
-      <Name>Microsoft.Spatial</Name>
+      <Name>Microsoft.Spatial.Portable45.Profile111</Name>
     </ProjectReference>
   </ItemGroup>
   <!-- Generated files -->
@@ -618,7 +618,7 @@
     <Compile Include="UriParser\Extensions\SyntacticAst\AggregateToken.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\GroupByToken.cs" />
-	<Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
+    <Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
       <Link>EdmValueParser.cs</Link>
     </Compile>
