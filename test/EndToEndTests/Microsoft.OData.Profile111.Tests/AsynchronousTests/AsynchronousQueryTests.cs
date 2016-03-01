@@ -6,8 +6,8 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.OData.Client;
 using System.Linq;
+using Microsoft.OData.Client;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
 using Xunit;

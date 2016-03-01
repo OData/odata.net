@@ -5,11 +5,11 @@
 //---------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using Microsoft.OData.Client;
 using System.Linq;
 using System.IO;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.OData.Client;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
 using Xunit;
