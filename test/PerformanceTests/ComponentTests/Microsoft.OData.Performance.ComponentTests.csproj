@@ -71,6 +71,7 @@
     <Compile Include="Scenario\BinaryDataScaleTests.cs" />
     <Compile Include="Scenario\DataSizeScaleTests.cs" />
     <Compile Include="Scenario\WriteReadFeedTestBase.cs" />
+    <Compile Include="UriParser\UriParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Common\Models\AdventureWorksPlus.csdl">
