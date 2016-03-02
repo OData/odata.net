@@ -47,11 +47,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.performance.core">
-      <HintPath>$(NugetPack)\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0028\lib\net46\xunit.performance.core.dll</HintPath>
+      <HintPath>..\..\..\sln\packages\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0029\lib\net46\xunit.performance.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.performance.execution.desktop, Version=1.0.0.27, Culture=neutral, PublicKeyToken=67066efe964d3b03, processorArchitecture=MSIL">
-      <HintPath>$(NugetPack)\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0028\lib\net46\xunit.performance.execution.desktop.dll</HintPath>
+      <HintPath>..\..\..\sln\packages\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0029\lib\net46\xunit.performance.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
