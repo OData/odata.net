@@ -60,7 +60,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void ParseOrderBy()
         {
-            string query = "Product?$orderby=Name,ProductNumber,MakeFlag,Color,SizeUnitMeasureCode desc,SellStartDate desc,ListPrice,StandardCost asc,TimeZones/$count asc";
+            string query = "Product?$orderby=Name,ProductNumber,MakeFlag,Color,SizeUnitMeasureCode desc,SellStartDate desc,ListPrice,StandardCost asc,ModifiedDate asc";
 
             int roundPerIteration = 5000;
 
