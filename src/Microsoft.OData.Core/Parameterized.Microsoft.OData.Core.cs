@@ -4648,7 +4648,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "'as' expected at position {0} in '{1}'."
+        /// A string like "'with' expected at position {0} in '{1}'."
         /// </summary>
         internal static string UriQueryExpressionParser_WithExpected(object p0, object p1) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_WithExpected, p0, p1);
@@ -4703,8 +4703,7 @@ namespace Microsoft.OData.Core {
         /// <summary>
         /// A string like "The DateTimeOffset text '{0}' should be in format 'yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?' and each field value is within valid range."
         /// </summary>
-        internal static string UriUtils_DateTimeOffsetInvalidFormat(object p0)
-        {
+        internal static string UriUtils_DateTimeOffsetInvalidFormat(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriUtils_DateTimeOffsetInvalidFormat, p0);
         }
 
