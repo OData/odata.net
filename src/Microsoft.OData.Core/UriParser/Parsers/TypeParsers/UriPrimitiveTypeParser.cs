@@ -82,6 +82,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of the WebConvert.TryKeyStringToPrimitive</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
+        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "We're calling this correctly")]
         private bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue, out UriTypeParsingException exception)
         {
             Debug.Assert(text != null, "text != null");

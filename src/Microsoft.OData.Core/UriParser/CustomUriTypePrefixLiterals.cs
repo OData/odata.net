@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core.UriParser
 
         private static readonly object Locker = new object();
 
-        private static Dictionary<string, IEdmTypeReference> PrefixLiteralsOfEdmTypes = new Dictionary<string, IEdmTypeReference>();
+        private static Dictionary<string, IEdmTypeReference> PrefixLiteralsOfEdmTypes = new Dictionary<string, IEdmTypeReference>(StringComparer.Ordinal);
 
         #endregion
 
