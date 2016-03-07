@@ -6,11 +6,12 @@
 
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
-#else
-namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
-#endif
 {
-    using Microsoft.OData.Core.UriParser.Extensions;
+    using Microsoft.OData.Core.UriParser.Aggregation;
+#else
+namespace Microsoft.OData.Core.UriParser.Aggregation
+{
+#endif
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Core.UriParser.Syntactic;
@@ -19,17 +20,17 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
     {
         private readonly QueryToken expression;
 
-        private readonly AggregationVerb withVerb;
+        private readonly AggregationMethod method;
 
         private readonly string alias;
 
-        public AggregateStatementToken(QueryToken expression, AggregationVerb withVerb, string alias)
+        public AggregateStatementToken(QueryToken expression, AggregationMethod withVerb, string alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
 
             this.expression = expression;
-            this.withVerb = withVerb;
+            this.method = withVerb;
             this.alias = alias;
         }
        
@@ -38,9 +39,9 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
             get { return QueryTokenKind.AggregateStatement; }
         }
 
-        public AggregationVerb WithVerb
+        public AggregationMethod Method
         {
-            get { return this.withVerb; }
+            get { return this.method; }
         }
 
         public QueryToken Expression
@@ -48,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Syntactic
             get { return this.expression; }
         }
 
-        public string AsAlias
+        public string Alias
         {
             get { return this.alias; }
         }

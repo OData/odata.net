@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using TreeNodeKinds;
 

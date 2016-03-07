@@ -11,11 +11,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Extensions;
-    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
     using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
     using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
@@ -976,7 +975,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new InnerPathToken(propertyName, parent, null);
         }
 
-        private AggregationVerb ParseAggregateWith()
+        private AggregationMethod ParseAggregateWith()
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
             {
@@ -985,24 +984,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             lexer.NextToken();
 
-            AggregationVerb verb;
+            AggregationMethod verb;
 
             switch (lexer.CurrentToken.GetIdentifier())
             {
                 case ExpressionConstants.KeywordAverage:
-                    verb = AggregationVerb.Average;
+                    verb = AggregationMethod.Average;
                     break;
                 case ExpressionConstants.KeywordCountDistinct:
-                    verb = AggregationVerb.CountDistinct;
+                    verb = AggregationMethod.CountDistinct;
                     break;
                 case ExpressionConstants.KeywordMax:
-                    verb = AggregationVerb.Max;
+                    verb = AggregationMethod.Max;
                     break;
                 case ExpressionConstants.KeywordMin:
-                    verb = AggregationVerb.Min;
+                    verb = AggregationMethod.Min;
                     break;
                 case ExpressionConstants.KeywordSum:
-                    verb = AggregationVerb.Sum;
+                    verb = AggregationMethod.Sum;
                     break;
                 default:
                     throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));

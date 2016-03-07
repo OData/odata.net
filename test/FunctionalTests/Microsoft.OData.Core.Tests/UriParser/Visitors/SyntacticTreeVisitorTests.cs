@@ -8,8 +8,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Extensions;
-using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
+using Microsoft.OData.Core.UriParser.Aggregation;
 using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Core.UriParser.Visitors;
@@ -157,7 +156,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
         public void AggregateStatementOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateStatementToken(new EndPathToken("Identifier", null), AggregationVerb.Sum, "Alias"));
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateStatementToken(new EndPathToken("Identifier", null), AggregationMethod.Sum, "Alias"));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 

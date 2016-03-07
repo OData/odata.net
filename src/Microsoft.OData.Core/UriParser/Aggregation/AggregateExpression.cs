@@ -1,47 +1,42 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregateStatement.cs" company="Microsoft">
+// <copyright file="AggregateExpression.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Extensions;
     using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
-    /// A aggregate statement representing a aggregation transformation.
+    /// A aggregate expression representing a aggregation transformation.
     /// </summary>
-    public sealed class AggregateStatement
+    public sealed class AggregateExpression
     {
-        private readonly AggregationVerb withVerb;
+        private readonly AggregationMethod method;
 
         private readonly SingleValueNode expression;
 
         private readonly string alias;
 
-        private readonly SingleValuePropertyAccessNode from;
-
         private readonly IEdmTypeReference typeReference;
 
         /// <summary>
-        /// Create a AggregateStatement.
+        /// Create a AggregateExpression.
         /// </summary>
         /// <param name="expression">The aggregation expression.</param>
-        /// <param name="withVerb">The <see cref="AggregationVerb"/>.</param>
-        /// <param name="from">The aggregation from <see cref="SingleValuePropertyAccessNode"/>.</param>
+        /// <param name="method">The <see cref="AggregationMethod"/>.</param>
         /// <param name="alias">The aggregation alias.</param>
-        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate statement.</param>
-        public AggregateStatement(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string alias, IEdmTypeReference typeReference)
+        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate expression.</param>
+        public AggregateExpression(SingleValueNode expression, AggregationMethod method, string alias, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
             this.expression = expression;
-            this.withVerb = withVerb;
-            this.from = from;
+            this.method = method;
             this.alias = alias;
             this.typeReference = typeReference;
         }
@@ -58,20 +53,20 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         }
 
         /// <summary>
-        /// Gets the <see cref="AggregationVerb"/>.
+        /// Gets the <see cref="AggregationMethod"/>.
         /// </summary>
-        public AggregationVerb WithVerb
+        public AggregationMethod Method
         {
             get
             {
-                return withVerb;
+                return method;
             }
         }
 
         /// <summary>
         /// Gets the aggregation alias.
         /// </summary>
-        public string AsAlias
+        public string Alias
         {
             get
             {
@@ -80,18 +75,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         }
 
         /// <summary>
-        /// Gets the aggregation from <see cref="SingleValuePropertyAccessNode"/>.
-        /// </summary>
-        public SingleValuePropertyAccessNode From
-        {
-            get
-            {
-                return from;
-            }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="IEdmTypeReference"/> of this aggregate statement.
+        /// Gets the <see cref="IEdmTypeReference"/> of this aggregate expression.
         /// </summary>
         public IEdmTypeReference TypeReference
         {

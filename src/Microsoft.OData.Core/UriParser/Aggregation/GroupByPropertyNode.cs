@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
     /// </summary>
     public sealed class GroupByPropertyNode
     {
-        private IList<GroupByPropertyNode> children = new List<GroupByPropertyNode>();
+        private IList<GroupByPropertyNode> childTransformations = new List<GroupByPropertyNode>();
 
         private IEdmTypeReference typeReference;
 
@@ -23,23 +23,23 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         /// Create a GroupByPropertyNode.
         /// </summary>
         /// <param name="name">The name of this node.</param>
-        /// <param name="accessor">The <see cref="SingleValueNode"/> of this node.</param>
-        public GroupByPropertyNode(string name, SingleValueNode accessor)
+        /// <param name="expression">The <see cref="SingleValueNode"/> of this node.</param>
+        public GroupByPropertyNode(string name, SingleValueNode expression)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
 
             this.Name = name;
-            this.Accessor = accessor;
+            this.Expression = expression;
         }
 
         /// <summary>
         /// Create a GroupByPropertyNode.
         /// </summary>
         /// <param name="name">The name of this node.</param>
-        /// <param name="accessor">The <see cref="SingleValueNode"/> of this node.</param>
+        /// <param name="expression">The <see cref="SingleValueNode"/> of this node.</param>
         /// <param name="type">The <see cref="IEdmTypeReference"/> of this node.</param>
-        public GroupByPropertyNode(string name, SingleValueNode accessor, IEdmTypeReference type)
-            : this(name, accessor)
+        public GroupByPropertyNode(string name, SingleValueNode expression, IEdmTypeReference type)
+            : this(name, expression)
         {
             this.typeReference = type;
         }
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         /// <summary>
         /// Gets the <see cref="SingleValueNode"/> of this node.
         /// </summary>
-        public SingleValueNode Accessor { get; private set; }
+        public SingleValueNode Expression { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="IEdmTypeReference"/> of this node.
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         {
             get
             {
-                if (Accessor == null)
+                if (Expression == null)
                 {
                     return null;
                 }
@@ -73,18 +73,18 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         }
 
         /// <summary>
-        /// Gets or sets the children <see cref="GroupByPropertyNode"/>s of this node.
+        /// Gets or sets the child transformations <see cref="GroupByPropertyNode"/>s of this node.
         /// </summary>
-        public IList<GroupByPropertyNode> Children
+        public IList<GroupByPropertyNode> ChildTransformations
         {
             get
             {
-                return children;
+                return childTransformations;
             }
 
             set
             {
-                children = value;
+               childTransformations = value;
             }
         }
     }

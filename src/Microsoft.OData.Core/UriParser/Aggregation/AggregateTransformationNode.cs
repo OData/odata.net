@@ -4,37 +4,36 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using System.Collections.Generic;
-    using TreeNodeKinds;
 
     /// <summary>
     /// Node representing a aggregate transformation.
     /// </summary>
     public sealed class AggregateTransformationNode : TransformationNode
     {
-        private readonly IEnumerable<AggregateStatement> statements;
+        private readonly IEnumerable<AggregateExpression> expressions;
 
         /// <summary>
         /// Create a AggregateTransformationNode.
         /// </summary>
-        /// <param name="statements">A list of <see cref="AggregateStatement"/>.</param>
-        public AggregateTransformationNode(IEnumerable<AggregateStatement> statements)
+        /// <param name="expressions">A list of <see cref="AggregateExpression"/>.</param>
+        public AggregateTransformationNode(IEnumerable<AggregateExpression> expressions)
         {
-            ExceptionUtils.CheckArgumentNotNull(statements, "statements");
+            ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
 
-            this.statements = statements;
+            this.expressions = expressions;
         }
 
         /// <summary>
-        /// Gets the list of <see cref="AggregateStatement"/>.
+        /// Gets the list of <see cref="AggregateExpression"/>.
         /// </summary>
-        public IEnumerable<AggregateStatement> Statements
+        public IEnumerable<AggregateExpression> Expressions
         {
             get 
             {
-                return statements;
+                return expressions;
             }
         }
 

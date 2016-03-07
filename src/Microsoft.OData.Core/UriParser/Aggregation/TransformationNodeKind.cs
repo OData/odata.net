@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     /// <summary>
     /// Enumeration of kinds of transformation nodes.

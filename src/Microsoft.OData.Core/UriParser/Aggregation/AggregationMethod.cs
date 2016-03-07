@@ -1,38 +1,38 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregationVerb.cs" company="Microsoft">
+// <copyright file="AggregationMethod.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     /// <summary>
-    /// Enumeration of verbs used in the aggregation clause
+    /// Enumeration of methods used in the aggregation clause
     /// </summary>
-    public enum AggregationVerb
+    public enum AggregationMethod
     {
         /// <summary>
-        /// The aggregation verb Sum.
+        /// The aggregation method Sum.
         /// </summary>
         Sum,
 
         /// <summary>
-        /// The aggregation verb Min.
+        /// The aggregation method Min.
         /// </summary>
         Min,
 
         /// <summary>
-        /// The aggregation verb Max.
+        /// The aggregation method Max.
         /// </summary>
         Max,
 
         /// <summary>
-        /// The aggregation verb Average.
+        /// The aggregation method Average.
         /// </summary>
         Average,
 
         /// <summary>
-        /// The aggregation verb CountDistinct.
+        /// The aggregation method CountDistinct.
         /// </summary>
         CountDistinct
     }

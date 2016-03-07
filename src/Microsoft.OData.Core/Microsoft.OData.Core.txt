@@ -783,9 +783,9 @@ MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease=Collection open
 MetadataBinder_IllegalSegmentType=Can only bind segments that are Navigation, Structural, Complex, or Collections. We found a segment '{0}' that isn't any of those. Please revise the query.
 MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities. 
 
-ApplyBinder_AggregateStatementIncompatibleTypeForVerb=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
-ApplyBinder_UnsupportedAggregateVerb=$apply/aggregate does not support verb '{0}'.
-ApplyBinder_AggregateStatementNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
+ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
+ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
+ApplyBinder_AggregateExpressionNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
 ApplyBinder_GroupByPropertyNotPropertyAccessValue=$apply/groupby grouping expression '{0}' must evaluate to a property access value.
 ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
 ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation

@@ -614,20 +614,20 @@
     <Compile Include="ValidatorFactory.cs" />
     <Compile Include="WriterUtils.cs" />
     <Compile Include="WriterValidationUtils.cs" />
-    <Compile Include="UriParser\Extensions\AggregationVerb.cs" />
-    <Compile Include="UriParser\Extensions\Binders\ApplyBinder.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\AggregateTransformationNode.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\TransformationNode.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\FilterTransformationNode.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\AggregateStatement.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\ApplyClause.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\GroupByTransformationNode.cs" />
-    <Compile Include="UriParser\Extensions\SemanticAst\GroupByPropertyNode.cs" />
-    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs" />
-    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateToken.cs" />
-    <Compile Include="UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs" />
-    <Compile Include="UriParser\Extensions\SyntacticAst\GroupByToken.cs" />
-    <Compile Include="UriParser\Extensions\TreeNodeKinds\TransformationNodeKind.cs" />
+    <Compile Include="UriParser\Aggregation\AggregationMethod.cs" />
+    <Compile Include="UriParser\Aggregation\ApplyBinder.cs" />
+    <Compile Include="UriParser\Aggregation\AggregateTransformationNode.cs" />
+    <Compile Include="UriParser\Aggregation\TransformationNode.cs" />
+    <Compile Include="UriParser\Aggregation\FilterTransformationNode.cs" />
+    <Compile Include="UriParser\Aggregation\AggregateExpression.cs" />
+    <Compile Include="UriParser\Aggregation\ApplyClause.cs" />
+    <Compile Include="UriParser\Aggregation\GroupByTransformationNode.cs" />
+    <Compile Include="UriParser\Aggregation\GroupByPropertyNode.cs" />
+    <Compile Include="UriParser\Aggregation\AggregateStatementToken.cs" />
+    <Compile Include="UriParser\Aggregation\AggregateToken.cs" />
+    <Compile Include="UriParser\Aggregation\ApplyTransformationToken.cs" />
+    <Compile Include="UriParser\Aggregation\GroupByToken.cs" />
+    <Compile Include="UriParser\Aggregation\TransformationNodeKind.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
       <Link>EdmValueParser.cs</Link>
     </Compile>

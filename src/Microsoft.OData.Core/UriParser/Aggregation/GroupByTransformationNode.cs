@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
@@ -17,7 +16,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
     {
         private readonly CollectionNode source;
 
-        private readonly TransformationNode childTransformation;
+        private readonly TransformationNode childTransformations;
 
         private readonly IEnumerable<GroupByPropertyNode> groupingProperties;
         
@@ -25,17 +24,17 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         /// Create a GroupByTransformationNode.
         /// </summary>
         /// <param name="groupingProperties">A list of <see cref="GroupByPropertyNode"/>.</param>
-        /// <param name="childTransformation">The child <see cref="TransformationNode"/>.</param>
+        /// <param name="childTransformations">The child <see cref="TransformationNode"/>.</param>
         /// <param name="source">The <see cref="CollectionNode"/> representing the source.</param>
         public GroupByTransformationNode(
             IList<GroupByPropertyNode> groupingProperties,
-            TransformationNode childTransformation,
+            TransformationNode childTransformations,
             CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
 
             this.groupingProperties = groupingProperties;
-            this.childTransformation = childTransformation;
+            this.childTransformations = childTransformations;
             this.source = source;
         }
 
@@ -53,11 +52,11 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         /// <summary>
         /// Gets the child <see cref="TransformationNode"/>.
         /// </summary>
-        public TransformationNode ChildTransformation
+        public TransformationNode ChildTransformations
         {
             get
             {
-                return childTransformation;
+                return childTransformations;
             }
         }
 

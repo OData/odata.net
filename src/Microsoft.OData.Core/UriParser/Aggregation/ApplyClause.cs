@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
+namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds;
 
     /// <summary>
     /// Represents the set of transformations to perform as part of $apply.
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
     {
         private readonly IEnumerable<TransformationNode> transformations;
 
-        private readonly IEnumerable<AggregateStatement> lastAggregateStatements;
+        private readonly IEnumerable<AggregateExpression> lastAggregateStatements;
 
         private readonly IEnumerable<GroupByPropertyNode> lastGroupByPropertyNodes;
 
@@ -36,7 +35,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
             {
                 if (transformations[i].Kind == TransformationNodeKind.Aggregate)
                 {
-                    lastAggregateStatements = (transformations[i] as AggregateTransformationNode).Statements;
+                    lastAggregateStatements = (transformations[i] as AggregateTransformationNode).Expressions;
                     break;
                 }
                 else if (transformations[i].Kind == TransformationNodeKind.GroupBy)
@@ -44,10 +43,10 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
                     var groupByTransformationNode =
                         transformations[i] as GroupByTransformationNode;
                     lastGroupByPropertyNodes = groupByTransformationNode.GroupingProperties;
-                    var childTransformation = groupByTransformationNode.ChildTransformation;
+                    var childTransformation = groupByTransformationNode.ChildTransformations;
                     if (childTransformation != null && childTransformation.Kind == TransformationNodeKind.Aggregate)
                     {
-                        lastAggregateStatements = (childTransformation as AggregateTransformationNode).Statements;
+                        lastAggregateStatements = (childTransformation as AggregateTransformationNode).Expressions;
                     }
 
                     break;
@@ -75,7 +74,7 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
         {
             if (lastAggregateStatements != null)
             {
-                return lastAggregateStatements.Select(statement => statement.AsAlias).ToList();
+                return lastAggregateStatements.Select(statement => statement.Alias).ToList();
             }
 
             return null;
@@ -83,13 +82,13 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
 
         private string CreatePropertiesUriSegment(
             IEnumerable<GroupByPropertyNode> groupByPropertyNodes, 
-            IEnumerable<AggregateStatement> aggregateStatements)
+            IEnumerable<AggregateExpression> aggregateStatements)
         {
             string result = string.Empty;
             if (groupByPropertyNodes != null)
             {
                 var groupByPropertyArray =
-                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.Children, null))
+                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.ChildTransformations, null))
                         .ToArray();
                 result = string.Join(",", groupByPropertyArray);
                 result = aggregateStatements == null
@@ -108,11 +107,11 @@ namespace Microsoft.OData.Core.UriParser.Extensions.Semantic
                 : ODataConstants.ContextUriProjectionStart + result + ODataConstants.ContextUriProjectionEnd;
         }
 
-        private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateStatement> aggregateStatements)
+        private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateExpression> aggregateStatements)
         {
             if (aggregateStatements != null)
             {
-                return string.Join(",", aggregateStatements.Select(statement => statement.AsAlias).ToArray());
+                return string.Join(",", aggregateStatements.Select(statement => statement.Alias).ToArray());
             }
             else
             {

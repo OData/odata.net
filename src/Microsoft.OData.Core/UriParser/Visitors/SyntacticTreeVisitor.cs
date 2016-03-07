@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core.UriParser.Visitors
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.Syntactic;
 
     /// <summary>
