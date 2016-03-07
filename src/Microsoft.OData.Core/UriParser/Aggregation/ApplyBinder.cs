@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 
         private FilterBinder filterBinder;
 
-        private IEnumerable<AggregateExpression> aggregateStatementsCache;
+        private IEnumerable<AggregateExpression> aggregateExpressionsCache;
 
         public ApplyBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                     case QueryTokenKind.Aggregate:
                         var aggregate = BindAggregateToken((AggregateToken)(token));
                         transformations.Add(aggregate);
-                        aggregateStatementsCache = aggregate.Expressions;
+                        aggregateExpressionsCache = aggregate.Expressions;
                         state.AggregatedPropertyNames =
                             aggregate.Expressions.Select(statement => statement.Alias).ToList();
                         break;
@@ -68,15 +68,15 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         private AggregateTransformationNode BindAggregateToken(AggregateToken token)
         {
             var statements = new List<AggregateExpression>();
-            foreach (var statementToken in token.Statements)
+            foreach (var statementToken in token.Expressions)
             {
-                statements.Add(BindAggregateStatementToken(statementToken));
+                statements.Add(BindAggregateExpressionToken(statementToken));
             }
 
             return new AggregateTransformationNode(statements);
         }
 
-        private AggregateExpression BindAggregateStatementToken(AggregateStatementToken token)
+        private AggregateExpression BindAggregateExpressionToken(AggregateExpressionToken token)
         {
             var expression = this.bindMethod(token.Expression) as SingleValueNode;
 
@@ -85,16 +85,16 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                 throw new ODataException(ODataErrorStrings.ApplyBinder_AggregateExpressionNotSingleValue(token.Expression));
             }
 
-            var typeReference = CreateAggregateStatementTypeReference(expression, token.Method);
+            var typeReference = CreateAggregateExpressionTypeReference(expression, token.Method);
 
             // TODO: Determine source
             return new AggregateExpression(expression, token.Method, token.Alias, typeReference);
         }
 
-        private IEdmTypeReference CreateAggregateStatementTypeReference(SingleValueNode expression, AggregationMethod withVerb)
+        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethod withVerb)
         {
             var expressionType = expression.TypeReference;
-            if (expressionType == null && aggregateStatementsCache != null)
+            if (expressionType == null && aggregateExpressionsCache != null)
             {
                 var openProperty = expression as SingleValueOpenPropertyAccessNode;
                 if (openProperty != null)
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 
         private IEdmTypeReference GetTypeReferenceByPropertyName(string name)
         {
-            return aggregateStatementsCache.First(statement => statement.Alias.Equals(name)).TypeReference;
+            return aggregateExpressionsCache.First(statement => statement.Alias.Equals(name)).TypeReference;
         }
 
         private GroupByTransformationNode BindGroupByToken(GroupByToken token)
@@ -172,9 +172,9 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                 if (token.Child.Kind == QueryTokenKind.Aggregate)
                 {
                     aggregate = BindAggregateToken((AggregateToken)token.Child);
-                    aggregateStatementsCache = ((AggregateTransformationNode)aggregate).Expressions;
+                    aggregateExpressionsCache = ((AggregateTransformationNode)aggregate).Expressions;
                     state.AggregatedPropertyNames =
-                        aggregateStatementsCache.Select(statement => statement.Alias).ToList();
+                        aggregateExpressionsCache.Select(statement => statement.Alias).ToList();
                 }
                 else
                 {

@@ -154,11 +154,11 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         T Visit(AggregateToken tokenIn);
 
         /// <summary>
-        /// Visits a AggregateStatementToken
+        /// Visits a AggregateExpressionToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateStatementToken to bind</param>
-        /// <returns>A T node bound to this AggregateStatementToken</returns>
-        T Visit(AggregateStatementToken tokenIn);
+        /// <param name="tokenIn">The AggregateExpressionToken to bind</param>
+        /// <returns>A T node bound to this AggregateExpressionToken</returns>
+        T Visit(AggregateExpressionToken tokenIn);
 
         /// <summary>
         /// Visits a GroupByToken

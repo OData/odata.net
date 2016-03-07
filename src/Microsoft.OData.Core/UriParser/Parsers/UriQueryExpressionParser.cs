@@ -261,10 +261,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this.lexer.NextToken();
 
             // series of statements separates by commas
-            var statements = new List<AggregateStatementToken>();
+            var statements = new List<AggregateExpressionToken>();
             while (true)
             {
-                statements.Add(this.ParseAggregateStatement());
+                statements.Add(this.ParseAggregateExpression());
 
                 if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new AggregateToken(statements);
         }
 
-        internal AggregateStatementToken ParseAggregateStatement()
+        internal AggregateExpressionToken ParseAggregateExpression()
         {
             // expression
             var expression = this.ParseExpression();
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // "as" alias
             var alias = this.ParseAggregateAs();
 
-            return new AggregateStatementToken(expression, verb, alias.Text);
+            return new AggregateExpressionToken(expression, verb, alias.Text);
         }
 
         // parses $apply groupby tranformation (.e.g. groupby(ProductID, CategoryId, aggregate(UnitPrice with sum as TotalUnitPrice))

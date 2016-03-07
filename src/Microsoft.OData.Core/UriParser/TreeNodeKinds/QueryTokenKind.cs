@@ -123,7 +123,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>
         /// $apply aggregate statement token
         /// </summary>
-        AggregateStatement = 25,
+        AggregateExpression = 25,
 
         /// <summary>
         /// $apply groupby token

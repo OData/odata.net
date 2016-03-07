@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AggregateStatementToken.cs" company="Microsoft">
+// <copyright file="AggregateExpressionToken.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
     using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Core.UriParser.Syntactic;
 
-    internal sealed class AggregateStatementToken : QueryToken
+    internal sealed class AggregateExpressionToken : QueryToken
     {
         private readonly QueryToken expression;
 
@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 
         private readonly string alias;
 
-        public AggregateStatementToken(QueryToken expression, AggregationMethod withVerb, string alias)
+        public AggregateExpressionToken(QueryToken expression, AggregationMethod withVerb, string alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
        
         public override QueryTokenKind Kind
         {
-            get { return QueryTokenKind.AggregateStatement; }
+            get { return QueryTokenKind.AggregateExpression; }
         }
 
         public AggregationMethod Method

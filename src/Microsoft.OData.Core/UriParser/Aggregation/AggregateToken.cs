@@ -17,12 +17,12 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 
     internal sealed class AggregateToken : ApplyTransformationToken
     {
-        private readonly IEnumerable<AggregateStatementToken> statements;
+        private readonly IEnumerable<AggregateExpressionToken> expressions;
 
-        public AggregateToken(IEnumerable<AggregateStatementToken> statements)
+        public AggregateToken(IEnumerable<AggregateExpressionToken> expressions)
         {
-            ExceptionUtils.CheckArgumentNotNull(statements, "statements");
-            this.statements = statements;
+            ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
+            this.expressions = expressions;
         }
 
         public override QueryTokenKind Kind
@@ -30,11 +30,11 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
             get { return QueryTokenKind.Aggregate; }
         }
 
-        public IEnumerable<AggregateStatementToken> Statements
+        public IEnumerable<AggregateExpressionToken> Expressions
         {
             get
             {
-                return statements;
+                return expressions;
             }
         }
 

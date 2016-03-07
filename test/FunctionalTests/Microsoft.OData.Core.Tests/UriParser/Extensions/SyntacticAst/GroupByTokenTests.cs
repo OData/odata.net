@@ -18,7 +18,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
     {
         private IEnumerable<EndPathToken> properties = new List<EndPathToken>();
 
-        private AggregateToken aggregate = new AggregateToken(new List<AggregateStatementToken>());
+        private AggregateToken aggregate = new AggregateToken(new List<AggregateExpressionToken>());
 
         [Fact]
         public void PropertiesCannotBeNull()

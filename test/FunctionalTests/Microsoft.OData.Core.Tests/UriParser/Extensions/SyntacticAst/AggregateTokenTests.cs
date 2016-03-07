@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
 {
     public class AggregateTokenTests
     {
-        private IEnumerable<AggregateStatementToken> statements = new List<AggregateStatementToken>();
+        private IEnumerable<AggregateExpressionToken> statements = new List<AggregateExpressionToken>();
 
         [Fact]
         public void StatementsCannotBeNull()
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
         public void StatementsSetCorrectly()
         {
             var token = new AggregateToken(statements);
-            ((object)token.Statements).Should().Be(statements);
+            ((object)token.Expressions).Should().Be(statements);
         }
 
         [Fact]
