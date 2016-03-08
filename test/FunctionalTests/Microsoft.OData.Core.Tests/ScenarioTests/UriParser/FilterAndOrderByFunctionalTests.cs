@@ -364,7 +364,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyDates/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCollectionCountNode().
+                And.Left.ShouldBeCountNode().
                     And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
         }
 
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("PreviousAddresses/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCollectionCountNode().
+                And.Left.ShouldBeCountNode().
                     And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
         }
        
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("FavoriteColors/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCollectionCountNode().
+                And.Left.ShouldBeCountNode().
                     And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteColorsProp());
         }
         
@@ -394,7 +394,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var filterQueryNode = ParseFilter("MyFriendsDogs/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
-                And.Left.ShouldBeCollectionCountNode().
+                And.Left.ShouldBeCountNode().
                     And.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
         }
 

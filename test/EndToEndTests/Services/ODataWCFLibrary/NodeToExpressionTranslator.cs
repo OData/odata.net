@@ -189,13 +189,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a CollectionCountNode
+        /// Visit a CountNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(CollectionCountNode nodeIn)
+        public override Expression Visit(CountNode nodeIn)
         {
-            this.CheckArgumentNull(nodeIn, "CollectionCountNode");
+            this.CheckArgumentNull(nodeIn, "CountNode");
 
             Type propType = null;
             Expression propExpr = null;

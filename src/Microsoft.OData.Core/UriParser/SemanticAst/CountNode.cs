@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CollectionCountNode.cs" company="Microsoft">
+// <copyright file="CountNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// <summary>
     /// Node representing count of related entities or items within a collection-valued property.
     /// </summary>
-    public sealed class CollectionCountNode : SingleValueNode
+    public sealed class CountNode : SingleValueNode
     {
         /// <summary>
         /// The collection to be counted, could be any type of collection includes primitive type, enum type, complex type or entity type collection.
@@ -28,11 +28,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly CollectionNode source;
         
         /// <summary>
-        /// Constructs a new <see cref="CollectionCountNode"/>.
+        /// Constructs a new <see cref="CountNode"/>.
         /// </summary>
         /// <param name="source">The value containing the property.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
-        public CollectionCountNode(CollectionNode source)
+        public CountNode(CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
 

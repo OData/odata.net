@@ -46,11 +46,11 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
-        /// Visit a CollectionCountNode
+        /// Visit a CountNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(CollectionCountNode nodeIn)
+        public virtual T Visit(CountNode nodeIn)
         {
             throw new NotImplementedException();
         }

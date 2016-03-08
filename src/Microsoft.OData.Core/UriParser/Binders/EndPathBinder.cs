@@ -147,7 +147,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
                 {
                     // create a collection count node for collection node property.
-                    return new CollectionCountNode(colNode);
+                    return new CountNode(colNode);
                 }
 
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));

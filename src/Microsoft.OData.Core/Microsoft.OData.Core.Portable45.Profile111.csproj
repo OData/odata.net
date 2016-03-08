@@ -483,7 +483,6 @@
     <Compile Include="UriParser\SemanticAst\BatchReferenceSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BatchSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BinaryOperatorNode.cs" />
-    <Compile Include="UriParser\SemanticAst\CollectionCountNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionFunctionCallNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionNavigationNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionNode.cs" />
@@ -492,6 +491,7 @@
     <Compile Include="UriParser\SemanticAst\CollectionPropertyCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\ConstantNode.cs" />
     <Compile Include="UriParser\SemanticAst\ConvertNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CountNode.cs" />
     <Compile Include="UriParser\SemanticAst\CountSegment.cs" />
     <Compile Include="UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs" />
     <Compile Include="UriParser\SemanticAst\EntityCollectionCastNode.cs" />
