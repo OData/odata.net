@@ -4329,6 +4329,30 @@ public class Microsoft.OData.Core.ODataPayloadValueConverter {
 	public virtual object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference)
 }
 
+public class Microsoft.OData.Core.ODataPreferenceHeader {
+	string AnnotationFilter  { public get; public set; }
+	bool ContinueOnError  { public get; public set; }
+	System.Nullable`1[[System.Int32]] MaxPageSize  { public get; public set; }
+	bool RespondAsync  { public get; public set; }
+	System.Nullable`1[[System.Boolean]] ReturnContent  { public get; public set; }
+	bool TrackChanges  { public get; public set; }
+	System.Nullable`1[[System.Int32]] Wait  { public get; public set; }
+
+	protected void Clear (string preference)
+	protected Microsoft.OData.Core.HttpHeaderValueElement Get (string preferenceName)
+	protected void Set (Microsoft.OData.Core.HttpHeaderValueElement preference)
+}
+
+public sealed class Microsoft.OData.Core.HttpHeaderValueElement {
+	public HttpHeaderValueElement (string name, string value, System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] parameters)
+
+	string Name  { public get; }
+	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Parameters  { public get; }
+	string Value  { public get; }
+
+	public virtual string ToString ()
+}
+
 [
 DebuggerDisplayAttribute(),
 ]
@@ -4819,16 +4843,6 @@ public sealed class Microsoft.OData.Core.ODataNullValue : Microsoft.OData.Core.O
 public sealed class Microsoft.OData.Core.ODataPayloadKindDetectionResult {
 	Microsoft.OData.Core.ODataFormat Format  { public get; }
 	Microsoft.OData.Core.ODataPayloadKind PayloadKind  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.ODataPreferenceHeader {
-	string AnnotationFilter  { public get; public set; }
-	bool ContinueOnError  { public get; public set; }
-	System.Nullable`1[[System.Int32]] MaxPageSize  { public get; public set; }
-	bool RespondAsync  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] ReturnContent  { public get; public set; }
-	bool TrackChanges  { public get; public set; }
-	System.Nullable`1[[System.Int32]] Wait  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataPrimitiveValue : Microsoft.OData.Core.ODataValue {

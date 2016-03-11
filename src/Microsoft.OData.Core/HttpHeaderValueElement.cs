@@ -13,10 +13,10 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Class to represent a HTTP header value element.
     /// </summary>
-    internal sealed class HttpHeaderValueElement
+    public sealed class HttpHeaderValueElement
     {
         /// <summary>
-        /// Internal constructor to create a new instance of <see cref="HttpHeaderValueElement"/>.
+        /// Initializes a new instance of the <see cref="HttpHeaderValueElement"/> class.
         /// </summary>
         /// <param name="name">The name of the preference.</param>
         /// <param name="value">The value of the preference.</param>
