@@ -140,7 +140,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 ex.ParsedSegments = this.parsedSegments;
                 ex.CurrentSegment = segmentText;
                 ex.UnparsedSegments = this.segmentQueue.ToList();
-                throw ex;
+                throw;
             }
 
             List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
