@@ -6131,6 +6131,13 @@ namespace Microsoft.OData.Core {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.JsonReaderExtensions_UnexpectedInstanceAnnotationName, p0);
         }
 
+        /// <summary>
+        /// A string like "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value."
+        /// </summary>
+        internal static string PreferenceHeader_IntegerExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PreferenceHeader_IntegerExpected, p0, p1);
+        }
+
     }
 
     /// <summary>
