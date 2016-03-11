@@ -14,7 +14,7 @@ namespace Microsoft.OData
     /// Class to set the "Prefer" header on an <see cref="IODataRequestMessage"/> or
     /// the "Preference-Applied" header on an <see cref="IODataResponseMessage"/>.
     /// </summary>
-    public sealed class ODataPreferenceHeader
+    public class ODataPreferenceHeader
     {
         /// <summary>
         /// The return preference token.
@@ -421,21 +421,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Adds quotes around the given text value.
-        /// </summary>
-        /// <param name="text">text to quote.</param>
-        /// <returns>Returns the quoted text.</returns>
-        private static string AddQuotes(string text)
-        {
-            return "\"" + text + "\"";
-        }
-
-        /// <summary>
         /// Clears the <paramref name="preference"/> from the "Prefer" header on the underlying IODataRequestMessage or
         /// the "Preference-Applied" header on the underlying IODataResponseMessage.
         /// </summary>
         /// <param name="preference">The preference to clear.</param>
-        private void Clear(string preference)
+        protected void Clear(string preference)
         {
             Debug.Assert(!string.IsNullOrEmpty(preference), "!string.IsNullOrEmpty(preference)");
             if (this.Preferences.Remove(preference))
@@ -452,7 +442,7 @@ namespace Microsoft.OData
         /// <remarks>
         /// If <paramref name="preference"/> is already on the header, this method does a replace rather than adding another instance of the same preference.
         /// </remarks>
-        private void Set(HttpHeaderValueElement preference)
+        protected void Set(HttpHeaderValueElement preference)
         {
             Debug.Assert(preference != null, "preference != null");
             this.Preferences[preference.Name] = preference;
@@ -466,7 +456,7 @@ namespace Microsoft.OData
         /// <param name="preferenceName">The preference to get.</param>
         /// <returns>Returns a key value pair of the <paramref name="preferenceName"/> and its value. The Value property of the key value pair may be null since not
         /// all preferences have value. If the <paramref name="preferenceName"/> is missing from the header, null is returned.</returns>
-        private HttpHeaderValueElement Get(string preferenceName)
+        protected HttpHeaderValueElement Get(string preferenceName)
         {
             Debug.Assert(!string.IsNullOrEmpty(preferenceName), "!string.IsNullOrEmpty(preferenceName)");
             HttpHeaderValueElement value;
@@ -476,6 +466,16 @@ namespace Microsoft.OData
             }
 
             return value;
+        }
+
+        /// <summary>
+        /// Adds quotes around the given text value.
+        /// </summary>
+        /// <param name="text">text to quote.</param>
+        /// <returns>Returns the quoted text.</returns>
+        private static string AddQuotes(string text)
+        {
+            return "\"" + text + "\"";
         }
 
         /// <summary>
