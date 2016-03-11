@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
@@ -739,6 +740,49 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads a complex value.
         /// </summary>
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        ///     (or the second property if the first one was odata.type).</param>
+        /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
+        /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <param name="complexValueTypeReference">The expected type reference of the value.</param>
+        /// <param name="payloadTypeName">The type name read from the payload.</param>
+        /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
+        /// <returns>The value of the complex value.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
+        ///                 JsonNodeType.EndObject - the end object of the complex value object.
+        /// Post-Condition: almost anything - the node after the complex value (after the EndObject)
+        /// </remarks>
+        private ODataComplexValue ReadComplexValue(
+            bool insideJsonObjectValue,
+            bool insideComplexValue,
+            string propertyName,
+            IEdmComplexTypeReference complexValueTypeReference,
+            string payloadTypeName,
+            SerializationTypeNameAnnotation serializationTypeNameAnnotation,
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        {
+            if (!insideJsonObjectValue && !insideComplexValue)
+            {
+                if (this.JsonReader.NodeType != JsonNodeType.StartObject)
+                {
+                    string typeName = complexValueTypeReference != null ? complexValueTypeReference.FullName() : payloadTypeName;
+                    throw new ODataException(
+                        string.Format(CultureInfo.InvariantCulture,
+                        "The property with name '{0}' was found with a value node of type '{1}'; however, a complex value of type '{2}' was expected.",
+                        propertyName, this.JsonReader.NodeType, typeName));
+                }
+
+                this.JsonReader.Read();
+            }
+
+            return this.ReadComplexValue(complexValueTypeReference, payloadTypeName, serializationTypeNameAnnotation, duplicatePropertyNamesChecker);
+        }
+
+        /// <summary>
+        /// Reads a complex value.
+        /// </summary>
         /// <param name="complexValueTypeReference">The expected type reference of the value.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
@@ -1045,12 +1089,10 @@ namespace Microsoft.OData.Core.JsonLight
                             throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(ODataAnnotationNames.ODataType));
                         }
 
-                        if (!valueIsJsonObject && !insideComplexValue)
-                        {
-                            this.JsonReader.ReadStartObject();
-                        }
-
                         result = this.ReadComplexValue(
+                            valueIsJsonObject,
+                            insideComplexValue,
+                            propertyName,
                             targetTypeReference == null ? null : targetTypeReference.AsComplex(),
                             payloadTypeName,
                             serializationTypeNameAnnotation,
