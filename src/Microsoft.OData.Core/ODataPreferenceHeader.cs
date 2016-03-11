@@ -286,7 +286,13 @@ namespace Microsoft.OData.Core
 
                 if (wait != null)
                 {
-                    return int.Parse(wait.Value, CultureInfo.InvariantCulture);
+                    int value;
+                    if (int.TryParse(wait.Value, out value))
+                    {
+                        return value;
+                    }
+
+                    throw new ODataException(Strings.PreferenceHeader_IntegerExpected(wait.Value, ODataPreferenceHeader.WaitPreferenceTokenName));
                 }
 
                 return null;
@@ -346,12 +352,15 @@ namespace Microsoft.OData.Core
             {
                 var maxPageSizeHttpHeaderValueElement = this.Get(ODataMaxPageSizePreferenceToken);
 
-                // Should check maxPageSizeHttpHeaderValueElement.Value != null.
-                // Should do int.TryParse.
-                // If either of the above fail, should throw an ODataException for parsing, not a System.Exception (such as FormatException, etc.).
                 if (maxPageSizeHttpHeaderValueElement != null)
                 {
-                    return int.Parse(maxPageSizeHttpHeaderValueElement.Value, CultureInfo.InvariantCulture);
+                    int value;
+                    if (int.TryParse(maxPageSizeHttpHeaderValueElement.Value, out value))
+                    {
+                        return value;
+                    }
+
+                    throw new ODataException(Strings.PreferenceHeader_IntegerExpected(maxPageSizeHttpHeaderValueElement.Value, ODataPreferenceHeader.ODataMaxPageSizePreferenceToken));
                 }
 
                 return null;

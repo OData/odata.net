@@ -869,6 +869,7 @@ namespace Microsoft.OData.Core {
         internal const string JsonReaderExtensions_CannotReadValueAsString = "JsonReaderExtensions_CannotReadValueAsString";
         internal const string JsonReaderExtensions_CannotReadValueAsDouble = "JsonReaderExtensions_CannotReadValueAsDouble";
         internal const string JsonReaderExtensions_UnexpectedInstanceAnnotationName = "JsonReaderExtensions_UnexpectedInstanceAnnotationName";
+        internal const string PreferenceHeader_IntegerExpected = "PreferenceHeader_IntegerExpected";
 
         static TextRes loader = null;
         ResourceManager resources;
