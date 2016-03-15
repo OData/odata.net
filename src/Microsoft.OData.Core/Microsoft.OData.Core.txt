@@ -581,6 +581,7 @@ ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue=A
 ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue=A top-level property with an invalid primitive null value was found. In OData, top-level properties with null value have to be serialized as JSON object with an '{0}' annotation that has the value '{1}'.
 ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty=Encountered a metadata reference property '{0}' in a scope other than an entry. In OData, a property name with a '#' character indicates a reference into the metadata and is only supported for describing operations bound to an entry.
 ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload=The property with name '{0}' was found in a null payload. In OData, no properties or OData annotations can appear in a null payload.
+ODataJsonLightPropertyAndValueDeserializer_PrimitiveValueFoundForComplexType=The property with name '{0}' was found with a value node of type '{1}'; however, a complex value of type '{2}' was expected.
 
 ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue=The value specified for the spatial property was not valid. You must specify a valid spatial value.
 

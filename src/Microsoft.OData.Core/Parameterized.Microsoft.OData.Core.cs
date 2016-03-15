@@ -4391,6 +4391,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// A string like "The property with name '{0}' was found with a value node of type '{1}'; however, a complex value of type '{2}' was expected."
+        /// </summary>
+        internal static string ODataJsonLightPropertyAndValueDeserializer_PrimitiveValueFoundForComplexType(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightPropertyAndValueDeserializer_PrimitiveValueFoundForComplexType, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The value specified for the spatial property was not valid. You must specify a valid spatial value."
         /// </summary>
         internal static string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue
