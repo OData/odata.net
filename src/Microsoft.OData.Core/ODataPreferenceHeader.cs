@@ -292,7 +292,8 @@ namespace Microsoft.OData.Core
                         return value;
                     }
 
-                    throw new ODataException(string.Format("Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                    throw new ODataException(string.Format(CultureInfo.InvariantCulture,
+                        "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                         wait.Value, ODataPreferenceHeader.WaitPreferenceTokenName));
                 }
 
@@ -361,7 +362,8 @@ namespace Microsoft.OData.Core
                         return value;
                     }
 
-                    throw new ODataException(string.Format("Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                    throw new ODataException(string.Format(CultureInfo.InvariantCulture,
+                        "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                         maxPageSizeHttpHeaderValueElement.Value, ODataPreferenceHeader.ODataMaxPageSizePreferenceToken));
                 }
 

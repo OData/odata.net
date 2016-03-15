@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using FluentAssertions;
 using Xunit;
 
@@ -250,7 +251,8 @@ namespace Microsoft.OData.Core.Tests
             int? wait;
             Action test = () => wait = this.preferHeader.Wait;
             test.ShouldThrow<ODataException>().WithMessage(
-                string.Format("Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                string.Format(CultureInfo.InvariantCulture,
+                "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                 "abc", WaitPreferenceTokenName));
         }
 
@@ -295,7 +297,8 @@ namespace Microsoft.OData.Core.Tests
             int? maxPageSize;
             Action test = () => maxPageSize = this.preferHeader.MaxPageSize;
             test.ShouldThrow<ODataException>().WithMessage(
-                string.Format("Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                string.Format(CultureInfo.InvariantCulture,
+                "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                 "abc", MaxPageSizePreference));
         }
 
