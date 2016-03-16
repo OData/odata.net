@@ -202,25 +202,23 @@ Following code provides a sample to add properties to an `ODataEntry`.
 
 ### Set `OnEntryStarting` ###
 
-Then, to add new properties in the `OdataEntry` info, developers can call `AddProperties` in `OnEntryStarting`.
+Then, to add new properties in the `OdataEntry`, developers can call `AddProperties` in `OnEntryStarting`.
 
-    public void UpdateEntryInfo()
-    {
-        DefaultContainer container = new DefaultContainer(new Uri("..."));
+    DefaultContainer dataServiceContext = new DefaultContainer(new Uri("http://services.odata.org/v4/(S(ghojd5jj5d33cwotkyfwn431))/TripPinServiceRW/"));
 
-        container.Configurations.RequestPipeline.OnEntryStarting(
-            args =>
+    dataServiceContext.Configurations.RequestPipeline.OnEntryStarting(
+        arg =>
+        {
+            arg.Entry.AddProperties(new ODataProperty
             {
-                args.Entry.AddProperties(new ODataProperty
-                {
-                    Name = "NewProperty",
-                    Value = 1
-                });
+                Name = "NewProperty",
+                Value = "new property"
             });
-        var product = new Product();
-        container.AddToProducts(product);
-        container.SaveChanges();
-    }
+        });
+
+    var person = dataServiceContext.People.ByKey("russellwhyte").GetValue();
+    dataServiceContext.UpdateObject(person);
+    dataServiceContext.SaveChanges();
 
 ## More client hooks in RequestPipeline && ResponsePipeline ##
 
