@@ -128,7 +128,7 @@ Following code provides a sample which overrides the `GetResponse()` method in u
     public class CustomizedRequestMessage : HttpWebRequestMessage
     {
         public string Response { get; set; }
-        public Dictionary<string, string> CutomizedHeaders { get; set; }
+        public Dictionary<string, string> CustomizedHeaders { get; set; }
 
         public CustomizedRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args)
@@ -139,13 +139,13 @@ Following code provides a sample which overrides the `GetResponse()` method in u
             : base(args)
         {
             this.Response = response;
-            this.CutomizedHeaders = headers;
+            this.CustomizedHeaders = headers;
         }
 
         public override IODataResponseMessage GetResponse()
         {
             return new HttpWebResponseMessage(
-                this.CutomizedHeaders,
+                this.CustomizedHeaders,
                 200,
                 () =>
                 {
