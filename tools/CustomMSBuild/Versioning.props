@@ -15,7 +15,7 @@
   <!-- For ODataLib -->
   <PropertyGroup>
     <VersionMajor Condition="'$(VersionMajor)' == ''">6</VersionMajor>
-    <VersionMinor Condition="'$(VersionMinor)' == ''">15</VersionMinor>
+    <VersionMinor Condition="'$(VersionMinor)' == ''">16</VersionMinor>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
     <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">0</VersionBuildRevision>
   </PropertyGroup>
@@ -37,7 +37,7 @@
   
   <!-- For NuGet Packages -->
   <PropertyGroup>
-    <VersionPrereleaseExtension></VersionPrereleaseExtension>
+    <VersionPrereleaseExtension>beta</VersionPrereleaseExtension>
     <VersionNuGetSemantic>$(VersionFullSemantic)</VersionNuGetSemantic>
     <VersionNuGetSemantic Condition="'$(VersionPrereleaseExtension)'!=''">$(VersionFullSemantic)-$(VersionPrereleaseExtension)</VersionNuGetSemantic>
   </PropertyGroup>
