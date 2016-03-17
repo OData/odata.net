@@ -1800,23 +1800,23 @@
     <Compile Include="..\WriterValidatorMinimalValidation.cs">
       <Link>Microsoft\OData\Core\WriterValidatorMinimalValidation.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\CustomUriTypePrefixLiterals.cs">
-      <Link>Microsoft\OData\Core\UriParser\CustomUriTypePrefixLiterals.cs</Link>
+    <Compile Include="..\UriParser\CustomUriLiteralPrefixes.cs">
+      <Link>Microsoft\OData\Core\UriParser\CustomUriLiteralPrefixes.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\TypeParsers\Common\IUriTypeParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\Common\IUriTypeParser.cs</Link>
+    <Compile Include="..\UriParser\Parsers\LiteralParsers\Common\IUriLiteralParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\Common\IUriLiteralParser.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\TypeParsers\Common\UriTypeParsingException.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\Common\UriTypeParsingException.cs</Link>
+    <Compile Include="..\UriParser\Parsers\LiteralParsers\Common\UriLiteralParsingException.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\Common\UriLiteralParsingException.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\TypeParsers\DefaultUriTypeParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\DefaultUriTypeParser.cs</Link>
+    <Compile Include="..\UriParser\Parsers\LiteralParsers\DefaultUriLiteralParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\DefaultUriLiteralParser.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\TypeParsers\UriCustomTypeParsers.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\UriCustomTypeParsers.cs</Link>
+    <Compile Include="..\UriParser\Parsers\LiteralParsers\CustomUriLiteralParsers.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\CustomUriLiteralParsers.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\TypeParsers\UriPrimitiveTypeParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\TypeParsers\UriPrimitiveTypeParser.cs</Link>
+    <Compile Include="..\UriParser\Parsers\LiteralParsers\UriPrimitiveTypeParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\UriPrimitiveTypeParser.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Parsers\UriParserHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\UriParserHelper.cs</Link>

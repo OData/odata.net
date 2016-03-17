@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Parsers.Common;
 using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -14,9 +14,9 @@ using Xunit;
 namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 {
     /// <summary>
-    /// Test the public API of UriCustomTypeParser class
+    /// Test the public API of CustomUriLiteralParser class
     /// </summary>
-    public class UriCustomTypeParserUnitTests
+    public class CustomUriLiteralParserUnitTests
     {
         #region Consts
 
@@ -34,64 +34,64 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         public const string CUSTOM_PARSER_STRING_VALUE_CAUSEBUG = "StringValueWithBug";
 
-        public const string BOOLEAN_TYPE_PREFIX_LITERAL = "myCustomBooleanTypePrefixLiteral";
+        public const string BOOLEAN_LITERAL_PREFIX = "myCustomBooleanTypePrefixLiteral";
 
-        public const string STRING_TYPE_PREFIX_LITERAL = "myCustomStringTypePrefixLiteral";
+        public const string STRING_LITERAL_PREFIX = "myCustomStringTypePrefixLiteral";
 
         #endregion
 
-        #region AddCustomUriTypeParser Method
+        #region AddCustomUriLiteralParser Method
 
         [Fact]
-        public void AddCustomUriTypeParser_CannotAddNullTypeParser()
+        public void AddCustomUriLiteralParser_CannotAddNullLiteralParser()
         {
-            Action addNullCustomUriTypeParser = () =>
-                UriCustomTypeParsers.AddCustomUriTypeParser(null);
+            Action addNullCustomUriLiteralParser = () =>
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(null);
 
-            addNullCustomUriTypeParser.ShouldThrow<ArgumentNullException>();
+            addNullCustomUriLiteralParser.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_CannotAddNullTypeParserAndNullEdmTypeReference()
+        public void AddCustomUriLiteralParser_CannotAddNullLiteralParserAndNullEdmTypeReference()
         {
-            Action addNullCustomUriTypeParserAndNullParser = () =>
-                UriCustomTypeParsers.AddCustomUriTypeParser(null, null);
+            Action addNullCustomUriLiteralParserAndNullParser = () =>
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(null, null);
 
-            addNullCustomUriTypeParserAndNullParser.ShouldThrow<ArgumentNullException>();
+            addNullCustomUriLiteralParserAndNullParser.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_CannotAddNullTypeParserWithEdmType()
+        public void AddCustomUriLiteralParser_CannotAddNullLiteralParserWithEdmType()
         {
             IEdmTypeReference typeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            Action addNullCustomUriTypeParser = () =>
-                UriCustomTypeParsers.AddCustomUriTypeParser(typeReference, null);
+            Action addNullCustomUriLiteralParser = () =>
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(typeReference, null);
 
-            addNullCustomUriTypeParser.ShouldThrow<ArgumentNullException>();
+            addNullCustomUriLiteralParser.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_CannotAddNullEdmTypeReferenceWithTypeParser()
+        public void AddCustomUriLiteralParser_CannotAddNullEdmTypeReferenceWithLiteralParser()
         {
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser =
-                new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser =
+                new MyCustomBooleanUriLiteralParser();
 
-            Action addCustomUriTypeParserWithNullEdmType = () =>
-                UriCustomTypeParsers.AddCustomUriTypeParser(null, customBooleanUriTypePraser);
+            Action addCustomUriLiteralParserWithNullEdmType = () =>
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(null, customBooleanUriTypePraser);
 
-            addCustomUriTypeParserWithNullEdmType.ShouldThrow<ArgumentNullException>();
+            addCustomUriLiteralParserWithNullEdmType.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_GeneralParsers_CanAdd()
+        public void AddCustomUriLiteralParser_GeneralParsers_CanAdd()
         {
-            RegisterTestCase("AddCustomUriTypeParser_GeneralParsers_CanAdd");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_GeneralParsers_CanAdd");
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
 
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
@@ -99,21 +99,22 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             finally
             {
                 // Clean up from cache
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_GeneralParsers_CanAddMultipleDifferentInstances()
+        public void AddCustomUriLiteralParser_GeneralParsers_CanAddMultipleDifferentInstances()
         {
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
-            IUriTypeParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_GeneralParsers_CanAddMultipleDifferentInstances");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
+            IUriLiteralParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriLiteralParser();
 
             try
             {
-                // Add two different instances to GeneralTypeParsers
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
-                UriCustomTypeParsers.AddCustomUriTypeParser(customIntBooleanUriTypePraser);
+                // Add two different instances to GeneralLiteralParsers
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customIntBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
@@ -122,69 +123,69 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             finally
             {
                 // Clean up from cache
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_GeneralParsers_CannotAddToGeneraldIfSameInstanceAlreadyExists()
+        public void AddCustomUriLiteralParser_GeneralParsers_CannotAddToGeneraldIfSameInstanceAlreadyExists()
         {
-            RegisterTestCase("AddCustomUriTypeParser_GeneralParsers_CannotAddToGeneraldIfSameInstanceAlreadyExists");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_GeneralParsers_CannotAddToGeneraldIfSameInstanceAlreadyExists");
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
 
             try
             {
                 // Add Once
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
                 // Add again - Should throw exception
-                Action addCustomUriTypeParser = () =>
-                    UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                Action addCustomUriLiteralParser = () =>
+                    CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
-                addCustomUriTypeParser.ShouldThrow<ODataException>().
+                addCustomUriLiteralParser.ShouldThrow<ODataException>().
                     WithMessage(Strings.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_RegisterToEdmType_CanAddCustomParser()
+        public void AddCustomUriLiteralParser_RegisterToEdmType_CanAddCustomParser()
         {
-            RegisterTestCase("AddCustomUriTypeParser_RegisterToEdmType_CanAddCustomParser");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_RegisterToEdmType_CanAddCustomParser");
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_RegisterToEdmType_CanAddMultipleDifferentInstances()
+        public void AddCustomUriLiteralParser_RegisterToEdmType_CanAddMultipleDifferentInstances()
         {
-            RegisterTestCase("AddCustomUriTypeParser_RegisterToEdmType_CanAddMultipleDifferentInstances");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_RegisterToEdmType_CanAddMultipleDifferentInstances");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            IUriTypeParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriTypeParser();
+            IUriLiteralParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriLiteralParser();
             IEdmTypeReference intEdmTypeReference = EdmCoreModel.Instance.GetInt32(false);
 
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
-                UriCustomTypeParsers.AddCustomUriTypeParser(intEdmTypeReference, customIntBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(intEdmTypeReference, customIntBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
@@ -192,50 +193,50 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_RegisterToEdmType_CannotAddIfAlreadyRegistedToTheSameEdmType()
+        public void AddCustomUriLiteralParser_RegisterToEdmType_CannotAddIfAlreadyRegistedToTheSameEdmType()
         {
-            RegisterTestCase("AddCustomUriTypeParser_RegisterToEdmType_CannotAddIfAlreadyRegistedToTheSameEdmType");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_RegisterToEdmType_CannotAddIfAlreadyRegistedToTheSameEdmType");
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
             try
             {
                 // Add once
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
                 // Add again - Should throw exception
-                Action addCustomUriTypeParser = () =>
-                    UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                Action addCustomUriLiteralParser = () =>
+                    CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                addCustomUriTypeParser.ShouldThrow<ODataException>().
+                addCustomUriLiteralParser.ShouldThrow<ODataException>().
                     WithMessage(Strings.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(booleanTypeReference.FullName()));
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsButRegisteredToDifferentEdmType()
+        public void AddCustomUriLiteralParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsButRegisteredToDifferentEdmType()
         {
-            RegisterTestCase("AddCustomUriTypeParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsButRegisteredToDifferentEdmType");
-            IUriTypeParser customIntAndBooleanUriTypePraser = new MyCustomIntAndBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsButRegisteredToDifferentEdmType");
+            IUriLiteralParser customIntAndBooleanUriTypePraser = new MyCustomIntAndBooleanUriLiteralParser();
 
             try
             {
                 // Add once
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customIntAndBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customIntAndBooleanUriTypePraser);
 
                 // Add same type converter but registered to a different EdmType(string instead of boolean)
                 IEdmTypeReference intTypeReference = EdmCoreModel.Instance.GetInt32(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(intTypeReference, customIntAndBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(intTypeReference, customIntAndBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
@@ -243,75 +244,75 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntAndBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntAndBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsAsGeneralTypeParser()
+        public void AddCustomUriLiteralParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsAsGeneralLiteralParser()
         {
-            RegisterTestCase("AddCustomUriTypeParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsAsGeneralTypeParser");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_RegisterToEdmType_CanAddIfSameParserInstanceExistsAsGeneralLiteralParser");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
 
             try
             {
-                // Add once as general TypeParser (with no specific EdmType)
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                // Add once as general LiteralParser (with no specific EdmType)
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
                 // Add again with registered EdmType
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_GeneralParsers_CanAddIfSameParserInstanceAlreadyRegisteredToEdmType()
+        public void AddCustomUriLiteralParser_GeneralParsers_CanAddIfSameParserInstanceAlreadyRegisteredToEdmType()
         {
-            RegisterTestCase("AddCustomUriTypeParser_GeneralParsers_CanAddIfSameParserInstanceAlreadyRegisteredToEdmType");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("AddCustomUriLiteralParser_GeneralParsers_CanAddIfSameParserInstanceAlreadyRegisteredToEdmType");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
 
             try
             {
                 // Add once with registered EdmType
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                // Add again as general TypeParser (with no specific EdmType)
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                // Add again as general LiteralParser (with no specific EdmType)
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
-        public void AddCustomUriTypeParser_CanAddMultipleDifferentInstancesToRegisteredAndGeneral()
+        public void AddCustomUriLiteralParser_CanAddMultipleDifferentInstancesToRegisteredAndGeneral()
         {
-            RegisterTestCase("AddCustomUriTypeParser_CanAddMultipleDifferentInstancesToRegisteredAndGeneral");
+            RegisterTestCase("AddCustomUriLiteralParser_CanAddMultipleDifferentInstancesToRegisteredAndGeneral");
 
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            IUriTypeParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriTypeParser();
+            IUriLiteralParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriLiteralParser();
 
             try
             {
                 // Add to registered edm types
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
                 // Add to general parsers
-                UriCustomTypeParsers.AddCustomUriTypeParser(customIntBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customIntBooleanUriTypePraser);
 
                 // Test of custom parser is working
                 this.ParseNonConvetionalBooleanValueSuccessfully();
@@ -319,16 +320,16 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         #endregion
 
-        #region RemoveCustomUriTypeParser Method
+        #region RemoveCustomUriLiteralParser Method
 
-        // ** Test 'RemoveCustomUriTypeParser' Method **
+        // ** Test 'RemoveCustomUriLiteralParser' Method **
 
         // Remove Validation
         // Cannot remove parser which is not added
@@ -338,47 +339,47 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         // Can remove if exists in general and 2 in registred
 
         [Fact]
-        public void RemoveCustomUriTypeParser_CannotRemoveNull()
+        public void RemoveCustomUriLiteralParser_CannotRemoveNull()
         {
-            Action removeNullCustomUriTypeParser = () =>
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(null);
+            Action removeNullCustomUriLiteralParser = () =>
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(null);
 
-            removeNullCustomUriTypeParser.ShouldThrow<ArgumentNullException>();
+            removeNullCustomUriLiteralParser.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void RemoveCustomUriTypeParser_CannotRemoveNotExistingParser()
+        public void RemoveCustomUriLiteralParser_CannotRemoveNotExistingParser()
         {
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
-            bool isRemoveSucceeded = UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser);
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
+            bool isRemoveSucceeded = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
 
             // Assert
             isRemoveSucceeded.Should().BeFalse();
         }
 
         [Fact]
-        public void RemoveCustomUriTypeParser_CanRemoveGeneralParser()
+        public void RemoveCustomUriLiteralParser_CanRemoveGeneralParser()
         {
-            RegisterTestCase("RemoveCustomUriTypeParser_CanRemoveGeneralParser");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
-            UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+            RegisterTestCase("RemoveCustomUriLiteralParser_CanRemoveGeneralParser");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
-            bool isRemoved = UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser);
+            bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
             isRemoved.Should().BeTrue();
 
             this.NoParsesForNonConvetionalBooleanValue();
         }
 
         [Fact]
-        public void RemoveCustomUriTypeParser_CanRemoveParserWhichIsRegisteredToEdmType()
+        public void RemoveCustomUriLiteralParser_CanRemoveParserWhichIsRegisteredToEdmType()
         {
-            RegisterTestCase("RemoveCustomUriTypeParser_CanRemoveParserWhichIsRegisteredToEdmType");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("RemoveCustomUriLiteralParser_CanRemoveParserWhichIsRegisteredToEdmType");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-            bool isRemoved = UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser);
+            bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
             isRemoved.Should().BeTrue();
 
             this.NoParsesForNonConvetionalBooleanValue();
@@ -388,16 +389,16 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         /// Should remove both from registered and general parsers.
         /// </summary>
         [Fact]
-        public void RemoveCustomUriTypeParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndRegistedWithEdmType()
+        public void RemoveCustomUriLiteralParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndRegistedWithEdmType()
         {
-            RegisterTestCase("RemoveCustomUriTypeParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndRegistedWithEdmType");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            RegisterTestCase("RemoveCustomUriLiteralParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndRegistedWithEdmType");
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
-            UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-            bool isRemoved = UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser);
+            bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser);
             isRemoved.Should().BeTrue();
 
             this.NoParsesForNonConvetionalBooleanValue();
@@ -407,18 +408,18 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         /// Should remove both from registered and general parsers.
         /// </summary>
         [Fact]
-        public void RemoveCustomUriTypeParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndMultipleRegistedWithEdmType()
+        public void RemoveCustomUriLiteralParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndMultipleRegistedWithEdmType()
         {
-            RegisterTestCase("RemoveCustomUriTypeParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndMultipleRegistedWithEdmType");
-            IUriTypeParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriTypeParser();
+            RegisterTestCase("RemoveCustomUriLiteralParser_CanRemoveSameInstanceOfParserAddedAsGeneralAndMultipleRegistedWithEdmType");
+            IUriLiteralParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
             IEdmTypeReference intTypeReference = EdmCoreModel.Instance.GetInt32(false);
 
-            UriCustomTypeParsers.AddCustomUriTypeParser(customIntBooleanUriTypePraser);
-            UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customIntBooleanUriTypePraser);
-            UriCustomTypeParsers.AddCustomUriTypeParser(intTypeReference, customIntBooleanUriTypePraser);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(customIntBooleanUriTypePraser);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customIntBooleanUriTypePraser);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(intTypeReference, customIntBooleanUriTypePraser);
 
-            bool isRemoved = UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntBooleanUriTypePraser);
+            bool isRemoved = CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser);
             isRemoved.Should().BeTrue();
 
             this.NoParsesForNonConvetionalBooleanValue();
@@ -443,15 +444,15 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_GeneralParsers_ValidValue_ParsingSucceeded()
         {
             RegisterTestCase("ParseUriStringToType_GeneralParsers_ValidValue_ParsingSucceeded");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
                 // Add to general parsers
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
 
                 // Assert
                 exception.Should().BeNull();
@@ -459,7 +460,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -467,15 +468,15 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_GeneralParsers_InvalidValue_ParsingHasFailed()
         {
             RegisterTestCase("ParseUriStringToType_GeneralParsers_InvalidValue_ParsingHasFailed");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
                 // Add to general parsers
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
 
                 // Assert
                 output.Should().BeNull();
@@ -485,11 +486,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     throw exception;
                 };
 
-                action.ShouldThrow<UriTypeParsingException>();
+                action.ShouldThrow<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -497,13 +498,13 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_GeneralParsers_ParserCannotParse_ParsingHasFailed()
         {
             RegisterTestCase("ParseUriStringToType_GeneralParsers_ParserCannotParse_ParsingHasFailed");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetBoolean(false), out exception);
 
                 // Assert
                 output.Should().BeNull();
@@ -513,11 +514,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     throw exception;
                 };
 
-                action.ShouldThrow<UriTypeParsingException>();
+                action.ShouldThrow<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -525,14 +526,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_RegisterToEdmType_ValidValue_ParsingSucceeded()
         {
             RegisterTestCase("ParseUriStringToType_RegisterToEdmType_ValidValue_ParsingSucceeded");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
                 // Assert
                 exception.Should().BeNull();
@@ -540,7 +541,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -548,14 +549,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_RegisterToEdmType_InvalidValue_ParsingHasFailed()
         {
             RegisterTestCase("ParseUriStringToType_RegisterToEdmType_InvalidValue_ParsingHasFailed");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, booleanTypeReference, out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, booleanTypeReference, out exception);
 
                 // Assert
                 output.Should().BeNull();
@@ -565,11 +566,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     throw exception;
                 };
 
-                action.ShouldThrow<UriTypeParsingException>();
+                action.ShouldThrow<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -577,14 +578,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_RegisterToEdmType_ParserCannotParse_ParsingHasFailed()
         {
             RegisterTestCase("ParseUriStringToType_RegisterToEdmType_ParserCannotParse_ParsingHasFailed");
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, booleanTypeReference, out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, booleanTypeReference, out exception);
 
                 // Assert
                 output.Should().BeNull();
@@ -594,26 +595,26 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     throw exception;
                 };
 
-                action.ShouldThrow<UriTypeParsingException>();
+                action.ShouldThrow<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
         [Fact]
         public void ParseUriStringToType_RegisterToEdmType_ParserIsRegisteredToDifferentEdmType()
         {
-            MyCustomBooleanUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
+            MyCustomBooleanUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                UriTypeParsingException exception;
+                UriLiteralParsingException exception;
                 object output =
-                    UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetString(true), out exception);
+                    CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, EdmCoreModel.Instance.GetString(true), out exception);
 
                 // Assert
                 output.Should().BeNull();
@@ -621,7 +622,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -630,8 +631,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            UriTypeParsingException exception;
-            object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
+            UriLiteralParsingException exception;
+            object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
             output.Should().BeNull();
@@ -642,21 +643,21 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseUriStringToType_ParseFirstWithRegisteredEdmType()
         {
             RegisterTestCase("ParseUriStringToType_ParseFirstWithRegisteredEdmType");
-            IUriTypeParser customBooleanUriTypePraser = new MyCustomBooleanUriTypeParser();
-            IUriTypeParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriTypeParser();
+            IUriLiteralParser customBooleanUriTypePraser = new MyCustomBooleanUriLiteralParser();
+            IUriLiteralParser customIntBooleanUriTypePraser = new MyCustomIntAndBooleanUriLiteralParser();
 
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypePraser);
-                UriCustomTypeParsers.AddCustomUriTypeParser(customIntBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customIntBooleanUriTypePraser);
 
                 // The boolean type parse will parse the value to 'True'
                 // The int boolean type parse will throw exception.
                 // If result is 'True' it means the registered parser is used first.
                 // If result is exception it means the general parse is used first
-                UriTypeParsingException exception;
-                object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID, booleanTypeReference, out exception);
+                UriLiteralParsingException exception;
+                object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID, booleanTypeReference, out exception);
 
                 // Assert
                 output.Should().Be(true);
@@ -664,8 +665,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypePraser).Should().BeTrue();
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customIntBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriTypePraser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customIntBooleanUriTypePraser).Should().BeTrue();
             }
         }
 
@@ -677,10 +678,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseWithCustomUriFunction_CanParseByGeneralCustomParser()
         {
             RegisterTestCase("ParseWithCustomUriFunction_CanParseByGeneralCustomParser");
-            IUriTypeParser customStringTypeParser = new MyCustomStringUriTypeParser();
+            IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(customStringTypeParser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALID_VALUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -690,7 +691,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customStringTypeParser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
             }
         }
 
@@ -698,10 +699,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseWithCustomUriFunction_CanParseByCustomParserRegisterdToEdmTpe()
         {
             RegisterTestCase("ParseWithCustomUriFunction_CanParseByCustomParserRegisterdToEdmTpe");
-            IUriTypeParser customStringTypeParser = new MyCustomStringUriTypeParser();
+            IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(EdmCoreModel.Instance.GetString(true), customStringTypeParser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALID_VALUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -711,7 +712,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customStringTypeParser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
             }
         }
 
@@ -719,10 +720,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseWithCustomUriFunction_CustomGeneralParserThrowsException()
         {
             RegisterTestCase("ParseWithCustomUriFunction_CustomGeneralParserThrowsException");
-            IUriTypeParser customStringTypeParser = new MyCustomStringUriTypeParser();
+            IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(customStringTypeParser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -731,11 +732,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     parser.ParseFilter();
 
                 parseUriAction.ShouldThrow<ODataException>().
-                    WithInnerException<UriTypeParsingException>();
+                    WithInnerException<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customStringTypeParser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
             }
         }
 
@@ -743,10 +744,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         public void ParseWithCustomUriFunction_CustomParserRegisteredToEdmTypeThrowsException()
         {
             RegisterTestCase("ParseWithCustomUriFunction_CustomParserRegisteredToEdmTypeThrowsException");
-            IUriTypeParser customStringTypeParser = new MyCustomStringUriTypeParser();
+            IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(EdmCoreModel.Instance.GetString(true), customStringTypeParser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -755,26 +756,26 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     parser.ParseFilter();
 
                 parseUriAction.ShouldThrow<ODataException>().
-                    WithInnerException<UriTypeParsingException>();
+                    WithInnerException<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customStringTypeParser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
             }
         }
 
         /// <summary>
-        /// Similates a stituation which the client implements a buggy UriTypeParser.
+        /// Similates a stituation which the client implements a buggy UriLiteralParser.
         /// It throw an exception and returns a value which is not null.
         /// </summary>
         [Fact]
         public void ParseWithCustomUriFunction_CustomParserThrowsExceptionAndReturnNotNullValue()
         {
             RegisterTestCase("ParseWithCustomUriFunction_CustomParserThrowsExceptionAndReturnNotNullValue");
-            IUriTypeParser customStringTypeParser = new MyCustomStringUriTypeParser();
+            IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                UriCustomTypeParsers.AddCustomUriTypeParser(EdmCoreModel.Instance.GetString(true), customStringTypeParser);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -783,64 +784,64 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     parser.ParseFilter();
 
                 parseUriAction.ShouldThrow<ODataException>().
-                    WithInnerException<UriTypeParsingException>();
+                    WithInnerException<UriLiteralParsingException>();
             }
             finally
             {
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customStringTypeParser).Should().BeTrue();
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customStringLiteralParser).Should().BeTrue();
             }
         }
 
 
         /// <summary>
-        /// In fact, this test shows the real power of the customization of UriTypeParser and LiteralPrefix.
+        /// In fact, this test shows the real power of the customization of UriLiteralParser and LiteralPrefix.
         /// Here we can see a special parsing for an EdmType 'Heartbeat' which is a complex type.
         /// The 'Heartbeat' type has it's own LiteralPrefix.
         /// The result is an instacne object of 'Heartbeat' class. 
         /// </summary>
         [Fact]
-        public void UriCustomTypePrefixLiteral_CanSetCustomLiteralWithCustomTypeParserCustomType()
+        public void CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParserCustomType()
         {
-            RegisterTestCase("UriCustomTypePrefixLiteral_CanSetCustomLiteralWithCustomTypeParserCustomType");
-            const string HEARTBEAT_TYPE_PREFIX_LITERAL = "myCustomHeartbeatTypePrefixLiteral";
-            IUriTypeParser customHeartbeatUriTypePraser = new HeatBeatCustomUriTypeParser();
-            IEdmTypeReference heartbeatTypeReference = HeatBeatCustomUriTypeParser.HeartbeatComplexType;
+            RegisterTestCase("CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParserCustomType");
+            const string HEARTBEAT_LITERAL_PREFIX = "myCustomHeartbeatTypePrefixLiteral";
+            IUriLiteralParser customHeartbeatUriTypePraser = new HeatBeatCustomUriLiteralParser();
+            IEdmTypeReference heartbeatTypeReference = HeatBeatCustomUriLiteralParser.HeartbeatComplexType;
 
             try
             {
-                CustomUriTypePrefixLiterals.AddCustomUriTypePrefixLiteral(HEARTBEAT_TYPE_PREFIX_LITERAL, heartbeatTypeReference);
-                UriCustomTypeParsers.AddCustomUriTypeParser(heartbeatTypeReference, customHeartbeatUriTypePraser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HEARTBEAT_LITERAL_PREFIX, heartbeatTypeReference);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(heartbeatTypeReference, customHeartbeatUriTypePraser);
 
-                var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HEARTBEAT_TYPE_PREFIX_LITERAL));
+                var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HEARTBEAT_LITERAL_PREFIX));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                HeatBeatCustomUriTypeParser.HeatBeat heartbeatValue =
+                HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue =
                   (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(heartbeatTypeReference).And.Source as ConstantNode).
-                  Value.As<HeatBeatCustomUriTypeParser.HeatBeat>();
+                  Value.As<HeatBeatCustomUriLiteralParser.HeatBeat>();
 
                 heartbeatValue.Should().NotBeNull();
                 heartbeatValue.Frequency.Should().Be(55.9);
             }
             finally
             {
-                CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(HEARTBEAT_TYPE_PREFIX_LITERAL);
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customHeartbeatUriTypePraser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HEARTBEAT_LITERAL_PREFIX);
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customHeartbeatUriTypePraser);
             }
         }
 
         [Fact]
-        public void UriCustomTypePrefixLiteral_CanSetCustomLiteralWithCustomTypeParser()
+        public void CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParser()
         {
-            RegisterTestCase("UriCustomTypePrefixLiteral_CanSetCustomLiteralWithCustomTypeParser");
-            IUriTypeParser customstringUriTypePraser = new MyCustomStringUriTypeParser();
+            RegisterTestCase("CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParser");
+            IUriLiteralParser customstringUriTypePraser = new MyCustomStringUriLiteralParser();
             IEdmTypeReference stringTypeReference = EdmCoreModel.Instance.GetString(true);
 
             try
             {
-                CustomUriTypePrefixLiterals.AddCustomUriTypePrefixLiteral(STRING_TYPE_PREFIX_LITERAL, stringTypeReference);
-                UriCustomTypeParsers.AddCustomUriTypeParser(stringTypeReference, customstringUriTypePraser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(STRING_LITERAL_PREFIX, stringTypeReference);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(stringTypeReference, customstringUriTypePraser);
 
-                var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", STRING_TYPE_PREFIX_LITERAL, CUSTOM_PARSER_STRING_VALID_VALUE));
+                var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", STRING_LITERAL_PREFIX, CUSTOM_PARSER_STRING_VALID_VALUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
@@ -848,24 +849,24 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(STRING_TYPE_PREFIX_LITERAL);
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customstringUriTypePraser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(STRING_LITERAL_PREFIX);
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customstringUriTypePraser);
             }
         }
 
 
         [Fact]
-        public void UriCustomTypePrefixLiteral_ParseTypeWithCorrectLiteralPrefixAndUriParser()
+        public void CustomUriLiteralPrefix_ParseTypeWithCorrectLiteralPrefixAndUriParser()
         {
-            RegisterTestCase("UriCustomTypePrefixLiteral_ParseTypeWithCorrectLiteralPrefixAndUriParser");
-            var customBooleanAndIntUriTypeParser = new MyCustomIntAndBooleanUriTypeParser();
+            RegisterTestCase("CustomUriLiteralPrefix_ParseTypeWithCorrectLiteralPrefixAndUriParser");
+            var customBooleanAndIntUriLiteralParser = new MyCustomIntAndBooleanUriLiteralParser();
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                CustomUriTypePrefixLiterals.AddCustomUriTypePrefixLiteral(BOOLEAN_TYPE_PREFIX_LITERAL, booleanTypeReference);
-                UriCustomTypeParsers.AddCustomUriTypeParser(customBooleanAndIntUriTypeParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
 
-                var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", BOOLEAN_TYPE_PREFIX_LITERAL, CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
+                var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", BOOLEAN_LITERAL_PREFIX, CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
@@ -873,23 +874,23 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(BOOLEAN_TYPE_PREFIX_LITERAL);
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanAndIntUriTypeParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(BOOLEAN_LITERAL_PREFIX);
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
             }
         }
 
         [Fact]
-        public void UriCustomTypePrefixLiteral_ParseTypeWithCorrectLiteralPrefixAndUriParserPerEdmType()
+        public void CustomUriLiteralPrefix_ParseTypeWithCorrectLiteralPrefixAndUriParserPerEdmType()
         {
-            RegisterTestCase("UriCustomTypePrefixLiteral_ParseTypeWithCorrectLiteralPrefixAndUriParserPerEdmType");
-            var customBooleanUriTypeParser = new UriCustomTypeParserUnitTests.MyCustomBooleanUriTypeParser();
+            RegisterTestCase("CustomUriLiteralPrefix_ParseTypeWithCorrectLiteralPrefixAndUriParserPerEdmType");
+            var customBooleanUriLiteralParser = new CustomUriLiteralParserUnitTests.MyCustomBooleanUriLiteralParser();
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                CustomUriTypePrefixLiterals.AddCustomUriTypePrefixLiteral(UriCustomTypeParserUnitTests.BOOLEAN_TYPE_PREFIX_LITERAL, booleanTypeReference);
-                UriCustomTypeParsers.AddCustomUriTypeParser(booleanTypeReference, customBooleanUriTypeParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriLiteralParser);
 
-                var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", UriCustomTypeParserUnitTests.BOOLEAN_TYPE_PREFIX_LITERAL, UriCustomTypeParserUnitTests.CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
+                var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, CustomUriLiteralParserUnitTests.CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
@@ -897,26 +898,26 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(UriCustomTypeParserUnitTests.BOOLEAN_TYPE_PREFIX_LITERAL);
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customBooleanUriTypeParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX);
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customBooleanUriLiteralParser);
             }
         }
 
         [Fact]
-        public void UriCustomTypePrefixLiteral_CanSetCustomLiteralToQuotedValue()
+        public void CustomUriLiteralPrefix_CanSetCustomLiteralToQuotedValue()
         {
-            RegisterTestCase("UriCustomTypePrefixLiteral_CanSetCustomLiteralToQuotedValue");
-            const string TYPE_PREFIX_LITERAL = "myCustomStringTypePrefixLiteral";
-            IUriTypeParser customstringUriTypePraser = new MyCustomStringUriTypeParser();
+            RegisterTestCase("CustomUriLiteralPrefix_CanSetCustomLiteralToQuotedValue");
+            const string LITERAL_PREFIX = "myCustomStringTypePrefixLiteral";
+            IUriLiteralParser customstringUriTypePraser = new MyCustomStringUriLiteralParser();
             IEdmTypeReference stringTypeReference = EdmCoreModel.Instance.GetString(true);
 
             try
             {
-                CustomUriTypePrefixLiterals.AddCustomUriTypePrefixLiteral(TYPE_PREFIX_LITERAL, stringTypeReference);
-                UriCustomTypeParsers.AddCustomUriTypeParser(stringTypeReference, customstringUriTypePraser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(LITERAL_PREFIX, stringTypeReference);
+                CustomUriLiteralParsers.AddCustomUriLiteralParser(stringTypeReference, customstringUriTypePraser);
 
 
-                var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", TYPE_PREFIX_LITERAL, CUSTOM_PARSER_STRING_VALID_VALUE));
+                var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", LITERAL_PREFIX, CUSTOM_PARSER_STRING_VALID_VALUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
@@ -924,8 +925,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriTypePrefixLiterals.RemoveCustomUriTypePrefixLiteral(TYPE_PREFIX_LITERAL);
-                UriCustomTypeParsers.RemoveCustomUriTypeParser(customstringUriTypePraser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(LITERAL_PREFIX);
+                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customstringUriTypePraser);
             }
         }
 
@@ -935,7 +936,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         /// <summary>
         /// Try to convert a valid value that the Custom boolean type parser can parse.
-        /// If the parser has been added successfully to the UriCustmTypeParser, this method will passed successfully.
+        /// If the parser has been added successfully to the UriCustomLiteralParser, this method will passed successfully.
         /// </summary>
         private void ParseNonConvetionalBooleanValueSuccessfully()
         {
@@ -944,8 +945,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            UriTypeParsingException exception;
-            object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
+            UriLiteralParsingException exception;
+            object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
             exception.Should().BeNull();
@@ -954,7 +955,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         /// <summary>
         /// Try to convert a valid value that the Custom int type parser can parse.
-        /// If the parser has been added successfully to the UriCustmTypeParser, this method will passed successfully.
+        /// If the parser has been added successfully to the UriCustomLiteralParser, this method will passed successfully.
         /// </summary>
         private void ParseNonConvetionalIntValueSuccessfully()
         {
@@ -964,8 +965,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
             IEdmTypeReference Int32TypeReference = EdmCoreModel.Instance.GetInt32(false);
 
-            UriTypeParsingException exception;
-            object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
+            UriLiteralParsingException exception;
+            object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
 
             // Assert
             exception.Should().BeNull();
@@ -974,14 +975,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         /// <summary>
         /// Try to convert a valid value that the Custom boolean type parser can parse.
-        /// If the parser has NOT been added to the UriCustmTypeParser, this method will passed successfully.
+        /// If the parser has NOT been added to the UriCustomLiteralParser, this method will passed successfully.
         /// </summary>
         private void NoParsesForNonConvetionalBooleanValue()
         {
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            UriTypeParsingException exception;
-            object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
+            UriLiteralParsingException exception;
+            object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, booleanTypeReference, out exception);
 
             // Assert
             exception.Should().BeNull();
@@ -990,14 +991,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         /// <summary>
         /// Try to convert a valid value that the Custom Int32 type parser can parse.
-        /// If the parser has NOT been added to the UriCustmTypeParser, this method will passed successfully.
+        /// If the parser has NOT been added to the UriCustomLiteralParser, this method will passed successfully.
         /// </summary>
         private void NoParsesForNonConvetionalIntValue()
         {
             IEdmTypeReference Int32TypeReference = EdmCoreModel.Instance.GetInt32(false);
 
-            UriTypeParsingException exception;
-            object output = UriCustomTypeParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
+            UriLiteralParsingException exception;
+            object output = CustomUriLiteralParsers.Instance.ParseUriStringToType(CUSTOM_PARSER_INT_VALID_VALUE, Int32TypeReference, out exception);
 
             // Assert
             exception.Should().BeNull();
@@ -1020,9 +1021,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         #region Custom Type Parsers
 
-        internal class MyCustomBooleanUriTypeParser : IUriTypeParser
+        internal class MyCustomBooleanUriLiteralParser : IUriLiteralParser
         {
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
+            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 
@@ -1037,9 +1038,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 }
 
                 // Take care of literals
-                if (text.StartsWith(BOOLEAN_TYPE_PREFIX_LITERAL))
+                if (text.StartsWith(BOOLEAN_LITERAL_PREFIX))
                 {
-                    text = text.Replace(BOOLEAN_TYPE_PREFIX_LITERAL, string.Empty);
+                    text = text.Replace(BOOLEAN_LITERAL_PREFIX, string.Empty);
                     text = UriParserHelper.RemoveQuotes(text);
                 }
 
@@ -1053,7 +1054,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 }
                 else if (text == CUSTOM_PARSER_BOOLEAN_INVALID_VALUE)
                 {
-                    parsingException = new UriTypeParsingException("Failed to convert boolean.", "Value must be bla bla bla");
+                    parsingException = new UriLiteralParsingException("Failed to convert boolean.");
                     return null;
                 }
 
@@ -1061,9 +1062,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
         }
 
-        internal class MyCustomIntAndBooleanUriTypeParser : IUriTypeParser
+        internal class MyCustomIntAndBooleanUriLiteralParser : IUriLiteralParser
         {
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
+            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
                 {
@@ -1085,7 +1086,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 return null;
             }
 
-            private object ParseUriStringToInt(string text, out UriTypeParsingException parsingException)
+            private object ParseUriStringToInt(string text, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 
@@ -1102,7 +1103,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 return null;
             }
 
-            public object ParseUriStringToBoolean(string text, out UriTypeParsingException parsingException)
+            public object ParseUriStringToBoolean(string text, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 
@@ -1112,9 +1113,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 }
 
                 // Take care of literals
-                if (text.StartsWith(BOOLEAN_TYPE_PREFIX_LITERAL))
+                if (text.StartsWith(BOOLEAN_LITERAL_PREFIX))
                 {
-                    text = text.Replace(BOOLEAN_TYPE_PREFIX_LITERAL, string.Empty);
+                    text = text.Replace(BOOLEAN_LITERAL_PREFIX, string.Empty);
                     text = UriParserHelper.RemoveQuotes(text);
                 }
 
@@ -1124,11 +1125,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 }
                 else if (text == CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID)
                 {
-                    parsingException = new UriTypeParsingException("Failed to convert boolean.", "Value must be bla bla bla");
+                    parsingException = new UriLiteralParsingException("Failed to convert boolean.");
                 }
                 else if (text == CUSTOM_PARSER_BOOLEAN_INVALID_VALUE)
                 {
-                    parsingException = new UriTypeParsingException("Failed to convert boolean.", "Value must be bla bla bla");
+                    parsingException = new UriLiteralParsingException("Failed to convert boolean.");
                     return null;
                 }
 
@@ -1136,9 +1137,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
         }
 
-        internal class MyCustomStringUriTypeParser : IUriTypeParser
+        internal class MyCustomStringUriLiteralParser : IUriLiteralParser
         {
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
+            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
                 if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
@@ -1158,9 +1159,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 bool isLiteralPrefixExists = false;
 
                 // Take care of literals
-                if (text.StartsWith(STRING_TYPE_PREFIX_LITERAL))
+                if (text.StartsWith(STRING_LITERAL_PREFIX))
                 {
-                    text = text.Replace(STRING_TYPE_PREFIX_LITERAL, string.Empty);
+                    text = text.Replace(STRING_LITERAL_PREFIX, string.Empty);
 
                     // If Literal exists, not need of quotes
                     isLiteralPrefixExists = true;
@@ -1168,7 +1169,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
                 if (!isLiteralPrefixExists && !UriParserHelper.IsUriValueQuoted(text))
                 {
-                    parsingException = new UriTypeParsingException("Edm.String value must be quoted");
+                    parsingException = new UriLiteralParsingException("Edm.String value must be quoted");
                     return null;
                 }
 
@@ -1177,7 +1178,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 // Simulates a bug in a client Parser
                 if (text == CUSTOM_PARSER_STRING_VALUE_CAUSEBUG)
                 {
-                    parsingException = new UriTypeParsingException("Parsing to Edm.String has failed for some reasons");
+                    parsingException = new UriLiteralParsingException("Parsing to Edm.String has failed for some reasons");
                     return "RetunsAValueButSupposeToBeNull";
                 }
 
@@ -1190,16 +1191,16 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             }
         }
 
-        internal class HeatBeatCustomUriTypeParser : IUriTypeParser
+        internal class HeatBeatCustomUriLiteralParser : IUriLiteralParser
         {
             public static EdmComplexTypeReference HeartbeatComplexType;
 
-            static HeatBeatCustomUriTypeParser()
+            static HeatBeatCustomUriLiteralParser()
             {
                 HeartbeatComplexType = new EdmComplexTypeReference(HardCodedTestModel.GetHeatbeatComplexType(), false);
             }
 
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
+            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
                 if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
@@ -1226,7 +1227,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
                 if (!UriParserHelper.IsUriValueQuoted(text))
                 {
-                    parsingException = new UriTypeParsingException("Edm.Heartbeat value must be quoted");
+                    parsingException = new UriLiteralParsingException("Edm.Heartbeat value must be quoted");
                     return null;
                 }
 

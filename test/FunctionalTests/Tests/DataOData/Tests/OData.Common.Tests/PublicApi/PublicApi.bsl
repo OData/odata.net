@@ -5105,14 +5105,13 @@ public enum Microsoft.OData.Core.UriParser.OrderByDirection : int {
 
 public sealed class Microsoft.OData.Core.UriParser.CustomUriFunctions {
 	public static void AddCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
-	public static void AddCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature, bool addAsOverloadToBuiltInFunction)
 	public static bool RemoveCustomUriFunction (string functionName)
 	public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
 }
 
-public sealed class Microsoft.OData.Core.UriParser.CustomUriTypePrefixLiterals {
-	public static void AddCustomUriTypePrefixLiteral (string typePrefixLiteralName, Microsoft.OData.Edm.IEdmTypeReference literalEdmTypeReference)
-	public static bool RemoveCustomUriTypePrefixLiteral (string typePrefixLiteralName)
+public sealed class Microsoft.OData.Core.UriParser.CustomUriLiteralPrefixes {
+	public static void AddCustomLiteralPrefix (string literalPrefix, Microsoft.OData.Edm.IEdmTypeReference literalEdmTypeReference)
+	public static bool RemoveCustomLiteralPrefix (string literalPrefix)
 }
 
 public sealed class Microsoft.OData.Core.UriParser.ODataUriUtils {
@@ -5314,6 +5313,13 @@ public sealed class Microsoft.OData.Core.UriParser.Metadata.StringAsEnumResolver
 	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
 	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IList`1[[System.String]] positionalValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
 	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] input)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Parsers.CustomUriLiteralParsers : IUriLiteralParser {
+	public static void AddCustomUriLiteralParser (Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser customUriLiteralParser)
+	public static void AddCustomUriLiteralParser (Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser customUriLiteralParser)
+	public virtual object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException& parsingException)
+	public static bool RemoveCustomUriLiteralParser (Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser customUriLiteralParser)
 }
 
 public abstract class Microsoft.OData.Core.UriParser.Semantic.CollectionNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
@@ -6156,28 +6162,17 @@ public abstract class Microsoft.OData.Core.UriParser.Visitors.SelectItemTranslat
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.WildcardSelectItem item)
 }
 
-public sealed class Microsoft.OData.Core.UriParser.Parsers.TypeParsers.UriCustomTypeParsers : IUriTypeParser {
-	public static void AddCustomUriTypeParser (Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.IUriTypeParser uriCustomTypeParser)
-	public static void AddCustomUriTypeParser (Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.IUriTypeParser uriCustomTypeParser)
-	public virtual object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.UriTypeParsingException& parsingException)
-	public static bool RemoveCustomUriTypeParser (Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.IUriTypeParser uriCustomTypeParser)
-}
-
-public interface Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.IUriTypeParser {
-	object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.UriTypeParsingException& parsingException)
+public interface Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser {
+	object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException& parsingException)
 }
 
 [
 DebuggerDisplayAttribute(),
 ]
-public sealed class Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common.UriTypeParsingException : Microsoft.OData.Core.ODataException, _Exception, ISerializable {
-	public UriTypeParsingException ()
-	public UriTypeParsingException (string message)
-	public UriTypeParsingException (string message, System.Exception innerException)
-	public UriTypeParsingException (string message, string parsingFailureReason)
-	public UriTypeParsingException (string message, System.Exception innerException, string parsingFailureReason)
-
-	string ParsingFailureReason  { public get; }
+public sealed class Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException : Microsoft.OData.Core.ODataException, _Exception, ISerializable {
+	public UriLiteralParsingException ()
+	public UriLiteralParsingException (string message)
+	public UriLiteralParsingException (string message, System.Exception innerException)
 }
 
 public enum Microsoft.OData.Client.DataServiceResponsePreference : int {

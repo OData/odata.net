@@ -322,8 +322,8 @@
     <Compile Include="UriParser\Parsers\SegmentKeyHandlerTests.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandParserTests.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandTermParserTests.cs" />
-    <Compile Include="UriParser\Parsers\UriCustomTypeParserTests.cs" />
-    <Compile Include="UriParser\Parsers\UriCustomTypePrefixLiteralTests.cs" />
+    <Compile Include="UriParser\Parsers\CustomUriLiteralParserTests.cs" />
+    <Compile Include="UriParser\Parsers\CustomUriLiteralPrefixesTests.cs" />
     <Compile Include="UriParser\Parsers\UriPathParserTests.cs" />
     <Compile Include="UriParser\Parsers\UriPrimitiveTypeParserTests.cs" />
     <Compile Include="UriParser\Parsers\UriQueryExpressionParserTests.cs" />

@@ -11,8 +11,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.Common;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         internal static string GetEdmConstantNames(IEdmTypeReference edmTypeReference)
         {
             Debug.Assert(edmTypeReference != null, "Cannot be null");
-            
+
             switch (edmTypeReference.PrimitiveKind())
             {
                 case EdmPrimitiveTypeKind.Boolean:
@@ -481,11 +481,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>Creates an exception for a parse error.</summary>
         /// <param name="message">Message text.</param>
-        /// <param name="parseException">Type Parsing exception</param>
+        /// <param name="parsingException">Type Parsing exception</param>
         /// <returns>A new Exception.</returns>
-        private static Exception ParseError(string message, UriTypeParsingException parseException)
+        private static Exception ParseError(string message, UriLiteralParsingException parsingException)
         {
-            return new ODataException(message, parseException);
+            return new ODataException(message, parsingException);
         }
 
         /// <summary>
@@ -512,8 +512,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             Debug.Assert(lexer != null, "lexer != null");
 
-            UriTypeParsingException typeParsingException;
-            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(lexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
+            UriLiteralParsingException typeParsingException;
+            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(lexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
 
             if (targetValue == null)
             {
@@ -536,7 +536,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         lexer.CurrentToken.Text,
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText,
-                        typeParsingException.ParsingFailureReason);
+                        typeParsingException.Message);
 
                     throw ParseError(message, typeParsingException);
                 }

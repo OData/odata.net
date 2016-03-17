@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IUriTypeParser.cs" company="Microsoft">
+// <copyright file="IUriLiteralParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
+namespace Microsoft.OData.Core.UriParser.Parsers.Common
 {
     #region Namespaces
 
@@ -13,11 +13,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
     #endregion
 
     /// <summary>
-    /// Interface for UriTypeParser.
-    /// To parse the uri of an OData request into objects, the ODataUriParser uses UriTypeParses.
+    /// Interface for Uri literal parser.
+    /// To parse the uri of an OData request into objects, the ODataUriParser uses UriLiteralParses.
     /// Implementation of this interface will parse a text of an EdmType to it's instance.
     /// </summary>
-    public interface IUriTypeParser
+    public interface IUriLiteralParser
     {
         /// <summary>
         /// Parse the given text of EdmType <paramref name="targetType"/> to it's object instance.
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
         /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
         /// <returns>If the parsing proceess has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
-        object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException);
+        object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException);
 
         // Consider add this API:
         // bool TryParseUriStringToType(string text, IEdmTypeReference targetType,out object targetValue, out UriTypeParsingException parsingException);

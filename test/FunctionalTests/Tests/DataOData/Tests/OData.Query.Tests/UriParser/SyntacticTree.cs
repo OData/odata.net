@@ -13,8 +13,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Parsers.Common;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm.Library;
 
@@ -387,7 +386,7 @@ namespace Microsoft.OData.Core.UriParser
             Debug.Assert(text != null, "text != null");
 
             object valueAsObject;
-            UriTypeParsingException exception;
+            UriLiteralParsingException exception;
             if (!UriPrimitiveTypeParser.Instance.TryParseUriStringToType(text, EdmCoreModel.Instance.GetInt32(false), out valueAsObject, out exception))
             {
                 nonNegativeInteger = -1;

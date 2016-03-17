@@ -10,8 +10,8 @@ namespace Microsoft.OData.Core.UriParser
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.Common;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
@@ -94,8 +94,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The literal token produced by building the given literal.</returns>
         private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmTypeReference targetTypeReference)
         {
-            UriTypeParsingException typeParsingException;
-            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
+            UriLiteralParsingException typeParsingException;
+            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
             if (targetValue == null)
             {
                 string message;
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Core.UriParser
                         expressionLexer.CurrentToken.Text,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText,
-                        typeParsingException.ParsingFailureReason);
+                        typeParsingException.Message);
 
                     throw new ODataException(message, typeParsingException);
                 }

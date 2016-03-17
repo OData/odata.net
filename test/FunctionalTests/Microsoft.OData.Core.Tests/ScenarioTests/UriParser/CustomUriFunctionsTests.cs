@@ -83,31 +83,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         #endregion
 
         [Fact]
-        public void AddCustomFunction_CannotAddFunctionWithNameAlreadyExistsAsBuildIsFunction_AddAsOverloadFalse_SameNameDifferentArguments()
-        {
-            FunctionSignatureWithReturnType customFunctionSignature =
-                new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false),
-                                                    EdmCoreModel.Instance.GetBoolean(false));
-
-            Action addExistingCustomFunctionSignature = () =>
-                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
-
-            addExistingCustomFunctionSignature.ShouldThrow<ODataException>().
-                WithMessage(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(BUILT_IN_GEODISTANCE_FUNCTION_NAME));
-        }
-
-        [Fact]
-        public void AddCustomFunction_CannotAddFunctionWithNameAlreadyExistsAsBuildIsFunction_AddAsOverloadFalse_SameNameSameArguments()
-        {
-            Action addExistingCustomFunctionSignature = () =>
-                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME,
-                                                        GEO_DISTANCE_BUILTIN_FUNCTION_SIGNATURE);
-
-            addExistingCustomFunctionSignature.ShouldThrow<ODataException>().
-                WithMessage(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(BUILT_IN_GEODISTANCE_FUNCTION_NAME));
-        }
-
-        [Fact]
         public void AddCustomFunction_CannotAddFunctionWhichAlreadyExistsAsBuiltInWithSameFullSignature_AddAsOverload()
         {
             try
@@ -115,8 +90,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 // Add exisiting with 'addAsOverload' 'true'
                 Action addCustomFunction = () =>
                     CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME,
-                                                            GEO_DISTANCE_BUILTIN_FUNCTION_SIGNATURE,
-                                                            true);
+                                                            GEO_DISTANCE_BUILTIN_FUNCTION_SIGNATURE);
 
                 // Assert
                 addCustomFunction.ShouldThrow<ODataException>().
@@ -139,7 +113,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                                                         EdmCoreModel.Instance.GetBoolean(false));
 
                 // Add with 'addAsOverload' 'true'
-                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature, true);
+                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
 
                 FunctionSignatureWithReturnType[] resultFunctionSignaturesWithReturnType =
                     this.GetCustomFunctionSignaturesOrNull(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
@@ -198,7 +172,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 var newCustomFunctionSignature = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
 
                 Action addCustomFunction = () =>
-                    CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature, true);
+                    CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Asserts
                 addCustomFunction.ShouldThrow<ODataException>().
@@ -224,7 +198,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
                 // Assert
                 // Make sure both signatures exists
-                FunctionSignatureWithReturnType[] customFunctionSignatures = 
+                FunctionSignatureWithReturnType[] customFunctionSignatures =
                     GetCustomFunctionSignaturesOrNull(customFunctionName);
 
                 customFunctionSignatures.Length.Should().Be(1);
@@ -487,7 +461,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
                 // Validate that the two overloads as 
                 GetCustomFunctionSignaturesOrNull(customFunctionName).
-                    All(funcSignature =>    funcSignature.Equals(existingCustomFunctionSignature) ||
+                    All(funcSignature => funcSignature.Equals(existingCustomFunctionSignature) ||
                                             funcSignature.Equals(existingCustomFunctionSignatureTwo)).
                         Should().BeTrue();
 
@@ -539,14 +513,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         [Fact]
         public void ParseWithCustomUriFunction_AddAsOverloadToBuiltIn()
         {
-            FunctionSignatureWithReturnType customStartWithFunctionSignature = 
+            FunctionSignatureWithReturnType customStartWithFunctionSignature =
                 new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true),
                                                     EdmCoreModel.Instance.GetString(true),
                                                     EdmCoreModel.Instance.GetInt32(true));
             try
             {
                 // Add with override 'true'
-                CustomUriFunctions.AddCustomUriFunction("startswith", customStartWithFunctionSignature, true);
+                CustomUriFunctions.AddCustomUriFunction("startswith", customStartWithFunctionSignature);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=startswith(Name, 66)");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);

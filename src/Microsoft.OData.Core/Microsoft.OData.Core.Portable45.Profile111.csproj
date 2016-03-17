@@ -420,7 +420,7 @@
     <Compile Include="UriParser\Binders\UnaryOperatorBinder.cs" />
     <Compile Include="UriParser\BuiltInUriFunctions.cs" />
     <Compile Include="UriParser\CustomUriFunctions.cs" />
-    <Compile Include="UriParser\CustomUriTypePrefixLiterals.cs" />
+    <Compile Include="UriParser\CustomUriLiteralPrefixes.cs" />
     <Compile Include="UriParser\ExceptionUtil.cs" />
     <Compile Include="UriParser\ExpressionLexer.cs" />
     <Compile Include="UriParser\ExpressionLexerLiteralExtensions.cs" />
@@ -465,11 +465,11 @@
     <Compile Include="UriParser\Parsers\SelectExpandParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandSyntacticParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandTermParser.cs" />
-    <Compile Include="UriParser\Parsers\TypeParsers\Common\IUriTypeParser.cs" />
-    <Compile Include="UriParser\Parsers\TypeParsers\Common\UriTypeParsingException.cs" />
-    <Compile Include="UriParser\Parsers\TypeParsers\DefaultUriTypeParser.cs" />
-    <Compile Include="UriParser\Parsers\TypeParsers\UriCustomTypeParsers.cs" />
-    <Compile Include="UriParser\Parsers\TypeParsers\UriPrimitiveTypeParser.cs" />
+    <Compile Include="UriParser\Parsers\LiteralParsers\Common\IUriLiteralParser.cs" />
+    <Compile Include="UriParser\Parsers\LiteralParsers\Common\UriLiteralParsingException.cs" />
+    <Compile Include="UriParser\Parsers\LiteralParsers\DefaultUriLiteralParser.cs" />
+    <Compile Include="UriParser\Parsers\LiteralParsers\CustomUriLiteralParsers.cs" />
+    <Compile Include="UriParser\Parsers\LiteralParsers\UriPrimitiveTypeParser.cs" />
     <Compile Include="UriParser\Parsers\UriParserHelper.cs" />
     <Compile Include="UriParser\Parsers\UriPathParser.cs" />
     <Compile Include="UriParser\Parsers\UriQueryExpressionParser.cs" />

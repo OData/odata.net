@@ -1,43 +1,43 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DefaultUriTypeParser.cs" company="Microsoft">
+// <copyright file="DefaultUriLiteralParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
+namespace Microsoft.OData.Core.UriParser.Parsers
 {
     #region Namespaces
 
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Parsers.Common;
     using Microsoft.OData.Edm;
 
     #endregion
 
-    internal sealed class DefaultUriTypeParser : IUriTypeParser
+    internal sealed class DefaultUriLiteralParser : IUriLiteralParser
     {
         #region Fields
 
-        // All Uri Type Parsers
-        private List<IUriTypeParser> uriTypeParsers;
+        // All Uri Literal Parsers
+        private List<IUriLiteralParser> uriTypeParsers;
 
         #endregion
 
         #region Singleton
 
-        private static DefaultUriTypeParser singleInstance = new DefaultUriTypeParser();
+        private static DefaultUriLiteralParser singleInstance = new DefaultUriLiteralParser();
 
-        private DefaultUriTypeParser()
+        private DefaultUriLiteralParser()
         {
             // It is important that UriCustomTypeParsers will be added first, so it will be called before the others built-in parsers
-            uriTypeParsers = new List<IUriTypeParser> 
+            uriTypeParsers = new List<IUriLiteralParser> 
             {
-                { UriCustomTypeParsers.Instance },
+                { CustomUriLiteralParsers.Instance },
                 { UriPrimitiveTypeParser.Instance }
             };
         }
 
-        internal static DefaultUriTypeParser Instance
+        internal static DefaultUriLiteralParser Instance
         {
             get
             {
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
 
         #endregion
 
-        #region IUriTypeParser Implementation
+        #region IUriLiteralParser Implementation
 
         /// <summary>
         /// Try to parse the given text by each parser.
@@ -56,13 +56,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers.TypeParsers
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
         /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
         /// <returns>If the parsing proceess has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
-        public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriTypeParsingException parsingException)
+        public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
         {
             parsingException = null;
             object targetValue;
 
             // Try to parse the uri text with each parser
-            foreach (IUriTypeParser uriTypeParser in uriTypeParsers)
+            foreach (IUriLiteralParser uriTypeParser in uriTypeParsers)
             {
                 targetValue = uriTypeParser.ParseUriStringToType(text, targetType, out parsingException);
 

@@ -733,7 +733,7 @@ namespace Microsoft.OData.Core.UriParser
             if (this.ch == '\'')
             {
                 // Get custom literal if exists.
-                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriTypePrefixLiterals.GetCustomEdmTypeByLiteralPrefix(this.token.Text);
+                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(this.token.Text);
                 if (edmTypeOfCustomLiteral != null)
                 {
                     this.token.SetCustomEdmTypeLiteral(edmTypeOfCustomLiteral);

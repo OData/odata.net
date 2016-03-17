@@ -6,8 +6,8 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Parsers.Common;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
         private bool TryParseUriStringToPrimitiveType(string text, IEdmTypeReference targetType, out object targetValue)
         {
-            UriTypeParsingException exception;
+            UriLiteralParsingException exception;
 
             return UriPrimitiveTypeParser.Instance.TryParseUriStringToType(text, targetType, out targetValue, out exception);
         }
