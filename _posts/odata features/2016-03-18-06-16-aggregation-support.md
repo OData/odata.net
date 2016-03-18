@@ -10,18 +10,20 @@ From ODataLib 6.15.0, we introduced the `basic` Uri parser support for aggregati
 ### Aggregate
 The aggregate transformation takes a comma-separated list of one or more aggregate expressions as parameters and returns a result set with a single instance, representing the aggregated value for all instances in the input set.
 
-####Examples
+#### Examples
+
 `GET ~/Sales?$apply=aggregate(Amount with sum as Total)`
 
 `GET ~/Sales?$apply=aggregate(Amount with min as MinAmount)`
 
-####Open Issue
+#### Open Issue
 [#463](https://github.com/OData/odata.net/issues/463)
 
-###Groupby
+### Groupby
 The groupby transformation takes one or two parameters and `Splits` the initial set into subsets where all instances in a subset have the same values for the grouping properties specified in the first parameter, `Applies` set transformations to each subset according to the second parameter, resulting in a new set of potentially different structure and cardinality, `Ensures` that the instances in the result set contain all grouping properties with the correct values for the group, `Concatenates` the intermediate result sets into one result set.
 
-####Examples
+#### Examples
+
 `GET ~/Sales?$apply=groupby((Category/CategoryName))`
 
 `GET ~/Sales?$apply=groupby((ProductName), aggregate(SupplierID with sum as SupplierID))`
@@ -29,7 +31,8 @@ The groupby transformation takes one or two parameters and `Splits` the initial 
 ### Apply with other QueryOptions
 Apply queryoption will get parse first and we can add filter, orderby, top, skip with apply.
 
-####Examples
+#### Examples
+
 `$apply=groupby((Address/City))&$filter=Address/City eq 'redmond'`
 
 `$apply=groupby((Name))&$top=1`
