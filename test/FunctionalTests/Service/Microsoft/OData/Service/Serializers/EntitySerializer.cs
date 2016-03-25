@@ -74,10 +74,10 @@ namespace Microsoft.OData.Service.Serializers
                     Debug.Assert(this.Service.OperationContext != null, "this.Service.OperationContext != null");
 
                     this.operationSerializer = new OperationSerializer(
-                        this.PayloadMetadataParameterInterpreter, 
-                        this.PayloadMetadataPropertyManager, 
-                        this.Service.ActionProvider.AdvertiseServiceAction, 
-                        this.Service.Provider.ContainerNamespace, 
+                        this.PayloadMetadataParameterInterpreter,
+                        this.PayloadMetadataPropertyManager,
+                        this.Service.ActionProvider.AdvertiseServiceAction,
+                        this.Service.Provider.ContainerNamespace,
                         this.contentFormat,
                         this.Service.OperationContext.MetadataUri);
                 }
@@ -205,14 +205,6 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             string title = expectedType.Name;
-#pragma warning disable 618
-            if (this.contentFormat == ODataFormat.Atom)
-#pragma warning restore 618
-            {
-                AtomEntryMetadata entryAtom = new AtomEntryMetadata();
-                entryAtom.EditLink = new AtomLinkMetadata { Title = title };
-                entry.SetAnnotation(entryAtom);
-            }
 
             ResourceType actualResourceType = WebUtil.GetNonPrimitiveResourceType(this.Provider, element);
             if (actualResourceType.ResourceTypeKind != ResourceTypeKind.EntityType)
@@ -237,7 +229,7 @@ namespace Microsoft.OData.Service.Serializers
 
             // Write the etag property, if the type has etag properties
             this.PayloadMetadataPropertyManager.SetETag(entry, () => this.GetETagValue(element, actualResourceType));
-            
+
             IEnumerable<ProjectionNode> projectionNodes = this.GetProjections();
             if (projectionNodes != null)
             {
@@ -320,13 +312,6 @@ namespace Microsoft.OData.Service.Serializers
 
                 // If the stream provider did not provider a read link, then we should use the edit link as the read link.
                 this.PayloadMetadataPropertyManager.SetReadLink(mediaResource, () => readStreamUri ?? lazyStreamEditLink.Value);
-#pragma warning disable 618
-                if (this.contentFormat == ODataFormat.Atom)
-#pragma warning restore 618
-                {
-                    AtomStreamReferenceMetadata mediaResourceAtom = new AtomStreamReferenceMetadata() { EditLink = new AtomLinkMetadata { Title = title } };
-                    mediaResource.SetAnnotation(mediaResourceAtom);
-                }
 
                 if (!string.IsNullOrEmpty(mediaETag))
                 {
@@ -350,7 +335,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
             Debug.Assert(namedStreamProperty != null, "namedStreamProperty != null");
             Debug.Assert(namedStreamProperty.IsOfKind(ResourcePropertyKind.Stream), "namedStreamProperty.IsOfKind(ResourcePropertyKind.Stream)");
-            
+
             string mediaETag;
             Uri readStreamUri;
             string mediaContentType;
@@ -407,17 +392,6 @@ namespace Microsoft.OData.Service.Serializers
 
             // Write the other elements for the feed
             this.PayloadMetadataPropertyManager.SetId(feed, () => getAbsoluteUri());
-
-#pragma warning disable 618
-            if (this.contentFormat == ODataFormat.Atom)
-#pragma warning restore 618
-            {
-                // Create the atom feed metadata and set the self link and title value.
-                AtomFeedMetadata feedMetadata = new AtomFeedMetadata();
-                feed.SetAnnotation(feedMetadata);
-                feedMetadata.Title = new AtomTextConstruct { Text = title };
-                feedMetadata.SelfLink = new AtomLinkMetadata { Href = getRelativeUri(), Title = title };
-            }
 
             // support for $count
             // in ATOM we write it at the beginning (we always have)
@@ -514,7 +488,7 @@ namespace Microsoft.OData.Service.Serializers
         private IEnumerable<ODataProperty> GetAllEntityProperties(EntityToSerialize entityToSerialize)
         {
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
-            
+
             List<ODataProperty> properties = new List<ODataProperty>(entityToSerialize.ResourceType.Properties.Count);
             foreach (ResourceProperty property in this.Provider.GetResourceSerializableProperties(this.CurrentContainer, entityToSerialize.ResourceType))
             {

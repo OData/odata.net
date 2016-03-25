@@ -194,7 +194,7 @@ namespace Microsoft.OData.Core
             {
                 if (this.mediaTypeResolver == null)
                 {
-                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.EnableAtom);
+                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver();
                 }
 
                 return this.mediaTypeResolver;

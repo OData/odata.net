@@ -79,7 +79,7 @@ namespace Microsoft.OData.Service
         /// Storage for whether or not the response body or etag should be written once it has been determined.
         /// </summary>
         private bool? responseBodyOrETagShouldBeWritten;
-        
+
         /// <summary>
         /// Storage for whether or not the response body should be written once it has been determined.
         /// </summary>
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Service
             this.ActualResponseVersion = this.ResponseVersion;
 
             this.Preference = ClientPreference.None;
-            
+
             this.containerName = InferContainerNameFromSegments(segmentInfos);
             this.mimeType = InferMimeTypeFromSegments(segmentInfos);
         }
@@ -235,13 +235,13 @@ namespace Microsoft.OData.Service
 
         /// <summary>Client preference for payload in response.</summary>
         internal ClientPreference Preference { get; private set; }
-        
+
         /// <summary>
         /// If the server needs to write a response body or etag in the response based on the request verb and uri.
         /// NOTE: The client's preference is not considered when determining this.
         /// </summary>
-        internal bool ShouldWriteResponseBodyOrETag 
-        { 
+        internal bool ShouldWriteResponseBodyOrETag
+        {
             get
             {
                 Debug.Assert(this.responseBodyOrETagShouldBeWritten.HasValue, "Whether or not the response has a body or etag has not yet been determined.");
@@ -253,7 +253,7 @@ namespace Microsoft.OData.Service
         /// If the server needs to write a response body in the response based on the request verb, uri, and client preference.
         /// </summary>
         internal bool ShouldWriteResponseBody
-        { 
+        {
             get
             {
                 Debug.Assert(this.responseBodyShouldBeWritten.HasValue, "Whether or not the response has a body has not yet been determined.");
@@ -443,18 +443,6 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Gets a value indicating whether the response to this request will be Atom.
-        /// </summary>
-        internal bool IsAtomResponse
-        {
-            get
-            {
-                return this.ResponseFormat.IsAtom
-                       && this.TargetKind == RequestTargetKind.Resource;
-            }
-        }
-
-        /// <summary>
         /// Function name specified in $callback for JSONP.
         /// </summary>
         /// 
@@ -594,7 +582,7 @@ namespace Microsoft.OData.Service
         internal void DetermineResponseFormat(IDataService service)
         {
             Debug.Assert(service != null, "service != null");
-            
+
             switch (this.TargetKind)
             {
                 case RequestTargetKind.Batch:

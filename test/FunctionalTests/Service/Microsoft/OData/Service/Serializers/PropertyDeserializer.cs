@@ -80,9 +80,8 @@ namespace Microsoft.OData.Service.Serializers
 
             ODataProperty property = this.MessageReader.ReadProperty(propertyTypeReference);
             Debug.Assert(property != null, "property != null");
-#pragma warning disable 618
-            AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Atom, ODataFormat.Json);
-#pragma warning restore 618
+            AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Json);
+
             // On V4, it seems this checking logic is useless. Will remove it after fully understanding.
             // PlainXmlDeserializer - PUT to a property with m:null='true' doesn't verify the name of the property matches
             //
@@ -94,8 +93,7 @@ namespace Microsoft.OData.Service.Serializers
             //
             // For Json light, we do not validate the property name since in requests we do not parse the metadata URI and thus
             //   will always report 'value'.
-            if (!this.IsAtomRequest && !this.IsJsonLightRequest &&
-                string.CompareOrdinal(segmentInfo.Identifier, property.Name) != 0)
+            if (!this.IsJsonLightRequest && string.CompareOrdinal(segmentInfo.Identifier, property.Name) != 0)
             {
                 throw DataServiceException.CreateBadRequestError(
                     Microsoft.OData.Service.Strings.PlainXml_IncorrectElementName(segmentInfo.Identifier, property.Name));

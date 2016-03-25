@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
     using Microsoft.Spatial;
-
     #endregion
 
     /// <summary>

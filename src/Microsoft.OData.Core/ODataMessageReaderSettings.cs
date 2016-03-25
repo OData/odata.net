@@ -60,7 +60,6 @@ namespace Microsoft.OData.Core
 
             // NOTE: reader behavior is immutable; copy by reference is ok.
             this.readerBehavior = other.ReaderBehavior;
-            this.EnableAtom = other.EnableAtom;
             this.EnableFullValidation = other.EnableFullValidation;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.mediaTypeResolver = other.mediaTypeResolver;
@@ -230,7 +229,7 @@ namespace Microsoft.OData.Core
             {
                 if (this.mediaTypeResolver == null)
                 {
-                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.EnableAtom);
+                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver();
                 }
 
                 return this.mediaTypeResolver;
@@ -312,11 +311,6 @@ namespace Microsoft.OData.Core
                 return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
             }
         }
-
-        /// <summary>
-        /// Whether ATOM support is enabled.
-        /// </summary>
-        internal bool EnableAtom { get; set; }
 
         /// <summary>Enables the default behavior.</summary>
         public void EnableDefaultBehavior()

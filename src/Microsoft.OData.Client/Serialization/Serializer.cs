@@ -183,14 +183,6 @@ namespace Microsoft.OData.Client
             // to resolve the entity type using EdmModel.FindSchemaElement.
             entry.TypeName = entityType.ElementTypeName;
 
-            // Continue to send the entry's ID in update payloads in Atom for compatibility with V1-V3,
-            // but for JSON-Light we do not want the extra information on the wire.
-            if (clientFormat.UsingAtom && EntityStates.Modified == entityDescriptor.State)
-            {
-                // <id>http://host/service/entityset(key)</id>
-                entry.Id = entityDescriptor.GetLatestIdentity();
-            }
-
             if (entityDescriptor.IsMediaLinkEntry || entityType.IsMediaLinkEntry)
             {
                 // Since we are already enabled EnableWcfDataServicesClientBehavior in the writer settings,
@@ -497,7 +489,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new DataServiceRequestException(Strings.Serializer_UriDoesNotContainParameterAlias(op.Name));
                 }
-                
+
                 if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase))
                 {
                     // name=value&
@@ -671,7 +663,7 @@ namespace Microsoft.OData.Client
         private string ConvertToEscapedUriValue(string paramName, object value, bool useEntityReference = false)
         {
             Debug.Assert(!string.IsNullOrEmpty(paramName), "!string.IsNullOrEmpty(paramName)");
-            
+
             // Literal values with single quotes need special escaping due to System.Uri changes in behavior between .NET 4.0 and 4.5.
             // We need to ensure that our escaped values do not change between those versions, so we need to escape values differently when they could contain single quotes.
             bool needsSpecialEscaping = false;
@@ -815,10 +807,10 @@ namespace Microsoft.OData.Client
                     {
                         var list = value as IEnumerable;
                         var links = (from object o in list
-                            select new ODataEntityReferenceLink()
-                            {
-                                Url = this.requestInfo.EntityTracker.GetEntityDescriptor(o).GetLatestIdentity(),
-                            }).ToList();
+                                     select new ODataEntityReferenceLink()
+                                     {
+                                         Url = this.requestInfo.EntityTracker.GetEntityDescriptor(o).GetLatestIdentity(),
+                                     }).ToList();
 
                         valueInODataFormat = new ODataEntityReferenceLinks()
                         {

@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
+
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -15,8 +17,8 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Atom;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 

@@ -24,99 +24,99 @@ namespace Microsoft.OData.Core
         /// <summary>The characters that are considered to be whitespace by XmlConvert.</summary>
         private static readonly char[] XmlWhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
 
-        /// <summary>
-        /// Converts the given value to the ATOM string representation
-        /// and uses the writer to write it.
-        /// </summary>
-        /// <param name="writer">The writer to write the stringified value.</param>
-        /// <param name="value">The value to be written.</param>
-        internal static void WritePrimitiveValue(XmlWriter writer, object value)
-        {
-            Debug.Assert(value != null, "value != null");
+        ///// <summary>
+        ///// Converts the given value to the ATOM string representation
+        ///// and uses the writer to write it.
+        ///// </summary>
+        ///// <param name="writer">The writer to write the stringified value.</param>
+        ///// <param name="value">The value to be written.</param>
+        //internal static void WritePrimitiveValue(XmlWriter writer, object value)
+        //{
+        //    Debug.Assert(value != null, "value != null");
 
-            if (!PrimitiveConverter.Instance.TryWriteAtom(value, writer))
-            {
-                string result = ConvertPrimitiveToString(value);
-                ODataAtomWriterUtils.WriteString(writer, result);
-            }
-        }
+        //    if (!PrimitiveConverter.Instance.TryWriteAtom(value, writer))
+        //    {
+        //        string result = ConvertPrimitiveToString(value);
+        //        ODataAtomWriterUtils.WriteString(writer, result);
+        //    }
+        //}
 
-        /// <summary>Converts the specified value to a serializable string in ATOM format, or throws an exception if the value cannot be converted.</summary>
-        /// <param name="value">Non-null value to convert.</param>
-        /// <returns>The specified value converted to an ATOM string.</returns>
-        internal static string ConvertPrimitiveToString(object value)
-        {
-            string result;
-            if (!TryConvertPrimitiveToString(value, out result))
-            {
-                throw new ODataException(Strings.AtomValueUtils_CannotConvertValueToAtomPrimitive(value.GetType().FullName));
-            }
+        ///// <summary>Converts the specified value to a serializable string in ATOM format, or throws an exception if the value cannot be converted.</summary>
+        ///// <param name="value">Non-null value to convert.</param>
+        ///// <returns>The specified value converted to an ATOM string.</returns>
+        //internal static string ConvertPrimitiveToString(object value)
+        //{
+        //    string result;
+        //    if (!TryConvertPrimitiveToString(value, out result))
+        //    {
+        //        throw new ODataException(Strings.AtomValueUtils_CannotConvertValueToAtomPrimitive(value.GetType().FullName));
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        /// <summary>
-        /// Reads a string value of an XML element and gets TypeName from model's EdmEnumTypeReference.
-        /// </summary>
-        /// <param name="reader">The XML reader to read the value from.</param>
-        /// <param name="enumTypeReference">The enum rype reference.</param>
-        /// <returns>An ODataEnumValue</returns>
-        internal static ODataEnumValue ReadEnumValue(XmlReader reader, IEdmEnumTypeReference enumTypeReference)
-        {
-            Debug.Assert(reader != null, "reader != null");
+        ///// <summary>
+        ///// Reads a string value of an XML element and gets TypeName from model's EdmEnumTypeReference.
+        ///// </summary>
+        ///// <param name="reader">The XML reader to read the value from.</param>
+        ///// <param name="enumTypeReference">The enum rype reference.</param>
+        ///// <returns>An ODataEnumValue</returns>
+        //internal static ODataEnumValue ReadEnumValue(XmlReader reader, IEdmEnumTypeReference enumTypeReference)
+        //{
+        //    Debug.Assert(reader != null, "reader != null");
 
-            // skip the validation on value or type name.
-            string stringValue = reader.ReadElementContentValue();
-            string typeName = (enumTypeReference != null) ? enumTypeReference.FullName() : null;
-            return new ODataEnumValue(stringValue, typeName);
-        }
+        //    // skip the validation on value or type name.
+        //    string stringValue = reader.ReadElementContentValue();
+        //    string typeName = (enumTypeReference != null) ? enumTypeReference.FullName() : null;
+        //    return new ODataEnumValue(stringValue, typeName);
+        //}
 
-        /// <summary>
-        /// Reads a value of an XML element and converts it to the target primitive value.
-        /// </summary>
-        /// <param name="reader">The XML reader to read the value from.</param>
-        /// <param name="primitiveTypeReference">The primitive type reference to convert the value to.</param>
-        /// <returns>The primitive value read.</returns>
-        /// <remarks>This method does not read null values, it only reads the actual element value (not its attributes).</remarks>
-        /// <remarks>
-        /// Pre-Condition:   XmlNodeType.Element   - the element to read the value for.
-        ///                  XmlNodeType.Attribute - an attribute on the element to read the value for.
-        /// Post-Condition:  XmlNodeType.Element    - the element was empty.
-        ///                  XmlNodeType.EndElement - the element had some value.
-        /// </remarks>
-        internal static object ReadPrimitiveValue(XmlReader reader, IEdmPrimitiveTypeReference primitiveTypeReference)
-        {
-            Debug.Assert(reader != null, "reader != null");
+        ///// <summary>
+        ///// Reads a value of an XML element and converts it to the target primitive value.
+        ///// </summary>
+        ///// <param name="reader">The XML reader to read the value from.</param>
+        ///// <param name="primitiveTypeReference">The primitive type reference to convert the value to.</param>
+        ///// <returns>The primitive value read.</returns>
+        ///// <remarks>This method does not read null values, it only reads the actual element value (not its attributes).</remarks>
+        ///// <remarks>
+        ///// Pre-Condition:   XmlNodeType.Element   - the element to read the value for.
+        /////                  XmlNodeType.Attribute - an attribute on the element to read the value for.
+        ///// Post-Condition:  XmlNodeType.Element    - the element was empty.
+        /////                  XmlNodeType.EndElement - the element had some value.
+        ///// </remarks>
+        //internal static object ReadPrimitiveValue(XmlReader reader, IEdmPrimitiveTypeReference primitiveTypeReference)
+        //{
+        //    Debug.Assert(reader != null, "reader != null");
 
-            object spatialValue;
-            if (!PrimitiveConverter.Instance.TryTokenizeFromXml(reader, EdmLibraryExtensions.GetPrimitiveClrType(primitiveTypeReference), out spatialValue))
-            {
-                string stringValue = reader.ReadElementContentValue();
-                return ConvertStringToPrimitive(stringValue, primitiveTypeReference);
-            }
+        //    object spatialValue;
+        //    if (!PrimitiveConverter.Instance.TryTokenizeFromXml(reader, EdmLibraryExtensions.GetPrimitiveClrType(primitiveTypeReference), out spatialValue))
+        //    {
+        //        string stringValue = reader.ReadElementContentValue();
+        //        return ConvertStringToPrimitive(stringValue, primitiveTypeReference);
+        //    }
 
-            return spatialValue;
-        }
+        //    return spatialValue;
+        //}
 
-        /// <summary>
-        /// Converts a given <see cref="AtomTextConstructKind"/> to a string appropriate for Atom format.
-        /// </summary>
-        /// <param name="textConstructKind">The text construct kind to convert.</param>
-        /// <returns>The string version of the text construct format in Atom format.</returns>
-        internal static string ToString(AtomTextConstructKind textConstructKind)
-        {
-            switch (textConstructKind)
-            {
-                case AtomTextConstructKind.Text:
-                    return AtomConstants.AtomTextConstructTextKind;
-                case AtomTextConstructKind.Html:
-                    return AtomConstants.AtomTextConstructHtmlKind;
-                case AtomTextConstructKind.Xhtml:
-                    return AtomConstants.AtomTextConstructXHtmlKind;
-                default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataAtomConvert_ToString));
-            }
-        }
+        ///// <summary>
+        ///// Converts a given <see cref="AtomTextConstructKind"/> to a string appropriate for Atom format.
+        ///// </summary>
+        ///// <param name="textConstructKind">The text construct kind to convert.</param>
+        ///// <returns>The string version of the text construct format in Atom format.</returns>
+        //internal static string ToString(AtomTextConstructKind textConstructKind)
+        //{
+        //    switch (textConstructKind)
+        //    {
+        //        case AtomTextConstructKind.Text:
+        //            return AtomConstants.AtomTextConstructTextKind;
+        //        case AtomTextConstructKind.Html:
+        //            return AtomConstants.AtomTextConstructHtmlKind;
+        //        case AtomTextConstructKind.Xhtml:
+        //            return AtomConstants.AtomTextConstructXHtmlKind;
+        //        default:
+        //            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataAtomConvert_ToString));
+        //    }
+        //}
 
         /// <summary>Converts the specified value to a serializable string in ATOM format.</summary>
         /// <param name="value">Non-null value to convert.</param>

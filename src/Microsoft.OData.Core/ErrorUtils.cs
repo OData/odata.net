@@ -40,7 +40,7 @@ namespace Microsoft.OData.Core
             code = error.ErrorCode ?? string.Empty;
             message = error.Message ?? string.Empty;
         }
-        
+
         /// <summary>
         /// Write an error message.
         /// </summary>

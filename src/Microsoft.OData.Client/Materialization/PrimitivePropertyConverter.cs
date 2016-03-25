@@ -217,26 +217,6 @@ namespace Microsoft.OData.Client.Materialization
             where TIn : ISpatial
             where TOut : class, ISpatial
         {
-            // This is format specific because the interpretation of which value is longitude/latitude vs x/y is format specific.
-#pragma warning disable 618
-            if (this.format == ODataFormat.Atom)
-#pragma warning restore 618
-            {
-                using (var stream = new MemoryStream())
-                {
-                    using (var writer = XmlWriter.Create(stream))
-                    {
-                        this.lazyGmlFormatter.Value.Write(valueToConvert, writer);
-                    }
-
-                    stream.Position = 0;
-                    using (var reader = XmlReader.Create(stream))
-                    {
-                        return this.lazyGmlFormatter.Value.Read<TOut>(reader);
-                    }
-                }
-            }
-
             Debug.Assert(this.format == ODataFormat.Json, "Expected a JSON-based format.");
             var json = this.lazyGeoJsonFormatter.Value.Write(valueToConvert);
             return this.lazyGeoJsonFormatter.Value.Read<TOut>(json);

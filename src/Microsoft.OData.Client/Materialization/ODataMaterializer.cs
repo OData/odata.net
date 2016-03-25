@@ -376,10 +376,7 @@ namespace Microsoft.OData.Client.Materialization
                     detectionResult = payloadKinds.First();
                 }
 
-                // Astoria client only supports atom, jsonlight and raw value payloads.
-#pragma warning disable 618
-                if (detectionResult.Format != ODataFormat.Atom && detectionResult.Format != ODataFormat.Json && detectionResult.Format != ODataFormat.RawValue)
-#pragma warning restore 618
+                if (detectionResult.Format != ODataFormat.Json && detectionResult.Format != ODataFormat.RawValue)
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidContentTypeEncountered(responseMessage.GetHeader(XmlConstants.HttpContentType)));
                 }

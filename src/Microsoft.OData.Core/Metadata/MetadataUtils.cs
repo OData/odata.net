@@ -12,13 +12,12 @@ namespace Microsoft.OData.Core.Metadata
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Atom;
-
     #endregion Namespaces
 
     /// <summary>
@@ -36,7 +35,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(annotatable != null, "annotatable != null");
-            
+
             IEnumerable<IEdmDirectValueAnnotation> annotations = model.DirectValueAnnotations(annotatable);
             if (annotations == null)
             {
@@ -181,7 +180,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="model">The model to search for operations.</param>
         /// <param name="edmTypeResolver">The edm type resolver to get the parameter type.</param>
         /// <returns>An enumeration of operations that are always bindable to the given type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")] 
+        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static IEdmOperation[] CalculateBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
         {
             Debug.Assert(model != null, "model != null");

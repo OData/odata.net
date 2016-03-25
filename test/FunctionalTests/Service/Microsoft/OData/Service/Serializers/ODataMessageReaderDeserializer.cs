@@ -74,24 +74,6 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the request is Atom
-        /// </summary>
-        protected override bool IsAtomRequest
-        {
-            get
-            {
-                if (!this.isAtomRequest.HasValue)
-                {
-#pragma warning disable 618
-                    this.isAtomRequest = ODataUtils.GetReadFormat(this.messageReader) == ODataFormat.Atom;
-#pragma warning restore 618
-                }
-
-                return this.isAtomRequest.Value;
-            }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the request is json light
         /// </summary>
         protected override bool IsJsonLightRequest
@@ -350,7 +332,7 @@ namespace Microsoft.OData.Service.Serializers
         private object ConvertComplexValue(ODataComplexValue complexValue, ref ResourceType complexResourceType)
         {
             Debug.Assert(complexValue != null, "complexValue != null");
-            
+
             if ((complexResourceType == null) || (complexValue.TypeName != complexResourceType.FullName))
             {
                 // Open complex value & Derived complex value - read the type from the value
@@ -396,7 +378,7 @@ namespace Microsoft.OData.Service.Serializers
                 var itemType = PrimitiveResourceTypeMap.TypeMap.GetPrimitive(itemTypeName);
                 itemType = itemType ?? this.Service.Provider.TryResolveResourceType(itemTypeName);
                 Debug.Assert(itemType != null, "The item Type in open collection property can not be resolved.");
-                
+
                 resourceType = CollectionResourceType.GetCollectionResourceType(itemType);
                 Debug.Assert(resourceType.ResourceTypeKind == ResourceTypeKind.Collection, "ODataLib should have verified that collection value has a collection resource type.");
             }

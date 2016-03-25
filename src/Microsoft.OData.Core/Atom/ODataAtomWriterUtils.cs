@@ -57,81 +57,81 @@ namespace Microsoft.OData.Core.Atom
             ErrorUtils.WriteXmlError(writer, error, includeDebugInformation, maxInnerErrorDepth);
         }
 
-        /// <summary>
-        /// Write the m:etag attribute with the given string value.
-        /// </summary>
-        /// <param name="writer">The Xml writer to write to.</param>
-        /// <param name="etag">The string value of the ETag.</param>
-        internal static void WriteETag(XmlWriter writer, string etag)
-        {
-            Debug.Assert(writer != null, "writer != null");
-            Debug.Assert(etag != null, "etag != null");
+        ///// <summary>
+        ///// Write the m:etag attribute with the given string value.
+        ///// </summary>
+        ///// <param name="writer">The Xml writer to write to.</param>
+        ///// <param name="etag">The string value of the ETag.</param>
+        //internal static void WriteETag(XmlWriter writer, string etag)
+        //{
+        //    Debug.Assert(writer != null, "writer != null");
+        //    Debug.Assert(etag != null, "etag != null");
 
-            writer.WriteAttributeString(
-                AtomConstants.ODataMetadataNamespacePrefix,
-                AtomConstants.ODataETagAttributeName,
-                AtomConstants.ODataMetadataNamespace,
-                etag);
-        }
+        //    writer.WriteAttributeString(
+        //        AtomConstants.ODataMetadataNamespacePrefix,
+        //        AtomConstants.ODataETagAttributeName,
+        //        AtomConstants.ODataMetadataNamespace,
+        //        etag);
+        //}
 
-        /// <summary>
-        /// Write the m:null attribute with a value of 'true'
-        /// </summary>
-        /// <param name="writer">The Xml writer to write to.</param>
-        internal static void WriteNullAttribute(XmlWriter writer)
-        {
-            Debug.Assert(writer != null, "writer != null");
+        ///// <summary>
+        ///// Write the m:null attribute with a value of 'true'
+        ///// </summary>
+        ///// <param name="writer">The Xml writer to write to.</param>
+        //internal static void WriteNullAttribute(XmlWriter writer)
+        //{
+        //    Debug.Assert(writer != null, "writer != null");
 
-            // m:null="true"
-            writer.WriteAttributeString(
-                AtomConstants.ODataMetadataNamespacePrefix,
-                AtomConstants.ODataNullAttributeName,
-                AtomConstants.ODataMetadataNamespace,
-                AtomConstants.AtomTrueLiteral);
-        }
+        //    // m:null="true"
+        //    writer.WriteAttributeString(
+        //        AtomConstants.ODataMetadataNamespacePrefix,
+        //        AtomConstants.ODataNullAttributeName,
+        //        AtomConstants.ODataMetadataNamespace,
+        //        AtomConstants.AtomTrueLiteral);
+        //}
        
-        /// <summary>
-        /// Writes raw markup with the given writer, adding the xml:space="preserve" attribute to the element if the markup has leading or trailing whitespace.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> to write to.</param>
-        /// <param name="value">A string containing the text to write.</param>
-        internal static void WriteRaw(XmlWriter writer, string value)
-        {
-            Debug.Assert(writer != null, "writer != null");
+        ///// <summary>
+        ///// Writes raw markup with the given writer, adding the xml:space="preserve" attribute to the element if the markup has leading or trailing whitespace.
+        ///// </summary>
+        ///// <param name="writer">The <see cref="XmlWriter"/> to write to.</param>
+        ///// <param name="value">A string containing the text to write.</param>
+        //internal static void WriteRaw(XmlWriter writer, string value)
+        //{
+        //    Debug.Assert(writer != null, "writer != null");
 
-            WritePreserveSpaceAttributeIfNeeded(writer, value);
-            writer.WriteRaw(value);
-        }
+        //    WritePreserveSpaceAttributeIfNeeded(writer, value);
+        //    writer.WriteRaw(value);
+        //}
 
-        /// <summary>
-        /// Writes a string with the given writer, adding the xml:space="preserve" attribute to the element if the string has leading or trailing whitespace.
-        /// </summary>
-        /// <param name="writer">The <see cref="XmlWriter"/> to write to.</param>
-        /// <param name="value">The string to write as element text content.</param>
-        internal static void WriteString(XmlWriter writer, string value)
-        {
-            Debug.Assert(writer != null, "writer != null");
+        ///// <summary>
+        ///// Writes a string with the given writer, adding the xml:space="preserve" attribute to the element if the string has leading or trailing whitespace.
+        ///// </summary>
+        ///// <param name="writer">The <see cref="XmlWriter"/> to write to.</param>
+        ///// <param name="value">The string to write as element text content.</param>
+        //internal static void WriteString(XmlWriter writer, string value)
+        //{
+        //    Debug.Assert(writer != null, "writer != null");
 
-            WritePreserveSpaceAttributeIfNeeded(writer, value);
-            writer.WriteString(value);
-        }
+        //    WritePreserveSpaceAttributeIfNeeded(writer, value);
+        //    writer.WriteString(value);
+        //}
 
-        /// <summary>
-        /// For Atom writer, only prefix the type name with # for payload writting if it is not primitive type.
-        /// </summary>
-        /// <param name="typeName">The type name to prefix</param>
-        /// <returns>The (#) prefixed type name, or the input type name if it is primitive type.</returns>
-        internal static string PrefixTypeName(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName) || IsPrimitiveType(typeName))
-            {
-                return typeName;
-            }
+        ///// <summary>
+        ///// For Atom writer, only prefix the type name with # for payload writting if it is not primitive type.
+        ///// </summary>
+        ///// <param name="typeName">The type name to prefix</param>
+        ///// <returns>The (#) prefixed type name, or the input type name if it is primitive type.</returns>
+        //internal static string PrefixTypeName(string typeName)
+        //{
+        //    if (string.IsNullOrEmpty(typeName) || IsPrimitiveType(typeName))
+        //    {
+        //        return typeName;
+        //    }
 
-            Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "before prefix");
+        //    Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "before prefix");
 
-            return ODataConstants.TypeNamePrefix + typeName;
-        }
+        //    return ODataConstants.TypeNamePrefix + typeName;
+        //}
 
         /// <summary>
         /// Creates a new XmlWriterSettings instance using the encoding.
@@ -157,41 +157,41 @@ namespace Microsoft.OData.Core.Atom
             return settings;
         }
 
-        /// <summary>
-        /// Writes an xml:space="preserve" attribute if the given value starts or ends with whitespace.
-        /// </summary>
-        /// <param name="writer">The writer to use for writing out the attribute string.</param>
-        /// <param name="value">The value to check for insignificant whitespace.</param>
-        private static void WritePreserveSpaceAttributeIfNeeded(XmlWriter writer, string value)
-        {
-            Debug.Assert(writer != null, "writer != null");
+        ///// <summary>
+        ///// Writes an xml:space="preserve" attribute if the given value starts or ends with whitespace.
+        ///// </summary>
+        ///// <param name="writer">The writer to use for writing out the attribute string.</param>
+        ///// <param name="value">The value to check for insignificant whitespace.</param>
+        //private static void WritePreserveSpaceAttributeIfNeeded(XmlWriter writer, string value)
+        //{
+        //    Debug.Assert(writer != null, "writer != null");
 
-            if (value == null)
-            {
-                return;
-            }
+        //    if (value == null)
+        //    {
+        //        return;
+        //    }
 
-            int length = value.Length;
+        //    int length = value.Length;
 
-            if (length > 0 && (Char.IsWhiteSpace(value[0]) || Char.IsWhiteSpace(value[length - 1])))
-            {
-                // xml:space="preserve"
-                writer.WriteAttributeString(
-                    AtomConstants.XmlNamespacePrefix,
-                    AtomConstants.XmlSpaceAttributeName,
-                    AtomConstants.XmlNamespace,
-                    AtomConstants.XmlPreserveSpaceAttributeValue);
-            }
-        }
+        //    if (length > 0 && (Char.IsWhiteSpace(value[0]) || Char.IsWhiteSpace(value[length - 1])))
+        //    {
+        //        // xml:space="preserve"
+        //        writer.WriteAttributeString(
+        //            AtomConstants.XmlNamespacePrefix,
+        //            AtomConstants.XmlSpaceAttributeName,
+        //            AtomConstants.XmlNamespace,
+        //            AtomConstants.XmlPreserveSpaceAttributeValue);
+        //    }
+        //}
 
-        /// <summary>
-        /// Determines if the type is primitive type.
-        /// </summary>
-        /// <param name="typeName">The type name to check</param>
-        /// <returns>true if the type is primitive type, else return false</returns>
-        private static bool IsPrimitiveType(string typeName)
-        {
-            return EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None;
-        }
+        ///// <summary>
+        ///// Determines if the type is primitive type.
+        ///// </summary>
+        ///// <param name="typeName">The type name to check</param>
+        ///// <returns>true if the type is primitive type, else return false</returns>
+        //private static bool IsPrimitiveType(string typeName)
+        //{
+        //    return EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None;
+        //}
     }
 }

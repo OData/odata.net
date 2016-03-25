@@ -54,9 +54,8 @@ namespace Microsoft.OData.Client.Materialization
             this.entry = entry;
             this.Format = format;
             this.entityDescriptor = new EntityDescriptor(model);
-#pragma warning disable 618
-            this.isAtomOrTracking = isTracking || this.Format == ODataFormat.Atom;
-#pragma warning restore 618
+            this.isAtomOrTracking = isTracking;
+
             string serverTypeName = this.Entry.TypeName;
             SerializationTypeNameAnnotation serializationTypeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
             if (serializationTypeNameAnnotation != null)
@@ -83,9 +82,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             this.entityDescriptor = entityDescriptor;
             this.Format = format;
-#pragma warning disable 618
-            this.isAtomOrTracking = isTracking || this.Format == ODataFormat.Atom;
-#pragma warning restore 618
+            this.isAtomOrTracking = isTracking;
             this.SetFlagValue(EntryFlags.ShouldUpdateFromPayload | EntryFlags.EntityHasBeenResolved | EntryFlags.ForLoadProperty, true);
         }
 

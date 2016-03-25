@@ -9,7 +9,6 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
@@ -26,7 +25,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
         private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
-       
+
         /// <summary>MIME type for JSON bodies in light mode with all metadata.</summary>
         private const string MimeApplicationJsonODataLightWithAllMetadata = "application/json;odata.metadata=full";
 
@@ -73,19 +72,6 @@ namespace Microsoft.OData.Client
         /// Invoked when using the parameterless UseJson method in order to get the service model.
         /// </summary>
         public Func<IEdmModel> LoadServiceModel { get; set; }
-        
-        /// <summary>
-        /// True if the format has been configured to use Atom, otherwise False.
-        /// </summary>
-        internal bool UsingAtom
-        {
-            get
-            {
-#pragma warning disable 618
-                return this.ODataFormat == ODataFormat.Atom;
-#pragma warning restore 618
-            }
-        }
 
         /// <summary>
         /// Gets the service model.
@@ -131,16 +117,6 @@ namespace Microsoft.OData.Client
             }
 
             this.ODataFormat = ODataFormat.Json;
-        }
-
-        /// <summary>
-        /// Indicates that the client should use the Atom format.
-        /// </summary>
-        [Obsolete("ATOM support is obsolete.")]
-        public void UseAtom()
-        {
-            this.ODataFormat = ODataFormat.Atom;
-            this.ServiceModel = null;
         }
 
         /// <summary>
@@ -265,14 +241,6 @@ namespace Microsoft.OData.Client
             // Unfortunately since that's not available, we will process the content-type value to determine if the format is JSON Light.
             string mime;
             ContentTypeUtil.ReadContentType(contentType, out mime);
-
-            if (MimeApplicationJson.Equals(mime, StringComparison.OrdinalIgnoreCase))
-            {
-                if (isResponse && this.UsingAtom)
-                {
-                    ThrowInvalidOperationExceptionForJsonLightWithoutModel();
-                }
-            }
         }
 
         /// <summary>
@@ -318,16 +286,11 @@ namespace Microsoft.OData.Client
         /// <returns>The media type to use (either JSON-Light or the provided value)</returns>
         private string ChooseMediaType(string valueIfUsingAtom, bool hasSelectQueryOption)
         {
-            if (this.UsingAtom)
-            {
-                return valueIfUsingAtom;
-            }
-
             if (hasSelectQueryOption)
             {
                 return MimeApplicationJsonODataLightWithAllMetadata;
             }
-            
+
             return MimeApplicationJsonODataLight;
         }
     }

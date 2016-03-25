@@ -15,7 +15,6 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
     #endregion Namespaces
 

@@ -50,18 +50,18 @@ namespace Microsoft.OData.Core.Atom
             return XmlReader.Create(stream, xmlReaderSettings);
         }
 
-        /// <summary>
-        /// Parses the value of the m:null attribute and returns a boolean.
-        /// </summary>
-        /// <param name="attributeValue">The string value of the m:null attribute.</param>
-        /// <returns>true if the value denotes that the element should be null; false otherwise.</returns>
-        internal static bool ReadMetadataNullAttributeValue(string attributeValue)
-        {
-            Debug.Assert(attributeValue != null, "attributeValue != null");
+        ///// <summary>
+        ///// Parses the value of the m:null attribute and returns a boolean.
+        ///// </summary>
+        ///// <param name="attributeValue">The string value of the m:null attribute.</param>
+        ///// <returns>true if the value denotes that the element should be null; false otherwise.</returns>
+        //internal static bool ReadMetadataNullAttributeValue(string attributeValue)
+        //{
+        //    Debug.Assert(attributeValue != null, "attributeValue != null");
 
-            // Keep the behavior of XmlConvert.ToBoolean and fail on non-recognized values.
-            return XmlConvert.ToBoolean(attributeValue);
-        }
+        //    // Keep the behavior of XmlConvert.ToBoolean and fail on non-recognized values.
+        //    return XmlConvert.ToBoolean(attributeValue);
+        //}
 
         /// <summary>
         /// Creates a new XmlReaderSettings instance using the encoding.

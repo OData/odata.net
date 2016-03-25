@@ -110,11 +110,6 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the request is Atom
-        /// </summary>
-        protected abstract bool IsAtomRequest { get; }
-
-        /// <summary>
         /// Gets a value indicating whether the request is json light
         /// </summary>
         protected abstract bool IsJsonLightRequest { get; }
@@ -164,7 +159,7 @@ namespace Microsoft.OData.Service.Serializers
 
             Debug.Assert(
                 (!update /*POST*/ && dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.POST) ||
-                (update /*PUT,PATCH*/ && (dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT || 
+                (update /*PUT,PATCH*/ && (dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT ||
                     dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PATCH)),
                 "For PUT and PATCH, update must be true; for POST, update must be false");
 
@@ -662,7 +657,7 @@ namespace Microsoft.OData.Service.Serializers
                 {
                     DataServiceConfiguration.CheckResourceRights(requestDescription.LastSegmentInfo.TargetResourceSet, EntitySetRights.WriteAppend);
                 }
-                
+
                 resourceInPayload = this.ReadEntity(out targetResourceType);
                 Debug.Assert(targetResourceType != null, "targetResourceType != null");
 
@@ -941,9 +936,9 @@ namespace Microsoft.OData.Service.Serializers
             else
             {
                 resourceCookie = Deserializer.GetResource(
-                    segmentInfo, 
-                    resourceType != null ? resourceType.FullName : null, 
-                    this.Service, 
+                    segmentInfo,
+                    resourceType != null ? resourceType.FullName : null,
+                    this.Service,
                     checkForNull);
 
                 // We only need to check etag if the resource is not cross-referenced. If the resource is cross-referenced,
@@ -1011,10 +1006,7 @@ namespace Microsoft.OData.Service.Serializers
                 // can get a more specific version this way
                 ResourceSetWrapper resourceSet = this.RequestDescription.LastSegmentInfo.TargetResourceSet;
                 Version minimumPayloadVersion = resourceType.GetMinimumResponseVersion(this.Service, resourceSet);
-                if (!this.IsAtomRequest)
-                {
-                    minimumPayloadVersion = resourceType.GetMinimumResponseVersion(this.Service, resourceSet);
-                }
+                minimumPayloadVersion = resourceType.GetMinimumResponseVersion(this.Service, resourceSet);
 
                 this.RequestDescription.VerifyAndRaiseResponseVersion(minimumPayloadVersion, this.Service);
             }
@@ -1075,7 +1067,7 @@ namespace Microsoft.OData.Service.Serializers
             {
                 Debug.Assert(!requestDescription.LastSegmentInfo.HasKeyValues, "CreateSegments must have caught this issue.");
                 ResourceType requestResourceType = requestDescription.LastSegmentInfo.TargetResourceType;
-                
+
                 // If this open property is collection, use resourceType in requestValue.
                 var requestCollectionValue = requestValue as CollectionPropertyValueEnumerable;
                 if (requestResourceType == null && requestCollectionValue != null)

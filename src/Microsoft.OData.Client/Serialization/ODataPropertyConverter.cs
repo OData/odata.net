@@ -114,17 +114,11 @@ namespace Microsoft.OData.Client
             visitedComplexTypeObjects.Add(value);
             ODataComplexValue odataComplexValue = new ODataComplexValue();
 
-            // When TypeName is set, it causes validation to occur when ODataLib writes out the collection. Part of the validation ensures that all items
-            // in the collection are exactly the same type, no derived types are allowed. In the released WCF Data Services 5.0 implementation, we don't set
-            // TypeName here, so that validation does not occur, therefore we will set this value only for JSON Light, so we don't break existing code.
-            if (!this.requestInfo.Format.UsingAtom)
-            {
-                odataComplexValue.TypeName = complexTypeAnnotation.ElementTypeName;
-            }
+            odataComplexValue.TypeName = complexTypeAnnotation.ElementTypeName;
 
             string serverTypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation);
             odataComplexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
-        
+
             odataComplexValue.Properties = this.PopulateProperties(value, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
 
             visitedComplexTypeObjects.Remove(value);
@@ -237,7 +231,7 @@ namespace Microsoft.OData.Client
                 collectionItemTypeName = ClientConvert.GetEdmType(Nullable.GetUnderlyingType(collectionItemType) ?? collectionItemType);
 
                 if (enumerablePropertyValue != null)
-                {                    
+                {
                     collection.Items = Util.GetEnumerable(
                         enumerablePropertyValue,
                         (val) =>
@@ -296,12 +290,8 @@ namespace Microsoft.OData.Client
                 collectionTypeName = collectionItemType.FullName;
             }
 
-            // Set the type name to use for client type lookups and validation. Because setting this value can cause validation to occur, we will
-            // only do it for JSON Light, in order to avoid breaking changes with the WCF Data Services 5.0 release, since it was already shipped without this.
-            if (!this.requestInfo.Format.UsingAtom)
-            {
-                collection.TypeName = GetCollectionName(collectionTypeName);
-            }
+            // Set the type name to use for client type lookups and validation. 
+            collection.TypeName = GetCollectionName(collectionTypeName);
 
             // Ideally, we should not set type annotation on collection value. 
             // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
@@ -418,10 +408,10 @@ namespace Microsoft.OData.Client
                 if (this.TryConvertPropertyValue(property, propertyValue, serverTypeName, visitedComplexTypeObjects, out odataValue))
                 {
                     odataProperties.Add(new ODataProperty
-                        {
-                            Name = property.PropertyName,
-                            Value = odataValue
-                        });
+                    {
+                        Name = property.PropertyName,
+                        Value = odataValue
+                    });
                 }
             }
 
@@ -532,8 +522,7 @@ namespace Microsoft.OData.Client
                 return;
             }
 
-            if (!this.requestInfo.Format.UsingAtom
-                && this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName)
+            if (this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName)
                 && !JsonSharedUtils.ValueTypeMatchesJsonType(primitiveValue, property.EdmProperty.Type.AsPrimitive()))
             {
                 // DEVNOTE: it is safe to use the property type name for primitive types because they do not generally support inheritance,

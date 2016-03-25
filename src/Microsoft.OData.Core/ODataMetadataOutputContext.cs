@@ -13,10 +13,10 @@ namespace Microsoft.OData.Core
     using System.IO;
     using System.Text;
     using System.Xml;
+    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core.Atom;
     #endregion Namespaces
 
     /// <summary>

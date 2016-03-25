@@ -179,8 +179,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 #endif
                         configurations.Add(new ReaderTestConfiguration(
                             format,
-                            new ODataMessageReaderSettings() 
-                            { 
+                            new ODataMessageReaderSettings()
+                            {
                                 DisableMessageStreamDisposal = disableMessageStreamDisposal,
                                 EnableAtom = true
                             },
@@ -218,8 +218,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 #endif
                         configurations.Add(new ReaderTestConfiguration(
                             format,
-                            new ODataMessageReaderSettings() 
-                            { 
+                            new ODataMessageReaderSettings()
+                            {
                                 DisableMessageStreamDisposal = limitedCombination.DisableMessageStreamDisposal,
                                 EnableAtom = true
                             },

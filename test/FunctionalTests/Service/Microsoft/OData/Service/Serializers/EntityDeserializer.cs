@@ -51,9 +51,7 @@ namespace Microsoft.OData.Service.Serializers
 
             IEdmEntitySet expectedEntitySet = WebUtil.GetEntitySet(this.Service.Provider, metadataProviderEdmModel, segmentInfo.TargetResourceSet);
             ODataReader odataReader = this.MessageReader.CreateODataEntryReader(expectedEntitySet, expectedEntityType);
-#pragma warning disable 618
-            AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Atom, ODataFormat.Json);
-#pragma warning restore 618
+            AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Json);
 
             // Read the entry and all its children into a tree. We use annotation to connect the items into the tree.
             // Note that we must cache the entire payload to preserve call order for navigation properties.
@@ -66,14 +64,6 @@ namespace Microsoft.OData.Service.Serializers
             }
             catch (UriFormatException exception)
             {
-                // For backward compatibility with previous released when reading ATOM we need to catch UriFormatExceptions and wrap them
-                // in a bad request exception so that a 400 is reported back. In JSON we used to not do this and thus we need to continue
-                // throwing the original exception which will cause a 500.
-                if (this.IsAtomRequest)
-                {
-                    throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.Syndication_ErrorReadingEntry(exception.Message), exception);
-                }
-
                 throw;
             }
 
@@ -551,16 +541,10 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             string linkUrl = UriUtil.UriToString(entityReferenceLink.Url);
-            if (this.IsAtomRequest && linkUrl.Length == 0)
-            {
-                // Empty Url for atom:link (without any content in the link) is treated as null entity.
-                this.SetResourceReferenceToNull(entityResource, navigationProperty);
-            }
-            else
-            {
-                // Resolve the link URL and set it to the navigation property.
-                this.SetResourceReferenceToUrl(entityResource, navigationProperty, linkUrl);
-            }
+
+            // Resolve the link URL and set it to the navigation property.
+            this.SetResourceReferenceToUrl(entityResource, navigationProperty, linkUrl);
+
         }
 
         /// <summary>
@@ -593,7 +577,7 @@ namespace Microsoft.OData.Service.Serializers
             // Deep insert is not allowed in updates.
             // In JSON we must not fail due to deep updates if the feed is empty. In JSON empty array is reported as an empty feed
             // but there's no telling if it means empty deep update array or empty array of bindings.
-            if (this.Update && (this.IsAtomRequest || feedAnnotation.Count > 0))
+            if (this.Update && feedAnnotation.Count > 0)
             {
                 throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.BadRequest_DeepUpdateNotSupported);
             }
@@ -642,7 +626,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityResource != null, "entityResource != null");
 
             // Deep insert is not allowed in updates, unless it's JSON and the deep insert is a null value.
-            if ((this.IsAtomRequest || entry != null) && this.Update)
+            if (entry != null && this.Update)
             {
                 throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.BadRequest_DeepUpdateNotSupported);
             }
@@ -703,18 +687,6 @@ namespace Microsoft.OData.Service.Serializers
             // Get the referenced resource.
             Uri referencedUri = RequestUriProcessor.GetAbsoluteUriFromReference(url, this.Service.OperationContext);
             RequestDescription requestDescription = RequestUriProcessor.ProcessRequestUri(referencedUri, this.Service, true /*internalQuery*/);
-
-            // ATOM deserializer checks that the url doesn't point to a collection. If it does it will ignore the link.
-            if (this.IsAtomRequest && !requestDescription.IsSingleResult)
-            {
-                if (navigationProperty != null &&
-                    navigationProperty.Kind == ResourcePropertyKind.ResourceReference)
-                {
-                    throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.BadRequest_LinkHrefMustReferToSingleResource(navigationProperty.Name));
-                }
-
-                return;
-            }
 
             // Get the resource
             object referencedResource = this.Service.GetResource(requestDescription, requestDescription.SegmentInfos.Count - 1, null);

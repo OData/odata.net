@@ -42,9 +42,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityReferenceLink != null, "ReadEntityReferenceLink should never return null.");
             Uri entityReferenceUri = entityReferenceLink.Url;
             Debug.Assert(entityReferenceUri != null, "The Url of the entity reference link should never be null.");
-#pragma warning disable 618
-            AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Atom, ODataFormat.Json);
-#pragma warning restore 618
+            AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Json);
 
             // We must fail on empty URI
             string entityReferenceUriAsString = UriUtil.UriToString(entityReferenceUri);

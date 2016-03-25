@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
@@ -23,9 +22,6 @@ namespace Microsoft.OData.Core
     /// </summary>
     public abstract class ODataFormat
     {
-        /// <summary>The ATOM format instance.</summary>
-        private static ODataAtomFormat atomFormat = new ODataAtomFormat();
-
         /// <summary>The JSON Light format instance.</summary>
         private static ODataJsonFormat JsonFormat = new ODataJsonFormat();
 
@@ -45,7 +41,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return atomFormat;
+                return JsonFormat;
             }
         }
 
