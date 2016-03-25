@@ -80,6 +80,8 @@ Here is the usage of each solution file:
 
 Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within Microsoft.OData.Full.sln and Microsoft.OData.E2E.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
 
+Note: The project T4CrossPlatformTests.WindowsStore.csproj will not be loaded unless you have installed the Windows 8.1 and Windows Phone 8.0 / 8.1 tools.
+
 ### 3.2 One-click build and test script in command line
 Open Command Line Window with "**Run as administrator**", cd to the root folder and run following command:
 
