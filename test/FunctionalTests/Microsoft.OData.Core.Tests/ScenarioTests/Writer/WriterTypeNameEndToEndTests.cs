@@ -67,11 +67,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                 new ODataProperty
                 {
                     Name = "DeclaredInt16", Value = (Int16)42
-                }, 
+                },
                 new ODataProperty
                 {
                     Name = "UndeclaredDecimal", Value = (Decimal)4.5
-                }, 
+                },
                 new ODataProperty
                 {
                     // Note: value is more derived than the declared type.
@@ -138,19 +138,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInAtomWhenKnobIsOff()
-        {
-            this.settings.SetContentType(atom, null);
-            this.settings.EnableAtom = true;
-            this.settings.AutoComputePayloadMetadataInJson = false;
-            this.writerOutput.Value.Should()
-                .Contain("d:DeclaredInt16 m:type=\"Int16\"")
-                .And.Contain("d:UndeclaredDecimal m:type=\"Decimal\"")
-                .And.Contain("d:DerivedPrimitive m:type=\"GeographyPoint\"")
-                .And.Contain("d:PropertyWithSTNA m:type=\"#TypeNameFromSTNA\"");
-        }
-
-        [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
@@ -197,19 +184,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
                 .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
                 .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
-        }
-
-        [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInAtomWhenKnobIsSet()
-        {
-            this.settings.SetContentType(atom, null);
-            this.settings.EnableAtom = true;
-            this.settings.AutoComputePayloadMetadataInJson = true;
-            this.writerOutput.Value.Should()
-                .Contain("d:DeclaredInt16 m:type=\"Int16\"")
-                .And.Contain("d:UndeclaredDecimal m:type=\"Decimal\"")
-                .And.Contain("d:DerivedPrimitive m:type=\"GeographyPoint\"")
-                .And.Contain("d:PropertyWithSTNA m:type=\"#TypeNameFromSTNA\"");
         }
     }
 }

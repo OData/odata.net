@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         private Stack<object> items = new Stack<object>();
         private int currentPropertyPosition = 0;
         private readonly bool response;
-        
+
         /// <summary>
         /// Public constructor
         /// </summary>
@@ -51,21 +51,22 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 // NOTE: the required Id is set when processing the annotations in AddFeedMetadata()
                 Count = payloadElement.InlineCount,
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo() {
+                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                {
                     NavigationSourceEntityTypeName = "Null",
                     NavigationSourceName = "MySet",
                     ExpectedTypeName = "Null"
                 }
             };
 
-            var idAnnotation = payloadElement.Annotations.Where(a => 
+            var idAnnotation = payloadElement.Annotations.Where(a =>
                 {
                     var annotation = a as XmlTreeAnnotation;
                     if (annotation != null)
                         return annotation.LocalName.Equals("id");
                     return false;
                 }).SingleOrDefault();
-            
+
             if (idAnnotation != null)
             {
                 feed.Id = new Uri((idAnnotation as XmlTreeAnnotation).PropertyValue, UriKind.Absolute);
@@ -75,8 +76,6 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 feed.NextPageLink = new Uri(payloadElement.NextLink);
             }
-
-            AddFeedMetadata(payloadElement, feed);
 
             if (this.items.Count > 0 && this.items.Peek() is ODataNavigationLink)
             {
@@ -141,9 +140,6 @@ namespace Microsoft.Test.Taupo.OData.Common
 
                 entry.MediaResource = mediaResource;
             }
-            
-            // TODO: add support for custom extensions at some point
-            AddEntryMetadata(payloadElement, entry);
 
             if (this.items.Count > 0)
             {
@@ -179,7 +175,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             finally
             {
-                entry = (ODataEntry) this.items.Pop();
+                entry = (ODataEntry)this.items.Pop();
             }
 
             //Return to original values
@@ -472,7 +468,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 Name = payloadElement.Name,
                 Value = value
             };
-            
+
             if (parent != null)
             {
                 var entry = parent as ODataEntry;
@@ -540,7 +536,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ODataCollectionStart collectionStart = new ODataCollectionStart();
             var annotation = new ODataCollectionItemsObjectModelAnnotation();
-            
+
             foreach (var primitive in payloadElement)
             {
                 annotation.Add(primitive.ClrValue);
@@ -567,7 +563,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 this.items.Push(property);
             }
             else
-            { 
+            {
                 var entry = parent as ODataEntry;
                 if (entry != null)
                 {
@@ -617,7 +613,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             this.items.Push(innerError);
             base.Visit(payloadElement);
-            
+
             //This should now have its innerError set if one exists
             innerError = this.items.Pop() as ODataInnerError;
 
@@ -665,7 +661,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             finally
             {
-                link = (ODataNavigationLink) this.items.Pop();
+                link = (ODataNavigationLink)this.items.Pop();
             }
         }
 
@@ -679,7 +675,6 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 ODataNavigationLink navigationLink = (ODataNavigationLink)this.items.Pop();
                 navigationLink.Url = new Uri(payloadElement.UriString);
-                AddLinkMetadata(payloadElement, navigationLink);
 
                 var contentType = payloadElement.Annotations.Where(a => a is ContentTypeAnnotation).SingleOrDefault();
                 if (contentType != null)
@@ -724,8 +719,8 @@ namespace Microsoft.Test.Taupo.OData.Common
         public override void Visit(ExpandedLink payloadElement)
         {
             Debug.Assert(this.items.Peek() is ODataNavigationLink);
-            ODataNavigationLink navigationLink = (ODataNavigationLink) this.items.Pop();
-           
+            ODataNavigationLink navigationLink = (ODataNavigationLink)this.items.Pop();
+
             navigationLink.IsCollection = !payloadElement.IsSingleEntity;
             // TODO, ckerer: where do I get the info whether this links is a singleton or collection?
             if (payloadElement.UriString != null)
@@ -733,7 +728,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 navigationLink.Url = new Uri(payloadElement.UriString);
             }
 
-            var entry = (ODataEntry) this.items.Peek();
+            var entry = (ODataEntry)this.items.Peek();
             var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
             if (annotation == null)
             {
@@ -805,489 +800,8 @@ namespace Microsoft.Test.Taupo.OData.Common
                     properties.Add(odataNamedStreamProperty);
                 }
             }
-            
+
             base.Visit(payloadElement);
-        }
-
-        private static void AddFeedMetadata(EntitySetInstance payloadElement, ODataFeed feed)
-        {
-            AtomFeedMetadata metadata = CreateFeedMetadata(payloadElement.Annotations.OfType<XmlTreeAnnotation>(), feed);
-
-            // Fix up metadata for baselining
-            metadata = metadata.Fixup();
-
-            if (metadata != null)
-            {
-                feed.SetAnnotation<AtomFeedMetadata>(metadata);
-            }
-        }
-
-        private static void AddEntryMetadata(EntityInstance payloadElement, ODataEntry entry)
-        {
-            AtomEntryMetadata metadata = null;
-
-            foreach (XmlTreeAnnotation epmTree in payloadElement.Annotations.OfType<XmlTreeAnnotation>())
-            {
-                if (epmTree.NamespaceName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomNamespace)
-                {
-                    if (metadata == null)
-                    {
-                        metadata = new AtomEntryMetadata();
-                    }
-
-                    string localName = epmTree.LocalName;
-                    if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomAuthorElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomPersonMetadata author = CreateAuthorMetadata(epmTree.Children);
-
-                        List<AtomPersonMetadata> authors;
-                        if (metadata.Authors == null)
-                        {
-                            authors = new List<AtomPersonMetadata>();
-                            metadata.Authors = authors;
-                        }
-                        else
-                        {
-                            authors = (List<AtomPersonMetadata>)metadata.Authors;
-                        }
-                        authors.Add(author);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomCategoryElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomCategoryMetadata category = CreateCategoryMetadata(epmTree.Children);
-
-                        List<AtomCategoryMetadata> categories;
-                        if (metadata.Categories == null)
-                        {
-                            categories = new List<AtomCategoryMetadata>();
-                            metadata.Categories = categories;
-                        }
-                        else
-                        {
-                            categories = (List<AtomCategoryMetadata>)metadata.Categories;
-                        }
-                        categories.Add(category);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomContributorElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomPersonMetadata contributor = CreateAuthorMetadata(epmTree.Children);
-
-                        List<AtomPersonMetadata> contributors;
-                        if (metadata.Contributors == null)
-                        {
-                            contributors = new List<AtomPersonMetadata>();
-                            metadata.Contributors = contributors;
-                        }
-                        else
-                        {
-                            contributors = (List<AtomPersonMetadata>)metadata.Contributors;
-                        }
-                        contributors.Add(contributor);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomIdElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        entry.Id = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : new Uri(epmTree.PropertyValue);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomLinkMetadata link = CreateLinkMetadata(epmTree.Children);
-
-                        List<AtomLinkMetadata> links;
-                        if (metadata.Links == null)
-                        {
-                            links = new List<AtomLinkMetadata>();
-                            metadata.Links = links;
-                        }
-                        else
-                        {
-                            links = (List<AtomLinkMetadata>)metadata.Links;
-                        }
-                        links.Add(link);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomPublishedElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Published = string.IsNullOrEmpty(epmTree.PropertyValue) ? (DateTimeOffset?)null : DateTimeOffset.Parse(epmTree.PropertyValue);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomRightsElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomTextConstructKind atomConstructKind = GetAtomConstructKind(epmTree.Children);
-                        metadata.Rights = new AtomTextConstruct { Kind = atomConstructKind, Text = epmTree.PropertyValue };
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomSourceElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Source = CreateFeedMetadata(epmTree.Children, null);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomSummaryElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomTextConstructKind atomConstructKind = GetAtomConstructKind(epmTree.Children);
-                        metadata.Summary = new AtomTextConstruct { Kind = atomConstructKind, Text = epmTree.PropertyValue };
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomTitleElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        AtomTextConstructKind atomConstructKind = GetAtomConstructKind(epmTree.Children);
-                        metadata.Title = new AtomTextConstruct { Kind = atomConstructKind, Text = epmTree.PropertyValue };
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomUpdatedElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Updated = string.IsNullOrEmpty(epmTree.PropertyValue) ? (DateTimeOffset?)null : DateTimeOffset.Parse(epmTree.PropertyValue);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException("Unsupported atom metadata '" + localName + "' found for entry!");
-                    }
-                }
-            }
-
-            // Fix up metadata for baselining
-            metadata = metadata.Fixup();
-
-            if (metadata != null)
-            {
-                entry.SetAnnotation<AtomEntryMetadata>(metadata);
-            }
-        }
-
-        private static void AddLinkMetadata(DeferredLink payloadElement, ODataNavigationLink link)
-        {
-            AtomLinkMetadata metadata = CreateLinkMetadata(payloadElement.Annotations.OfType<XmlTreeAnnotation>());
-            if (metadata != null)
-            {
-                link.SetAnnotation<AtomLinkMetadata>(metadata);
-            }
-        }
-
-        private static AtomCategoryMetadata CreateCategoryMetadata(IEnumerable<XmlTreeAnnotation> children)
-        {
-            AtomCategoryMetadata metadata = null;
-
-            foreach (XmlTreeAnnotation epmTree in children.Where(child => child.IsAttribute))
-            {
-                if (string.IsNullOrEmpty(epmTree.NamespaceName))
-                {
-                    if (metadata == null)
-                    {
-                        metadata = new AtomCategoryMetadata();
-                    }
-
-                    string localName = epmTree.LocalName;
-                    if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomCategoryTermAttributeName)
-                    {
-                        metadata.Term = epmTree.PropertyValue;
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomCategorySchemeAttributeName)
-                    {
-                        metadata.Scheme = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : epmTree.PropertyValue;
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomCategoryLabelAttributeName)
-                    {
-                        metadata.Label = epmTree.PropertyValue;
-                    }
-                    else
-                    {
-                        throw new NotSupportedException("Unsupported metadata '" + localName + "' found for category.");
-                    }
-                }
-            }
-
-            return metadata;
-        }
-
-        private static AtomPersonMetadata CreateAuthorMetadata(IEnumerable<XmlTreeAnnotation> children)
-        {
-            AtomPersonMetadata metadata = null;
-
-            foreach (XmlTreeAnnotation epmTree in children)
-            {
-                if (epmTree.NamespaceName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomNamespace)
-                {
-                    if (metadata == null)
-                    {
-                        metadata = new AtomPersonMetadata();
-                    }
-
-                    string localName = epmTree.LocalName;
-                    if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomPersonNameElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Name = epmTree.PropertyValue;
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomPersonUriElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Uri = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : new Uri(epmTree.PropertyValue);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomPersonEmailElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Email = epmTree.PropertyValue;
-                    }
-                }
-            }
-
-            return metadata;
-        }
-
-        private static AtomTextConstructKind GetAtomConstructKind(IEnumerable<XmlTreeAnnotation> children)
-        {
-            foreach (XmlTreeAnnotation epmTree in children.Where(child => child.IsAttribute))
-            {
-                if (string.IsNullOrEmpty(epmTree.NamespaceName))
-                {
-                    string localName = epmTree.LocalName;
-                    if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomTypeAttributeName)
-                    {
-                        Debug.Assert(epmTree.IsAttribute);
-                        string epmTreeValue = epmTree.PropertyValue;
-                        if (string.IsNullOrEmpty(epmTreeValue) || Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomTextConstructTextKind == epmTreeValue)
-                        {
-                            return AtomTextConstructKind.Text;
-                        }
-                        else if (Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomTextConstructHtmlKind == epmTreeValue)
-                        {
-                            return AtomTextConstructKind.Html;
-                        }
-                        else if (Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomTextConstructXHtmlKind == epmTreeValue)
-                        {
-                            return AtomTextConstructKind.Xhtml;
-                        }
-                        else
-                        {
-                            throw new NotSupportedException("Text construct kind " + epmTreeValue + " is not supported.");
-                        }
-                    }
-                }
-            }
-
-            return AtomTextConstructKind.Text;
-        }
-
-        private static AtomLinkMetadata CreateLinkMetadata(IEnumerable<XmlTreeAnnotation> children)
-        {
-            AtomLinkMetadata metadata = new AtomLinkMetadata();
-            bool initialized = false;
-
-            foreach (XmlTreeAnnotation epmTree in children.Where(child => child.IsAttribute))
-            {
-                string localName = epmTree.LocalName;
-                if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkHrefAttributeName)
-                {
-                    Debug.Assert(epmTree.IsAttribute);
-                    metadata.Href = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : new Uri(epmTree.PropertyValue);
-                    initialized = true;
-                }
-                else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkHrefLangAttributeName)
-                {
-                    Debug.Assert(epmTree.IsAttribute);
-                    metadata.HrefLang = epmTree.PropertyValue;
-                    initialized = true;
-                }
-                else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkLengthAttributeName)
-                {
-                    Debug.Assert(epmTree.IsAttribute);
-                    metadata.Length = string.IsNullOrEmpty(epmTree.PropertyValue) ? (int?)null : int.Parse(epmTree.PropertyValue);
-                    initialized = true;
-                }
-                else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkRelationAttributeName)
-                {
-                    Debug.Assert(epmTree.IsAttribute);
-                    metadata.Relation = epmTree.PropertyValue;
-                    initialized = true;
-                }
-                else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkTitleAttributeName)
-                {
-                    Debug.Assert(epmTree.IsAttribute);
-                    metadata.Title = epmTree.PropertyValue;
-                    initialized = true;
-                }
-                else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkTypeAttributeName)
-                {
-                    Debug.Assert(epmTree.IsAttribute);
-                    metadata.MediaType = epmTree.PropertyValue;
-                    initialized = true;
-                }
-                else
-                {
-                    throw new NotSupportedException("Unsupported metadata '" + localName + "' found for a link.");
-                }
-            }
-
-            return initialized ? metadata : null;
-        }
-
-        private static AtomFeedMetadata CreateFeedMetadata(IEnumerable<XmlTreeAnnotation> children, ODataFeed feed)
-        {
-            AtomFeedMetadata metadata = null;
-
-            foreach (XmlTreeAnnotation epmTree in children)
-            {
-                if (epmTree.NamespaceName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomNamespace)
-                {
-                    if (metadata == null)
-                    {
-                        metadata = new AtomFeedMetadata();
-                    }
-
-                    string localName = epmTree.LocalName;
-                    if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomAuthorElementName)
-                    {
-                        AtomPersonMetadata author = CreateAuthorMetadata(epmTree.Children);
-
-                        List<AtomPersonMetadata> authors;
-                        if (metadata.Authors == null)
-                        {
-                            authors = new List<AtomPersonMetadata>();
-                            metadata.Authors = authors;
-                        }
-                        else
-                        {
-                            authors = (List<AtomPersonMetadata>)metadata.Authors;
-                        }
-                        authors.Add(author);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomCategoryElementName)
-                    {
-                        AtomCategoryMetadata category = CreateCategoryMetadata(epmTree.Children);
-
-                        List<AtomCategoryMetadata> categories;
-                        if (metadata.Categories == null)
-                        {
-                            categories = new List<AtomCategoryMetadata>();
-                            metadata.Categories = categories;
-                        }
-                        else
-                        {
-                            categories = (List<AtomCategoryMetadata>)metadata.Categories;
-                        }
-                        categories.Add(category);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomContributorElementName)
-                    {
-                        AtomPersonMetadata contributor = CreateAuthorMetadata(epmTree.Children);
-
-                        List<AtomPersonMetadata> contributors;
-                        if (metadata.Contributors == null)
-                        {
-                            contributors = new List<AtomPersonMetadata>();
-                            metadata.Contributors = contributors;
-                        }
-                        else
-                        {
-                            contributors = (List<AtomPersonMetadata>)metadata.Contributors;
-                        }
-                        contributors.Add(contributor);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomGeneratorElementName)
-                    {
-                        metadata.Generator = CreateGeneratorMetadata(epmTree);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomIconElementName)
-                    {
-                        metadata.Icon = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : new Uri(epmTree.PropertyValue);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomIdElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        Uri id = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : new Uri(epmTree.PropertyValue, UriKind.Absolute);
-                        if (feed == null)
-                        {
-                            // we are creating the metadata for an entry's 'source' metadata;
-                            // we don't have a feed to store the Id on so it has to go into metadata
-                            metadata.SourceId = id;
-                        }
-                        else
-                        {
-                            feed.Id = id;
-                        }
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLinkElementName)
-                    {
-                        AtomLinkMetadata link = CreateLinkMetadata(epmTree.Children);
-
-                        List<AtomLinkMetadata> links;
-                        if (metadata.Links == null)
-                        {
-                            links = new List<AtomLinkMetadata>();
-                            metadata.Links = links;
-                        }
-                        else
-                        {
-                            links = (List<AtomLinkMetadata>)metadata.Contributors;
-                        }
-                        links.Add(link);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomLogoElementName)
-                    {
-                        metadata.Logo = string.IsNullOrEmpty(epmTree.PropertyValue) ? null : new Uri(epmTree.PropertyValue);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomRightsElementName)
-                    {
-                        AtomTextConstructKind atomConstructKind = GetAtomConstructKind(epmTree.Children);
-                        metadata.Rights = new AtomTextConstruct { Kind = atomConstructKind, Text = epmTree.PropertyValue };
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomSubtitleElementName)
-                    {
-                        AtomTextConstructKind atomConstructKind = GetAtomConstructKind(epmTree.Children);
-                        metadata.Subtitle = new AtomTextConstruct { Kind = atomConstructKind, Text = epmTree.PropertyValue };
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomTitleElementName)
-                    {
-                        AtomTextConstructKind atomConstructKind = GetAtomConstructKind(epmTree.Children);
-                        metadata.Title = new AtomTextConstruct { Kind = atomConstructKind, Text = epmTree.PropertyValue };
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomUpdatedElementName)
-                    {
-                        Debug.Assert(!epmTree.IsAttribute);
-                        metadata.Updated = string.IsNullOrEmpty(epmTree.PropertyValue) ? (DateTimeOffset?)null : DateTimeOffset.Parse(epmTree.PropertyValue);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException("Unsupported atom metadata found!");
-                    }
-                }
-            }
-
-            return metadata;
-        }
-
-        private static AtomGeneratorMetadata CreateGeneratorMetadata(XmlTreeAnnotation epmTree)
-        {
-            AtomGeneratorMetadata metadata = new AtomGeneratorMetadata()
-            {
-                Name = epmTree.PropertyValue
-            };
-
-            foreach (XmlTreeAnnotation attribute in epmTree.Children.Where(child => child.IsAttribute))
-            {
-                if (string.IsNullOrEmpty(attribute.NamespaceName))
-                {
-                    string localName = attribute.LocalName;
-                    if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomGeneratorUriAttributeName)
-                    {
-                        metadata.Uri = string.IsNullOrEmpty(attribute.PropertyValue) ? null : new Uri(attribute.PropertyValue);
-                    }
-                    else if (localName == Microsoft.Test.Taupo.OData.Atom.TestAtomConstants.AtomGeneratorVersionAttributeName)
-                    {
-                        metadata.Version = attribute.PropertyValue;
-                    }
-                    else
-                    {
-                        throw new NotSupportedException("Unsupported metadata '" + localName + "' found for a generator.");
-                    }
-                }
-            }
-
-            return metadata;
         }
     }
 }

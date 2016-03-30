@@ -68,9 +68,6 @@
   <ItemGroup>
     <Compile Include="InfrastructureTests\BufferingReadStreamTests.cs" />
     <Compile Include="InfrastructureTests\ODataUtilsTests.cs" />
-    <Compile Include="ObjectModelTests\AtomCategoriesMetadataTests.cs" />
-    <Compile Include="ObjectModelTests\AtomResourceCollectionMetadataTests.cs" />
-    <Compile Include="ObjectModelTests\AtomWorkspaceMetadataTests.cs" />
     <Compile Include="ObjectModelTests\ODataEdmValueUtils.cs" />
     <Compile Include="ObjectModelTests\ODataActionsAndFunctionsTests.cs" />
     <Compile Include="ObjectModelTests\ODataInnerErrorTests.cs" />

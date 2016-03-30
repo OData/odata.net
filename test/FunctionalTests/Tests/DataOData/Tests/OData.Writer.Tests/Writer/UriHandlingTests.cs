@@ -44,11 +44,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             Uri baseUri = new Uri("http://odata.org");
             Uri testUri = new Uri("http://odata.org/relative");
-            IEnumerable<Func<Uri, BaseUriErrorTestCase>> testCaseFuncs = new Func<Uri, BaseUriErrorTestCase>[] 
+            IEnumerable<Func<Uri, BaseUriErrorTestCase>> testCaseFuncs = new Func<Uri, BaseUriErrorTestCase>[]
             {
                 relativeUri => new BaseUriErrorTestCase
                 {   // next page link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         feed.NextPageLink = relativeUri;
@@ -58,7 +58,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // entry read link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.ReadLink = relativeUri;
@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // entry edit link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.EditLink = relativeUri;
@@ -78,7 +78,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // media resource (default stream) read link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataStreamReferenceValue mediaResource = new ODataStreamReferenceValue();
                         mediaResource.ContentType = "image/jpg";
@@ -91,7 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // media resource (default stream) edit link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataStreamReferenceValue mediaResource = new ODataStreamReferenceValue();
                         mediaResource.ContentType = "image/jpg";    // required
@@ -105,7 +105,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // link Url
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataNavigationLink link = ObjectModelUtils.CreateDefaultCollectionLink();
                         link.Url = relativeUri;
@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // association link Url
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataNavigationLink link = ObjectModelUtils.CreateDefaultSingletonLink();
                         link.AssociationLinkUrl = relativeUri;
@@ -129,7 +129,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // named stream read link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataStreamReferenceValue namedStream = new ODataStreamReferenceValue()
                         {
@@ -150,7 +150,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // named stream edit link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataStreamReferenceValue namedStream = new ODataStreamReferenceValue()
                         {
@@ -172,165 +172,81 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed generator Uri
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                        AtomFeedMetadata metadata = new AtomFeedMetadata()
-                        {
-                            Generator = new AtomGeneratorMetadata()
-                            {
-                                Uri = relativeUri
-                            }
-                        };
-                        feed.SetAnnotation<AtomFeedMetadata>(metadata);
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed logo
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                        AtomFeedMetadata metadata = new AtomFeedMetadata()
-                        {
-                            Logo = relativeUri
-                        };
-                        feed.SetAnnotation<AtomFeedMetadata>(metadata);
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed icon
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                        AtomFeedMetadata metadata = new AtomFeedMetadata()
-                        {
-                            Icon = relativeUri
-                        };
-                        feed.SetAnnotation<AtomFeedMetadata>(metadata);
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed author
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                        AtomFeedMetadata metadata = new AtomFeedMetadata()
-                        {
-                            Authors = new []
-                            {
-                                new AtomPersonMetadata()
-                                {
-                                    Uri = relativeUri
-                                }
-                            }
-                        };
-                        feed.SetAnnotation<AtomFeedMetadata>(metadata);
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed contributor
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                        AtomFeedMetadata metadata = new AtomFeedMetadata()
-                        {
-                            Contributors = new []
-                            {
-                                new AtomPersonMetadata()
-                                {
-                                    Uri = relativeUri
-                                }
-                            }
-                        };
-                        feed.SetAnnotation<AtomFeedMetadata>(metadata);
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                        AtomFeedMetadata metadata = new AtomFeedMetadata()
-                        {
-                            Links = new []
-                            {
-                                new AtomLinkMetadata()
-                                {
-                                    Href = relativeUri
-                                }
-                            }
-                        };
-                        feed.SetAnnotation<AtomFeedMetadata>(metadata);
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: entry author
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-                        AtomEntryMetadata metadata = new AtomEntryMetadata()
-                        {
-                            Authors = new []
-                            {
-                                new AtomPersonMetadata()
-                                {
-                                    Uri = relativeUri
-                                }
-                            }
-                        };
-                        entry.SetAnnotation<AtomEntryMetadata>(metadata);
                         return new [] { entry };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: entry contributor
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-                        AtomEntryMetadata metadata = new AtomEntryMetadata()
-                        {
-                            Contributors = new []
-                            {
-                                new AtomPersonMetadata()
-                                {
-                                    Uri = relativeUri
-                                }
-                            }
-                        };
-                        entry.SetAnnotation<AtomEntryMetadata>(metadata);
                         return new [] { entry };
                     }),
                     Formats = new [] { ODataFormat.Atom }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: entry link
-                    ItemFunc = new Func<IEnumerable<ODataItem>>(() => 
+                    ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-                        AtomEntryMetadata metadata = new AtomEntryMetadata()
-                        {
-                            Links = new []
-                            {
-                                new AtomLinkMetadata()
-                                {
-                                    Href = relativeUri
-                                }
-                            }
-                        };
-                        entry.SetAnnotation<AtomEntryMetadata>(metadata);
                         return new [] { entry };
                     }),
                     Formats = new [] { ODataFormat.Atom }
@@ -384,45 +300,42 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        IEnumerable<UriTestCase> uriTestCases = new UriTestCase[] 
+        IEnumerable<UriTestCase> uriTestCases = new UriTestCase[]
         {
             new UriTestCase
             {   // next page link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                     feed.NextPageLink = url;
                     return new [] { feed };
-                }, 
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "link").Attribute("href").Value),
+                },
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyValue("__next"),
                 ResponseOnly = true
             },
             new UriTestCase
             {   // entry read link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.ReadLink = url;
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "link").Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("__metadata").PropertyValue("uri"),
             },
             new UriTestCase
             {   // entry edit link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.EditLink = url;
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "link").Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("__metadata").PropertyValue("uri"),
             },
             new UriTestCase
             {   // media resource (default stream) read link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataStreamReferenceValue mediaResource = new ODataStreamReferenceValue();
                     mediaResource.ContentType = "image/jpg";
@@ -431,12 +344,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry.MediaResource = mediaResource;
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "content").Attribute("src").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("__metadata").PropertyValue("media_src"),
             },
             new UriTestCase
             {   // media resource (default stream) edit link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataStreamReferenceValue mediaResource = new ODataStreamReferenceValue();
                     mediaResource.ContentType = "image/jpg";    // required
@@ -446,17 +358,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry.MediaResource = mediaResource;
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement(
-                    "uri", 
-                    element.Elements(TestAtomConstants.AtomXNamespace + "link")
-                        .Where(l => l.HasAttribute("rel", "edit-media"))
-                        .Single()
-                        .Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("__metadata").PropertyValue("edit_media"),
             },
             new UriTestCase
             {   // navigation link Url
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataNavigationLink link = ObjectModelUtils.CreateDefaultSingletonLink();
                     link.Url = url;
@@ -464,36 +370,24 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                     return new ODataItem[] { entry, link };
                 },
-                AtomExtractor = (tc, element) => new XElement(
-                    "uri", 
-                    element.Elements(TestAtomConstants.AtomXNamespace + "link")
-                        .Where(l => l.HasAttribute("rel", "http://docs.oasis-open.org/odata/ns/related/SampleLinkName"))
-                        .Single()
-                        .Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("SampleLinkName").PropertyObject(tc.IsRequest ? "__metadata" : "__deferred").PropertyValue("uri"),
             },
             new UriTestCase
             {   // association link Url
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataNavigationLink link = ObjectModelUtils.CreateDefaultSingletonLink();
                     link.AssociationLinkUrl = url;
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                     return new ODataItem[] { entry, link };
                 },
-                AtomExtractor = (tc, element) => new XElement(
-                    "uri", 
-                    element.Elements(TestAtomConstants.AtomXNamespace + "link")
-                        .Where(l => l.HasAttribute("rel", "http://docs.oasis-open.org/odata/ns/relatedlinks/SampleLinkName"))
-                        .Single()
-                        .Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("__metadata").PropertyObject("properties").PropertyObject("SampleLinkName").PropertyValue("associationuri"),
                 // Association links are not allowed in requests.
                 ResponseOnly = true,
             },
             new UriTestCase
             {   // named stream read link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataStreamReferenceValue namedStream = new ODataStreamReferenceValue()
                     {
@@ -510,12 +404,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry.Properties = new[] { property };
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement(
-                    "uri", 
-                    element.Elements(TestAtomConstants.AtomXNamespace + "link")
-                        .Where(l => l.HasAttribute("rel", "http://docs.oasis-open.org/odata/ns/mediaresource/NamedStream"))
-                        .Single()
-                        .Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object()
                     .PropertyObject("NamedStream")
                     .PropertyObject("__mediaresource")
@@ -526,7 +414,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             },
             new UriTestCase
             {   // named stream edit link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataStreamReferenceValue namedStream = new ODataStreamReferenceValue()
                     {
@@ -544,12 +432,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry.Properties = new[] { property };
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement(
-                    "uri", 
-                    element.Elements(TestAtomConstants.AtomXNamespace + "link")
-                        .Where(l => l.HasAttribute("rel", "http://docs.oasis-open.org/odata/ns/edit-media/NamedStream"))
-                        .Single()
-                        .Attribute("href").Value),
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object()
                     .PropertyObject("NamedStream")
                     .PropertyObject("__mediaresource")
@@ -559,89 +441,46 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             },
             new UriTestCase
             {   // Atom metadata: feed generator Uri
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        Generator = new AtomGeneratorMetadata()
-                        {
-                            Uri = url
-                        }
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "generator").Attribute("uri").Value),
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: feed logo
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        Logo = url
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "logo").Value),
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: feed icon
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        Icon = url
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "icon").Value),
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: feed author
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        Authors = new []
-                        {
-                            new AtomPersonMetadata()
-                            {
-                                Uri = url
-                            }
-                        }
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "author").Element(TestAtomConstants.AtomXNamespace + "uri").Value),
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: feed contributor
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        Contributors = new []
-                        {
-                            new AtomPersonMetadata()
-                            {
-                                Uri = url
-                            }
-                        }
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
+
                     return new [] { feed };
                 },
                 AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "contributor").Element(TestAtomConstants.AtomXNamespace + "uri").Value),
@@ -649,131 +488,60 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             },
             new UriTestCase
             {   // Atom metadata: feed self link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        SelfLink = new AtomLinkMetadata()
-                        {
-                            Relation = TestAtomConstants.AtomSelfRelationAttributeValue,
-                            Href = url
-                        }
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "link").Attribute("href").Value),
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: feed next page link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                     feed.NextPageLink = url;
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        NextPageLink = new AtomLinkMetadata()
-                        {
-                            Relation = TestAtomConstants.AtomNextRelationAttributeValue,
-                            Href = url
-                        }
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "link").Attribute("href").Value),
                 JsonExtractor = null,
                 ResponseOnly = true
             },
             new UriTestCase
             {   // Atom metadata: feed link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    AtomFeedMetadata metadata = new AtomFeedMetadata()
-                    {
-                        Links = new []
-                        {
-                            new AtomLinkMetadata()
-                            {
-                                Href = url
-                            }
-                        }
-                    };
-                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
                     return new [] { feed };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "link").Attribute("href").Value),
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: entry author
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-                    AtomEntryMetadata metadata = new AtomEntryMetadata()
-                    {
-                        Authors = new []
-                        {
-                            new AtomPersonMetadata()
-                            {
-                                Uri = url
-                            }
-                        }
-                    };
-                    entry.SetAnnotation<AtomEntryMetadata>(metadata);
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "author").Element(TestAtomConstants.AtomXNamespace + "uri").Value),
+
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: entry contributor
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-                    AtomEntryMetadata metadata = new AtomEntryMetadata()
-                    {
-                        Contributors = new []
-                        {
-                            new AtomPersonMetadata()
-                            {
-                                Uri = url
-                            }
-                        }
-                    };
-                    entry.SetAnnotation<AtomEntryMetadata>(metadata);
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement("uri", element.Element(TestAtomConstants.AtomXNamespace + "contributor").Element(TestAtomConstants.AtomXNamespace + "uri").Value),
+
                 JsonExtractor = null,
             },
             new UriTestCase
             {   // Atom metadata: entry link
-                ItemFunc = (url) => 
+                ItemFunc = (url) =>
                 {
                     ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-                    AtomEntryMetadata metadata = new AtomEntryMetadata()
-                    {
-                        Links = new []
-                        {
-                            new AtomLinkMetadata()
-                            {
-                                Href = url
-                            }
-                        }
-                    };
-                    entry.SetAnnotation<AtomEntryMetadata>(metadata);
                     return new [] { entry };
                 },
-                AtomExtractor = (tc, element) => new XElement(
-                    "uri", 
-                    element.Elements(TestAtomConstants.AtomXNamespace + "link")
-                    .Where(l => !l.HasAttribute("rel")).Single()
-                    .Attribute("href")
-                    .Value),
                 JsonExtractor = null,
             },
         };
@@ -873,14 +641,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new Uri("http://odata.org/My%7DService.svc/"), // }
                 // Others                         
                 new Uri("http://odata.org:80/MyService.svc/"),
-                new Uri("http://odata.org/My_Service.svc/"),   
-                new Uri("http://odata.org/My-Service.svc/"), 
-                new Uri("http://odata.org/My31572Service.svc/"), 
+                new Uri("http://odata.org/My_Service.svc/"),
+                new Uri("http://odata.org/My-Service.svc/"),
+                new Uri("http://odata.org/My31572Service.svc/"),
             };
 
             Uri[] testUris = new Uri[]
             {
-                new Uri("http://odata.org/testuri"),                
+                new Uri("http://odata.org/testuri"),
                 new Uri("http://odata.org/testuri?$filter=3.14E%2B%20ne%20null"),
                 new Uri("http://odata.org/testuri?$filter='foo%20%26%20'%20ne%20null"),
                 new Uri("http://odata.org/testuri?$filter=not%20endswith(Name,'%2B')"),
@@ -890,18 +658,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testDescriptors = uriTestCases
                 .SelectMany(testCase => testUris
                     .SelectMany(testUri => baseUris
-                        .Select (baseUri =>
-            {
-                return new
-                {
-                    TestCase = testCase,
-                    BaseUri = baseUri,
-                    Descriptor = new PayloadWriterTestDescriptor<ODataItem>(
-                        this.Settings,
-                        testCase.ItemFunc(testUri),
-                        CreateUriTestCaseExpectedResultCallback(baseUri, testUri, testCase))
-                };
-            })));
+                        .Select(baseUri =>
+           {
+               return new
+               {
+                   TestCase = testCase,
+                   BaseUri = baseUri,
+                   Descriptor = new PayloadWriterTestDescriptor<ODataItem>(
+                       this.Settings,
+                       testCase.ItemFunc(testUri),
+                       CreateUriTestCaseExpectedResultCallback(baseUri, testUri, testCase))
+               };
+           })));
 
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
@@ -935,16 +703,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             Uri resultRelativeUri = new Uri("resultRelativeUri", UriKind.Relative);
             Uri resultAbsoluteUri = new Uri("http://odata.org/absoluteresolve");
 
-            var resolvers = new []
+            var resolvers = new[]
                 {
                     // Resolver which always returns relative URL
                     new
                     {
-                        Resolver = new Func<Uri, Uri, Uri>((baseUri, payloadUri) => { 
+                        Resolver = new Func<Uri, Uri, Uri>((baseUri, payloadUri) => {
                             if (payloadUri.OriginalString == inputUri.OriginalString)
                             {
                                 return resultRelativeUri;
-                            } 
+                            }
                             else
                             {
                                 return null;
@@ -954,11 +722,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     // Resolver which always returns absolute URL
                     new
                     {
-                        Resolver = new Func<Uri, Uri, Uri>((baseUri, payloadUri) => { 
+                        Resolver = new Func<Uri, Uri, Uri>((baseUri, payloadUri) => {
                             if (payloadUri.OriginalString == inputUri.OriginalString)
                             {
                                 return resultAbsoluteUri;
-                            } 
+                            }
                             else
                             {
                                 return null;
@@ -976,9 +744,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         this.Settings,
                         testCase.ItemFunc(inputUri),
                         CreateUriTestCaseExpectedResultCallback(/*baseUri*/ null, resolver.ResultUri, testCase))
-                        {
-                            UrlResolver = new TestUrlResolver() { ResolutionCallback = resolver.Resolver }
-                        }
+                    {
+                        UrlResolver = new TestUrlResolver() { ResolutionCallback = resolver.Resolver }
+                    }
                 };
             }));
 
@@ -1065,7 +833,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// <param name="testCase">The <see cref="UriTestCase"/> to create the result callback for.</param>
         /// <returns>The expected result callback for a URI test.</returns>
         private PayloadWriterTestDescriptor.WriterTestExpectedResultCallback CreateUriTestCaseExpectedResultCallback(
-            Uri baseUri, 
+            Uri baseUri,
             Uri uri,
             UriTestCase testCase)
         {

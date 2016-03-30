@@ -84,7 +84,6 @@
     <Compile Include="Common\Annotations\MinimumRequiredVersionAnnotation.cs" />
     <Compile Include="Common\Annotations\SerializationTypeNameTestAnnotation.cs" />
     <Compile Include="Common\AsyncTestStream.cs" />
-    <Compile Include="Atom\AtomMetadataODataObjectModelVisitor.cs" />
     <Compile Include="Common\Batch\BatchGeneratorExtensions.cs" />
     <Compile Include="Common\Batch\BatchPayloadGenerator.cs" />
     <Compile Include="Common\Batch\BatchResponseToDummyRequestGenerator.cs" />
@@ -146,7 +145,6 @@
     <Compile Include="Common\ODataUnitTestModule.cs" />
     <Compile Include="Common\ODataVersionUtils.cs" />
     <Compile Include="Common\PayloadBuilder.cs" />
-    <Compile Include="Common\PayloadElementODataWriter.cs" />
     <Compile Include="Common\PayloadGeneratorExtensions.cs" />
     <Compile Include="Common\PayloadTestDescriptor.cs" />
     <Compile Include="Common\PayloadTestDescriptorAnnotation.cs" />

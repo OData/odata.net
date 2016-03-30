@@ -57,15 +57,7 @@ namespace Microsoft.OData.Service.Serializers
             // Note that we must cache the entire payload to preserve call order for navigation properties.
             // Due to the fact that the payload order on the wire is arbitrary, but we always set all non-navigation properties first
             // and then apply all navigation properties, we must cache the entire tree.
-            ODataEntry topLevelEntry;
-            try
-            {
-                topLevelEntry = this.ReadEntry(odataReader, segmentInfo);
-            }
-            catch (UriFormatException exception)
-            {
-                throw;
-            }
+            ODataEntry topLevelEntry = this.ReadEntry(odataReader, segmentInfo);
 
             ODataEntryAnnotation topLevelEntryAnnotation = topLevelEntry.GetAnnotation<ODataEntryAnnotation>();
             Debug.Assert(topLevelEntryAnnotation != null, "Each entry we read must have the entry annotation.");

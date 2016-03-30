@@ -189,9 +189,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 (messageWriter, writerDescriptor, feedWriter) =>
                 {
                     writerDescriptor.TestDescriptorSettings.ObjectModelToMessageWriter.WriteMessage(
-                        messageWriter, 
-                        ODataPayloadKind.Parameter, 
-                        writerDescriptor.PayloadItems.First(), 
+                        messageWriter,
+                        ODataPayloadKind.Parameter,
+                        writerDescriptor.PayloadItems.First(),
                         /*model*/ null,
                         functionImport);
                 },
@@ -715,16 +715,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         ODataEntry entry = item as ODataEntry;
                         if (entry != null)
                         {
-                            AtomEntryMetadata metadata = entry.GetAnnotation<AtomEntryMetadata>();
-
-                            // Fix up metadata for baselining
-                            metadata = metadata.Fixup();
-
-                            if (metadata != null)
-                            {
-                                entry.SetAnnotation<AtomEntryMetadata>(metadata);
-                            }
-
                             WriteEntryCallbacksAnnotation callbacksAnnotation = entry.GetAnnotation<WriteEntryCallbacksAnnotation>();
                             if (callbacksAnnotation != null && callbacksAnnotation.BeforeWriteStartCallback != null)
                             {
@@ -747,16 +737,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                             ODataFeed feed = item as ODataFeed;
                             if (feed != null)
                             {
-                                AtomFeedMetadata metadata = feed.GetAnnotation<AtomFeedMetadata>();
-                                
-                                // Fix up metadata for baselining
-                                metadata = metadata.Fixup();
-
-                                if (metadata != null)
-                                {
-                                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
-                                }
-
                                 WriteFeedCallbacksAnnotation callbacksAnnotation = feed.GetAnnotation<WriteFeedCallbacksAnnotation>();
                                 if (callbacksAnnotation != null && callbacksAnnotation.BeforeWriteStartCallback != null)
                                 {
@@ -1798,7 +1778,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 return deserializer.DeserializeBatchResponse(request, response);
             }
         }
-        
+
         /// <summary>
         /// Writes the end of a given item to the specified writer.
         /// </summary>

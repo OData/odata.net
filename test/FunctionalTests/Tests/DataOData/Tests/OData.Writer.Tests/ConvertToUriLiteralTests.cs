@@ -424,8 +424,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         public void ConvertToUriLiteralMoreComplexTest()
         {
             List<ConvertToUriLiteralTestCase> testCases = new List<ConvertToUriLiteralTestCase>();
-            IEdmModel edmModel = TestModels.BuildTestModel();
-            ODataPayloadElementToObjectModelConverter payloadToObjectModelConverter = new ODataPayloadElementToObjectModelConverter(false);
+            TestModels.BuildTestModel();
 
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
@@ -471,7 +470,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                     Name = "Collection_Of_Complex_Property",
                                     Value = new ODataCollectionValue()
                                     {
-                                        Items = new[] 
+                                        Items = new[]
                                         {
                                             new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
                                             new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
@@ -498,7 +497,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                     Value = new ODataCollectionValue()
                                     {
                                         TypeName = EntityModelUtils.GetCollectionTypeName("Complex_Type"),
-                                        Items = new[] 
+                                        Items = new[]
                                         {
                                             new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
                                             new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
@@ -616,7 +615,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Parameter = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.MyType"),
-                        Items = new[] 
+                        Items = new[]
                         {
                             new ODataComplexValue() { TypeName = "NameSpace.MyType", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Bool_Prop", Value = false } } },
                         }
@@ -638,7 +637,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Parameter = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.MyType"),
-                        Items = new[] 
+                        Items = new[]
                         {
                             new ODataComplexValue() { TypeName = "NameSpace.MyType", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Bool_Prop", Value = false } } },
                         }
@@ -664,7 +663,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 {
                     Parameter = new ODataCollectionValue()
                     {
-                        Items = new[] 
+                        Items = new[]
                             {
                                 new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
                                 new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
@@ -679,7 +678,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Parameter = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Complex_Type"),
-                        Items = new[] 
+                        Items = new[]
                             {
                                 new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
                                 new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
@@ -696,12 +695,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Parameter = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.Complex"),
-                        Items = new[] 
+                        Items = new[]
                             {
-                                new ODataComplexValue() 
-                                { 
-                                    TypeName = "NameSpace.Complex", 
-                                    Properties = new ODataProperty[2] 
+                                new ODataComplexValue()
+                                {
+                                    TypeName = "NameSpace.Complex",
+                                    Properties = new ODataProperty[2]
                                     {
                                         new ODataProperty()
                                         {
@@ -744,7 +743,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Model = edmModel,
                     ExpectedValue = "null",
                 });
-           
+
 
             this.RunTestCases(testCases);
         }
@@ -802,7 +801,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             var container = new EdmEntityContainer("TestModel", "DefaultContainer");
             edmModel.AddElement(container);
-            
+
             #region negative test
             // types that does not exist in model
             testCases.Add(

@@ -110,7 +110,6 @@ namespace Microsoft.OData.Core
 
             // NOTE: writer behavior is immutable; copy by reference is ok.
             this.writerBehavior = other.writerBehavior;
-            this.EnableAtom = other.EnableAtom;
             this.EnableFullValidation = other.EnableFullValidation;
             this.mediaTypeResolver = other.mediaTypeResolver;
             this.ODataSimplified = other.ODataSimplified;
@@ -352,11 +351,6 @@ namespace Microsoft.OData.Core
                 this.shouldIncludeAnnotation = value;
             }
         }
-
-        /// <summary>
-        /// Whether ATOM support is enabled.
-        /// </summary>
-        internal bool EnableAtom { get; set; }
 
         /// <summary>Sets the acceptable media types and character sets from which the content type will be computed when writing the payload.</summary>
         /// <param name="acceptableMediaTypes">The acceptable media types used to determine the content type of the message. This is a comma separated list of content types as specified in RFC 2616, Section 14.1.</param>

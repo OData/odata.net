@@ -49,11 +49,6 @@ namespace Microsoft.OData.Service.Serializers
                     Name = rs.Name
                 };
 
-                entitySetInfo.SetAnnotation<AtomResourceCollectionMetadata>(new AtomResourceCollectionMetadata()
-                {
-                    Title = new AtomTextConstruct { Text = rs.Name }
-                });
-
                 return entitySetInfo;
             });
 

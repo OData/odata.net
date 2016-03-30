@@ -184,12 +184,6 @@ namespace Microsoft.OData.Core.Tests
         {
             this.settings.SelectExpandClause.Should().Be(null);
         }
-
-        [Fact]
-        public void EnableAtomBeFalseByDefault()
-        {
-            this.settings.EnableAtom.Should().BeFalse();
-        }
         #endregion Default settings tests
 
         #region Copy constructor tests
@@ -342,14 +336,6 @@ namespace Microsoft.OData.Core.Tests
             string select, expand;
             newSetting.SelectExpandClause.GetSelectExpandPaths(out select, out expand);
             select.Should().Be("*");
-        }
-
-        [Fact]
-        public void CopyConstructorShouldCopyEnableAtom()
-        {
-            this.settings.EnableAtom = true;
-            var newSetting = new ODataMessageWriterSettings(this.settings);
-            newSetting.EnableAtom.Should().BeTrue();
         }
 
         [Fact]

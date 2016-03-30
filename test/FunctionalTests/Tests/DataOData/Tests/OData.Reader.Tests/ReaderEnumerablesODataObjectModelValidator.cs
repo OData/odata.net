@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.Test.Taupo.OData.Common;
+
 namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
     #region Namespaces
@@ -43,7 +45,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Visitor for the OData OM which performs the verification.
         /// </summary>
-        private class ObjectModelVisitor : AtomMetadataODataObjectModelVisitor
+        private class ObjectModelVisitor : ODataObjectModelVisitor
         {
             /// <summary>
             /// The assertion handler to use.
@@ -109,42 +111,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 this.ValidateEnumerable<ODataEntityReferenceLink>(entityReferenceLinks.Links, "ODataEntityReferenceLinks.Links");
                 base.VisitEntityReferenceLinks(entityReferenceLinks);
-            }
-
-            /// <summary>
-            /// Visits an ATOM entry metadata.
-            /// </summary>
-            /// <param name="atomEntryMetadata">The entry metadata to visit.</param>
-            protected override void VisitAtomEntryMetadata(AtomEntryMetadata atomEntryMetadata)
-            {
-                this.ValidateEnumerable<AtomPersonMetadata>(atomEntryMetadata.Authors, "AtomEntryMetadata.Authors");
-                this.ValidateEnumerable<AtomCategoryMetadata>(atomEntryMetadata.Categories, "AtomEntryMetadata.Categories");
-                this.ValidateEnumerable<AtomPersonMetadata>(atomEntryMetadata.Contributors, "AtomEntryMetadata.Contributors");
-                this.ValidateEnumerable<AtomLinkMetadata>(atomEntryMetadata.Links, "AtomEntryMetadata.Links");
-                base.VisitAtomEntryMetadata(atomEntryMetadata);
-            }
-
-            /// <summary>
-            /// Visits an ATOM feed metadata.
-            /// </summary>
-            /// <param name="atomFeedMetadata">The feed metadata to visit.</param>
-            protected override void VisitAtomFeedMetadata(AtomFeedMetadata atomFeedMetadata)
-            {
-                this.ValidateEnumerable<AtomPersonMetadata>(atomFeedMetadata.Authors, "AtomFeedMetadata.Authors");
-                this.ValidateEnumerable<AtomCategoryMetadata>(atomFeedMetadata.Categories, "AtomFeedMetadata.Categories");
-                this.ValidateEnumerable<AtomPersonMetadata>(atomFeedMetadata.Contributors, "AtomFeedMetadata.Contributors");
-                this.ValidateEnumerable<AtomLinkMetadata>(atomFeedMetadata.Links, "AtomFeedMetadata.Links");
-                base.VisitAtomFeedMetadata(atomFeedMetadata);
-            }
-
-            /// <summary>
-            /// Visits an ATOM categories metadata.
-            /// </summary>
-            /// <param name="atomCategoriesMetadata">The categories metadata to visit.</param>
-            protected override void VisitAtomCategoriesMetadata(AtomCategoriesMetadata atomCategoriesMetadata)
-            {
-                this.ValidateEnumerable<AtomCategoryMetadata>(atomCategoriesMetadata.Categories, "AtomCategoriesMetadata.Categories");
-                base.VisitAtomCategoriesMetadata(atomCategoriesMetadata);
             }
 
             /// <summary>

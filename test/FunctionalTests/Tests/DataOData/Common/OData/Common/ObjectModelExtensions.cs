@@ -114,45 +114,5 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             Debug.Assert(navigationLinksProcessed == navigationLinkCount, "All navigation links should have been processed.");
         }
-
-        /// <summary>
-        /// Fixup AtomEntryMetadata to fix hte baselne issue for Atom Entry payload generator
-        /// </summary>
-        /// <param name="metadata">the AtomEntryMetadata</param>
-        /// <returns>fix-up AtomEntryMetadata</returns>
-        public static AtomEntryMetadata Fixup(this AtomEntryMetadata metadata)
-        {
-            if (metadata == null)
-            {
-                return new AtomEntryMetadata() { Updated = DateTimeOffset.MaxValue };
-            }
-            if (metadata.Updated == null)
-            {
-                metadata.Updated = DateTimeOffset.MaxValue;
-            }
-            if (metadata.Source != null && metadata.Source.Updated == null)
-            {
-                metadata.Source.Updated = DateTimeOffset.MaxValue;
-            }
-            return metadata;
-        }
-
-        /// <summary>
-        /// Fixup AtomFeedMetadata to fix hte baselne issue for Atom Feed payload generator
-        /// </summary>
-        /// <param name="metadata">the AtomFeedMetadata</param>
-        /// <returns>fix-up AtomFeedMetadata</returns>
-        public static AtomFeedMetadata Fixup(this AtomFeedMetadata metadata)
-        {
-            if (metadata == null)
-            {
-                return new AtomFeedMetadata() { Updated = DateTimeOffset.MaxValue };
-            }
-            if (metadata.Updated == null)
-            {
-                metadata.Updated = DateTimeOffset.MaxValue;
-            }
-            return metadata;
-        }
     }
 }

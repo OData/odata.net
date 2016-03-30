@@ -53,7 +53,7 @@ namespace Microsoft.OData.Core.Tests
         {
             string[] args =
             {
-                "application/json;IEEE754Compatible=false", 
+                "application/json;IEEE754Compatible=false",
                 "application/json"
             };
             foreach (var arg in args)
@@ -262,14 +262,12 @@ namespace Microsoft.OData.Core.Tests
             var result1 = TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal", ODataVersion.V4);
             var result2 = TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal", ODataVersion.V4);
             var result3 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4);
-            var result4 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver(true));
-            var result5 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver(true));
+            var result4 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver());
 
             result1.Should().BeJsonLight().And.SpecifyDefaultMetadata();
             result2.Should().BeJsonLight().And.SpecifyDefaultMetadata();
             result3.Should().BeUnspecifiedJson();
             result4.Should().BeUnspecifiedJson();
-            result5.Should().BeUnspecifiedJson();
         }
 
         [Fact]

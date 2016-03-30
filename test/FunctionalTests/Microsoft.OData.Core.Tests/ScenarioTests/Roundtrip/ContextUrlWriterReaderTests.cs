@@ -1254,8 +1254,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             {
                 DisableMessageStreamDisposal = true,
                 PayloadBaseUri = new Uri(TestBaseUri),
-                AutoComputePayloadMetadataInJson = true,
-                EnableAtom = true
+                AutoComputePayloadMetadataInJson = true
             };
             writerSettings.SetServiceDocumentUri(new Uri(TestBaseUri));
             writerSettings.SetContentType(odataFormat);
@@ -1283,7 +1282,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             {
                 BaseUri = new Uri(TestBaseUri + "$metadata"),
                 DisableMessageStreamDisposal = false,
-                EnableAtom = true
             };
 
             using (var msgReader =

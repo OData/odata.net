@@ -38,12 +38,12 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // value
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType),ODataFormat.RawValue),
             },
             // binary
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType) ,ODataFormat.RawValue),
             },
             // collection
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // metadata document
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),
             },
             // error
@@ -70,11 +70,11 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // delta
             new ODataMediaTypeFormat[]
-            { 
+            {
             },
             // async
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType) ,ODataFormat.RawValue),
             },
         };
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void TestJsonMediaType()
         {
-            var resolver = ODataMediaTypeResolver.GetMediaTypeResolver(false);
+            var resolver = ODataMediaTypeResolver.GetMediaTypeResolver();
             foreach (var payloadKind in Enum.GetValues(typeof(ODataPayloadKind)).Cast<ODataPayloadKind>())
             {
                 if (payloadKind == ODataPayloadKind.Unsupported)

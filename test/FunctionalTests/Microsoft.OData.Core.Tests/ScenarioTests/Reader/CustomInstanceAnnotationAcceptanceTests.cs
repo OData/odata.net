@@ -216,16 +216,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations, "application/json;odata.streaming=true");
         }
 
-        [Fact]
-        public void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntryInAtom()
-        {
-            ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(AtomFeedAndEntryPayloadWithCustomInstanceAnnotations, "application/atom+xml;type=feed;charset=utf-8");
-        }
-
         public void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(string payload, string contentType)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false, EnableAtom = true };
+            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
 
             IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 200, Stream = stream };
             messageToRead.SetHeader("Content-Type", contentType);
@@ -342,38 +336,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             WriteCustomInstanceAnnotationToFeedAndEntry(FeedWithCustomInstanceAnnotationInJsonLight, ODataFormat.Json);
         }
 
-        [Fact]
-        public void ShouldBeAbleToWriteCustomInstanceAnnotationToFeedAndEntryInAtom()
-        {
-            const string FeedWithCustomInstanceAnnotationInAtom =
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-                "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:d=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:m=\"http://docs.oasis-open.org/odata/ns/metadata\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:gml=\"http://www.opengis.net/gml\" m:context=\"http://www.example.com/$metadata#TestEntitySet\">" +
-                    "<id>urn:feedId</id>" +
-                    "<title />" +
-                    "<updated>2013-03-12T22:14:47Z</updated>" +
-                    "<m:annotation term=\"Custom.Int32Annotation\" int=\"123\" />" +
-                    "<m:annotation term=\"Custom.GuidAnnotation\" m:type=\"Guid\">00000000-0000-0000-0000-000000000000</m:annotation>" +
-                    "<entry>" +
-                        "<m:annotation term=\"Custom.ComplexAnnotation\" m:type=\"#TestNamespace.TestComplexType\"><d:StringProperty>StringValue1</d:StringProperty></m:annotation>" +
-                        "<id />" +
-                        "<title />" +
-                        "<updated>2013-03-12T22:14:47Z</updated>" +
-                        "<author><name /></author>" +
-                        "<content type=\"application/xml\">" +
-                            "<m:properties>" +
-                                "<d:ID m:type=\"Int32\">1</d:ID>" +
-                            "</m:properties>" +
-                        "</content>" +
-                        "<m:annotation term=\"Custom.PrimitiveCollectionAnnotation\" m:type=\"#Collection(String)\"><m:element>StringValue1</m:element><m:element>StringValue2</m:element></m:annotation>" +
-                    "</entry>" +
-                    "<m:annotation term=\"Custom.ComplexCollectionAnnotation\" m:type=\"#Collection(TestNamespace.TestComplexType)\"><m:element><d:StringProperty>StringValue1</d:StringProperty></m:element><m:element><d:StringProperty>StringValue2</d:StringProperty></m:element></m:annotation>" +
-                "</feed>";
-            WriteCustomInstanceAnnotationToFeedAndEntry(FeedWithCustomInstanceAnnotationInAtom, ODataFormat.Atom);
-        }
-
         private static void WriteCustomInstanceAnnotationToFeedAndEntry(string expectedPayload, ODataFormat format)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, EnableAtom = format == ODataFormat.Atom };
+            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
             writerSettings.SetContentType(format);
             writerSettings.ODataUri = new ODataUri() { ServiceRoot = new Uri("http://www.example.com/") };
 

@@ -347,9 +347,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                         TypeName = "My.NestedAddressType",
                         Properties = new []
                         {
-                            new ODataProperty() 
-                            { 
-                                Name = "Street", 
+                            new ODataProperty()
+                            {
+                                Name = "Street",
                                 Value = new ODataComplexValue()
                                 {
                                     TypeName = "My.StreetType",
@@ -428,7 +428,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Geography"),
-                        Items = new object[] 
+                        Items = new object[]
                         {
                             ObjectModelUtils.GeographyCollectionValue,
                             ObjectModelUtils.GeographyLineStringValue,
@@ -447,8 +447,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType"),
-                        Items = new [] 
-                        { 
+                        Items = new []
+                        {
                             new ODataComplexValue()
                             {
                                 TypeName = "My.AddressType",
@@ -517,11 +517,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 Id = DefaultFeedId,
                 SerializationInfo = MySerializationInfo
             };
-            AtomFeedMetadata metadata = new AtomFeedMetadata()
-            {
-                Updated = DateTimeOffset.Parse(DefaultFeedUpdated)
-            };
-            feed.SetAnnotation<AtomFeedMetadata>(metadata);
             return feed;
         }
 
@@ -680,11 +675,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 TypeName = typeName,
                 SerializationInfo = MySerializationInfo
             };
-            AtomEntryMetadata metadata = new AtomEntryMetadata()
-            {
-                Updated = DateTimeOffset.Parse(DefaultEntryUpdated)
-            };
-            entry.SetAnnotation<AtomEntryMetadata>(metadata);
             return entry;
         }
 
@@ -721,9 +711,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 TypeName = "My.NestedAddressType",
                 Properties = new[]
                 {
-                    new ODataProperty() 
-                    { 
-                        Name = "Street", 
+                    new ODataProperty()
+                    {
+                        Name = "Street",
                         Value = new ODataComplexValue()
                         {
                             TypeName = "My.StreetType",

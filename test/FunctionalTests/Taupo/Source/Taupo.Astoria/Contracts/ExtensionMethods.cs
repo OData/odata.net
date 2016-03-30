@@ -194,26 +194,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
         }
 
         /// <summary>
-        /// Converts test enum SyndicationItemProperty to product enum.
-        /// </summary>
-        /// <param name="item">test enum value</param>
-        /// <returns>product enum</returns>
-        public static AtomSyndicationItemProperty ToProductEnum(this SyndicationItemProperty item)
-        {
-            return ConvertEnum<SyndicationItemProperty, AtomSyndicationItemProperty>(item);
-        }
-
-        /// <summary>
-        /// Converts test enum SyndicationTextContentKind to product enum.
-        /// </summary>
-        /// <param name="contentKind">test enum value</param>
-        /// <returns>product enum</returns>
-        public static AtomSyndicationTextContentKind ToProductEnum(this SyndicationTextContentKind contentKind)
-        {
-            return ConvertEnum<SyndicationTextContentKind, AtomSyndicationTextContentKind>(contentKind);
-        }
-
-        /// <summary>
         /// Converts test enum to product enum.
         /// </summary>
         /// <typeparam name="TOriginal">Type of original enum</typeparam>

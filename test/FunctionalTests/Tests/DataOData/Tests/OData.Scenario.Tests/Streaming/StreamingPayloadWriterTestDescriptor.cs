@@ -124,7 +124,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             Settings settings,
             IEnumerable<T> payloadItems,
             WriterTestExpectedResultCallback expectedResultCallback)
-            : base(settings,payloadItems, expectedResultCallback)
+            : base(settings, payloadItems, expectedResultCallback)
         {
             this.settings = settings;
         }
@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
         /// Runs the test specified by this test descriptor.
         /// </summary>
         /// <param name="testConfiguration">The test configuration to use for running the test.</param>
-        public override void RunTest(WriterTestConfiguration testConfiguration, BaselineLogger logger=null)
+        public override void RunTest(WriterTestConfiguration testConfiguration, BaselineLogger logger = null)
         {
             //TODO: Use Logger to verify result, right now this change is only to unblock writer testcase checkin
 
@@ -196,13 +196,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                 ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings(this.settings.MessageReaderSettings)
                 {
                     DisableMessageStreamDisposal = testConfiguration.MessageWriterSettings.DisableMessageStreamDisposal,
-                    EnableAtom = true
                 };
 
                 ReaderTestConfiguration readerConfig = new ReaderTestConfiguration(
-                    testConfiguration.Format, 
-                    readerSettings, 
-                    testConfiguration.IsRequest, 
+                    testConfiguration.Format,
+                    readerSettings,
+                    testConfiguration.IsRequest,
                     testConfiguration.Synchronous);
 
                 IEdmModel model = this.GetMetadataProvider();
@@ -220,7 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                 }
             });
         }
-        
+
         /// <summary>
         /// Helper method to create a test message from its content.
         /// </summary>

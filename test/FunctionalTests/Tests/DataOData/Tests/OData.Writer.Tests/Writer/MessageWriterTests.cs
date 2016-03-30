@@ -42,13 +42,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             new WriterActionForPayloadKind[]
             {
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Unsupported, WriterAction = messageWriter => { throw new InvalidOperationException("Must not get here for unsupported kinds."); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Entry, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Entry, WriterAction = messageWriter =>
                     { ODataWriter writer = messageWriter.CreateODataEntryWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultEntry("TestModel.CityType")); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Feed, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Feed, WriterAction = messageWriter =>
                     { ODataWriter writer = messageWriter.CreateODataFeedWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultFeed()); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Collection, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Collection, WriterAction = messageWriter =>
                     { ODataCollectionWriter writer = messageWriter.CreateODataCollectionWriter(); writer.WriteStart(new ODataCollectionStart { Name = "collection" }); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Batch, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Batch, WriterAction = messageWriter =>
                     { ODataBatchWriterTestWrapper writer = messageWriter.CreateODataBatchWriter(); writer.WriteStartBatch(); writer.WriteStartChangeset(); writer.WriteEndChangeset(); writer.WriteEndBatch(); writer.Flush(); } },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.EntityReferenceLink, WriterAction = messageWriter => messageWriter.WriteEntityReferenceLink(ObjectModelUtils.CreateDefaultEntityReferenceLink()) },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.EntityReferenceLinks, WriterAction = messageWriter => messageWriter.WriteEntityReferenceLinks(ObjectModelUtils.CreateDefaultEntityReferenceLinks()) },
@@ -542,7 +542,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             // Add some error combinations
             string[] invalidVersionHeaders = { "randomstring", "V1.0", "1.5", "randomstring;1.0", "1", ";UserAgentString" };
-            IEnumerable<VersionMessageHeaderTestCase> errorTestCases = invalidVersionHeaders.Select(invalidHeader => 
+            IEnumerable<VersionMessageHeaderTestCase> errorTestCases = invalidVersionHeaders.Select(invalidHeader =>
                 new VersionMessageHeaderTestCase
                 {
                     VersionHeaderValue = invalidHeader,
@@ -706,14 +706,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         DisableMessageStreamDisposal = settings.DisableMessageStreamDisposal,
                         Indent = settings.Indent,
                         MessageQuotas = new ODataMessageQuotas(settings.MessageQuotas),
-                        Version = settings.Version,
-                        EnableAtom = true
+                        Version = settings.Version
                     };
                     clonedSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     WriterTestConfiguration clonedTestConfiguration = new WriterTestConfiguration(
-                        testConfiguration.Format, 
-                        clonedSettings, 
-                        testConfiguration.IsRequest, 
+                        testConfiguration.Format,
+                        clonedSettings,
+                        testConfiguration.IsRequest,
                         testConfiguration.Synchronous);
 
                     using (var memoryStream = new TestStream())
@@ -1031,8 +1030,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     ContentTypeHeaderValue = "abc/pqr",
                     ExpectedException = tc => ODataExpectedExceptions.ODataContentTypeException(
-                        "MediaTypeUtils_CannotDetermineFormatFromContentType", 
-                        TestMediaTypeUtils.GetSupportedMediaTypes(payloadKind, /*includeAppJson*/true), 
+                        "MediaTypeUtils_CannotDetermineFormatFromContentType",
+                        TestMediaTypeUtils.GetSupportedMediaTypes(payloadKind, /*includeAppJson*/true),
                         "abc/pqr"),
                 },
             };
@@ -1118,7 +1117,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         this.Assert.AreEqual(60, payload[0], "BOM might be present which is not expected");
                         this.Assert.AreEqual(63, payload[1], "BOM might be present which is not expected");
                     }
-                });   
+                });
         }
 
         [TestMethod, Variation(Description = "Verifies that IODataRequestMessage and IODataResponseMessage continue to have settable properties.")]
@@ -1128,11 +1127,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var exception = TestExceptionUtils.RunCatching(() => requestMessage.Url = new Uri("http://www.odata.org"));
             ExceptionUtilities.Assert(exception == null, "No exception was expected. Exception was thrown {0}", exception);
 
-            var responseMessage= new TestResponseMessage(new MemoryStream());
+            var responseMessage = new TestResponseMessage(new MemoryStream());
             exception = TestExceptionUtils.RunCatching(() => responseMessage.StatusCode = 5);
             ExceptionUtilities.Assert(exception == null, "No exception was expected. Exception was thrown {0}", exception);
         }
-        
+
         // These tests are disabled on Silverlight and Phone because they only run on async configuration 
 #if !SILVERLIGHT && !WINDOWS_PHONE
         [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]

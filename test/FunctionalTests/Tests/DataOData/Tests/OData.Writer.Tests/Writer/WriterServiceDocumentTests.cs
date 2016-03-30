@@ -102,7 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var collectionArrays = interestingCollections.Variations(0, 1, 3);
 
-            EdmModel model=new EdmModel();
+            EdmModel model = new EdmModel();
             EdmEntityContainer edmEntityContainer = new EdmEntityContainer("DefaultNamespace", "DefaultContainer");
             model.AddElement(edmEntityContainer);
 
@@ -110,9 +110,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 this.Settings,
                 CreateWorkspace( /*createMetadataFirst*/ false, /* workspaceName */ null, collectionArray),
                 CreateExpectedResultCallback(baseUri, /* workspaceName */ null, collectionArray))
-                {
-                    Model = model,
-                });
+            {
+                Model = model,
+            });
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
@@ -179,7 +179,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 var vals = collectionArrays
                     .SelectMany(collectionArray =>
                         includeAdditionalCollections.Select(flag => flag ? collectionArray.Concat(additionalCollections) : collectionArray))
-                    .SelectMany(collectionArray2 => 
+                    .SelectMany(collectionArray2 =>
                         setTitle.Select(setTitleFlag => setTitleFlag ? collectionArray2.Select(c => new CollectionInfo { Url = c.Url, TitleAnnotation = c.Url }) : collectionArray2))
                     .Select(collectionArray3 => new PayloadWriterTestDescriptor<ODataServiceDocument>(
                         this.Settings,
@@ -313,7 +313,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testDescriptors = singletonArrays
                 .SelectMany(collectionArray =>
                     includeAdditionalSingletons.Select(flag => flag ? collectionArray.Concat(additionalSingletons) : collectionArray))
-                    .SelectMany(singletonArray2 => setTitle.Select(setTitleFlag => setTitleFlag ? singletonArray2.Select(c => new SingletonInfo {Name = c.Name, Url = c.Url, TitleAnnotation = c.Url }) : singletonArray2))
+                    .SelectMany(singletonArray2 => setTitle.Select(setTitleFlag => setTitleFlag ? singletonArray2.Select(c => new SingletonInfo { Name = c.Name, Url = c.Url, TitleAnnotation = c.Url }) : singletonArray2))
                     .Select(singletonArray3 =>
                         new PayloadWriterTestDescriptor<ODataServiceDocument>(
                         this.Settings,
@@ -349,14 +349,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new[]
                 {
                     // duplicate resource collection name
-                    new 
+                    new
                     {
                         Collections = new [] { new CollectionInfo { Url = "A" }, new CollectionInfo { Url = "A" } },
                         Model = (IEdmModel)null,
                     },
 
                     // resource collection name does not match metadata.
-                    new 
+                    new
                     {
                         Collections = new [] { new CollectionInfo { Url = "SomeName" } },
                         Model = model,
@@ -370,9 +370,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ServiceDocument = CreateWorkspace(/*createMetadataFirst*/ false, null, tc.Collections),
                 },
                 CreateExpectedResultCallback(baseUri, null, tc.Collections))
-                {
-                    Model = tc.Model,
-                });
+            {
+                Model = tc.Model,
+            });
 
             this.CombinatorialEngineProvider.RunCombinations(
               testDescriptors,
@@ -395,14 +395,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                       this.Assert,
                       docWithSettings.WriterSettings,
                       baselineLogger: this.Logger);
-              });        
+              });
         }
-
 
         [TestMethod, Variation(Description = "Test different error conditions writing service documents.")]
         public void ServiceDocumentErrorTests()
         {
-            IEdmModel model = this.CreateMetadata(new[] { new CollectionInfo() { Url = "EntitySet1" }, new CollectionInfo() { Url = "EntitySet2" }});
+            IEdmModel model = this.CreateMetadata(new[] { new CollectionInfo() { Url = "EntitySet1" }, new CollectionInfo() { Url = "EntitySet2" } });
 
             var testCases = new[]
                 {
@@ -410,8 +409,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {   // relative uri without any base Uri
                          Workspace = new Func<ODataServiceDocument>(() => {
                             var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
-                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[] 
-                            { 
+                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
+                            {
                                 new ODataEntitySetInfo() { Url = new Uri("SomeUri", UriKind.Relative) }
                             };
                             return defaultWorkspace;
@@ -425,8 +424,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {   // empty relative uri without any base Uri
                          Workspace = new Func<ODataServiceDocument>(() => {
                             var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
-                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[] 
-                            { 
+                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
+                            {
                                 new ODataEntitySetInfo() { Url = new Uri(string.Empty, UriKind.Relative) }
                             };
                             return defaultWorkspace;
@@ -440,8 +439,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {   // empty collection name
                         Workspace = new Func<ODataServiceDocument>(() => {
                             var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
-                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[] 
-                            { 
+                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
+                            {
                                 new ODataEntitySetInfo() { Url = null }
                             };
                             return defaultWorkspace;
@@ -455,8 +454,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {   // null collection
                         Workspace = new Func<ODataServiceDocument>(() => {
                             var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
-                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[] 
-                            { 
+                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
+                            {
                                 null
                             };
                             return defaultWorkspace;
@@ -484,9 +483,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     WriterSettings = tc.MessageWriterSettings
                 },
                 CreateErrorResultCallback(tc.ExpectedException, tc.OnlyForFormat, this.Settings.ExpectedResultSettings))
-                {
-                    Model = tc.Model,
-                });
+            {
+                Model = tc.Model,
+            });
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
@@ -515,17 +514,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private IEdmModel CreateMetadata(IEnumerable<CollectionInfo> collections = null, IEnumerable<SingletonInfo> singletons = null)
         {
-            EdmModel edmModel=new EdmModel();
+            EdmModel edmModel = new EdmModel();
 
             EdmEntityType edmEntityType = new EdmEntityType("DefaultNamespace", "EntityType");
-            EdmStructuralProperty edmStructuralProperty =new EdmStructuralProperty(edmEntityType,"Id",EdmCoreModel.Instance.GetInt32(false));
+            EdmStructuralProperty edmStructuralProperty = new EdmStructuralProperty(edmEntityType, "Id", EdmCoreModel.Instance.GetInt32(false));
             edmEntityType.AddKeys(edmStructuralProperty);
             edmEntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
             edmModel.AddElement(edmEntityType);
 
             EdmEntityContainer edmEntityContainer = new EdmEntityContainer("DefaultNamespace", "TestContainer");
             edmModel.AddElement(edmEntityContainer);
-            
+
             if (collections != null)
             {
                 foreach (var collection in collections)
@@ -548,34 +547,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private static ODataServiceDocument CreateWorkspace(bool createMetadataFirst, string workspaceName = null, IEnumerable<CollectionInfo> incomingCollections = null, IEnumerable<SingletonInfo> incomingSingletons = null)
         {
             ODataServiceDocument serviceDocument = ObjectModelUtils.CreateDefaultWorkspace();
-            if (createMetadataFirst)
-            {
-                serviceDocument.SetAnnotation(new AtomWorkspaceMetadata());
-            }
 
-            if (workspaceName != null)
-            {
-                AtomWorkspaceMetadata metadata = serviceDocument.Atom();
-                metadata.Title = new AtomTextConstruct { Text = workspaceName };
-            }
 
             if (incomingCollections != null)
             {
                 var collections = new List<ODataEntitySetInfo>();
                 foreach (var collectionInfo in incomingCollections)
                 {
-                    var collection = new ODataEntitySetInfo() { Url = new Uri(collectionInfo.Url, UriKind.RelativeOrAbsolute), Name = collectionInfo.Name, Title = collectionInfo.TitleAnnotation};
-                    if (createMetadataFirst)
-                    {
-                        collection.SetAnnotation(new AtomResourceCollectionMetadata());
-                    }
-
-                    if (collectionInfo.TitleAnnotation != null)
-                    {
-                        AtomResourceCollectionMetadata metadata = collection.Atom();
-                        metadata.Title = new AtomTextConstruct { Text = collectionInfo.TitleAnnotation };
-                    }
-
+                    var collection = new ODataEntitySetInfo() { Url = new Uri(collectionInfo.Url, UriKind.RelativeOrAbsolute), Name = collectionInfo.Name, Title = collectionInfo.TitleAnnotation };
                     collections.Add(collection);
                 }
 
@@ -588,11 +567,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 foreach (var singletonInfo in incomingSingletons)
                 {
                     var singleton = new ODataSingletonInfo() { Url = new Uri(singletonInfo.Url, UriKind.RelativeOrAbsolute), Name = singletonInfo.Name, Title = singletonInfo.TitleAnnotation };
-                    if (createMetadataFirst)
-                    {
-                        singleton.SetAnnotation(new AtomResourceCollectionMetadata());
-                    }
-
                     singletons.Add(singleton);
                 }
 
@@ -618,7 +592,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         private WriterTestDescriptor.WriterTestExpectedResultCallback CreateExpectedResultCallback(
-            string baseUri, 
+            string baseUri,
             string workspaceName = null,
             IEnumerable<CollectionInfo> collections = null,
             IEnumerable<SingletonInfo> singletons = null)
@@ -647,12 +621,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             if (collectionWithTitleNameMismatch != null)
                             {
                                 return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                       {
-                                           ExpectedException2 = ODataExpectedExceptions.ODataException(
+                                {
+                                    ExpectedException2 = ODataExpectedExceptions.ODataException(
                                                "ODataAtomServiceDocumentMetadataSerializer_ResourceCollectionNameAndTitleMismatch",
                                                collectionWithTitleNameMismatch.Name,
                                                collectionWithTitleNameMismatch.TitleAnnotation)
-                                       };
+                                };
                             }
                         }
 
@@ -733,7 +707,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 return new WriterTestExpectedResults(expectedResultSettings)
                 {
                     // Replace the expected exception for requests where an ODataException is expected
-                    ExpectedException2 = 
+                    ExpectedException2 =
                         testConfiguration.IsRequest && (expectedException != null && expectedException.ExpectedExceptionType.Equals(typeof(ODataException)))
                         ? ODataExpectedExceptions.ODataException("ODataMessageWriter_ServiceDocumentInRequest")
                         : expectedException,
@@ -742,11 +716,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         private static void CreateResultTemplates(
-            string baseUri, 
-            string workspaceName, 
-            IEnumerable<CollectionInfo> collections, 
+            string baseUri,
+            string workspaceName,
+            IEnumerable<CollectionInfo> collections,
             IEnumerable<SingletonInfo> singletons,
-            out string xmlResultTemplate, 
+            out string xmlResultTemplate,
             out string[] jsonLightResultTemplate)
         {
             Debug.Assert(baseUri != null, "baseUri != null");
@@ -783,7 +757,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         xmlLines.Add(@"$(Indent)$(Indent)$(Indent)<atom:title />");
                     }
-                    
+
                     xmlLines.Add(@"$(Indent)$(Indent)</collection>");
 
                     if (jsonLightBuilder.Length > 0)

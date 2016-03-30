@@ -34,39 +34,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             this.model.AddElement(container);
             container.AddEntitySet("Entities", this.entityType);
 
-            this.defaultSettings = new ODataMessageReaderSettings { BaseUri = new Uri("http://serviceRoot/"), EnableAtom = true };
-            this.settingsWithConversionDisabled = new ODataMessageReaderSettings(this.defaultSettings) { DisablePrimitiveTypeConversion = true, EnableAtom = true };
-        }
-
-        [Fact]
-        public void AtomShouldConvertOpenPropertyValueToPayloadSpecifiedTypeEvenIfConversionIsDisabled()
-        {
-            this.ReadPropertyValueInAtom("OpenProperty", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled).Should().BeAssignableTo<byte[]>();
-        }
-
-        [Fact]
-        public void AtomShouldConvertDeclaredPropertyValueToPayloadSpecifiedTypeEvenIfConversionIsDisabled()
-        {
-            this.ReadPropertyValueInAtom("String", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled).Should().BeAssignableTo<byte[]>();
-        }
-
-        [Fact]
-        public void AtomShouldNotConvertDeclaredPropertyValueToMetadataTypeIfConversionIsDisabled()
-        {
-            this.ReadPropertyValueInAtom("Binary", "AQ==", null, this.settingsWithConversionDisabled).Should().BeAssignableTo<string>();
-        }
-
-        [Fact]
-        public void AtomShouldConvertDeclaredPropertyValueToMetadataTypeByDefault()
-        {
-            this.ReadPropertyValueInAtom("Binary", "AQ==", null, this.defaultSettings).Should().BeAssignableTo<byte[]>();
-        }
-
-        [Fact]
-        public void AtomShouldFailIfPayloadTypeDoesNotMatchMetadataTypeByDefault()
-        {
-            Action readWithWrongType = () => this.ReadPropertyValueInAtom("String", "AQ==", "Edm.Binary", this.defaultSettings);
-            readWithWrongType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_IncompatibleType("Edm.Binary", "Edm.String"));
+            this.defaultSettings = new ODataMessageReaderSettings { BaseUri = new Uri("http://serviceRoot/") };
+            this.settingsWithConversionDisabled = new ODataMessageReaderSettings(this.defaultSettings) { DisablePrimitiveTypeConversion = true };
         }
 
         [Fact]
@@ -105,26 +74,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             var payload = CreateJsonLightPayload(propertyName, propertyValue, typeName);
             var property = this.ReadPropertyOfEntry(payload, propertyName, settings, "application/json;odata.metadata=minimal");
             return property.Value;
-        }
-
-        private object ReadPropertyValueInAtom(string propertyName, string propertyValue, string typeName, ODataMessageReaderSettings settings)
-        {
-            var payload = CreateAtomPayload(propertyName, propertyValue, typeName);
-            var property = this.ReadPropertyOfEntry(payload, propertyName, settings, "application/atom+xml");
-            return property.Value;
-        }
-
-        private static string CreateAtomPayload(string propertyName, string value, string type)
-        {
-            const string format = @"
-                <entry xmlns=""http://www.w3.org/2005/Atom"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-                    <content type=""application/xml"">
-                    <m:properties>
-                        <d:{0}{2}>{1}</d:{0}>
-                    </m:properties>
-                    </content>
-                </entry>";
-            return string.Format(format, propertyName, value, type == null ? null : string.Format(" m:type=\"{0}\"", type));
         }
 
         private static string CreateJsonLightPayload(string propertyName, string value, string type)

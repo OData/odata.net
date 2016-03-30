@@ -160,7 +160,7 @@ namespace Microsoft.OData.Core
         /// Creates a new media type resolver with the mappings.
         /// </summary>
         /// <param name="enableAtom">Whether to enable ATOM.</param>
-        private ODataMediaTypeResolver()
+        public ODataMediaTypeResolver()
         {
             this.mediaTypesForPayloadKind = CloneDefaultMediaTypes();
 

@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         private static ODataMessageReader CreateODataMessageReader(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations, bool odataSimplified = false)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false, EnableAtom = true, ODataSimplified = odataSimplified };
+            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false, ODataSimplified = odataSimplified };
             ODataMessageReader messageReader;
             if (isResponse)
             {

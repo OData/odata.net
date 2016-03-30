@@ -347,7 +347,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             ODataEntityReferenceLinks entityReferenceLinks = new ODataEntityReferenceLinks
             {
-                Links = new ODataEntityReferenceLink[] 
+                Links = new ODataEntityReferenceLink[]
                 {
                     new ODataEntityReferenceLink { Url = new Uri("http://www.odata.org/1") },
                     new ODataEntityReferenceLink { Url = new Uri("http://www.odata.org/2") },
@@ -693,17 +693,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var customerType = new EdmEntityType("TestNS", "Customer");
             customerType.AddKeys(customerType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
             customerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
-                                                    {
-                                                        Name = "Info",
-                                                        Target = customerInfoType,
-                                                        TargetMultiplicity = EdmMultiplicity.One,
-                                                    });
+            {
+                Name = "Info",
+                Target = customerInfoType,
+                TargetMultiplicity = EdmMultiplicity.One,
+            });
             customerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
-                                                    {
-                                                        Name = "Orders",
-                                                        Target = orderType,
-                                                        TargetMultiplicity = EdmMultiplicity.Many,
-                                                    });
+            {
+                Name = "Orders",
+                Target = orderType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+            });
             model.AddElement(customerType);
             testContainer.AddEntitySet("Customers", customerType);
 
@@ -790,7 +790,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             ODataEntityReferenceLinks entityReferenceLinks = new ODataEntityReferenceLinks
             {
-                Links = new ODataEntityReferenceLink[] 
+                Links = new ODataEntityReferenceLink[]
                 {
                     new ODataEntityReferenceLink { Url = new Uri("http://www.odata.org/1") },
                     new ODataEntityReferenceLink { Url = new Uri("http://www.odata.org/2") },
@@ -920,7 +920,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private void RunParameterContentTypeTest(ODataParameters parameters, EdmModel model, EdmOperationImport functionImport, IEnumerable<ContentTypeTestCase> testCases)
         {
             var testConfigurations = CreateContentTypeTestConfigurations(testCases).Where(c => c.IsRequest == true);
-            var testDescriptors = new[] { 
+            var testDescriptors = new[] {
                 new PayloadWriterTestDescriptor<ODataParameters>(this.Settings, parameters, CreateContentTypeResultCallback(testCases, this.Settings.ExpectedResultSettings, /*responseOnly*/ false))
                 {
                     Model = model,
@@ -950,7 +950,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private void RunContentTypeTest(ODataItem item, ODataPayloadKind payloadKind, EdmModel model, EdmEntitySet entitySet, EdmEntityType entityType, IEnumerable<ContentTypeTestCase> testCases)
         {
             var testConfigurations = CreateContentTypeTestConfigurations(testCases);
-            var testDescriptors = new[] { 
+            var testDescriptors = new[] {
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, item, CreateContentTypeResultCallback(testCases, this.Settings.ExpectedResultSettings))
                 {
                     Model = model,
@@ -1034,7 +1034,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private void RunCollectionContentTypeTest(object[] values, EdmModel model, string collectionName, string collectionTypeName, IEdmTypeReference collectionItemType, IEnumerable<ContentTypeTestCase> testCases)
         {
             var testConfigurations = CreateContentTypeTestConfigurations(testCases);
-            var testDescriptors = new[] { 
+            var testDescriptors = new[] {
                 new CollectionWriterTestDescriptor(this.CollectionSettings, collectionName, collectionTypeName, values, CreateContentTypeResultCallback(testCases, this.Settings.ExpectedResultSettings), model)
                 {
                     //PayloadModel = model,
@@ -1233,11 +1233,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ReadLink = ObjectModelUtils.DefaultEntryReadLink,
                 TypeName = fullTypeName,
             };
-            AtomEntryMetadata metadata = new AtomEntryMetadata()
-            {
-                Updated = DateTimeOffset.Parse(ObjectModelUtils.DefaultEntryUpdated)
-            };
-            entry.SetAnnotation<AtomEntryMetadata>(metadata);
             return entry;
         }
 
@@ -1248,9 +1243,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 TypeName = "My.NestedAddressType",
                 Properties = new[]
                 {
-                    new ODataProperty() 
-                    { 
-                        Name = "Street", 
+                    new ODataProperty()
+                    {
+                        Name = "Street",
                         Value = new ODataComplexValue()
                         {
                             TypeName = "My.StreetType",

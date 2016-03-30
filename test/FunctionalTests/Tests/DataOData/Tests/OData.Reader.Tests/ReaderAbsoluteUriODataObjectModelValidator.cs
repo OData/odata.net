@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.Test.Taupo.OData.Common;
+
 namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
     #region Namespaces
@@ -41,7 +43,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Visitor for the OData OM which performs the verification.
         /// </summary>
-        private class ObjectModelVisitor : AtomMetadataODataObjectModelVisitor
+        private class ObjectModelVisitor : ODataObjectModelVisitor
         {
             /// <summary>
             /// The assertion handler to use.
@@ -127,57 +129,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 this.ValidateUri(entityReferenceLink.Url);
                 base.VisitEntityReferenceLink(entityReferenceLink);
-            }
-
-            /// <summary>
-            /// Visits an ATOM feed metadata.
-            /// </summary>
-            /// <param name="atomFeedMetadata">The feed metadata to visit.</param>
-            protected override void VisitAtomFeedMetadata(AtomFeedMetadata atomFeedMetadata)
-            {
-                this.ValidateUri(atomFeedMetadata.Icon);
-                this.ValidateUri(atomFeedMetadata.Logo);
-                base.VisitAtomFeedMetadata(atomFeedMetadata);
-            }
-
-            /// <summary>
-            /// Visits an ATOM generator metadata.
-            /// </summary>
-            /// <param name="atomGeneratorMetadata">The generator metadata to visit.</param>
-            protected override void VisitAtomGeneratorMetadata(AtomGeneratorMetadata atomGeneratorMetadata)
-            {
-                this.ValidateUri(atomGeneratorMetadata.Uri);
-                base.VisitAtomGeneratorMetadata(atomGeneratorMetadata);
-            }
-
-            /// <summary>
-            /// Visits an ATOM link metadata.
-            /// </summary>
-            /// <param name="atomLinkMetadata">The link metadata to visit.</param>
-            protected override void VisitAtomLinkMetadata(AtomLinkMetadata atomLinkMetadata)
-            {
-                this.ValidateUri(atomLinkMetadata.Href);
-                base.VisitAtomLinkMetadata(atomLinkMetadata);
-            }
-
-            /// <summary>
-            /// Visits an ATOM person metadata.
-            /// </summary>
-            /// <param name="atomPersonMetadata">The person metadata to visit.</param>
-            protected override void VisitAtomPersonMetadata(AtomPersonMetadata atomPersonMetadata)
-            {
-                this.ValidateUri(atomPersonMetadata.Uri);
-                base.VisitAtomPersonMetadata(atomPersonMetadata);
-            }
-
-            /// <summary>
-            /// Visits an ATOM categories metadata.
-            /// </summary>
-            /// <param name="atomCategoriesMetadata">The categories metadata to visit.</param>
-            protected override void VisitAtomCategoriesMetadata(AtomCategoriesMetadata atomCategoriesMetadata)
-            {
-                this.ValidateUri(atomCategoriesMetadata.Href);
-                base.VisitAtomCategoriesMetadata(atomCategoriesMetadata);
             }
 
             /// <summary>

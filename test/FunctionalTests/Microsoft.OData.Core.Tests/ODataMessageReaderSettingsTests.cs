@@ -40,7 +40,8 @@ namespace Microsoft.OData.Core.Tests
             Uri baseUri = new Uri("http://odata.org");
             Func<ODataEntry, XmlReader, Uri, XmlReader> entryAtomXmlCustomizationCallback = (entry, reader, uri) => reader;
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings {
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings
+            {
                 BaseUri = baseUri,
                 CheckCharacters = true,
                 DisablePrimitiveTypeConversion = true,
@@ -48,7 +49,8 @@ namespace Microsoft.OData.Core.Tests
                 EnableAtomMetadataReading = true,
                 UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty,
                 MaxProtocolVersion = ODataVersion.V4,
-                MessageQuotas = new ODataMessageQuotas {
+                MessageQuotas = new ODataMessageQuotas
+                {
                     MaxPartsPerBatch = 2,
                     MaxOperationsPerChangeset = 3,
                     MaxNestingDepth = 4,
@@ -111,7 +113,6 @@ namespace Microsoft.OData.Core.Tests
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;
             settings.MessageQuotas.MaxNestingDepth = 20;
             settings.MessageQuotas.MaxReceivedMessageSize = 2000;
-            settings.EnableAtom = true;
             copyOfSettings = new ODataMessageReaderSettings(settings);
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
@@ -227,7 +228,6 @@ namespace Microsoft.OData.Core.Tests
             Assert.True(expected.MessageQuotas.MaxOperationsPerChangeset == actual.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset does not match");
             Assert.True(expected.MessageQuotas.MaxNestingDepth == actual.MessageQuotas.MaxNestingDepth, "MaxNestingDepth does not match");
             Assert.True(expected.MessageQuotas.MaxReceivedMessageSize == actual.MessageQuotas.MaxReceivedMessageSize, "MaxMessageSize does not match");
-            Assert.True(expected.EnableAtom == actual.EnableAtom, "EnableAtom does not match");
         }
 
         [Fact]

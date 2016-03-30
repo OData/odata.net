@@ -182,7 +182,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             new ODataMessageReaderSettings()
                             {
                                 DisableMessageStreamDisposal = disableMessageStreamDisposal,
-                                EnableAtom = true
                             },
                             isRequest,
                             synchronous));
@@ -221,7 +220,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             new ODataMessageReaderSettings()
                             {
                                 DisableMessageStreamDisposal = limitedCombination.DisableMessageStreamDisposal,
-                                EnableAtom = true
                             },
                             isRequest,
                             limitedCombination.Synchronous));

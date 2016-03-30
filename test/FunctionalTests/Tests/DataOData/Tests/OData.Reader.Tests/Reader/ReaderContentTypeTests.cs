@@ -46,74 +46,74 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEnumerable<ContentTypeTestCase> testCases = new ContentTypeTestCase[]
             {
                 #region Atom test cases
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only reading an entry or feed should succeed
-                    ContentType = "application/atom+xml;type=feed", 
-                    ExpectedFormat = ODataFormat.Atom, 
+                    ContentType = "application/atom+xml;type=feed",
+                    ExpectedFormat = ODataFormat.Atom,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only reading an entry or feed should succeed
-                    ContentType = "application/atom+xml;type=entry", 
-                    ExpectedFormat = ODataFormat.Atom, 
+                    ContentType = "application/atom+xml;type=entry",
+                    ExpectedFormat = ODataFormat.Atom,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // reading a feed, an entry, and metadata should succeed
-                    ContentType = "application/atom+xml", 
+                    ContentType = "application/atom+xml",
                     ExpectedFormat = ODataFormat.Atom,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // reading a property, an entity reference link, entity reference links, a collection, a service document, and an error should succeed
-                    ContentType = "application/xml", 
+                    ContentType = "application/xml",
                     ExpectedFormat = ODataFormat.Atom,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // reading a property, an entity reference link, entity reference links, and a collection should succeed
-                    ContentType = "text/xml", 
+                    ContentType = "text/xml",
                     ExpectedFormat = ODataFormat.Atom,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // reading a service document should succeed
-                    ContentType = "application/atomsvc+xml", 
-                    ExpectedFormat = ODataFormat.Atom, 
+                    ContentType = "application/atomsvc+xml",
+                    ExpectedFormat = ODataFormat.Atom,
                 },
                 #endregion Atom test cases
 
                 #region RawValue test cases
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only reading a raw value will succeed
-                    ContentType = "text/plain", 
+                    ContentType = "text/plain",
                     ExpectedFormat = ODataFormat.RawValue,
-                    ShouldSucceedForPayloadKind = pk => 
-                        pk == ODataPayloadKind.Value 
+                    ShouldSucceedForPayloadKind = pk =>
+                        pk == ODataPayloadKind.Value
                         || pk == ODataPayloadKind.BinaryValue,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only reading a raw value or binary value will succeed; raw values can be read as binary values when the content type is application/octet-stream
-                    ContentType = "application/octet-stream", 
-                    ExpectedFormat = ODataFormat.RawValue, 
-                    ShouldSucceedForPayloadKind = pk => 
-                        pk == ODataPayloadKind.Value 
+                    ContentType = "application/octet-stream",
+                    ExpectedFormat = ODataFormat.RawValue,
+                    ShouldSucceedForPayloadKind = pk =>
+                        pk == ODataPayloadKind.Value
                         || pk == ODataPayloadKind.BinaryValue,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only raw value / binary value will succeed
                     ContentType = "multipart/mixed",
-                    ExpectedFormat = ODataFormat.RawValue, 
+                    ExpectedFormat = ODataFormat.RawValue,
                     ShouldSucceedForPayloadKind = pk => false,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // Test for: MimeType allows 0x7F character, but ContentType parsing doesn't
-                    ContentType = "application/"+0x7F, 
+                    ContentType = "application/"+0x7F,
                     ExpectedFormat = ODataFormat.RawValue,
                     ShouldSucceedForPayloadKind = pk => false,
                 },
@@ -121,49 +121,49 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 #endregion RawValue test cases
 
                 #region JSON Lite test cases
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
-                    ContentType = ApplicationJsonODataLight, 
-                    ExpectedFormat = ODataFormat.Json, 
-                    ShouldSucceedForPayloadKind = pk => 
-                        pk != ODataPayloadKind.Value 
+                    ContentType = ApplicationJsonODataLight,
+                    ExpectedFormat = ODataFormat.Json,
+                    ShouldSucceedForPayloadKind = pk =>
+                        pk != ODataPayloadKind.Value
                         && pk != ODataPayloadKind.BinaryValue,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
-                    ContentType = ApplicationJsonODataLightStreaming, 
-                    ExpectedFormat = ODataFormat.Json, 
-                    ShouldSucceedForPayloadKind = pk => 
-                        pk != ODataPayloadKind.Value 
+                    ContentType = ApplicationJsonODataLightStreaming,
+                    ExpectedFormat = ODataFormat.Json,
+                    ShouldSucceedForPayloadKind = pk =>
+                        pk != ODataPayloadKind.Value
                         && pk != ODataPayloadKind.BinaryValue,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
-                    ContentType = ApplicationJsonODataLightNonStreaming, 
-                    ExpectedFormat = ODataFormat.Json, 
-                    ShouldSucceedForPayloadKind = pk => 
-                        pk != ODataPayloadKind.Value 
+                    ContentType = ApplicationJsonODataLightNonStreaming,
+                    ExpectedFormat = ODataFormat.Json,
+                    ShouldSucceedForPayloadKind = pk =>
+                        pk != ODataPayloadKind.Value
                         && pk != ODataPayloadKind.BinaryValue,
                 },
                 #endregion JSON Lite test cases
 
                 #region Error test cases
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // unsupported content type; everything will fail
-                    ContentType = "application/foo", 
+                    ContentType = "application/foo",
                     ShouldSucceedForPayloadKind = pk => false,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // unsupported content type with parameters; everything will fail
                     ContentType = "abc/pqr;a=b;c=d",
                     ShouldSucceedForPayloadKind = pk => false,
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // "image/jpeg" is not supported, even for raw values.
                     ContentType = "image/jpeg",
@@ -172,7 +172,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 #endregion Error test cases
 
                 #region Content Type is null or empty
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // null content type and zero content length should be default to Json if the payload kind is not binary value or value.
                     ContentType = null,
@@ -181,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ShouldSucceedForPayloadKind = pk => true,
                     ShouldIgnoreTest = pk => pk == ODataPayloadKind.BinaryValue || pk == ODataPayloadKind.Value
                 },
-                new ContentTypeTestCase 
+                new ContentTypeTestCase
                 { 
                     // null content type and zero content length should be default to RawValue if the payload kind is binary value or value.
                     ContentType = null,
@@ -193,7 +193,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 #endregion
             };
 
-            string[] parameters = new string[] 
+            string[] parameters = new string[]
             {
                 "foo=bar",
                 "foo1=bar1;foo2=bar2"
@@ -216,7 +216,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testCase, payloadKind, testConfiguration) =>
                 {
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.EnableAtom = false;
                     if (IgnoreTestCase(payloadKind, testConfiguration))
                     {
                         return;
@@ -239,7 +238,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     }
 
                     ExpectedException expectedException = testCase.ExpectedException == null
-                         ? testCase.ShouldSucceedForPayloadKind!=null && testCase.ShouldSucceedForPayloadKind(payloadKind)
+                         ? testCase.ShouldSucceedForPayloadKind != null && testCase.ShouldSucceedForPayloadKind(payloadKind)
                              ? null
                              : ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", supportedMediaTypes, testCase.ContentType ?? "")
                          : testCase.ExpectedException;
@@ -279,7 +278,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     };
 
                     testDescriptor.RunTest(testConfiguration);
-                    testConfiguration.MessageReaderSettings.EnableAtom = true;
                 });
         }
 
@@ -288,34 +286,34 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         {
             var testCases = new ContentTypeTestCase[]
             {
-                new ContentTypeTestCase 
-                { 
-                    ContentType = null, 
+                new ContentTypeTestCase
+                {
+                    ContentType = null,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("ODataMessageReader_NoneOrEmptyContentTypeHeader")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = string.Empty, 
+                new ContentTypeTestCase
+                {
+                    ContentType = string.Empty,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("ODataMessageReader_NoneOrEmptyContentTypeHeader")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = ";foo=bar", 
+                new ContentTypeTestCase
+                {
+                    ContentType = ";foo=bar",
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("HttpUtils_MediaTypeRequiresSlash", ";foo=bar")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "application/*", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "application/*",
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("ODataMessageReader_WildcardInContentType", "application/*")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "*/*", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "*/*",
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("ODataMessageReader_WildcardInContentType", "*/*")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "application/json, application/xml", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "application/json, application/xml",
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified", "application/json, application/xml")
                 },
             };
@@ -350,44 +348,44 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEnumerable<ContentTypeTestCase> testCases = new ContentTypeTestCase[]
             {
                 // correct batch content type
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "multipart/mixed;boundary=--aa_bb_cc--", 
-                    ExpectedFormat = ODataFormat.Batch, 
+                new ContentTypeTestCase
+                {
+                    ContentType = "multipart/mixed;boundary=--aa_bb_cc--",
+                    ExpectedFormat = ODataFormat.Batch,
                 },
 
                 // missing batch boundary
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "multipart/mixed", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "multipart/mixed",
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataException("MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads", "multipart/mixed", "boundary")
                 },
 
                 // multiple batch boundary parameters
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "multipart/mixed;boundary=boundary1;boundary=boundary2", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "multipart/mixed;boundary=boundary1;boundary=boundary2",
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataException("MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads", "multipart/mixed;boundary=boundary1;boundary=boundary2", "boundary")
                 },
 
                 // invalid batch content types
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "multipart/bar", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "multipart/bar",
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), "multipart/bar")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "foo/mixed", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "foo/mixed",
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), "foo/mixed")
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "abc/pqr", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "abc/pqr",
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), "abc/pqr")
                 },
@@ -446,14 +444,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // with isXmlPayloadKind when dealing with pre-V3 clients.
             var testCases = new[]
             {
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "application/atom+xml", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "application/atom+xml",
                     ExpectedFormat = ODataFormat.Atom,
                 },
-                new ContentTypeTestCase 
-                { 
-                    ContentType = "application/xml", 
+                new ContentTypeTestCase
+                {
+                    ContentType = "application/xml",
                     ExpectedFormat = ODataFormat.Atom,
                 },
             };
@@ -471,7 +469,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     // Run under the client knob.
                     testConfiguration = testConfiguration.CloneAndApplyBehavior(TestODataBehaviorKind.WcfDataServicesClient);
-                    testConfiguration.MessageReaderSettings.EnableAtom = false;
 
                     if (IgnoreTestCase(payloadKind, testConfiguration))
                     {
@@ -494,7 +491,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     }
 
                     ExpectedException expectedException = testCase.ExpectedException == null
-                        ? shouldSucceedForPayloadKind!=null && shouldSucceedForPayloadKind(payloadKind)
+                        ? shouldSucceedForPayloadKind != null && shouldSucceedForPayloadKind(payloadKind)
                             ? null
                             : ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", supportedMediaTypes, testCase.ContentType)
                         : testCase.ExpectedException;
@@ -542,13 +539,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     ODataPayloadElement payloadElement = CreatePayloadElement(model, payloadKind, testConfiguration);
                     ReaderContentTypeTestDescriptor testDescriptor = new ReaderContentTypeTestDescriptor(this.Settings)
-                        {
-                            PayloadElement = payloadElement,
-                            PayloadEdmModel = model,
-                            ExpectedFormat = ComputeExpectedFormat(testConfiguration, contentType),
-                            ContentType = contentType,
-                            ExpectedException = expectedException,
-                        };
+                    {
+                        PayloadElement = payloadElement,
+                        PayloadEdmModel = model,
+                        ExpectedFormat = ComputeExpectedFormat(testConfiguration, contentType),
+                        ContentType = contentType,
+                        ExpectedException = expectedException,
+                    };
 
                     testDescriptor.RunTest(testConfiguration);
                 });
