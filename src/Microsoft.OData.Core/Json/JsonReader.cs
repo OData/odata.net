@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
 namespace Microsoft.OData.Core.Json
-#endif
 {
     #region Namespaces
     using System;
@@ -17,9 +13,6 @@ namespace Microsoft.OData.Core.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-#if SPATIAL
-    using Microsoft.Spatial;
-#endif
     using System.Text;
     #endregion Namespaces
 
@@ -367,11 +360,7 @@ namespace Microsoft.OData.Core.Json
                     break;
 
                 default:
-#if SPATIAL
-                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_InternalError);
-#else
                     throw JsonReaderExtensions.CreateException(Strings.General_InternalError(InternalErrorCodes.JsonReader_Read));
-#endif
             }
 
             Debug.Assert(

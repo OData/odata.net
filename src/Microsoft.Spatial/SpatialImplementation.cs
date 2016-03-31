@@ -7,7 +7,6 @@
 namespace Microsoft.Spatial
 {
     using System;
-    using Microsoft.Data.Spatial;
 
     /// <summary>
     /// Class responsible for knowing how to create the Geography and Geometry builders for 

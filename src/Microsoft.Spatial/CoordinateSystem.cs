@@ -9,7 +9,6 @@ namespace Microsoft.Spatial
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using Microsoft.Data.Spatial;
 
     /// <summary>
     ///   Coordinate System Reference

@@ -282,7 +282,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     }
                     return new ODataCollectionValue() { TypeName = genericTypeName, Items = tmp };
                 }
-                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Data.Spatial") && !t.Namespace.StartsWith("Microsoft.OData.Edm.Library"))
+                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial") && !t.Namespace.StartsWith("Microsoft.OData.Edm.Library"))
                 {
                     if (t.IsEnum == true)
                     {

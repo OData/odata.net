@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.IO;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// WellKnownText Lexer

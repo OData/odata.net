@@ -20,7 +20,7 @@ SelectExpandQueryOption
 						Return Type = [Edm.Double Nullable=True]
 						Function = 
 						Arguments = 
-							Microsoft.Data.Spatial.GeometryLineStringImplementation(Type: [Edm.GeometryLineString Nullable=True SRID=0])
+							Microsoft.Spatial.GeometryLineStringImplementation(Type: [Edm.GeometryLineString Nullable=True SRID=0])
 				LessThan
 					0.5(Type: [Edm.Double Nullable=False])
 			SelectExpandQueryOption

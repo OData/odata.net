@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -12,7 +12,6 @@ namespace Microsoft.Data.Spatial
     using System.IO;
     using System.Text;
     using System.Xml;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Reader for Extended Well Known Text, Case sensitive

@@ -7,11 +7,9 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Xml;
-    using Microsoft.Data.Spatial;
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
     using Microsoft.Spatial;

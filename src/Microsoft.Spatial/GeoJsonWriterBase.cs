@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Base Writer for GeoJson
@@ -448,7 +447,7 @@ namespace Microsoft.Data.Spatial
         /// <summary>
         /// Writes the coordinate reference system footer for the GeoJson object.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.Data.Spatial.JsonWriter.WriteQuotedString(System.String)", Justification = "Values have no localized content.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.Spatial.JsonWriter.WriteQuotedString(System.String)", Justification = "Values have no localized content.")]
         private void WriteCrs()
         {
             // "crs": {

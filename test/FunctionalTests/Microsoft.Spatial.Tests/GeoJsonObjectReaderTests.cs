@@ -7,8 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Data.Spatial;
-using Microsoft.Spatial.Tests;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests

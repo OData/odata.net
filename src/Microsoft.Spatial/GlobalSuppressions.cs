@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.Data.Spatial")]
+[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.Spatial")]
 
 // Multi*
 [module: SuppressMessage("Microsoft.Naming", "CA1702", Scope = "member", Target = "Microsoft.Spatial.SpatialType.MultiLineString")]

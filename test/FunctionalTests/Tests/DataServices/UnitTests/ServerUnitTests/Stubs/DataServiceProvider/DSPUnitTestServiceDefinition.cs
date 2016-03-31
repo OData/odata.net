@@ -7,7 +7,6 @@
 namespace AstoriaUnitTests.Stubs.DataServiceProvider
 {
     using System;
-    using Microsoft.Spatial;
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -17,7 +16,6 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
     using System.Reflection;
     using System.Text;
     using System.Transactions;
-    using Microsoft.Data.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using test = System.Data.Test.Astoria;
 

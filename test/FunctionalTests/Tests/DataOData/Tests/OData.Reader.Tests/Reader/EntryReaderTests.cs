@@ -1374,7 +1374,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = undeclaredValueProperties.SelectMany(undeclaredProperty =>
             {
                 if ((undeclaredProperty is PrimitiveProperty)
-                    && ((PrimitiveProperty)undeclaredProperty).Value.ClrValue.ToString() == "Microsoft.Data.Spatial.GeographyPointImplementation")
+                    && ((PrimitiveProperty)undeclaredProperty).Value.ClrValue.ToString() == "Microsoft.Spatial.GeographyPointImplementation")
                 {
                     return Enumerable.Empty<PayloadReaderTestDescriptor>();
                 }

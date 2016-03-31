@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Service;
 using Microsoft.OData.Service.Providers;
 using System.Data.Test.Astoria;
 using System.Linq;
@@ -15,7 +14,6 @@ using Microsoft.Spatial;
 using System.Xml.Linq;
 using AstoriaUnitTests.Stubs;
 using AstoriaUnitTests.Stubs.DataServiceProvider;
-using Microsoft.Data.Spatial;
 using Microsoft.Test.ModuleCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

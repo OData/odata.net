@@ -1307,7 +1307,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                     genericTypeName = genericTypeName.Substring(0, genericTypeName.IndexOf('`'));
                     genericTypeName += "(" + t.GetGenericArguments().Single().FullName.Replace("System.", "Edm.") + ")";
 
-                    if (t.GetGenericArguments().Single().Namespace != "System" && !t.GetGenericArguments().Single().Namespace.StartsWith("Microsoft.Data.Spatial"))
+                    if (t.GetGenericArguments().Single().Namespace != "System" && !t.GetGenericArguments().Single().Namespace.StartsWith("Microsoft.Spatial"))
                     {
                         var items = new List<object>();
                         var values = value as IEnumerable;
@@ -1322,7 +1322,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = value as IEnumerable } };
                     }
                 }
-                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Data.Spatial"))
+                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial"))
                 {
                     if (t.IsEnum == true)
                     {

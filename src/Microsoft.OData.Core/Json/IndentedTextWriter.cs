@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
 namespace Microsoft.OData.Core.Json
-#endif
 {
     #region Namespaces
     using System;

@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// This is a forwarding transform pipe segment
@@ -107,7 +106,7 @@ namespace Microsoft.Data.Spatial
 
 #if DEBUG
             // must be null, a user implemented pipeline, lastly if it is ours, it better be wrapped in a forwarder
-            string[] spatialNamespaces = new string[] { "Microsoft.Spatial", "Microsoft.Data.Spatial" };
+            string[] spatialNamespaces = new string[] { "Microsoft.Spatial", "Microsoft.Spatial" };
             Debug.Assert(destination.GeographyPipeline == null || !spatialNamespaces.Any(s => s == destination.GeographyPipeline.GetType().Namespace) || destination.GeographyPipeline is GeographyForwarder, "the destination must be wrapped with the same type of the exception handling/Reset won't work correctly.");
             Debug.Assert(destination.GeometryPipeline == null || !spatialNamespaces.Any(s => s == destination.GeometryPipeline.GetType().Namespace) || destination.GeometryPipeline is GeometryForwarder, "the destination must be wrapped with the same type of the exception handling/Reset won't work correctly.");
 #endif

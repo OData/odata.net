@@ -4,21 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
 namespace Microsoft.OData.Core.Json
-#endif
 {
-    #region Namespaces
-    using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.JsonLight;
-
-#if SPATIAL
-    using Microsoft.Spatial;
-#endif
-    #endregion Namespaces
 
     /// <summary>
     /// Extension methods for the JSON reader.
@@ -253,7 +241,6 @@ namespace Microsoft.OData.Core.Json
             return nodeType == JsonNodeType.PrimitiveValue || nodeType == JsonNodeType.StartObject || nodeType == JsonNodeType.StartArray;
         }
 
-#if !SPATIAL
         /// <summary>
         /// Asserts that the reader is not buffer.
         /// </summary>
@@ -277,7 +264,6 @@ namespace Microsoft.OData.Core.Json
             Debug.Assert(bufferedJsonReader.IsBuffering, "bufferedJsonReader.IsBuffering");
 #endif
         }
-#endif
 
         /// <summary>
         /// Creates an exception instance that is appropriate for the current library being built.
@@ -285,17 +271,10 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <param name="exceptionMessage">String to use for the exception message.</param>
         /// <returns>Exception to be thrown.</returns>
-#if SPATIAL
-        internal static FormatException CreateException(string exceptionMessage)
-        {
-            return new FormatException(exceptionMessage);
-        }
-#else
         internal static ODataException CreateException(string exceptionMessage)
         {
             return new ODataException(exceptionMessage);
         }
-#endif
 
         /// <summary>
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is of the expected node type.

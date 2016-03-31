@@ -16,6 +16,16 @@ public interface Microsoft.Spatial.IGeographyProvider {
 	System.Action`1[[Microsoft.Spatial.Geography]] ProduceGeography {public abstract add;public abstract remove; }
 }
 
+public interface Microsoft.Spatial.IGeoJsonWriter {
+	void AddPropertyName (string name)
+	void AddValue (double value)
+	void AddValue (string value)
+	void EndArrayScope ()
+	void EndObjectScope ()
+	void StartArrayScope ()
+	void StartObjectScope ()
+}
+
 public interface Microsoft.Spatial.IGeometryProvider {
 	Microsoft.Spatial.Geometry ConstructedGeometry  { public abstract get; }
 
@@ -156,7 +166,7 @@ public abstract class Microsoft.Spatial.GeoJsonObjectFormatter {
 	protected GeoJsonObjectFormatter ()
 
 	public static Microsoft.Spatial.GeoJsonObjectFormatter Create ()
-	public abstract Microsoft.Spatial.SpatialPipeline CreateWriter (Microsoft.Data.Spatial.IGeoJsonWriter writer)
+	public abstract Microsoft.Spatial.SpatialPipeline CreateWriter (Microsoft.Spatial.IGeoJsonWriter writer)
 	public abstract T Read (System.Collections.Generic.IDictionary`2[[System.String],[System.Object]] source)
 	public abstract System.Collections.Generic.IDictionary`2[[System.String],[System.Object]] Write (Microsoft.Spatial.ISpatial value)
 }
@@ -466,16 +476,6 @@ public class Microsoft.Spatial.SpatialPipeline {
 	Microsoft.Spatial.SpatialPipeline StartingLink  { public get; public set; }
 
 	public virtual Microsoft.Spatial.SpatialPipeline ChainTo (Microsoft.Spatial.SpatialPipeline destination)
-}
-
-public interface Microsoft.Data.Spatial.IGeoJsonWriter {
-	void AddPropertyName (string name)
-	void AddValue (double value)
-	void AddValue (string value)
-	void EndArrayScope ()
-	void EndObjectScope ()
-	void StartArrayScope ()
-	void StartObjectScope ()
 }
 
 public enum Microsoft.OData.Edm.EdmConcurrencyMode : int {

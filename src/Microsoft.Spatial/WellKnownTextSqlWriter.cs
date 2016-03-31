@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.Spatial;
     
     /// <summary>
     /// WellKnownText Writer

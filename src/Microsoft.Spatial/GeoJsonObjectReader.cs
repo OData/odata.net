@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// The spatial reader that can read from a pre parsed GeoJson payload

@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Core.Json
 {
-    using Microsoft.Data.Spatial;
+    using Microsoft.Spatial;
 
     /// <summary>
     /// Convert writer interface from IJsonWriter to IGeoJsonWriter.

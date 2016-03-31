@@ -4,11 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using System;
     using System.Collections.ObjectModel;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Geography Multi-LineString

@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using Microsoft.Spatial;
-
     /// <summary>
     /// Class responsible for knowing how to create the Geography and Geometry builders for 
     /// the data services implemenation of Spatial types

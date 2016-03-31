@@ -14,7 +14,6 @@ using System.Text;
 using System.Xml;
 using AstoriaUnitTests.Stubs;
 using AstoriaUnitTests.Stubs.DataServiceProvider;
-using Microsoft.Data.Spatial;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 

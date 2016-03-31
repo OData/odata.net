@@ -9,8 +9,6 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.Data.Spatial;
-using Microsoft.Spatial.Tests;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests

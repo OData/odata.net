@@ -14,5 +14,5 @@ FilterQueryOption
 		Return Type = [Edm.Boolean Nullable=True]
 		Function = 
 		Arguments = 
-			Microsoft.Data.Spatial.GeometryPointImplementation(Type: [Edm.GeometryPoint Nullable=True SRID=0])
-			Microsoft.Data.Spatial.GeometryPolygonImplementation(Type: [Edm.GeometryPolygon Nullable=True SRID=0])
+			Microsoft.Spatial.GeometryPointImplementation(Type: [Edm.GeometryPoint Nullable=True SRID=0])
+			Microsoft.Spatial.GeometryPolygonImplementation(Type: [Edm.GeometryPolygon Nullable=True SRID=0])

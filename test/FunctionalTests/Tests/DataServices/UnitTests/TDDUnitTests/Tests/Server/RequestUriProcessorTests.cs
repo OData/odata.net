@@ -17,7 +17,6 @@ namespace AstoriaUnitTests.Tests.Server
     using AstoriaUnitTests.Tests.Server.Simulators;
     using DataSpatialUnitTests.Utils;
     using FluentAssertions;
-    using Microsoft.Data.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Collections.Generic;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Formatter for Json Object
