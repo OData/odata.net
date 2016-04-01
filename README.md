@@ -14,17 +14,29 @@ For more information about OData, please refer to the following resources:
 - [OData .Net Client](http://odata.github.io/odata.net/#04-01-basic-crud-operations)
 
 ## 2. Project structure
-The project currently has four branches: [master](https://github.com/OData/odata.net/), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [ODATAV3](https://github.com/OData/odata.net/tree/ODATAV3), and [WCFDSV4](https://github.com/OData/odata.net/tree/WCFDSV4).
+The project currently has six branches: [ODataV4-6.x](https://github.com/OData/odata.net/tree/ODataV4-6.x), [ODataV4-7.x](https://github.com/OData/odata.net/tree/ODataV4-7.x), [master](https://github.com/OData/odata.net/tree/master), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [ODATAV3](https://github.com/OData/odata.net/tree/ODATAV3), and [WCFDSV4](https://github.com/OData/odata.net/tree/WCFDSV4).
 
-**Master branch**
 
-The master branch includes the .NET libraries for OData V4 only that are now most actively iterated and maintained by the OData team. It has the following libraries:
+
+**ODataV4-6.x branch**
+
+The ODataV4-6.x branch includes the .NET libraries for OData V4 only that are now most actively iterated and maintained by the OData team, it has newest OData lib 6.x release code base. It has the following libraries:
 - [ODataLib](http://www.nuget.org/packages/Microsoft.OData.Core/) (namespace `Microsoft.OData.Core`):<br />The ODataLib contains classes to serialize, deserialize and validate OData JSON payloads.
 - [EdmLib](http://www.nuget.org/packages/Microsoft.OData.Edm/) (namespace `Microsoft.OData.Edm`):<br />The EdmLib contains classes to represent, construct, parse, serialize and validate entity data models.
 - [Microsoft.Spatial](http://www.nuget.org/packages/Microsoft.Spatial/) (namespace `Microsoft.Spatial`):<br />The spatial library contains classes and methods that facilitate geography and geometry spatial operations.
 - [OData Client for .NET](http://www.nuget.org/packages/Microsoft.OData.Client/) (namespace `Microsoft.OData.Client`):<br />The client library is built on top of ODataLib and EdmLib that has LINQ-enabled client APIs for issuing OData queries and consuming OData JSON payloads.
 
-For these libraries, we accept bug reports, feature requirements and pull requests. The corresponding fixes and implementations will be included into every new release.
+For these libraries, we accept bug reports and pull requests. The corresponding fixes and implementations will be included into every new release.
+
+**ODataV4-7.x branch**
+
+The ODataV4-7.x branch includes the .NET libraries for OData V4 only that are in development now. It is evolved from ODataV4-6.x with kinds of improvements, new features and so on. It is in-compatible with ODataV4-6.x release and will become the master branch after it is released. It has same libraries as ODataV4-6.x branch.
+
+For these libraries, we accept feature requirements, but we do not accept bug reports and pull requests before first release is ready.
+
+**Master branch**
+
+The master branch has most recently stable 6.x release code base, and is recommended to use before OData lib 7.x is released.
 
 **gh-pages branch**
 
@@ -48,6 +60,8 @@ The WCFDSV4 branch has the source code of the OData V4 parity of the WCF Data Se
 
 ## 3. Building, Testing, Debugging and Release
 In the case of VS2013, [SQL Express 2008](https://www.microsoft.com/en-sg/download/details.aspx?id=30438) or above must be installed. In the case of VS2015, LocalDB v12.0 or above will be used which is part of VS2015 and no additional installation is needed. The Database will be automatically initialized by the test code if it doesn't exist.
+
+Note: The project T4CrossPlatformTests.WindowsStore.csproj will not be loaded unless you have installed the Windows 8.1 and Windows Phone 8.0 / 8.1 tools.
 
 ### 3.1 Building and Testing in Visual Studio
 Simply open the solution files under 'sln' folder and build them in Visual Studio 2013 or 2015.
