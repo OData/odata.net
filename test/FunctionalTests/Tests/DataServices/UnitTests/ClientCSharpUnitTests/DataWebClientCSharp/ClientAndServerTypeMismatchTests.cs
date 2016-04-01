@@ -422,7 +422,7 @@ namespace AstoriaUnitTests
             responseMessage.SetHeader("OData-Version", "4.0");
 
             var ctx = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, requestMessage, responseMessage);
-            ctx.EnableAtom = true;
+            //ctx.EnableAtom = true;
 
             if (contentType == UnitTestsUtil.JsonLightMimeType || contentType == UnitTestsUtil.JsonLightMimeTypeIeee754Compatible)
             {

@@ -45,8 +45,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void ShortIntegrationCreateWriterSettingsShouldSetInstanceAnnotationFilter()
         {
             this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.Indent = true));
-           
-            var settings = this.writingHelper.CreateSettings(false, false, false);
+
+            var settings = this.writingHelper.CreateSettings(false, false);
             settings.Indent.Should().BeTrue();
         }
     }

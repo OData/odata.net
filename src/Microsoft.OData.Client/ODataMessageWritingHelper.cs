@@ -36,7 +36,7 @@ namespace Microsoft.OData.Client
         /// <param name="enableAtom">Whether to enable ATOM.</param>
         /// <param name="odataSimplified">Whether to enable OData Simplified.</param>
         /// <returns>Newly created message writer settings.</returns>
-        internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool enableAtom, bool odataSimplified)
+        internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool odataSimplified)
         {
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
             {
@@ -50,13 +50,7 @@ namespace Microsoft.OData.Client
                 // we can do this here.
                 DisableMessageStreamDisposal = !isBatchPartRequest
             };
-#if !DNXCORE50
-            if (enableAtom)
-            {
-                // Enable ATOM for client
-                writerSettings.EnableAtomSupport();
-            }
-#endif
+
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
             // Enable the Astoria client behavior in ODataLib.

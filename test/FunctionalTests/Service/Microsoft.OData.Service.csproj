@@ -118,9 +118,6 @@
       <Link>Microsoft\OData\Service\InternalErrorCodesCommon.cs</Link>
     </Compile>
     <Compile Include="Microsoft\OData\Service\DataServiceStaticConfiguration.cs" />
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MessageSettingsHelper.cs">
-      <Link>Microsoft\OData\Service\MessageSettingsHelper.cs</Link>
-    </Compile>
     <Compile Include="Microsoft\OData\Service\ODataPathToSegmentInfoConverter.cs" />
     <Compile Include="Microsoft\OData\Service\OpenTypeMethodCallDetector.cs" />
     <Compile Include="Microsoft\OData\Service\Parsing\SkipTokenExpressionBuilder.cs" />

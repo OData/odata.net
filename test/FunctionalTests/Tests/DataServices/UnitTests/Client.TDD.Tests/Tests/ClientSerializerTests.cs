@@ -26,19 +26,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     public class ClientSerializerTests
     {
         [TestMethod]
-        public void ClientShouldIncludeIdInAtomUpdates()
-        {
-            Action<EntityDescriptor> configureDescriptor = d =>
-            {
-                d.Identity = new Uri("http://foo.org");
-                d.State = EntityStates.Modified;
-            };
-
-            var testSubject = CreateODataEntry(configureDescriptor, f => f.UseAtom());
-            testSubject.Id.Should().Be(new Uri("http://foo.org"));
-        }
-
-        [TestMethod]
         public void ClientShouldNotIncludeIdInJsonLightUpdates()
         {
             Action<EntityDescriptor> configureDescriptor = d =>
@@ -48,19 +35,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             };
 
             var testSubject = CreateODataEntry(configureDescriptor, f => f.UseJson(new EdmModel()));
-            testSubject.Id.Should().BeNull();
-        }
-
-        [TestMethod]
-        public void ClientShouldNotIncludeIdInAtomInserts()
-        {
-            Action<EntityDescriptor> configureDescriptor = d =>
-            {
-                d.Identity = new Uri("http://foo.org");
-                d.State = EntityStates.Added;
-            };
-
-            var testSubject = CreateODataEntry(configureDescriptor, f => f.UseAtom());
             testSubject.Id.Should().BeNull();
         }
 

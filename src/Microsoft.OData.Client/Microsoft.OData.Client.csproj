@@ -255,7 +255,6 @@
     <Compile Include="EntityTrackerBase.cs" />
     <Compile Include="Materialization\ODataMaterializerContext.cs" />
     <Compile Include="Materialization\IODataMaterializerContext.cs" />
-    <Compile Include="MessageSettingsHelper.cs" />
     <Compile Include="ReadingEntryArgs.cs" />
     <Compile Include="DataServiceClientResponsePipelineConfiguration.cs" />
     <Compile Include="Materialization\FeedAndEntryMaterializerAdapter.cs" />

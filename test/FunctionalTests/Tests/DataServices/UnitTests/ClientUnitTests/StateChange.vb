@@ -40,8 +40,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
             AddHandler Me.ctx.SendingRequest2, AddressOf SendingRequestListenHttpMethod
         End Sub
 

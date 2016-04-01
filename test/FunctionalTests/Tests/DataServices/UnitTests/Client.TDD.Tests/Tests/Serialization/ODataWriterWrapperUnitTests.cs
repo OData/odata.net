@@ -224,7 +224,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             entityDescriptor.Entity = person;
             entityDescriptor.EditLink = new Uri("http://www.foo.com/custom");
             var requestMessageArgs = new BuildingRequestEventArgs("POST", new Uri("http://www.foo.com/Northwind"), headers, entityDescriptor, HttpStack.Auto);
-            var linkDescriptors = new LinkDescriptor[] { new LinkDescriptor(person, "Cars", car1, clientModel), new LinkDescriptor(person, "Cars", car2, clientModel)};
+            var linkDescriptors = new LinkDescriptor[] { new LinkDescriptor(person, "Cars", car1, clientModel), new LinkDescriptor(person, "Cars", car2, clientModel) };
             var odataRequestMessageWrapper = ODataRequestMessageWrapper.CreateRequestMessageWrapper(requestMessageArgs, requestInfo);
 
             serializer.WriteEntry(entityDescriptor, linkDescriptors, odataRequestMessageWrapper);
@@ -238,113 +238,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "{\"ID\":100,\"Name\":\"Bing\",\"Cars@odata.bind\":[\"http://www.odata.org/service.svc/Cars(1001)\",\"http://www.odata.org/service.svc/Cars(1002)\"]}");
         }
 
-        [TestMethod]
-        public void SerializeEnity_EnumProperty()
-        {
-            MyEntity1 myEntity1 = new MyEntity1()
-            {
-                ID = 2,
-                MyColorValue = MyColor.Yellow,
-                MyFlagsColorValue = MyFlagsColor.Blue,
-                ComplexValue1Value = new ComplexValue1() { MyColorValue = MyColor.Green, MyFlagsColorValue = MyFlagsColor.Red },
-                MyFlagsColorCollection1 = new List<MyFlagsColor>() { MyFlagsColor.Blue, MyFlagsColor.Red, MyFlagsColor.Red },
-                MyColorCollection = new List<MyColor?>()
-            };
 
-            DataServiceContext dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
-            dataServiceContext.EnableAtom = true;
-            dataServiceContext.Format.UseAtom();
-            dataServiceContext.AttachTo("MyEntitySet1", myEntity1);
-
-            var requestInfo = new RequestInfo(dataServiceContext);
-            var serializer = new Serializer(requestInfo);
-            var headers = new HeaderCollection();
-            headers.SetHeader("Content-Type", "application/atom+xml;odata.metadata=minimal");
-            var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
-            var entityDescriptor = new EntityDescriptor(clientModel);
-            entityDescriptor.State = EntityStates.Added;
-            entityDescriptor.Entity = myEntity1;
-            var requestMessageArgs = new BuildingRequestEventArgs("POST", new Uri("http://www.foo.com/Northwind"), headers, entityDescriptor, HttpStack.Auto);
-            var linkDescriptors = new LinkDescriptor[] { };
-            var odataRequestMessageWrapper = ODataRequestMessageWrapper.CreateRequestMessageWrapper(requestMessageArgs, requestInfo);
-
-            serializer.WriteEntry(entityDescriptor, linkDescriptors, odataRequestMessageWrapper);
-
-            // read result:
-            MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
-            stream.Position = 0;
-
-            string payload = (new StreamReader(stream)).ReadToEnd();
-            payload = Regex.Replace(payload, "<updated>[^<]*</updated>", "");
-            payload.Should().Be(
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?><entry xmlns=\"http://www.w3.org/2005/Atom\" " +
-                    "xmlns:d=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:m=\"http://docs.oasis-open.org/odata/ns/metadata\" " +
-                    "xmlns:georss=\"http://www.georss.org/georss\" xmlns:gml=\"http://www.opengis.net/gml\">" +
-                    "<id />" +
-                    "<title />" +
-                //"<updated>2013-11-11T19:29:54Z</updated>" +
-                    "<author><name /></author>" +
-                    "<content type=\"application/xml\">" +
-                        "<m:properties>" +
-                            "<d:ComplexValue1Value>" +
-                                "<d:MyColorValue m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests_MyColor\">Green</d:MyColorValue>" +
-                                "<d:MyFlagsColorValue m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests_MyFlagsColor\">Red</d:MyFlagsColorValue>" +
-                                "<d:StringValue m:null=\"true\" />" +
-                            "</d:ComplexValue1Value>" +
-                            "<d:ID m:type=\"Int64\">2</d:ID>" +
-                            "<d:MyColorCollection />" +
-                            "<d:MyColorValue m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests_MyColor\">Yellow</d:MyColorValue>" +
-                            "<d:MyFlagsColorCollection1>" +
-                                "<m:element m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests+MyFlagsColor\">Blue</m:element>" +
-                                "<m:element m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests+MyFlagsColor\">Red</m:element>" +
-                                "<m:element m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests+MyFlagsColor\">Red</m:element>" +
-                            "</d:MyFlagsColorCollection1>" +
-                            "<d:MyFlagsColorValue m:type=\"#AstoriaUnitTests.TDD.Tests.Client.ODataWriterWrapperUnitTests_MyFlagsColor\">Blue</d:MyFlagsColorValue>" +
-                        "</m:properties>" +
-                    "</content>" +
-                    "</entry>");
-        }
-
-        [TestMethod]
-        public void SerializeEnity_NullableEnumProperty()
-        {
-            MyEntity1 myEntity1 = new MyEntity1()
-            {
-                ID = 2,
-                MyColorValue = null,
-                MyFlagsColorValue = MyFlagsColor.Blue,
-                ComplexValue1Value = new ComplexValue1() { MyColorValue = MyColor.Green, MyFlagsColorValue = MyFlagsColor.Red },
-                MyFlagsColorCollection1 = new List<MyFlagsColor>() { MyFlagsColor.Blue, MyFlagsColor.Red, MyFlagsColor.Red },
-                MyColorCollection = new List<MyColor?> { MyColor.Green, null } 
-            };
-
-            DataServiceContext dataServiceContext = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
-            dataServiceContext.EnableAtom = true;
-            dataServiceContext.Format.UseAtom();
-            dataServiceContext.AttachTo("MyEntitySet1", myEntity1);
-
-            var requestInfo = new RequestInfo(dataServiceContext);
-            var serializer = new Serializer(requestInfo);
-            var headers = new HeaderCollection();
-            var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
-            var entityDescriptor = new EntityDescriptor(clientModel);
-            entityDescriptor.State = EntityStates.Added;
-            entityDescriptor.Entity = myEntity1;
-            var requestMessageArgs = new BuildingRequestEventArgs("POST", new Uri("http://www.foo.com/Northwind"), headers, entityDescriptor, HttpStack.Auto);
-            var linkDescriptors = new LinkDescriptor[] { };
-            var odataRequestMessageWrapper = ODataRequestMessageWrapper.CreateRequestMessageWrapper(requestMessageArgs, requestInfo);
-
-            serializer.WriteEntry(entityDescriptor, linkDescriptors, odataRequestMessageWrapper);
-
-            // read result:
-            MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
-            stream.Position = 0;
-
-            string payload = (new StreamReader(stream)).ReadToEnd();
-            payload = Regex.Replace(payload, "<updated>[^<]*</updated>", "");
-            payload.Should().Be(
-                "{\"ComplexValue1Value\":{\"MyColorValue\":\"Green\",\"MyFlagsColorValue\":\"Red\",\"StringValue\":null},\"ID\":2,\"MyColorCollection\":[\"Green\",null],\"MyColorValue\":null,\"MyFlagsColorCollection1\":[\"Blue\",\"Red\",\"Red\"],\"MyFlagsColorValue\":\"Blue\"}");
-        }
 
         internal ODataWriterWrapper SetupTestActionExecuted(Action<DataServiceContext, DataServiceClientRequestPipelineConfiguration> setup)
         {

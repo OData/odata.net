@@ -43,7 +43,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         private const string ExpectedPostQueryItem = PostSpecificQueryParameter + "=" + PostSpecificValue;
 
         private int buildingRequestCallCount;
-        private Queue<Descriptor> descriptors = new Queue<Descriptor>(); 
+        private Queue<Descriptor> descriptors = new Queue<Descriptor>();
 
         private static readonly Dictionary<string, string> Headers = new Dictionary<string, string>
         {
@@ -116,7 +116,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 Action actionToTest = () => ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers(1)"));
-                
+
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
@@ -153,8 +153,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 Action actionToTest = () =>
@@ -167,7 +167,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             ctx.Execute(continuation);
                         }
                     };
-                
+
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(2);
             }
@@ -182,8 +182,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 Action actionToTest = () =>
@@ -203,7 +203,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
         #endregion
-         
+
         #region Query, LoadPropety Tests
 
         [TestMethod]
@@ -219,14 +219,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
                 var query = (DataServiceQuery<Customer>)(ctx.CreateQuery<Customer>("Customers").Where(c => c.Name.Contains("1")));
                 query = query.AddQueryOption("ParameterFromLinqMethod", "value&split");
-                
+
                 Action actionToTest = () => query.Execute();
 
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
-        }        
-        
+        }
+
         [TestMethod]
         public void QueryAsync()
         {
@@ -274,7 +274,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ctx.AttachTo("Customers", customer, "*");
 
                 Action actionToTest = () => ctx.LoadProperty(customer, "Orders");
-                
+
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
@@ -315,14 +315,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 ctx.ResolveName = T => T.FullName;
                 Customer customer = new Customer() { ID = 1 };
                 ctx.AttachTo("Customers", customer, "*");
-                
+
                 Action actionToTest = () =>
                     {
                         QueryOperationResponse qor = ctx.LoadProperty(customer, "Orders", new Uri(web.ServiceRoot + "/Customers(1)/Orders"));
@@ -343,8 +343,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 ctx.ResolveName = T => T.FullName;
@@ -383,203 +383,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
-        }        
-        #endregion
-
-        #region Stream Related Tests
-
-        [TestMethod]
-        public void GetReadStreamForMediaLinkEntry()
-        {
-            PlaybackServiceDefinition playbackService = new PlaybackServiceDefinition();
-            using (TestWebRequest web = playbackService.CreateForInProcessWcf())
-            {
-                web.ServiceType = typeof(PlaybackService);
-                web.StartService();
-
-                playbackService.OverridingPlayback = this.GetBlobResponse(web.BaseUri);
-
-                var ctx = GetContextWithBuildingRequestHandler(web);
-                ctx.EnableAtom = true;
-
-                var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
-                var result = query.Execute();
-                var entry = result.First();
-
-                this.AddDescriptorShouldBeStreamVerifier(ctx, descriptor => 
-                {
-                    descriptor.State.Should().Be(EntityStates.Unchanged);
-                    descriptor.EntityDescriptor.State.Should().Be(EntityStates.Unchanged);
-                    descriptor.EntityDescriptor.ReadStreamUri.Should().BeSameAs(descriptor.StreamLink.SelfLink);
-                    descriptor.EntityDescriptor.EditStreamUri.Should().BeSameAs(descriptor.StreamLink.EditLink);
-                });
-
-                buildingRequestCallCount = 0;
-                var readStream = ctx.GetReadStream(entry, new DataServiceRequestArgs());
-                readStream.Should().NotBeNull();
-                buildingRequestCallCount.Should().Be(1);
-
-                buildingRequestCallCount = 0;
-                IAsyncResult asyncResult = ctx.BeginGetReadStream(entry, new DataServiceRequestArgs(), null, null);
-                var readStreamAsync = ctx.EndGetReadStream(asyncResult);
-                readStreamAsync.Should().NotBeNull();
-                buildingRequestCallCount.Should().Be(1);
-            }
         }
-
-        [TestMethod]
-        public void GetReadStreamForNamedStream()
-        {
-            PlaybackServiceDefinition playbackService = new PlaybackServiceDefinition();
-            using (TestWebRequest web = playbackService.CreateForInProcessWcf())
-            {
-                web.ServiceType = typeof(PlaybackService);
-                web.StartService();
-
-                playbackService.OverridingPlayback = this.GetBlobResponse(web.BaseUri);
-
-                var ctx = GetContextWithBuildingRequestHandler(web);
-                ctx.EnableAtom = true;
-
-                var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
-                var result = query.Execute();
-                var entry = result.First();
-
-                AddDescriptorShouldBeStreamVerifier(ctx, descriptor =>
-                {
-                    descriptor.State.Should().Be(EntityStates.Unchanged);
-                    descriptor.EntityDescriptor.State.Should().Be(EntityStates.Unchanged);
-                });
-
-                buildingRequestCallCount = 0;
-                var readStream = ctx.GetReadStream(entry, "NamedStream", new DataServiceRequestArgs());
-                readStream.Should().NotBeNull();
-                buildingRequestCallCount.Should().Be(1);
-
-                buildingRequestCallCount = 0;
-                IAsyncResult asyncResult = ctx.BeginGetReadStream(entry, "NamedStream", new DataServiceRequestArgs(), null, null);
-                var readStreamAsync = ctx.EndGetReadStream(asyncResult);
-                readStreamAsync.Should().NotBeNull();
-                buildingRequestCallCount.Should().Be(1);
-            }
-        }
-
-        [TestMethod]
-        public void SetSaveStreamEditMediaLinkEntry()
-        {
-            PlaybackServiceDefinition playbackService = new PlaybackServiceDefinition();
-            using (TestWebRequest web = playbackService.CreateForInProcessWcf())
-            {
-                web.ServiceType = typeof(PlaybackService);
-                web.StartService();
-
-                playbackService.OverridingPlayback = this.GetBlobResponse(web.BaseUri);
-
-                var ctx = GetContextWithBuildingRequestHandler(web);
-                ctx.EnableAtom = true;
-
-                var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
-                var result = query.Execute();
-                var entry = result.First();
-
-                AddDescriptorShouldBeStreamVerifier(ctx, descriptor =>
-                {
-                    descriptor.State.Should().Be(EntityStates.Modified);
-                    descriptor.EntityDescriptor.State.Should().Be(EntityStates.Unchanged);
-                    descriptor.EntityDescriptor.ReadStreamUri.Should().BeSameAs(descriptor.StreamLink.SelfLink);
-                    descriptor.EntityDescriptor.EditStreamUri.Should().BeSameAs(descriptor.StreamLink.EditLink);
-                });
-
-                Stream newStream = new MemoryStream();
-                ctx.SetSaveStream(entry, newStream, false, new DataServiceRequestArgs() { ContentType = "application/jpeg" });
-                buildingRequestCallCount = 0;
-                ctx.SaveChanges();
-                buildingRequestCallCount.Should().Be(1);
-            }
-        }
-       
-        [TestMethod]
-        public void SetSaveStreamEditNamedStream()
-        {
-            PlaybackServiceDefinition playbackService = new PlaybackServiceDefinition();
-            using (TestWebRequest web = playbackService.CreateForInProcessWcf())
-            {
-                web.ServiceType = typeof(PlaybackService);
-                web.StartService();
-
-                playbackService.OverridingPlayback = this.GetBlobResponse(web.BaseUri);
-
-                var ctx = GetContextWithBuildingRequestHandler(web);
-                ctx.EnableAtom = true;
-
-                var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
-                var result = query.Execute();
-                var entry = result.First();
-
-                AddDescriptorShouldBeStreamVerifier(ctx, descriptor =>
-                {
-                    descriptor.State.Should().Be(EntityStates.Modified);
-                    descriptor.EntityDescriptor.State.Should().Be(EntityStates.Unchanged);
-                });
-                
-                Stream newStream = new MemoryStream();
-                ctx.SetSaveStream(entry, "NamedStream", newStream, false, new DataServiceRequestArgs() { ContentType = "application/jpeg" });
-                buildingRequestCallCount = 0;
-                ctx.SaveChanges();
-                buildingRequestCallCount.Should().Be(1);
-            }
-        }
-
-        [TestMethod]
-        public void BuildingRequestOverrideDataServiceRequestArgs()
-        {
-            PlaybackServiceDefinition playbackService = new PlaybackServiceDefinition();
-            using (TestWebRequest web = playbackService.CreateForInProcessWcf())
-            {
-                web.ServiceType = typeof(PlaybackService);
-                web.StartService();
-
-                playbackService.OverridingPlayback = this.GetBlobResponse(web.BaseUri);
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(web.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-
-                var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
-                var result = query.Execute();
-                var entry = result.First();
-
-                buildingRequestCallCount = 0;
-                int sendingRequest2CallCount = 0;
-                ctx.BuildingRequest += (sender, arg) =>
-                    {
-                        arg.Headers["Accept"] = "application/atom+xml";
-                        arg.Headers["Slug"] = "ModifiedSlug";
-                        arg.Headers["Content-Type"] = "*/*";
-                        buildingRequestCallCount++;
-                    };
-                ctx.SendingRequest2 += (sender, arg) =>
-                    {
-                        Assert.AreEqual("application/atom+xml", arg.RequestMessage.GetHeader("Accept"));
-                        Assert.AreEqual("ModifiedSlug", arg.RequestMessage.GetHeader("Slug"));
-                        Assert.AreEqual("*/*", arg.RequestMessage.GetHeader("Content-Type"));
-                        sendingRequest2CallCount++;
-                    };
-
-                Stream newStream = new MemoryStream();
-                ctx.SetSaveStream(entry, newStream, false, new DataServiceRequestArgs() { AcceptContentType = "application/*", Slug = "slug", ContentType = "application/jpeg" });
-                ctx.SaveChanges();
-                buildingRequestCallCount.Should().Be(1);
-                sendingRequest2CallCount.Should().Be(1);
-
-                buildingRequestCallCount = 0;
-                sendingRequest2CallCount = 0;
-                var readStream = ctx.GetReadStream(entry, new DataServiceRequestArgs() { AcceptContentType = "application/*", Slug = "slug", ContentType = "application/jpeg" });
-                readStream.Should().NotBeNull();
-                buildingRequestCallCount.Should().Be(1);
-                sendingRequest2CallCount.Should().Be(1);
-            }
-        }
-
         #endregion
 
         #region CUD Tests
@@ -652,7 +456,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 var ctx = GetContextWithBuildingRequestHandler(web);
                 ctx.ResolveName = T => T.FullName;
 
-                Customer customer = new Customer() { ID = 3369, Name="newly added customer"};
+                Customer customer = new Customer() { ID = 3369, Name = "newly added customer" };
 
                 AddDescriptorShouldBeEntityVerifier(ctx, descriptor =>
                 {
@@ -787,8 +591,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
                 Order order1 = new Order() { ID = 1239 };
 
-                AddDescriptorShouldBeEntityVerifier(ctx, descriptor => 
-                { 
+                AddDescriptorShouldBeEntityVerifier(ctx, descriptor =>
+                {
                     descriptor.State.Should().Be(EntityStates.Added);
                     descriptor.Entity.Should().Be(order1);
                     descriptor.ParentForInsert.Entity.Should().Be(customer1);
@@ -825,14 +629,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     if (e.RequestUri.AbsoluteUri.Contains("$batch"))
                     {
-                        e.Descriptor.Should().BeNull();                                               
+                        e.Descriptor.Should().BeNull();
                     }
                 };
                 ctx.SendingRequest2 += (sender, e) =>
                 {
                     if (e.RequestMessage.Url.AbsoluteUri.Contains("$batch"))
                     {
-                        e.Descriptor.Should().BeNull();                                               
+                        e.Descriptor.Should().BeNull();
                     }
                 };
 
@@ -845,8 +649,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 RunTest(actionToRun);
                 buildingRequestCallCount.Should().Be(3); // 1 for outer batch, 2 for inner operations 
             }
-        }   
-        
+        }
+
         /// <summary>
         /// Sends a batch request with two inserts. This test ensures that inner inserts have the additional parameters and headers added.
         /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
@@ -891,8 +695,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 RunTest(actionToRun);
                 buildingRequestCallCount.Should().Be(3); // 1 for outer batch, 2 for the 2 inner insert operations
             }
-        }          
-  
+        }
+
         /// <summary>
         /// Sends a batch request with a single query in it. This test ensures that inner query has the additional parameters and headers added.
         /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
@@ -914,7 +718,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     result.StatusCode.Should().Be(418);
                     result.Error.Message.Should().Contain("Server received user altered request correctly.");
                 }
-                
+
                 buildingRequestCallCount.Should().Be(2); // 1 for outer batch, 1 for inner query
             }
         }
@@ -959,8 +763,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 Customer customer1 = new Customer() { ID = 659 };
                 Order order1 = new Order() { ID = 1239 };
 
-                AddDescriptorShouldBeEntityVerifier(ctx, descriptor => 
-                { 
+                AddDescriptorShouldBeEntityVerifier(ctx, descriptor =>
+                {
                     descriptor.State.Should().Be(EntityStates.Added);
                     if (this.buildingRequestCallCount == 2)
                     {
@@ -994,8 +798,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
 
@@ -1026,8 +830,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
 
@@ -1056,8 +860,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
 
@@ -1093,8 +897,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
 
@@ -1158,14 +962,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.DataServiceType = typeof(EndToEndTestService);
                 web.StartService();
                 DataServiceContext ctx = new DataServiceContext(web.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 ctx.BuildingRequest += SimpleBuildingRequest;
                 ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers"));
                 buildingRequestCallCount.Should().Be(1);
-                
+
                 buildingRequestCallCount = 0;
                 ctx.BuildingRequest -= SimpleBuildingRequest;
                 ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers"));
@@ -1228,8 +1032,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(web.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                // ctx.EnableAtom = true;
+                // ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 ctx.BuildingRequest += (sender, arg) => arg.RequestUri = new Uri(web.ServiceRoot.AbsoluteUri + "/Customers(1)");
@@ -1292,8 +1096,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     using (CustomDataContext.CreateChangeScope())
                     {
                         DataServiceContext ctx = new DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        // ctx.EnableAtom = true;
+                        // ctx.Format.UseAtom();
                         ctx.ResolveName = T => T.FullName;
                         List<Descriptor> actualSendingRequestDescriptors = new List<Descriptor>() { };
                         List<Descriptor> actualReceivingResponseDescriptors = new List<Descriptor>() { };
@@ -1388,48 +1192,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         #endregion       
 
         #region Utility Methods
-
-        private string GetBlobResponse(string resourcePath)
-        {
-            if (!resourcePath.EndsWith("\\"))
-            {
-                resourcePath += "\\";
-            }
-
-            return @"HTTP/1.1 200 OK
-Proxy-Connection: Keep-Alive
-Connection: Keep-Alive
-Content-Length: 14546
-Via: 1.1 TK5-PRXY-08
-Expires: Tue, 17 Jul 2012 00:44:53 GMT
-Date: Tue, 17 Jul 2012 00:43:53 GMT
-Content-Type: application/atom+xml;charset=utf-8
-Server: Microsoft-IIS/7.5
-Cache-Control: private
-Vary: *
-X-Content-Type-Options: nosniff
-OData-Version: 4.0;
-X-AspNet-Version: 4.0.30319
-X-Powered-By: ASP.NET
-
-<?xml version=""1.0"" encoding=""utf-8"" ?> 
-<entry xml:base=""http://services.odata.org/V3/Northwind/Northwind.svc/"" xmlns=""http://www.w3.org/2005/Atom"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-<id>http://services.odata.org/V3/Northwind/Northwind.svc/Categories(1)</id> 
-<category term=""#NorthwindModel.Category"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" /> 
-<link rel=""edit"" title=""Category"" href=""Categories(1)"" /> 
-<link rel=""edit-media"" href=""" + resourcePath + @"Categories(1)/$value"" />
-" + NamedStreamTests.GetNamedStreamEditLink(resourcePath, "application/jpeg", null, "NamedStream") + @"
-<title /> 
-<updated>2012-07-17T00:48:10Z</updated> 
-<author>
-<name />    
-</author>
-<content type=""application/jpeg"" src=""" + resourcePath + @"""/>
-<m:properties>
-</m:properties>
-</entry>";
-        }
-
         /// <summary>
         /// Runs the given action, and validates we get the special exception the dummy server throws.
         /// </summary>
@@ -1554,8 +1316,8 @@ X-Powered-By: ASP.NET
         private static void AddDescriptorShouldBeEntityVerifier(DataServiceContext ctx, Action<EntityDescriptor> extraVerifier = null)
         {
             AddDescriptorShouldBeEntityVerifier(ctx, null, extraVerifier);
-        }        
-        
+        }
+
         /// <summary>
         /// Adds code to verify that in BuildingRequest and SendingRequest2 we get a non-null EntityDescriptor that is the same object.
         /// Skips the check if $batch is in the URL.
@@ -1572,7 +1334,7 @@ X-Powered-By: ASP.NET
                     EntityDescriptor entityDescriptor = e.Descriptor as EntityDescriptor;
                     entityDescriptor.Should().NotBeNull("an EntityDescriptor was expected for this kind of request, but found: " + e.Descriptor);
                     extraVerifier(entityDescriptor);
-                    expectedDescriptor = expectedDescriptorProvided ?  expectedDescriptor : e.Descriptor;
+                    expectedDescriptor = expectedDescriptorProvided ? expectedDescriptor : e.Descriptor;
                     e.Descriptor.Should().BeSameAs(expectedDescriptor);
                 }
             };
@@ -1620,7 +1382,7 @@ X-Powered-By: ASP.NET
                     streamDescriptor.Should().BeSameAs(descriptor);
                 }
             };
-            
+
         }
 
         /// <summary>
@@ -1672,7 +1434,7 @@ X-Powered-By: ASP.NET
                 if (buildingRequestCondition(e))
                 {
                     // Add a new custom query parameter, and other if it's POST
-                    var queryParametersToAdd = new Dictionary<string, string> {{CustomQueryParameter, SampleValue}};
+                    var queryParametersToAdd = new Dictionary<string, string> { { CustomQueryParameter, SampleValue } };
                     if (e.Method == "POST")
                     {
                         queryParametersToAdd.Add(PostSpecificQueryParameter, PostSpecificValue);
@@ -1768,7 +1530,7 @@ X-Powered-By: ASP.NET
             }
         }
 
-        private class ManyChangeValidatingService: ValidatingService
+        private class ManyChangeValidatingService : ValidatingService
         {
             public ManyChangeValidatingService()
                 : base(RequireAllHeadersAndParameters)

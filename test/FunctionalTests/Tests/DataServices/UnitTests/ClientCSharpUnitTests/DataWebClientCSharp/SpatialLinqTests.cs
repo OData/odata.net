@@ -324,8 +324,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
 
                 // Query the top level set
                 List<TripLeg<Geography>> results = context.CreateQuery<TripLeg<Geography>>("TripLegs").ToList();
@@ -380,7 +380,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
+                //context.EnableAtom = true;
                 context.MergeOption = MergeOption.NoTracking;
                 
                 var tests = getTests(context);

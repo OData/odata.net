@@ -164,8 +164,8 @@ namespace AstoriaUnitTests.Tests
         public void PerTestSetup()
         {
             this.ctx = new DataServiceContext(web.ServiceRoot);
-            this.ctx.EnableAtom = true;
-            this.ctx.Format.UseAtom();
+            //this.ctx.EnableAtom = true;
+            //this.ctx.Format.UseAtom();
             this.ctx.ResolveName = (t) =>
             {
                 string clientName = t.FullName;
@@ -620,8 +620,8 @@ namespace AstoriaUnitTests.Tests
         {
             // Fix URI composition in Astoria for V3 payloads
             ctx = new DataServiceContext(web.ServiceRoot, Microsoft.OData.Client.ODataProtocolVersion.V4);
-            ctx.EnableAtom = true;
-            ctx.Format.UseAtom();
+            //ctx.EnableAtom = true;
+            //ctx.Format.UseAtom();
             // Create new office type
             EFFKClient.Office o = new EFFKClient.Office() { ID = 1, BuildingName = "Building 35", FloorNumber = 2, OfficeNumber = 2173 };
             ctx.AddObject("CustomObjectContext.Offices", o);
@@ -695,8 +695,8 @@ namespace AstoriaUnitTests.Tests
         private void VerifyServerOrderId(int orderId, int? expectedCustomerId, String message = null)
         {
             var _ctx = new DataServiceContext(web.ServiceRoot);
-            _ctx.EnableAtom = true;
-            _ctx.Format.UseAtom();
+            //_ctx.EnableAtom = true;
+            //_ctx.Format.UseAtom();
 
             var order = _ctx.CreateQuery<EFFKClient.Order>("CustomObjectContext.Orders").Expand("Customers").Where(o => o.ID == orderId).FirstOrDefault();
 

@@ -159,8 +159,8 @@ namespace AstoriaUnitTests
                         },
                         delegate(DataServiceContext context)
                         {
-                            context.Format.UseAtom();
-                            context.EnableAtom = true;
+                            //context.Format.UseAtom();
+                            //context.EnableAtom = true;
                             context.MergeOption = MergeOption.OverwriteChanges;
                             var q = context.CreateQuery<ArubaClient.OwnerContactInfo>("OwnerContactInfoSet(2)").Execute().Single();
                             var p = context.CreateQuery<ArubaClient.ContactInfo>("OwnerContactInfoSet(2)/ContactInfo").Execute().Single();
@@ -198,8 +198,8 @@ namespace AstoriaUnitTests
                         {
                             // Consider: For a typed DataServiceContext, do we want to enforce for context.AddObject("entityset", object)
                             // where if context.GetProperty("entityset") is of IQueryable<T> that typeof(T).IsInstanceOfType(object)?
-                            context.Format.UseAtom();
-                            context.EnableAtom = true;
+                            //context.Format.UseAtom();
+                            //context.EnableAtom = true;
 
                             northwindClient.Customers customer = northwindClient.Customers.CreateCustomers("ASTOR", "Microsoft");
                             northwindClient.Orders order1 = northwindClient.Orders.CreateOrders(999);
@@ -251,8 +251,8 @@ namespace AstoriaUnitTests
             {
                 Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                 DataServiceContext ctx = constructor(baseUri);
-                ctx.Format.UseAtom();
-                ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
                 Trace.WriteLine("Querying workspace at " + baseUri);
 
                 #region Confirm default context properties
@@ -599,8 +599,8 @@ namespace AstoriaUnitTests
                 Assert.IsNotNull(gtc, "didn't generate context in assembly");
 
                 DataServiceContext tmpCtx = (DataServiceContext)Activator.CreateInstance(gtc, ctx.BaseUri);
-                tmpCtx.Format.UseAtom();
-                tmpCtx.EnableAtom = true;
+                //tmpCtx.Format.UseAtom();
+                //tmpCtx.EnableAtom = true;
                 tmpCtx.Timeout = ctx.Timeout;
                 tmpCtx.Credentials = ctx.Credentials;
 
@@ -835,8 +835,8 @@ namespace AstoriaUnitTests
             private void SaveCustomer(Uri baseUri, DoAsyncType doAsync)
             {
                 northwindClient.northwindContext ctx = new northwindClient.northwindContext(baseUri);
-                ctx.Format.UseAtom();
-                ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
                 ctx.Timeout = TestConstants.MaxTestTimeout;
                 ctx.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
                 ctx.UsePostTunneling = true;
@@ -1016,8 +1016,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.NorthwindWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new northwindClient.northwindContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     Trace.WriteLine("Querying workspace at " + baseUri);
 
@@ -1057,8 +1057,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.NorthwindWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new northwindClient.northwindContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     Trace.WriteLine("Querying workspace at " + baseUri);
 
@@ -1094,8 +1094,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.NorthwindWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new northwindClient.northwindContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     Trace.WriteLine("Querying workspace at " + baseUri);
 
@@ -1141,8 +1141,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.PhotoWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     Trace.WriteLine("Querying workspace at " + baseUri);
 
@@ -1183,8 +1183,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.PhotoWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     Trace.WriteLine("Querying workspace at " + baseUri);
 
@@ -1371,8 +1371,8 @@ namespace AstoriaUnitTests
                         SimpleWorkspace workspace = this.PhotoWorkspace;
                         Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                         DataServiceContext ctx = new DataServiceContext(baseUri);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.Timeout = TestConstants.MaxTestTimeout;
                         Trace.WriteLine("Querying workspace at " + baseUri);
 
@@ -1418,8 +1418,8 @@ namespace AstoriaUnitTests
                         SimpleWorkspace workspace = this.PhotoWorkspace;
                         Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                         DataServiceContext ctx = new DataServiceContext(baseUri);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.Timeout = TestConstants.MaxTestTimeout;
                         Trace.WriteLine("Querying workspace at " + baseUri);
                         ctx.ResolveName = type =>
@@ -1481,8 +1481,8 @@ namespace AstoriaUnitTests
                         SimpleWorkspace workspace = this.PhotoWorkspace;
                         Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                         DataServiceContext ctx = new DataServiceContext(baseUri);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.Timeout = TestConstants.MaxTestTimeout;
                         Trace.WriteLine("Querying workspace at " + baseUri);
                         ctx.ResolveName = type =>
@@ -1679,8 +1679,8 @@ namespace AstoriaUnitTests
 
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new DataServiceContext(baseUri, ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     Trace.WriteLine("Querying workspace at " + baseUri);
                     ctx.ResolveName = type =>
@@ -1750,8 +1750,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.ArubaWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new ArubaBinding.ArubaContainer(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Timeout = TestConstants.MaxTestTimeout;
                     ctx.ResolveName = ResolveName;
                     ctx.ResolveType = ResolveType;
@@ -2127,8 +2127,8 @@ namespace AstoriaUnitTests
                         Uri baseUri = new Uri(openWorkspace.ServiceEndPoint + openWorkspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
 
                         DataServiceContext ctx = new DataServiceContext(baseUri, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.AddAndUpdateResponsePreference = addAndUpdateResponsePreference;
                         ctx.MergeOption = MergeOption.OverwriteChanges;
                         ctx.IgnoreMissingProperties = true;
@@ -2762,8 +2762,8 @@ namespace AstoriaUnitTests
                     foreach (var testCase in testCases)
                     {
                         DataServiceContext ctx = new DataServiceContext(baseUri);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
 
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>((sender, e) =>
                         {
@@ -2823,8 +2823,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.CustomObjectWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc/", UriKind.Absolute);
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.IgnoreMissingProperties = true;
 
                     // This TypeResolver is needed because the server sends a media resource on "CustomerBlob" types
@@ -2905,8 +2905,8 @@ namespace AstoriaUnitTests
                     SimpleWorkspace workspace = this.NorthwindWorkspace;
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                     DataServiceContext ctx = new northwindClient.northwindContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
 
                     // 1: materialization
                     var cust = ctx.CreateQuery<northwindClient.Customers>("Customers").Take(1).FirstOrDefault();
@@ -2949,8 +2949,8 @@ namespace AstoriaUnitTests
                     object[] state = (object[])async.AsyncState;
                     string property = (string)state[0];
                     DataServiceContext context = (DataServiceContext)state[1];
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
 
                     return context.EndLoadProperty(async);
                 }

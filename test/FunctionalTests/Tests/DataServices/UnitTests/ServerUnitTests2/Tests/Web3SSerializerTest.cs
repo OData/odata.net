@@ -944,8 +944,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
                     
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<Customer>("Customers");
                     q = includeCount ? q.IncludeTotalCount() : q;
 

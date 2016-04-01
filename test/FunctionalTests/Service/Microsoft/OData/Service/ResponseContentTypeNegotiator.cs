@@ -60,7 +60,7 @@ namespace Microsoft.OData.Service
             ContentNegotiationResponseMessage responseMessage = new ContentNegotiationResponseMessage();
 
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = this.responseVersion };
-            settings.EnableAtomSupport();
+            // settings.EnableAtomSupport();
             settings.SetContentType(acceptableMediaTypes, acceptableCharSets);
 
             try

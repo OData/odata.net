@@ -52,8 +52,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New NorthwindBindingModel.NorthwindContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -365,8 +365,8 @@ Partial Public Class ClientModule
             Using AstoriaUnitTests.Stubs.CustomDataContext.CreateChangeScope()
                 Try
                     Dim customDataContext As AstoriaClientUnitTests.Stubs.CustomDataContext = New AstoriaClientUnitTests.Stubs.CustomDataContext(web1.ServiceRoot)
-                    customDataContext.EnableAtom = True
-                    customDataContext.Format.UseAtom()
+                    'customDataContext.EnableAtom = True
+                    'customDataContext.Format.UseAtom()
                     customDataContext.ResolveName = AddressOf ResolveName
                     customDataContext.ResolveType = AddressOf ResolveType
 
@@ -441,8 +441,8 @@ Partial Public Class ClientModule
             Using AstoriaUnitTests.Stubs.CustomDataContext.CreateChangeScope()
                 Try
                     Dim customDataContext As AstoriaClientUnitTests.Stubs.CustomDataContext = New AstoriaClientUnitTests.Stubs.CustomDataContext(web1.ServiceRoot)
-                    customDataContext.EnableAtom = True
-                    customDataContext.Format.UseAtom()
+                    'customDataContext.EnableAtom = True
+                    'customDataContext.Format.UseAtom()
                     customDataContext.ResolveName = AddressOf ResolveName
                     customDataContext.ResolveType = AddressOf ResolveType
 
@@ -483,8 +483,8 @@ Partial Public Class ClientModule
             Using AstoriaUnitTests.Stubs.CustomDataContext.CreateChangeScope()
                 Try
                     Dim customDataContext As AstoriaClientUnitTests.Stubs.CustomDataContext = New AstoriaClientUnitTests.Stubs.CustomDataContext(web1.ServiceRoot)
-                    customDataContext.EnableAtom = True
-                    customDataContext.Format.UseAtom()
+                    'customDataContext.EnableAtom = True
+                    'customDataContext.Format.UseAtom()
                     customDataContext.ResolveName = AddressOf ResolveName
                     customDataContext.ResolveType = AddressOf ResolveType
 
@@ -526,8 +526,8 @@ Partial Public Class ClientModule
             Using AstoriaUnitTests.Stubs.CustomDataContext.CreateChangeScope()
                 Try
                     Dim customDataContext As AstoriaClientUnitTests.Stubs.CustomDataContext = New AstoriaClientUnitTests.Stubs.CustomDataContext(web1.ServiceRoot)
-                    customDataContext.EnableAtom = True
-                    customDataContext.Format.UseAtom()
+                    'customDataContext.EnableAtom = True
+                    'customDataContext.Format.UseAtom()
                     customDataContext.ResolveName = AddressOf ResolveName
                     customDataContext.ResolveType = AddressOf ResolveType
 
@@ -947,8 +947,8 @@ Partial Public Class ClientModule
             Using AstoriaUnitTests.Stubs.CustomDataContext.CreateChangeScope()
                 Try
                     Dim customDataContext As AstoriaClientUnitTests.Stubs.CustomDataContext = New AstoriaClientUnitTests.Stubs.CustomDataContext(web1.ServiceRoot)
-                    customDataContext.EnableAtom = True
-                    customDataContext.Format.UseAtom()
+                    'customDataContext.EnableAtom = True
+                    'customDataContext.Format.UseAtom()
                     customDataContext.ResolveName = AddressOf ResolveName
                     customDataContext.ResolveType = AddressOf ResolveType
 
@@ -1322,7 +1322,7 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition2")> <TestMethod(), Variation("Complex type detection for binding scenarios.")> Public Sub ComplexTypeShouldWorkInBindingScenarios()
             Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost"))
-            ctx.EnableAtom = True
+            'ctx.EnableAtom = True
             Dim t As SomeType = New SomeType
             Dim coll = New DataServiceCollection(Of SomeType)(ctx)
             Dim exceptionHappened As Boolean = False

@@ -47,8 +47,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -254,7 +254,7 @@ Partial Public Class ClientModule
         Public Sub TranslationShouldBeCorrectInFilterPredicate()
             ' ALinq: incorrect translation in query with traversal+key lookup in filter predicate
             Dim typedContext = New SimpleContext(web.ServiceRoot)
-            typedContext.EnableAtom = True
+            'typedContext.EnableAtom = True
             Dim q = From r In typedContext.RelatedThings Where r.OneEntity.ID = 1 Select r
             Dim playback = ExtractPlayback(q)
             TestUtil.AssertContains(playback, "/RelatedThings?$filter=OneEntity/ID%20eq%201")

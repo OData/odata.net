@@ -227,7 +227,6 @@ namespace Microsoft.OData.Client
             this.Configurations = new DataServiceClientConfigurations(this);
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
-            this.EnableAtom = false;
             this.UsePostTunneling = false;
 
             // Need to use the same defaults when running sl in portable lib as when running in SL normally.
@@ -685,11 +684,6 @@ namespace Microsoft.OData.Client
         /// Indicates whether user is using <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> to track changes.
         /// </summary>
         internal bool UsingDataServiceCollection { get; set; }
-
-        /// <summary>
-        /// Internal flag for whether Atom support is enabled.
-        /// </summary>
-        internal bool EnableAtom { get; set; }
 
         /// <summary>The instance annotations in current context</summary>
         internal WeakDictionary<object, IDictionary<string, object>> InstanceAnnotations

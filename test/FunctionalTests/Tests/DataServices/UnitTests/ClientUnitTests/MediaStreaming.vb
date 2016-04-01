@@ -46,8 +46,8 @@ Partial Public Class ClientModule
             webContent.ServiceType = GetType(AstoriaUnitTests.Stubs.StreamingContentService)
             webContent.StartService()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             AddHandler ctx.SendingRequest2, AddressOf EntitySetResolverTests.SetAcceptHeader
             ctx.Execute(Of Boolean)(New Uri("/SetContentServiceUri/$value?uri='" + HttpUtility.UrlEncode(webContent.ServiceRoot.ToString() + "'"), _
                                             UriKind.Relative))
@@ -68,9 +68,9 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub GetReadStreamUriApi()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
             Dim entityWithoutStream = ctx.Execute(Of StreamingServiceEntityWithoutStream)(New Uri("/EntitiesWithoutStream(1)", UriKind.Relative)).SingleOrDefault()
@@ -115,8 +115,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub BeginGetReadStreamApi()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
             Dim entityWithoutStream = ctx.Execute(Of StreamingServiceEntityWithoutStream)(New Uri("/EntitiesWithoutStream(1)", UriKind.Relative)).SingleOrDefault()
@@ -180,9 +180,9 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub EndGetReadStreamApi()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
@@ -277,8 +277,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub GetReadStream_Entity_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             GetReadStreamApiCommon(ctx, _
                 Function(context As DataServiceContext, entity As Object) context.GetReadStream(entity))
@@ -287,8 +287,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub GetReadStream_Entity_ContentType_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
             GetReadStreamApiCommon(ctx, _
@@ -312,8 +312,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub GetReadStream_Entity_Args_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
             Dim args = New DataServiceRequestArgs()
@@ -387,8 +387,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub SetSaveStream_Entity_Stream_ContentType_Slug_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
             SetSaveStreamApiCommon(ctx, AddressOf SetSaveStream_Entity_Stream_ContentType_Slug_Callback)
@@ -422,8 +422,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub SetSaveStream_Entity_Stream_Args_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
             SetSaveStreamApiCommon(ctx, AddressOf SetSaveStream_Entity_Stream_Args_Callback)
@@ -458,8 +458,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim useV1Entity = CType(values("UseV1Entity"), Boolean)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhotoBase
             If useV1Entity Then
@@ -486,8 +486,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim useV1Entity = CType(values("UseV1Entity"), Boolean)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim query As IEnumerable(Of StreamingServicePhotoBase)
             If useV1Entity Then
@@ -515,8 +515,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim useV1Entity = CType(values("UseV1Entity"), Boolean)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim query As IEnumerable(Of StreamingServicePhotoBase)
             If useV1Entity Then
@@ -542,8 +542,8 @@ Partial Public Class ClientModule
         Private Sub ReadFailingMR_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).FirstOrDefault()
 
             Dim args = New DataServiceRequestArgs()
@@ -573,8 +573,8 @@ Partial Public Class ClientModule
         Private Sub ReadMRWithWrongContentType_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).FirstOrDefault()
 
             Dim args = New DataServiceRequestArgs()
@@ -603,8 +603,8 @@ Partial Public Class ClientModule
         Private Sub ReadMRWithContentDisposition_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos?$filter=AlternativeUri eq true", UriKind.Relative)).FirstOrDefault()
 
             Dim args = New DataServiceRequestArgs()
@@ -625,8 +625,8 @@ Partial Public Class ClientModule
         Private Sub ReadMRVerifyEvents_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).FirstOrDefault()
 
             ResetRequestHeaders()
@@ -643,8 +643,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub ReadSingleMRAbort()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhoto
             photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
@@ -666,8 +666,8 @@ Partial Public Class ClientModule
         Private Sub ReadSingleMRError_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhotoBase
             photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
@@ -712,8 +712,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim api = CType(values("API"), String)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos?$filter=AlternativeUri eq true", UriKind.Relative)).First()
 
             Dim response As DataServiceStreamResponse = Nothing
@@ -757,8 +757,8 @@ Partial Public Class ClientModule
         Private Sub RequestHeaders_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos?$filter=AlternativeUri eq true", UriKind.Relative)).First()
 
             Dim args = New DataServiceRequestArgs()
@@ -800,8 +800,8 @@ Partial Public Class ClientModule
         Private Sub ResponseHeaders_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos?$filter=AlternativeUri eq true", UriKind.Relative)).First()
 
             Dim args = New DataServiceRequestArgs()
@@ -826,8 +826,8 @@ Partial Public Class ClientModule
         Private Sub ResponseContentProperties_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos?$filter=AlternativeUri eq true", UriKind.Relative)).First()
 
             Dim args = New DataServiceRequestArgs()
@@ -843,8 +843,8 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> _
         Public Sub ResponseIsReadOnly()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).First()
 
             Dim response = Util.GetReadStream(ctx, photo, New DataServiceRequestArgs(), Util.ExecutionMethod.Synchronous)
@@ -900,8 +900,8 @@ Partial Public Class ClientModule
             Dim content = CType(values("Content"), Byte())
             Dim refreshMergeOption = CType(values("MergeOption"), MergeOption)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim contentType = "type/simple"
 
@@ -956,8 +956,8 @@ Partial Public Class ClientModule
             Dim photoType = CType(values("PhotoType"), Type)
             Dim refreshMergeOption = CType(values("MergeOption"), MergeOption)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim content1 = New Byte() {1, 2, 3}
             Dim content2 = New Byte() {11, 12, 13}
@@ -1029,8 +1029,8 @@ Partial Public Class ClientModule
         Private Sub VerifyAddRemovesStream_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = New StreamingServicePhoto()
             Dim content = New Byte() {1, 2, 3}
 
@@ -1059,8 +1059,8 @@ Partial Public Class ClientModule
         Private Sub AddMRHeaders_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = New StreamingServicePhoto()
             Dim content = New Byte() {1, 2, 3}
 
@@ -1080,8 +1080,8 @@ Partial Public Class ClientModule
             ResetServiceContent()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = New StreamingServicePhoto
             ctx.AddObject("Photos", photo)
 
@@ -1105,8 +1105,8 @@ Partial Public Class ClientModule
         Private Sub VerifyChunkedEncoding_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             ' Verify that by default chunked encoding is on
             ResetRequestHeaders()
@@ -1138,8 +1138,8 @@ Partial Public Class ClientModule
             Dim failRequest = CType(values("FailRequest"), Boolean)
             Dim saveChangesOptions = CType(values("SaveChangesOptions"), SaveChangesOptions)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim content = New Byte() {1, 2, 3}
             Dim photo = New StreamingServicePhoto
 
@@ -1186,8 +1186,8 @@ Partial Public Class ClientModule
             Dim continueOnError = CType(values("ContinueOnError"), Boolean)
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim p = New StreamingServiceV1Photo
             p.Content = New Byte() {1, 2, 3}
             ' This will make the MR POST fail
@@ -1227,8 +1227,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             If photoType Is GetType(StreamingServicePhoto) Then
                 Dim v2photo = New StreamingServicePhoto()
@@ -1281,8 +1281,8 @@ Partial Public Class ClientModule
             Dim updateEntityOptions = CType(values("UpdateEntityOptions"), UpdateEntityOptions)
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim content = CType(values("Content"), Byte())
             Dim contentType = "type/newtype"
@@ -1371,8 +1371,8 @@ Partial Public Class ClientModule
             Dim updateEntityOptions = CType(values("UpdateEntityOptions"), UpdateEntityOptions)
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim content1 = New Byte() {1, 2, 3}
             Dim content2 = New Byte() {11, 12, 13}
@@ -1464,8 +1464,8 @@ Partial Public Class ClientModule
         Private Sub VerifyUpdateRemovesStream_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
             Dim content = New Byte() {1, 2, 3}
 
@@ -1497,8 +1497,8 @@ Partial Public Class ClientModule
             Dim contentTypeHeader = CType(values("ContentTypeHeader"), String)
             Dim slugHeader = CType(values("SlugHeader"), String)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
             Dim content = New Byte() {1, 2, 3}
 
@@ -1527,8 +1527,8 @@ Partial Public Class ClientModule
         Private Sub UpdateVerifyChunkedEncoding_Inner(ByVal values As Hashtable)
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             ' Verify that by default chunked encoding is on
             ResetRequestHeaders()
@@ -1558,8 +1558,8 @@ Partial Public Class ClientModule
             Dim failRequest = CType(values("FailRequest"), Boolean)
             Dim saveChangesOptions = CType(values("SaveChangesOptions"), SaveChangesOptions)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim content = New Byte() {1, 2, 3}
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
             Dim photo2 = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(2)", UriKind.Relative)).SingleOrDefault()
@@ -1610,8 +1610,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim content = New Byte() {1, 2, 3}
             Dim entity = ctx.Execute(Of StreamingServiceEntityWithoutStream)(New Uri("/EntitiesWithoutStream", UriKind.Relative)).FirstOrDefault()
 
@@ -1642,8 +1642,8 @@ Partial Public Class ClientModule
             Dim photoType = CType(values("PhotoType"), Type)
             Dim updateMLE = CType(values("UpdateMLE"), Boolean)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim v2photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
             ctx.SetSaveStream(v2photo, New MemoryStream(), False, "text", "slug")
@@ -1676,8 +1676,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photoEntity As Object
             Dim v2photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
@@ -1733,15 +1733,15 @@ Partial Public Class ClientModule
 
             ' Reset content
             Dim resetContentCtx = New DataServiceContext(service.ServiceRoot)
-            resetContentctx.EnableAtom = True
-            resetContentCtx.Format.UseAtom()
+            'resetContentctx.EnableAtom = True
+            'resetContentCtx.Format.UseAtom()
             resetContentCtx.Execute(Of Boolean)(New Uri("/ResetContent", UriKind.Relative)).Count()
 
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(service.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             ctx.MergeOption = MergeOption.OverwriteChanges
 
             Dim photoEntity As StreamingServicePhotoBase
@@ -1792,8 +1792,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhotoBase
             Dim entitySetName As String
@@ -1839,8 +1839,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhotoBase
             If photoType Is GetType(StreamingServicePhoto) Then
@@ -1882,8 +1882,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim queries As List(Of DataServiceQuery) = New List(Of DataServiceQuery)
             If photoType Is GetType(StreamingServicePhoto) Then
@@ -1917,8 +1917,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhotoBase
             If photoType Is GetType(StreamingServicePhoto) Then
@@ -1963,8 +1963,8 @@ Partial Public Class ClientModule
             Dim executionMethod = CType(values("ExecutionMethod"), Util.ExecutionMethod)
             Dim photoType = CType(values("PhotoType"), Type)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             Dim photo As StreamingServicePhotoBase
             If photoType Is GetType(StreamingServicePhoto) Then
@@ -2066,8 +2066,8 @@ Partial Public Class ClientModule
                 OpenWebDataServiceHelper.ForceVerboseErrors = True
 
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                context.EnableAtom = True
-                context.Format.UseAtom()
+                'context.EnableAtom = True
+                'context.Format.UseAtom()
                 Dim c As New DummyTypeWithStream With { _
                     .ID = 12345, _
                     .Name = "Microsoft" _
@@ -2147,8 +2147,8 @@ Partial Public Class ClientModule
                 OpenWebDataServiceHelper.ForceVerboseErrors = True
 
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                context.EnableAtom = True
-                context.Format.UseAtom()
+                'context.EnableAtom = True
+                'context.Format.UseAtom()
                 Dim c As New DummyTypeWithStream With { _
                  .ID = 12345, _
                  .Name = "Microsoft" _
@@ -2192,8 +2192,8 @@ Partial Public Class ClientModule
                 OpenWebDataServiceHelper.ForceVerboseErrors = True
 
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                context.EnableAtom = True
-                context.Format.UseAtom()
+                'context.EnableAtom = True
+                'context.Format.UseAtom()
                 Dim c As New DummyType With { _
                  .ID = 12345, _
                  .Name = "Microsoft" _
@@ -2213,8 +2213,8 @@ Partial Public Class ClientModule
 
                 ' now update the stream using another context
                 Dim context1 As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                context1.EnableAtom = True
-                context1.Format.UseAtom()
+                'context1.EnableAtom = True
+                'context1.Format.UseAtom()
                 Dim dummy1 = context1.CreateQuery(Of DummyType)("MySet").First()
 
                 context1.SetSaveStream(dummy1, "Stream1", New MemoryStream(New Byte() {3, 4, 5, 6}), True, "image/bmp")
@@ -2246,8 +2246,8 @@ Partial Public Class ClientModule
                 OpenWebDataServiceHelper.ForceVerboseErrors = True
 
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                context.EnableAtom = True
-                context.Format.UseAtom()
+                'context.EnableAtom = True
+                'context.Format.UseAtom()
                 Dim c As New DummyTypeWithStream With { _
                  .ID = 12345, _
                  .Name = "Microsoft" _
@@ -2263,8 +2263,8 @@ Partial Public Class ClientModule
 
                 ' now update the stream using another context
                 Dim context1 As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                context1.EnableAtom = True
-                context1.Format.UseAtom()
+                'context1.EnableAtom = True
+                'context1.Format.UseAtom()
                 Dim dummy1 = context1.CreateQuery(Of DummyTypeWithStream)("MySet").First()
 
                 context1.SetSaveStream(dummy1, New MemoryStream(New Byte() {3, 4, 5, 6}), True, New DataServiceRequestArgs() With {.ContentType = "image/bmp"})
@@ -2420,15 +2420,15 @@ Partial Public Class ClientModule
 #Region "Headers support"
         Private Sub ResetRequestHeaders()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             ctx.Execute(Of Boolean)(New Uri("/ResetRequestHeaders", UriKind.Relative))
         End Sub
 
         Private Function GetRequestHeaders() As Dictionary(Of String, WebHeaderCollection)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim result = New Dictionary(Of String, WebHeaderCollection)
 
             Dim headers = ctx.Execute(Of StreamingServiceRequestHeaders)(New Uri("/RequestHeaders", UriKind.Relative))
@@ -2466,8 +2466,8 @@ Partial Public Class ClientModule
 
         Private Sub ResetServiceContent()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             ctx.Execute(Of Boolean)(New Uri("/ResetContent", UriKind.Relative)).Count()
         End Sub
     End Class

@@ -790,8 +790,8 @@ namespace AstoriaUnitTests.Tests
             {
                 request.StartService();
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
 
                 string value = "value of Pròjè_x00A2_tÎð瑞갂థ్క_x0020_Iiلإَّ";
 

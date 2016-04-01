@@ -8,11 +8,8 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
-    using System.Diagnostics;
-    using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>

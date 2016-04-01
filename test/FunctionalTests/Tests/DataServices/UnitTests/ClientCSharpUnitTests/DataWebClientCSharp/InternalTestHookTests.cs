@@ -25,108 +25,6 @@ namespace AstoriaUnitTests.Tests
     public class InternalTestHookTests
     {
         [TestMethod]
-        public void ResponseHeadersAndStreamTest()
-        {
-            // Execute a query using a variety of methods (including sync, async, batch) and verify the response headers and payloads
-            using (PlaybackService.OverridingPlayback.Restore())
-            using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
-            {
-                request.ServiceType = typeof(PlaybackService);
-                request.StartService();
-
-                string nonbatchPayload =
-@"<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes""?>
-<entry xml:base=""http://sparradevvm1:34866/TheTest/"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" m:etag=""W/&quot;3d9e3978-e6a7-4742-a44e-ef5a43d18d5f&quot;"" xmlns=""http://www.w3.org/2005/Atom"">
-  <id>http://sparradevvm1:34866/TheTest/Customers(1)</id>
-  <title type=""text""></title>
-  <updated>2010-10-12T18:07:17Z</updated>
-  <author>
-    <name />
-  </author>
-  <link rel=""edit"" title=""Customer"" href=""Customers(1)"" />
-  <link rel=""http://docs.oasis-open.org/odata/ns/related/BestFriend"" type=""application/atom+xml;type=entry"" title=""BestFriend"" href=""Customers(1)/BestFriend"" />
-  <link rel=""http://docs.oasis-open.org/odata/ns/related/Orders"" type=""application/atom+xml;type=feed"" title=""Orders"" href=""Customers(1)/Orders"" />
-  <category term=""#AstoriaUnitTests.Stubs.CustomerWithBirthday"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />
-  <content type=""application/xml"">
-    <m:properties>
-      <d:GuidValue m:type=""Edm.Guid"">3d9e3978-e6a7-4742-a44e-ef5a43d18d5f</d:GuidValue>
-      <d:ID m:type=""Edm.Int32"">1</d:ID>
-      <d:Name>Customer 1</d:Name>
-      <d:NameAsHtml>&lt;html&gt;&lt;body&gt;Customer 1&lt;/body&gt;&lt;/html&gt;</d:NameAsHtml>
-      <d:Birthday m:type=""Edm.DateTimeOffset"">1980-10-12T00:00:00-07:00</d:Birthday>
-      <d:Address m:type=""AstoriaUnitTests.Stubs.Address"">
-        <d:StreetAddress>Line1</d:StreetAddress>
-        <d:City>Redmond</d:City>
-        <d:State>WA</d:State>
-        <d:PostalCode>98052</d:PostalCode>
-      </d:Address>
-    </m:properties>
-  </content>
-</entry>
-";
-                string nonbatchHttpResponse = PlaybackService.ConvertToPlaybackServicePayload(null, nonbatchPayload);
-                string batchPayload;
-                string batchHttpResponse = PlaybackService.ConvertToBatchResponsePayload(new string[] { nonbatchHttpResponse }, true, out batchPayload);
-
-                Dictionary<string, string> nonbatchHeaders = new Dictionary<string, string>();
-                nonbatchHeaders.Add("Content-Type", "application/atom+xml");
-                nonbatchHeaders.Add("__HttpStatusCode", "OK");
-                nonbatchHeaders.Add("Content-Length", nonbatchPayload.Length.ToString());
-                nonbatchHeaders.Add("Server", "Microsoft-HTTPAPI/2.0");
-                nonbatchHeaders.Add("Date", null);
-
-                Dictionary<string, string> batchHeaders = new Dictionary<string, string>();
-                batchHeaders.Add("Content-Type", "multipart/mixed; boundary=batchresponse_e9b231d9-72ab-46ea-9613-c7e8f5ece46b");
-                batchHeaders.Add("__HttpStatusCode", "Accepted");
-                batchHeaders.Add("Content-Length", batchPayload.Length.ToString());
-                batchHeaders.Add("Server", "Microsoft-HTTPAPI/2.0");
-                batchHeaders.Add("Date", null);
-
-                TestUtil.RunCombinations(((IEnumerable<QueryMode>)Enum.GetValues(typeof(QueryMode))), (queryMode) =>
-                    {
-                        Dictionary<string, string> expectedResponseHeaders;
-                        string expectedResponsePayload;
-                        bool isBatchQuery = queryMode == QueryMode.BatchAsyncExecute || queryMode == QueryMode.BatchAsyncExecuteWithCallback || queryMode == QueryMode.BatchExecute;
-                        if (isBatchQuery)
-                        {
-                            PlaybackService.OverridingPlayback.Value = batchHttpResponse;
-                            expectedResponseHeaders = batchHeaders;
-                            expectedResponsePayload = batchPayload;
-                        }
-                        else
-                        {
-                            PlaybackService.OverridingPlayback.Value = nonbatchHttpResponse;
-                            expectedResponseHeaders = nonbatchHeaders;
-                            expectedResponsePayload = nonbatchPayload;
-                        }
-
-                        DataServiceContext context = new DataServiceContext(new Uri(request.BaseUri));
-                        context.EnableAtom = true;
-                        HttpTestHookConsumer testHookConsumer = new HttpTestHookConsumer(context, false);
-
-                        DataServiceQuery<Customer> query = context.CreateQuery<Customer>("Customers");
-                        foreach (var o in DataServiceContextTestUtil.ExecuteQuery(context, query, queryMode))
-                        {
-                        }
-
-                        // Verify response headers
-                        Assert.AreEqual(1, testHookConsumer.ResponseHeaders.Count, "Wrong number of response headers being tracked by the test hook.");
-                        Dictionary<string, string> actualResponseHeaders = testHookConsumer.ResponseHeaders[0];
-                        VerifyHeaders(expectedResponseHeaders, actualResponseHeaders);
-
-                        // Verify response stream
-                        Assert.AreEqual(1, testHookConsumer.ResponseWrappingStreams.Count, "Unexpected number of response streams tracked by the test hook.");
-                        string actualResponsePayload = testHookConsumer.ResponseWrappingStreams[0].GetLoggingStreamAsString();
-                        Assert.AreEqual(expectedResponsePayload, actualResponsePayload, "Response payload was not the value that was expected");
-
-                        // Sanity check on the count of request streams, but not verifying them here. That functionality is tested more fully in another test method.
-                        int expectedRequestStreamsCount = isBatchQuery ? 1 : 0;
-                        Assert.AreEqual(expectedRequestStreamsCount, testHookConsumer.RequestWrappingStreams.Count, "Unexpected number of request streams.");
-                    });
-            }
-        }
-
-        [TestMethod]
         public void ResponseHeadersAndStreamExceptionTest()
         {
             // Execute a query using a variety of methods (including sync, async, batch) and verify the response headers and payloads
@@ -182,6 +80,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // [Lianw] Remove Atom
         [TestMethod]
         public void RequestHeadersAndStreamTest()
         {
@@ -215,7 +114,7 @@ namespace AstoriaUnitTests.Tests
                 responseHeaders2.Add("Location", String.Format("{0}/Customers({1})", request.BaseUri, newCustomer2.ID));
 
                 string[] nonBatchHttpResponses = new string[]
-                { 
+                {
                     PlaybackService.ConvertToPlaybackServicePayload(responseHeaders1, null, HttpStatusCode.Created),
                     PlaybackService.ConvertToPlaybackServicePayload(responseHeaders2, null, HttpStatusCode.Created)
                 };
@@ -241,8 +140,8 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.RunCombinations(saveChangesModes, saveChangesOptions, (saveChangesMode, saveChangesOption) =>
                     {
                         DataServiceContext context = new DataServiceContext(new Uri(request.BaseUri));
-                        context.EnableAtom = true;
-                        context.Format.UseAtom();
+                        //context.EnableAtom = true;
+                        //context.Format.UseAtom();
                         HttpTestHookConsumer testHookConsumer = new HttpTestHookConsumer(context, false);
 
                         bool isBatch = saveChangesOption == SaveChangesOptions.BatchWithSingleChangeset;

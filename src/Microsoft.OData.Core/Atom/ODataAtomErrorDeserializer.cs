@@ -15,16 +15,8 @@ namespace Microsoft.OData.Core.Atom
     /// <summary>
     /// OData ATOM deserializer for error payloads.
     /// </summary>
-    internal sealed class ODataAtomErrorDeserializer //  : ODataAtomDeserializer
+    internal sealed class ODataAtomErrorDeserializer
     {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="atomInputContext">The ATOM input context to read from.</param>
-        //internal ODataAtomErrorDeserializer(ODataAtomInputContext atomInputContext)
-        //    : base(atomInputContext)
-        //{
-        //}
         internal ODataAtomErrorDeserializer()
         {
         }
@@ -155,50 +147,6 @@ namespace Microsoft.OData.Core.Atom
             return error;
         }
 
-        ///// <summary>
-        ///// Reads a top-level error.
-        ///// </summary>
-        ///// <returns>An <see cref="ODataError"/> representing the read error.</returns>
-        ///// <remarks>
-        ///// Pre-Condition:  XmlNodeType.None    - assumes that the Xml reader has not been used yet.
-        ///// Post-Condition: Any                 - the next node after the m:error end element or the empty m:error element node.
-        ///// </remarks>
-        //internal ODataError ReadTopLevelError()
-        //{
-        //    Debug.Assert(this.ReadingResponse, "Top-level errors are only supported in responses.");
-        //    Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
-        //    Debug.Assert(!this.XmlReader.DisableInStreamErrorDetection, "!this.XmlReader.DetectInStreamErrors");
-
-        //    try
-        //    {
-        //        this.XmlReader.DisableInStreamErrorDetection = true;
-
-        //        this.ReadPayloadStart();
-        //        this.AssertXmlCondition(XmlNodeType.Element);
-
-        //        // check for the <m:error> element
-        //        if (!this.XmlReader.NamespaceEquals(this.XmlReader.ODataMetadataNamespace) ||
-        //            !this.XmlReader.LocalNameEquals(this.XmlReader.ODataErrorElementName))
-        //        {
-        //            throw new ODataErrorException(
-        //                Strings.ODataAtomErrorDeserializer_InvalidRootElement(this.XmlReader.Name, this.XmlReader.NamespaceURI));
-        //        }
-
-        //        ODataError error = ReadErrorElement(this.XmlReader, this.MessageReaderSettings.MessageQuotas.MaxNestingDepth);
-
-        //        // The ReadErrorElement leaves the reader on the m:error end element or empty start element.
-        //        // So read over that to consume the entire m:error element.
-        //        this.XmlReader.Read();
-
-        //        this.ReadPayloadEnd();
-        //        return error;
-        //    }
-        //    finally
-        //    {
-        //        this.XmlReader.DisableInStreamErrorDetection = false;
-        //    }
-        //}
-
         /// <summary>
         /// Verifies that the specified element was not yet found in a top-level error element.
         /// </summary>
@@ -263,7 +211,7 @@ namespace Microsoft.OData.Core.Atom
             Debug.Assert(xmlReader != null, "this.XmlReader != null");
             Debug.Assert(xmlReader.NodeType == XmlNodeType.Element, "xmlReader.NodeType == XmlNodeType.Element");
             Debug.Assert(
-                xmlReader.LocalName == AtomConstants.ODataInnerErrorElementName || 
+                xmlReader.LocalName == AtomConstants.ODataInnerErrorElementName ||
                 xmlReader.LocalName == AtomConstants.ODataInnerErrorInnerErrorElementName,
                 "Expected reader to be positioned on 'm:innererror' or 'm:internalexception' element.");
             Debug.Assert(xmlReader.NamespaceEquals(xmlReader.ODataMetadataNamespace), "this.XmlReader.NamespaceEquals(this.ODataMetadataNamespace)");

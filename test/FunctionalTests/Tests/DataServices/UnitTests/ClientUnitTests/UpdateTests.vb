@@ -52,8 +52,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
             AddHandler Me.ctx.SendingRequest2, AddressOf SendingRequestListenHttpMethod
         End Sub
 
@@ -312,16 +312,16 @@ Partial Public Class ClientModule
         Public Sub ClientUpdate_0()
             ' create the customer to database
             Dim ctx1 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            ctx1.EnableAtom = True
-            ctx1.Format.UseAtom()
+            'ctx1.EnableAtom = True
+            'ctx1.Format.UseAtom()
             ctx1.AddToCustomers(NorthwindSimpleModel.Customers.CreateCustomers("88998", "Microsoft"))
             ctx1.SaveChanges()
             Assert.AreEqual(1, (From e In ctx1.Entities Where e.State = EntityStates.Unchanged Select e).Count)
 
             ' show the customer is in the database
             Dim ctx2 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            ctx2.EnableAtom = True
-            ctx2.Format.UseAtom()
+            'ctx2.EnableAtom = True
+            'ctx2.Format.UseAtom()
             Dim customer2 = (From cust In ctx2.Customers Where cust.CustomerID = "88998" Select cust).First
             Assert.IsNotNull(customer2)
 
@@ -332,8 +332,8 @@ Partial Public Class ClientModule
 
             ' add the customer again
             Dim ctx3 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            ctx3.EnableAtom = True
-            ctx3.Format.UseAtom()
+            'ctx3.EnableAtom = True
+            'ctx3.Format.UseAtom()
             ctx3.AddToCustomers(NorthwindSimpleModel.Customers.CreateCustomers("88998", "Microsoft"))
             ctx3.SaveChanges()
             Assert.AreEqual(1, ctx3.Entities.Count + ctx3.Links.Count)
@@ -385,8 +385,8 @@ Partial Public Class ClientModule
                         web.StartService()
                         Try
                             Dim customCtx As DataServiceContext = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
-                            customCtx.EnableAtom = True
-                            customCtx.Format.UseAtom()
+                            'customCtx.EnableAtom = True
+                            'customCtx.Format.UseAtom()
                             customCtx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent
                             Dim customer = customCtx.Execute(Of AstoriaUnitTests.Stubs.Customer)(New Uri("/Customers(0)", UriKind.Relative)).First()
                             Dim original As Guid = customer.GuidValue
@@ -422,8 +422,8 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx, SaveChangesOptions.None, 1, 0)
 
             ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim d As NorthwindSimpleModel.Customers = Enumerable.Single(Of NorthwindSimpleModel.Customers)(ctx.CreateQuery(Of NorthwindSimpleModel.Customers)("/Customers('ab')"))
             Assert.AreEqual("foo", d.ContactName)
             Assert.AreEqual("b", d.CompanyName)
@@ -627,8 +627,8 @@ Partial Public Class ClientModule
             Dim changeset As SaveChangesOptions = CType(hashtable.Item("Changeset"), SaveChangesOptions)
 
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
             Me.ctx.Timeout = 30
             beginSaveChanges = False
 
@@ -1115,8 +1115,8 @@ Partial Public Class ClientModule
                     web.StartService()
                     Try
                         Dim customCtx As DataServiceContext = New DeleteComplexPropertyContext(web.ServiceRoot)
-                        customCtx.EnableAtom = True
-                        customCtx.Format.UseAtom()
+                        'customCtx.EnableAtom = True
+                        'customCtx.Format.UseAtom()
                         Dim customer = customCtx.Execute(Of AstoriaUnitTests.Stubs.Customer)(New Uri("/Customers(0)", UriKind.Relative)).First()
                         customer.Address = Nothing
                         customCtx.UpdateObject(customer)
@@ -1708,169 +1708,7 @@ Partial Public Class ClientModule
                 Util.SaveChanges(context, saveChangesOptions, executionMethod)
             End Using
         End Sub
-
-        <TestCategory("Partition1")> <TestMethod()> Public Sub PreferHeader_Patch_ClientPreferHeaderUsageAndResponseParsing()
-            Dim service = New PlaybackServiceDefinition
-            Using request = service.CreateForInProcessWcf
-                request.StartService()
-
-                TestUtil.RunCombinations(
-                    New DataServiceResponsePreference() {DataServiceResponsePreference.None, DataServiceResponsePreference.IncludeContent, DataServiceResponsePreference.NoContent},
-                    New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges},
-                    UnitTestsUtil.BooleanValues,
-                    New String() {"POST", "PUT", "PATCH"},
-                    UnitTestsUtil.BooleanValues,
-                    UnitTestsUtil.BooleanValues,
-                    New String() {Nothing, "return=representation", "return=minimal", "foo"},
-                    New String() {Nothing, "4.0;"},
-                    New Util.ExecutionMethod() {Util.ExecutionMethod.Synchronous, Util.ExecutionMethod.AsynchronousCallback},
-                    Sub(responsePreference, mergeOption, batch, httpMethod, usePostTunneling, includeResponse, preferAppliedHeader, responseVersion, executionMethod)
-                        Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                        context.EnableAtom = True
-                        context.AddAndUpdateResponsePreference = responsePreference
-                        context.MergeOption = mergeOption
-                        context.UsePostTunneling = usePostTunneling
-
-                        Dim customer = New Customer()
-                        customer.Name = "OldName"
-                        customer.Address.State = "IL"
-
-                        Dim identity = request.ServiceRoot.ToString() & "/Customers(0)"
-
-                        If httpMethod = "POST" Then
-                            context.AddObject("Customers", customer)
-                        Else
-                            context.AttachTo("Customers", customer)
-                            context.UpdateObject(customer)
-                        End If
-
-                        Dim saveOptions As SaveChangesOptions = SaveChangesOptions.None
-                        If httpMethod = "PUT" Then
-                            saveOptions = saveOptions Or SaveChangesOptions.ReplaceOnUpdate
-                        End If
-                        If batch Then
-                            saveOptions = saveOptions Or SaveChangesOptions.BatchWithSingleChangeset
-                        End If
-
-                        Dim response = New InMemoryWebRequest
-                        response.SetResponseStatusCode(CType(IIf(includeResponse, 200, 204), Integer))
-                        response.ResponseHeaders("Content-Type") = "application/atom+xml"
-                        response.ResponseHeaders("Location") = request.ServiceRoot.ToString() & "/Customers(0)"
-                        response.ResponseHeaders("ETag") = "NewETag"
-
-                        If Not preferAppliedHeader Is Nothing Then
-                            response.ResponseHeaders("Preference-Applied") = preferAppliedHeader
-                        End If
-
-                        If Not responseVersion Is Nothing Then
-                            response.ResponseHeaders("OData-Version") = responseVersion
-                        End If
-
-                        If Not includeResponse And (httpMethod = "POST" Or httpMethod = "PATCH") Then
-                            response.ResponseHeaders("OData-EntityId") = identity
-                        Else
-                            ' Insert bogus OData-EntityId to verify that the header is ignored by the client in cases where it should
-                            response.ResponseHeaders("OData-EntityId") = "urn:non-existing-id"
-                        End If
-
-                        If includeResponse Then
-                            response.SetResponseStreamAsText( _
-                                <entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>
-                                    <title/>
-                                    <author>
-                                        <name/>
-                                    </author>
-                                    <updated>2010-07-09T13:49:08.6037015Z</updated>
-                                    <id><%= identity %></id>
-                                    <content type='application/xml'>
-                                        <m:properties>
-                                            <d:Address>
-                                                <d:City>Redmond</d:City>
-                                                <d:PostalCode>98052</d:PostalCode>
-                                                <d:State>NY</d:State>
-                                                <d:StreetAddress>Line1</d:StreetAddress>
-                                            </d:Address>
-                                            <d:GuidValue m:type='Edm.Guid'>2b09c19c-5f6b-4d66-b309-1d961b3680f2</d:GuidValue>
-                                            <d:ID m:type='Edm.Int32'>0</d:ID>
-                                            <d:Name>NewName</d:Name>
-                                            <d:NameAsHtml>&lt;html&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;</d:NameAsHtml>
-                                        </m:properties>
-                                    </content>
-                                </entry>.ToString())
-                        End If
-
-                        service.ProcessRequestOverride = _
-                            Function(clientRequest)
-                                If batch Then
-                                    Dim batchRequest = BatchWebRequest.FromRequest(clientRequest)
-                                    clientRequest = batchRequest.Changesets(0).Parts(0)
-                                End If
-
-                                Dim requestPreference As String = Nothing
-                                clientRequest.RequestHeaders.TryGetValue("Prefer", requestPreference)
-                                Dim xhttpMethod As String = Nothing
-                                clientRequest.RequestHeaders.TryGetValue("X-HTTP-Method", xhttpMethod)
-
-                                If Not batch And usePostTunneling And httpMethod <> "POST" Then
-                                    Assert.AreEqual("POST", clientRequest.HttpMethod, "When POST tunneling is turned on the request must use the POST verb.")
-                                    Assert.AreEqual(httpMethod, xhttpMethod, "When POST tunneling is turned on the X-HTTP-Method headers must contain the original verb.")
-                                Else
-                                    Assert.AreEqual(httpMethod, clientRequest.HttpMethod, "The HTTP verb used by the client is not the one expected.")
-                                    Assert.IsNull(xhttpMethod, "If POST tunneling is not used the X-HTTP-Method header must not be set.")
-                                End If
-
-                                If httpMethod = "PATCH" Or responsePreference <> DataServiceResponsePreference.None Then
-                                    If ServiceVersion.FromHeaderValue(clientRequest.RequestVersion).Version < 40 Then
-                                        Assert.Fail("When PATCH or Prefer header is used the DSV of the request must be at least 4.0")
-                                    End If
-                                End If
-
-                                Try
-                                    If responsePreference = DataServiceResponsePreference.None Then
-                                        Assert.IsNull(requestPreference, "Client should not send a Prefer header by default.")
-                                    ElseIf responsePreference = DataServiceResponsePreference.IncludeContent Then
-                                        Assert.AreEqual("return=representation", requestPreference, "Client didn't send a correct value for the Prefer header.")
-                                    Else
-                                        Assert.AreEqual("return=minimal", requestPreference, "Client didn't send a correct value for the Prefer header.")
-                                    End If
-                                Catch exception As Exception
-                                    response.SetResponseStatusCode(500)
-                                    response.SetResponseStreamAsText(exception.Message)
-                                End Try
-
-                                ' Copy over the Content-ID so that batch response matches the request
-                                Dim contentId As String = Nothing
-                                clientRequest.RequestHeaders.TryGetValue("Content-ID", contentId)
-                                response.ResponseHeaders("Content-ID") = contentId
-
-                                If batch Then
-                                    Dim batchResponse = New BatchWebRequest
-                                    Dim changeset = New BatchWebRequest.Changeset
-                                    changeset.Parts.Add(response)
-                                    batchResponse.Changesets.Add(changeset)
-                                    response = New InMemoryWebRequest
-                                    batchResponse.WriteResponse(response)
-                                End If
-                                Return response
-                            End Function
-
-                        Util.SaveChanges(context, saveOptions, executionMethod)
-
-                        If includeResponse Then
-                            Assert.AreEqual("NewName", customer.Name, "Name was not read from the payload correctly.")
-                            Assert.AreEqual("NY", customer.Address.State, "Address.State was not read from the payload correctly.")
-                        Else
-                            Assert.AreEqual("OldName", customer.Name, "No response sent, should be unchanged.")
-                            Assert.AreEqual("IL", customer.Address.State, "No response sent, should be unchanged.")
-                        End If
-                        Dim entityDescriptor = context.GetEntityDescriptor(customer)
-                        Assert.AreEqual("NewETag", entityDescriptor.ETag, "The ETag should be updated always.")
-                        Assert.AreEqual(identity, entityDescriptor.Identity.OriginalString,
-                                        "The entity has wrong identity. This probably means the OData-EntityId header was not read or it was not ignored as it should have been.")
-                    End Sub)
-            End Using
-        End Sub
-
+        
         Class PreferHeader_StreamItem
             Public Property ID As Integer
         End Class
@@ -1902,8 +1740,8 @@ Partial Public Class ClientModule
 
                             Dim saveChangesOptions = batchOptions Or patchOptions
                             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                            context.EnableAtom = True
-                            context.Format.UseAtom()
+                            'context.EnableAtom = True
+                            'context.Format.UseAtom()
                             context.AddAndUpdateResponsePreference = responsePreference
 
                             ' Simple GET Execute
@@ -1952,8 +1790,8 @@ Partial Public Class ClientModule
                         Sub(responsePreference, saveOption, executionMethod)
                             mrService.ClearChanges()
                             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                            context.EnableAtom = True
-                            context.Format.UseAtom()
+                            'context.EnableAtom = True
+                            'context.Format.UseAtom()
                             context.AddAndUpdateResponsePreference = responsePreference
 
                             ' MR and Named streams are not supported in the $batch, so no need to try it here
@@ -2070,7 +1908,7 @@ Partial Public Class ClientModule
             ' GET an entity with old identity and edit link
             Dim oldIdentity = New Uri("urn:old-identity")
             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
+            'context.EnableAtom = True
             Dim oldEditLink = New Uri(context.BaseUri.ToString() & "/oldentity1")
             service.ProcessRequestOverride = _
                 Function(clientRequest)
@@ -2175,7 +2013,7 @@ Partial Public Class ClientModule
             Dim editLinkInPayload = If((payloadOptions And ClientUpdateTests.PayloadOptions.PayloadWithEditLink) = ClientUpdateTests.PayloadOptions.PayloadWithEditLink, request.ServiceRoot.AbsoluteUri + "/editLinkInPayload/Customers(1)", Nothing)
 
             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
+            'context.EnableAtom = True
 
             service.ProcessRequestOverride = _
                 Function(clientRequest)
@@ -2288,7 +2126,7 @@ Partial Public Class ClientModule
             Dim editLinkInPayload = If((payloadOptions And ClientUpdateTests.PayloadOptions.PayloadWithEditLink) = ClientUpdateTests.PayloadOptions.PayloadWithEditLink, request.ServiceRoot.AbsoluteUri + "/editLinkInPayload/Customers(1)", Nothing)
 
             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
+            'context.EnableAtom = True
 
             service.ProcessRequestOverride = _
                 Function(clientRequest)

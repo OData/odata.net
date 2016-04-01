@@ -15,9 +15,6 @@ namespace Microsoft.OData.Core.Metadata
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
     #endregion Namespaces
 
     /// <summary>

@@ -128,8 +128,6 @@
     <Compile Include="Tests\DataServiceClientExceptionSerializationTests.cs" />
     <Compile Include="Tests\DynamicProxyMethodGeneratorTests.cs" />
     <Compile Include="Tests\HttpProcessUtilityTests.cs" />
-    <Compile Include="Tests\ODLMaterializerUnitTests.cs" />
-    <Compile Include="Tests\SpatialTypeIntegrationTests.cs" />
     <Compile Include="Tests\Common\TestPrimitiveType.cs" />
     <Compile Include="Tests\ClientPrimitiveTypeTests.cs" />
     <Compile Include="Tests\MaterializerUnitTests.cs" />

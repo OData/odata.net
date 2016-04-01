@@ -516,19 +516,6 @@ namespace AstoriaUnitTests.Tests
             var query = ctx.CreateQuery<Order>("Orders").Where(o => o.ID == 100).Select(projection);
             return query.Single();
         }
-
-        [Ignore]
-        [TestMethod]
-        public void ClientShouldNotRequestAllMetadataWithAtom()
-        {
-            var ctx = new DataServiceContext(new Uri("http://localhost/fakeService"));
-            // Atom is the default, but setting it explicitly to ensure we are testing the right scenario
-            ctx.Format.UseAtom();
-            var query = ctx.CreateQuery<Order>("Orders").Select(o => new { o.DollarAmount });
-            ctx.SendingRequest2 += (c, args) => Assert.IsFalse(args.RequestMessage.GetHeader("Accept").Contains("metadata"));
-            ctx.IgnoreResourceNotFoundException = true;
-            Assert.AreEqual(0, query.ToList().Count());
-        }
         
         [TestMethod]
         public void ClientShouldRequestAllMetadataWithProjectionInExecuteWithUri()

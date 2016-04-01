@@ -185,10 +185,15 @@ namespace AstoriaUnitTests.Tests
             {
                 oDataFormat = ODataFormat.Json;
             }
-            else if (format.StartsWith(UnitTestsUtil.AtomFormat) ||
-                     format.StartsWith(UnitTestsUtil.MimeApplicationXml))
+            //else if (format.StartsWith(UnitTestsUtil.AtomFormat) ||
+            //         format.StartsWith(UnitTestsUtil.MimeApplicationXml))
+            //{
+            //    oDataFormat = ODataFormat.Atom;
+            //}
+            //[Lianw] Remove Atom 
+            else if (format.StartsWith(UnitTestsUtil.MimeApplicationXml))
             {
-                oDataFormat = ODataFormat.Atom;
+                oDataFormat = ODataFormat.Metadata;
             }
             else
             {
@@ -215,10 +220,10 @@ namespace AstoriaUnitTests.Tests
             {
                 payloadGenerator = new JsonLightPayloadGenerator(settings);
             }
-            else if (format == ODataFormat.Atom)
-            {
-                payloadGenerator = new AtomPayloadGenerator(settings);
-            }
+            //else if (format == ODataFormat.Atom)
+            //{
+            //    payloadGenerator = new AtomPayloadGenerator(settings);
+            //}
             else
             {
                 Assert.Fail(String.Format("Payload generation not implemented for {0}", format));

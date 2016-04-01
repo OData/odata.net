@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 namespace AstoriaUnitTests
-{ 
+{
     #region Namespaces
     using System;
     using System.Collections;
@@ -21,9 +21,9 @@ namespace AstoriaUnitTests
     using Microsoft.OData.Core;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using AstoriaTest = System.Data.Test.Astoria;
-    
+
     #endregion
-    
+
     /// <summary>
     /// Test action and function descriptors.
     /// </summary>
@@ -32,8 +32,8 @@ namespace AstoriaUnitTests
     {
         private const string ServiceName = "TestService";
         private const string ServiceNamespace = "TestNamespace";
-        
-        private const string AtomId  = "http://host/TheTest/Customers(1)";
+
+        private const string AtomId = "http://host/TheTest/Customers(1)";
 
         private static DSPMetadata Metadata;
         private static ResourceType CustomerResourceType;
@@ -261,7 +261,7 @@ namespace AstoriaUnitTests
             DSPResource entity1 = new DSPResource(customerType);
             entity1.SetValue("ID", 1);
             entity1.SetValue("Name", "Vineet");
-            
+
             DSPResource entity2 = new DSPResource(customerType);
             entity2.SetValue("ID", 2);
             entity2.SetValue("Name", "Jimmy");
@@ -287,7 +287,7 @@ namespace AstoriaUnitTests
 
             return new MyOperationDescriptor() { Title = title, Metadata = String.Format("$metadata#TestNamespace.{0}", title), Target = uri + "/TestNamespace." + title };
         }
-        
+
         private static void TestEquality(IEnumerable<OperationDescriptor> actualDescriptors, IEnumerable<MyOperationDescriptor> expectedDescriptors)
         {
             IEnumerable<OperationDescriptor> orderedActualDescriptors = actualDescriptors.OrderBy(od => od.Title);
@@ -296,7 +296,7 @@ namespace AstoriaUnitTests
             IEnumerator<OperationDescriptor> actualEnumerator = orderedActualDescriptors.GetEnumerator();
             IEnumerator<MyOperationDescriptor> expectedEnumerator = orderedExpectedDescriptors.GetEnumerator();
 
-            while(expectedEnumerator.MoveNext())
+            while (expectedEnumerator.MoveNext())
             {
                 Assert.IsTrue(actualEnumerator.MoveNext());
                 MyOperationDescriptor actualDescriptor = new MyOperationDescriptor((OperationDescriptor)actualEnumerator.Current);
@@ -345,96 +345,6 @@ namespace AstoriaUnitTests
 
         #region Test Methods
 
-        #region ActionDescriptorNegativeTests
-        [TestMethod]
-        public void ActionDescriptorInAtomWithNullTargetUri()
-        {
-            var testCase = new TestCase()
-            {
-                ResponsePayloadBuilder = GetPayloadBuilder().AddAction("/somemetadata", "Action1", null),
-                RequestUriString = "CustomerEntities(1)",
-                ExpectedErrorMessage = "The 'target' attribute on the {http://docs.oasis-open.org/odata/ns/metadata}:action element is missing.",
-            };
-
-            RunNegativeActionTestWithAtom(testCase);    
-        }
-
-        [TestMethod]
-        public void ActionDescriptorInAtomWithRelativeTargetUriAndNoBaseUriInXMLOrOnContext()
-        {
-            var testCase = new TestCase()
-            {
-                ResponsePayloadBuilder = GetPayloadBuilder().AddAction("/somemetadata", "Action1", "/sometarget/action1"),
-                RequestUriString = "CustomerEntities(1)",
-                ExpectedErrorMessage = ODataLibResourceUtil.GetString("ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified", "/sometarget/action1"),
-            };
-
-            RunNegativeActionTestWithAtom(testCase);
-        }
-
-        [TestMethod]
-        public void ActionDescriptorWithNullMetadataUriInAtom()
-        {
-            var testCase = new TestCase()
-            {
-                ResponsePayloadBuilder = GetPayloadBuilder().AddAction(null, "Action1", "http://sometarget"),
-                RequestUriString = "CustomerEntities(1)",
-                ExpectedErrorMessage = "The 'metadata' attribute on the {http://docs.oasis-open.org/odata/ns/metadata}:action element is missing.",
-            };
-
-            RunNegativeActionTestWithAtom(testCase);
-        }
-
-        private static void RunNegativeActionTestWithAtom(TestCase testCase)
-        {
-            // These tests are specific to Atom and don't apply to JSON Light.
-            // Any JSON Light negative cases are covered by ODL reader tests. See ODL tests OperationReaderJsonLightTests and ODataJsonLightDeserializerTests.
-            using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.ProcessRequestOverride.Restore())
-            {
-                request.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                request.StartService();
-                
-                PlaybackService.ProcessRequestOverride.Value = (req) =>
-                {
-                    // These tests intentionally don't set the base URI of the context, so we need to also remove the xml:base attribute that is automatically
-                    // generated by the PayloadGenerator. Otherwise another parsing error will occur before we hit the actual errors we are trying to validate.
-                    string payload = PayloadGenerator.Generate(testCase.ResponsePayloadBuilder, ODataFormat.Atom);
-                    string xmlBaseAttribute = @"xml:base=""/""";
-                    payload = payload.Remove(payload.IndexOf(xmlBaseAttribute), xmlBaseAttribute.Length);
-
-                    req.SetResponseStreamAsText(payload);
-                    req.ResponseHeaders.Add("Content-Type", "application/atom+xml");
-                    req.SetResponseStatusCode(200);
-                    return req;
-                };
-
-                Uri uri = new Uri(request.ServiceRoot + "/" + testCase.RequestUriString);
-                DataServiceContext ctx = new DataServiceContext(null, ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-
-                QueryOperationResponse<CustomerEntity> qor = (QueryOperationResponse<CustomerEntity>)ctx.Execute<CustomerEntity>(uri);
-                Assert.IsNotNull(qor);
-                Assert.IsNull(qor.Error);
-
-                IEnumerator<CustomerEntity> entities = qor.GetEnumerator();
-
-                Exception exception = AstoriaTest.TestUtil.RunCatching(delegate()
-                {
-                    while (entities.MoveNext())
-                    {
-                        CustomerEntity c = entities.Current;
-                        EntityDescriptor ed = ctx.GetEntityDescriptor(c);
-                        IEnumerable<OperationDescriptor> actualDescriptors = ed.OperationDescriptors;
-                    }
-                });
-
-                Assert.IsNotNull(exception);
-                Assert.AreEqual(testCase.ExpectedErrorMessage, exception.Message);
-            }    
-        }
-        #endregion
-
         #region ActionDescriptorPositiveTests
 
         [TestMethod]
@@ -475,9 +385,9 @@ namespace AstoriaUnitTests
             var testCase = new TestCase()
             {
                 Operations = new ServiceAction[] { this.GetServiceAction("Action1", CustomerResourceType), this.GetServiceAction("Action2", CustomerResourceType) },
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor> 
-                { 
-                    new MyOperationDescriptor() { Title="SomeTitle", Target="http://sometarget/", Metadata="SomeMetadata" }, 
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
+                {
+                    new MyOperationDescriptor() { Title="SomeTitle", Target="http://sometarget/", Metadata="SomeMetadata" },
                     new MyOperationDescriptor() { Title="SomeTitle", Target="http://sometarget/", Metadata="SomeMetadata" },
                 }},
                 RequestUriString = "CustomerEntities(1)",
@@ -517,13 +427,13 @@ namespace AstoriaUnitTests
             var testCase = new TestCase()
             {
                 Operations = new ServiceAction[] { this.GetServiceAction("Action1", CustomerResourceType) },
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> 
-                { 
-                    new List<MyOperationDescriptor>()  
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>>
+                {
+                    new List<MyOperationDescriptor>()
                     {
                         this.GetMyOperationDescriptor(format, "Action1", "CustomerEntities(1)"),
                     },
-                    new List<MyOperationDescriptor>()    
+                    new List<MyOperationDescriptor>()
                     {
                         this.GetMyOperationDescriptor(format, "Action1", "CustomerEntities(2)"),
                     }
@@ -617,7 +527,7 @@ namespace AstoriaUnitTests
             var testCase = new TestCase()
             {
                 Operations = new ServiceAction[] { this.GetServiceAction("Action1", CustomerResourceType) },
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>() 
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>()
                 {
                     new MyOperationDescriptor() { Title="SomeTitle", Target="http://sometarget/", Metadata="#TestNamespace.Action1" }
                 }},
@@ -645,7 +555,7 @@ namespace AstoriaUnitTests
                 InitializeExpectedDescriptors = (format) =>
                 {
                     var target = string.Format("CustomerEntities(1)/{0}Action1", "TestNamespace.");
-                    
+
                     // With JSON Light, if the title is not on the wire (which it's not, if it's null), then the metadata builder kicks in and a non-null value is reported
                     // There is no real scenario where the title would need to actually be null, so we have decided to not do anything to make this match the Atom behavior.
                     var title = format == ODataFormat.Json ? "TestNamespace.Action1" : null;
@@ -704,7 +614,7 @@ namespace AstoriaUnitTests
                 Operations = new ServiceAction[] { this.GetServiceAction(unescaped, CustomerResourceType) },
                 InitializeExpectedDescriptors = (format) =>
                 {
-                    var target = string.Format("CustomerEntities(1)/TestNamespace.{0}", format == ODataFormat.Json ?  unescaped : escapedRelativeUri);
+                    var target = string.Format("CustomerEntities(1)/TestNamespace.{0}", format == ODataFormat.Json ? unescaped : escapedRelativeUri);
                     var title = string.Format("{0}{1}", format == ODataFormat.Json ? "TestNamespace." : String.Empty, unescaped);
                     return new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>()
                     {
@@ -726,14 +636,14 @@ namespace AstoriaUnitTests
         private static void RunPositiveTest(ODataFormat format, TestCase testCase)
         {
             MyDSPActionProvider actionProvider = new MyDSPActionProvider();
-            DSPServiceDefinition service = new DSPServiceDefinition() {Metadata = Metadata, CreateDataSource = CreateDataSource, ActionProvider = actionProvider};
+            DSPServiceDefinition service = new DSPServiceDefinition() { Metadata = Metadata, CreateDataSource = CreateDataSource, ActionProvider = actionProvider };
             service.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
 
             using (TestWebRequest request = service.CreateForInProcessWcf())
             {
                 request.StartService();
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
+                //ctx.EnableAtom = true;
 
                 Uri uri = new Uri(request.ServiceRoot + "/" + testCase.RequestUriString);
 
@@ -745,7 +655,7 @@ namespace AstoriaUnitTests
                 }
                 else
                 {
-                    ctx.Format.UseAtom();
+                    //ctx.Format.UseAtom();
                 }
 
                 QueryOperationResponse<CustomerEntity> qor = (QueryOperationResponse<CustomerEntity>)ctx.Execute<CustomerEntity>(uri);
@@ -767,7 +677,7 @@ namespace AstoriaUnitTests
         }
 
         #endregion
-        
+
         #region FunctionDescriptorTests
 
         private void RunPositiveFunctionTestWithAllFormats(TestCase testCase)
@@ -783,8 +693,8 @@ namespace AstoriaUnitTests
             {
                 ResponsePayloadBuilder = GetPayloadBuilder()
                                             .AddFunction("#TestNamespace.Function1", "TestNamespace.Function1", "http://sometarget"),
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor> 
-                    { 
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
+                    {
                         new MyOperationDescriptor() { Title="TestNamespace.Function1", Target="http://sometarget/", Metadata="#TestNamespace.Function1" }
                     }},
                 RequestUriString = "CustomerEntities(1)",
@@ -801,7 +711,7 @@ namespace AstoriaUnitTests
                 ResponsePayloadBuilder = GetPayloadBuilder()
                                             .AddFunction("#TestNamespace.Function1", "Function1", "http://sometarget")
                                             .AddFunction("#TestNamespace.Function2", "TestNamespace.Function2", "http://sometarget2"),
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor> 
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
                 {
                     new MyOperationDescriptor() { Title="Function1", Target="http://sometarget/", Metadata="#TestNamespace.Function1" },
                     new MyOperationDescriptor() { Title="TestNamespace.Function2", Target="http://sometarget2/", Metadata="#TestNamespace.Function2" },
@@ -820,7 +730,7 @@ namespace AstoriaUnitTests
                 ResponsePayloadBuilder = GetPayloadBuilder()
                                             .AddFunction("#TestNamespace.Function1", "Function1", "http://sometarget")
                                             .AddFunction("#TestNamespace.Function1", "Function1", "http://sometarget"),
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor> 
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
                 {
                     new MyOperationDescriptor() { Title="Function1", Target="http://sometarget/", Metadata="#TestNamespace.Function1" },
                     new MyOperationDescriptor() { Title="Function1", Target="http://sometarget/", Metadata="#TestNamespace.Function1" },
@@ -842,8 +752,8 @@ namespace AstoriaUnitTests
                                             .AddAction("#TestNamespace.Action1", "TestNamespace.Action1", "http://sometarget1")
                                             .AddAction("#TestNamespace.Action2", "Action2", "http://sometarget2")
                                             .AddFunction("#TestNamespace.Function1", "Function1", "http://sometarget3"),
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor> 
-                    { 
+                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
+                    {
                         new MyOperationDescriptor() { Title="TestNamespace.Action1", Target="http://sometarget1/", Metadata="#TestNamespace.Action1" },
                         new MyOperationDescriptor() { Title="Action2", Target="http://sometarget2/", Metadata="#TestNamespace.Action2" },
                         new MyOperationDescriptor() { Title="Function1", Target="http://sometarget3/", Metadata="#TestNamespace.Function1" }
@@ -892,7 +802,7 @@ namespace AstoriaUnitTests
 
                 Uri uri = new Uri(request.ServiceRoot + "/" + testCase.RequestUriString);
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
+                //ctx.EnableAtom = true;
 
                 if (format == ODataFormat.Json)
                 {

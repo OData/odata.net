@@ -39,7 +39,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
-            Me.ctx.EnableAtom = True
+            'Me.'ctx.EnableAtom = True
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -597,7 +597,7 @@ Partial Public Class ClientModule
 
                 Try
                     ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
-                    ctx.EnableAtom = True
+                    'ctx.EnableAtom = True
                     ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent
 
                     'Insert a customer into the context

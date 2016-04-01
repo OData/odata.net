@@ -19,7 +19,7 @@ namespace AstoriaUnitTests
     using Microsoft.OData.Core;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
-using System.IO;
+    using System.IO;
     #endregion
 
     /// <summary>
@@ -581,9 +581,9 @@ using System.IO;
             responseMessage.StatusCode = 200;
             responseMessage.WriteToStream(payload);
             responseMessage.SetHeader("Content-Length", responseMessage.MemoryStream.Length.ToString());
-            
+
             var context = new DataServiceContextWithCustomTransportLayer(maxDataServiceVersion, requestMessage, responseMessage);
-            context.EnableAtom = true;
+            //context.EnableAtom = true;
             context.ResolveName = ResolveName;
             context.ResolveType = ResolveType;
             context.Format.UseJson(Model);

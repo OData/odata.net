@@ -148,8 +148,8 @@ namespace AstoriaUnitTests.Tests
 
                         // Add entities
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         foreach (XFeatureTestsEntity entity in testEntities)
                         {
                             ctx.AddObject("Entities", entity);
@@ -327,8 +327,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         test(ctx, data, pageSize, enableCustomPaging);
@@ -406,8 +406,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     PopulateClientContextWithTestEntities(ctx);
 
                     ctx.IgnoreResourceNotFoundException = true;
@@ -486,8 +486,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
 
                         if (httpMethod != "POST")
                         {
@@ -540,8 +540,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         service.EnableChangeInterceptors = false;
                         PopulateClientContextWithTestEntities(ctx);
                         service.EnableChangeInterceptors = true;
@@ -600,8 +600,8 @@ namespace AstoriaUnitTests.Tests
 
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
 
                     ctx.AddObject("Entities", clientMle);
                     ctx.SetSaveStream(clientMle, new MemoryStream(clientBlob), true, "application/octet-stream", clientMle.ID.ToString());
@@ -761,8 +761,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         request.RequestUriString = testCase.RequestUri;
@@ -811,8 +811,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         // set navigation
@@ -1204,8 +1204,8 @@ namespace AstoriaUnitTests.Tests
                     {
                         request.StartService();
                         var ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         var testCases = new[] {

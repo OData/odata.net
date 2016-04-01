@@ -16,7 +16,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     public class ODataFormatWithParametersTests
     {
         private ODataFormatWithParameters metadataFormat;
-        private ODataFormatWithParameters atomFormat;
         private ODataFormatWithParameters jsonLightFormat;
 
         [TestInitialize]
@@ -24,9 +23,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             // no media type specified
             this.metadataFormat = new ODataFormatWithParameters(ODataFormat.Metadata);
-
-            // media type without parameters
-            this.atomFormat = new ODataFormatWithParameters(ODataFormat.Atom, "application/atom+xml");
 
             // media type with parameters
             this.jsonLightFormat = new ODataFormatWithParameters(ODataFormat.Json, "application/atom+xml;odata.metadata=minimal");
@@ -36,23 +32,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void FormatShouldBeSame()
         {
             this.metadataFormat.Format.Should().BeSameAs(ODataFormat.Metadata);
-            this.atomFormat.Format.Should().BeSameAs(ODataFormat.Atom);
             this.jsonLightFormat.Format.Should().BeSameAs(ODataFormat.Json);
         }
-
-        [TestMethod]
-        public void OnlyAtomFormatShouldClaimToBeAtom()
-        {
-            this.metadataFormat.IsAtom.Should().BeFalse();
-            this.atomFormat.IsAtom.Should().BeTrue();
-            this.jsonLightFormat.IsAtom.Should().BeFalse();
-        }
-
+        
         [TestMethod]
         public void GetParameterValueShouldBeNullIfNotFound()
         {
             this.metadataFormat.GetParameterValue("foo").Should().BeNull();
-            this.atomFormat.GetParameterValue("foo").Should().BeNull();
             this.jsonLightFormat.GetParameterValue("foo").Should().BeNull();
         }
 

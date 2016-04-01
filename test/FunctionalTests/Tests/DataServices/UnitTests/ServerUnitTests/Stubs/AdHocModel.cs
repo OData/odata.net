@@ -279,9 +279,9 @@ namespace AstoriaUnitTests.Stubs
         public string TargetPath { get; set; }
 
         //atom is true
-        public AtomSyndicationItemProperty SyndicationItem { get; set; }
-        public AtomSyndicationTextContentKind? ContentKind { get; set; }
-        public String CriteriaValue { get; set; }
+        //public AtomSyndicationItemProperty SyndicationItem { get; set; }
+        //public AtomSyndicationTextContentKind? ContentKind { get; set; }
+        //public String CriteriaValue { get; set; }
 
         //atom is false
         public string NsPrefix { get; set; }
@@ -1678,7 +1678,7 @@ namespace AstoriaUnitTests.Stubs
                 }
                 if (type.EPMInfo != null)
                 {
-                    WriteEPMInfo(writer, type.EPMInfo);
+                    // WriteEPMInfo(writer, type.EPMInfo);
                 }
                 if (type.KeyProperties != null && type.KeyProperties.Count > 0)
                 {
@@ -1744,7 +1744,7 @@ namespace AstoriaUnitTests.Stubs
                 }
 
                 writer.WriteAttributeString("Nullable", scalar.IsNullable ? "true" : "false");
-                WriteEPMInfo(writer, property.EPMInfo, string.Empty);
+                // WriteEPMInfo(writer, property.EPMInfo, string.Empty);
                 writer.WriteEndElement();
             }
 
@@ -1760,101 +1760,101 @@ namespace AstoriaUnitTests.Stubs
             }
         }
 
-        private static void WriteEPMInfo(XmlWriter writer, List<AdHocEPMInfo> epmInfo)
-        {
-            if(epmInfo != null)
-            {
-                for (int epmInfoIdx = 0; epmInfoIdx < epmInfo.Count; epmInfoIdx++)
-                {
-                    WriteEPMInfo(writer, epmInfo[epmInfoIdx], epmInfoIdx == 0 ? string.Empty : "_" + epmInfoIdx.ToString());
-                }
-            }
-        }
+        //private static void WriteEPMInfo(XmlWriter writer, List<AdHocEPMInfo> epmInfo)
+        //{
+        //    if(epmInfo != null)
+        //    {
+        //        for (int epmInfoIdx = 0; epmInfoIdx < epmInfo.Count; epmInfoIdx++)
+        //        {
+        //            WriteEPMInfo(writer, epmInfo[epmInfoIdx], epmInfoIdx == 0 ? string.Empty : "_" + epmInfoIdx.ToString());
+        //        }
+        //    }
+        //}
 
-        private static void WriteEPMInfo(XmlWriter writer, AdHocEPMInfo epmInfo, string suffix)
-        {
-            if (epmInfo != null)
-            {
-                if (suffix == null)
-                {
-                    suffix = string.Empty;
-                }
+        //private static void WriteEPMInfo(XmlWriter writer, AdHocEPMInfo epmInfo, string suffix)
+        //{
+        //    if (epmInfo != null)
+        //    {
+        //        if (suffix == null)
+        //        {
+        //            suffix = string.Empty;
+        //        }
 
-                // Allow negative testing - do not write FC_SourcePath attribute if null
-                if (epmInfo.SourcePath != null)
-                {
-                    writer.WriteAttributeString("FC_SourcePath" + suffix, MetadataNsUri, epmInfo.SourcePath);
-                }
+        //        // Allow negative testing - do not write FC_SourcePath attribute if null
+        //        if (epmInfo.SourcePath != null)
+        //        {
+        //            writer.WriteAttributeString("FC_SourcePath" + suffix, MetadataNsUri, epmInfo.SourcePath);
+        //        }
 
-                writer.WriteAttributeString("FC_KeepInContent" + suffix, MetadataNsUri, (epmInfo.KeepInContent ?? string.Empty).ToString());
+        //        writer.WriteAttributeString("FC_KeepInContent" + suffix, MetadataNsUri, (epmInfo.KeepInContent ?? string.Empty).ToString());
 
-                // ContentKind and NsPrefix/NsUri are mutually exclusive. Here we are making it possible to specify both just 
-                // to be able to test server for this condition. 
-                if (epmInfo.ContentKind != null)
-                {
-                    // Let's write an empty string if epmInfo.ContentKind is not a valid SyndicationTextConentKind value. This allows for some negative testing.
-                    writer.WriteAttributeString("FC_ContentKind" + suffix, MetadataNsUri, Enum.IsDefined(typeof(AtomSyndicationTextContentKind), epmInfo.ContentKind) ?
-                        TranslateContentKind((AtomSyndicationTextContentKind)epmInfo.ContentKind) :
-                        string.Empty);
-                }
+        //        // ContentKind and NsPrefix/NsUri are mutually exclusive. Here we are making it possible to specify both just 
+        //        // to be able to test server for this condition. 
+        //        if (epmInfo.ContentKind != null)
+        //        {
+        //            // Let's write an empty string if epmInfo.ContentKind is not a valid SyndicationTextConentKind value. This allows for some negative testing.
+        //            writer.WriteAttributeString("FC_ContentKind" + suffix, MetadataNsUri, Enum.IsDefined(typeof(AtomSyndicationTextContentKind), epmInfo.ContentKind) ?
+        //                TranslateContentKind((AtomSyndicationTextContentKind)epmInfo.ContentKind) :
+        //                string.Empty);
+        //        }
 
-                // Allow writing the prefix even if the uri is null, for negative testing scenarios
-                if (epmInfo.NsPrefix != null)
-                {
-                    writer.WriteAttributeString("FC_NsPrefix" + suffix, MetadataNsUri, epmInfo.NsPrefix);
-                }
+        //        // Allow writing the prefix even if the uri is null, for negative testing scenarios
+        //        if (epmInfo.NsPrefix != null)
+        //        {
+        //            writer.WriteAttributeString("FC_NsPrefix" + suffix, MetadataNsUri, epmInfo.NsPrefix);
+        //        }
 
-                if (epmInfo.NsUri != null)
-                {
-                    writer.WriteAttributeString("FC_NsUri" + suffix, MetadataNsUri, epmInfo.NsUri);
-                }
+        //        if (epmInfo.NsUri != null)
+        //        {
+        //            writer.WriteAttributeString("FC_NsUri" + suffix, MetadataNsUri, epmInfo.NsUri);
+        //        }
 
-                writer.WriteAttributeString("FC_TargetPath" + suffix, MetadataNsUri, epmInfo.TargetPath ?? TranslateSyndicationItem(epmInfo.SyndicationItem));
+        //        writer.WriteAttributeString("FC_TargetPath" + suffix, MetadataNsUri, epmInfo.TargetPath ?? TranslateSyndicationItem(epmInfo.SyndicationItem));
 
-                if (epmInfo.CriteriaValue != null)
-                {
-                    writer.WriteAttributeString("FC_CriteriaValue" + suffix, MetadataNsUri, epmInfo.CriteriaValue);
-                }
-            }
-        }
+        //        if (epmInfo.CriteriaValue != null)
+        //        {
+        //            writer.WriteAttributeString("FC_CriteriaValue" + suffix, MetadataNsUri, epmInfo.CriteriaValue);
+        //        }
+        //    }
+        //}
 
-        private static string TranslateContentKind(AtomSyndicationTextContentKind contentKind)
-        {
-            switch (contentKind)
-            {
-                case AtomSyndicationTextContentKind.Plaintext:
-                    return "text";
-                case AtomSyndicationTextContentKind.Html:
-                    return "html";
-                case AtomSyndicationTextContentKind.Xhtml:
-                    return "xhtml";
-                default:
-                    throw new ArgumentException("Unknown SyndicationTextContentKind enum value", "contentKind");
-            }
-        }
+        //private static string TranslateContentKind(AtomSyndicationTextContentKind contentKind)
+        //{
+        //    switch (contentKind)
+        //    {
+        //        case AtomSyndicationTextContentKind.Plaintext:
+        //            return "text";
+        //        case AtomSyndicationTextContentKind.Html:
+        //            return "html";
+        //        case AtomSyndicationTextContentKind.Xhtml:
+        //            return "xhtml";
+        //        default:
+        //            throw new ArgumentException("Unknown SyndicationTextContentKind enum value", "contentKind");
+        //    }
+        //}
 
-        private static string TranslateSyndicationItem(AtomSyndicationItemProperty itemProperty)
-        {
-            switch (itemProperty)
-            {
-                case AtomSyndicationItemProperty.AuthorEmail:
-                case AtomSyndicationItemProperty.AuthorName:
-                case AtomSyndicationItemProperty.AuthorUri:
-                case AtomSyndicationItemProperty.ContributorEmail:
-                case AtomSyndicationItemProperty.ContributorName:
-                case AtomSyndicationItemProperty.ContributorUri:
-                case AtomSyndicationItemProperty.Published:
-                case AtomSyndicationItemProperty.Rights:
-                case AtomSyndicationItemProperty.Summary:
-                case AtomSyndicationItemProperty.Title:
-                case AtomSyndicationItemProperty.Updated:
-                    return "Syndication" + itemProperty.ToString();
-                case AtomSyndicationItemProperty.CustomProperty:
-                    throw new NotSupportedException("AtomSyndicationItemProperty.CustomProperty");
-                default:
-                    throw new ArgumentException("Unknown AtomSyndicationItemProperty enum value", "itemProperty");
-            }
-        }
+        //private static string TranslateSyndicationItem(AtomSyndicationItemProperty itemProperty)
+        //{
+        //    switch (itemProperty)
+        //    {
+        //        case AtomSyndicationItemProperty.AuthorEmail:
+        //        case AtomSyndicationItemProperty.AuthorName:
+        //        case AtomSyndicationItemProperty.AuthorUri:
+        //        case AtomSyndicationItemProperty.ContributorEmail:
+        //        case AtomSyndicationItemProperty.ContributorName:
+        //        case AtomSyndicationItemProperty.ContributorUri:
+        //        case AtomSyndicationItemProperty.Published:
+        //        case AtomSyndicationItemProperty.Rights:
+        //        case AtomSyndicationItemProperty.Summary:
+        //        case AtomSyndicationItemProperty.Title:
+        //        case AtomSyndicationItemProperty.Updated:
+        //            return "Syndication" + itemProperty.ToString();
+        //        case AtomSyndicationItemProperty.CustomProperty:
+        //            throw new NotSupportedException("AtomSyndicationItemProperty.CustomProperty");
+        //        default:
+        //            throw new ArgumentException("Unknown AtomSyndicationItemProperty enum value", "itemProperty");
+        //    }
+        //}
 
         public void WriteMappingModel(XmlWriter writer)
         {

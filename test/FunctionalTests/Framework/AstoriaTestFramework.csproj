@@ -133,7 +133,6 @@
     <Compile Include="Verification\JSONPayload.cs" />
     <Compile Include="Verification\PayloadObject.cs" />
     <Compile Include="Verification\PayloadProperty.cs" />
-    <Compile Include="Verification\XMLPayload.cs" />
     <Compile Include="Tree\Astoria\Resource.cs" />
     <Compile Include="Tree\Astoria\ResouceNode.cs" />
     <Compile Include="Tree\Astoria\ResourceType.cs" />

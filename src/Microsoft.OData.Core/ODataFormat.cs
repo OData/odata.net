@@ -8,12 +8,9 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
     #endregion Namespaces
 

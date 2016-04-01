@@ -91,6 +91,7 @@ namespace System.Data.Test.Astoria
         }
 
         private CommonPayload _CommonPayload = null;
+
         public CommonPayload CommonPayload
         {
             get

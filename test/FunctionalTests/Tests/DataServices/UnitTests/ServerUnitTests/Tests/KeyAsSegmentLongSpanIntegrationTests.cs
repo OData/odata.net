@@ -31,17 +31,6 @@ namespace AstoriaUnitTests.Tests
 
         [TestCategory("Partition2")]
         [TestMethod]
-        public void KeyAsSegmentEndToEndSmokeTestInAtom()
-        {
-            RunEndToEndSmokeTestWithClient(ctx =>
-            {
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
-            });
-        }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
         public void KeyAsSegmentEndToEndSmokeTestInJsonLight()
         {
             RunEndToEndSmokeTestWithClient(ctx =>

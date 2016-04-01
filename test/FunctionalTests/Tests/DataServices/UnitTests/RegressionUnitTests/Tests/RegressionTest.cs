@@ -2638,8 +2638,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     Microsoft.OData.Client.DataServiceContext ctx = new northwindClient.northwindContext(new Uri(request.BaseUri));
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
 
                     var q1 = ctx.CreateQuery<northwindClient.Customers>("Customers").Select(c => c as northwindClient.Customers);
@@ -5574,8 +5574,8 @@ Content-Type: application/atom+xml;type=entry
                 public AstoriaDataContext()
                 {
                     this.ctx = new DataServiceContext(AstoriaDataContext.ContextUri);
-                    ctx.EnableAtom = true;
-                    this.ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //this.ctx.Format.UseAtom();
                 }
 
                 public DataServiceQuery<Customer> Customers
@@ -5618,8 +5618,8 @@ Content-Type: application/atom+xml;type=entry
                         requestToAstoria.DataServiceType = typeof(AstoriaDataContext);
                         requestToAstoria.StartService();
                         DataServiceContext ctxToAstoria = new DataServiceContext(requestToAstoria.ServiceRoot);
-                        ctxToAstoria.EnableAtom = true;
-                        ctxToAstoria.Format.UseAtom();
+                        //ctxToAstoria.EnableAtom = true;
+                        //ctxToAstoria.Format.UseAtom();
                         foreach (Customer c in ctxToAstoria.CreateQuery<Customer>("Customers"))
                         {
                         }
@@ -6642,8 +6642,8 @@ Content-Type: application/atom+xml;type=entry
                         {
                             request.StartService();
                             var ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                            ctx.EnableAtom = true;
-                            ctx.Format.UseAtom();
+                            //ctx.EnableAtom = true;
+                            //ctx.Format.UseAtom();
 
                             // Get the entity
                             var streamEntity = ctx.CreateQuery<StreamEntity>("StreamSet").Where(s => s.ID == 1).Single();

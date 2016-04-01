@@ -4,21 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
-
 namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Xml;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 

@@ -29,68 +29,6 @@ namespace System.Data.Test.Astoria
 
         #endregion
     }
-    public class AtomPropertyAnnotation : EDMAnnotation
-    {
-
-        public AtomSyndicationItemProperty EDMProperty { get; set; }
-        public AtomSyndicationTextContentKind ContentKind { get; set; }
-
-
-        private string ToAtomElement(string propertyName)
-        {
-            string strEdmAnnotation;
-            string strSyndicationItemName = propertyName.ToString().Replace("SyndicationItemProperty.", "");
-            strSyndicationItemName = propertyName.ToString().Replace("SyndicationTextContentKind.", "");
-            switch (strSyndicationItemName)
-            {
-                case "AuthorEmail":
-                    strEdmAnnotation = "EpmSyndicationAuthorEmail";
-                    break;
-                case "AuthorName":
-                    strEdmAnnotation = "EpmSyndicationAuthorName";
-                    break;
-                case "AuthorUri":
-                    strEdmAnnotation = "EpmSyndicationAuthorUri";
-                    break;
-                case "Published":
-                    strEdmAnnotation = "EpmSyndicationPublished";
-                    break;
-                case "Rights":
-                    strEdmAnnotation = "EpmSyndicationRights";
-                    break;
-                case "Summary":
-                    strEdmAnnotation = "EpmSyndicationSummary";
-                    break;
-                case "Title":
-                    strEdmAnnotation = "EpmSyndicationTitle";
-                    break;
-                case "Plaintext":
-                    strEdmAnnotation = "EpmPlaintext";
-                    break;
-                case "Html":
-                    strEdmAnnotation = "EpmHtml";
-                    break;
-                case "Xhtml":
-                    strEdmAnnotation = "EpmXHtml";
-                    break;
-                default:
-                    strEdmAnnotation = "";
-                    break;
-            }
-
-            return strEdmAnnotation;
-        }
-
-        #region IMetadataItem Members
-
-        public override string ToCSDL()
-        {
-            return String.Format(" d3p1:FC_TargetPath=\"{0}\" d3p1:FC_ContentKind=\"{1}\" d3p1:FC_KeepInContent=\"{2}\" xmlns:d3p1=\"http://docs.oasis-open.org/odata/ns/metadata\"  ",
-                ToAtomElement(EDMProperty.ToString()), ToAtomElement(ContentKind.ToString()), KeepInContent.ToString().ToLower());
-        }
-
-        #endregion
-    }
 
     public class CustomPropertyAnnotation : EDMAnnotation
     {
@@ -109,52 +47,16 @@ namespace System.Data.Test.Astoria
 
         #endregion
     }
+
     public class EDMProperty : IMetadataItem
     {
         public string Name { get; set; }
         public Type Type { get; set; }
         public bool IsKey { get; set; }
         public bool IsNullable { get; set; }
-        public AtomPropertyAnnotation AtomAnnotation { get; set; }
+
         public CustomPropertyAnnotation CustomAnnotation { get; set; }
-        public EDMProperty(string PropertyName, Type PropertyType, bool IsKeyProperty, bool IsNullableProperty, AtomPropertyAnnotation atomAnnotation)
-            : this(PropertyName, PropertyType, IsKeyProperty, IsNullableProperty)
-        {
-            AtomAnnotation = atomAnnotation;
-        }
 
-
-        public EDMProperty(string PropertyName, Type PropertyType, bool IsKeyProperty, bool IsNullableProperty, CustomPropertyAnnotation customAnnotation)
-            : this(PropertyName, PropertyType, IsKeyProperty, IsNullableProperty)
-        {
-            this.CustomAnnotation = customAnnotation;
-        }
-        public EDMProperty(string PropertyName, Type PropertyType, CustomPropertyAnnotation customAnnotation)
-            : this(PropertyName, PropertyType)
-        {
-            this.CustomAnnotation = customAnnotation;
-        }
-
-
-        public EDMProperty(string PropertyName, Type PropertyType, bool IsKeyProperty, bool IsNullableProperty)
-        {
-            this.Name = PropertyName;
-            this.Type = PropertyType;
-            this.IsKey = IsKeyProperty;
-            this.IsNullable = IsNullableProperty;
-        }
-        public EDMProperty(string PropertyName, Type PropertyType, AtomPropertyAnnotation atomAnnotation)
-            : this(PropertyName, PropertyType)
-        {
-            this.AtomAnnotation = atomAnnotation;
-        }
-        public EDMProperty(string PropertyName, Type PropertyType)
-        {
-            this.Name = PropertyName;
-            this.Type = PropertyType;
-            this.IsKey = false;
-            this.IsNullable = false;
-        }
         #region IMetadataItem Members
 
         const string _csdlTemplate = "<Property Name=\"{0}\" Type=\"{1}\" Nullable=\"{2}\"";
@@ -168,11 +70,7 @@ namespace System.Data.Test.Astoria
             }
             sbCSDL.AppendFormat(_csdlTemplate, Name, Type.FullName.Replace("System", "Edm"), this.IsNullable.ToString().ToLower());
             #region Append any annotations available
-            if (AtomAnnotation != null)
-            {
-                IMetadataItem im = AtomAnnotation as IMetadataItem;
-                sbCSDL.Append(im.ToCSDL());
-            }
+
             if (CustomAnnotation != null)
             {
                 IMetadataItem im = CustomAnnotation as IMetadataItem;

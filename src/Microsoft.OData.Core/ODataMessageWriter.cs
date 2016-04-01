@@ -10,18 +10,13 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
     using System.Text;
-    using System.Xml;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
     /// <summary>

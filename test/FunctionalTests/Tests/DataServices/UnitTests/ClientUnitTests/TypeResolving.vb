@@ -49,8 +49,8 @@ Partial Public Class ClientModule
             web.StartService()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
         End Sub
 
         <ClassCleanup()> Public Shared Sub PerClassCleanup()
@@ -62,8 +62,8 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Client.TypeResolveContext.ResetData()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -389,8 +389,8 @@ Partial Public Class ClientModule
                 Client.TypeResolveContext.ResetData()
 
                 ctx = New DataServiceContext(ctx.BaseUri)
-                ctx.EnableAtom = True
-                ctx.Format.UseAtom()
+                'ctx.EnableAtom = True
+                'ctx.Format.UseAtom()
                 ctx.MergeOption = merge
 
                 For i As Int32 = 0 To instancesToAddToFirstCollections
@@ -1269,8 +1269,8 @@ Partial Public Class ClientModule
             web.StartService()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
         End Sub
 
         <ClassCleanup()> Public Shared Sub PerClassCleanup()
@@ -1282,8 +1282,8 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Client.TypeResolveContext.ResetData()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -1363,8 +1363,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -1681,8 +1681,8 @@ Partial Public Class ClientModule
 
             ' AttachTo
             ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             ctx.AttachTo("Customers", cust)
             ' check generated edit link

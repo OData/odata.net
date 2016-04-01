@@ -1009,8 +1009,8 @@ namespace AstoriaUnitTests.Tests
                     req.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(req.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = from p in ctx.CreateQuery<Photo>("Items") where p.ParentFolder != null select new { p.ParentFolder.ID };
 
                     bool foundEntry = false;
@@ -3536,8 +3536,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
 
                     ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
 
@@ -5093,8 +5093,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.ResolveName = type =>
                     {
                         if (type == typeof(Item))
@@ -5266,8 +5266,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.IgnoreMissingProperties = true;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
                         ctx.ResolveName = (type) =>
@@ -5399,8 +5399,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.IgnoreMissingProperties = true;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
                         if (request.DataServiceType == typeof(CustomRowBasedContext))

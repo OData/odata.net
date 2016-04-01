@@ -97,6 +97,7 @@
     <Compile Include="Common\CombinatorialEngineExtensionMethods.cs" />
     <Compile Include="Common\AstoriaAttributeToODataLibAnnotationConverter.cs" />
     <Compile Include="Common\ODataAssemblyResourceLookup.cs" />
+    <Compile Include="Common\PayloadElementODataWriter.cs" />
     <Compile Include="Common\SpatialUtils.cs" />
     <Compile Include="Common\EdmModelUtils.cs" />
     <Compile Include="Common\EdmModelBuilder.cs" />

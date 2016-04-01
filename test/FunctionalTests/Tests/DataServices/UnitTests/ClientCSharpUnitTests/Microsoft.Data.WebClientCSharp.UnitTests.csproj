@@ -118,26 +118,20 @@
     <Compile Include="DataWebClientCSharp\ClientActionTests.cs" />
     <Compile Include="DataWebClientCSharp\AlternativeContext.cs" />
     <Compile Include="DataWebClientCSharp\AssemblyCleanup.cs" />
-    <Compile Include="DataWebClientCSharp\AtomMaterializerTests.cs" />
-    <Compile Include="DataWebClientCSharp\AtomParserTests.cs" />
     <Compile Include="DataWebClientCSharp\DerivedPropertyTests.cs" />
     <Compile Include="DataWebClientCSharp\LinqAnyAllTests.cs" />
     <Compile Include="DataWebClientCSharp\CollectionBinding.cs" />
     <Compile Include="DataWebClientCSharp\CollectionTests.cs" />
-    <Compile Include="DataWebClientCSharp\ClientBlobTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientCSharpRegressionTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientPartialTrustTests.cs" />
     <Compile Include="DataWebClientCSharp\DataServiceContextTests.cs" />
     <Compile Include="DataWebClientCSharp\Dev10EF4FKTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataWebClientCSharp\InputBinderTests.cs" />
     <Compile Include="DataWebClientCSharp\Dev10TypeTestsClient.cs" />
     <Compile Include="DataWebClientCSharp\InternalTestHookTests.cs" />
     <Compile Include="DataWebClientCSharp\LinqTests.cs" />
-    <Compile Include="DataWebClientCSharp\NamedStreamTests.cs" />
     <Compile Include="DataWebClientCSharp\NamedStream_ProjectionTests.cs" />
-    <Compile Include="DataWebClientCSharp\ProjectionTests.cs" />
     <Compile Include="DataWebClientCSharp\ReceivingResponseFunctionalTests.cs" />
     <Compile Include="DataWebClientCSharp\BuildingRequestEventFunctionalTests.cs" />
     <Compile Include="DataWebClientCSharp\SpatialLinqTests.cs" />
