@@ -65,6 +65,18 @@ namespace Microsoft.OData.Tests.UriParser
             uriParser.ParseDeltaToken().Should().BeEmpty();
         }
 
+        [Fact]
+        public void DupilicateNonODataQueryOptionShouldWork()
+        {
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'")).ParsePath();
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
+            var nonODataqueryOptions = uriParser.CustomODataQueryOptions;
+
+            action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
+            Assert.Equal(nonODataqueryOptions.Count, 2);
+            Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") && nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
+        }
+
         #region Setter/getter and validation tests
         [Fact]
         public void ModelCannotBeNull()

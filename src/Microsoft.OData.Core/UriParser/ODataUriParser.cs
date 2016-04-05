@@ -36,6 +36,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>Store query option dictionary.</summary>
         private IDictionary<string, string> queryOptionDic;
 
+        /// <summary>Store non-OData query options, duplicates are allowed.</summary>
+        private IList<KeyValuePair<string, string>> customODataQueryOptions;
+
         /// <summary>Parser for query option.</summary>
         private ODataQueryOptionParser queryOptionParser;
 
@@ -172,6 +175,22 @@ namespace Microsoft.OData.UriParser
                 }
 
                 return this.ParameterAliasValueAccessor.ParameterAliasValueNodesCached;
+            }
+        }
+
+        /// <summary>
+        /// Gets non-OData query options.
+        /// </summary>
+        public IList<KeyValuePair<string, string>> CustomODataQueryOptions
+        {
+            get
+            {
+                if (customODataQueryOptions == null)
+                {
+                    InitQueryOptionDic();
+                }
+
+                return customODataQueryOptions;
             }
         }
 
@@ -473,6 +492,7 @@ namespace Microsoft.OData.UriParser
             }
 
             queryOptionDic = new Dictionary<string, string>(StringComparer.Ordinal);
+            customODataQueryOptions = new List<KeyValuePair<string, string>>();
 
             if (queryOptions != null)
             {
@@ -483,13 +503,48 @@ namespace Microsoft.OData.UriParser
                         continue;
                     }
 
-                    if (queryOptionDic.ContainsKey(queryOption.Name))
+                    if (IsODataQueryOption(queryOption.Name))
                     {
-                        throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOption.Name));
-                    }
+                        if (queryOptionDic.ContainsKey(queryOption.Name))
+                        {
+                            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOption.Name));
+                        }
 
-                    queryOptionDic.Add(queryOption.Name, queryOption.Value);
+                        queryOptionDic.Add(queryOption.Name, queryOption.Value);
+                    }
+                    else
+                    {
+                        customODataQueryOptions.Add(new KeyValuePair<string, string>(queryOption.Name, queryOption.Value));
+                    }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Judge if optionName belongs to UriQueryConstants (Case ignored).
+        /// </summary>
+        /// <param name="optionName">The name of a query option.</param>
+        /// <returns>True if optionName is OData query option, vise versa.</returns>
+        private static bool IsODataQueryOption(string optionName)
+        {
+            switch (optionName.ToLower())
+            {
+                case UriQueryConstants.FilterQueryOption:
+                case UriQueryConstants.ApplyQueryOption:
+                case UriQueryConstants.OrderByQueryOption:
+                case UriQueryConstants.SelectQueryOption:
+                case UriQueryConstants.ExpandQueryOption:
+                case UriQueryConstants.SkipQueryOption:
+                case UriQueryConstants.SkipTokenQueryOption:
+                case UriQueryConstants.DeltaTokenQueryOption:
+                case UriQueryConstants.IdQueryOption:
+                case UriQueryConstants.TopQueryOption:
+                case UriQueryConstants.CountQueryOption:
+                case UriQueryConstants.FormatQueryOption:
+                case UriQueryConstants.SearchQueryOption:
+                    return true;
+                default:
+                    return false;
             }
         }
     }
