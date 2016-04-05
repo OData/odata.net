@@ -13,10 +13,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.Reflection;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>Metadata definition for the DSP. This also implements the <see cref="IEdmModel"/>.</summary>
     public class ConstructableMetadata : IEdmEntityContainer, IEdmModel

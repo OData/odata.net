@@ -23,7 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
     using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.OData.Atom;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     #endregion Namespaces
 
     /// <summary>

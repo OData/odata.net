@@ -10,10 +10,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             switch (expression.ExpressionKind)
             {
-                case Expressions.EdmExpressionKind.Labeled:
+                case EdmExpressionKind.Labeled:
                     {
                         CsdlLabeledExpression labeledElement = (CsdlLabeledExpression)expression;
                         string label = labeledElement.Label;
@@ -225,28 +225,28 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         break;
                     }
 
-                case Expressions.EdmExpressionKind.Collection:
+                case EdmExpressionKind.Collection:
                     foreach (CsdlExpressionBase element in ((CsdlCollectionExpression)expression).ElementValues)
                     {
                         AddLabeledExpressions(element, result);
                     }
 
                     break;
-                case Expressions.EdmExpressionKind.OperationApplication:
+                case EdmExpressionKind.OperationApplication:
                     foreach (CsdlExpressionBase argument in ((CsdlApplyExpression)expression).Arguments)
                     {
                         AddLabeledExpressions(argument, result);
                     }
 
                     break;
-                case Expressions.EdmExpressionKind.Record:
+                case EdmExpressionKind.Record:
                     foreach (CsdlPropertyValue property in ((CsdlRecordExpression)expression).PropertyValues)
                     {
                         AddLabeledExpressions(property.Expression, result);
                     }
 
                     break;
-                case Expressions.EdmExpressionKind.If:
+                case EdmExpressionKind.If:
                     {
                         CsdlIfExpression ifExpression = (CsdlIfExpression)expression;
                         AddLabeledExpressions(ifExpression.Test, result);
@@ -256,10 +256,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         break;
                     }
 
-                case Expressions.EdmExpressionKind.IsType:
+                case EdmExpressionKind.IsType:
                     AddLabeledExpressions(((CsdlIsTypeExpression)expression).Operand, result);
                     break;
-                case Expressions.EdmExpressionKind.Cast:
+                case EdmExpressionKind.Cast:
                     AddLabeledExpressions(((CsdlCastExpression)expression).Operand, result);
                     break;
                 default:

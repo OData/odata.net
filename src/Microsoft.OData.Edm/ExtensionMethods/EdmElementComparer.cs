@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OData.Edm.Expressions;
 
 namespace Microsoft.OData.Edm
 {

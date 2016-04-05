@@ -8,7 +8,7 @@ namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>

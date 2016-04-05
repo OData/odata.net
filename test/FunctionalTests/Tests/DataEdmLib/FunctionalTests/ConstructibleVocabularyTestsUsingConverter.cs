@@ -16,7 +16,7 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
@@ -81,7 +81,7 @@ namespace EdmLibTests.FunctionalTests
 
         private sealed class MutableValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmValueAnnotation
         {
-            public Microsoft.OData.Edm.Expressions.IEdmExpression Value
+            public IEdmExpression Value
             {
                 get;
                 set;

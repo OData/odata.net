@@ -32,9 +32,9 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <#@ Import Namespace="Microsoft.OData.Edm.Csdl" #>
 <#@ Import Namespace="Microsoft.OData.Edm" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Annotations" #>
-<#@ Import Namespace="Microsoft.OData.Edm.Expressions" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Library" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Values" #>
+<#@ Import Namespace="Microsoft.OData.Edm.Vocabularies" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Vocabularies.V1" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Vocabularies.Community.V1" #>
 <#@ Import Namespace="System.Text"#>

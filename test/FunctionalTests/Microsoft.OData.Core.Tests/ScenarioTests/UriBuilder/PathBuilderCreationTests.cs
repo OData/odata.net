@@ -11,7 +11,7 @@ using Microsoft.OData.Core.UriBuilder;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder

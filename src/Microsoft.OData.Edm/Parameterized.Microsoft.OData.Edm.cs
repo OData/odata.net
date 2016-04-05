@@ -9,7 +9,6 @@
 
 namespace Microsoft.OData.Edm {
     using System;
-    using System.Resources;
 
     /// <summary>
     ///    Strongly-typed and parameterized string resources.

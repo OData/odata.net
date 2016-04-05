@@ -18,7 +18,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.ODataLibOM;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Helper methods for testing metadata and their OM

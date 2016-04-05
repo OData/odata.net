@@ -8,9 +8,7 @@ namespace AstoriaUnitTests
 {
     using System;
     using Microsoft.OData.Client;
-    using System.Reflection;
     using System.Diagnostics;
-    using Suites.Data.Test;
     using System.Net;
     using System.Linq;
     using System.Collections.Generic;
@@ -18,9 +16,7 @@ namespace AstoriaUnitTests
     using System.IO;
     using System.Collections;
     using System.Xml;
-    using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service;
-    using System.Collections.ObjectModel;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public partial class ClientModule

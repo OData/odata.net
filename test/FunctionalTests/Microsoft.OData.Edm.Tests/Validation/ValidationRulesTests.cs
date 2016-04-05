@@ -9,10 +9,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Expressions;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Validation
@@ -934,7 +933,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
 
             public bool IsBound { get; set; }
 
-            public OData.Edm.Expressions.IEdmPathExpression EntitySetPath { get; set; }
+            public IEdmPathExpression EntitySetPath { get; set; }
 
             public IEdmOperationParameter FindParameter(string name)
             {

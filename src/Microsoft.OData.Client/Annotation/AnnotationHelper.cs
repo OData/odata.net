@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client.Annotation
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.EdmToClrConversion;
     using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Values;
 
     /// <summary>

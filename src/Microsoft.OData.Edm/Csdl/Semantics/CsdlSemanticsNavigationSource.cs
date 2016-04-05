@@ -14,9 +14,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-    using Microsoft.OData.Edm.Expressions;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Provides semantics for CsdlAbstractNavigationSource.
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.navigationSource.Name; }
         }
 
-        public Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return this.path; }
         }

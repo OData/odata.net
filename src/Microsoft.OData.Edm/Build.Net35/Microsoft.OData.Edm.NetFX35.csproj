@@ -40,12 +40,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmEnumMemberExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmEnumMemberExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmEnumMemberExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmEnumMemberExpression.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\TimeOfDay.cs">
       <Link>Microsoft\OData\Edm\Library\TimeOfDay.cs</Link>
     </Compile>
@@ -409,9 +403,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmFunction.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmFunction.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmDurationConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmDurationConstantExpression.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmInclude.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmInclude.cs</Link>
     </Compile>
@@ -483,9 +474,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmUnknownEntitySet.cs">
       <Link>Microsoft\OData\Edm\Library\EdmUnknownEntitySet.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmNavigationPropertyPathExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmNavigationPropertyPathExpression.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Memoizer.cs">
       <Link>Microsoft\OData\Edm\Memoizer.cs</Link>
@@ -649,12 +637,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyModel.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularis\CapabilitiesVocabularyConstants.cs">
-      <Link>Microsoft\OData\Edm\Vocabularis\CapabilitiesVocabularyConstants.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularis\CoreVocabularyConstants.cs">
-      <Link>Microsoft\OData\Edm\Vocabularis\CoreVocabularyConstants.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\DuplicateOperationValidator.cs">
       <Link>Microsoft\OData\Edm\Validation\DuplicateOperationValidator.cs</Link>
     </Compile>
@@ -685,30 +667,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\ToTraceStringExtensionMethods.cs">
       <Link>Microsoft\OData\Edm\ExtensionMethods\ToTraceStringExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmEnumMemberReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmEnumMemberReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmGuidConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmGuidConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmDateConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmDateConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmDateTimeOffsetConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmDateTimeOffsetConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmBinaryConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmBinaryConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmLabeledExpressionReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmLabeledExpressionReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmNullExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmNullExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmParameterReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmParameterReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmVocabularyAnnotatable.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmVocabularyAnnotatable.cs</Link>
     </Compile>
@@ -738,57 +696,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmEnumType.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmEnumType.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmBooleanConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmBooleanConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmDecimalConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmDecimalConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmEntitySetReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmEntitySetReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmFloatingConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmFloatingConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmApplyExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmApplyExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmOperationReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmOperationReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmIfExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmIfExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmIntegerConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmIntegerConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmIsTypeExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmIsTypeExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmLabeledExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmLabeledExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmCollectionExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmCollectionExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmPathExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmPathExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmPropertyConstructor.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmPropertyConstructor.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmPropertyReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmPropertyReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmRecordExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmRecordExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmTimeOfDayConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmTimeOfDayConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmValueTermReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmValueTermReferenceExpression.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmDelayedValue.cs">
       <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmDelayedValue.cs</Link>
@@ -846,15 +753,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmValue.cs">
       <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmCastExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmCastExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Expressions\IEdmStringConstantExpression.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Expressions\IEdmStringConstantExpression.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\CsdlConstants.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlConstants.cs</Link>
@@ -1040,18 +938,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmEnumType.cs">
       <Link>Microsoft\OData\Edm\Library\EdmEnumType.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmEnumMemberReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmEnumMemberReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmLabeledExpressionReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmLabeledExpressionReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmNullExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmNullExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmParameterReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmParameterReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedOperation.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedOperation.cs</Link>
     </Compile>
@@ -1084,48 +970,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmEnumTypeReference.cs">
       <Link>Microsoft\OData\Edm\Library\EdmEnumTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmValueTermReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmValueTermReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmRecordExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmRecordExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmPathExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmPathExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmPropertyConstructor.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmPropertyConstructor.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmPropertyPathExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmPropertyPathExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmPropertyReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmPropertyReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmIsTypeExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmIsTypeExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmIfExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmIfExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmOperationReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmOperationReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmApplyExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmApplyExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmEntitySetReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmEntitySetReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmLabeledExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmLabeledExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmCollectionExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmCollectionExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Expressions\EdmCastExpression.cs">
-      <Link>Microsoft\OData\Edm\Library\Expressions\EdmCastExpression.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmFloatingConstant.cs">
       <Link>Microsoft\OData\Edm\Library\Values\EdmFloatingConstant.cs</Link>
@@ -1496,6 +1340,156 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
       <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmApplyExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmApplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmCastExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmCollectionExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmCollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmEntitySetReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmEntitySetReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmEnumMemberExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmEnumMemberExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmEnumMemberReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmEnumMemberReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmIfExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmIfExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmIsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmIsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmLabeledExpressionReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmLabeledExpressionReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmNavigationPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmNavigationPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmNullExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmOperationReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmOperationReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmParameterReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmParameterReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmPropertyConstructor.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyConstructor.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmPropertyPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmPropertyReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmRecordExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\EdmValueTermReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmValueTermReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmApplyExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmApplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmBinaryConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmBinaryConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmBooleanConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmBooleanConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmCastExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmCollectionExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmCollectionExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDateConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDateConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDateTimeOffsetConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDateTimeOffsetConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDecimalConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDecimalConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmDurationConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmDurationConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmEntitySetReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEntitySetReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmEnumMemberExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEnumMemberExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmGuidConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmGuidConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmIfExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmIfExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmIntegerConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmIntegerConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmIsTypeExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmIsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmLabeledExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmLabeledExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmLabeledExpressionReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmLabeledExpressionReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmNullExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmOperationReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmOperationReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmParameterReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmParameterReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmPropertyConstructor.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPropertyConstructor.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmPropertyReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPropertyReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmRecordExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmStringConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmStringConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
@@ -1532,5 +1526,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

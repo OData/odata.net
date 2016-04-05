@@ -15,11 +15,8 @@ namespace Suites.Data.Test
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Reflection;
     using System.Reflection.Emit;
-    using System.Security;
-    using System.Security.Permissions;
     using MethodDef = System.Collections.Generic.KeyValuePair<System.RuntimeMethodHandle, System.RuntimeTypeHandle>;
 
     public static class UnitTestCodeGen

@@ -19,9 +19,6 @@ namespace Microsoft.OData.Edm.Csdl
 #endif
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml;
     using Microsoft.OData.Edm;

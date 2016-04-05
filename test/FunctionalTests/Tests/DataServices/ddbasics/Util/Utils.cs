@@ -18,7 +18,6 @@ using System.Reflection.Emit;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using AstoriaUnitTests.Stubs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AstoriaUnitTests

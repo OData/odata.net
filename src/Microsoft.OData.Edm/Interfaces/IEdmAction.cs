@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Expressions;
-
 namespace Microsoft.OData.Edm
 {
     /// <summary>

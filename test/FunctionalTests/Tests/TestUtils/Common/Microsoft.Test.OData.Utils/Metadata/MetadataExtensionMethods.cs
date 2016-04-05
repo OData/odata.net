@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Values;
     using Microsoft.Test.OData.Utils.Common;
 

@@ -20,7 +20,6 @@ namespace Microsoft.OData.Edm.Csdl
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Xml;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;

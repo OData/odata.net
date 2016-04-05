@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     internal class CsdlEnumMemberReferenceExpression : CsdlExpressionBase
@@ -16,9 +18,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.enumMemberPath = enumMemberPath;
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.EnumMemberReference; }
+            get { return EdmExpressionKind.EnumMemberReference; }
         }
 
         public string EnumMemberPath

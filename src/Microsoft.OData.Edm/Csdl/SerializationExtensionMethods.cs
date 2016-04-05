@@ -15,8 +15,6 @@ using Microsoft.OData.Edm.Values;
 
 namespace Microsoft.OData.Edm.Csdl
 {
-    using System.Diagnostics;
-
     /// <summary>
     /// Represents whether a vocabulary annotation should be serialized within the element it applies to or in a separate section of the CSDL.
     /// </summary>

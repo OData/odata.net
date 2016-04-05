@@ -7,7 +7,7 @@
 namespace EdmLibTests.StubEdm
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Values;
 
     /// <summary>

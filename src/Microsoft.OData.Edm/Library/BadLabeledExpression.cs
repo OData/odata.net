@@ -6,9 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Library
 {

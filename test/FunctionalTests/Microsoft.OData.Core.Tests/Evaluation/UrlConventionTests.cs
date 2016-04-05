@@ -14,6 +14,8 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.Evaluation
 {
+    using Microsoft.OData.Edm.Vocabularies;
+
     public class UrlConventionTests
     {
         [Fact]

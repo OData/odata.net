@@ -6,8 +6,7 @@
 
 namespace Microsoft.OData.Edm.Library
 {
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Represents an EDM singleton.
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Gets the path that a navigation property targets.
         /// </summary>
-        public override Edm.Expressions.IEdmPathExpression Path
+        public override IEdmPathExpression Path
         {
             get { return this.path; }
         }

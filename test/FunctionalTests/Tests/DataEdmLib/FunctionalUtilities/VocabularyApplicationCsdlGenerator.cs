@@ -12,7 +12,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 
     /// <summary>

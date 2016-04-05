@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Library
 {
@@ -46,7 +47,7 @@ namespace Microsoft.OData.Edm.Library
             get { return Enumerable.Empty<IEdmNavigationPropertyBinding>(); }
         }
 
-        public Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return null; }
         }

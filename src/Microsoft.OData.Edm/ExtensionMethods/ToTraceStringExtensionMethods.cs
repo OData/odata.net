@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Linq;
 using System.Text;
 using Microsoft.OData.Edm.Library;
 

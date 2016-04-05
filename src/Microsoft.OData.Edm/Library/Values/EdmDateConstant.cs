@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Library.Values
 {

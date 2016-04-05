@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Edm.Library
 {

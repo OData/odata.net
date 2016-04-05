@@ -4,24 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-using Microsoft.OData.Edm.Csdl.Serialization;
-using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation.Internal;
 using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Validation
 {
-    using System.Collections.ObjectModel;
-
     /// <summary>
     /// Built in Edm validation rules.
     /// </summary>
@@ -1409,8 +1404,8 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (operationImport.EntitySet != null)
                     {
-                        if (operationImport.EntitySet.ExpressionKind != Expressions.EdmExpressionKind.EntitySetReference &&
-                            operationImport.EntitySet.ExpressionKind != Expressions.EdmExpressionKind.Path)
+                        if (operationImport.EntitySet.ExpressionKind != EdmExpressionKind.EntitySetReference &&
+                            operationImport.EntitySet.ExpressionKind != EdmExpressionKind.Path)
                         {
                             context.AddError(
                                 operationImport.Location(),

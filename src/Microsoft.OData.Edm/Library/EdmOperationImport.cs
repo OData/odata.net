@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Edm.Library
 {
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Represents an EDM operation import.

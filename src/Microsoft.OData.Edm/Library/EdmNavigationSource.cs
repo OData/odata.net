@@ -6,11 +6,10 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Expressions;
 
 namespace Microsoft.OData.Edm.Library
 {
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Represents an abstract EDM navigation source.

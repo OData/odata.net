@@ -9,6 +9,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmEntitySet
@@ -68,7 +69,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         /// <summary>
         /// Gets the path that a navigation property targets.
         /// </summary>
-        public OData.Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return null; }
         }

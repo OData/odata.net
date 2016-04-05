@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     internal class CsdlPropertyReferenceExpression : CsdlExpressionBase
@@ -18,9 +20,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.baseExpression = baseExpression;
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.PropertyReference; }
+            get { return EdmExpressionKind.PropertyReference; }
         }
 
         public string Property

@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Validation.Internal
 {

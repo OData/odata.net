@@ -11,6 +11,7 @@ namespace Microsoft.OData.Service.Providers
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Vocabularies;
     using Strings = Microsoft.OData.Service.Strings;
     #endregion Namespaces
 
@@ -114,7 +115,7 @@ namespace Microsoft.OData.Service.Providers
         /// <summary>
         /// Gets the path that represents current path of the navigation source.
         /// </summary>
-        public Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             // TODO: implement path and type to support MetadataProviderEdmEntitySet.cs
             get { return null; }

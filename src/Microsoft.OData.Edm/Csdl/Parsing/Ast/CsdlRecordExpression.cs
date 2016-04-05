@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
@@ -23,9 +24,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.propertyValues = new List<CsdlPropertyValue>(propertyValues);
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.Record; }
+            get { return EdmExpressionKind.Record; }
         }
 
         public CsdlTypeReference Type

@@ -12,10 +12,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Vocabularis;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;

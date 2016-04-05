@@ -8,8 +8,6 @@ using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
-    using System;
-
     /// <summary>
     /// Represents a CSDL operation import.
     /// </summary>

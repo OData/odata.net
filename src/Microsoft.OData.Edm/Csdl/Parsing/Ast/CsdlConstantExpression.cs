@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
@@ -23,38 +24,38 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.value = value;
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
             get
             {
                 switch (this.kind)
                 {
                     case EdmValueKind.Binary:
-                        return Expressions.EdmExpressionKind.BinaryConstant;
+                        return EdmExpressionKind.BinaryConstant;
                     case EdmValueKind.Boolean:
-                        return Expressions.EdmExpressionKind.BooleanConstant;
+                        return EdmExpressionKind.BooleanConstant;
                     case EdmValueKind.DateTimeOffset:
-                        return Expressions.EdmExpressionKind.DateTimeOffsetConstant;
+                        return EdmExpressionKind.DateTimeOffsetConstant;
                     case EdmValueKind.Decimal:
-                        return Expressions.EdmExpressionKind.DecimalConstant;
+                        return EdmExpressionKind.DecimalConstant;
                     case EdmValueKind.Floating:
-                        return Expressions.EdmExpressionKind.FloatingConstant;
+                        return EdmExpressionKind.FloatingConstant;
                     case EdmValueKind.Guid:
-                        return Expressions.EdmExpressionKind.GuidConstant;
+                        return EdmExpressionKind.GuidConstant;
                     case EdmValueKind.Integer:
-                        return Expressions.EdmExpressionKind.IntegerConstant;
+                        return EdmExpressionKind.IntegerConstant;
                     case EdmValueKind.String:
-                        return Expressions.EdmExpressionKind.StringConstant;
+                        return EdmExpressionKind.StringConstant;
                     case EdmValueKind.Duration:
-                        return Expressions.EdmExpressionKind.DurationConstant;
+                        return EdmExpressionKind.DurationConstant;
                     case EdmValueKind.Date:
-                        return Expressions.EdmExpressionKind.DateConstant;
+                        return EdmExpressionKind.DateConstant;
                     case EdmValueKind.TimeOfDay:
-                        return Expressions.EdmExpressionKind.TimeOfDayConstant;
+                        return EdmExpressionKind.TimeOfDayConstant;
                     case EdmValueKind.Null:
-                        return Expressions.EdmExpressionKind.Null;
+                        return EdmExpressionKind.Null;
                     default:
-                        return Expressions.EdmExpressionKind.None;
+                        return EdmExpressionKind.None;
                 }
             }
         }

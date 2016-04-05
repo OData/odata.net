@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Library
 {
@@ -37,7 +38,7 @@ namespace Microsoft.OData.Edm.Library
             }
         }
 
-        public Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return null; }
         }

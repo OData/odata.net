@@ -17,6 +17,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Implementation of <see cref="IEdmStructuredValue"/> which wraps client-side objects.

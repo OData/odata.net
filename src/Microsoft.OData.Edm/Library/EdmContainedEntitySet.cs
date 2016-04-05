@@ -6,10 +6,8 @@
 
 namespace Microsoft.OData.Edm.Library
 {
-    using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Represents an EDM contained entity set.

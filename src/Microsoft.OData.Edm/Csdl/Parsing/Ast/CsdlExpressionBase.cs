@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     /// <summary>
@@ -16,6 +18,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
         }
 
-        public abstract Expressions.EdmExpressionKind ExpressionKind { get; }
+        public abstract EdmExpressionKind ExpressionKind { get; }
     }
 }

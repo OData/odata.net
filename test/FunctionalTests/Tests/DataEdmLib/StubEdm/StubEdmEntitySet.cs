@@ -9,6 +9,7 @@ namespace EdmLibTests.StubEdm
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmEntitySet
@@ -63,7 +64,7 @@ namespace EdmLibTests.StubEdm
         /// <summary>
         /// Gets the path that represents current path of the navigation source. 
         /// </summary>
-        public Microsoft.OData.Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return null; }
         }
