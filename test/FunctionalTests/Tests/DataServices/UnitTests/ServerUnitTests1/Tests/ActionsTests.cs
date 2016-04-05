@@ -907,7 +907,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = false,
                     HasReturnSet = false,
                 },
-                
+
                 new {
                     RequestUri = "/TopLevelActionWithParam_PrimitiveCollection",
                     RequestPayload = requestPayload3,
@@ -958,7 +958,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = false,
                     HasReturnSet = false,
                 },
-               
+
                 new {
                     RequestUri = "/TopLevelActionWithParam_Complex",
                     RequestPayload = requestPayload5,
@@ -969,7 +969,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = false,
                     HasReturnSet = false,
                 },
-                
+
                 new {
                     RequestUri = "/TopLevelActionWithParam_ComplexCollection",
                     RequestPayload = requestPayload2,
@@ -989,7 +989,7 @@ namespace AstoriaUnitTests.Tests.Server
                     ResponseVersion = V4,
                     IsBindable = false,
                     HasReturnSet = false,
-                }, 
+                },
                 new {
                     RequestUri = "/TopLevelActionWithParam_ComplexCollection",
                     RequestPayload = requestPayload7,
@@ -1030,7 +1030,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = false,
                     HasReturnSet = false,
                 },
-                
+
                 new {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Primitive",
                     RequestPayload = requestPayload1,
@@ -1181,7 +1181,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = true,
                     HasReturnSet = false,
                 },
-                
+
                 new {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveCollection_Primitive",
                     RequestPayload = requestPayload9,
@@ -1213,7 +1213,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = true,
                     HasReturnSet = false,
                 },
-                
+
                 new {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Primitive_PrimitiveQueryable",
                     RequestPayload = requestPayload12,
@@ -1224,7 +1224,7 @@ namespace AstoriaUnitTests.Tests.Server
                     IsBindable = true,
                     HasReturnSet = false,
                 },
-                
+
                 new {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Primitive_PrimitiveQueryable",
                     RequestPayload = requestPayload13,
@@ -1366,7 +1366,7 @@ namespace AstoriaUnitTests.Tests.Server
                     ResponseVersion = V4,
                     IsBindable = false,
                     HasReturnSet = false,
-                } 
+                }
             };
             #endregion Test Cases
 
@@ -1489,7 +1489,7 @@ namespace AstoriaUnitTests.Tests.Server
                     failedTestUris.Add(testCase.RequestUri);
                     throw;
                 }
-                
+
             });
         }
 
@@ -1877,7 +1877,7 @@ namespace AstoriaUnitTests.Tests.Server
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Variation("Makes sure in Json Light, always bindable actions are omitted in payload.")]
         public void JsonLightOmitAlwaysAvailableActionsInEntry()
         {
@@ -2158,7 +2158,7 @@ namespace AstoriaUnitTests.Tests.Server
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Variation("Tests $select on entities with actions.")]
         public void ActionSelectExpandTests()
         {
@@ -2204,7 +2204,7 @@ namespace AstoriaUnitTests.Tests.Server
                     XPaths = new string[]
                     {
                         "boolean(//atom:entry/atom:content/adsm:properties/ads:ID)",
-                        "not    (//atom:entry/atom:content/adsm:properties/*[local-name()!='ID'])",                        
+                        "not    (//atom:entry/atom:content/adsm:properties/*[local-name()!='ID'])",
                         "boolean(//atom:entry[count(adsm:action)=1] and not(//atom:entry[count(adsm:action)!=1]))",
                         "boolean(//atom:entry/adsm:action[@title='ActionOnSingleEntity_Void'] and not(//atom:entry/adsm:action[@title!='ActionOnSingleEntity_Void']))"
                     },
@@ -2405,10 +2405,11 @@ namespace AstoriaUnitTests.Tests.Server
                     failingTests.Add(testCase.RequestUri);
                     throw;
                 }
-                
+
             });
         }
 
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Variation("Tests the next link with selected actions.")]
         public void ActionNextLinkWithSelectExpandTests()
         {
@@ -3895,7 +3896,7 @@ namespace AstoriaUnitTests.Tests.Server
                     RequestUri = "/GetFirstTwoCustomers/NorthwindModel.IQueryableCustomersWithBinding",
                     ExpectedResponsePayload = "{\"@odata.context\":\"http://host/$metadata#Customers\",\"value\":[{\"CustomerID\":\"ALFKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"ContactTitle\":\"Sales Representative\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\",\"Region\":null,\"PostalCode\":\"12209\",\"Phone\":\"030-0074321\",\"Fax\":\"030-0076545\",\"#NorthwindModel.UpdateAddress\":{}},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"ContactTitle\":\"Owner\",\"Address\":\"Avda. de la Constituci\\u00f3n 2222\",\"City\":\"M\\u00e9xico D.F.\",\"Region\":null,\"PostalCode\":\"05021\",\"Phone\":\"(5) 555-4729\",\"Fax\":\"(5) 555-3745\",\"#NorthwindModel.UpdateAddress\":{}}]}",
                     StatusCode = 200,
-                },           
+                },
             };
 
             t.TestUtil.RunCombinations(testCases, (testCase) =>
@@ -4386,7 +4387,7 @@ namespace AstoriaUnitTests.Tests.Server
         {
             Assert.AreEqual(binding.GetValue("ID"), 3);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Variation("Service action and open type positive tests.")]
         public void ActionOpenTypeSelectTests()
         {

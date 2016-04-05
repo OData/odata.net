@@ -65,7 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.StreamProperty("StreamProperty", contentType: "mime/type"),
                     PayloadEdmModel = model,
                     // Doesn't work for ATOM as ATOM needs the self link to put the content type on
-                    SkipTestConfiguration = tc => tc.Format == ODataFormat.Atom
+                    SkipTestConfiguration = tc => false
                 },
                 // Read link and content type
                 new PayloadReaderTestDescriptor(settings)
@@ -85,7 +85,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.StreamProperty("StreamProperty", etag: "etag"),
                     PayloadEdmModel = model,
                     // Doesn't work for ATOM as ATOM needs the edit link to put the etag on
-                    SkipTestConfiguration = tc => tc.Format == ODataFormat.Atom
+                    SkipTestConfiguration = tc => false
                 },
                 // Just edit link and etag - valid for readers
                 new PayloadReaderTestDescriptor(settings)
@@ -106,24 +106,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             return streamPropertyTestDescriptors;
         }
 
-        [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with fully specified metadata.")]
-        public void StreamPropertyWithMetadataTest()
-        {
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors
-                = CreateStreamPropertyMetadataTestDescriptors(this.Settings).SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
-
-            // NOTE: manual JSON tests and error tests are part of the JSON specific StreamPropertyWithMetadataJsonTests test case
-            // NOTE: manual ATOM tests and error tests are part of the ATOM specific StreamPropertyWithMetadataAtomTests test case
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                // No stream properties in requests or <V3 payloads
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
         [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with fully specified metadata in JSON Light.")]
         public void StreamPropertyWithMetadataJsonLightTest()
         {
@@ -139,28 +121,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
-        [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with regard to UndeclaredPropertyBehaviorKinds.")]
-        public void UndeclaredPropertyBehaviorKindStreamPropertyTest()
-        {
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                TestReaderUtils.ODataUndeclaredPropertyBehaviorKindsCombinations,
-                undeclaredPropertyBehaviorKinds =>
-                {
-                    var testDescriptors = CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(undeclaredPropertyBehaviorKinds, this.Settings);
-                    this.CombinatorialEngineProvider.RunCombinations(
-                        testDescriptors,
-                        this.ReaderTestConfigurationProvider.AtomFormatConfigurations.Where(tc => !tc.IsRequest),
-                        (testDescriptor, testConfiguration) =>
-                        {
-                            testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                            testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds;
-
-                            testDescriptor.RunTest(testConfiguration);
-                        });
                 });
         }
 

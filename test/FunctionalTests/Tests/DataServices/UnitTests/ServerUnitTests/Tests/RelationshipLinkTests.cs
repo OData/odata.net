@@ -35,6 +35,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        [Ignore] // Remove Atom
         [TestClass]
         public class RelationshipLinkTests : AstoriaTestCase
         {

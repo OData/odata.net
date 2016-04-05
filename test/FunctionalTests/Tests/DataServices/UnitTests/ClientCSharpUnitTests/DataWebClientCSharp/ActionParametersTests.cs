@@ -27,6 +27,7 @@ namespace AstoriaUnitTests
     /// <summary>
     /// Test the serialization of action parameters from the client.
     /// </summary>
+    [Ignore] // Remove Atom
     [TestClass]
     public class ActionParametersTests
     {
@@ -79,7 +80,7 @@ namespace AstoriaUnitTests
                         #region BodyOperationParameter Tests
                         
                         #region Enum
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -92,7 +93,7 @@ namespace AstoriaUnitTests
                         #region primitive
 
                         // primitive
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -102,7 +103,7 @@ namespace AstoriaUnitTests
                         },
                     
                         // two primitives
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -116,7 +117,7 @@ namespace AstoriaUnitTests
                         #region entity
                     
                         // entity
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -134,7 +135,7 @@ namespace AstoriaUnitTests
                         #region complex
 
                         // complex containing a collection of primitive type
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -148,12 +149,12 @@ namespace AstoriaUnitTests
                         },
 
                         // complex containing a collection of complex type.
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
                             HttpMethod = "POST",
-                            Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexParam3) }, 
+                            Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexParam3) },
                             ExpectedPayloadBuilder = new PayloadBuilder()
                                 .AddComplexProperty("ComplexParam3",
                                     new PayloadBuilder() { TypeName = "AstoriaServer.ActionParametersTests+ComplexType3" }
@@ -167,7 +168,7 @@ namespace AstoriaUnitTests
                         },
    
                         // Complex
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -194,7 +195,7 @@ namespace AstoriaUnitTests
                                         .AddComplexProperty("Address", new PayloadBuilder() { TypeName = "AstoriaServer.ActionParametersTests+AddressComplexType"}
                                                 .AddProperty("City", "Woodinville")
                                                 .AddProperty("Enum1", BasicParamValues.EnumPara1 + "")
-                                                .AddProperty("ZipCode", 98077))    
+                                                .AddProperty("ZipCode", 98077))
                                         .AddProperty("Name", "Allie"))
                         },
 
@@ -203,7 +204,7 @@ namespace AstoriaUnitTests
                         #region Empty or null parameters
                         
                         // null value
-                       new TestCase() 
+                       new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -213,7 +214,7 @@ namespace AstoriaUnitTests
                         },
                     
                         // empty string
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -223,7 +224,7 @@ namespace AstoriaUnitTests
                         },
 
                         // empty collection of primitive
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -233,7 +234,7 @@ namespace AstoriaUnitTests
                         },
 
                         // empty collection of complex
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -259,8 +260,8 @@ namespace AstoriaUnitTests
                         #region misc
 
                         // primitive and complex
-                        new TestCase() 
-                        {   
+                        new TestCase()
+                        {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
                             HttpMethod = "POST",
@@ -275,7 +276,7 @@ namespace AstoriaUnitTests
                         },
 
                         // complex and primitive
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -291,17 +292,17 @@ namespace AstoriaUnitTests
                         },
 
                         // complex, primitive, complex collection, primitive
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
                             HttpMethod = "POST",
-                            Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexParam1), this.GetParam<BodyOperationParameter>(BasicParamValues.StringParam1), 
+                            Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexParam1), this.GetParam<BodyOperationParameter>(BasicParamValues.StringParam1),
                                 this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexCollParam), this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },
                             ExpectedPayloadBuilder = new PayloadBuilder()
                                 .AddComplexProperty("ComplexParam1",
                                     new PayloadBuilder() { TypeName = "AstoriaServer.ActionParametersTests+AddressComplexType" }
-                                        .AddProperty("City", "Redmond")                
+                                        .AddProperty("City", "Redmond")
                                         .AddProperty("Enum1", BasicParamValues.EnumPara1 + "")
                                         .AddProperty("ZipCode", 98052))
                                 .AddProperty("StringParam1", "StringValue1")
@@ -321,7 +322,7 @@ namespace AstoriaUnitTests
                         #region primitive collection
 
                         // primitive collection (array)
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -331,7 +332,7 @@ namespace AstoriaUnitTests
                         },
 
                         // primitive collection (array)
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -343,7 +344,7 @@ namespace AstoriaUnitTests
                         #endregion      
                         
                         #region  Enum colleciton
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -356,7 +357,7 @@ namespace AstoriaUnitTests
                         #region complex collection
 
                         // complex collection (array)
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -372,7 +373,7 @@ namespace AstoriaUnitTests
                         },
 
                         // List of complex types
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -428,7 +429,7 @@ namespace AstoriaUnitTests
                         #region UriOperationParameter Tests
                         
                         #region Enum
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(p1=AstoriaServer.ActionParametersTests+BasicParamValues'IntParam1')",
@@ -441,57 +442,57 @@ namespace AstoriaUnitTests
                         #region primitive
 
                         // primitive - int
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(IntParam1=5)",
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.IntParam1) },    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.IntParam1) },
                             ExpectedPayloadBuilder = null,
                         },
 
                         // primitive - string
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(StringParam1='StringValue1')",
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.StringParam1)},    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.StringParam1)},
                             ExpectedPayloadBuilder = null,
                         },
 
                         // primitive - string with quotes
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(param1='some''s''tring')",
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { new UriOperationParameter("param1", "some's'tring" )},    
+                            Parameters = new UriOperationParameter[] { new UriOperationParameter("param1", "some's'tring" )},
                             ExpectedPayloadBuilder = null,
                         },
 
                         // primitive - empty string.
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(EmptyStringParam='')",
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.EmptyStringParam) },    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.EmptyStringParam) },
                             ExpectedPayloadBuilder = null,
                         },
 
                         // datetimeoffset
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(DateTimeParam=2011-01-01T00%3A00%3A00Z)",
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.DateTimeOffsetParam) },    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.DateTimeOffsetParam) },
                             ExpectedPayloadBuilder = null,
                         },
       
                         // two primitives - int and string
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(IntParam1=5,StringParam1='StringValue1')",
@@ -501,7 +502,7 @@ namespace AstoriaUnitTests
                         },              
                                         
                         // nullable bool.
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = Uri.EscapeUriString("/ActionWithParameters(NullableBool=5)"),
@@ -515,7 +516,7 @@ namespace AstoriaUnitTests
                         #region complex
                         
                         // complex type
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -525,7 +526,7 @@ namespace AstoriaUnitTests
                                     .AddProperty("Enum1", BasicParamValues.EnumPara1 + "")
                                     .AddProperty("ZipCode", 98052)),
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam1) },    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam1) },
                             ExpectedPayloadBuilder = null,
                         },
 
@@ -549,7 +550,7 @@ namespace AstoriaUnitTests
                         //},
                     
                         // complex containing a collection of primitive type
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -601,7 +602,7 @@ namespace AstoriaUnitTests
                         #region collection of primitive/complex
 
                         // collection of complex type (list)
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -619,12 +620,12 @@ namespace AstoriaUnitTests
                                             .AddProperty("ZipCode", 98007)
                                     })),
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ListOfComplexTypesParam) },    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ListOfComplexTypesParam) },
                             ExpectedPayloadBuilder = null,
                         },
                     
                         // complex collection (array)
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -647,7 +648,7 @@ namespace AstoriaUnitTests
                         },
 
                         // primitive collection (array) - 1 element
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -683,7 +684,7 @@ namespace AstoriaUnitTests
                         },
 
                         // empty string
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = "/ActionWithParameters(EmptyStringParam='')",
@@ -693,7 +694,7 @@ namespace AstoriaUnitTests
                         },
 
                         // empty collection of primitive
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -705,7 +706,7 @@ namespace AstoriaUnitTests
                         },
 
                         // empty collection of complex
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -717,7 +718,7 @@ namespace AstoriaUnitTests
                         },
 
                         // empty parameter array
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -731,7 +732,7 @@ namespace AstoriaUnitTests
                         #region entity
 
                          // entity type
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -741,7 +742,7 @@ namespace AstoriaUnitTests
                                     .AddProperty("Enum1", BasicParamValues.EnumPara1 + "")
                                     .AddProperty("ZipCode", 98052)),
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam1) },    
+                            Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam1) },
                             ExpectedPayloadBuilder = null,
                         },
 
@@ -796,7 +797,7 @@ namespace AstoriaUnitTests
                     
                         #region misc
                         // primitive and complex
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -812,7 +813,7 @@ namespace AstoriaUnitTests
                         },
 
                         // complex and primitive
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             ExpectedBaseUriString = this.defaultUriString,
@@ -824,7 +825,7 @@ namespace AstoriaUnitTests
                                 .AddParameter("IntParam1", 5),
                             HttpMethod = "GET",
                             Parameters = new UriOperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam1), this.GetParam<UriOperationParameter>(BasicParamValues.IntParam1) },
-                            ExpectedPayloadBuilder = null,  
+                            ExpectedPayloadBuilder = null,
                         },
 
                         // TODO: need more investigation
@@ -880,7 +881,7 @@ namespace AstoriaUnitTests
                                     .AddCollectionProperty("Numbers", "Edm.Int32", new List<int> { 1, 2 })),
                             HttpMethod = "POST",
                             Parameters = new OperationParameter[] { this.GetParam<UriOperationParameter>(BasicParamValues.IntParam1), this.GetParam<BodyOperationParameter>(BasicParamValues.StringParam1),
-                                this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam2), this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexParam2)},    
+                                this.GetParam<UriOperationParameter>(BasicParamValues.ComplexParam2), this.GetParam<BodyOperationParameter>(BasicParamValues.ComplexParam2)},
                             ExpectedPayloadBuilder = new PayloadBuilder()
                                 .AddProperty("StringParam1", "StringValue1")
                                 .AddComplexProperty("ComplexParam2",
@@ -904,12 +905,12 @@ namespace AstoriaUnitTests
                         //},
 
                         // uri with existing escaped query string.
-                        new TestCase()  
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString + "?What=A%20B%20C",
                             ExpectedBaseUriString = "/ActionWithParameters(p1='This%20is%20with%20space')?What=A%20B%20C",
                             HttpMethod = "GET",
-                            Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", "This is with space") },    
+                            Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", "This is with space") },
                         },
 
                         // TODO: need more investigation
@@ -948,7 +949,7 @@ namespace AstoriaUnitTests
                         #region BodyOperationParameter tests
 
                         // duplicate parameter name for body operation parameter
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             Parameters = new OperationParameter[] { new BodyOperationParameter("p1", 5), new BodyOperationParameter("p1", 6)},
@@ -975,12 +976,12 @@ namespace AstoriaUnitTests
                         },
                         
                         // Arraylist
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             Parameters = new BodyOperationParameter[]  { new BodyOperationParameter("p1", new ArrayList() { 1 } ) },
                             HttpMethod = "POST",
-                            ExpectedErrorMessage = "The complex type 'System.Object' has no settable properties.",  
+                            ExpectedErrorMessage = "The complex type 'System.Object' has no settable properties.",
                         },
 
                         #endregion
@@ -988,7 +989,7 @@ namespace AstoriaUnitTests
                         #region UriOperationParameter tests
 
                         // duplicate parameter name for uri operation parameter
-                        new TestCase() 
+                        new TestCase()
                         {
                             ActualUriString = this.defaultUriString,
                             Parameters = new OperationParameter[] { new UriOperationParameter("p1", 5), new UriOperationParameter("p1", 6)},
@@ -1347,22 +1348,11 @@ namespace AstoriaUnitTests
         }
 
         [TestMethod]
-        public void ExecuteActionParametersErrorTestsWithAtom()
-        {
-            RunExecuteActionParametersErrorTests(ODataFormat.Atom, (ctx, uri, testCase) => ctx.Execute(uri, testCase.HttpMethod, testCase.Parameters));
-        }
-
-        [TestMethod]
         public void ExecuteActionParametersErrorTestsWithJsonLight()
         {
             RunExecuteActionParametersErrorTests(ODataFormat.Json, (ctx, uri, testCase) => ctx.Execute(uri, testCase.HttpMethod, testCase.Parameters));
         }
 
-        [TestMethod]
-        public void ExecuteActionParametersErrorTestsAsyncWithAtom()
-        {
-            RunExecuteActionParametersErrorTests(ODataFormat.Atom, (ctx, uri, testCase) => ctx.BeginExecute<object>(uri, asyncResult => ctx.EndExecute<object>(asyncResult), null, testCase.HttpMethod, false, testCase.Parameters));
-        }
 
         [TestMethod]
         public void ExecuteActionParametersErrorTestsAsyncWithJsonLight()
@@ -1393,25 +1383,10 @@ namespace AstoriaUnitTests
         #region Positive Tests
         [Ignore]
         [TestMethod]
-        public void ExecuteActionParametersTestsWithAtom()
-        {
-            RunExecuteActionParameterTests(true, ODataFormat.Atom);
-        }
-        
-        [Ignore]
-        [TestMethod]
         public void ExecuteActionParametersTestsWithJsonLight()
         {
             // Test all positive test cases for action body parameter serialization with JSON Light.
             this.RunExecuteActionParameterTests(true, ODataFormat.Json);
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void ExecuteActionParametersTestsAsyncWithAtom()
-        {
-            // Test all positive test cases for action parameter serialization in async mode with Atom.
-            RunExecuteActionParameterTests(false, ODataFormat.Atom);
         }
 
         [Ignore]
@@ -1424,38 +1399,18 @@ namespace AstoriaUnitTests
 
         [Ignore]
         [TestMethod]
-        public void ExecuteUriWithExistingEscapedCollectionValueWithAtom()
-        {
-            var testCases = new TestCase[]
-            {
-                new TestCase()  
-                {
-                    // Original query string = IntCollection1={"__metadata"%3A{"type"%3A"Collection(Edm.Int32)"},"results"%3A[1]}
-                    ActualUriString = this.defaultUriString + "?IntCollection1=%7B%22__metadata%22%3A%7B%22type%22%3A%22Collection(Edm.Int32)%22%7D,%22results%22%3A%5B1%5D%7D",
-                    //"/ActionWithParameters(p1='%7B%2526*%7D')?IntCollection1=%7B%22__metadata%22%3A%7B%22type%22%3A%22Collection(Edm.Int32)%22%7D,%22results%22%3A%5B1%5D%7D",
-                    ExpectedBaseUriString = "/ActionWithParameters?IntCollection1=%7B%22__metadata%22%3A%7B%22type%22%3A%22Collection(Edm.Int32)%22%7D,%22results%22%3A%5B1%5D%7D&p1='%7B%2526*%7D'",
-                    HttpMethod = "GET",
-                    Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", "{%26*}") },    
-                },
-            };
-
-            this.RunExecuteActionParameterTests(testCases, true, ODataFormat.Atom);
-        }
-
-        [Ignore]
-        [TestMethod]
         public void ExecuteUriWithExistingEscapedCollectionValueWithJsonLight()
         {
             var testCases = new TestCase[]
             {
-                new TestCase()  
+                new TestCase()
                 {
                     // Original query string = IntCollection1={"odata.type"%3A"Collection(Edm.Int32)","value"%3A[1]}
                     ActualUriString = this.defaultUriString + "?IntCollection1=%7B%22odata.type%22%3A%22Collection(Edm.Int32)%22,%22value%22%3A%5B1%5D%7D",
                     //"/ActionWithParameters(p1='%7B%2526*%7D')IntCollection1=%7B%22odata.type%22%3A%22Collection(Edm.Int32)%22,%22value%22%3A%5B1%5D%7D"
                     ExpectedBaseUriString = "/ActionWithParameters?IntCollection1=%7B%22odata.type%22%3A%22Collection(Edm.Int32)%22,%22value%22%3A%5B1%5D%7D&p1='%7B%2526*%7D'",
                     HttpMethod = "GET",
-                    Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", "{%26*}") },    
+                    Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", "{%26*}") },
                 },
             };
 
@@ -1482,10 +1437,6 @@ namespace AstoriaUnitTests
                     {
                         // Parameters are sent using JSON when context format is Atom
                         var expectedParameterFormat = contextFormat;
-                        if (expectedParameterFormat == ODataFormat.Atom)
-                        {
-                            expectedParameterFormat = ODataFormat.Json;
-                        }
 
                         string expectedUriString = testCase.ExpectedBaseUriString;
                         OperationUriBuilder operationUriBuilder = testCase.ExpectedUriBuilder;
@@ -1536,14 +1487,6 @@ namespace AstoriaUnitTests
         #endregion
 
         #region Async Cancel Tests
-
-        [TestMethod]
-        public void ExecuteActionParametersTestsAsyncCancelWithAtom()
-        {
-            // Test that cancelling an async execute works with Atom.
-            this.RunCancelRequestTest(ODataFormat.Atom);
-        }
-
         [TestMethod]
         public void ExecuteActionParametersTestsAsyncCancelWithJsonLight()
         {
@@ -1568,7 +1511,7 @@ namespace AstoriaUnitTests
                 Uri uri = new Uri(request.ServiceRoot + this.defaultUriString);
                 IAsyncResult result = ctx.BeginExecute<object>(uri, null, null, "POST", false, cancelTestCase.Parameters);
                 ctx.CancelRequest(result);
-                Exception exception = AstoriaTest.TestUtil.RunCatching(delegate()
+                Exception exception = AstoriaTest.TestUtil.RunCatching(delegate ()
                 {
                     ctx.EndExecute<object>(result);
                 });
@@ -1591,13 +1534,6 @@ namespace AstoriaUnitTests
         }
 
         [TestMethod]
-        public void BeginAndEndExecuteErrorTestsWithAtom()
-        {
-            // Test that incorrectly calling EndExecute throws error with Atom.
-            this.RunBeginAndEndExecuteErrorTests(ODataFormat.Atom);
-        }
-
-        [TestMethod]
         public void BeginAndEndExecuteErrorTestsWithJsonLight()
         {
             // Test that incorrectly calling EndExecute throws error with JSON Light.
@@ -1611,13 +1547,13 @@ namespace AstoriaUnitTests
                 // Call EndExecute<T> on BeginExecute.
                 new BeginAndEndExecuteTestCase()
                 {
-                    Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },    
+                    Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },
                     ExpectedErrorMessage = "The current object did not originate the async result.\r\nParameter name: asyncResult",
                     BeginExecuteMethod = new MyBeginExecute((DataServiceContext ctx, Uri uri, OperationParameter[] parameters) =>
                         {
                             return ctx.BeginExecute(uri, null, null, "POST", parameters);
                         }),
-                       
+
                     EndExecuteMethod = new MyEndExecute((DataServiceContext ctx, IAsyncResult result) =>
                         {
                             ctx.EndExecute<object>(result);
@@ -1627,13 +1563,13 @@ namespace AstoriaUnitTests
                 // Call EndExecute on BeginExecute<T>. 
                 new BeginAndEndExecuteTestCase()
                 {
-                    Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },    
+                    Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },
                     ExpectedErrorMessage = "The current object did not originate the async result.\r\nParameter name: asyncResult",
                     BeginExecuteMethod = new MyBeginExecute((DataServiceContext ctx, Uri uri, OperationParameter[] parameters) =>
                         {
                             return ctx.BeginExecute<object>(uri, null, null, "POST", false, parameters);
                         }),
-                       
+
                     EndExecuteMethod = new MyEndExecute((DataServiceContext ctx, IAsyncResult result) =>
                         {
                             ctx.EndExecute(result);
@@ -1643,13 +1579,13 @@ namespace AstoriaUnitTests
                 // Call EndExecute on another BeginExecute<T> overload. 
                 new BeginAndEndExecuteTestCase()
                 {
-                    Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },    
+                    Parameters = new BodyOperationParameter[] { this.GetParam<BodyOperationParameter>(BasicParamValues.IntParam1) },
                     ExpectedErrorMessage = "The current object did not originate the async result.\r\nParameter name: asyncResult",
                     BeginExecuteMethod = new MyBeginExecute((DataServiceContext ctx, Uri uri, OperationParameter[] parameters) =>
                         {
                             return ctx.BeginExecute<object>(uri, null, null);
                         }),
-                       
+
                     EndExecuteMethod = new MyEndExecute((DataServiceContext ctx, IAsyncResult result) =>
                         {
                             ctx.EndExecute(result);
@@ -1668,7 +1604,7 @@ namespace AstoriaUnitTests
 
                     Uri uri = new Uri(request.ServiceRoot + this.defaultUriString);
                     IAsyncResult result = testCase.BeginExecuteMethod(ctx, uri, testCase.Parameters);
-                    Exception exception = AstoriaTest.TestUtil.RunCatching(delegate()
+                    Exception exception = AstoriaTest.TestUtil.RunCatching(delegate ()
                     {
                         testCase.EndExecuteMethod(ctx, result);
                     });
@@ -1684,15 +1620,6 @@ namespace AstoriaUnitTests
         //TODO: Need to update server for serviceoperation parameter
         [Ignore]
         [TestMethod]
-        public void ExecuteServiceOperationTestsWithUriParametersWithAtom()
-        {
-            // End-to-End test for uri parameters using service operation with Atom.
-            RunServiceOperationTestWithUriParameters(ODataFormat.Atom);
-        }
-
-        //TODO: Need to update server for serviceoperation parameter
-        [Ignore]
-        [TestMethod]
         public void ExecuteServiceOperationTestsWithUriParametersWithJsonLight()
         {
             // End-to-End test for uri parameters using service operation with JSON Light.
@@ -1704,11 +1631,11 @@ namespace AstoriaUnitTests
             TestCase[] positiveTestCases = new TestCase[]
             {   
                 // a uri parameter containing spaces. (Client should escape the uri parameter containing spaces)
-                new TestCase() 
+                new TestCase()
                 {
                     ActualUriString = "/ServiceOpTest",
                     Parameters = new OperationParameter[] { new UriOperationParameter("p1", 5), new UriOperationParameter("p2", "This is a string with space") },
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
                     {
                         ExpectedResults.Clear();
                         ExpectedResults.Add("p1", 5);
@@ -1718,11 +1645,11 @@ namespace AstoriaUnitTests
                 },
 
                 // a uri parameter containing spaces and special characters which should be escaped.
-                new TestCase() 
+                new TestCase()
                 {
                     ActualUriString = "/ServiceOpTest",
                     Parameters = new OperationParameter[] { new UriOperationParameter("p1", 5), new UriOperationParameter("p2", "{\"__metadata\":{\"type\":\"Collection(Edm.Int32)\"}, \"results\":[1]}") },
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
                     {
                         ExpectedResults.Clear();
                         ExpectedResults.Add("p1", 5);
@@ -1732,11 +1659,11 @@ namespace AstoriaUnitTests
                 },
 
                 // a uri parameter containing '?' and '&' in escaped form. 
-                new TestCase() 
+                new TestCase()
                 {
                     ActualUriString = "/ServiceOpTest",
                     Parameters = new OperationParameter[] { new UriOperationParameter("p1", 5), new UriOperationParameter("p2", "%3F%26") },
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
                     {
                         ExpectedResults.Clear();
                         ExpectedResults.Add("p1", 5);
@@ -1746,11 +1673,11 @@ namespace AstoriaUnitTests
                 },
 
                 // a uri parameter containing reserved characters: "?, #, $, %". Also contains %20 which represents a space.
-                new TestCase() 
+                new TestCase()
                 {
                     ActualUriString = "/ServiceOpTest",
                     Parameters = new OperationParameter[] { new UriOperationParameter("p1", 5), new UriOperationParameter("p2", "This#Has$Reserved#?Characters  %20") },
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
                     {
                         ExpectedResults.Clear();
                         ExpectedResults.Add("p1", 5);
@@ -1776,12 +1703,6 @@ namespace AstoriaUnitTests
                     Assert.IsNull(operationResponse.Error);
                 });
             }
-        }
-
-        [TestMethod]
-        public void PassUriParameterWithoutResolveNameWithAtom()
-        {
-            RunPassUriParameterWithoutResolveNameTest(ODataFormat.Atom);
         }
 
         [TestMethod]
@@ -1822,13 +1743,6 @@ namespace AstoriaUnitTests
 
         #region Null values for UriOperationParameter
         [TestMethod]
-        public void ExecuteActionNullUriParameterValueTestsWithAtom()
-        {
-            // Test null values for uri parameter values with Atom
-            RunExecuteActionNullUriParameterValueTests(ODataFormat.Atom);
-        }
-
-        [TestMethod]
         public void ExecuteActionNullUriParameterValueTestsWithJsonLight()
         {
             // Test null values for uri parameter values with JSON Light
@@ -1840,23 +1754,23 @@ namespace AstoriaUnitTests
             TestCase[] positiveTestCases = new TestCase[]
             {   
                 // null parameter value without typename
-                new TestCase()  
+                new TestCase()
                 {
                     ActualUriString = this.defaultUriString,
                     ExpectedBaseUriString = "/ActionWithParameters(p1=null)",
                     HttpMethod = "GET",
-                    Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", new ODataNullValue()) },    
+                    Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", new ODataNullValue()) },
                     ExpectedPayloadBuilder = null,
                 },
   
                 // multiple null parameter value
-                new TestCase()  
+                new TestCase()
                 {
                     ActualUriString = this.defaultUriString,
                     ExpectedBaseUriString = "/ActionWithParameters(p1=null,p2=null,p3=null,p4=null)",
                     HttpMethod = "GET",
                     Parameters = new UriOperationParameter[] { new UriOperationParameter("p1", new ODataNullValue()), new UriOperationParameter("p2", new ODataNullValue()),
-                        new UriOperationParameter("p3", new ODataNullValue()), new UriOperationParameter("p4", null) },    
+                        new UriOperationParameter("p3", new ODataNullValue()), new UriOperationParameter("p4", null) },
                     ExpectedPayloadBuilder = null,
                 },
             };

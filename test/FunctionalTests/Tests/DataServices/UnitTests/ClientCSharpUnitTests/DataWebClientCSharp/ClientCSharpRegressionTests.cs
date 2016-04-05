@@ -66,6 +66,7 @@ namespace AstoriaUnitTests.Tests
                     '+', ',', '\'', '"', ' ',
                     '!', '\t', '\r', '\n' };
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientLinqUriInjectionTest()
         {
@@ -88,6 +89,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DeletePostTunnelingShouldWork()
         {
@@ -191,6 +193,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EnsureClientAttachToGenerateSameIdentityAsServer()
         {
@@ -312,6 +315,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SendingEntityWithNullKey()
         {
@@ -626,6 +630,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SetSaveStreamOnMultipleObjects()
         {
@@ -701,6 +706,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SaveChangeOptionsContinueOnErrorShouldWork()
         {
@@ -771,6 +777,7 @@ namespace AstoriaUnitTests.Tests
             public byte[] Bin { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AsyncWithLargePayload()
         {
@@ -864,6 +871,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientShouldCheckIdOrEditLinks()
         {
@@ -956,6 +964,7 @@ namespace AstoriaUnitTests.Tests
             public IEnumerable<Person> ProjectedFriends;
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void MaterializationOfEntitesIntoComplexTypeShouldNotBeAllowed()
         {
@@ -1161,6 +1170,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void VerifyUriAppliedToDescriptorWhenLinkFoldingUsed()
         {
@@ -1306,6 +1316,7 @@ namespace AstoriaUnitTests.Tests
             //public List<UInt64> CollectionUInt64 { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientShouldWriteTypeInfoForPrimitiveCollectionProperties()
         {
@@ -1429,7 +1440,7 @@ namespace AstoriaUnitTests.Tests
         #endregion
 
         #region DeleteLinkAsyncExtraLinkDescriptorTest
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DeleteLinkAsyncExtraLinkDescriptorTest()
         {
@@ -1562,6 +1573,7 @@ namespace AstoriaUnitTests.Tests
 
         #endregion
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NullCheckAgainstNonEntityProperty()
         {
@@ -1586,6 +1598,7 @@ namespace AstoriaUnitTests.Tests
 
         #region The setter for OperationResponse.Error property will cause Debug.Assert when the value passed is null.
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void OperationResponseErrorShouldAcceptNull()
         {
@@ -1612,6 +1625,7 @@ namespace AstoriaUnitTests.Tests
 
         #endregion
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestLoadDataServiceCollectionFromLoadProperty()
         {
@@ -1665,6 +1679,7 @@ namespace AstoriaUnitTests.Tests
             public MyNonEntityCustomer Customer { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EnumerateProjectionIntoComplexTypeShouldThrow()
         {
@@ -1811,6 +1826,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadNavigationPropertyToSetNotAssignableFromListOfT()
         {
@@ -1943,6 +1959,7 @@ namespace AstoriaUnitTests.Tests
 
         #endregion
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientShouldFailIfPrimitiveTypeNotMatch()
         {
@@ -2009,6 +2026,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ShouldThrowIfUsingJsonLightWithoutModel()
         {
@@ -2035,6 +2053,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ChangeAcceptHeaderToJsonInSendingRequestWithoutModel()
         {

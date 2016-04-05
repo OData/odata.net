@@ -34,6 +34,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Operations"), Variation(Description = "Test the reading of m:action and m:function elements.")]
         public void ReadActionsAndFunctionsTest()
         {   
@@ -112,7 +113,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 ODataVersionUtils.AllSupportedVersions,
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, maxProtocolVersion, testConfiguration) =>
                 {
                     if (maxProtocolVersion < testConfiguration.Version)

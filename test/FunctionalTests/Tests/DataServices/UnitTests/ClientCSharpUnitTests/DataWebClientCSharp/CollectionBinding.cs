@@ -168,7 +168,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         #region Test cases
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void CollectionMembershipChanged()
         {
@@ -176,6 +176,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(allTestInfos, typeof(MembershipTest<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ComplexTypePropertyChanges()
         {
@@ -185,6 +186,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(complexTestInfos, typeof(ComplexPropertyChangesTest<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnMultipleReferencesToSameCollection()
         {
@@ -217,6 +219,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnCollectionDoesntImplementINotifyCollectionChanged()
         {
@@ -257,6 +260,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(testInfos, typeof(ErrorOnCollectionChangedNotImplemented<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnComplexTypeDoesntImplementINotifyPropertyChanged()
         {
@@ -294,6 +298,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(complexWithPrimitivesInfos, typeof(InvalidItemsTest<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnCollectionChangedWithNullArgs()
         {

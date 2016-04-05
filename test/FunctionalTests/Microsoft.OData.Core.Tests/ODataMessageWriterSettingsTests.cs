@@ -434,17 +434,8 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void SetContentTypeTest()
         {
-            settings.SetContentType(ODataFormat.Atom);
-            ODataMessageWriterSettings copyOfSettings = new ODataMessageWriterSettings(settings);
-            settings.Format.Should().Be(ODataFormat.Atom);
-            copyOfSettings.Format.Should().Be(ODataFormat.Atom);
-            settings.AcceptableMediaTypes.Should().BeNull();
-            copyOfSettings.AcceptableMediaTypes.Should().BeNull();
-            settings.AcceptableCharsets.Should().BeNull();
-            copyOfSettings.AcceptableCharsets.Should().BeNull();
-
             settings.SetContentType("application/xml", null);
-            copyOfSettings = new ODataMessageWriterSettings(settings);
+            ODataMessageWriterSettings copyOfSettings = new ODataMessageWriterSettings(settings);
             settings.Format.Should().BeNull();
             copyOfSettings.Format.Should().BeNull();
             settings.AcceptableMediaTypes.Should().Be("application/xml");

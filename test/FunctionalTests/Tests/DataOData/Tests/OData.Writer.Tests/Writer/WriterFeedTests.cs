@@ -46,6 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feed payloads.")]
         public void TaupoTopLevelFeedTest()
         {
@@ -100,6 +101,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing feed payloads with user exceptions being thrown at various points.")]
         public void FeedUserExceptionTests()
         {
@@ -143,7 +145,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    writerPayload, 
+                    writerPayload,
                     tc => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         ExpectedException = new Exception("User code triggered an exception."),
@@ -181,6 +183,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feed payloads with next links.")]
         public void FeedNextLinkTests()
         {
@@ -200,6 +203,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feed payloads with next link value set after writing Feed Start.")]
         public void SetNextLinkAfterFeedStartTests()
         {
@@ -227,6 +231,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feed payloads with inline count.")]
         public void FeedInlineCountTests()
         {
@@ -264,7 +269,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 testCases,
                 ODataFormatUtils.ODataFormats.Where(f => f != null),
 
-// Async  test configuration is not supported for Phone and Silverlight
+                // Async  test configuration is not supported for Phone and Silverlight
 #if !SILVERLIGHT && !WINDOWS_PHONE
                 new bool[] { false, true },
 #else
@@ -290,6 +295,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feeds with payloads combining inline count, next link and element type.")]
         public void WriteFeedTests()
         {
@@ -352,6 +358,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests various error cases for feeds.")]
         public void ODataFeedWriterErrorTests()
         {
@@ -373,7 +380,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                 }
             ).WithDefaultAtomIDAnnotation();
-            
+
             List<PayloadWriterTestDescriptor<ODataPayloadElement>> testDescriptors = new List<PayloadWriterTestDescriptor<ODataPayloadElement>>()
             {
                 // Skipping json because there is a fixup in the PayloadWriterTestDescriptor that will add the ID.
@@ -429,6 +436,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test homogeneity of feed payloads.")]
         public void FeedValidatorTests()
         {
@@ -472,28 +480,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = string.Join(
-                                "$(NL)",
-                                @"<feed xmlns=""" + TestAtomConstants.AtomNamespace + @""">",
-                                @"  <id>" + ObjectModelUtils.DefaultFeedId + "</id>",
-                                @"  <title />",
-                                @"  <updated>" + ObjectModelUtils.DefaultFeedUpdated + "</updated>",
-                                @"  <author>",
-                                @"    <name />",
-                                @"  </author>",
-                                @"</feed>"),
-                            FragmentExtractor = (element) =>
-                                {
-                                    element.RemoveAttributes();
-                                    return element;
-                                }
-                        };
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json)
+                    if (testConfiguration.Format == ODataFormat.Json)
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
@@ -512,13 +499,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         throw new NotSupportedException("Invalid format detected: " + formatName);
                     }
                 })
-                {
-                    // JSON Light does not support writing without model
-                    SkipTestConfiguration = tc => model == null && tc.Format == ODataFormat.Json,
-                    Model = model,
-                    PayloadEdmElementContainer = customerSet,
-                    PayloadEdmElementType = customerType,
-                };
+            {
+                // JSON Light does not support writing without model
+                SkipTestConfiguration = tc => model == null && tc.Format == ODataFormat.Json,
+                Model = model,
+                PayloadEdmElementContainer = customerSet,
+                PayloadEdmElementType = customerType,
+            };
         }
 
         private PayloadWriterTestDescriptor<ODataItem>[] CreateFeedQueryCountDescriptors()
@@ -550,34 +537,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         };
                     }
 
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        if (count.HasValue)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = @"<m:count xmlns:m =""" + TestAtomConstants.ODataMetadataNamespace + @""">" + count + "</m:count>",
-                                FragmentExtractor = (result) => result.Elements(XName.Get("count", TestAtomConstants.ODataMetadataNamespace)).Single()
-                            };
-                        }
-                        else
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = @"<nocount xmlns=""" + TestAtomConstants.ODataMetadataNamespace + @"""/>",
-                                FragmentExtractor = (result) =>
-                                    {
-                                        var countElement = result.Elements(XName.Get("count", TestAtomConstants.ODataMetadataNamespace)).SingleOrDefault();
-                                        if (countElement == null)
-                                        {
-                                            countElement = new XElement(TestAtomConstants.ODataMetadataXNamespace + "nocount");
-                                        }
-                                        return countElement;
-                                    }
-                            };
-                        }
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json)
+                    if (testConfiguration.Format == ODataFormat.Json)
                     {
                         if (count.HasValue)
                         {
@@ -608,18 +568,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         throw new NotSupportedException("Invalid format detected: " + formatName);
                     }
                 })
-                {
-                    Model = model,
-                    PayloadEdmElementContainer = entitySet,
-                    PayloadEdmElementType = entityType,
-                });
+            {
+                Model = model,
+                PayloadEdmElementContainer = entitySet,
+                PayloadEdmElementType = entityType,
+            });
 
             return descriptors.ToArray();
         }
 
         private PayloadWriterTestDescriptor<ODataItem>[] CreateFeedNextLinkDescriptors()
         {
-            string[] nextLinkUris = new string[] 
+            string[] nextLinkUris = new string[]
             {
                 "http://my.customers.com/?skiptoken=1234",
                 "http://my.customers.com/?",
@@ -658,15 +618,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         };
                     }
 
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = @"<link rel=""next"" href=""" + nextLink + @""" xmlns=""" + TestAtomConstants.AtomNamespace + @""" />",
-                            FragmentExtractor = (result) => result.Elements(XName.Get("link", TestAtomConstants.AtomNamespace)).Single()
-                        };
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json)
+                    if (testConfiguration.Format == ODataFormat.Json)
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
@@ -680,11 +632,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         throw new NotSupportedException("Invalid format detected: " + formatName);
                     }
                 })
-                {
-                    Model = model,
-                    PayloadEdmElementContainer = customerSet,
-                    PayloadEdmElementType = customerType,
-                }).ToArray();
+            {
+                Model = model,
+                PayloadEdmElementContainer = customerSet,
+                PayloadEdmElementType = customerType,
+            }).ToArray();
         }
 
         private PayloadWriterTestDescriptor<ODataItem> CreateDefaultFeedMetadataDescriptor(bool withModel)
@@ -711,15 +663,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 feed,
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = @"<id xmlns=""" + TestAtomConstants.AtomNamespace + @""">" + ObjectModelUtils.DefaultFeedId + "</id>",
-                            FragmentExtractor = (element) => element.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomIdElementName).Single()
-                        };
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json)
+                    if (testConfiguration.Format == ODataFormat.Json)
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {

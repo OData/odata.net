@@ -62,7 +62,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         /// <param name="other">The other test descriptor to copy values from.</param>
         public NativeInputReaderTestDescriptor(NativeInputReaderTestDescriptor other)
-            :base(other)
+            : base(other)
         {
             this.AtomInput = other.AtomInput;
             this.AtomInputXml = other.AtomInputXml;
@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// The input for ATOM payloads. This overrides AtomInputXml if both are specified.
         /// </summary>
-        public XElement AtomInput 
+        public XElement AtomInput
         {
             get
             {
@@ -108,7 +108,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// The input for JSON payloads. This overrides JsonInputText if both are specified.
         /// </summary>
-        public JsonValue JsonInput 
+        public JsonValue JsonInput
         {
             get
             {
@@ -178,8 +178,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             memoryStream.Seek(0, SeekOrigin.Begin);
             TestStream messageStream = new TestStream(memoryStream);
             TestMessage testMessage = TestReaderUtils.CreateInputMessageFromStream(
-                messageStream, 
-                testConfiguration, 
+                messageStream,
+                testConfiguration,
                 this.PayloadKind,
                 /*customContentTypeHeader*/ null,
                 /*urlResolver*/ null);
@@ -217,16 +217,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
-                {
-                    ExceptionUtilities.Assert(
-                        this.AtomInput != null || this.AtomInputXml != null,
-                        "The test tries to use ATOM format, thus the AtomInput or AtomInputXml must be specified.");
-
-                    // Note that by default the Save will use UTF8 encoding which is exactly what we want.
-                    this.AtomInput.Save(stream, SaveOptions.DisableFormatting);
-                }
-                else if (testConfiguration.Format == null)
+                if (testConfiguration.Format == null)
                 {
                     ExceptionUtilities.CheckObjectNotNull(this.DefaultInput, "The test tries to use Default format, thus the DefaultInput must be specified.");
 

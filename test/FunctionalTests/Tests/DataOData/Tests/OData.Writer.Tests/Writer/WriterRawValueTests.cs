@@ -70,6 +70,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Error tests for writing primitive values in raw format.")]
         public void RawValueErrorTests()
         {

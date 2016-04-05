@@ -32,6 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Links"), Variation(Description = "Test the the reading of deferred links on entry payloads.")]
         public void DeferredLinkTest()
         {
@@ -86,7 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 testDescriptors,
                 // Deferred links are response only.
                 // TODO: Reenable Json Light support
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => !tc.IsRequest && tc.Format == ODataFormat.Atom),
+                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);

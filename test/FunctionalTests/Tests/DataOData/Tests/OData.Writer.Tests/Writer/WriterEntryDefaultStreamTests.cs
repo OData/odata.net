@@ -37,6 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonConstants.ODataMetadataMediaETagPropertyName
             };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Validates the payloads for various default streams.")]
         public void EntryDefaultStreamTest()
         {

@@ -33,6 +33,7 @@ namespace AstoriaUnitTests.Tests
         public class BatchTests
         {
             /// <summary>Tests whether the configuration options are honored.</summary>
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void ConfigurationBatchTest()
             {
@@ -150,7 +151,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void TestExceedMaxBatchCount()
             {
@@ -311,7 +312,7 @@ namespace AstoriaUnitTests.Tests
                         });
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void UriCompositionRulesChangedOnServer()
             {
@@ -383,7 +384,7 @@ namespace AstoriaUnitTests.Tests
                     return this.ContentType;
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BatchContentTypeTest()
             {

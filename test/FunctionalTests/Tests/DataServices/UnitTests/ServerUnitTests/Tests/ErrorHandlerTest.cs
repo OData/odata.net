@@ -65,6 +65,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorResponseContentTypeHasCharset()
         {
@@ -112,6 +113,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ProcessExceptionTest()
         {

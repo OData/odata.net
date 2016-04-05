@@ -35,7 +35,7 @@ namespace AstoriaUnitTests.Tests
             public List<string> CollectionOfString { get; set; }
             public List<MVComplexType> CollectionOfComplexType { get; set; }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterCollectionWithAnyAll()
         {
@@ -102,7 +102,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterNavigationWithAnyAll()
         {
@@ -238,7 +238,7 @@ namespace AstoriaUnitTests.Tests
                     });
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterNavigationWithAnyAll_TypeCasts()
         {
@@ -347,7 +347,7 @@ namespace AstoriaUnitTests.Tests
                 return (o) => o.Customer.ID != 0;
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestAnyAllWithQueryInterceptor()
         {

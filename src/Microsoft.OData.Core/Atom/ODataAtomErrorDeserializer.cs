@@ -17,10 +17,6 @@ namespace Microsoft.OData.Core.Atom
     /// </summary>
     internal sealed class ODataAtomErrorDeserializer
     {
-        internal ODataAtomErrorDeserializer()
-        {
-        }
-
         /// <summary>
         /// An enumeration of the various kinds of elements in an m:error element.
         /// </summary>

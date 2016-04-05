@@ -40,11 +40,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
             if (rootElement != null)
             {
                 ODataFormat format = null;
-                if (contentType.Contains(MimeTypes.ApplicationAtomXml))
-                {
-                    format = ODataFormat.Atom;
-                }
-                else if (contentType.Contains(MimeTypes.ApplicationJson))
+                if (contentType.Contains(MimeTypes.ApplicationJson))
                 {
                     format = ODataFormat.Json;
                 }
@@ -68,11 +64,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
             if (rootElement != null)
             {
                 ODataFormat format = null;
-                if (contentType.Contains(MimeTypes.ApplicationAtomXml))
-                {
-                    format = ODataFormat.Atom;
-                }
-                else if (contentType.Contains(MimeTypes.ApplicationJson))
+                if (contentType.Contains(MimeTypes.ApplicationJson))
                 {
                     format = ODataFormat.Json;
                 }

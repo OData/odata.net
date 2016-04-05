@@ -333,7 +333,7 @@ namespace AstoriaUnitTests.Tests
                     return request.ResponseETag;
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Test QueryIntercepters defined on the subclass of DataService<T>")]
             public void IDSPQueryIntercepterTest()
             {
@@ -2540,7 +2540,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             #endregion
-
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Test that we correctly Dispose query results.")]
             public void EnumeratorDisposeAfterQuery()
             {

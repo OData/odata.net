@@ -40,21 +40,21 @@ namespace AstoriaUnitTests.Tests
                                                ctx.Format.UseJson(EdmxReader.Parse(XmlReader.Create(ctx.GetMetadataUri().AbsoluteUri)));
                                            });
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForTopLevelEntity()
         {
             ResponseShouldBeEntryWithEditLink("/Customers/0", "Customers/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForProperty()
         {
             ResponseShouldBeValueElement("/Customers/0/Name", "Customer 0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForTypeSegments()
@@ -62,7 +62,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/Customers/$/AstoriaUnitTests.Stubs.Customer/0", "Customers/0");
             ResponseShouldBeEntryWithEditLink("/Customers/0/AstoriaUnitTests.Stubs.Customer", "Customers/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForNavigation()
@@ -70,7 +70,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/Customers/1/BestFriend", "Customers/0");
             ResponseShouldBeEntryWithEditLink("/Customers/0/Orders/0", "Orders/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForLinks()
@@ -78,14 +78,14 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeSingleLink("/Customers/1/BestFriend/$ref", "Customers/0");
             ResponseShouldBeLinkCollection("/Customers/0/Orders/$ref", "Orders/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForServiceOperation()
         {
             ResponseShouldBeEntryWithEditLink("/GetCustomers/0", "Customers/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForReservedNameAsKeyValue()
@@ -99,7 +99,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldHaveStatusCode("/StringKeys/$ref", 400);
             ResponseShouldHaveStatusCode("/StringKeys/$ref", 400);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForTypeNameAsKeyValue()
@@ -108,7 +108,7 @@ namespace AstoriaUnitTests.Tests
 
             ResponseShouldBeFeed("/StringKeys/$/" + EntityTypeNameWithStringKey, 200);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForActionNameAsKeyValue()
@@ -116,7 +116,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/StringKeys/Action?$format=atom", "StringKeys/Action");
             ResponseShouldHaveStatusCode("/StringKeys/$/AstoriaUnitTests.Tests.Action?$format=atom", 405);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForStream()
@@ -125,7 +125,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldHaveStatusCode("/StringKeys/$value", 400);
             ResponseShouldHaveMediaType("/StringKeys/$$value/$value", "application/jpeg");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForKeysWithParens()
@@ -140,7 +140,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/StringKeys/(parens)", "StringKeys/"  + Uri.EscapeDataString("(parens)"));
             ResponseShouldBeEntryWithEditLink("/StringKeys/)parens(", "StringKeys/"  + Uri.EscapeDataString(")parens("));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentMetadataSmokeTest()

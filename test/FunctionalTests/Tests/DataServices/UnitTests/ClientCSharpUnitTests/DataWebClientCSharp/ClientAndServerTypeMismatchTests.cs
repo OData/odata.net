@@ -40,37 +40,37 @@ namespace AstoriaUnitTests
         private readonly Dictionary<object, object> conversionsFromString = new Dictionary<object, object>
         {
             // from string to all types
-            {"true", true}, 
-            {"1", 1}, 
+            {"true", true},
+            {"1", 1},
             {"2", (byte)2},
             {"-1", (sbyte)-1},
             {"3", (short)3},
             {XmlConvert.ToString(long.MaxValue), long.MaxValue},
-            {XmlConvert.ToString(float.MaxValue), float.MaxValue}, 
-            {XmlConvert.ToString(double.MinValue), double.MinValue}, 
-            {XmlConvert.ToString(decimal.MaxValue), decimal.MaxValue}, 
-            {XmlConvert.ToString(DateTimeOffset.MinValue), DateTimeOffset.MinValue}, 
-            {XmlConvert.ToString(TimeSpan.MaxValue), TimeSpan.MaxValue}, 
-            {XmlConvert.ToString(Guid.Empty), Guid.Empty}, 
+            {XmlConvert.ToString(float.MaxValue), float.MaxValue},
+            {XmlConvert.ToString(double.MinValue), double.MinValue},
+            {XmlConvert.ToString(decimal.MaxValue), decimal.MaxValue},
+            {XmlConvert.ToString(DateTimeOffset.MinValue), DateTimeOffset.MinValue},
+            {XmlConvert.ToString(TimeSpan.MaxValue), TimeSpan.MaxValue},
+            {XmlConvert.ToString(Guid.Empty), Guid.Empty},
             {Convert.ToBase64String(new byte[] {0, 1, 2}), new byte[] {0, 1, 2}},
         };
 
         private readonly Dictionary<object, object> conversionsToString = new Dictionary<object, object>
         {
             // from all types to string
-            {true, "true"}, 
-            {1, "1"}, 
+            {true, "true"},
+            {1, "1"},
             {(byte)2, "2"},
             {(sbyte)-1, "-1"},
             {(short)3, "3"},
             {long.MaxValue, XmlConvert.ToString(long.MaxValue)},
-            {float.MaxValue, XmlConvert.ToString(float.MaxValue)}, 
-            {double.MinValue, XmlConvert.ToString(double.MinValue)}, 
-            {decimal.MaxValue, XmlConvert.ToString(decimal.MaxValue)}, 
-            {DateTime.MinValue, XmlConvert.ToString(TypeData.ConvertDateTimeToDateTimeOffset(DateTime.MinValue))}, 
-            {DateTimeOffset.MinValue, XmlConvert.ToString(DateTimeOffset.MinValue)}, 
-            {TimeSpan.MaxValue, XmlConvert.ToString(TimeSpan.MaxValue)}, 
-            {Guid.Empty, XmlConvert.ToString(Guid.Empty)}, 
+            {float.MaxValue, XmlConvert.ToString(float.MaxValue)},
+            {double.MinValue, XmlConvert.ToString(double.MinValue)},
+            {decimal.MaxValue, XmlConvert.ToString(decimal.MaxValue)},
+            {DateTime.MinValue, XmlConvert.ToString(TypeData.ConvertDateTimeToDateTimeOffset(DateTime.MinValue))},
+            {DateTimeOffset.MinValue, XmlConvert.ToString(DateTimeOffset.MinValue)},
+            {TimeSpan.MaxValue, XmlConvert.ToString(TimeSpan.MaxValue)},
+            {Guid.Empty, XmlConvert.ToString(Guid.Empty)},
             {new byte[] {0, 1, 2, }, Convert.ToBase64String(new byte[] {0, 1, 2})},
         };
 
@@ -158,12 +158,13 @@ namespace AstoriaUnitTests
             {GeographyPoint.Create(CoordinateSystem.DefaultGeography, 2, 2, null, null), GeometryPoint.Create(CoordinateSystem.DefaultGeography, 2, 2, null, null)},
         };
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NullServerPropertyShouldMaterializeIntoAnyType()
         {
-            foreach (var format in new[] {UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType})
+            foreach (var format in new[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType })
             {
-                 // the server type doesn't actually matter here.
+                // the server type doesn't actually matter here.
                 this.ValidatePrimitiveConversion<string, bool?>(null, null, format);
                 this.ValidatePrimitiveConversion<string, int?>(null, null, format);
                 this.ValidatePrimitiveConversion<string, byte?>(null, null, format);
@@ -182,23 +183,11 @@ namespace AstoriaUnitTests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void StringValueShouldMaterializeIntoAnyTypeIfValueCanBeConverted()
         {
-            this.InvokeForAll(this.conversionsFromString, UnitTestsUtil.AtomFormat);
             this.InvokeForAll(this.conversionsFromString, UnitTestsUtil.JsonLightMimeType);
-        }
-
-        [TestMethod]
-        public void AnyValueShouldMaterializeIntoStringForAtom()
-        {
-            this.InvokeForAll(this.conversionsToString, UnitTestsUtil.AtomFormat);
-        }
-
-        [TestMethod]
-        public void AllNumericConversionsShouldWorkForAtom()
-        {
-            this.InvokeForAll(this.numericConversions, UnitTestsUtil.AtomFormat);
         }
 
         [TestMethod]
@@ -210,7 +199,6 @@ namespace AstoriaUnitTests
         [TestMethod]
         public void SpatialConversionsShouldWorkForBothFormats()
         {
-            this.InvokeForAll(this.spatialConversions, UnitTestsUtil.AtomFormat);
             this.InvokeForAll(this.spatialConversions, UnitTestsUtil.JsonLightMimeType);
         }
 
@@ -314,7 +302,7 @@ namespace AstoriaUnitTests
 
                 string attributes = "\"Property@odata.type\":\"Edm." + GetPrimitiveTypeKind<TServer>() + "\",";
                 string propertyValue;
-                
+
                 if (typeof(TServer) == typeof(DateTime))
                 {
                     propertyValue = '"' + XmlConvert.ToString((DateTime)(object)serverPropertyValue, XmlDateTimeSerializationMode.RoundtripKind) + '"';
@@ -339,7 +327,7 @@ namespace AstoriaUnitTests
                 {
                     propertyValue = JsonPrimitiveTypesUtil.PrimitiveToString(serverPropertyValue, null).Replace(".0", null);
                 }
-                
+
                 const string complexTemplate = "{{{0}\"Property\":{1}}}";
                 if (complex)
                 {
@@ -364,7 +352,7 @@ namespace AstoriaUnitTests
             bool first = true;
             foreach (var property in properties)
             {
-                if(!first)
+                if (!first)
                 {
                     builder.Append(',');
                 }
@@ -373,7 +361,7 @@ namespace AstoriaUnitTests
 
                 builder.Append(property.Key + ": ");
                 AppendGeoJsonPropertyValue(builder, property.Value);
-            } 
+            }
             builder.Append('}');
         }
 
@@ -383,7 +371,7 @@ namespace AstoriaUnitTests
             {
                 builder.Append(JsonPrimitiveTypesUtil.PrimitiveToString(value, null));
             }
-            else if(value is IEnumerable<KeyValuePair<string, object>>)
+            else if (value is IEnumerable<KeyValuePair<string, object>>)
             {
                 AppendGeoJsonProperties(builder, (IEnumerable<KeyValuePair<string, object>>)value);
             }
@@ -391,7 +379,7 @@ namespace AstoriaUnitTests
             {
                 builder.Append('[');
                 bool first = true;
-                foreach(var element in ((IEnumerable)value).Cast<object>())
+                foreach (var element in ((IEnumerable)value).Cast<object>())
                 {
                     if (!first)
                     {
@@ -416,7 +404,7 @@ namespace AstoriaUnitTests
             var payload = GeneratePayload<TServer, TClient>(serverPropertyValue, contentType, complex, collection);
 
             var requestMessage = new ODataTestMessage();
-            var responseMessage = new ODataTestMessage {StatusCode = 200, MemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(payload))};
+            var responseMessage = new ODataTestMessage { StatusCode = 200, MemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             responseMessage.SetHeader("Content-Type", contentType);
             responseMessage.SetHeader("Content-Length", responseMessage.MemoryStream.Length.ToString());
             responseMessage.SetHeader("OData-Version", "4.0");
@@ -449,7 +437,7 @@ namespace AstoriaUnitTests
                     var complexType = new EdmComplexType("Fake", "ComplexType");
                     complexType.AddStructuralProperty("Property", kind, true);
                     model.AddElement(complexType);
-                    
+
                     if (!collection)
                     {
                         edmEntityType.AddStructuralProperty("Property", new EdmComplexTypeReference(complexType, true));
@@ -504,7 +492,7 @@ namespace AstoriaUnitTests
             {
                 actual.Should().BeNull();
             }
-            else if(typeof(ISpatial).IsAssignableFrom(typeof(TClient)))
+            else if (typeof(ISpatial).IsAssignableFrom(typeof(TClient)))
             {
                 actual.Should().BeAssignableTo<TClient>();
                 var formatter = WellKnownTextSqlFormatter.Create();

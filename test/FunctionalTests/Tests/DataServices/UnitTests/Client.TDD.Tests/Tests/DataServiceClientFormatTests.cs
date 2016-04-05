@@ -160,6 +160,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.TestSetRequestContentTypeHeaderForAction(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SetRequestContentTypeHeaderShouldNotSetContentTypeHeaderIfAlreadySetWhenUsingJson()
         {

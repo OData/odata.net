@@ -314,8 +314,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.PrimitiveValues"), Variation(Description = "Verifies correct reading of spatial properties when type conversion is disabled.")]
         public void SpatialPropertyWithDisabledPrimitiveTypeConversionTest()
         {
@@ -345,7 +345,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 new bool[] { false, true },
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, disableStrictValidation, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);

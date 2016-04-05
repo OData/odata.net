@@ -99,7 +99,7 @@ namespace AstoriaUnitTests.Tests
                 Assert.AreEqual(1, NumAnnotationBuilderCalls);
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void AnnotationBuilderShouldNotBeCalledOutsideMetadataUri()
         {

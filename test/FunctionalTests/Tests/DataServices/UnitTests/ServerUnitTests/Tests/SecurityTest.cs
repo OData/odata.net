@@ -34,6 +34,7 @@ namespace AstoriaUnitTests.Tests
             /// <summary>
             /// Verifies that query callbacks are made on $filter and $orderby properties.
             /// </summary>
+            [Ignore] // Remove Atom
             [TestMethod]
             public void SecurityCallbacksFilterTest()
             {
@@ -87,6 +88,7 @@ namespace AstoriaUnitTests.Tests
             /// <summary>
             /// Verifies that query callbacks are made on $filter and $orderby properties.
             /// </summary>
+            [Ignore] // Remove Atom
             [TestMethod]
             public void SecurityCallbacksFilterEdmTest()
             {
@@ -160,7 +162,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void SecurityMaxResultsTest()
             {
@@ -283,6 +285,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void FriendlyFeedsInMediumTrust()
             {
@@ -427,6 +430,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             /// <summary>Verifies that all stack-consuming features are properly guarded.</summary>
+            [Ignore] // Remove Atom
             [TestMethod]
             public void SecurityStackOverflowTest()
             {

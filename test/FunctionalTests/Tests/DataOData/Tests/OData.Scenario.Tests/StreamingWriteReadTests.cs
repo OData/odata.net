@@ -38,6 +38,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
         [InjectDependency(IsRequired = true)]
         public IPayloadGenerator PayloadGenerator { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void StreamWriteReadFeed()
         {
@@ -125,7 +126,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Synchronous && tc.Format == ODataFormat.Atom),
+               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                (testDescriptor, testConfiguration) =>
                {
                    testDescriptor.RunTest(testConfiguration);

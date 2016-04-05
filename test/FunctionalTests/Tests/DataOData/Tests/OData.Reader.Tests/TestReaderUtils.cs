@@ -221,11 +221,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 payloadElementToSerialize = payloadElementCopy ?? payloadElementToSerialize;
             }
 
-            if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                payloadSerializer = new XmlPayloadSerializer(settings.PayloadElementToXmlConverter);
-            }
-            else if (testConfiguration.Format == ODataFormat.Json)
+            if (testConfiguration.Format == ODataFormat.Json)
             {
                 // Create a copy of the payload element so that we can add annotations to it.
                 payloadElementToSerialize = payloadElementToSerialize.DeepCopy();

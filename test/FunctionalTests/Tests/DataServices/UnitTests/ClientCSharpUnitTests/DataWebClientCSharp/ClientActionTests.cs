@@ -38,6 +38,7 @@ namespace AstoriaUnitTests
     /// entity, collection of entity, entity queryable. Collection of primitive and collection
     /// of complex are included but require a slightly different pattern for use.
     /// </remarks>
+    [Ignore] // Remove Atom
     [TestClass]
     public class ClientActionTests
     {
@@ -2215,6 +2216,7 @@ namespace AstoriaUnitTests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestClientEventsWithAction()
         {

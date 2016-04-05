@@ -52,6 +52,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Feeds"), Variation(Description = "Test homogeneity of feed payloads.")]
         public void FeedValidatorTests()
         {
@@ -61,7 +62,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+               this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                (testDescriptor, testConfiguration) =>
                {
                    testDescriptor.RunTest(testConfiguration);
@@ -147,5 +148,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedException = testCase.ExpectedException,
                 });
         }
-   }
+    }
 }

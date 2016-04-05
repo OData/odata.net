@@ -310,7 +310,7 @@ namespace AstoriaUnitTests.Tests
                 HandleExceptionCalls.Should().Be(2);
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         [TestCategory("Partition2")]
         public void CustomAnnotationOnErrorShouldBeIgnoredInAtom()

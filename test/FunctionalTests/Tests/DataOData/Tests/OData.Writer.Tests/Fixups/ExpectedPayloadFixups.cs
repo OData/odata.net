@@ -27,10 +27,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
             {
                 return this.JsonFixup(payload);
             }
-            else if (format == ODataFormat.Atom)
-            {
-                return this.AtomFixup(payload);
-            }
             else if (format == null && (payload is BatchRequestPayload || payload is BatchResponsePayload))
             {
                 return this.DefaultFixup(payload);

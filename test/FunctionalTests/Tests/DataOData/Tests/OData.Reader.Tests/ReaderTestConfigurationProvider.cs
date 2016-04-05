@@ -82,14 +82,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// List of all interesting configuration for ATOM format payloads.
         /// </summary>
-        public virtual IEnumerable<ReaderTestConfiguration> AtomFormatConfigurations
-        {
-            get
-            {
-                CachedConfigurations configurations = this.InitializeConfigurations();
-                return configurations.AtomConfigurations;
-            }
-        }
+        //public virtual IEnumerable<ReaderTestConfiguration> AtomFormatConfigurations
+        //{
+        //    get
+        //    {
+        //        CachedConfigurations configurations = this.InitializeConfigurations();
+        //        return configurations.AtomConfigurations;
+        //    }
+        //}
 
         /// <summary>
         /// List of all interesting configurations with format for payloads which doesn't depend on format = raw content.
@@ -142,7 +142,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
             return new CachedConfigurations
             {
-                AtomConfigurations = CreateConfigurations(runKind, combinatorialEngine, ODataFormat.Atom),
+                // AtomConfigurations = CreateConfigurations(runKind, combinatorialEngine, ODataFormat.Atom),
                 JsonLightConfigurations = CreateConfigurations(runKind, combinatorialEngine, ODataFormat.Json),
                 DefaultFormatConfigurations = CreateConfigurations(runKind, combinatorialEngine, /*format*/ null),
             };
@@ -237,7 +237,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <summary>
             /// List of all ATOM configurations with default settings.
             /// </summary>
-            public List<ReaderTestConfiguration> AtomConfigurations { get; set; }
+            // public List<ReaderTestConfiguration> AtomConfigurations { get; set; }
 
             /// <summary>
             /// List of all JSON Lite configurations with default settings.
@@ -256,7 +256,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 get
                 {
-                    return this.AtomConfigurations.Concat(this.JsonLightConfigurations);
+                    return this.JsonLightConfigurations;
                 }
             }
 
@@ -267,9 +267,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 get
                 {
-                    return this.AtomConfigurations
-                        .Concat(this.JsonLightConfigurations)
-                        .Concat(this.DefaultFormatConfigurations);
+                    return this.JsonLightConfigurations.Concat(this.DefaultFormatConfigurations);
                 }
             }
         }

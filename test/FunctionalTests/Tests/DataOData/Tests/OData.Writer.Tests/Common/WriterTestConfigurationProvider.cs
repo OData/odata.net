@@ -219,7 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
             return new CachedConfigurations
             {
-                AtomConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Atom),
+                //AtomConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Atom),
                 JsonLightConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Json),
                 DefaultFormatConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, /*format*/ null),
             };
@@ -237,7 +237,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
             return new CachedConfigurations
             {
-                AtomConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Atom, defaultConfigurations.AtomConfigurations),
+                // AtomConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Atom, defaultConfigurations.AtomConfigurations),
                 JsonLightConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Json, defaultConfigurations.JsonLightConfigurations),
                 DefaultFormatConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, /*format*/ null, defaultConfigurations.DefaultFormatConfigurations),
             };

@@ -24,6 +24,7 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class InternalTestHookTests
     {
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ResponseHeadersAndStreamExceptionTest()
         {

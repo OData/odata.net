@@ -25,7 +25,7 @@ Imports System.IO
 
 Partial Public Class ClientModule
 
-    <TestClass()> _
+    <TestClass()>
     Public Class EntitySetResolverTests
         Inherits AstoriaTestCase
         Private Shared streamingWeb As TestWebRequest = Nothing
@@ -78,7 +78,7 @@ Partial Public Class ClientModule
             ' Since we are sending $value payload, we must correctly set the accept type header.
             ' Otherwise, astoria server sends application/atom+xml as the header value and then client fails to parse.
             AddHandler ctx.SendingRequest2, AddressOf SetAcceptHeader
-            ctx.Execute(Of Boolean)(New Uri("/SetContentServiceUri/$value?uri='" + HttpUtility.UrlEncode(streamContentWeb.ServiceRoot.ToString() + "'"), _
+            ctx.Execute(Of Boolean)(New Uri("/SetContentServiceUri/$value?uri='" + HttpUtility.UrlEncode(streamContentWeb.ServiceRoot.ToString() + "'"),
                                             UriKind.Relative))
             RemoveHandler ctx.SendingRequest2, AddressOf SetAcceptHeader
         End Sub
@@ -103,7 +103,7 @@ Partial Public Class ClientModule
         '<TestCleanup()> Public Sub PerTestCleanup()
         'End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBeginExecute_NullBaseUri_Error()
             Dim context = New DataServiceContext()
             Dim act As Action = Sub()
@@ -115,7 +115,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBeginExecute_NullBaseUri_AbsoluteRequestUri_Success()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -125,8 +125,8 @@ Partial Public Class ClientModule
                                                                    End Sub,
                                                                    Nothing)
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextExecute_NullBaseUri_AbsoluteRequestUri_Success()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -134,7 +134,7 @@ Partial Public Class ClientModule
             context.Execute(Of Object)(entitySet1AbsoluteUri).ToList()
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextExecute_NullBaseUri_Error()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -147,7 +147,7 @@ Partial Public Class ClientModule
                                                             "Context_RequestUriIsRelativeBaseUriRequired")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextGetMetadataUri_NullBaseUri_Error()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -160,7 +160,7 @@ Partial Public Class ClientModule
                                                             "Context_BaseUriRequired")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBaseUriProperty_InvalidUri_Error()
             For Each loopVariation In InvalidUriVariations
                 ' use a local variable to keep the loop var from being captured by the delegate
@@ -177,7 +177,7 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBaseUriStateEquvilentBetweenDefaultCtorAndNullPassedToBaseUriCtor()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -189,7 +189,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBaseUriProperty()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -204,7 +204,7 @@ Partial Public Class ClientModule
             Assert.IsNull(context.BaseUri, "The BaseUri property didn't set back to null")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBaseUriProperty_SetAfterCtorSet()
             Dim oldUri = New Uri("http://foo.com/Old.svc")
             Dim context = New DataServiceContext(oldUri)
@@ -220,7 +220,7 @@ Partial Public Class ClientModule
             Assert.IsNull(context.BaseUri, "The BaseUri property didn't set back to null")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextResolveEntitySetProperty()
             Const absoluteUri As String = "http://foo.com/Awesome.svc"
             Dim context = New DataServiceContext()
@@ -234,7 +234,7 @@ Partial Public Class ClientModule
             Assert.IsNull(context.ResolveEntitySet, "The ResolveEntitySet property didn't set back to null")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextCtorWithBaseUri_InvalidUri_Error()
 
             For Each loopVariation In InvalidUriVariations
@@ -251,7 +251,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextResolveEntitySetProperty_InvalidUri_Error()
 
             For Each loopVariation In InvalidUriVariations
@@ -280,7 +280,7 @@ Partial Public Class ClientModule
             Inherits Exception
         End Class
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextResolveEntitySetProperty_Throws()
             ' we shouldn't catch or modify what the resolver is throwing
             Dim SetupContext As Func(Of DataServiceContext) = Function()
@@ -311,7 +311,7 @@ Partial Public Class ClientModule
             AssertUtil.RunCatch(Of MyTestException)(attachTo)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextResolveEntitySetProperty_DefaultsToNull()
             Dim context As DataServiceContext = New DataServiceContext()
             Assert.IsNull(context.ResolveEntitySet, "The default value of the ResolveEntitySetProperty should be null")
@@ -322,7 +322,7 @@ Partial Public Class ClientModule
             Assert.IsNull(context.ResolveEntitySet, "The default value of the ResolveEntitySetProperty should be null")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextResolveEntitySetProperty_ReturnsNull()
             ' should just use the BaseUri
             Dim context = New DataServiceContext(New Uri("http://foo/ReturnsNull"))
@@ -336,7 +336,7 @@ Partial Public Class ClientModule
         End Sub
 
         <Ignore>
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub LinqQueryResolvesUriOnExecuteWhenReused()
             ' be sure that a change to the baseUri after one execute is picked up on the next
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -387,8 +387,8 @@ Partial Public Class ClientModule
         '    context.BaseUri = New Uri(web1.BaseUri, UriKind.Absolute)
         '    StringAssert.Contains(q.ToString(), web1.BaseUri, "didn't use the latest baseUri")
         'End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub SetSaveStreamDoesNotCallEntitySetResolverOrBaseUri()
             ' Arange
             Dim ctx = New DataServiceContext(streamingWeb.ServiceRoot)
@@ -448,8 +448,8 @@ Partial Public Class ClientModule
             Loop While count > 0
             Return byteList.ToArray()
         End Function
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub LinkEntitiesDoesNotCallEntitySetResolverOrBaseUri()
             Dim newCust As NorthwindSimpleModel.Customers = New NorthwindSimpleModel.Customers() With {.CustomerID = "FOO01", .CompanyName = "Foo Store"}
             Dim newOrder As NorthwindSimpleModel.Orders = New NorthwindSimpleModel.Orders() With {.OrderID = 9999, .OrderDate = DateTime.Now}
@@ -476,8 +476,8 @@ Partial Public Class ClientModule
             northwindCtx.SetLink(newOrder, "Customers", Nothing)
             northwindCtx.SaveChanges()
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub ExecuteWithAbsoluteUriDoesNotCallEntitySetResolverOrBaseUri()
             Dim ctx = New DataServiceContext()
             'ctx.EnableAtom = True
@@ -488,8 +488,8 @@ Partial Public Class ClientModule
             Dim count As Integer = ctx.Execute(Of NorthwindSimpleModel.Orders)(New Uri(northwindWeb.BaseUri & "/Orders?$top=2", UriKind.Absolute)).Count()
             Assert.AreEqual(2, count, "execute should return the correct number of orders")
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub LoadPropertyDoesNotCallEntitySetResolverOrBaseUri()
             Dim cust As NorthwindSimpleModel.Customers = northwindCtx.CreateQuery(Of NorthwindSimpleModel.Customers)("Customers").Execute().First()
             northwindCtx.BaseUri = Nothing
@@ -499,8 +499,8 @@ Partial Public Class ClientModule
             Dim response = northwindCtx.LoadProperty(cust, "Orders")
             Assert.IsFalse(cust.Orders.Count = 0, "No orders were loaded")
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub LinqQueryResolvesUriOnlyOnExecute()
             Const entitySetName As String = "Values"
             'Arange
@@ -522,7 +522,7 @@ Partial Public Class ClientModule
             Assert.IsNotNull(readAllType, "didn't read the entity we expected to find")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub NoBaseUriAndNoEntitySetResolverOnAddObject_Error()
             Dim act As Action = Sub()
                                     Dim context As New DataServiceContext()
@@ -533,8 +533,8 @@ Partial Public Class ClientModule
                                                 "Context_ResolveEntitySetOrBaseUriRequired",
                                                 "foo")
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub CaptureUriDuringAddObjectCall()
             'Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -562,7 +562,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, TypedCustomDataContext(Of MyAllTypes1).CurrentValues.Count, "Wrong number of objects added")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub CaptureUriDuringAttachToCall()
             'Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -596,8 +596,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, TypedCustomDataContext(Of MyAllTypes1).CurrentValues.Count, "Wrong number of objects added")
             Assert.AreEqual("NewFoo", TypedCustomDataContext(Of MyAllTypes1).CurrentValues.First().StringType, "The update was not saved")
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub ExecuteBatchWithRelativeUri()
             ' Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -622,8 +622,8 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-
-        <TestCategory("Partition3")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()>
         Public Sub SimpleCRUDTest()
 
             For Each mode As SaveChangesMode In [Enum].GetValues(GetType(SaveChangesMode))

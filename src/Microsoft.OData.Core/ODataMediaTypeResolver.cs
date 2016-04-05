@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core
         /// The set of supported media types is ordered (desc) by their precedence/priority with respect to (1) format and (2) media type.
         /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
         /// </remarks>
-        private static readonly ODataMediaTypeFormat[][] defaultMediaTypesWithoutAtom =
+        private static readonly ODataMediaTypeFormat[][] defaultMediaTypes =
             new ODataMediaTypeFormat[][]
                 {
                 // feed
@@ -154,12 +154,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// MediaTypeResolver without atom support
         /// </summary>
-        private static readonly ODataMediaTypeResolver MediaTypeResolverWithoutAtom = new ODataMediaTypeResolver();
+        private static readonly ODataMediaTypeResolver MediaTypeResolver = new ODataMediaTypeResolver();
 
         /// <summary>
         /// Creates a new media type resolver with the mappings.
         /// </summary>
-        /// <param name="enableAtom">Whether to enable ATOM.</param>
         public ODataMediaTypeResolver()
         {
             this.mediaTypesForPayloadKind = CloneDefaultMediaTypes();
@@ -175,7 +174,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return MediaTypeResolverWithoutAtom;
+                return MediaTypeResolver;
             }
         }
 
@@ -195,17 +194,16 @@ namespace Microsoft.OData.Core
         /// <returns>A new media type resolver for readers with the mappings for the specified version and behavior kind.</returns>
         internal static ODataMediaTypeResolver GetMediaTypeResolver()
         {
-            return MediaTypeResolverWithoutAtom;
+            return MediaTypeResolver;
         }
 
         /// <summary>
         /// Clones the default media types.
         /// </summary>
-        /// <param name="includeAtom">Whether include Atom mediatypes.</param>
         /// <returns>The cloned media type table.</returns>
         private static List<ODataMediaTypeFormat>[] CloneDefaultMediaTypes()
         {
-            ODataMediaTypeFormat[][] mediaTypes = defaultMediaTypesWithoutAtom;
+            ODataMediaTypeFormat[][] mediaTypes = defaultMediaTypes;
 
             List<ODataMediaTypeFormat>[] clone = new List<ODataMediaTypeFormat>[mediaTypes.Length];
 

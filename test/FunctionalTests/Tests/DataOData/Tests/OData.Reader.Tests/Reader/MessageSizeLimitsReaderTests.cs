@@ -569,7 +569,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 },
             };
 
-            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest || (tc.Format != ODataFormat.Atom && tc.Format != ODataFormat.Json));
+            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest || tc.Format != ODataFormat.Json);
         }
 
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading batch response payloads.")]
@@ -613,7 +613,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 },
             };
 
-            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => tc.IsRequest || (tc.Format != ODataFormat.Json || tc.Format != ODataFormat.Atom));
+            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => true);
         }
 #endif
 
@@ -650,7 +650,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 },
             };
 
-            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest || tc.Format == ODataFormat.Atom);
+            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest);
         }
 
         private void RunAtomJsonMessageSizeLimitTests(
@@ -689,11 +689,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     (testCase, testConfiguration) =>
                     {
                         int size = -1;
-                        if (testConfiguration.Format == ODataFormat.Atom && testCase.AtomSizes != null)
-                        {
-                            size = testConfiguration.IsRequest ? testCase.AtomSizes.RequestSize : testCase.AtomSizes.ResponseSize;
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
+                        if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
                         {
                             size = testConfiguration.IsRequest ? testCase.JsonLightSizes.RequestSize : testCase.JsonLightSizes.ResponseSize;
                         }
@@ -738,11 +734,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testCase, testConfiguration) =>
                 {
                     int size = -1;
-                    if (testConfiguration.Format == ODataFormat.Atom && testCase.AtomSizes != null)
-                    {
-                        size = testConfiguration.IsRequest ? testCase.AtomSizes.RequestSize : testCase.AtomSizes.ResponseSize;
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
+                    if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
                     {
                         size = testConfiguration.IsRequest ? testCase.JsonLightSizes.RequestSize : testCase.JsonLightSizes.ResponseSize;
                     }

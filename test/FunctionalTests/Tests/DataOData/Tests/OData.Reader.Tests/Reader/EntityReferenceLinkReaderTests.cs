@@ -38,15 +38,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             // make sure this also works with metadata
             EdmModel model = (EdmModel)Test.OData.Utils.Metadata.TestModels.BuildTestModel();
-            EdmEntityType cityType = (EdmEntityType) model.FindDeclaredType("TestModel.CityType");
+            EdmEntityType cityType = (EdmEntityType)model.FindDeclaredType("TestModel.CityType");
             EdmEntitySet citySet = (EdmEntitySet)model.EntityContainersAcrossModels().First().FindEntitySet("Cities");
 
             testDescriptors = testDescriptors.Concat(
-                testDescriptors.Select(td => 
-                    new PayloadReaderTestDescriptor(td) 
+                testDescriptors.Select(td =>
+                    new PayloadReaderTestDescriptor(td)
                     {
                         PayloadElement = ((DeferredLink)td.PayloadElement.DeepCopy()).ExpectedNavigationProperty(citySet, cityType, "PoliceStation"),
-                        PayloadEdmModel = model 
+                        PayloadEdmModel = model
                     }));
 
             // add some error cases
@@ -59,10 +59,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult (this.Settings.ExpectedResultSettings)
-                            { 
-                                ExpectedException = tc.Format == ODataFormat.Atom 
-                                    ? ODataExpectedExceptions.ODataException("ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified", string.Empty) 
-                                    : ODataExpectedExceptions.ODataException("ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull")
+                            {
+                                ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull")
                             },
                 },
 
@@ -73,13 +71,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult (this.Settings.ExpectedResultSettings)
-                            { 
+                            {
                                 ExpectedException = tc.Format == ODataFormat.Json
                                 ? null
-                                : ODataExpectedExceptions.ODataException(
-                                    tc.Format == ODataFormat.Atom 
-                                        ? "ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified" 
-                                        : "ODataJsonDeserializer_RelativeUriUsedWithoutBaseUriSpecified")
+                                : ODataExpectedExceptions.ODataException("ODataJsonDeserializer_RelativeUriUsedWithoutBaseUriSpecified")
                             },
                 },
 
@@ -90,13 +85,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult (this.Settings.ExpectedResultSettings)
-                            { 
+                            {
                                 ExpectedException = tc.Format == ODataFormat.Json
                                 ? null
-                                : ODataExpectedExceptions.ODataException(
-                                    tc.Format == ODataFormat.Atom 
-                                        ? "ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified" 
-                                        : "ODataJsonDeserializer_RelativeUriUsedWithoutBaseUriSpecified")
+                                : ODataExpectedExceptions.ODataException("ODataJsonDeserializer_RelativeUriUsedWithoutBaseUriSpecified")
                             },
                 },
             };
@@ -135,11 +127,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             EdmEntitySet citySet = (EdmEntitySet)model.EntityContainersAcrossModels().First().FindEntitySet("Cities");
 
             testDescriptors = testDescriptors.Concat(
-                testDescriptors.Select(td => 
-                    new PayloadReaderTestDescriptor(td) 
+                testDescriptors.Select(td =>
+                    new PayloadReaderTestDescriptor(td)
                     {
                         PayloadElement = ((LinkCollection)td.PayloadElement.DeepCopy()).ExpectedNavigationProperty(citySet, cityType, "DOL"),
-                        PayloadEdmModel = model 
+                        PayloadEdmModel = model
                     }));
 
             // add some error cases
@@ -154,10 +146,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     SkipTestConfiguration = t => t.IsRequest,
                     ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult (this.Settings.ExpectedResultSettings)
-                            { 
-                                ExpectedException = tc.Format == ODataFormat.Atom 
-                                    ? ODataExpectedExceptions.ODataException("ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified", string.Empty) 
-                                    : ODataExpectedExceptions.ODataException("ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull")
+                            {
+                                ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull")
                             },
                 },
 

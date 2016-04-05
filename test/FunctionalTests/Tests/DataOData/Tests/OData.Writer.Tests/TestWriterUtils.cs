@@ -1222,13 +1222,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             bool success;
             string error;
-            if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                var atomExpectedResults = expectedResults as AtomWriterTestExpectedResults;
-                ExceptionUtilities.CheckObjectNotNull(atomExpectedResults, "The expected result should be for ATOM format.");
-                success = CompareAtomResults(atomExpectedResults, stream, testConfiguration, out error);
-            }
-            else if (testConfiguration.Format == ODataFormat.Json)
+            if (testConfiguration.Format == ODataFormat.Json)
             {
                 var jsonExpectedResults = expectedResults as JsonWriterTestExpectedResults;
                 ExceptionUtilities.CheckObjectNotNull(jsonExpectedResults, "The expected result should be for Json format.");

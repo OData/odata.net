@@ -80,7 +80,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
         protected readonly ODataFormat[] mimeTypes = new ODataFormat[]
         {
-            ODataFormat.Atom,
             ODataFormat.Json
         };
 

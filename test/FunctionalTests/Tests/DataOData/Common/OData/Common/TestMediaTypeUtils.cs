@@ -42,38 +42,30 @@ namespace Microsoft.Test.Taupo.OData.Common
                 // feed
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeAtomXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // entry
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeAtomXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // property
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimeXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // entity reference link
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimeXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // entity reference links
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" +  MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" +  MimeConstants.MimeXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" +  MimeConstants.MimeJsonSubType }
                 },
 
@@ -92,16 +84,12 @@ namespace Microsoft.Test.Taupo.OData.Common
                 // collection
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimeXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // service document
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeAtomSvcXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
@@ -114,7 +102,6 @@ namespace Microsoft.Test.Taupo.OData.Common
                 // error
                 new MediaTypeWithFormat[]
                 {
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
@@ -190,7 +177,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <returns>The default encoding for <paramref name="kind"/>.</returns>
         public static Encoding GetDefaultEncoding(ODataPayloadKind kind, ODataFormat format)
         {
-            if (format == ODataFormat.Atom)
+            if (format == ODataFormat.Json)
             {
                 return null;
             }
@@ -235,7 +222,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                     case ODataPayloadKind.BinaryValue:
                         return ODataFormat.RawValue;
                     default:
-                        return ODataFormat.Atom;
+                        return ODataFormat.Json;
                 }
             }
 
@@ -254,12 +241,10 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 case ODataPayloadKind.Feed:
                 case ODataPayloadKind.EntityReferenceLinks:
-                    if (format == ODataFormat.Atom || format == null) return "application/atom+xml;type=feed";
-                    else if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
+                    if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
                 case ODataPayloadKind.Entry:
-                    if (format == ODataFormat.Atom || format == null) return "application/atom+xml;type=entry";
-                    else if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
+                    if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
                 case ODataPayloadKind.Value:
                     if (format == ODataFormat.RawValue || format == null) return "text/plain;charset=iso-8859-1";
@@ -272,8 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 case ODataPayloadKind.EntityReferenceLink:  // fall through
                 case ODataPayloadKind.Error:                // fall through
                 case ODataPayloadKind.ServiceDocument:
-                    if (format == ODataFormat.Atom || format == null) return "application/xml";
-                    else if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
+                    if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
                 case ODataPayloadKind.Batch:
                     if (format == ODataFormat.Batch || format == null) return "multipart/mixed";

@@ -17,8 +17,8 @@ Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 
 Partial Public Class ClientModule
-
-    <TestClass()> _
+    'Remove Atom
+    <Ignore> <TestClass()>
     Public Class SelfEditLinkTests
         Inherits AstoriaTestCase
 
@@ -48,17 +48,17 @@ Partial Public Class ClientModule
 
         Private Function GetNavigationLink(ByVal entityDescriptor As EntityDescriptor, ByVal propertyName As String) As Uri
             GetNavigationLink = (From linkInfo In entityDescriptor.LinkInfos
-                                  Where linkInfo.Name = propertyName
-                                  Select linkInfo.NavigationLink).FirstOrDefault
+                                 Where linkInfo.Name = propertyName
+                                 Select linkInfo.NavigationLink).FirstOrDefault
         End Function
 
         Private Function GetRelationshipLink(ByVal entityDescriptor As EntityDescriptor, ByVal propertyName As String) As Uri
             GetRelationshipLink = (From linkInfo In entityDescriptor.LinkInfos
-                                  Where linkInfo.Name = propertyName
-                                  Select linkInfo.AssociationLink).FirstOrDefault
+                                   Where linkInfo.Name = propertyName
+                                   Select linkInfo.AssociationLink).FirstOrDefault
         End Function
 
-        <TestCategory("Partition1")> <TestMethod()> _
+        <TestCategory("Partition1")> <TestMethod()>
         Public Sub SimpleCRUDTest()
             ' start a new web service so that we can use a different endpoint to make sure client uses the new endpoint
             ' and not the existing one from which the context was created.
@@ -67,10 +67,10 @@ Partial Public Class ClientModule
                 web1.ServiceType = GetType(AstoriaUnitTests.Stubs.PlaybackService)
                 web1.StartService()
 
-                Dim engine = CombinatorialEngine.FromDimensions( _
-                        New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}), _
-                        New Dimension("ServiceUri", New Uri() {web1.ServiceRoot}), _
-                        New Dimension("UseBatchMode", New Boolean() {True, False}), _
+                Dim engine = CombinatorialEngine.FromDimensions(
+                        New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}),
+                        New Dimension("ServiceUri", New Uri() {web1.ServiceRoot}),
+                        New Dimension("UseBatchMode", New Boolean() {True, False}),
                         New Dimension("UseQuery", New Boolean() {True, False}))
                 TestUtil.RunCombinatorialEngineFail(engine, AddressOf SimpleCRUDTest_Inner)
             End Using
@@ -204,13 +204,13 @@ Partial Public Class ClientModule
         End Sub
 
         ' This test verifies that the values of entity descriptor object is correct, for different kind of server responses.
-        <TestCategory("Partition1")> <TestMethod()> _
+        <TestCategory("Partition1")> <TestMethod()>
         Public Sub VerifyVariousLinksInPayload()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("BatchMode", New Boolean() {True, False}), _
-                New Dimension("QueryMethod", New Boolean() {True, False}), _
-                New Dimension("Location", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/Location/Customers(123)", Nothing}), _
-                New Dimension("QueryLink", New String() {web.ServiceRoot.OriginalString & "/readservice.svc/Customers(123)", Nothing}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("BatchMode", New Boolean() {True, False}),
+                New Dimension("QueryMethod", New Boolean() {True, False}),
+                New Dimension("Location", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/Location/Customers(123)", Nothing}),
+                New Dimension("QueryLink", New String() {web.ServiceRoot.OriginalString & "/readservice.svc/Customers(123)", Nothing}),
                 New Dimension("EditLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/Customers(123)", Nothing}),
                 New Dimension("NavigationLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/Customers(123)/related", Nothing}))
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf VerifyingLinksInQuery_Inner)
@@ -275,7 +275,7 @@ Partial Public Class ClientModule
             End Using
         End Sub
 
-        <TestCategory("Partition1")> <TestMethod()> _
+        <TestCategory("Partition1")> <TestMethod()>
         Public Sub SimpleCRUDTestInBatch()
             ' start a new web service so that we can use a different endpoint to make sure client uses the new endpoint
             ' and not the existing one from which the context was created.
@@ -284,9 +284,9 @@ Partial Public Class ClientModule
             web1.StartService()
 
             Try
-                Dim engine = CombinatorialEngine.FromDimensions( _
-                    New Dimension("ServiceUri", New Uri() {web1.ServiceRoot}), _
-                    New Dimension("UseBatchMode", New Boolean() {True, False}), _
+                Dim engine = CombinatorialEngine.FromDimensions(
+                    New Dimension("ServiceUri", New Uri() {web1.ServiceRoot}),
+                    New Dimension("UseBatchMode", New Boolean() {True, False}),
                     New Dimension("UseQuery", New Boolean() {True, False}))
                 TestUtil.RunCombinatorialEngineFail(engine, AddressOf SimpleCRUDTestInBatch_Inner)
             Finally
@@ -366,26 +366,26 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition1")> <TestMethod()> Public Sub VerifyEntityDescriptorMerging()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                    New Dimension("EntityState", New EntityStates() {EntityStates.Added, EntityStates.Deleted, EntityStates.Modified, EntityStates.Unchanged}), _
-                    New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}), _
-                    New Dimension("QueryLink", New String() {web.ServiceRoot.OriginalString & "/readservice.svc/update/Customers(123)", Nothing}), _
-                    New Dimension("EditLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/update/Customers(123)", Nothing}), _
-                    New Dimension("NavigationLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/update/Customers(123)/related", Nothing}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                    New Dimension("EntityState", New EntityStates() {EntityStates.Added, EntityStates.Deleted, EntityStates.Modified, EntityStates.Unchanged}),
+                    New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}),
+                    New Dimension("QueryLink", New String() {web.ServiceRoot.OriginalString & "/readservice.svc/update/Customers(123)", Nothing}),
+                    New Dimension("EditLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/update/Customers(123)", Nothing}),
+                    New Dimension("NavigationLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/update/Customers(123)/related", Nothing}),
                     New Dimension("UseBatchMode", New Boolean() {True, False}))
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf VerifyingEntityDescriptorMerging_Inner)
         End Sub
 
         Private Function GetNavigationLinkCount(ByVal entityDescriptor As EntityDescriptor) As Integer
             GetNavigationLinkCount = (From rd In entityDescriptor.LinkInfos
-                                       Where Not rd.NavigationLink Is Nothing
-                                       Select rd).Count
+                                      Where Not rd.NavigationLink Is Nothing
+                                      Select rd).Count
         End Function
 
         Private Function GetRelationshipLinkCount(ByVal entityDescriptor As EntityDescriptor) As Integer
             GetRelationshipLinkCount = (From rd In entityDescriptor.LinkInfos
-                                       Where Not rd.AssociationLink Is Nothing
-                                       Select rd).Count
+                                        Where Not rd.AssociationLink Is Nothing
+                                        Select rd).Count
         End Function
 
         Private Sub VerifyingEntityDescriptorMerging_Inner(ByVal values As Hashtable)
@@ -491,36 +491,36 @@ Partial Public Class ClientModule
                 '   - navigation links referring to the different end point
                 Dim serviceUri As String = web.ServiceRoot.OriginalString
                 PlaybackService.OverridingPlayback.Value =
-                "HTTP/1.1 200 OK" & vbCrLf & _
-                "Content-Type: application/atom+xml" & vbCrLf & _
-                "Content-ID: 1" & vbCrLf & _
-                vbCrLf & _
-                "<feed xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='AstoriaUnitTests.Stubs.Customer' xmlns='http://www.w3.org/2005/Atom'>" & _
-                    "<entry>" & _
-                    "  <id>" & serviceUri & "/Id/Customers(123)</id>" & _
-                    "<link rel='self' href='" & serviceUri & "/Customers(123)/SelfLink' />" & _
-                    "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' type='application/atom+xml;type=feed' href='" & serviceUri & "/navigation/orders' />" & _
-                    "<link rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' href='" & serviceUri & "/navigation/bestfriend' />" & _
-                    "  <content type='application/xml'>" & _
-                    "    <m:properties>" & _
-                    "      <d:ID>123</d:ID>" & _
-                    "      <d:Name>Foo</d:Name>" & _
-                    "    </m:properties>" & _
-                    "  </content>" & _
-                    "</entry>" & _
-                    "<entry>" & _
-                    "  <id>" & serviceUri & "/Id/Customers(121)</id>" & _
-                    "<link rel='self' href='" & serviceUri & "/Customers(121)/SelfLink' />" & _
-                    "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' type='application/atom+xml;type=feed' href='" & serviceUri & "/navigation/orders' />" & _
-                    "<link rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' href='" & serviceUri & "/navigation/bestfriend' />" & _
-                    "  <content type='application/xml'>" & _
-                    "    <m:properties>" & _
-                    "      <d:ID>121</d:ID>" & _
-                    "      <d:Name>Foo1</d:Name>" & _
-                    "    </m:properties>" & _
-                    "  </content>" & _
-                    "</entry>" & _
-                    "<link rel='next' href='" & serviceUri & "/Customers?$skiptoken=2' />" & _
+                "HTTP/1.1 200 OK" & vbCrLf &
+                "Content-Type: application/atom+xml" & vbCrLf &
+                "Content-ID: 1" & vbCrLf &
+                vbCrLf &
+                "<feed xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='AstoriaUnitTests.Stubs.Customer' xmlns='http://www.w3.org/2005/Atom'>" &
+                    "<entry>" &
+                    "  <id>" & serviceUri & "/Id/Customers(123)</id>" &
+                    "<link rel='self' href='" & serviceUri & "/Customers(123)/SelfLink' />" &
+                    "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' type='application/atom+xml;type=feed' href='" & serviceUri & "/navigation/orders' />" &
+                    "<link rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' href='" & serviceUri & "/navigation/bestfriend' />" &
+                    "  <content type='application/xml'>" &
+                    "    <m:properties>" &
+                    "      <d:ID>123</d:ID>" &
+                    "      <d:Name>Foo</d:Name>" &
+                    "    </m:properties>" &
+                    "  </content>" &
+                    "</entry>" &
+                    "<entry>" &
+                    "  <id>" & serviceUri & "/Id/Customers(121)</id>" &
+                    "<link rel='self' href='" & serviceUri & "/Customers(121)/SelfLink' />" &
+                    "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' type='application/atom+xml;type=feed' href='" & serviceUri & "/navigation/orders' />" &
+                    "<link rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' href='" & serviceUri & "/navigation/bestfriend' />" &
+                    "  <content type='application/xml'>" &
+                    "    <m:properties>" &
+                    "      <d:ID>121</d:ID>" &
+                    "      <d:Name>Foo1</d:Name>" &
+                    "    </m:properties>" &
+                    "  </content>" &
+                    "</entry>" &
+                    "<link rel='next' href='" & serviceUri & "/Customers?$skiptoken=2' />" &
                 "</feed>"
 
                 Dim q = ctx.CreateQuery(Of Customer)("Customers")
@@ -546,33 +546,33 @@ Partial Public Class ClientModule
                 'then construct the requestUri and check it with convention without executing the query.
 
                 Dim orderQuery As DataServiceQuery(Of Order) = CType((From c In ctx.CreateQuery(Of Customer)("Customers")
-                                                        Where c.ID = 123 _
-                                                        From o In c.Orders _
-                                                        Select o), DataServiceQuery(Of Order))
+                                                                      Where c.ID = 123
+                                                                      From o In c.Orders
+                                                                      Select o), DataServiceQuery(Of Order))
                 Assert.AreEqual(orderQuery.RequestUri.AbsoluteUri, web.ServiceRoot.AbsoluteUri & "/Customers(123)/Orders", "Linq queries needs to use convention to build queries.")
 
 
                 orderQuery = CType((From c In ctx.CreateQuery(Of Customer)("Customers")
-                                    Where c.ID = 123 _
-                                    From o In c.BestFriend.Orders _
+                                    Where c.ID = 123
+                                    From o In c.BestFriend.Orders
                                     Select o), DataServiceQuery(Of Order))
                 Assert.AreEqual(orderQuery.RequestUri.AbsoluteUri, web.ServiceRoot.AbsoluteUri & "/Customers(123)/BestFriend/Orders", "Linq queries needs to use convention to build queries.")
 
 
                 Dim customerQuery As DataServiceQuery(Of Customer) = CType((From c In ctx.CreateQuery(Of Customer)("Customers")
-                                                        Where c.ID = 123 _
-                                                        Select c.BestFriend), DataServiceQuery(Of Customer))
+                                                                            Where c.ID = 123
+                                                                            Select c.BestFriend), DataServiceQuery(Of Customer))
                 Assert.AreEqual(customerQuery.RequestUri.AbsoluteUri, web.ServiceRoot.AbsoluteUri & "/Customers(123)/BestFriend", "Linq queries needs to use convention to build queries.")
 
             End Using
         End Sub
 
         <TestCategory("Partition1")> <TestMethod()> Public Sub VerifyLinksWithUpdateResponses()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-               New Dimension("BatchMode", New Boolean() {True, False}), _
-               New Dimension("QueryLink", New String() {web.ServiceRoot.OriginalString & "/readservice.svc/update/Customers(123)", Nothing}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+               New Dimension("BatchMode", New Boolean() {True, False}),
+               New Dimension("QueryLink", New String() {web.ServiceRoot.OriginalString & "/readservice.svc/update/Customers(123)", Nothing}),
                New Dimension("EditLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/update/Customers(123)", Nothing}),
-               New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}), _
+               New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}),
                New Dimension("NavigationLink", New String() {web.ServiceRoot.OriginalString & "/writeservice.svc/update/Customers(123)/related", Nothing})
                )
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf VerifyLinksWithUpdateResponses_Inner)
@@ -726,22 +726,22 @@ Partial Public Class ClientModule
                 Dim locationHeader = If((populateViaQuery), Nothing, "Location: " & serviceUri.OriginalString & "/Foo.svc/Orders(" & key & ")" & vbCrLf)
                 Dim statusCode = If((populateViaQuery), "HTTP/1.1 200 OK", "HTTP/1.1 201 Created")
 
-                Dim payload = _
-                    statusCode & vbCrLf & _
-                    "Content-Type: application/atom+xml" & vbCrLf & _
-                    "Content-ID: 1" & vbCrLf & _
-                    locationHeader & _
-                    vbCrLf & _
-                    "<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='AstoriaUnitTests.Stubs.Order' xmlns='http://www.w3.org/2005/Atom'>" & _
-                    "  <id>" & id & "</id>" & _
-                    "  <link rel='self' href='" & queryLink & "' />" & _
-                    "  <link rel='edit' href='" & editLink & "' />" & _
-                    "  <content type='application/xml'>" & _
-                    "    <m:properties>" & _
-                    "      <d:ID>" & key & "</d:ID>" & _
-                    "      <d:DollarAmount>1000.00</d:DollarAmount>" & _
-                    "    </m:properties>" & _
-                    "  </content>" & _
+                Dim payload =
+                    statusCode & vbCrLf &
+                    "Content-Type: application/atom+xml" & vbCrLf &
+                    "Content-ID: 1" & vbCrLf &
+                    locationHeader &
+                    vbCrLf &
+                    "<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='AstoriaUnitTests.Stubs.Order' xmlns='http://www.w3.org/2005/Atom'>" &
+                    "  <id>" & id & "</id>" &
+                    "  <link rel='self' href='" & queryLink & "' />" &
+                    "  <link rel='edit' href='" & editLink & "' />" &
+                    "  <content type='application/xml'>" &
+                    "    <m:properties>" &
+                    "      <d:ID>" & key & "</d:ID>" &
+                    "      <d:DollarAmount>1000.00</d:DollarAmount>" &
+                    "    </m:properties>" &
+                    "  </content>" &
                     "</entry>"
 
                 If (useBatchMode) Then
@@ -785,24 +785,24 @@ Partial Public Class ClientModule
             Dim changeSetEndBoundary As String = Nothing
 
             If Not populateViaQuery Then
-                changeSetBeginBoundary = _
-                    "Content-Type: multipart/mixed; boundary=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c" & vbCrLf & _
-                    vbCrLf & _
+                changeSetBeginBoundary =
+                    "Content-Type: multipart/mixed; boundary=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c" & vbCrLf &
+                    vbCrLf &
                     "--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c" & vbCrLf
 
                 changeSetEndBoundary = "--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--" & vbCrLf
             End If
             Return _
-                "HTTP/1.1 200 OK" & vbCrLf & _
-                contentType & vbCrLf & _
-                vbCrLf & _
-                "--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b" & vbCrLf & _
-                changeSetBeginBoundary & _
-                "Content-Type: application/http" & vbCrLf & _
-                "Content-Transfer-Encoding: binary" & vbCrLf & _
-                vbCrLf & _
-                payload & vbCrLf & _
-                changeSetEndBoundary & _
+                "HTTP/1.1 200 OK" & vbCrLf &
+                contentType & vbCrLf &
+                vbCrLf &
+                "--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b" & vbCrLf &
+                changeSetBeginBoundary &
+                "Content-Type: application/http" & vbCrLf &
+                "Content-Transfer-Encoding: binary" & vbCrLf &
+                vbCrLf &
+                payload & vbCrLf &
+                changeSetEndBoundary &
                 "--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--"
         End Function
 
@@ -827,28 +827,28 @@ Partial Public Class ClientModule
 
             Dim feedStart = If((generateFeedPayload = False), Nothing, "<feed xmlns='http://www.w3.org/2005/Atom'>" & vbCrLf)
             Dim feedEnd = If((generateFeedPayload = False), Nothing, "</feed>")
-            Dim payload = _
-                statusCode & vbCrLf & _
-                "Content-Type: application/atom+xml" & vbCrLf & _
-                "Content-ID: 1" & vbCrLf & _
-                locationPayload & _
-                vbCrLf & _
-                feedStart & _
-                "<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='AstoriaUnitTests.Stubs.Customer' xmlns='http://www.w3.org/2005/Atom'>" & vbCrLf & _
-                "  <id>" & id & "</id>" & vbCrLf & _
-                queryLinkPayload & vbCrLf & _
-                editLinkPayload & vbCrLf & _
-                bestFriendNavigationLinkInPayload & vbCrLf & _
-                orderNavigationLinkInPayload & vbCrLf & _
-                bestFriendRelationshipLinkInPayload & vbCrLf & _
-                orderRelationshipLinkInPayload & vbCrLf & _
-                "  <content type='application/xml'>" & vbCrLf & _
-                "    <m:properties>" & vbCrLf & _
-                "      <d:ID>123</d:ID>" & vbCrLf & _
-                "      <d:Name>Foo</d:Name>" & vbCrLf & _
-                "    </m:properties>" & vbCrLf & _
-                "  </content>" & vbCrLf & _
-                "</entry>" & _
+            Dim payload =
+                statusCode & vbCrLf &
+                "Content-Type: application/atom+xml" & vbCrLf &
+                "Content-ID: 1" & vbCrLf &
+                locationPayload &
+                vbCrLf &
+                feedStart &
+                "<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='AstoriaUnitTests.Stubs.Customer' xmlns='http://www.w3.org/2005/Atom'>" & vbCrLf &
+                "  <id>" & id & "</id>" & vbCrLf &
+                queryLinkPayload & vbCrLf &
+                editLinkPayload & vbCrLf &
+                bestFriendNavigationLinkInPayload & vbCrLf &
+                orderNavigationLinkInPayload & vbCrLf &
+                bestFriendRelationshipLinkInPayload & vbCrLf &
+                orderRelationshipLinkInPayload & vbCrLf &
+                "  <content type='application/xml'>" & vbCrLf &
+                "    <m:properties>" & vbCrLf &
+                "      <d:ID>123</d:ID>" & vbCrLf &
+                "      <d:Name>Foo</d:Name>" & vbCrLf &
+                "    </m:properties>" & vbCrLf &
+                "  </content>" & vbCrLf &
+                "</entry>" &
                 feedEnd
 
             If isBatch Then
@@ -859,9 +859,9 @@ Partial Public Class ClientModule
         End Function
 
         Private Function GetCustomerPayloadOnlyHeaders(ByVal batchMode As Boolean) As String
-            Dim payload = _
-                "HTTP/1.1 200 OK" & vbCrLf & _
-                "Content-ID: 1" & vbCrLf & _
+            Dim payload =
+                "HTTP/1.1 200 OK" & vbCrLf &
+                "Content-ID: 1" & vbCrLf &
                 vbCrLf
 
             If batchMode Then

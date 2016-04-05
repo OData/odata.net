@@ -29,6 +29,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region TypeFilter tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TypeFilterTests()
         {
@@ -286,6 +287,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region OrderBy tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void OrderByTests()
         {
@@ -498,7 +500,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion OrderBy tests
 
         #region Filter tests
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterTests()
         {
@@ -619,7 +621,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion Filter tests
 
         #region Expand tests
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ExpandTests()
         {
@@ -706,6 +708,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #endregion Expand tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ProjectionTests()
         {
@@ -1488,6 +1491,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
             );
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NegativeQueryTestsForMissingProperty_JsonTracking()
         {
@@ -1501,6 +1505,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NegativeQueryTestsForMissingProperty_JsonNoTracking()
         {
@@ -2098,7 +2103,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #region DataServiceContext Tests
 
         #region AddLink
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AddLinkTests()
         {
@@ -2317,7 +2322,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion AddLink
 
         #region SetLink
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SetLinkTests()
         {
@@ -2562,7 +2567,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion SetLink
 
         #region DeleteLink
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DeleteLinkTests()
         {
@@ -2679,7 +2684,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion DeleteLink
 
         #region AddRelatedObject
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AddRelatedObjectTests()
         {
@@ -2814,7 +2819,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion AddRelatedObject
 
         #region LoadProperty
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyTests()
         {
@@ -2885,7 +2890,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion LoadProperty
 
         #region NamedStreams
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreamTests()
         {

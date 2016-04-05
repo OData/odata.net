@@ -219,6 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Verify reading batch requests with references in the changeset operation payloads.")]
         public void BatchReaderCrossReferenceLinksInPayloadTest()
         {

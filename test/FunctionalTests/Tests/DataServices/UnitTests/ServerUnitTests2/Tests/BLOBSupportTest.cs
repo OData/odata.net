@@ -255,7 +255,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobETagTest()
             {
@@ -284,6 +284,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
+            [Ignore] // Remove Atom
             [TestCategory("Partition1"), TestMethod, Variation]
             public void BlobObjectContextTest()
             {
@@ -403,7 +404,7 @@ namespace AstoriaUnitTests.Tests
 
                 this.EnsureTestHasNoLeakedStreams();
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void EdmBlobWithInheritanceTest()
             {
@@ -475,6 +476,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobReflectionContextItemTest()
             {
@@ -577,6 +579,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobReflectionContextPhotoTest()
             {
@@ -713,7 +716,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobReflectionContextPermissionTest()
             {
@@ -799,7 +802,7 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobPostBindingTest()
             {
@@ -989,7 +992,7 @@ namespace AstoriaUnitTests.Tests
                     Assert.IsNull(PhotoDataServiceContext._items.Single(i => i.ID == 500).RelatedItems.SingleOrDefault(i => i.ID == id));
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod]
             public void BlobEntryWithNoProperties()
             {
@@ -1024,6 +1027,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now accepts MLE payloads without content element.
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobUpdateMLEWithEmptyContentETagTest()
             {
@@ -1056,7 +1060,7 @@ namespace AstoriaUnitTests.Tests
                     Assert.AreEqual(412, req.ResponseStatusCode, "The request should have failed due to mismatch in ETags");
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobUpdateBindingTest()
             {
@@ -1254,7 +1258,7 @@ namespace AstoriaUnitTests.Tests
 
                 this.EnsureTestHasNoLeakedStreams();
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobEtagTest()
             {
@@ -1862,7 +1866,7 @@ namespace AstoriaUnitTests.Tests
                 writer.WriteLine("--cs--");
                 writer.Flush();
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition1"), TestMethod, Variation]
             public void BlobAcceptContentTypeHeaderTest()
             {
@@ -1988,7 +1992,7 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Verify that no query options can be applied to Media Resources + invalid queries for Blobs and Projections")]
             public void BlobStreamQueryOptionTests()
             {
@@ -2178,7 +2182,7 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Test cases for  'IDataServiceStreamProvider.GetReadStreamUri'")]
             public void GetReadStreamUriTest()
             {
@@ -2264,7 +2268,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Verify that we can call GetQueryStringValue(headerName) correctly in an IDataServiceStreamProvider method.")]
             public void BlobQueryStringHeaderTest()
             {
@@ -2332,7 +2336,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             #region Cross Feature - Blobs, service ops, concurrency, RowCount
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Cross Feature - Blobs, service ops, concurrency, RowCount, query options")]
             public void Blob_ServiceOp_Concurrency_RowCount_QueryOptions()
             {
@@ -2798,7 +2802,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature - Blobs and Projections
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs - Reflection provider")]
             public void BlobProjectionTests_ReflectionProvider()
             {
@@ -3514,7 +3518,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs Client Queries- EF provider")]
             public void BlobProjectionTestsClientQueries_EFProvider()
             {
@@ -3596,7 +3600,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature - Projections and Expand on MLEs
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests Projection and Expand on MLEs - IDSP provider")]
             public void BlobProjectionTests_IDSP()
             {
@@ -3975,7 +3979,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests Projection and Expand on MLEs - Open Type provider")]
             public void BlobProjectionTests_OpenTypeProvider()
             {
@@ -4362,7 +4366,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature - Server Blobs and $orderby
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition1"), TestMethod, Variation("Tests orderby on MLEs, positive cases - EF provider")]
             public void BlobAndOrderby_EFProvider()
             {
@@ -4424,7 +4428,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs, positive cases - reflection provider")]
             public void BlobAndOrderby_ReflectionProvider()
             {
@@ -4481,7 +4485,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs on IDSP and OpenTypes provider")]
             public void BlobAndOrderBy_IDSPAndOpenTypesProvider()
             {
@@ -4737,7 +4741,7 @@ namespace AstoriaUnitTests.Tests
                             }, 1),
                         };
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests top and skip on MLEs - EF provider")]
             public void BlobAndTopSkip_EFProvider()
             {
@@ -4800,7 +4804,7 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests top and skip on MLEs - IDSP and OpenTypes provider")]
             public void BlobAndTopSkip_IDSPAndOpenTypesProvider()
             {
@@ -4873,7 +4877,7 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs, positive cases - reflection provider")]
             public void BlobAndTopSkip_ReflectionProvider()
             {
@@ -5020,7 +5024,7 @@ namespace AstoriaUnitTests.Tests
                     Assert.AreEqual(atomCustomersId, responseCustomersId, "IDs don't match.");
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Tests Top and Skip on MLEs, negative cases")]
             public void BlobTopSkipNegative()
             {
@@ -5076,7 +5080,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Blob Client Insert Tests
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Blob client insert tests -- in memory provider")]
             public void BlobClientInsertTests()
             {
@@ -5229,7 +5233,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature BlobServer and SDP Client
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("HasStream attribute mismatch in server/client types")]
             public void BlobServerClientMismatchHasStreamTest()
             {
@@ -5361,7 +5365,7 @@ namespace AstoriaUnitTests.Tests
                 public double DollarAmount { get; set; }
                 public MyCustomer Customer { get; set; }
             }
-
+            [Ignore] // Remove Atom
             [TestCategory("Partition2"), TestMethod, Variation("Blob Server X SDP client")]
             public void BlobServerXSDPClientTest()
             {

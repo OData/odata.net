@@ -426,7 +426,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
             this.ExpectedResultNormalizers = new List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>>
             {
-                (tc) => tc.Format == ODataFormat.Atom ? AtomPayloadElementPropertyOrderNormalizer.Normalize : nullFunction,
                 (tc) => nullFunction,
                 (tc) => tc.Format == ODataFormat.Json ? RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.Visit : nullFunction,
                 (tc) => tc.Format == ODataFormat.Json ? (payloadElement) => JsonLightExpectedPayloadElementNormalizer.Normalize(payloadElement, tc) : nullFunction,
@@ -503,7 +502,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 this.PayloadDescriptor.PayloadElement = value;
             }
         }
-        
+
         /// <summary>
         /// A func to create the payload element to compare the results to based on the current test configuration. If this is null the PayloadElement will be used.
         /// </summary>
@@ -906,11 +905,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 string contentType = operation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
 
                 ODataFormat format = this.batchTestConfiguration.Format;
-                if (IsAtomMimeType(contentType))
-                {
-                    format = ODataFormat.Atom;
-                }
-                else if (IsJsonMimeType(contentType))
+                if (IsJsonMimeType(contentType))
                 {
                     format = ODataFormat.Json;
                 }

@@ -285,7 +285,7 @@ namespace Microsoft.OData.Client
             
             if (IsEntity(entry))
             {
-                Debug.Assert(entry.IsAtomOrTracking, "entry.IsAtomOrTracking == true, otherwise we should not be tracking this entry with the context.");
+                Debug.Assert(entry.IsTracking, "entry.isTracking == true, otherwise we should not be tracking this entry with the context.");
 
                 this.entityTracker.AttachIdentity(entry.EntityDescriptor, this.mergeOption);
                 this.identityStack.Add(entry.Id, entry.Entry);
@@ -304,7 +304,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(entry.Entry != null, "entry != null");
             Debug.Assert(entry.Id != null, "entry.Id != null");
-            Debug.Assert(entry.IsAtomOrTracking, "Should not be trying to resolve the entry if entry.IsAtomOrTracking is false.");
+            Debug.Assert(entry.IsTracking, "Should not be trying to resolve the entry if entry.isTracking is false.");
 
             ODataEntry existingODataEntry;
 
@@ -373,7 +373,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise, what did we create?");
             Debug.Assert(entry.CreatedByMaterializer, "entry.CreatedByMaterializer -- otherwise we shouldn't be calling this");
 
-            if (IsEntity(entry) && entry.IsAtomOrTracking && !entry.Entry.IsTransient)
+            if (IsEntity(entry) && entry.IsTracking && !entry.Entry.IsTransient)
             {
                 this.identityStack.Add(entry.Id, entry.Entry);
                 if (this.mergeOption == MergeOption.AppendOnly)

@@ -24,6 +24,7 @@ namespace AstoriaUnitTests
     /// <summary>
     /// End-to-end test for actions with large number of parameters or advertisement of large number of actions.
     /// </summary>
+    [Ignore] // Remove Atom
     [TestClass]
     public class ActionTestsWithLargePayload
     {
@@ -281,6 +282,7 @@ namespace AstoriaUnitTests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AdvertiseLargeNumberOfActionsTests()
         {

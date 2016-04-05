@@ -72,13 +72,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             },
         };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that sync and async calls cannot be mixed on a single writer.")]
         public void SyncAsyncMismatchTest()
         {
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 TestCalls,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 new bool[] { false, true },
                 new bool[] { false, true },
                 (testCall, testConfiguration, writingFeed, testSynchronousCall) =>

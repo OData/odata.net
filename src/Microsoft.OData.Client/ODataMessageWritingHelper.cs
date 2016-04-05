@@ -33,7 +33,6 @@ namespace Microsoft.OData.Client
         /// Create message writer settings for producing requests.
         /// </summary>
         /// <param name="isBatchPartRequest">if set to <c>true</c> indicates that this is a part of a batch request.</param>
-        /// <param name="enableAtom">Whether to enable ATOM.</param>
         /// <param name="odataSimplified">Whether to enable OData Simplified.</param>
         /// <returns>Newly created message writer settings.</returns>
         internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool odataSimplified)

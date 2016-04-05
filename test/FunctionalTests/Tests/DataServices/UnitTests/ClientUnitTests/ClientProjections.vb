@@ -19,7 +19,8 @@ Imports System.Linq.Expressions
 
 Partial Public Class ClientModule
 
-    <TestClass()> Public Class ClientProjectionTests
+    'Remove Atom
+    <Ignore> <TestClass()> Public Class ClientProjectionTests
         Inherits AstoriaTestCase
 
         Private Shared web As TestWebRequest = Nothing
@@ -27,7 +28,7 @@ Partial Public Class ClientModule
 
 #Region "Test Entity"
 
-        <Key("Int")> _
+        <Key("Int")>
         Public Class TestEntity
             Private m_long As Long
             Private m_int As Integer
@@ -107,7 +108,7 @@ Partial Public Class ClientModule
             Public ReadOnly Property Values() As IQueryable(Of TestEntity)
                 Get
                     Return New TestEntity() _
-                     {New TestEntity() With _
+                     {New TestEntity() With
                       {.LongValue = CType(TestValue, Long), .Int = CType(TestValue, Integer), .Float = CType(TestValue, Single), .DoubleVal = TestValue, .DecimalVal = CType(TestValue, Decimal), .StringVal = TestValue.ToString(), .DateTimeOffsetVal = New DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.FromHours(-8.0))}}.AsQueryable()
 
                 End Get
@@ -150,57 +151,57 @@ Partial Public Class ClientModule
         ' NOTE OF AUTOMATION
         ' We cannot dynamically generate these expressions, since we are testing the behaviour of VB compiler
 
-        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")> _
+        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")>
         Public Sub ClientProjection_ProjectBinaryTwoPropsResultComplexType()
             Dim baseQuery = ctx.CreateQuery(Of TestEntity)("Values")
             Dim blEntity = New ProjectionTestContext().Values.FirstOrDefault()
 
             ' Binary with two properties
-            Dim binaryPropertiesTestValues() = _MakeArray( _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.LongValue, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.LongValue, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.Int, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.Int, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.Float, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.Float, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.DoubleVal, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.DecimalVal, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.Int, Object)}), .result = DirectCast(blEntity.Int + blEntity.Int, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.Float, Object)}), .result = DirectCast(blEntity.Int + blEntity.Float, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.DoubleVal, Object)}), .result = DirectCast(blEntity.Int + blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.DecimalVal, Object)}), .result = DirectCast(blEntity.Int + blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float + t.Float, Object)}), .result = DirectCast(blEntity.Float + blEntity.Float, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float + t.DoubleVal, Object)}), .result = DirectCast(blEntity.Float + blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float + t.DecimalVal, Object)}), .result = DirectCast(blEntity.Float + blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal + t.DoubleVal, Object)}), .result = DirectCast(blEntity.DoubleVal + blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal + t.DecimalVal, Object)}), .result = DirectCast(blEntity.DoubleVal + blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DecimalVal + t.DecimalVal, Object)}), .result = DirectCast(blEntity.DecimalVal + blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.LongValue, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.LongValue, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.Int, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.Int, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.Float, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.Float, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.DoubleVal, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.DecimalVal, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.Int, Object)}), .result = DirectCast(blEntity.Int / blEntity.Int, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.Float, Object)}), .result = DirectCast(blEntity.Int / blEntity.Float, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.DoubleVal, Object)}), .result = DirectCast(blEntity.Int / blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.DecimalVal, Object)}), .result = DirectCast(blEntity.Int / blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float / t.Float, Object)}), .result = DirectCast(blEntity.Float / blEntity.Float, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float / t.DoubleVal, Object)}), .result = DirectCast(blEntity.Float / blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float / t.DecimalVal, Object)}), .result = DirectCast(blEntity.Float / blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal / t.DoubleVal, Object)}), .result = DirectCast(blEntity.DoubleVal / blEntity.DoubleVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal / t.DecimalVal, Object)}), .result = DirectCast(blEntity.DoubleVal / blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DecimalVal / t.DecimalVal, Object)}), .result = DirectCast(blEntity.DecimalVal / blEntity.DecimalVal, Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.LongValue, t.LongValue), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.LongValue, blEntity.LongValue), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.Int, t.Int), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.Int, blEntity.Int), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.Float, t.Float), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.Float, blEntity.Float), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.DoubleVal, blEntity.DoubleVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.DecimalVal, blEntity.DecimalVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.Int, t.Int), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.Int, blEntity.Int), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.Float, t.Float), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.Float, blEntity.Float), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.DoubleVal, blEntity.DoubleVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.DecimalVal, blEntity.DecimalVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Float + t.Float, t.Float), Object)}), .result = DirectCast(Math.Pow(blEntity.Float + blEntity.Float, blEntity.Float), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Float + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Float + blEntity.DoubleVal, blEntity.DoubleVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Float + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Float + blEntity.DecimalVal, blEntity.DecimalVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.DoubleVal + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.DoubleVal + blEntity.DoubleVal, blEntity.DoubleVal), Object)}, _
-                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.DoubleVal + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.DoubleVal + blEntity.DecimalVal, blEntity.DecimalVal), Object)}, _
+            Dim binaryPropertiesTestValues() = _MakeArray(
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.LongValue, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.LongValue, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.Int, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.Int, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.Float, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.Float, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.DoubleVal, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue + t.DecimalVal, Object)}), .result = DirectCast(blEntity.LongValue + blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.Int, Object)}), .result = DirectCast(blEntity.Int + blEntity.Int, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.Float, Object)}), .result = DirectCast(blEntity.Int + blEntity.Float, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.DoubleVal, Object)}), .result = DirectCast(blEntity.Int + blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int + t.DecimalVal, Object)}), .result = DirectCast(blEntity.Int + blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float + t.Float, Object)}), .result = DirectCast(blEntity.Float + blEntity.Float, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float + t.DoubleVal, Object)}), .result = DirectCast(blEntity.Float + blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float + t.DecimalVal, Object)}), .result = DirectCast(blEntity.Float + blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal + t.DoubleVal, Object)}), .result = DirectCast(blEntity.DoubleVal + blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal + t.DecimalVal, Object)}), .result = DirectCast(blEntity.DoubleVal + blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DecimalVal + t.DecimalVal, Object)}), .result = DirectCast(blEntity.DecimalVal + blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.LongValue, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.LongValue, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.Int, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.Int, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.Float, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.Float, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.DoubleVal, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.LongValue / t.DecimalVal, Object)}), .result = DirectCast(blEntity.LongValue / blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.Int, Object)}), .result = DirectCast(blEntity.Int / blEntity.Int, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.Float, Object)}), .result = DirectCast(blEntity.Int / blEntity.Float, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.DoubleVal, Object)}), .result = DirectCast(blEntity.Int / blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Int / t.DecimalVal, Object)}), .result = DirectCast(blEntity.Int / blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float / t.Float, Object)}), .result = DirectCast(blEntity.Float / blEntity.Float, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float / t.DoubleVal, Object)}), .result = DirectCast(blEntity.Float / blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.Float / t.DecimalVal, Object)}), .result = DirectCast(blEntity.Float / blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal / t.DoubleVal, Object)}), .result = DirectCast(blEntity.DoubleVal / blEntity.DoubleVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DoubleVal / t.DecimalVal, Object)}), .result = DirectCast(blEntity.DoubleVal / blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DecimalVal / t.DecimalVal, Object)}), .result = DirectCast(blEntity.DecimalVal / blEntity.DecimalVal, Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.LongValue, t.LongValue), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.LongValue, blEntity.LongValue), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.Int, t.Int), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.Int, blEntity.Int), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.Float, t.Float), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.Float, blEntity.Float), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.DoubleVal, blEntity.DoubleVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.LongValue + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.LongValue + blEntity.DecimalVal, blEntity.DecimalVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.Int, t.Int), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.Int, blEntity.Int), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.Float, t.Float), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.Float, blEntity.Float), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.DoubleVal, blEntity.DoubleVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Int + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Int + blEntity.DecimalVal, blEntity.DecimalVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Float + t.Float, t.Float), Object)}), .result = DirectCast(Math.Pow(blEntity.Float + blEntity.Float, blEntity.Float), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Float + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Float + blEntity.DoubleVal, blEntity.DoubleVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.Float + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.Float + blEntity.DecimalVal, blEntity.DecimalVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.DoubleVal + t.DoubleVal, t.DoubleVal), Object)}), .result = DirectCast(Math.Pow(blEntity.DoubleVal + blEntity.DoubleVal, blEntity.DoubleVal), Object)},
+                New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.DoubleVal + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.DoubleVal + blEntity.DecimalVal, blEntity.DecimalVal), Object)},
                 New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Pow(t.DecimalVal + t.DecimalVal, t.DecimalVal), Object)}), .result = DirectCast(Math.Pow(blEntity.DecimalVal + blEntity.DecimalVal, blEntity.DecimalVal), Object)})
 
             For Each t In binaryPropertiesTestValues
@@ -209,7 +210,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")> _
+        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")>
         Public Sub ClientProjection_ProjectUnaryResultComplexType()
             Dim baseQuery = ctx.CreateQuery(Of TestEntity)("Values")
 
@@ -218,91 +219,91 @@ Partial Public Class ClientModule
                 ProjectionTestContext.TestValue = v
                 Dim blEntity = New ProjectionTestContext().Values.FirstOrDefault()
 
-                Dim unaryTestValues() = _MakeArray( _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.LongValue), Object)}), .result = DirectCast(Math.Abs(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.Int), Object)}), .result = DirectCast(Math.Abs(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.Float), Object)}), .result = DirectCast(Math.Abs(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.DoubleVal), Object)}), .result = DirectCast(Math.Abs(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.DecimalVal), Object)}), .result = DirectCast(Math.Abs(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.LongValue), Object)}), .result = DirectCast(Math.Acos(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.Int), Object)}), .result = DirectCast(Math.Acos(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.Float), Object)}), .result = DirectCast(Math.Acos(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.DoubleVal), Object)}), .result = DirectCast(Math.Acos(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.DecimalVal), Object)}), .result = DirectCast(Math.Acos(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.LongValue), Object)}), .result = DirectCast(Math.Asin(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.Int), Object)}), .result = DirectCast(Math.Asin(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.Float), Object)}), .result = DirectCast(Math.Asin(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.DoubleVal), Object)}), .result = DirectCast(Math.Asin(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.DecimalVal), Object)}), .result = DirectCast(Math.Asin(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.LongValue), Object)}), .result = DirectCast(Math.Atan(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.Int), Object)}), .result = DirectCast(Math.Atan(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.Float), Object)}), .result = DirectCast(Math.Atan(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.DoubleVal), Object)}), .result = DirectCast(Math.Atan(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.DecimalVal), Object)}), .result = DirectCast(Math.Atan(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.LongValue), Object)}), .result = DirectCast(Math.Ceiling(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.Int), Object)}), .result = DirectCast(Math.Ceiling(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.Float), Object)}), .result = DirectCast(Math.Ceiling(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.DoubleVal), Object)}), .result = DirectCast(Math.Ceiling(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.DecimalVal), Object)}), .result = DirectCast(Math.Ceiling(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.LongValue), Object)}), .result = DirectCast(Math.Cos(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.Int), Object)}), .result = DirectCast(Math.Cos(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.Float), Object)}), .result = DirectCast(Math.Cos(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.DoubleVal), Object)}), .result = DirectCast(Math.Cos(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.DecimalVal), Object)}), .result = DirectCast(Math.Cos(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.LongValue), Object)}), .result = DirectCast(Math.Cosh(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.Int), Object)}), .result = DirectCast(Math.Cosh(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.Float), Object)}), .result = DirectCast(Math.Cosh(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.DoubleVal), Object)}), .result = DirectCast(Math.Cosh(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.DecimalVal), Object)}), .result = DirectCast(Math.Cosh(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.LongValue), Object)}), .result = DirectCast(Math.Exp(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.Int), Object)}), .result = DirectCast(Math.Exp(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.Float), Object)}), .result = DirectCast(Math.Exp(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.DoubleVal), Object)}), .result = DirectCast(Math.Exp(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.DecimalVal), Object)}), .result = DirectCast(Math.Exp(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.LongValue), Object)}), .result = DirectCast(Math.Floor(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.Int), Object)}), .result = DirectCast(Math.Floor(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.Float), Object)}), .result = DirectCast(Math.Floor(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.DoubleVal), Object)}), .result = DirectCast(Math.Floor(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.DecimalVal), Object)}), .result = DirectCast(Math.Floor(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.LongValue), Object)}), .result = DirectCast(Math.Log(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.Int), Object)}), .result = DirectCast(Math.Log(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.Float), Object)}), .result = DirectCast(Math.Log(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.DoubleVal), Object)}), .result = DirectCast(Math.Log(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.DecimalVal), Object)}), .result = DirectCast(Math.Log(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.LongValue), Object)}), .result = DirectCast(Math.Log10(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.Int), Object)}), .result = DirectCast(Math.Log10(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.Float), Object)}), .result = DirectCast(Math.Log10(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.DoubleVal), Object)}), .result = DirectCast(Math.Log10(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.DecimalVal), Object)}), .result = DirectCast(Math.Log10(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.LongValue), Object)}), .result = DirectCast(Math.Round(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.Int), Object)}), .result = DirectCast(Math.Round(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.Float), Object)}), .result = DirectCast(Math.Round(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.DoubleVal), Object)}), .result = DirectCast(Math.Round(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.DecimalVal), Object)}), .result = DirectCast(Math.Round(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.LongValue), Object)}), .result = DirectCast(Math.Sin(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.Int), Object)}), .result = DirectCast(Math.Sin(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.Float), Object)}), .result = DirectCast(Math.Sin(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.DoubleVal), Object)}), .result = DirectCast(Math.Sin(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.DecimalVal), Object)}), .result = DirectCast(Math.Sin(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.LongValue), Object)}), .result = DirectCast(Math.Sinh(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.Int), Object)}), .result = DirectCast(Math.Sinh(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.Float), Object)}), .result = DirectCast(Math.Sinh(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.DoubleVal), Object)}), .result = DirectCast(Math.Sinh(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.DecimalVal), Object)}), .result = DirectCast(Math.Sinh(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.LongValue), Object)}), .result = DirectCast(Math.Sqrt(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.Int), Object)}), .result = DirectCast(Math.Sqrt(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.Float), Object)}), .result = DirectCast(Math.Sqrt(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.DoubleVal), Object)}), .result = DirectCast(Math.Sqrt(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.DecimalVal), Object)}), .result = DirectCast(Math.Sqrt(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.LongValue), Object)}), .result = DirectCast(Math.Tan(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.Int), Object)}), .result = DirectCast(Math.Tan(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.Float), Object)}), .result = DirectCast(Math.Tan(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.DoubleVal), Object)}), .result = DirectCast(Math.Tan(blEntity.DoubleVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.DecimalVal), Object)}), .result = DirectCast(Math.Tan(blEntity.DecimalVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.LongValue), Object)}), .result = DirectCast(Math.Tanh(blEntity.LongValue), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.Int), Object)}), .result = DirectCast(Math.Tanh(blEntity.Int), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.Float), Object)}), .result = DirectCast(Math.Tanh(blEntity.Float), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.DoubleVal), Object)}), .result = DirectCast(Math.Tanh(blEntity.DoubleVal), Object)}, _
+                Dim unaryTestValues() = _MakeArray(
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.LongValue), Object)}), .result = DirectCast(Math.Abs(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.Int), Object)}), .result = DirectCast(Math.Abs(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.Float), Object)}), .result = DirectCast(Math.Abs(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.DoubleVal), Object)}), .result = DirectCast(Math.Abs(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Abs(t.DecimalVal), Object)}), .result = DirectCast(Math.Abs(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.LongValue), Object)}), .result = DirectCast(Math.Acos(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.Int), Object)}), .result = DirectCast(Math.Acos(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.Float), Object)}), .result = DirectCast(Math.Acos(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.DoubleVal), Object)}), .result = DirectCast(Math.Acos(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Acos(t.DecimalVal), Object)}), .result = DirectCast(Math.Acos(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.LongValue), Object)}), .result = DirectCast(Math.Asin(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.Int), Object)}), .result = DirectCast(Math.Asin(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.Float), Object)}), .result = DirectCast(Math.Asin(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.DoubleVal), Object)}), .result = DirectCast(Math.Asin(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Asin(t.DecimalVal), Object)}), .result = DirectCast(Math.Asin(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.LongValue), Object)}), .result = DirectCast(Math.Atan(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.Int), Object)}), .result = DirectCast(Math.Atan(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.Float), Object)}), .result = DirectCast(Math.Atan(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.DoubleVal), Object)}), .result = DirectCast(Math.Atan(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Atan(t.DecimalVal), Object)}), .result = DirectCast(Math.Atan(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.LongValue), Object)}), .result = DirectCast(Math.Ceiling(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.Int), Object)}), .result = DirectCast(Math.Ceiling(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.Float), Object)}), .result = DirectCast(Math.Ceiling(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.DoubleVal), Object)}), .result = DirectCast(Math.Ceiling(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Ceiling(t.DecimalVal), Object)}), .result = DirectCast(Math.Ceiling(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.LongValue), Object)}), .result = DirectCast(Math.Cos(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.Int), Object)}), .result = DirectCast(Math.Cos(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.Float), Object)}), .result = DirectCast(Math.Cos(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.DoubleVal), Object)}), .result = DirectCast(Math.Cos(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cos(t.DecimalVal), Object)}), .result = DirectCast(Math.Cos(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.LongValue), Object)}), .result = DirectCast(Math.Cosh(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.Int), Object)}), .result = DirectCast(Math.Cosh(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.Float), Object)}), .result = DirectCast(Math.Cosh(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.DoubleVal), Object)}), .result = DirectCast(Math.Cosh(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Cosh(t.DecimalVal), Object)}), .result = DirectCast(Math.Cosh(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.LongValue), Object)}), .result = DirectCast(Math.Exp(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.Int), Object)}), .result = DirectCast(Math.Exp(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.Float), Object)}), .result = DirectCast(Math.Exp(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.DoubleVal), Object)}), .result = DirectCast(Math.Exp(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Exp(t.DecimalVal), Object)}), .result = DirectCast(Math.Exp(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.LongValue), Object)}), .result = DirectCast(Math.Floor(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.Int), Object)}), .result = DirectCast(Math.Floor(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.Float), Object)}), .result = DirectCast(Math.Floor(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.DoubleVal), Object)}), .result = DirectCast(Math.Floor(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Floor(t.DecimalVal), Object)}), .result = DirectCast(Math.Floor(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.LongValue), Object)}), .result = DirectCast(Math.Log(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.Int), Object)}), .result = DirectCast(Math.Log(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.Float), Object)}), .result = DirectCast(Math.Log(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.DoubleVal), Object)}), .result = DirectCast(Math.Log(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log(t.DecimalVal), Object)}), .result = DirectCast(Math.Log(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.LongValue), Object)}), .result = DirectCast(Math.Log10(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.Int), Object)}), .result = DirectCast(Math.Log10(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.Float), Object)}), .result = DirectCast(Math.Log10(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.DoubleVal), Object)}), .result = DirectCast(Math.Log10(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Log10(t.DecimalVal), Object)}), .result = DirectCast(Math.Log10(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.LongValue), Object)}), .result = DirectCast(Math.Round(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.Int), Object)}), .result = DirectCast(Math.Round(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.Float), Object)}), .result = DirectCast(Math.Round(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.DoubleVal), Object)}), .result = DirectCast(Math.Round(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Round(t.DecimalVal), Object)}), .result = DirectCast(Math.Round(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.LongValue), Object)}), .result = DirectCast(Math.Sin(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.Int), Object)}), .result = DirectCast(Math.Sin(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.Float), Object)}), .result = DirectCast(Math.Sin(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.DoubleVal), Object)}), .result = DirectCast(Math.Sin(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sin(t.DecimalVal), Object)}), .result = DirectCast(Math.Sin(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.LongValue), Object)}), .result = DirectCast(Math.Sinh(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.Int), Object)}), .result = DirectCast(Math.Sinh(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.Float), Object)}), .result = DirectCast(Math.Sinh(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.DoubleVal), Object)}), .result = DirectCast(Math.Sinh(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sinh(t.DecimalVal), Object)}), .result = DirectCast(Math.Sinh(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.LongValue), Object)}), .result = DirectCast(Math.Sqrt(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.Int), Object)}), .result = DirectCast(Math.Sqrt(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.Float), Object)}), .result = DirectCast(Math.Sqrt(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.DoubleVal), Object)}), .result = DirectCast(Math.Sqrt(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Sqrt(t.DecimalVal), Object)}), .result = DirectCast(Math.Sqrt(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.LongValue), Object)}), .result = DirectCast(Math.Tan(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.Int), Object)}), .result = DirectCast(Math.Tan(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.Float), Object)}), .result = DirectCast(Math.Tan(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.DoubleVal), Object)}), .result = DirectCast(Math.Tan(blEntity.DoubleVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tan(t.DecimalVal), Object)}), .result = DirectCast(Math.Tan(blEntity.DecimalVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.LongValue), Object)}), .result = DirectCast(Math.Tanh(blEntity.LongValue), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.Int), Object)}), .result = DirectCast(Math.Tanh(blEntity.Int), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.Float), Object)}), .result = DirectCast(Math.Tanh(blEntity.Float), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.DoubleVal), Object)}), .result = DirectCast(Math.Tanh(blEntity.DoubleVal), Object)},
                     New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(Math.Tanh(t.DecimalVal), Object)}), .result = DirectCast(Math.Tanh(blEntity.DecimalVal), Object)})
 
                 For Each t In unaryTestValues
@@ -313,7 +314,7 @@ Partial Public Class ClientModule
         End Sub
 
 
-        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")> _
+        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")>
         Public Sub ClientProjection_ProjectBinaryLocalVarResultComplexType()
 
             Dim baseQuery = ctx.CreateQuery(Of TestEntity)("Values")
@@ -322,41 +323,41 @@ Partial Public Class ClientModule
             ' Binary Operations
             For Each v In _MakeArray(1, -1, 0.1, -0.01D, 1.0, 1.0 + Double.MinValue)
                 Dim _it = v
-                Dim binaryVariableTestValues() = _MakeArray( _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue + _it}), .result = blEntity.LongValue + v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int + _it}), .result = blEntity.Int + v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float + _it}), .result = blEntity.Float + v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal + _it}), .result = blEntity.DoubleVal + v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal + _it}), .result = blEntity.DecimalVal + v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue - _it}), .result = blEntity.LongValue - v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int - _it}), .result = blEntity.Int - v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float - _it}), .result = blEntity.Float - v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal - _it}), .result = blEntity.DoubleVal - v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal - _it}), .result = blEntity.DecimalVal - v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue * _it}), .result = blEntity.LongValue * v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int * _it}), .result = blEntity.Int * v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float * _it}), .result = blEntity.Float * v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal * _it}), .result = blEntity.DoubleVal * v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal * _it}), .result = blEntity.DecimalVal * v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue / _it}), .result = blEntity.LongValue / v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int / _it}), .result = blEntity.Int / v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float / _it}), .result = blEntity.Float / v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal / _it}), .result = blEntity.DoubleVal / v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal / _it}), .result = blEntity.DecimalVal / v}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.LongValue, _it)}), .result = Math.Max(blEntity.LongValue, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.Int, _it)}), .result = Math.Max(blEntity.Int, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.Float, _it)}), .result = Math.Max(blEntity.Float, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.DoubleVal, _it)}), .result = Math.Max(blEntity.DoubleVal, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.DecimalVal, _it)}), .result = Math.Max(blEntity.DecimalVal, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.LongValue, _it)}), .result = Math.Min(blEntity.LongValue, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.Int, _it)}), .result = Math.Min(blEntity.Int, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.Float, _it)}), .result = Math.Min(blEntity.Float, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.DoubleVal, _it)}), .result = Math.Min(blEntity.DoubleVal, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.DecimalVal, _it)}), .result = Math.Min(blEntity.DecimalVal, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.LongValue, _it)}), .result = Math.Pow(blEntity.LongValue, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.Int, _it)}), .result = Math.Pow(blEntity.Int, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.Float, _it)}), .result = Math.Pow(blEntity.Float, v)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.DoubleVal, _it)}), .result = Math.Pow(blEntity.DoubleVal, v)}, _
+                Dim binaryVariableTestValues() = _MakeArray(
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue + _it}), .result = blEntity.LongValue + v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int + _it}), .result = blEntity.Int + v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float + _it}), .result = blEntity.Float + v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal + _it}), .result = blEntity.DoubleVal + v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal + _it}), .result = blEntity.DecimalVal + v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue - _it}), .result = blEntity.LongValue - v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int - _it}), .result = blEntity.Int - v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float - _it}), .result = blEntity.Float - v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal - _it}), .result = blEntity.DoubleVal - v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal - _it}), .result = blEntity.DecimalVal - v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue * _it}), .result = blEntity.LongValue * v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int * _it}), .result = blEntity.Int * v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float * _it}), .result = blEntity.Float * v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal * _it}), .result = blEntity.DoubleVal * v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal * _it}), .result = blEntity.DecimalVal * v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.LongValue / _it}), .result = blEntity.LongValue / v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Int / _it}), .result = blEntity.Int / v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.Float / _it}), .result = blEntity.Float / v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DoubleVal / _it}), .result = blEntity.DoubleVal / v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = t.DecimalVal / _it}), .result = blEntity.DecimalVal / v},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.LongValue, _it)}), .result = Math.Max(blEntity.LongValue, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.Int, _it)}), .result = Math.Max(blEntity.Int, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.Float, _it)}), .result = Math.Max(blEntity.Float, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.DoubleVal, _it)}), .result = Math.Max(blEntity.DoubleVal, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Max(t.DecimalVal, _it)}), .result = Math.Max(blEntity.DecimalVal, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.LongValue, _it)}), .result = Math.Min(blEntity.LongValue, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.Int, _it)}), .result = Math.Min(blEntity.Int, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.Float, _it)}), .result = Math.Min(blEntity.Float, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.DoubleVal, _it)}), .result = Math.Min(blEntity.DoubleVal, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Min(t.DecimalVal, _it)}), .result = Math.Min(blEntity.DecimalVal, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.LongValue, _it)}), .result = Math.Pow(blEntity.LongValue, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.Int, _it)}), .result = Math.Pow(blEntity.Int, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.Float, _it)}), .result = Math.Pow(blEntity.Float, v)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.DoubleVal, _it)}), .result = Math.Pow(blEntity.DoubleVal, v)},
                     New With {.query = baseQuery.Select(Function(t) New With {.result = Math.Pow(t.DecimalVal, _it)}), .result = Math.Pow(blEntity.DecimalVal, v)})
 
                 For Each t In binaryVariableTestValues
@@ -366,25 +367,25 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")> _
+        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")>
         Public Sub ClientProjection_ProjectStringOpResultComplexType()
 
             Dim baseQuery = ctx.CreateQuery(Of TestEntity)("Values")
             Dim blEntity = New ProjectionTestContext().Values.FirstOrDefault()
 
-            Dim stringTestValues() = _MakeArray( _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Contains("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.Contains("Foo"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.IndexOf("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.IndexOf("Foo"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.EndsWith("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.EndsWith("Foo"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.LastIndexOf("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.LastIndexOf("Foo"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.StartsWith("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.StartsWith("Foo"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Insert(0, "Foo"), Object)}), .result = DirectCast(blEntity.StringVal.Insert(0, "Foo"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Remove(0, 1), Object)}), .result = DirectCast(blEntity.StringVal.Remove(0, 1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Replace("1", "0"), Object)}), .result = DirectCast(blEntity.StringVal.Replace("1", "0"), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.ToLower(), Object)}), .result = DirectCast(blEntity.StringVal.ToLower(), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.ToUpper(), Object)}), .result = DirectCast(blEntity.StringVal.ToLower(), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(String.Format("Foo{0}", t.StringVal), Object)}), .result = DirectCast(String.Format("Foo{0}", blEntity.StringVal), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(String.Compare("Foo", t.StringVal), Object)}), .result = DirectCast(String.Compare("Foo", blEntity.StringVal), Object)}, _
+            Dim stringTestValues() = _MakeArray(
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Contains("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.Contains("Foo"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.IndexOf("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.IndexOf("Foo"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.EndsWith("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.EndsWith("Foo"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.LastIndexOf("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.LastIndexOf("Foo"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.StartsWith("Foo"), Object)}), .result = DirectCast(blEntity.StringVal.StartsWith("Foo"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Insert(0, "Foo"), Object)}), .result = DirectCast(blEntity.StringVal.Insert(0, "Foo"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Remove(0, 1), Object)}), .result = DirectCast(blEntity.StringVal.Remove(0, 1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.Replace("1", "0"), Object)}), .result = DirectCast(blEntity.StringVal.Replace("1", "0"), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.ToLower(), Object)}), .result = DirectCast(blEntity.StringVal.ToLower(), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.StringVal.ToUpper(), Object)}), .result = DirectCast(blEntity.StringVal.ToLower(), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(String.Format("Foo{0}", t.StringVal), Object)}), .result = DirectCast(String.Format("Foo{0}", blEntity.StringVal), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(String.Compare("Foo", t.StringVal), Object)}), .result = DirectCast(String.Compare("Foo", blEntity.StringVal), Object)},
                     New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(String.Concat("Foo", t.StringVal), Object)}), .result = DirectCast(String.Concat("Foo", blEntity.StringVal), Object)})
 
             For Each t In stringTestValues
@@ -392,25 +393,25 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")> _
+        <TestCategory("Partition1")> <TestMethod(), Variation("Test VB compiler generated expressions with projection")>
         Public Sub ClientProjection_DateTimeOffset()
 
             Dim baseQuery = ctx.CreateQuery(Of TestEntity)("Values")
             Dim blEntity = New ProjectionTestContext().Values.FirstOrDefault()
             Dim testDateTime As DateTimeOffset = New DateTimeOffset(2009, 9, 9, 0, 0, 0, TimeSpan.FromHours(-8))
 
-            Dim datetimeTestValues() = _MakeArray( _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.Ticks, Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.Ticks, Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(DateTimeOffset.Compare(t.DateTimeOffsetVal.Date, testDateTime.Date), Object)}), .result = DirectCast(DateTime.Compare(blEntity.DateTimeOffsetVal.Date, testDateTime.Date), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.Add(TimeSpan.FromDays(1)), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.Add(TimeSpan.FromDays(1)), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.Subtract(TimeSpan.FromDays(1)), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.Subtract(TimeSpan.FromDays(1)), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddDays(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddDays(1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddHours(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddHours(1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddMilliseconds(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddMilliseconds(1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddMinutes(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddMinutes(1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddMonths(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddMonths(1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddSeconds(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddSeconds(1), Object)}, _
-                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddTicks(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddTicks(1), Object)}, _
+            Dim datetimeTestValues() = _MakeArray(
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.Ticks, Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.Ticks, Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(DateTimeOffset.Compare(t.DateTimeOffsetVal.Date, testDateTime.Date), Object)}), .result = DirectCast(DateTime.Compare(blEntity.DateTimeOffsetVal.Date, testDateTime.Date), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.Add(TimeSpan.FromDays(1)), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.Add(TimeSpan.FromDays(1)), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.Subtract(TimeSpan.FromDays(1)), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.Subtract(TimeSpan.FromDays(1)), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddDays(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddDays(1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddHours(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddHours(1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddMilliseconds(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddMilliseconds(1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddMinutes(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddMinutes(1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddMonths(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddMonths(1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddSeconds(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddSeconds(1), Object)},
+                    New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddTicks(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddTicks(1), Object)},
                     New With {.query = baseQuery.Select(Function(t) New With {.result = DirectCast(t.DateTimeOffsetVal.AddYears(1), Object)}), .result = DirectCast(blEntity.DateTimeOffsetVal.AddYears(1), Object)})
 
             For Each t In datetimeTestValues
@@ -422,8 +423,8 @@ Partial Public Class ClientModule
     End Class
 
 #Region "Cross Feature Tests - Type Resolving/Projections/SDP Client"
-
-    <TestClass()> Public Class ClientProjectionTypeResolvingTests
+    'Remove Atom
+    <Ignore> <TestClass()> Public Class ClientProjectionTypeResolvingTests
         Inherits AstoriaTestCase
 
         Private Shared web As TestWebRequest = Nothing
@@ -751,7 +752,7 @@ Partial Public Class ClientModule
             End Sub
         End Class
 
-        <ServiceModel.ServiceBehavior(includeExceptionDetailInFaults:=True)> _
+        <ServiceModel.ServiceBehavior(IncludeExceptionDetailInFaults:=True)>
         Public Class WorkItemService
             Inherits DataService(Of WorkItemContext)
 
@@ -763,7 +764,7 @@ Partial Public Class ClientModule
                 config.SetEntitySetPageSize("WorkItems", 2)
             End Sub
 
-            <WebGet()> _
+            <WebGet()>
             Public Function GetDevWorkItems() As IQueryable(Of DevWorkItem)
                 Return (From w In Me.CurrentDataSource.WorkItems Select w).OfType(Of DevWorkItem)()
             End Function
@@ -800,10 +801,10 @@ Partial Public Class ClientModule
 #End Region
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectionInheritanceSingleLevel()
-            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.NarrowWorkItem)("WorkItems") _
-                    Select New ProjectionTypeResolvingTests.NarrowWorkItem() With { _
-                        .Comments = w.Comments, _
-                        .DueDate = w.DueDate, _
+            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.NarrowWorkItem)("WorkItems")
+                    Select New ProjectionTypeResolvingTests.NarrowWorkItem() With {
+                        .Comments = w.Comments,
+                        .DueDate = w.DueDate,
                         .Priority = w.Priority}
 
             Dim qor = CType(CType(q, DataServiceQuery(Of ProjectionTypeResolvingTests.NarrowWorkItem)).Execute(), QueryOperationResponse(Of ProjectionTypeResolvingTests.NarrowWorkItem))
@@ -853,10 +854,10 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectionInheritanceDSCSingleLevel()
-            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientBindingWorkItem)("WorkItems") _
-                    Select New ProjectionTypeResolvingTests.NarrowBindingWorkItem() With { _
-                        .Comments = w.Comments, _
-                        .DueDate = w.DueDate, _
+            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientBindingWorkItem)("WorkItems")
+                    Select New ProjectionTypeResolvingTests.NarrowBindingWorkItem() With {
+                        .Comments = w.Comments,
+                        .DueDate = w.DueDate,
                         .Priority = w.Priority}
 
             Dim dsc As DataServiceCollection(Of ProjectionTypeResolvingTests.NarrowBindingWorkItem) = Nothing
@@ -892,20 +893,20 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectionInheritanceMultiLevel()
-            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.NarrowWorkItemWithRelations)("WorkItems") _
-                    Select New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With _
-                    {.Comments = w.Comments, .DueDate = w.DueDate, .Priority = w.Priority, _
-                     .Parent = If(w.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With { _
-                                  .Comments = w.Parent.Comments, _
-                                  .DueDate = w.Parent.DueDate, _
-                                  .Priority = w.Parent.Priority}), _
-                     .Children = (From c In w.Children _
-                                  Select New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With { _
-                                  .Priority = c.Priority, _
-                                  .Parent = If(c.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With { _
-                                               .Comments = c.Parent.Comments, _
-                                               .DueDate = c.Parent.DueDate, _
-                                               .Priority = c.Parent.Priority}) _
+            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.NarrowWorkItemWithRelations)("WorkItems")
+                    Select New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With
+                    {.Comments = w.Comments, .DueDate = w.DueDate, .Priority = w.Priority,
+                     .Parent = If(w.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With {
+                                  .Comments = w.Parent.Comments,
+                                  .DueDate = w.Parent.DueDate,
+                                  .Priority = w.Parent.Priority}),
+                     .Children = (From c In w.Children
+                                  Select New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With {
+                                  .Priority = c.Priority,
+                                  .Parent = If(c.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowWorkItemWithRelations() With {
+                                               .Comments = c.Parent.Comments,
+                                               .DueDate = c.Parent.DueDate,
+                                               .Priority = c.Parent.Priority})
                                                }).ToList()}
             Dim qor = CType(CType(q, DataServiceQuery(Of ProjectionTypeResolvingTests.NarrowWorkItemWithRelations)).Execute(), QueryOperationResponse(Of ProjectionTypeResolvingTests.NarrowWorkItemWithRelations))
             Dim childrenCount = 0, parentCount = 0
@@ -953,21 +954,21 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectionInheritanceDSCMultiLevel()
-            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientBindingWorkItem)("WorkItems") _
-                    Select New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With _
-                    {.Comments = w.Comments, .DueDate = w.DueDate, .Priority = w.Priority, _
-                     .Parent = If(w.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With { _
-                                  .Comments = w.Parent.Comments, _
-                                  .DueDate = w.Parent.DueDate, _
-                                  .Priority = w.Parent.Priority}), _
-                     .Children = New DataServiceCollection(Of ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations)( _
-                                    From c In w.Children _
-                                    Select New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With { _
-                                    .Priority = c.Priority, _
-                                    .Parent = If(c.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With { _
-                                                 .Comments = c.Parent.Comments, _
-                                                 .DueDate = c.Parent.DueDate, _
-                                                 .Priority = c.Parent.Priority})}) _
+            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientBindingWorkItem)("WorkItems")
+                    Select New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With
+                    {.Comments = w.Comments, .DueDate = w.DueDate, .Priority = w.Priority,
+                     .Parent = If(w.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With {
+                                  .Comments = w.Parent.Comments,
+                                  .DueDate = w.Parent.DueDate,
+                                  .Priority = w.Parent.Priority}),
+                     .Children = New DataServiceCollection(Of ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations)(
+                                    From c In w.Children
+                                    Select New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With {
+                                    .Priority = c.Priority,
+                                    .Parent = If(c.Parent Is Nothing, Nothing, New ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations() With {
+                                                 .Comments = c.Parent.Comments,
+                                                 .DueDate = c.Parent.DueDate,
+                                                 .Priority = c.Parent.Priority})})
                     }
 
             Dim dsc = New DataServiceCollection(Of ProjectionTypeResolvingTests.NarrowBindingWorkItemWithRelations)(q)
@@ -997,22 +998,22 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectionMixedTypeInheritance()
             ctx.MergeOption = MergeOption.OverwriteChanges
 
-            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientWorkItem)("WorkItems") _
-                    Where w.ID < 10 _
-                    Select New ProjectionTypeResolvingTests.NarrowWorkItemWithComplexProperty() With { _
-                        .Comments = w.Comments, _
-                        .Priority = w.Priority, _
+            Dim q = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientWorkItem)("WorkItems")
+                    Where w.ID < 10
+                    Select New ProjectionTypeResolvingTests.NarrowWorkItemWithComplexProperty() With {
+                        .Comments = w.Comments,
+                        .Priority = w.Priority,
                         .DueDate = w.DueDate}
 
             For Each w In q
                 Assert.IsNull(w.Developer)
             Next
 
-            Dim q2 = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientDevWorkItem)("GetDevWorkItems") _
-                    Where w.ID < 10 _
-                    Select New ProjectionTypeResolvingTests.NarrowWorkItemWithComplexProperty() With { _
-                        .Comments = w.Comments, _
-                        .Developer = w.Developer}
+            Dim q2 = From w In ctx.CreateQuery(Of ProjectionTypeResolvingTests.ClientDevWorkItem)("GetDevWorkItems")
+                     Where w.ID < 10
+                     Select New ProjectionTypeResolvingTests.NarrowWorkItemWithComplexProperty() With {
+                         .Comments = w.Comments,
+                         .Developer = w.Developer}
             For Each w In q2
                 Assert.IsNotNull(w.Developer)
                 Assert.IsNotNull(w.Developer.Name)
@@ -1068,7 +1069,7 @@ End Class
 
 Namespace ProjectionTypeResolvingTests
 
-    <EntityType()> _
+    <EntityType()>
     Public Class NarrowWorkItem
         Private m_DueDate As DateTimeOffset
         Private m_Priority As Integer
@@ -1102,7 +1103,7 @@ Namespace ProjectionTypeResolvingTests
         End Property
     End Class
 
-    <EntityType()> _
+    <EntityType()>
     Public Class NarrowWorkItemWithComplexProperty
         Inherits NarrowWorkItem
 
@@ -1117,7 +1118,7 @@ Namespace ProjectionTypeResolvingTests
         End Property
     End Class
 
-    <EntityType()> _
+    <EntityType()>
     Public Class NarrowWorkItemWithRelations
         Inherits NarrowWorkItem
 
@@ -1353,7 +1354,7 @@ Namespace ProjectionTypeResolvingTests
         End Sub
     End Class
 
-    <EntityType()> _
+    <EntityType()>
     Public Class NarrowBindingWorkItem
         Implements ComponentModel.INotifyPropertyChanged
 
@@ -1401,7 +1402,7 @@ Namespace ProjectionTypeResolvingTests
 
     End Class
 
-    <EntityType()> _
+    <EntityType()>
     Public Class NarrowBindingWorkItemWithComplexProperty
         Inherits NarrowBindingWorkItem
 
@@ -1417,8 +1418,8 @@ Namespace ProjectionTypeResolvingTests
         End Property
     End Class
 
-    <EntityType()> _
-    <EntitySet("WorkItems")> _
+    <EntityType()>
+    <EntitySet("WorkItems")>
     Public Class NarrowBindingWorkItemWithRelations
         Inherits NarrowBindingWorkItem
 
@@ -1445,8 +1446,8 @@ Namespace ProjectionTypeResolvingTests
         End Property
     End Class
 
-    <Global.Microsoft.OData.Client.EntitySetAttribute("WorkItems"), _
-     Global.Microsoft.OData.Client.KeyAttribute("ID")> _
+    <Global.Microsoft.OData.Client.EntitySetAttribute("WorkItems"),
+     Global.Microsoft.OData.Client.KeyAttribute("ID")>
     Public Class ClientBindingWorkItem
         Implements Global.System.ComponentModel.INotifyPropertyChanged
 
@@ -1524,7 +1525,7 @@ Namespace ProjectionTypeResolvingTests
         End Sub
     End Class
 
-    <Global.Microsoft.OData.Client.KeyAttribute("ID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("ID")>
     Public Class ClientBindingDevWorkItem
         Inherits ClientBindingWorkItem
 
@@ -1596,7 +1597,7 @@ Namespace ProjectionTypeResolvingTests
         Private _FeatureSpec As String
     End Class
 
-    <Global.Microsoft.OData.Client.KeyAttribute("ID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("ID")>
     Public Class ClientBindingBugWorkItem
         Inherits ClientBindingWorkItem
 

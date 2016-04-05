@@ -958,7 +958,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         #endregion
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void MaterializationOfCollection()
         {
@@ -1158,25 +1158,28 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         #endregion
 
         #region LoadProperty
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyNonErrorTestsAsync()
         {
             LoadPropertyTests(testCasesWithoutExceptions, true);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyNonErrorTestsSync()
         {
             LoadPropertyTests(testCasesWithoutExceptions, false);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyErrorTestsAsync()
         {
             LoadPropertyTests(testCasesWithExceptions, true);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyErrorTestsSync()
         {
@@ -1317,6 +1320,7 @@ X-Powered-By: ASP.NET
 
         #region Serialization
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SerializationOfCollection()
         {
@@ -1571,6 +1575,7 @@ X-Powered-By: ASP.NET
             public UntypedCollection<T> Collection { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void InvalidItemsInCollection()
         {
@@ -1655,6 +1660,7 @@ X-Powered-By: ASP.NET
             public Dictionary<string, string> Collection { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SerializationOfEntityWithDictionary()
         {
@@ -1835,6 +1841,7 @@ X-Powered-By: ASP.NET
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Collection_SupportedClientLINQQueries()
         {
@@ -2261,7 +2268,7 @@ X-Powered-By: ASP.NET
                     //context.EnableAtom = true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
-                    where e.ID == 0
+                            where e.ID == 0
                             select new CollectionEntityType
                             {
                                 Names = e.Names
@@ -2434,6 +2441,7 @@ X-Powered-By: ASP.NET
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Collection_NotSupportedClientLINQQueries()
         {
@@ -2524,6 +2532,7 @@ X-Powered-By: ASP.NET
             public ComplexTypeWithCollectionOfArrays ComplexType { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientShouldWriteComplexTypesWithOnlyCollectionProperties()
         {
@@ -2633,6 +2642,7 @@ X-Powered-By: ASP.NET
             public string SettableProperty { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Collection_CollectionTypeRecognition()
         {

@@ -56,11 +56,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 var orders = GetOrders();
 
                 this.TestApplyItemsToCollection(
-                    customer, 
-                    orders, 
-                    mo, 
-                    new TestEntityTracker() 
-                    { 
+                    customer,
+                    orders,
+                    mo,
+                    new TestEntityTracker()
+                    {
                         GetLinksFunc = (o, s) => Enumerable.Empty<LinkDescriptor>()
                     },
                     false);
@@ -83,8 +83,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 }
 
                 this.TestApplyItemsToCollection(
-                    customer, 
-                    this.GetOverlappingOrders(customer.Orders), 
+                    customer,
+                    this.GetOverlappingOrders(customer.Orders),
                     mo,
                     new TestEntityTracker()
                     {
@@ -111,8 +111,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 }
 
                 this.TestApplyItemsToCollection(
-                    customer, 
-                    this.GetOverlappingOrders(customer.Orders), 
+                    customer,
+                    this.GetOverlappingOrders(customer.Orders),
                     mo,
                     new TestEntityTracker()
                     {
@@ -141,10 +141,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 var currentOrders = orders.ToArray();
 
                 this.TestApplyItemsToCollection(
-                    customer, 
-                    this.GetOverlappingOrders(customer.Orders), 
-                    mo, 
-                    new TestEntityTracker() 
+                    customer,
+                    this.GetOverlappingOrders(customer.Orders),
+                    mo,
+                    new TestEntityTracker()
                     {
                         GetLinksFunc = (o, s) => currentOrders.Select(order => new LinkDescriptor(o, s, order, this.clientEdmModel) { State = EntityStates.Unchanged })
                     },
@@ -207,51 +207,51 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void DeletedSourceEntityShouldNotDetachLinks()
         {
             foreach (bool isContinuation in new[] { false, true })
-            foreach (MergeOption mo in new[] { MergeOption.PreserveChanges, MergeOption.OverwriteChanges })
-            {
-                var customer = GetCustomer();
-                var orders = GetOrders();
-
-                foreach (TestOrder o in orders)
+                foreach (MergeOption mo in new[] { MergeOption.PreserveChanges, MergeOption.OverwriteChanges })
                 {
-                    customer.Orders.Add(o);
-                }
+                    var customer = GetCustomer();
+                    var orders = GetOrders();
 
-                var currentOrders = orders.ToArray();
-
-                int numLinkAttachments = 0;
-                int numLinkDetachments = 0;
-
-                this.TestApplyItemsToCollection(
-                    customer,
-                    this.GetOverlappingOrders(customer.Orders),
-                    mo,
-                    new TestEntityTracker()
+                    foreach (TestOrder o in orders)
                     {
-                        GetLinksFunc = (o, s) => currentOrders.Select(order => new LinkDescriptor(o, s, order, this.clientEdmModel) { State = EntityStates.Added }),
-                        GetEntityDescriptorFunc = (o) => o is TestCustomer ?
-                        new EntityDescriptor(this.clientEdmModel) { Entity = o, State = EntityStates.Deleted } :
-                        new EntityDescriptor(this.clientEdmModel) { Entity = o, State = EntityStates.Unchanged },
-                        AttachLinkAction = (s, sp, t, m) => { numLinkAttachments++; },
-                        DetachExistingLinkAction = (l, d) => { numLinkDetachments++; }
-                    },
-                    isContinuation);
+                        customer.Orders.Add(o);
+                    }
 
-                // Deleted source should still attach the new links.
-                Assert.IsTrue(numLinkAttachments == 3);
+                    var currentOrders = orders.ToArray();
 
-                if (mo == MergeOption.OverwriteChanges && !isContinuation)
-                {
-                    Assert.IsTrue(customer.Orders.Count == 3);
-                    // Overwrite results in link detachments.
-                    Assert.IsTrue(numLinkDetachments == 2);
+                    int numLinkAttachments = 0;
+                    int numLinkDetachments = 0;
+
+                    this.TestApplyItemsToCollection(
+                        customer,
+                        this.GetOverlappingOrders(customer.Orders),
+                        mo,
+                        new TestEntityTracker()
+                        {
+                            GetLinksFunc = (o, s) => currentOrders.Select(order => new LinkDescriptor(o, s, order, this.clientEdmModel) { State = EntityStates.Added }),
+                            GetEntityDescriptorFunc = (o) => o is TestCustomer ?
+                            new EntityDescriptor(this.clientEdmModel) { Entity = o, State = EntityStates.Deleted } :
+                            new EntityDescriptor(this.clientEdmModel) { Entity = o, State = EntityStates.Unchanged },
+                            AttachLinkAction = (s, sp, t, m) => { numLinkAttachments++; },
+                            DetachExistingLinkAction = (l, d) => { numLinkDetachments++; }
+                        },
+                        isContinuation);
+
+                    // Deleted source should still attach the new links.
+                    Assert.IsTrue(numLinkAttachments == 3);
+
+                    if (mo == MergeOption.OverwriteChanges && !isContinuation)
+                    {
+                        Assert.IsTrue(customer.Orders.Count == 3);
+                        // Overwrite results in link detachments.
+                        Assert.IsTrue(numLinkDetachments == 2);
+                    }
+                    else
+                    {
+                        Assert.IsTrue(customer.Orders.Count == 5);
+                        Assert.IsTrue(numLinkDetachments == 0);
+                    }
                 }
-                else
-                {
-                    Assert.IsTrue(customer.Orders.Count == 5);
-                    Assert.IsTrue(numLinkDetachments == 0);
-                }
-            }
         }
 
         private TestCustomer GetCustomer()
@@ -261,11 +261,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         private IEnumerable<TestOrder> GetOrders()
         {
-            return new[] 
-            { 
-                new TestOrder { ID = 1, Price = 10 }, 
-                new TestOrder { ID = 2, Price = 20 }, 
-                new TestOrder { ID = 3, Price = 30 } 
+            return new[]
+            {
+                new TestOrder { ID = 1, Price = 10 },
+                new TestOrder { ID = 2, Price = 20 },
+                new TestOrder { ID = 3, Price = 30 }
             };
         }
 
@@ -279,15 +279,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         private void TestApplyItemsToCollection(
-            TestCustomer customer, 
-            IEnumerable orders, 
-            MergeOption option, 
+            TestCustomer customer,
+            IEnumerable orders,
+            MergeOption option,
             TestEntityTracker entityTracker,
             bool isContinuation)
         {
             var customerDescriptor = new EntityDescriptor(this.clientEdmModel) { Entity = customer };
 
-            var materializerEntry = MaterializerEntry.CreateEntryForLoadProperty(customerDescriptor, ODataFormat.Atom, true);
+            var materializerEntry = MaterializerEntry.CreateEntryForLoadProperty(customerDescriptor, ODataFormat.Json, true);
 
             materializerEntry.ActualType = this.clientEdmModel.GetClientTypeAnnotation(clientEdmModel.GetOrCreateEdmType(typeof(TestCustomer)));
 

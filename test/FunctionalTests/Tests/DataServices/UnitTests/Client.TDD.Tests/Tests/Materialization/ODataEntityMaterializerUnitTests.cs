@@ -34,9 +34,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void AfterEntryMaterializedShouldOccur()
         {
-            foreach (ODataFormat format in new ODataFormat[] {ODataFormat.Atom, ODataFormat.Json})
+            foreach (ODataFormat format in new ODataFormat[] { ODataFormat.Json })
             {
-                var entity = new SimpleEntity() {ID = 1};
+                var entity = new SimpleEntity() { ID = 1 };
                 var odataEntry = CreateEntryWithMaterializerEntry(format, entity);
                 MaterializedEntityArgs found = null;
                 this.context.Configurations.ResponsePipeline.OnEntityMaterialized((MaterializedEntityArgs materializedEntryEventArgs) => found = materializedEntryEventArgs);

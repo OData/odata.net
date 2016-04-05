@@ -23,7 +23,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
     public partial class Container : DataServiceContext
     {
-        public Container(Uri serviceRoot) : 
+        public Container(Uri serviceRoot) :
                 base(serviceRoot, ODataProtocolVersion.V4)
         {
             this.ResolveName = this.ResolveNameFromType;
@@ -314,12 +314,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Atom, true, clientEdmModel);
+            MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Json, true, clientEdmModel);
             var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());
 
-            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Atom);
+            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Json);
 
             var customersRead = new List<EntityType>();
             while (entriesMaterializer.Read())
@@ -382,7 +382,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void MaterializeEnumTypeShouldWork()
         {
             ODataEnumValue enumValue = new ODataEnumValue("blue");
-            ODataProperty property = new ODataProperty{ Name = "enumProperty", Value = enumValue };
+            ODataProperty property = new ODataProperty { Name = "enumProperty", Value = enumValue };
             var enumPolicy = new EnumValueMaterializationPolicy(new TestMaterializerContext());
             var result = enumPolicy.MaterializeEnumTypeProperty(typeof(Color), property);
             property.GetMaterializedValue().Should().Be(Color.Blue);
@@ -455,7 +455,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         private ComplexValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy()
         {
-            TestMaterializerContext context = new TestMaterializerContext() { Context = new DataServiceContext()};
+            TestMaterializerContext context = new TestMaterializerContext() { Context = new DataServiceContext() };
             return CreatePrimitiveValueMaterializationPolicy(context);
         }
 

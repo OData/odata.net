@@ -78,13 +78,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             {
                 // No primitive properties
                 new PayloadReaderTestDescriptor(this.Settings)
-                {                    
+                {
                     PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("ID", 1),
                     PayloadEdmModel = model
                 },
                 // Simple primitive property
                 new PayloadReaderTestDescriptor(this.Settings)
-                {                    
+                {
                     PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("ID", 1).PrimitiveProperty("__number", 42),
                     PayloadEdmModel = model
                 },
@@ -142,24 +142,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Test the reading of various kinds of properties on a single entry.")]
-        public void VariousPropertyKindsOnEntryTest()
-        {
-            EdmModel model = new EdmModel();
-
-            // Generate interesting payloads around the entry
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateEntityInstanceDescriptors(this.Settings, model, true)
-                .SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
@@ -264,7 +246,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadEdmModel = model,
                         ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_OpenStreamProperty", "OpenProperty"),
                         // TODO: In JSON we recognize this as a complex property - once we make a decision about the bug enable the test for JSON.
-                        SkipTestConfiguration = tc => tc.Format != ODataFormat.Atom || tc.IsRequest
+                        SkipTestConfiguration = tc => true
                     },
                     // Open deferred navigation property is not allowed.
                     new PayloadReaderTestDescriptor(this.Settings)
@@ -274,7 +256,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadEdmModel = model,
                         ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_OpenNavigationProperty", "OpenProperty", "TestModel.OpenEntityType"),
                         // TODO: In JSON we recognize this as a complex property - once we make a decision about the bug enable the test for JSON.
-                        SkipTestConfiguration = tc => tc.Format != ODataFormat.Atom
+                        SkipTestConfiguration = tc => true
                     },
                     // Open expanded navigation property (entry) is not allowed.
                     new PayloadReaderTestDescriptor(this.Settings)
@@ -284,7 +266,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadEdmModel = model,
                         ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_OpenNavigationProperty", "OpenProperty", "TestModel.OpenEntityType"),
                         // This can't work in JSON as it is recognized as a complex value - and will fail for different reasons
-                        SkipTestConfiguration = tc => tc.Format != ODataFormat.Atom
+                        SkipTestConfiguration = tc => true
                     },
                     // Open expanded navigation property (feed) is not allowed.
                     new PayloadReaderTestDescriptor(this.Settings)
@@ -294,7 +276,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadEdmModel = model,
                         ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_OpenNavigationProperty", "OpenProperty", "TestModel.OpenEntityType"),
                         // This can't work in JSON as it may be recognized as a complex value - and will fail for different reasons
-                        SkipTestConfiguration = tc => tc.Format != ODataFormat.Atom
+                        SkipTestConfiguration = tc =>true
                     },
                     // Open property with same name as non-open property
                     new PayloadReaderTestDescriptor(this.Settings)
@@ -342,18 +324,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 // Primitive property
                 PayloadBuilder.PrimitiveProperty(propertyName, 15),
                 // Complex property
-                PayloadBuilder.Property(propertyName, 
+                PayloadBuilder.Property(propertyName,
                     PayloadBuilder.ComplexValue("TestModel.DeclaredComplexType").PrimitiveProperty("foo", "bar")),
                 // Stream property
                 PayloadBuilder.StreamProperty(propertyName, "http://odata.org/readlink"),
                 // Collection property (over primitive type)
-                PayloadBuilder.Property(propertyName, 
+                PayloadBuilder.Property(propertyName,
                     PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.Boolean"))),
                 // Collection property (over declared complex type)
-                PayloadBuilder.Property(propertyName, 
+                PayloadBuilder.Property(propertyName,
                     PayloadBuilder.ComplexMultiValue(EntityModelUtils.GetCollectionTypeName("TestModel.DeclaredComplexType"))),
                 // Collection property (over undeclared complex type)
-                PayloadBuilder.Property(propertyName, 
+                PayloadBuilder.Property(propertyName,
                     PayloadBuilder.ComplexMultiValue(EntityModelUtils.GetCollectionTypeName("TestModel.UndeclaredComplexType"))),
                 // Navigation property
                 PayloadBuilder.NavigationProperty(propertyName, "http://odata.org/navlink"),
@@ -450,18 +432,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PropertyInstance secondProperty = duplicatePropertySet.Properties.ElementAt(1);
 
                     // Non-metadata parsing is not supported in JSON.
-                    if (!useMetadata && (testConfiguration.Format != ODataFormat.Atom))
+                    if (!useMetadata)
                     {
                         return;
                     }
 
-                    // If we will have metadata then we can only allow combinations of the same kind
-                    if (useMetadata)
+                    if (firstProperty.ElementType != secondProperty.ElementType)
                     {
-                        if (firstProperty.ElementType != secondProperty.ElementType)
-                        {
-                            return;
-                        }
+                        return;
                     }
 
                     // Association links are only recognized in response payloads and MPV >= V3
@@ -497,13 +475,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     // Now add the second property to it
                     ((EntityInstance)testDescriptor.PayloadElement).Add(secondProperty);
-
-                    // [Astoria-ODataLib-Integration] Parsing of URLs on OData recognized places may fail, but Astoria server doesn't
-                    // Server does not read named stream links for Atom payload therefore the expected payload needs to be normalized
-                    if (testConfiguration.Format == ODataFormat.Atom && useServerBehavior)
-                    {
-                        testDescriptor.ExpectedResultNormalizers.Add(config => (payloadElement => WcfDsServerPayloadElementNormalizer.Normalize(payloadElement, ODataFormat.Atom, testDescriptor.PayloadEdmModel as EdmModel)));
-                    }
 
                     // We expect failure only if we don't allow duplicates or if the property kind doesn't allow duplicates ever.
                     // In JSON with WCF DS Service behavior where duplicates are removed very soon and thus we never fail on them.
@@ -558,15 +529,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     if (firstProperty.ElementType == ODataPayloadElementType.NamedStreamInstance && secondProperty.ElementType == ODataPayloadElementType.NamedStreamInstance)
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            // In ATOM stream properties are represented as pair of links and thus we first match the links together.
-                            // Thus the code finds the duplicate stream property before we get to the duplicate check
-                            // (since it actually finds a stream property which already has a link which it's trying to read)
-                            // As a result we get a different error message, which is OK.
-                            testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleReadLinks", "DuplicateProperty");
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataMediaEditLinkAnnotationName, "DuplicateProperty");
                         }
@@ -597,19 +560,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Two expanded links, both collection",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "CityHall",
                             PayloadBuilder.EntitySet().InsertAt(0, PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1), PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 2))),
                         PayloadBuilder.ExpandedNavigationProperty(
                             "CityHall",
                             PayloadBuilder.EntitySet()) },
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall")
-                                        : (tc.IsRequest) 
+                                        : (tc.IsRequest)
                                             ? null
                                             : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
@@ -617,19 +580,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Two expanded links, both singletons",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1)),
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             null) },
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "PoliceStation")
-                                        : (tc.IsRequest) 
+                                        : (tc.IsRequest)
                                             ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation")
                                             : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "PoliceStation"),
                                 },
@@ -637,7 +600,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Two expanded links, one collection one singleton",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1)),
@@ -650,19 +613,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Expanded singleton, deferred without type",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1)),
                         PayloadBuilder.DeferredNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred")) },
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName) 
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation")
@@ -672,19 +635,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Expanded singleton, deferred singleton",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1)),
                         PayloadBuilder.DeferredNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(false)) },
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
-                                        ? tc.IsRequest 
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName) 
+                                        ? tc.IsRequest
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation")
@@ -694,7 +657,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Expanded singleton, deferred collection (no metadata), we will fail on this since we don't allow multiple links for singletons",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1)),
@@ -707,14 +670,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Expanded collection, deferred without type - no failures",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "CityHall",
                             PayloadBuilder.EntitySet()),
                         PayloadBuilder.DeferredNavigationProperty(
                             "CityHall",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred")).IsCollection(true) },
-                    ExpectedResultNormalizer = 
+                    ExpectedResultNormalizer =
                         (tc) =>
                         {
                             if (tc.Format == ODataFormat.Json)
@@ -724,7 +687,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                             return null;
                         },
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json || tc.IsRequest)
@@ -735,7 +698,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Expanded collection, deferred singleton - no failures (binding scenario) (the metadata mismatch is specifically allowed)",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "CityHall",
                             PayloadBuilder.EntitySet()),
@@ -745,9 +708,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Doesn't work for JSON since the metadata mismatch will cause the parsing to fail
                     // Does not work for deferred link in responses.
                     SkipForConfiguration = tc => tc.IsRequest == false,
-                    ExpectedResultNormalizer = 
+                    ExpectedResultNormalizer =
                         (tc) => (tc.Format == ODataFormat.Json) ? DuplicateNavigationPropertiesToLinkCollection : (Func<ODataPayloadElement, ODataPayloadElement>)null,
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
@@ -758,7 +721,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Expanded collection, deferred collection - no failures (binding scenario)",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.ExpandedNavigationProperty(
                             "CityHall",
                             PayloadBuilder.EntitySet()),
@@ -766,22 +729,22 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             "CityHall",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(true)) },
                     // Doesn't work for JSON since the metadata mismatch will cause the parsing to fail
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
-                                        ? tc.IsRequest 
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName) 
+                                        ? tc.IsRequest
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
                                             : null
-                                        : tc.IsRequest 
-                                            ? null 
+                                        : tc.IsRequest
+                                            ? null
                                             : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Two deferred singletons on a collection property - no failures (binding scenario) (the metadata mismatch is specifically allowed)",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.DeferredNavigationProperty(
                             "CityHall",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(false)),
@@ -791,45 +754,45 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Doesn't work for JSON since the metadata mismatch will cause the parsing to fail
                     // Does not work for deferred link in responses.
                     SkipForConfiguration = tc => tc.IsRequest == false,
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = (tc.Format == ODataFormat.Json) 
-                                        ? (tc.IsRequest) 
-                                            ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall") 
+                                    ExpectedException = (tc.Format == ODataFormat.Json)
+                                        ? (tc.IsRequest)
+                                            ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
                                             : null
-                                        : (tc.IsRequest) 
-                                            ? null 
+                                        : (tc.IsRequest)
+                                            ? null
                                             : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Two deferred collections on a collection property - no failures (binding scenario)",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.DeferredNavigationProperty(
                             "CityHall",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(true)).IsCollection(true),
                         PayloadBuilder.DeferredNavigationProperty(
                             "CityHall",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(true)).IsCollection(true) },
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = 
-                                        (tc.Format == ODataFormat.Json) 
-                                            ? (tc.IsRequest) 
-                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall") 
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall") 
-                                            : (tc.IsRequest) 
-                                                ? null 
+                                    ExpectedException =
+                                        (tc.Format == ODataFormat.Json)
+                                            ? (tc.IsRequest)
+                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                            : (tc.IsRequest)
+                                                ? null
                                                 : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
                 {
                     DebugDescription = "Deferred collection and deferred singleton - no failures (binding scenario) (the metadata mismatch is specifically allowed)",
-                    Properties = new PropertyInstance[] { 
+                    Properties = new PropertyInstance[] {
                         PayloadBuilder.DeferredNavigationProperty(
                             "CityHall",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(true)),
@@ -839,16 +802,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Doesn't work for JSON since the metadata mismatch will cause the parsing to fail
                     // Does not work for deferred link in responses.
                     SkipForConfiguration = tc => tc.IsRequest == false,
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = 
-                                        (tc.Format == ODataFormat.Json) 
-                                            ? (tc.IsRequest) 
-                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall") 
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall") 
-                                            : (tc.IsRequest) 
-                                                ? null 
+                                    ExpectedException =
+                                        (tc.Format == ODataFormat.Json)
+                                            ? (tc.IsRequest)
+                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                            : (tc.IsRequest)
+                                                ? null
                                                 : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
@@ -868,16 +831,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Doesn't work for JSON since the metadata mismatch will cause the parsing to fail
                     // Does not work for deferred link in responses.
                     SkipForConfiguration = tc => tc.IsRequest == false,
-                    ExpectedResultCallback = 
+                    ExpectedResultCallback =
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = 
-                                        (tc.Format == ODataFormat.Json) 
-                                            ? (tc.IsRequest) 
-                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall") 
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall") 
-                                            : (tc.IsRequest) 
-                                                ? null 
+                                    ExpectedException =
+                                        (tc.Format == ODataFormat.Json)
+                                            ? (tc.IsRequest)
+                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                            : (tc.IsRequest)
+                                                ? null
                                                 : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
@@ -1024,15 +987,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     var projections = new List<PayloadReaderTestDescriptor>
                     {
-                        new PayloadReaderTestDescriptor(td) 
-                        { 
-                            PayloadElement = firstPropertyOnly, 
+                        new PayloadReaderTestDescriptor(td)
+                        {
+                            PayloadElement = firstPropertyOnly,
                             SkipTestConfiguration = tc =>
                                 ODataPayloadElementConfigurationValidator.GetSkipTestConfiguration(firstPropertyOnly, ODataPayloadElementConfigurationValidator.AllValidators)(tc),
                         },
                         new PayloadReaderTestDescriptor(td)
                         {
-                            PayloadElement = lastPropertyOnly, 
+                            PayloadElement = lastPropertyOnly,
                             SkipTestConfiguration = tc => tc.Format == ODataFormat.Json ||
                                 ODataPayloadElementConfigurationValidator.GetSkipTestConfiguration(lastPropertyOnly, ODataPayloadElementConfigurationValidator.AllValidators)(tc),
                         },
@@ -1087,8 +1050,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             var testDescriptors = new[]
             {
-                new PayloadReaderTestDescriptor(this.Settings) 
-                { 
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
                     PayloadElement = PayloadBuilder.Entity(entityType.FullName())
                         .PrimitiveProperty("Id", System.Guid.NewGuid().ToString())
                         .Property(PayloadBuilder.NavigationProperty("NavProp", baseUri.Replace("foo", "geo1"), baseUri.Replace("foo", "geo2")).IsCollection(true))
@@ -1098,8 +1061,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // No stream properties in requests or <V3 payloads
                     SkipTestConfiguration = tc => tc.IsRequest
                 },
-                new PayloadReaderTestDescriptor(this.Settings) 
-                { 
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
                     PayloadElement = PayloadBuilder.Entity(mleType.FullName())
                         .EnsureMediaLinkEntry()
                         .PrimitiveProperty("Id", System.Guid.NewGuid().ToString())
@@ -1107,7 +1070,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         .StreamEditLink(baseUri.Replace("foo", "edit-stream"))
                         .StreamSourceLink(baseUri.Replace("foo", "source-stream"))
                         .ExpectedEntityType(mleType, mleSet),
-                    PayloadEdmModel = model 
+                    PayloadEdmModel = model
                 },
             };
 
@@ -1120,19 +1083,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     var actualConfiguration = new ReaderTestConfiguration(testConfiguration);
                     actualConfiguration.MessageReaderSettings.BaseUri = withBaseUri ? new Uri(baseUri) : (testConfiguration.Format != ODataFormat.Json ? null : new Uri(baseUri));
                     testDescriptor.RunTest(actualConfiguration);
-                });
-        }
-
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verify correct reading of MLEs")]
-        public void MediaLinkEntryTest()
-        {
-            var testDescriptors = CreateMediaLinkEntry(this.Settings);
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
                 });
         }
 
@@ -1179,7 +1129,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         .ExpectedEntityType(cityWithMapType, citiesEntitySet),
                     PayloadEdmModel = model,
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataAtomEntryAndFeedDeserializer_ContentWithWrongType", "mime/type"),
-                    SkipTestConfiguration = (tc) => tc.Format != ODataFormat.Atom
+                    SkipTestConfiguration = (tc) => true
                 },
                 // MR read link and content type
                 new PayloadReaderTestDescriptor(settings)
@@ -1202,7 +1152,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.Entity(cityWithMapType.FullName()).PrimitiveProperty("Id", 1).AsMediaLinkEntry().StreamETag("etag")
                         .ExpectedEntityType(cityWithMapType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    SkipTestConfiguration = tc => tc.Format == ODataFormat.Atom
+                    SkipTestConfiguration = tc => false
                 },
                 // Just MR edit link and etag - valid for readers
                 new PayloadReaderTestDescriptor(settings)
@@ -1307,8 +1257,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     var element = testDescriptor.PayloadElement as PropertyInstance;
-                    if (element != null && testConfiguration.Format == ODataFormat.Atom)
-                        element.Name = null;  // make sure Atom top level property have name set to null
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     testConfiguration.MessageReaderSettings.MessageQuotas.MaxNestingDepth = depthLimit;
 
@@ -1417,7 +1365,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         // In entry
                         new PayloadReaderTestDescriptor(settings)
                         {
-                            PayloadElement = 
+                            PayloadElement =
                             PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).Property(undeclaredProperty.DeepCopy()),// :
                             PayloadEdmModel = model,
                             ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty)
@@ -1566,6 +1514,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
         public void UndeclaredExpandedLinkOnOpenTypeTestInAtom()
         {
@@ -1576,7 +1525,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.EntityType")
                 });
 
-            this.RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty, tc => tc.Format == ODataFormat.Atom);
+            this.RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty, tc => false);
         }
 
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]

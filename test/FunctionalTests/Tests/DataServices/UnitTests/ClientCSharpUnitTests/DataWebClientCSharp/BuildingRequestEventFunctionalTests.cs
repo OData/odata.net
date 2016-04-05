@@ -25,6 +25,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     /// Functional tests for the BuildingRequest event. These tests add query parameters and headers in BuildingRequest and then
     /// verify that they were added in SendingRequest2 and in the service itself.
     /// </summary>
+    [Ignore] // Remove Atom
     [TestClass]
     public class BuildingRequestEventFunctionalTests
     {
@@ -104,6 +105,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ExecuteUri()
         {
@@ -144,6 +146,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ExecuteUriPaging()
         {
@@ -173,6 +176,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ExecuteUriPagingAsync()
         {
@@ -227,6 +231,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void QueryAsync()
         {
@@ -280,6 +285,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyAsync()
         {
@@ -306,6 +312,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyPaging()
         {
@@ -334,6 +341,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyPagingAsync()
         {
@@ -445,6 +453,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Insert()
         {
@@ -475,7 +484,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         #endregion
 
         #region Link Tests
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SetLink()
         {
@@ -614,6 +623,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         /// Inserts our plethora of query string parameters and headers onto the top level batch request and verifies that they 
         /// are added to the top level batch request (only).
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchTopLevel()
         {
@@ -655,6 +665,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         /// Sends a batch request with two inserts. This test ensures that inner inserts have the additional parameters and headers added.
         /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchInserts()
         {
@@ -701,6 +712,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         /// Sends a batch request with a single query in it. This test ensures that inner query has the additional parameters and headers added.
         /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchQuery()
         {
@@ -723,6 +735,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchQueryAsync()
         {
@@ -749,6 +762,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         /// <summary>
         /// Call both AddObject on a Customer and AddRelatedObject on an Order then one batch SaveChanges call.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchInsertAndAddRelatedObject()
         {
@@ -788,7 +802,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         #endregion
 
         #region Call Order Tests
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SimpleInsertRequestCallOrder()
         {
@@ -821,6 +835,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SimpleQueryCallOrder()
         {
@@ -851,6 +866,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchQueryExecuteCallOrder()
         {
@@ -888,6 +904,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchRequestCallOrder()
         {
@@ -954,6 +971,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
         #region Other Tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void UnRegisterBuildingRequestEvent()
         {
@@ -1023,6 +1041,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ChangeRequestUriInBuildingRequestDoesNotOverrideOriginalQuery()
         {
@@ -1076,6 +1095,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         /// - event argment descriptor
         /// - end-to-end scenario in which customer adds query string options in SendingRequest
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BuildingRequestReceivingResponseCUDEndToEndTest()
         {

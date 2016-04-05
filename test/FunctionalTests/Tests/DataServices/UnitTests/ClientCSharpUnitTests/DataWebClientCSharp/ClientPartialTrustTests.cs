@@ -316,6 +316,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
          * Within the sandbox code you cannot use Visual Studio Unit Test Assembly to assert due to the lack of security permission. 
          * Use the assert in the test context instead.
          */
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientProjectionPartialTrust()
         {
@@ -327,6 +328,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientProjectionPartialTrustAnonymousType()
         {
@@ -338,6 +340,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientProjectionPartialTrustRef()
         {
@@ -349,6 +352,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientNamedStreamProjection()
         {

@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs.DataServiceProvider;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    [Ignore] // Remove Atom
     [TestClass]
     public class NonNullablePropertiesTests
     {

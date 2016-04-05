@@ -25,7 +25,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    
+
     /// <summary>
     /// Tests for writing association links with the OData writer.
     /// </summary>
@@ -37,6 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         // Navigation link cannot be used in request
         [TestMethod, Variation(Description = "Validates the payloads for various association links.")]
         public void AssociationLinkTest()
@@ -108,30 +109,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     (testConfiguration) =>
                     {
                         var firstAssocLink = testCase.NavigationLinks == null ? null : testCase.NavigationLinks.FirstOrDefault();
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = "<AssociationLinks>" + testCase.Atom + "</AssociationLinks>",
-                                FragmentExtractor = (result) =>
-                                {
-                                    var links = result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                        .Where(l => l.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value.StartsWith(
-                                            TestAtomConstants.ODataNavigationPropertiesAssociationLinkRelationPrefix));
-                                    result = new XElement("AssociationLinks", links);
-                                    if (result.FirstNode == null)
-                                    {
-                                        result.Add("");
-                                    }
-
-                                    return result;
-                                },
-                                ExpectedException2 = testConfiguration.IsRequest && firstAssocLink != null
-                                    ? ODataExpectedExceptions.ODataException("ODataWriterCore_DeferredLinkInRequest")
-                                    : null
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
@@ -161,10 +139,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             return null;
                         }
                     })
-                    {
-                        Model = model,
-                        PayloadEdmElementContainer = customerSet
-                    };
+                {
+                    Model = model,
+                    PayloadEdmElementContainer = customerSet
+                };
             });
 
             // With and without model
@@ -201,6 +179,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Veifies correct writing for association links specified directly on the nav. link.")]
         public void AssociationLinkOnNavigationLinkTest()
         {
@@ -218,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var edmNavigationPropertyAssociationLinkTwo = edmEntityTypeCustomerType.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo { Name = "NavProp2", Target = edmEntityTypeOrderType, TargetMultiplicity = EdmMultiplicity.Many });
             model.AddElement(edmEntityTypeCustomerType);
-            
+
             var customerSet = container.AddEntitySet("Customers", edmEntityTypeCustomerType);
             var orderSet = container.AddEntitySet("Orders", edmEntityTypeOrderType);
             customerSet.AddNavigationTarget(edmNavigationPropertyAssociationLinkOne, orderSet);
@@ -231,7 +210,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     NavigationLink = new ODataNavigationLink() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
                     Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
-                    JsonLight = 
+                    JsonLight =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
                 },
@@ -267,30 +246,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         new ODataItem[] { entry, testCase.NavigationLink, null },
                         (testConfiguration) =>
                         {
-                            if (testConfiguration.Format == ODataFormat.Atom)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    Xml = "<Links>" + testCase.Atom + "</Links>",
-                                    FragmentExtractor = (result) =>
-                                    {
-                                        var links = result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                            .Where(l => l.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value.StartsWith(
-                                                TestAtomConstants.ODataNavigationPropertiesAssociationLinkRelationPrefix) ||
-                                                l.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value.StartsWith(
-                                                TestAtomConstants.ODataNavigationPropertiesRelatedLinkRelationPrefix));
-                                        result = new XElement("Ref", links);
-                                        if (result.FirstNode == null)
-                                        {
-                                            result.Add("");
-                                        }
-
-                                        return result;
-                                    },
-                                    ExpectedException2 = testCase.Atom == null ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyUrl", testCase.PropertyName) : null
-                                };
-                            }
-                            else if (testConfiguration.Format == ODataFormat.Json)
+                            if (testConfiguration.Format == ODataFormat.Json)
                             {
                                 return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                 {
@@ -360,6 +316,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies correct metadata validation for association links.")]
         public void AssociationLinkMetadataValidationTest()
         {
@@ -367,12 +324,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var container = new EdmEntityContainer("TestModel", "Default");
             model.AddElement(container);
-            
+
             var edmEntityTypeOrderType = new EdmEntityType("TestModel", "OrderType");
             model.AddElement(edmEntityTypeOrderType);
 
             var edmEntityTypeCustomerType = new EdmEntityType("TestModel", "CustomerType");
-            edmEntityTypeCustomerType.AddKeys(new EdmStructuralProperty(edmEntityTypeCustomerType,"ID",EdmCoreModel.Instance.GetInt32(false)));
+            edmEntityTypeCustomerType.AddKeys(new EdmStructuralProperty(edmEntityTypeCustomerType, "ID", EdmCoreModel.Instance.GetInt32(false)));
             edmEntityTypeCustomerType.AddStructuralProperty("PrimitiveProperty", EdmCoreModel.Instance.GetString(true));
             var edmNavigationPropertyAssociationLinkOne = edmEntityTypeCustomerType.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo { Name = "Orders", Target = edmEntityTypeOrderType, TargetMultiplicity = EdmMultiplicity.Many });
@@ -380,9 +337,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new EdmNavigationPropertyInfo { Name = "BestFriend", Target = edmEntityTypeCustomerType, TargetMultiplicity = EdmMultiplicity.One });
             model.AddElement(edmEntityTypeCustomerType);
 
-            var edmEntityTypeOpenCustomerType = new EdmEntityType("TestModel", "OpenCustomerType",edmEntityTypeCustomerType,isAbstract:false,isOpen:true);
+            var edmEntityTypeOpenCustomerType = new EdmEntityType("TestModel", "OpenCustomerType", edmEntityTypeCustomerType, isAbstract: false, isOpen: true);
             model.AddElement(edmEntityTypeOpenCustomerType);
-            
+
             var customerSet = container.AddEntitySet("Customers", edmEntityTypeCustomerType);
             var orderSet = container.AddEntitySet("Orders", edmEntityTypeOrderType);
             customerSet.AddNavigationTarget(edmNavigationPropertyAssociationLinkOne, orderSet);
@@ -393,35 +350,35 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new[]
             {
                 // Valid collection
-                new 
+                new
                 {
                     TypeName = "TestModel.CustomerType",
                     NavigationLink = ObjectModelUtils.CreateDefaultCollectionLink("Orders"),
                     ExpectedException = (ExpectedException)null,
                 },
                 // Valid singleton
-                new 
+                new
                 {
                     TypeName = "TestModel.CustomerType",
                     NavigationLink = ObjectModelUtils.CreateDefaultSingletonLink("BestFriend"),
                     ExpectedException = (ExpectedException)null,
                 },
                 // Undeclared on closed type
-                new 
+                new
                 {
                     TypeName = "TestModel.CustomerType",
                     NavigationLink = ObjectModelUtils.CreateDefaultCollectionLink("NonExistant"),
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "NonExistant", "TestModel.CustomerType"),
                 },
                 // Undeclared on open type
-                new 
+                new
                 {
                     TypeName = "TestModel.OpenCustomerType",
                     NavigationLink = ObjectModelUtils.CreateDefaultCollectionLink("NonExistant"),
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_OpenNavigationProperty", "NonExistant", "TestModel.OpenCustomerType"),
                 },
                 // Declared but of wrong kind
-                new 
+                new
                 {
                     TypeName = "TestModel.CustomerType",
                     NavigationLink = ObjectModelUtils.CreateDefaultSingletonLink("PrimitiveProperty"),
@@ -438,20 +395,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     return new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
-                        new ODataItem[] {entry, navigationLink},
-                        tc => tc.Format == ODataFormat.Atom ?
-                            (WriterTestExpectedResults)new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                ExpectedException2 = testCase.ExpectedException
-                            } :
-                            (WriterTestExpectedResults)new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                ExpectedException2 = testCase.ExpectedException
-                            })
+                        new ODataItem[] { entry, navigationLink },
+                        tc => (WriterTestExpectedResults)new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            Model = model,
-                            PayloadEdmElementContainer = customerSet
-                        };
+                            ExpectedException2 = testCase.ExpectedException
+                        })
+                    {
+                        Model = model,
+                        PayloadEdmElementContainer = customerSet
+                    };
                 });
 
             this.CombinatorialEngineProvider.RunCombinations(

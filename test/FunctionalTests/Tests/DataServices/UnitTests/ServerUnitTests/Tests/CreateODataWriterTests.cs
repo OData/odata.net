@@ -21,6 +21,7 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class CreateODataWriterTests
     {
+        [Ignore] // Remove Atom
         [TestMethod]
         public void CreateODataWriterDelegateTest()
         {
@@ -103,6 +104,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void CreateODataWriterInlinecountTest()
         {
@@ -271,7 +273,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void CreateODataWriterDelegateTestForOpenProvider()
         {
@@ -351,6 +353,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ChangingFeedCollectionValueForTopLevel()
         {
@@ -433,6 +436,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void WritingExpandedValue()
         {
@@ -479,6 +483,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DataServiceOdataWriterWriteEndForEntryTest()
         {
@@ -543,6 +548,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DataServiceOdataWriterWriteEndForLinksTest()
         {
@@ -586,7 +592,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DataServiceOdataWriterWriteEndForFeedTest()
         {

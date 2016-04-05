@@ -40,12 +40,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             // make sure reading errors works with and without model
             testDescriptors = testDescriptors.Concat(testDescriptors.Select(td => new PayloadReaderTestDescriptor(td) { PayloadEdmModel = model }));
-            
+
             // add the normalizer for ATOM error payloads
             testDescriptors = testDescriptors.Select(td =>
             {
                 td.ExpectedResultNormalizers.Add(
-                    tc => tc.Format == ODataFormat.Atom ? ErrorMessageNormalizer.Visit : (Func<ODataPayloadElement, ODataPayloadElement>)null);
+                    tc => (Func<ODataPayloadElement, ODataPayloadElement>)null);
                 return td;
             });
 

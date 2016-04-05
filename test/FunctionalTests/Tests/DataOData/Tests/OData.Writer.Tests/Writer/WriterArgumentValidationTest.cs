@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    
+
     /// <summary>
     /// Tests for correct API argument validation in writers
     /// </summary>
@@ -21,6 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataFeed) method")]
         public void WriteStartFeedTest()
         {
@@ -30,6 +31,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataEntry) method")]
         public void WriteStartEntryTest()
         {
@@ -39,6 +41,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataNavigationLink) method")]
         public void WriteStartLinkTest()
         {

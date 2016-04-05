@@ -52,7 +52,7 @@ namespace AstoriaUnitTests.Tests
 
             Dictionary<KeyValuePair<TypeData, int>, TypeBuilder> typeBuilders = new Dictionary<KeyValuePair<TypeData, int>, TypeBuilder>();
             ModuleBuilder module = TestUtil.CreateModuleBuilder("ServiceOpModule");
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable engineValues)
+            TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable engineValues)
             {
                 TypeData typeData = (TypeData)engineValues["TypeData"];
                 int parameterCount = (int)engineValues["ParameterCount"];
@@ -69,7 +69,7 @@ namespace AstoriaUnitTests.Tests
                     CreateServiceTypeForParameterTesting(module, id++, "ServiceOp", typeData.ClrType, parameterCount);
             });
 
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable engineValues)
+            TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable engineValues)
             {
                 TypeData typeData = (TypeData)engineValues["TypeData"];
                 int parameterCount = (int)engineValues["ParameterCount"];
@@ -105,7 +105,7 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     CombinatorialEngine requestEngine = CombinatorialEngine.FromDimensions(requestDimensions.ToArray());
-                    TestUtil.RunCombinatorialEngineFail(requestEngine, delegate(Hashtable requestValues)
+                    TestUtil.RunCombinatorialEngineFail(requestEngine, delegate (Hashtable requestValues)
                     {
                         bool isParameterMissing = false;
                         bool parameterTypeCanBeNull = typeData.ClrType.IsClass || Nullable.GetUnderlyingType(typeData.ClrType) != null;
@@ -280,6 +280,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Checks that metadata can be generated for service operations.</summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationsMetadataBasic()
         {
@@ -417,7 +418,7 @@ namespace AstoriaUnitTests.Tests
                     bool valid = CheckValidMetadata(request, webAttribute,
                         isAbstract,
                         (webAttribute == null && nameOverrides == false && false), // change to true when URI processor is implemented
-                        /* These are 'schedule' rather than technical limitations. */
+                                                                                   /* These are 'schedule' rather than technical limitations. */
                         nameOverrides && webAttribute != null,
                         webAttribute != null && singleResult && resultTypeKind == typeof(IEnumerable));
 
@@ -486,7 +487,7 @@ namespace AstoriaUnitTests.Tests
                         }
 
                         Stream stream = null;
-                        Exception exceptionThrown = TestUtil.RunCatching(delegate()
+                        Exception exceptionThrown = TestUtil.RunCatching(delegate ()
                         {
                             Trace.WriteLine("RequestUriString: " + request.RequestUriString);
                             request.SendRequest();
@@ -539,7 +540,7 @@ namespace AstoriaUnitTests.Tests
                                     {
                                         atomXPaths = new string[] { "/adsm:value/adsm:element" };
                                         jsonXPaths = new string[] {
-                                            String.Format("/{0}/{1}/{2}/{0}[count(@*) = 0]", 
+                                            String.Format("/{0}/{1}/{2}/{0}[count(@*) = 0]",
                                                  JsonValidator.ObjectString, JsonValidator.ResultsString, JsonValidator.ArrayString )
                                         };
                                     }
@@ -552,7 +553,7 @@ namespace AstoriaUnitTests.Tests
                                             "/atom:entry[atom:category/@term='#" + jsonElementName + "']"
                                         };
                                         jsonXPaths = new string[] {
-                                            String.Format("/{0}/__metadata[type='{1}']", 
+                                            String.Format("/{0}/__metadata[type='{1}']",
                                                 JsonValidator.ObjectString, jsonElementName)
                                         };
                                     }
@@ -562,7 +563,7 @@ namespace AstoriaUnitTests.Tests
                                             "/atom:feed/atom:entry[atom:category/@term='#" + jsonElementName + "']"
                                         };
                                         jsonXPaths = new string[] {
-                                            String.Format("/{1}/{3}/{0}/{1}/__metadata[type='{2}']", 
+                                            String.Format("/{1}/{3}/{0}/{1}/__metadata[type='{2}']",
                                                 JsonValidator.ArrayString, JsonValidator.ObjectString, jsonElementName, JsonValidator.ResultsString)
                                         };
                                     }
@@ -578,10 +579,11 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Checks that parameters support extra whitespace.</summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationsSyntax()
         {
-            TestUtil.TraceScopeForException("ServiceOperationsSyntax", delegate()
+            TestUtil.TraceScopeForException("ServiceOperationsSyntax", delegate ()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
@@ -591,17 +593,18 @@ namespace AstoriaUnitTests.Tests
 
                     request.RequestUriString = "/ManyCustomers?name=color&id=123";
                     request.ServiceType = typeof(ServiceOperationsSyntaxService);
-                    Exception exception = TestUtil.RunCatching(delegate() { request.SendRequest(); });
+                    Exception exception = TestUtil.RunCatching(delegate () { request.SendRequest(); });
                     TestUtil.AssertExceptionExpected(exception, true);
                 }
             });
         }
 
         /// <summary>Checks that service operation supports derived type identifier segments in the URI.</summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperations_WithTypeIdentifier()
         {
-            TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier", delegate()
+            TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier", delegate ()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
@@ -613,10 +616,11 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Checks that service operation with a derived type identifier segment in the URI returns only instances of the type..</summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperations_WithTypeIdentifier_ReturnsAllResults_1()
         {
-            TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier_ReturnsAllResults", delegate()
+            TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier_ReturnsAllResults", delegate ()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
@@ -637,10 +641,11 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Checks that service operation with a derived type identifier segment in the URI allows one to project derived type properites</summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperations_WithTypeIdentifier_ReturnsAllResults_2()
         {
-            TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier_ReturnsAllResults", delegate()
+            TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier_ReturnsAllResults", delegate ()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
@@ -666,10 +671,11 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Checks that service operations work with enumerations that are not IQueryable.</summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationsPlainEnumerableTest()
         {
-            TestUtil.TraceScopeForException("ServiceOperationsPlainEnumerableTest", delegate()
+            TestUtil.TraceScopeForException("ServiceOperationsPlainEnumerableTest", delegate ()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
@@ -680,7 +686,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void InStreamPagingErrorForIEnumerableServiceOperation()
         {
@@ -722,25 +728,25 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ServiceOperationsNoCompositionTest()
         {
-            TestUtil.TraceScopeForException("ServiceOperationsNoCompositionTest", delegate()
+            TestUtil.TraceScopeForException("ServiceOperationsNoCompositionTest", delegate ()
             {
                 string[] options = new string[]
                 {
-                    "$expand=Name", 
-                    "$filter=true", 
-                    "$skip=1", "$top=1", 
-                    "$orderby=Name", 
-                    "$count=true", 
-                    "$select=ID", 
-                    "$skiptoken=1", 
+                    "$expand=Name",
+                    "$filter=true",
+                    "$skip=1", "$top=1",
+                    "$orderby=Name",
+                    "$count=true",
+                    "$select=ID",
+                    "$skiptoken=1",
                     "/$count"
                 };
                 string[] uriList = new string[]
                 {
-                    "EnumerableCustomer", 
-                    "TheEnumerableCustomer", 
-                    "TheEnumerableCustomerReturningQueryableInstance", 
-                    "TheEnumerableCustomerMulti", 
+                    "EnumerableCustomer",
+                    "TheEnumerableCustomer",
+                    "TheEnumerableCustomerReturningQueryableInstance",
+                    "TheEnumerableCustomerMulti",
                     "GetSingleCustomer"
                 };
 
@@ -763,7 +769,7 @@ namespace AstoriaUnitTests.Tests
                             else if (option == "/$count")
                             {
                                 expectedErrorCode = 400;
-                                errorString = ODataLibResourceUtil.GetString("RequestUriProcessor_MustBeLeafSegment", uri );
+                                errorString = ODataLibResourceUtil.GetString("RequestUriProcessor_MustBeLeafSegment", uri);
                             }
                             else
                             {
@@ -810,7 +816,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyXPaths(document, xpaths);
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod, Description("Assert were getting fired when If-Match or If-None-Match header was specified for singleton service operations")]
         public void ServiceOperationsETagNotAllowed()
         {
@@ -821,7 +827,7 @@ namespace AstoriaUnitTests.Tests
 
             foreach (string uri in uriList)
                 foreach (string format in new string[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType })
-                    foreach (var etagHeader in new KeyValuePair<string, string>[] { 
+                    foreach (var etagHeader in new KeyValuePair<string, string>[] {
                     new KeyValuePair<string, string>("If-Match", "W/\"foo\""),
                     new KeyValuePair<string, string>("If-None-Match", "W/\"bar\"") })
                     {
@@ -836,7 +842,7 @@ namespace AstoriaUnitTests.Tests
                             false /*verifyETag*/);
                     }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationReturningNullShouldThrow404()
         {
@@ -849,7 +855,7 @@ namespace AstoriaUnitTests.Tests
             // Service operation returning null should throw 404
             UnitTestsUtil.VerifyInvalidRequest(null, "/GetSingleQueryableCustomer?id=11", typeof(ServiceOperationsSyntaxService), UnitTestsUtil.AtomFormat, "GET", 404, DataServicesResourceUtil.GetString("RequestUriProcessor_ResourceNotFound", "GetSingleQueryableCustomer"));
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationSerializationWithSingleEntity()
         {
@@ -868,7 +874,7 @@ namespace AstoriaUnitTests.Tests
 
             TestServiceOperationSerialization("/GetSingleCustomer", atomXPaths, jsonLiteXPaths);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationSerializationWithCollectionOfEntities()
         {
@@ -888,7 +894,7 @@ namespace AstoriaUnitTests.Tests
 
             TestServiceOperationSerialization("/TheEnumerableCustomerMulti", atomXPaths, jsonLiteXPaths);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationSerializationWithSingleComplexType()
         {
@@ -907,7 +913,7 @@ namespace AstoriaUnitTests.Tests
 
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationSerializationWithCollectionOfComplexTypes()
         {
@@ -928,7 +934,7 @@ namespace AstoriaUnitTests.Tests
 
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationSerializationWithSinglePrimitive()
         {
@@ -948,7 +954,7 @@ namespace AstoriaUnitTests.Tests
 
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ServiceOperationSerializationWithCollectionOfPrimitives()
         {
@@ -958,7 +964,7 @@ namespace AstoriaUnitTests.Tests
             {
                 String.Format("/adsm:value[adsm:element='String2']")
             };
-            
+
             var jsonLiteXPaths = new string[]
             {
                 String.Format("//{0}[odata.context='http://host/$metadata#Collection(Edm.String)' and value/{1}[{2}='String2']]",
@@ -966,7 +972,7 @@ namespace AstoriaUnitTests.Tests
                     JsonValidator.ArrayString,
                     JsonValidator.ObjectString)
             };
-            
+
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
 
@@ -985,7 +991,7 @@ namespace AstoriaUnitTests.Tests
 
         private static void SendAndVerifyResults(string[] xPaths, string uri, string responseFormat)
         {
-            UnitTestsUtil.SendRequestAndVerifyXPath(null, uri, new KeyValuePair<string, string[]>[] {new KeyValuePair<string, string[]>(uri, xPaths)}, typeof(ServiceOperationsSyntaxService), responseFormat, "GET");
+            UnitTestsUtil.SendRequestAndVerifyXPath(null, uri, new KeyValuePair<string, string[]>[] { new KeyValuePair<string, string[]>(uri, xPaths) }, typeof(ServiceOperationsSyntaxService), responseFormat, "GET");
         }
 
         public class ServiceOperationsSyntaxService : OpenWebDataService<CustomDataContext>
@@ -1049,7 +1055,7 @@ namespace AstoriaUnitTests.Tests
             [WebGet]
             public IQueryable<Customer> CustomersWithDerivedTypeIdentiferSegment()
             {
-                return new List<Customer>() { 
+                return new List<Customer>() {
                     new Customer() { Name = "Phani", ID = 1000 } ,
                     new CustomerWithBirthday() { Name = "Raju", ID = 1001 }
                     }.AsQueryable();
@@ -1086,7 +1092,7 @@ namespace AstoriaUnitTests.Tests
 
         private static bool CheckValidMetadata(TestWebRequest request, Type webAttributeType, params bool[] exceptionExpected)
         {
-            Exception exception = TestUtil.RunCatching(delegate()
+            Exception exception = TestUtil.RunCatching(delegate ()
             {
                 request.RequestUriString = "/$metadata";
                 request.SendRequest();
@@ -1099,7 +1105,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     Assert.IsTrue(webAttributeType == typeof(WebGetAttribute) ||
                         webAttributeType == typeof(WebInvokeAttribute), "Only Get and Invoke are valid values for the attribute");
-                    
+
                     IEdmEntityContainer entityContainer = metadata.EntityContainer;
                     if (entityContainer != null)
                     {

@@ -26,6 +26,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     /// We set up a server that always adds a custom header to the responses, and then try to read it
     /// in ReceivingResponse on the client in each of the various code paths.
     /// </summary>
+    [Ignore] // Remove Atom
     [TestClass]
     public class ReceivingResponseFunctionalTests
     {
@@ -33,6 +34,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         private const string ResponseHeaderName = "CustomResponseHeader";
         private const string ResponseHeaderValue = "SimpleValue";
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void QueryResponseShouldCallReceivingResponse()
         {
@@ -53,6 +55,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void InsertShouldCallReceivingResponse()
         {
@@ -80,6 +83,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void UpdateShouldCallReceivingResponse()
         {
@@ -189,6 +193,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchQueryResponsesShouldCallReceivingResponse()
         {
@@ -280,7 +285,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchWithIndependentOperationsInsertsLinkShouldCallErrorResponse()
         {
@@ -319,7 +324,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchWithIndependentOperationsInsertsErrorResponseShouldCallReceiveResponse()
         {
@@ -356,6 +361,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchInsertsShouldCallReceivingResponse()
         {
@@ -388,6 +394,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchUpdatesShouldCallReceivingResponse()
         {
@@ -658,6 +665,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void GetReadStreamShouldCallReceivingResponse()
         {
@@ -690,6 +698,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SetSaveStreamShouldCallReceivingResponse()
         {
@@ -723,6 +732,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyShouldCallReceivingResponse()
         {
@@ -746,6 +756,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LinqQueryDataServiceCollectionShouldCallReceivingResponse()
         {
@@ -797,6 +808,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DifferntResponseTypeShouldCallReceivingResponse()
         {
@@ -827,6 +839,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AsyncQueryShouldCallReceivingResponse()
         {
@@ -907,6 +920,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchQueryErrorResponsesShouldCallReceivingResponse()
         {
@@ -935,6 +949,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchInsertErrorResponseShouldCallReceivingResponse()
         {
@@ -979,6 +994,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ModifyQueryResponseInReceivingResponse()
         {

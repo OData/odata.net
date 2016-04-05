@@ -31,17 +31,6 @@ namespace Microsoft.OData.Core
         /// <summary>The metadata format instance.</summary>
         private static ODataMetadataFormat metadataFormat = new ODataMetadataFormat();
 
-        /// <summary>Specifies the ATOM format; we also use this for all Xml based formats (if ATOM can't be used).</summary>
-        /// <returns>The ATOM format.</returns>
-        [System.Obsolete("ATOM support is obsolete.")]
-        public static ODataFormat Atom
-        {
-            get
-            {
-                return JsonFormat;
-            }
-        }
-
         /// <summary>Specifies the JSON format.</summary>
         /// <returns>The JSON format.</returns>
         public static ODataFormat Json

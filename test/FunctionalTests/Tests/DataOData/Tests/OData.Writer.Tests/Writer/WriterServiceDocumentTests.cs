@@ -39,6 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private static readonly ODataMessageWriterSettings settingsWithBaseUri = new ODataMessageWriterSettings { PayloadBaseUri = new Uri(baseUri) };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of service document writing.")]
         public void WorkspaceNamesTests()
         {
@@ -63,6 +64,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the behavior of the Name property on a resource collection.")]
         public void ResourceCollectionNamePropertyTests()
         {
@@ -131,6 +133,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections and serviceDocument names.")]
         public void WorkspaceNamesAndResourceCollectionTests()
         {
@@ -216,6 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections.")]
         public void ResourceCollectionTests()
         {
@@ -278,6 +282,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of writing service documents with singletons.")]
         public void SingletonTests()
         {
@@ -340,6 +345,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections.")]
         public void AdditionalResourceCollectionTests()
         {
@@ -398,6 +404,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
               });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different error conditions writing service documents.")]
         public void ServiceDocumentErrorTests()
         {
@@ -405,36 +412,36 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testCases = new[]
                 {
-                    new
-                    {   // relative uri without any base Uri
-                         Workspace = new Func<ODataServiceDocument>(() => {
-                            var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
-                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
-                            {
-                                new ODataEntitySetInfo() { Url = new Uri("SomeUri", UriKind.Relative) }
-                            };
-                            return defaultWorkspace;
-                        })(),
-                        MessageWriterSettings = (ODataMessageWriterSettings)null,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "SomeUri"),
-                        Model = (IEdmModel)null,
-                        OnlyForFormat = ODataFormat.Atom
-                    },
-                    new
-                    {   // empty relative uri without any base Uri
-                         Workspace = new Func<ODataServiceDocument>(() => {
-                            var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
-                            defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
-                            {
-                                new ODataEntitySetInfo() { Url = new Uri(string.Empty, UriKind.Relative) }
-                            };
-                            return defaultWorkspace;
-                        })(),
-                        MessageWriterSettings = (ODataMessageWriterSettings)null,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", string.Empty),
-                        Model = (IEdmModel)null,
-                        OnlyForFormat = ODataFormat.Atom
-                    },
+                    //new
+                    //{   // relative uri without any base Uri
+                    //     Workspace = new Func<ODataServiceDocument>(() => {
+                    //        var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
+                    //        defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
+                    //        {
+                    //            new ODataEntitySetInfo() { Url = new Uri("SomeUri", UriKind.Relative) }
+                    //        };
+                    //        return defaultWorkspace;
+                    //    })(),
+                    //    MessageWriterSettings = (ODataMessageWriterSettings)null,
+                    //    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "SomeUri"),
+                    //    Model = (IEdmModel)null,
+                    //    OnlyForFormat = ODataFormat.Atom
+                    //},
+                    //new
+                    //{   // empty relative uri without any base Uri
+                    //     Workspace = new Func<ODataServiceDocument>(() => {
+                    //        var defaultWorkspace = ObjectModelUtils.CreateDefaultWorkspace();
+                    //        defaultWorkspace.EntitySets = new ODataEntitySetInfo[]
+                    //        {
+                    //            new ODataEntitySetInfo() { Url = new Uri(string.Empty, UriKind.Relative) }
+                    //        };
+                    //        return defaultWorkspace;
+                    //    })(),
+                    //    MessageWriterSettings = (ODataMessageWriterSettings)null,
+                    //    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", string.Empty),
+                    //    Model = (IEdmModel)null,
+                    //    OnlyForFormat = ODataFormat.Atom
+                    //},
                     new
                     {   // empty collection name
                         Workspace = new Func<ODataServiceDocument>(() => {
@@ -611,49 +618,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         };
                     }
 
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        if (collections != null)
-                        {
-                            var collectionWithTitleNameMismatch = collections.FirstOrDefault(
-                                c => c.Name != null && c.TitleAnnotation != null && c.Name != c.TitleAnnotation);
-
-                            if (collectionWithTitleNameMismatch != null)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = ODataExpectedExceptions.ODataException(
-                                               "ODataAtomServiceDocumentMetadataSerializer_ResourceCollectionNameAndTitleMismatch",
-                                               collectionWithTitleNameMismatch.Name,
-                                               collectionWithTitleNameMismatch.TitleAnnotation)
-                                };
-                            }
-                        }
-
-                        if (singletons != null)
-                        {
-                            var singletonWithTitleNameMismatch = singletons.FirstOrDefault(
-                                c => c.Name != null && c.TitleAnnotation != null && c.Name != c.TitleAnnotation);
-
-                            if (singletonWithTitleNameMismatch != null)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = ODataExpectedExceptions.ODataException(
-                                        "ODataAtomServiceDocumentMetadataSerializer_ResourceCollectionNameAndTitleMismatch",
-                                        singletonWithTitleNameMismatch.Name,
-                                        singletonWithTitleNameMismatch.TitleAnnotation)
-                                };
-                            }
-                        }
-
-                        return (WriterTestExpectedResults)new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = xmlResultTemplate ?? string.Empty,
-                            FragmentExtractor = (e) => e
-                        };
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json)
+                    if (testConfiguration.Format == ODataFormat.Json)
                     {
                         if (collections != null)
                         {

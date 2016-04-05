@@ -28,7 +28,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ExceptionUtilities = Microsoft.Test.Taupo.Common.ExceptionUtilities;
-    
+
     /// <summary>
     /// Base class for ODataLib Tests with extra assembly added for unit test
     /// </summary>
@@ -202,7 +202,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
             else
             {
-                ExceptionUtilities.Assert(format == ODataFormat.Atom, "Format not supported: {0}", format);
+                ExceptionUtilities.Assert(false, "Format not supported: {0}", format);
                 contentType = MimeTypes.ApplicationAtomXml;
             }
 

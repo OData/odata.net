@@ -69,7 +69,7 @@ namespace AstoriaUnitTests.Tests
             #region Metadata Runtime Tests
 
             #region IDSP Metadata Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPNamedStreamsOnDerivedTypes()
             {
@@ -284,7 +284,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPMetadataStreamProviderValidationTest()
             {
@@ -427,7 +427,7 @@ namespace AstoriaUnitTests.Tests
                     VerifyStreamsInMetadata(edmMetadata, 26, new string[] { "Customers", "Orders" }, expectedNameStreams);
                 }
             }
-            
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamEFMetadataStreamProviderValidationTest()
             {
@@ -585,7 +585,7 @@ namespace AstoriaUnitTests.Tests
                         "Stream1", "AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_EntityWithConflictStream"));
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamReflectionNamedStreamOnDerivedTypes()
             {
@@ -815,7 +815,7 @@ namespace AstoriaUnitTests.Tests
             {
                 public int ID { get; set; }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamReflectionMetadataStreamProviderValidationTest()
             {
@@ -924,7 +924,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Metadata Runtime Tests
 
             #region Uri Parsing Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamUriNegativeTest()
             {
@@ -1029,7 +1029,7 @@ namespace AstoriaUnitTests.Tests
             #region Main Scenario Functional Tests
 
             #region IDSP Main Scenario Functional Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPPostEntityTest()
             {
@@ -1158,7 +1158,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPGetAndPutDefaultStreamTest()
             {
@@ -1360,7 +1360,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPGetDeleteEntityTest()
             {
@@ -1635,7 +1635,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Main Scenario Functional Tests
 
             #region Stream Provider API Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSSP2ApiTest()
             {
@@ -2065,7 +2065,7 @@ namespace AstoriaUnitTests.Tests
 
                 return xpaths;
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamProjectExpandSDPTest()
             {

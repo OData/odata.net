@@ -210,10 +210,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                     ODataPayloadElementToObjectModelConverter payloadElementToOMConverter = new ODataPayloadElementToObjectModelConverter(!testConfiguration.IsRequest);
                     ObjectModelToPayloadElementConverter reverseConverter = new ObjectModelToPayloadElementConverter();
                     ObjectModelWriteReadStreamer streamer = new ObjectModelWriteReadStreamer();
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        this.PayloadElement.Accept(new AddFeedIDFixup());
-                    }
 
                     this.readObject = reverseConverter.Convert(streamer.WriteMessage(messageWriter, messageReaderWrapper, this.PayloadKind, payloadElementToOMConverter.Convert(this.PayloadElement)), !testConfiguration.IsRequest);
                 }

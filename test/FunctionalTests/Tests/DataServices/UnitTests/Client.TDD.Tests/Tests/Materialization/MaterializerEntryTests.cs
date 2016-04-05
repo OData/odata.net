@@ -24,39 +24,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         private readonly ClientEdmModel clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
 
         [TestMethod]
-        public void ServerTypeNameShouldBeFromAnnotationInAtom()
-        {
-            var testSubject = this.CreateMaterializerEntry(
-                ODataFormat.Atom, 
-                e =>
-                {
-                    e.TypeName = "foo";
-                    e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = ExpectedTypeName });
-                });
-            testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
-        }
-
-        [TestMethod]
-        public void ServerTypeNameShouldBeFromAnnotationInAtomEvenIfItIsNull()
-        {
-            var testSubject = this.CreateMaterializerEntry(
-                ODataFormat.Atom, 
-                e =>
-                {
-                    e.TypeName = "foo";
-                    e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
-                });
-            testSubject.EntityDescriptor.ServerTypeName.Should().BeNull();
-        }
-
-        [TestMethod]
-        public void ServerTypeNameShouldBeFromEntryInAtomIfNoAnnotationIsPresent()
-        {
-            var testSubject = this.CreateMaterializerEntry(ODataFormat.Atom, e => e.TypeName = ExpectedTypeName);
-            testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
-        }
-
-        [TestMethod]
         public void ServerTypeNameShouldFromEntryInJsonIfNoAnnotationIsPresent()
         {
             var testSubject = this.CreateMaterializerEntry(ODataFormat.Json, e => e.TypeName = ExpectedTypeName);
@@ -92,7 +59,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         private MaterializerEntry CreateMaterializerEntry(ODataFormat format, Action<ODataEntry> modifyEntry = null)
         {
             var entry = new ODataEntry();
-            if(modifyEntry != null)
+            if (modifyEntry != null)
             {
                 modifyEntry(entry);
             }

@@ -26,6 +26,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule1
     {
+        [Ignore] // Remove Atom
         public partial class CollectionTest
         {
             #region XFeature entities and helpers

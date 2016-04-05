@@ -81,6 +81,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that the message writer can only be used once.")]
         public void UseWriterOnceTests()
         {
@@ -152,6 +153,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Action<ODataMessageWriterTestWrapper> WriterMethod { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that an OData entry writer can only be used to write entries and an ODataFeedWriter only for feeds.")]
         public void ODataFeedAndEntryWriterIncorrectPayload()
         {
@@ -194,6 +196,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the correct error behavior for invalid calls after SetHeadersForPayload was called.")]
         public void SetHeadersForPayloadAndInvalidCallsErrorTest()
         {
@@ -516,6 +519,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         // These tests are disabled on Silverlight and Phone because they use private reflection to validate the test result.
 #if !SILVERLIGHT && !WINDOWS_PHONE
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header.")]
         public void SetVersionInMessageHeaderTest()
         {
@@ -600,6 +604,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header as well as in the writer settings.")]
         public void SetVersionInMessageHeaderAndSettingsTest()
         {
@@ -671,6 +676,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header.")]
         public void SetContentTypeInMessageHeaderTest()
         {
@@ -686,8 +692,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         }));
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors.Where(td => td.TestCase.ExpectedFormat == ODataFormat.Atom),
-                this.WriterTestConfigurationProvider.AllFormatsConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                testDescriptors.Where(td => false),
+                this.WriterTestConfigurationProvider.AllFormatsConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     ODataPayloadKind payloadKind = testDescriptor.WriterInvocation.PayloadKind;
@@ -760,6 +766,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header as well as in the writer settings.")]
         public void SetContentTypeInMessageHeaderAndSettingsTest()
         {
@@ -839,19 +846,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ExpectedFormat = ODataFormat.Json
         };
 
-        private static readonly ContentTypeMessageHeaderTestCase AppXmlTestCase = new ContentTypeMessageHeaderTestCase
-        {
-            ContentTypeHeaderValue = "application/xml",
-            ExpectedEncoding = null,
-            ExpectedFormat = ODataFormat.Atom
-        };
+        //private static readonly ContentTypeMessageHeaderTestCase AppXmlTestCase = new ContentTypeMessageHeaderTestCase
+        //{
+        //    ContentTypeHeaderValue = "application/xml",
+        //    ExpectedEncoding = null,
+        //    ExpectedFormat = ODataFormat.Atom
+        //};
 
-        private static readonly ContentTypeMessageHeaderTestCase TextXmlTestCase = new ContentTypeMessageHeaderTestCase
-        {
-            ContentTypeHeaderValue = "text/xml",
-            ExpectedEncoding = null,
-            ExpectedFormat = ODataFormat.Atom
-        };
+        //private static readonly ContentTypeMessageHeaderTestCase TextXmlTestCase = new ContentTypeMessageHeaderTestCase
+        //{
+        //    ContentTypeHeaderValue = "text/xml",
+        //    ExpectedEncoding = null,
+        //    ExpectedFormat = ODataFormat.Atom
+        //};
 
         private static IEnumerable<ContentTypeMessageHeaderTestCase> CreateContentTypeHeaderTestCases(ODataPayloadKind payloadKind)
         {
@@ -863,18 +870,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.EntityReferenceLinks:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml;type=feed",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
                         AppJsonLightTestCase,
                     };
 
@@ -882,18 +877,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Entry:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml;type=entry",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
                         AppJsonLightTestCase,
                     };
 
@@ -901,8 +884,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Property:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
-                        TextXmlTestCase,
+                        //AppXmlTestCase,
+                        //TextXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -910,8 +893,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.EntityReferenceLink:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
-                        TextXmlTestCase,
+                        //AppXmlTestCase,
+                        //TextXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -943,8 +926,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Collection:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
-                        TextXmlTestCase,
+                        //AppXmlTestCase,
+                        //TextXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -952,12 +935,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.ServiceDocument:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atomsvc+xml",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
                         AppJsonLightTestCase,
                     };
 
@@ -977,7 +954,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Error:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
+                        // AppXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -1040,6 +1017,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 #endif
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream.")]
         public void NullStreamMessageTest()
         {
@@ -1077,6 +1055,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies no BOM is written out on default writer.")]
         public void NoByteOrderMarkByDefaultTest()
         {
@@ -1134,6 +1113,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         // These tests are disabled on Silverlight and Phone because they only run on async configuration 
 #if !SILVERLIGHT && !WINDOWS_PHONE
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]
         public void NullStreamTaskMessageTest()
         {

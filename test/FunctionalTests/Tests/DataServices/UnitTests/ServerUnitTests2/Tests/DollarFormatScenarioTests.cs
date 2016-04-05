@@ -49,7 +49,7 @@ namespace AstoriaUnitTests.Tests
                 Assert.AreEqual(expectedJsonLight.Replace("BASE_URI", request.BaseUri), actualText);
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void DollarFormatQueryTest()
         {
@@ -176,7 +176,7 @@ namespace AstoriaUnitTests.Tests
 
             this.RunQueryTest(testCases);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void DollarFormatQueryErrorTest()
         {
@@ -264,7 +264,7 @@ namespace AstoriaUnitTests.Tests
             {
                 webRequest.HttpMethod = "GET";
                 webRequest.DataServiceType = typeof(DollarFormatTestService);
-                
+
                 foreach (var testCase in testCases)
                 {
                     webRequest.RequestUriString = testCase.UriString;
@@ -276,7 +276,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void DollarFormatMIMETypeTest()
         {
@@ -361,7 +361,7 @@ namespace AstoriaUnitTests.Tests
 
             this.RunQueryTest(testCases);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void DollarFormatInvalidFormatTest()
         {
@@ -433,7 +433,7 @@ namespace AstoriaUnitTests.Tests
                     ExpectedContentType = applicationXml,
                     ExpectedStatusCode = 415
                 },
-                
+
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=text/plain",
@@ -462,7 +462,7 @@ namespace AstoriaUnitTests.Tests
                 };
                 string option = string.Empty;
                 ctx.BuildingRequest += (sender, arg) => arg.RequestUri = new Uri(arg.RequestUri.AbsoluteUri + "?$format=" + option);
-                
+
                 foreach (string s in options)
                 {
                     try
@@ -470,7 +470,7 @@ namespace AstoriaUnitTests.Tests
                         option = s;
                         ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers"));
                         ctx.CreateQuery<Customer>("Customers");
-                      //  Assert.IsTrue(option == "json");
+                        //  Assert.IsTrue(option == "json");
                     }
                     catch (DataServiceQueryException e)
                     {
@@ -518,7 +518,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-        
+
         private void RunQueryTest(List<DollarFormatTestCase> testCases, string RequestMaxVersion = "4.0;")
         {
             using (TestWebRequest webRequest = TestWebRequest.CreateForInProcessWcf())

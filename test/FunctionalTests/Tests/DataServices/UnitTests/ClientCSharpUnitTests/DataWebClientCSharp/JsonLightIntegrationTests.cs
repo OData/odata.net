@@ -25,6 +25,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    [Ignore] // Remove Atom
     [TestClass]
     public class JsonLightIntegrationTests
     {

@@ -73,6 +73,7 @@ namespace AstoriaUnitTests.Tests
             TestUtil.ClearConfiguration();
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BeginLoadPropertyTest()
         {
@@ -149,6 +150,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyRemoveElementUnChangedSource()
         {
@@ -247,6 +249,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyRemoveElementDeletedSource()
         {
@@ -312,6 +315,7 @@ namespace AstoriaUnitTests.Tests
             public NarrowCustomer Customer { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ExerciseApplyItemsToCollectionViaMergeLists()
         {
@@ -361,6 +365,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void WritingEntityWithControlChars()
         {

@@ -83,11 +83,6 @@
     <Compile Include="JsonLight\UndelcaredPropertyReaderJsonLightTests.cs" />
     <Compile Include="Json\InStreamErrorReaderJsonTests.cs" />
     <Compile Include="AtomPayloadElementPropertyOrderNormalizer.cs" />
-    <Compile Include="Atom\PayloadKindDetectionAtomTests.cs" />
-    <Compile Include="Atom\ElementValueTests.cs" />
-    <Compile Include="Atom\EncodingAtomTests.cs" />
-    <Compile Include="Atom\EntryReaderAtomTests.cs" />
-    <Compile Include="Atom\ErrorReaderAtomTests.cs" />
     <Compile Include="Atom\ErrorMessageNormalizer.cs" />
     <Compile Include="Batch\BatchReaderCrossReferenceTests.cs" />
     <Compile Include="Batch\BatchReaderHttpStreamSimulationTests.cs" />
@@ -119,6 +114,7 @@
     <Compile Include="ConvertFromUriLiteralTests.cs" />
     <Compile Include="Common\ConvertAtomMetadataForConfigurationPayloadElementNormalizer.cs" />
     <Compile Include="Common\RemoveAssociationLinkPayloadElementNormalizer.cs" />
+    <Compile Include="ReaderDefaultODataObjectModelValidator.cs" />
     <Compile Include="Reader\ReaderSyncAsyncMismatchTests.cs" />
     <Compile Include="RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.cs" />
     <Compile Include="JsonLight\CollectionValueReaderJsonLightTests.cs" />
@@ -147,8 +143,6 @@
     <Compile Include="ODataFeedPayloadOrderObjectModelAnnotation.cs" />
     <Compile Include="ODataParameterReaderTestWrapper.cs" />
     <Compile Include="JsonPayloadElementPropertyOrderNormalizer.cs" />
-    <Compile Include="Atom\PropertiesElementAtomValues.cs" />
-    <Compile Include="Atom\StreamReferenceValueReaderAtomTests.cs" />
     <Compile Include="MetadataReaderTestExpectedResult.cs" />
     <Compile Include="MetadataReaderTestDescriptor.cs" />
     <Compile Include="Atom\XmlBaseReaderTests.cs" />

@@ -35,18 +35,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test $ref payloads that return a single link.")]
         public void EntityReferenceLinkTest()
         {
-            ODataEntityReferenceLink entityReferenceLink1 = new ODataEntityReferenceLink{ Url = new Uri("http://odata.org/linkresult")};
+            ODataEntityReferenceLink entityReferenceLink1 = new ODataEntityReferenceLink { Url = new Uri("http://odata.org/linkresult") };
             ODataEntityReferenceLink entityReferenceLink2 = new ODataEntityReferenceLink { Url = new Uri("relative", UriKind.Relative) };
-            ODataEntityReferenceLink entityReferenceLink3 = new ODataEntityReferenceLink{ Url = new Uri("http://odata.org/linkresult")};
+            ODataEntityReferenceLink entityReferenceLink3 = new ODataEntityReferenceLink { Url = new Uri("http://odata.org/linkresult") };
             entityReferenceLink3.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestModel.unknown", new ODataPrimitiveValue(123)));
             entityReferenceLink3.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(456)));
-            ODataEntityReferenceLink entityReferenceLink4 = new ODataEntityReferenceLink{ Url = new Uri("relative", UriKind.Relative)};
+            ODataEntityReferenceLink entityReferenceLink4 = new ODataEntityReferenceLink { Url = new Uri("relative", UriKind.Relative) };
             entityReferenceLink4.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestModel.unknown", new ODataPrimitiveValue(123)));
             entityReferenceLink4.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(456)));
-            
+
             ODataEntityReferenceLink[] resultLinks = new ODataEntityReferenceLink[]
             {
                 entityReferenceLink1, entityReferenceLink2, entityReferenceLink3, entityReferenceLink4
@@ -61,10 +62,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     bool expectMetadataNamespace = false;
                     PayloadWriterTestDescriptor<ODataEntityReferenceLink> testDescriptor =
                         new PayloadWriterTestDescriptor<ODataEntityReferenceLink>(
-                            this.Settings, 
+                            this.Settings,
                             resultLink,
                             CreateExpectedCallback(resultLink, expectMetadataNamespace, "http://odata.org/test/$metadata#$ref"));
- 
+
                     // When writing JSON lite, always provide a model and a non-null nav prop.
                     // The error cases when a model isn't provided or the nav prop is null are tested in JsonLightEntityReferenceLinkWriterTests
                     if (testConfiguration.Format == ODataFormat.Json)
@@ -90,6 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test error cases when writing a single link.")]
         public void EntityReferenceLinkErrorTest()
         {
@@ -125,6 +127,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test $ref payloads that return multiple links.")]
         public void EntityReferenceLinksTest()
         {
@@ -140,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             Uri nextPageLink = new Uri("http://odata.org/nextpage");
             Uri relativeNextPageLink = new Uri("relative-nextpage", UriKind.Relative);
 
-            long?[] inputCounts = new long?[] { null, 1, 3, -1, -3, 0, long.MaxValue, long.MinValue};
+            long?[] inputCounts = new long?[] { null, 1, 3, -1, -3, 0, long.MaxValue, long.MinValue };
             Uri[] inputNextLinks = new Uri[] { nextPageLink, relativeNextPageLink, null };
             ODataInstanceAnnotation[][] inputAnnotations = new ODataInstanceAnnotation[][]
             {
@@ -162,8 +165,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = inputCounts.SelectMany(
                 inputCount => inputNextLinks.SelectMany(
                     inputNextLink => inputReferenceLinks.Select(
-                        (inputReferenceLink, index) => new ODataEntityReferenceLinks { Count = inputCount, Links = inputReferenceLink, NextPageLink = inputNextLink, InstanceAnnotations = inputAnnotations[index == 1 ? 1 : 0]})));
-       
+                        (inputReferenceLink, index) => new ODataEntityReferenceLinks { Count = inputCount, Links = inputReferenceLink, NextPageLink = inputNextLink, InstanceAnnotations = inputAnnotations[index == 1 ? 1 : 0] })));
+
             var testDescriptors = testCases.Select(
                 testCase =>
                     new PayloadWriterTestDescriptor<ODataEntityReferenceLinks>(this.Settings, testCase, this.CreateExpectedCallback(testCase, /*forceNextLinkAndCountAtEnd*/ false)));
@@ -192,14 +195,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
 
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
-                        testDescriptor, 
-                        testConfiguration, 
+                        testDescriptor,
+                        testConfiguration,
                         (messageWriter) => messageWriter.WriteEntityReferenceLinks(entityReferenceLinks),
                         this.Assert,
                         baselineLogger: this.Logger);
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test error cases when writing multiple links.")]
         public void EntityReferenceLinksErrorTest()
         {
@@ -218,8 +222,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             PayloadWriterTestDescriptor<ODataEntityReferenceLinks>[] testCases = new PayloadWriterTestDescriptor<ODataEntityReferenceLinks>[]
                 {
                     new PayloadWriterTestDescriptor<ODataEntityReferenceLinks>(
-                        this.Settings, 
-                        testCase, 
+                        this.Settings,
+                        testCase,
                         (testConfiguration) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) {
                             // Top-level EntityReferenceLinks payload write requests are not allowed.
                             ExpectedException2 = testConfiguration.IsRequest ? ODataExpectedExceptions.ODataException("ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed") : null
@@ -253,6 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that we write the inline count first, then all the links and only then the next link.")]
         public void EntityReferenceLinksPropertyAccessOrderTest()
         {
@@ -295,10 +300,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     };
                     testReferenceLink.Links = new CheckingEntityReferenceLinkEnumerable(
                         testReferenceLink,
-                        correctCountValue, 
-                        nextPageLink /* correct next link */, 
-                        entityReferenceLink1, 
-                        entityReferenceLink2, 
+                        correctCountValue,
+                        nextPageLink /* correct next link */,
+                        entityReferenceLink1,
+                        entityReferenceLink2,
                         entityReferenceLink3);
 
                     PayloadWriterTestDescriptor<ODataEntityReferenceLinks> testDescriptor =
@@ -317,7 +322,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
 
                     ODataEntityReferenceLinks entityReferenceLinks = testDescriptor.PayloadItems.Single();
-                    
+
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
                         testConfiguration,
@@ -343,7 +348,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             CustomerInfo.AddKeys(CustomerInfo.AddStructuralProperty("CustomerInfoId", EdmCoreModel.Instance.GetInt32(false)));
             CustomerInfo.AddStructuralProperty("Information", EdmCoreModel.Instance.GetString(true));
             model.AddElement(CustomerInfo);
-            
+
             var Customer = new EdmEntityType("TestModel", "Customer");
             Customer.AddKeys(Customer.AddStructuralProperty("CustomerId", EdmCoreModel.Instance.GetInt32(false)));
             Customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
@@ -410,7 +415,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 if (testConfiguration.IsRequest)
                 {
                     // Top-level EntityReferenceLinks payload write requests are not allowed.
-                    expectedException = ODataExpectedExceptions.ODataException("ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed");                    
+                    expectedException = ODataExpectedExceptions.ODataException("ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed");
                 }
 
                 if (expectedException == null)
@@ -504,7 +509,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     if (count.HasValue && forceNextLinkAndCountAtEnd)
                     {
-                        jsonLightLastLine += ",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":" + count.Value ;
+                        jsonLightLastLine += ",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":" + count.Value;
                     }
 
                     if (nextPageLinkString != null)
@@ -525,14 +530,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     atomStrings.Add(@"</links>");
                 }
 
-                if (testConfiguration.Format == ODataFormat.Atom)
-                {
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Xml = string.Join("$(NL)", atomStrings)
-                    };
-                }
-                else if (testConfiguration.Format == ODataFormat.Json)
+                if (testConfiguration.Format == ODataFormat.Json)
                 {
                     return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
@@ -556,37 +554,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private string GetResultUri(Uri uri, WriterTestConfiguration testConfig)
         {
             Uri baseUri = testConfig.MessageWriterSettings.PayloadBaseUri;
-            if (testConfig.Format == ODataFormat.Atom)
+
+            Debug.Assert(testConfig.Format == ODataFormat.Json, "Only ATOM and JSON lite are supported.");
+            if (uri.IsAbsoluteUri)
             {
-                if (uri.IsAbsoluteUri)
-                {
-                    return uri.AbsoluteUri;
-                }
-                else
-                {
-                    // In ATOM we expect the original, relative URI in the payload if a base URI is present;
-                    // If no base URI exists, we will fail so we don't consider the case here.
-                    return uri.OriginalString;
-                }
+                return uri.AbsoluteUri;
+            }
+            else if (baseUri != null)
+            {
+                // In JSON we expect the absolute URI if a base URI is present
+                return new Uri(baseUri, uri).AbsoluteUri;
             }
             else
             {
-                Debug.Assert(testConfig.Format == ODataFormat.Json, "Only ATOM and JSON lite are supported.");
-                if (uri.IsAbsoluteUri)
-                {
-                    return uri.AbsoluteUri;
-                }
-                else if (baseUri != null)
-                {
-                    // In JSON we expect the absolute URI if a base URI is present
-                    return new Uri(baseUri, uri).AbsoluteUri;
-                }
-                else
-                {
-                    // This will fail; return the original relative URI.
-                    return uri.OriginalString;
-                }
-
+                // This will fail; return the original relative URI.
+                return uri.OriginalString;
             }
         }
 
@@ -614,20 +596,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     };
                 }
 
-                if (testConfiguration.Format == ODataFormat.Atom)
-                {
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Xml = "<uri xmlns=\"" +
-                                (expectMetadataNamespace
-                                    ? TestAtomConstants.ODataMetadataNamespace
-                                    : TestAtomConstants.ODataNamespace) +
-                                "\">" +
-                                uriResultString +
-                                "</uri>"
-                    };
-                }
-                else if (testConfiguration.Format == ODataFormat.Json)
+                if (testConfiguration.Format == ODataFormat.Json)
                 {
                     string jsonLightResult =
                         "{" +
@@ -762,7 +731,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 /// </summary>
                 public ODataEntityReferenceLink Current
                 {
-                    get 
+                    get
                     {
                         Debug.Assert(this.currentIx >= -1, "Object disposed.");
                         return this.GetCurrent();
@@ -783,7 +752,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 /// </summary>
                 object IEnumerator.Current
                 {
-                    get 
+                    get
                     {
                         Debug.Assert(this.currentIx >= -1, "Object disposed.");
                         return this.GetCurrent();

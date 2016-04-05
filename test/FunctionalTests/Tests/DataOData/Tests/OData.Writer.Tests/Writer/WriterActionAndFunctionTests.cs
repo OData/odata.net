@@ -101,6 +101,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             return sb.ToString();
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Validates the payloads for various m:action and m:function elements.")]
         public void ActionAndFunctionTest()
         {
@@ -229,36 +230,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry,
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = "<ODataOperations>" + testCase.Atom + "</ODataOperations>",
-                                ExpectedException2 =
-                                    entry.Actions != null && entry.Actions.Contains(null)
-                                        ? ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataEntry.Actions")
-                                        : testConfiguration.IsRequest && entry.Actions != null && entry.Actions.Any()
-                                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_OperationInRequest", GetFirstOperationMetadata(entry))
-                                            : entry.Functions != null && entry.Functions.Contains(null)
-                                                ? ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataEntry.Functions")
-                                                : testConfiguration.IsRequest && entry.Functions != null && entry.Functions.Any()
-                                                    ? ODataExpectedExceptions.ODataException("WriterValidationUtils_OperationInRequest", GetFirstOperationMetadata(entry))
-                                                    : null,
-                                FragmentExtractor = (result) =>
-                                {
-                                    var actions = result.Elements(TestAtomConstants.ODataMetadataXNamespace + "action");
-                                    var functions = result.Elements(TestAtomConstants.ODataMetadataXNamespace + "function");
-                                    result = new XElement("ODataOperations", actions, functions);
-                                    if (result.FirstNode == null)
-                                    {
-                                        result.Add(string.Empty);
-                                    }
-
-                                    return result;
-                                }
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                         if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {

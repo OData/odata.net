@@ -27,11 +27,6 @@ namespace Microsoft.OData.Service.Serializers
         private readonly ODataMessageReader messageReader;
 
         /// <summary>
-        /// Cached value indicating whether the request is Atom
-        /// </summary>
-        private bool? isAtomRequest = null;
-
-        /// <summary>
         /// Cached value indicating whether the request is JSON Light
         /// </summary>
         private bool? isJsonLightRequest = null;

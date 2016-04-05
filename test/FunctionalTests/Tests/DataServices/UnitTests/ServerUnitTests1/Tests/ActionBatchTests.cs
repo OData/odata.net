@@ -1272,6 +1272,7 @@ Cache-Control: no-cache
             });
         }
 
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Variation("Verify that $metadata in batch passes the right operation context instance.")]
         public void BatchedActionMetadataTest()
         {

@@ -191,6 +191,7 @@ namespace AstoriaUnitTests.Tests
             this.ctx = null;
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Get_SimpleGet()
         {
@@ -205,6 +206,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Get_ProjectNavOnly()
         {
@@ -228,6 +230,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Get_ProjectFKOnly()
         {
@@ -251,6 +254,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Update_SimpleUpdate()
         {
@@ -276,6 +280,7 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, cust.ID);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Update_ProjectedUpdate()
         {
@@ -309,6 +314,7 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, cust.ID);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Update_NarrowingUpdate1()
         {
@@ -344,6 +350,7 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, cust.ID);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_Update_NarrowingUpdate2()
         {
@@ -379,6 +386,7 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, 1);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_InsertTest()
         {
@@ -427,6 +435,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_InsertAddRelated()
         {
@@ -447,6 +456,7 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(100022, 11);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_DeleteLinks()
         {
@@ -480,6 +490,7 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, null);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_SettingTheSameRelationshipAgain()
         {
@@ -490,6 +501,7 @@ namespace AstoriaUnitTests.Tests
             ctx.SaveChanges();
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_BasicInsert_Bind_Delete()
         {
@@ -518,6 +530,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Office>("CustomObjectContext.Offices").Count(), 0, "There should be no offices left");
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_CascadeDelete_PrincipalToDependent()
         {
@@ -542,6 +555,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Worker>("CustomObjectContext.Workers").Count(), 0, "There should be no workers left");
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_CascadeDelete_DependentToPrincipal()
         {
@@ -566,6 +580,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Worker>("CustomObjectContext.Workers").Count(), 0, "There should be no workers left");
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_DeleteDependent()
         {
@@ -593,6 +608,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Worker>("CustomObjectContext.Workers").Count(), 0, "There should be no workers left");
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_BasicInsertAndBind_Batch()
         {
@@ -615,6 +631,7 @@ namespace AstoriaUnitTests.Tests
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_BasicInsertAndBind_Batch_ChangedUriCompositionRulesOnServer()
         {
@@ -641,6 +658,7 @@ namespace AstoriaUnitTests.Tests
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EFFK_1To1_UpdateRelationship()
         {

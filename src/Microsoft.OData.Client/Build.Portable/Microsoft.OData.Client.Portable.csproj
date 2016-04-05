@@ -827,9 +827,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WebUtil.cs">
       <Link>WebUtil.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MessageSettingsHelper.cs">
-      <Link>MessageSettingsHelper.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Metadata\ClientPropertyAnnotation.cs">
       <Link>Metadata\ClientPropertyAnnotation.cs</Link>
     </Compile>

@@ -73,6 +73,7 @@ namespace AstoriaUnitTests.Tests.Server
             this.serviceFactory.ClearQueryArgument();
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void QuerySpatialProperty()
         {
@@ -84,6 +85,7 @@ namespace AstoriaUnitTests.Tests.Server
             Assert.AreEqual("Spatial", d.LastSegmentInfo.Identifier);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterCompareSpatialPropertyAndLiteral()
         {
@@ -110,6 +112,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterCompareSpatialLiterals()
         {
@@ -137,6 +140,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterSpatialMathOperators()
         {
@@ -159,6 +163,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterBySpatialFunctionWithLiterals()
         {
@@ -191,7 +196,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterBySpatialFunctionWithProperties()
         {
@@ -241,6 +246,7 @@ namespace AstoriaUnitTests.Tests.Server
                             expectedFunctions));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterBySpatialFunctionWithNulls()
         {
@@ -252,6 +258,7 @@ namespace AstoriaUnitTests.Tests.Server
             RunSpatialExpressionTest("$filter", "geo.distance(null, Point) gt cast(0, 'Edm.Double')", q => q.Where(it => GeographyOperationsExtensions.Distance(null, it.Point) > (double?)(object)0));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void OrderBySpatialFunctionWithNulls()
         {

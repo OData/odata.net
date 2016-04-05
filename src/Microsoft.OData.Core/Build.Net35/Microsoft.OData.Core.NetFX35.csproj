@@ -61,185 +61,26 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\AtomAndVerboseJsonTypeNameOracle.cs">
       <Link>Microsoft\OData\Core\AtomAndVerboseJsonTypeNameOracle.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomCategoriesMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomCategoriesMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomCategoryMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomCategoryMetadata.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomConstants.cs">
       <Link>Microsoft\OData\Core\Atom\AtomConstants.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomEntryMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomEntryMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomFeedMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomFeedMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomGeneratorMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomGeneratorMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomInstanceAnnotation.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomInstanceAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomLinkMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomLinkMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomMetadataReaderUtils.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomMetadataReaderUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomPersonMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomPersonMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomResourceCollectionMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomResourceCollectionMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomStreamReferenceMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomStreamReferenceMetadata.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomTextConstruct.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomTextConstruct.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomTextConstructKind.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomTextConstructKind.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomUtils.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomValueUtils.cs">
       <Link>Microsoft\OData\Core\Atom\AtomValueUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomWorkspaceMetadata.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomWorkspaceMetadata.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\BufferingXmlReader.cs">
       <Link>Microsoft\OData\Core\Atom\BufferingXmlReader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\Common\AtomSyndicationItemProperty.cs">
-      <Link>Microsoft\OData\Core\Atom\Common\AtomSyndicationItemProperty.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\Common\AtomSyndicationTextContentKind.cs">
-      <Link>Microsoft\OData\Core\Atom\Common\AtomSyndicationTextContentKind.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\DefaultNamespaceCompensatingXmlWriter.cs">
       <Link>Microsoft\OData\Core\Atom\DefaultNamespaceCompensatingXmlWriter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\EntryPropertiesValueCache.cs">
-      <Link>Microsoft\OData\Core\Atom\EntryPropertiesValueCache.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ExtensionMethods.cs">
-      <Link>Microsoft\OData\Core\Atom\ExtensionMethods.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\IODataAtomReaderEntryState.cs">
-      <Link>Microsoft\OData\Core\Atom\IODataAtomReaderEntryState.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\IODataAtomReaderFeedState.cs">
-      <Link>Microsoft\OData\Core\Atom\IODataAtomReaderFeedState.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomAnnotationReader.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomAnnotationReader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomCollectionDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomCollectionDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomCollectionReader.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomCollectionReader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomCollectionSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomCollectionSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomCollectionWriter.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomCollectionWriter.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomConvert.cs">
       <Link>Microsoft\OData\Core\Atom\ODataAtomConvert.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomDeserializerExpandedNavigationLinkContent.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomDeserializerExpandedNavigationLinkContent.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomEntityReferenceLinkDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomEntityReferenceLinkDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomEntityReferenceLinkSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomEntityReferenceLinkSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomEntryAndFeedDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomEntryAndFeedDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomEntryAndFeedSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomEntryAndFeedSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomEntryMetadataDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomEntryMetadataDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomEntryMetadataSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomEntryMetadataSerializer.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomErrorDeserializer.cs">
       <Link>Microsoft\OData\Core\Atom\ODataAtomErrorDeserializer.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomFeedMetadataDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomFeedMetadataDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomFeedMetadataSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomFeedMetadataSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomFormat.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomFormat.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomInputContext.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomInputContext.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomMetadataDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomMetadataDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomMetadataSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomMetadataSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomOutputContext.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomOutputContext.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomPayloadKindDetectionDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomPayloadKindDetectionDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomPropertyAndValueDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomPropertyAndValueDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomPropertyAndValueSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomPropertyAndValueSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomReader.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomReader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomReaderNavigationLinkDescriptor.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomReaderNavigationLinkDescriptor.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomReaderUtils.cs">
       <Link>Microsoft\OData\Core\Atom\ODataAtomReaderUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomServiceDocumentDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomServiceDocumentDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomServiceDocumentMetadataDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomServiceDocumentMetadataDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomServiceDocumentMetadataSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomServiceDocumentMetadataSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomServiceDocumentSerializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomServiceDocumentSerializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomWriter.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomWriter.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomWriterMetadataUtils.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomWriterMetadataUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomWriterUtils.cs">
       <Link>Microsoft\OData\Core\Atom\ODataAtomWriterUtils.cs</Link>
@@ -1839,6 +1680,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Microsoft\OData\Core\Atom\Common\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

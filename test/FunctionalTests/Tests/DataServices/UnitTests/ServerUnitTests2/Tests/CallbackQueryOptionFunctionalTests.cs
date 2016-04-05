@@ -140,6 +140,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verify that we support callback option for inner GET request in Batch but not the batch request itself.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Partition1")]
         public void CallBackInBatchRequestTest()
         {
@@ -203,6 +204,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// We throw on $callback if we content negotiation does not result in us writing JSON.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void CallbackFailOnAtomXml()
         {

@@ -116,11 +116,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                             {
-                                ExpectedException = tc.Format == ODataFormat.Atom 
-                                    ? tc.IsRequest
-                                        ? null
-                                        : ODataExpectedExceptions.ODataException("ValidationUtils_MismatchPropertyKindForStreamProperty", "NonStreamProperty") 
-                                    : tc.Format == ODataFormat.Json
+                                ExpectedException = tc.Format == ODataFormat.Json
                                         ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType", "NonStreamProperty", "Edm.Boolean")
                                         : ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
                             },
@@ -156,10 +152,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -233,10 +225,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     }
 
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
 
                     testDescriptor.RunTest(testConfiguration);
                 });

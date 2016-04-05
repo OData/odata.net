@@ -128,6 +128,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        [Ignore] // Remove Atom
         [TestClass, TestCase]
         public class SelectTest : AstoriaTestCase
         {

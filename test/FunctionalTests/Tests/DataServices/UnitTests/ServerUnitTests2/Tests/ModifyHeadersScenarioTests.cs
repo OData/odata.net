@@ -197,6 +197,7 @@ namespace AstoriaUnitTests.Tests
         /// Tests that both the ProcessingRequest event and OnStartProcessingRequest can overrwite the header values of various types
         /// with a query item and the server uses the new value. Also test multiple query string headers in Uri.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Partition1")]
         public void SetOverrideVariousTypeHeaderValueWithQueryString()
         {
@@ -256,6 +257,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Tests GetQueryStringValue(headerName) behaviors with edge case headerName values.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Partition1")]
         public void GetQueryStringItemEdgeTest()
         {
@@ -377,6 +379,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Tests that server does not honor Content-Type, Content-Length header values from query string.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Partition1")]
         public void OverloadUpdateRequestWithContentTypeContentLengthHeader()
         {
@@ -475,6 +478,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verify behaviors of overriding accept header of $batch request and its inner request in OnStartProcessingRequest/ProcessingRequest   
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Partition1")]
         public void CanOverrideAcceptHeaderToBatchRequestWithQueryItem()
         {
@@ -565,6 +569,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verify that $format will fail when used in a batch uri
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Partition1")]
         public void DollarFormatShouldFailOnTopLevelBatch()
         {

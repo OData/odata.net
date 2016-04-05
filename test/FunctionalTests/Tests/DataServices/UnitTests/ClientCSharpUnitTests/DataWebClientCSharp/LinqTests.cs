@@ -97,6 +97,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, queryable);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestContinuation()
         {
@@ -8400,6 +8401,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ProjectionClient_X_ServiceOp()
         {

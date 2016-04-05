@@ -44,8 +44,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
-// We use InternalsVisibleTo here to access internal properties which is not supported for Silverlight or Phone
+        // We use InternalsVisibleTo here to access internal properties which is not supported for Silverlight or Phone
 #if !SILVERLIGHT && !WINDOWS_PHONE
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that if projected properties are specified, they are correctly written/skipped.")]
         public void ProjectedPropertiesTest()
         {
@@ -103,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             };
 
             // Then create wrapped test cases 
-            var nestedTestCases = topLevelTestCases.Select(t => 
+            var nestedTestCases = topLevelTestCases.Select(t =>
                 new ProjectedPropertiesTestCase(t)
                 {
                     NestedPayload = true,
@@ -154,7 +155,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.TopLevelValuePayload),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -174,9 +175,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 var container = model.FindEntityContainer("DefaultContainer");
                 entitySet = container.FindEntitySet("EntitySet") as EdmEntitySet;
                 wrappingEntitySet = container.FindEntitySet("WrappingEntitySet") as EdmEntitySet;
- 
+
             }
-            
+
             return testCases.Select(testCase =>
             {
                 var payload = this.CreatePayload(testCase);
@@ -253,7 +254,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "ExpandedEntry", Target = expandedEntryType, TargetMultiplicity = EdmMultiplicity.One });
             entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "ExpandedFeed", Target = entityType, TargetMultiplicity = EdmMultiplicity.Many });
             model.AddElement(entityType);
-            
+
             EdmEntityType wrappingEntityType = new EdmEntityType(DefaultNamespaceName, "WrappingEntityType");
             wrappingEntityType.AddKeys(wrappingEntityType.AddStructuralProperty("Wrapping_ID", Int32TypeRef));
             wrappingEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Wrapping_ExpandedEntry", Target = entityType, TargetMultiplicity = EdmMultiplicity.One });
@@ -274,41 +275,41 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataEntry entry = new ODataEntry()
             {
                 TypeName = "TestModel.EntityType",
-                Properties = new List<ODataProperty>() 
+                Properties = new List<ODataProperty>()
                     {
                         new ODataProperty { Name = "StringProperty", Value = "foo" },
                         new ODataProperty { Name = "NumberProperty", Value = 42 },
-                        new ODataProperty { Name = "SimpleComplexProperty", Value = new ODataComplexValue 
-                        { 
-                            TypeName = "TestModel.SimplexComplexType", 
+                        new ODataProperty { Name = "SimpleComplexProperty", Value = new ODataComplexValue
+                        {
+                            TypeName = "TestModel.SimplexComplexType",
                             Properties = new ODataProperty[] {
                                 new ODataProperty { Name = "Name", Value = "Bart" }
                         } } },
-                        new ODataProperty { Name = "DeepComplexProperty", Value = new ODataComplexValue 
-                        { 
+                        new ODataProperty { Name = "DeepComplexProperty", Value = new ODataComplexValue
+                        {
                             TypeName = "TestModel.NestedComplexType",
                             Properties = new ODataProperty[] {
-                                new ODataProperty { Name = "InnerComplexProperty", Value = new ODataComplexValue 
-                                { 
+                                new ODataProperty { Name = "InnerComplexProperty", Value = new ODataComplexValue
+                                {
                                     TypeName = "TestModel.SimplexComplexType2",
                                     Properties = new ODataProperty[] {
                                         new ODataProperty { Name = "Value", Value = 43 }
                                 } } }
                         } } },
-                        
-                        new ODataProperty { Name = "PrimitiveCollection", Value = new ODataCollectionValue 
-                        { 
+
+                        new ODataProperty { Name = "PrimitiveCollection", Value = new ODataCollectionValue
+                        {
                             TypeName = "Collection(Edm.String)",
                             Items = new object[] { "Simpson" }
                         } },
-                        new ODataProperty { Name = "ComplexCollection", Value = new ODataCollectionValue 
-                        { 
+                        new ODataProperty { Name = "ComplexCollection", Value = new ODataCollectionValue
+                        {
                             TypeName = "Collection(TestModel.RatingComplexType)",
                             Items = new object[] {
-                                new ODataComplexValue 
-                                { 
+                                new ODataComplexValue
+                                {
                                     TypeName = "TestModel.RatingComplexType",
-                                    Properties = new ODataProperty[] { new ODataProperty { Name = "Rating", Value = -3 } } 
+                                    Properties = new ODataProperty[] { new ODataProperty { Name = "Rating", Value = -3 } }
                                 }
                         } } }
                     },
@@ -328,7 +329,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 null, // End deferred link
 
                 new ODataNavigationLink { Name = "ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/entry") },
-                    new ODataEntry() 
+                    new ODataEntry()
                     {
                         TypeName = "TestModel.ExpandedEntryType",
                         Properties = new ODataProperty[] {
@@ -367,21 +368,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             }
 
             // If we are processing a test case for a nested payload, wrap the entry items into a wrapping entry with an expanded navigation link.
-            ODataEntry wrappingEntry = new ODataEntry() 
+            ODataEntry wrappingEntry = new ODataEntry()
             {
                 TypeName = "TestModel.WrappingEntityType",
                 Properties = new[] { new ODataProperty { Name = "Wrapping_ID", Value = 1 } },
                 SerializationInfo = MySerializationInfo
             };
-            IEnumerable<ODataItem> wrappedItems = 
-                new ODataItem[] { wrappingEntry, new ODataNavigationLink { Name = "Wrapping_ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/wrapping") }}
+            IEnumerable<ODataItem> wrappedItems =
+                new ODataItem[] { wrappingEntry, new ODataNavigationLink { Name = "Wrapping_ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/wrapping") } }
                 .Concat(entryItems)
                 .Concat(new ODataItem[] { null, null });
 
             ProjectedPropertiesAnnotation nestedProjectedProperties = testCase.NestedProjectedProperties;
             entry.SetAnnotation(nestedProjectedProperties);
             wrappingEntry.SetAnnotation(projectedProperties);
-            
+
             return wrappedItems;
         }
 
@@ -399,72 +400,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 }
             }
 
-            if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                #region Atom expected result
-                var atomExpectedResults = new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                {
-                    Xml = new XElement("properties", testCase.ExpectedProperties.OrderBy(p => p).Select(p => new XElement(p))).ToString(),
-                    FragmentExtractor = (result) =>
-                    {
-                        // Navigation links
-                        IEnumerable<string> actualProperties;
-                        if (result == null)
-                        {
-                            actualProperties = new string[0];
-                        }
-                        else
-                        {
-                            actualProperties = result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                            .Where(link => link.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value.StartsWith(TestAtomConstants.ODataNavigationPropertiesRelatedLinkRelationPrefix))
-                            .Select(link => link.Attribute(TestAtomConstants.AtomLinkTitleAttributeName).Value);
-                            // Named stream links
-                            actualProperties = actualProperties.Concat(result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                .Where(link => link.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value.StartsWith(TestAtomConstants.ODataStreamPropertyEditMediaRelatedLinkRelationPrefix))
-                                .Select(link => link.Attribute(TestAtomConstants.AtomLinkTitleAttributeName).Value));
-                            // Association links
-                            actualProperties = actualProperties.Concat(result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                .Where(link => link.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value.StartsWith(TestAtomConstants.ODataNavigationPropertiesAssociationLinkRelationPrefix))
-                                .Select(link => link.Attribute(TestAtomConstants.AtomLinkTitleAttributeName).Value));
-                            // Properties
-                            actualProperties = actualProperties.Concat(result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomContentElementName)
-                                .Elements(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomPropertiesElementName)
-                                .Elements().Where(e => e.Name.Namespace == TestAtomConstants.ODataXNamespace)
-                                .Select(pe => pe.Name.LocalName));
-                        }
-
-                        return new XElement("properties",
-                            actualProperties.OrderBy(p => p).Select(p => new XElement(p)));
-                    }
-                };
-
-                if (testCase.NestedPayload)
-                {
-                    var originalFragmentExtractor = atomExpectedResults.FragmentExtractor;
-                    atomExpectedResults.FragmentExtractor = (result) =>
-                    {
-                        // Verify that the Wrapping_ID property is not written
-                        this.Assert.IsNull(result
-                            .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomContentElementName)
-                            .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomPropertiesElementName),
-                            "There should be no other property but the nav link and thus no m:properties in the content.");
-                        XElement expandedNavLinkElement = result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                .Where(link => link.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value
-                                    .StartsWith(TestAtomConstants.ODataNavigationPropertiesRelatedLinkRelationPrefix + "Wrapping_ExpandedEntry"))
-                                .SingleOrDefault();
-                        return originalFragmentExtractor(
-                                expandedNavLinkElement == null
-                                ? null
-                                : expandedNavLinkElement
-                                    .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName)
-                                    .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName));
-                    };
-                }
-
-                return atomExpectedResults;
-                #endregion Atom expected result
-            }
-            else if (testConfiguration.Format == ODataFormat.Json)
+            if (testConfiguration.Format == ODataFormat.Json)
             {
                 #region JSON Light expected result
                 JsonArray expectedJson = new JsonArray();

@@ -39,6 +39,7 @@ namespace AstoriaUnitTests
     public partial class ClientModule
     {
         /// <summary>This is a test class for update, insert and delete functionality.</summary>
+        [Ignore] // Remove Atom
         [TestClass]
         public class ClientBasics
         {

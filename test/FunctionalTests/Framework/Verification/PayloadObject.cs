@@ -18,7 +18,6 @@ namespace System.Data.Test.Astoria
             PayloadObjects = new List<PayloadObject>();
             PayloadProperties = new List<PayloadProperty>();
             NamedStreams = new List<PayloadNamedStream>();
-            // SyndicationItemProperties = new Dictionary<AtomSyndicationItemProperty, string>();
             CustomEpmMappedProperties = new Dictionary<string, string>();
         }
 
@@ -116,12 +115,6 @@ namespace System.Data.Test.Astoria
                 return Payload.Format;
             }
         }
-
-        //public Dictionary<AtomSyndicationItemProperty, string> SyndicationItemProperties
-        //{
-        //    get;
-        //    private set;
-        //}
 
         public Dictionary<string, string> CustomEpmMappedProperties
         {

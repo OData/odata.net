@@ -17,6 +17,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    [Ignore] // Remove Atom
     [TestClass]
     public class NamedStream_ProjectionTests
     {
@@ -40,6 +41,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_SimpleProjectionWithoutStreams()
         {
@@ -53,6 +55,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             Assert.AreEqual(context.Entities[0].StreamDescriptors.Count, 0, "There must be no named streams associated with the entity yet, since we didn't specify the named streams in the projection query");
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_SimpleProjectionWithStreams()
         {
@@ -95,6 +98,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_SimpleLinkProjection()
         {
@@ -145,6 +149,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_ProjectingOnlyStreamLinkProperty()
         {
@@ -248,6 +253,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_NonEntity_AccessPropertiesFromDifferentLevels()
         {
@@ -294,6 +300,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_Projection()
         {
@@ -317,6 +324,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_PayloadDrivenMaterialization()
         {
@@ -365,6 +373,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_DeepLinkProjection()
         {
@@ -418,6 +427,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_DeepLinkProjection_MultipleParametersInScope()
         {
@@ -498,6 +508,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_NestedQuery_1()
         {
@@ -580,6 +591,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_NestedQuery_2()
         {

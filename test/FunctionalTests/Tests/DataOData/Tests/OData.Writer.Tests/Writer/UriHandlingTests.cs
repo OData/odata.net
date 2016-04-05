@@ -39,6 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public BatchWriterTestDescriptor.Settings BatchSettings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests that relative Uris are only allowed when a base Uri is specified.")]
         public void BaseUriErrorTest()
         {
@@ -54,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         feed.NextPageLink = relativeUri;
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // entry read link
@@ -64,7 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry.ReadLink = relativeUri;
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // entry edit link
@@ -74,7 +75,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry.EditLink = relativeUri;
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // media resource (default stream) read link
@@ -87,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry.MediaResource = mediaResource;
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // media resource (default stream) edit link
@@ -101,7 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry.MediaResource = mediaResource;
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // link Url
@@ -113,7 +114,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         return new ODataItem[] { entry, link };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // association link Url
@@ -125,7 +126,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         return new ODataItem[] { entry, link };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // named stream read link
@@ -146,7 +147,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry.Properties = new[] { property };
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // named stream edit link
@@ -168,7 +169,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry.Properties = new[] { property };
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom, ODataFormat.Json }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed generator Uri
@@ -177,7 +178,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed logo
@@ -186,7 +187,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed icon
@@ -195,7 +196,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed author
@@ -204,7 +205,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed contributor
@@ -213,7 +214,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: feed link
@@ -222,7 +223,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: entry author
@@ -231,7 +232,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: entry contributor
@@ -240,7 +241,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
                 {   // Atom metadata: entry link
@@ -249,7 +250,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
                         return new [] { entry };
                     }),
-                    Formats = new [] { ODataFormat.Atom }
+                    Formats = new [] { ODataFormat.Json }
                 },
             };
 
@@ -258,7 +259,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             Uri invalidRelativeUri = new Uri("../invalid/relative/uri", UriKind.Relative);
             this.CombinatorialEngineProvider.RunCombinations(
                 testCaseFuncs,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => c.IsRequest == false && c.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => false),
                 new Uri[] { testRelativeUri, invalidRelativeUri },
                 new bool[] { false, true },
                 (testCaseFunc, testConfiguration, uri, implementUrlResolver) =>
@@ -546,6 +547,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             },
         };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests that realtive Uris are allowed (if a base URI exists) and written in an escaped form.")]
         public void RelativeUriTest()
         {
@@ -584,12 +586,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => c.IsRequest == false && c.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => false),
                 new bool[] { false, true },
                 (testDescriptor, testConfiguration, implementUrlResolver) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Json && testDescriptor.TestCase.JsonExtractor != null ||
-                        testConfiguration.Format == ODataFormat.Atom && testDescriptor.TestCase.AtomExtractor != null)
+                    if (testConfiguration.Format == ODataFormat.Json && testDescriptor.TestCase.JsonExtractor != null)
                     {
                         PayloadWriterTestDescriptor<ODataItem> payloadTestDescriptor = testDescriptor.Descriptor;
                         if (implementUrlResolver)
@@ -606,6 +607,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests that absolute Uris are allowed and written as-is (not made relative).")]
         public void AbsoluteUriTest()
         {
@@ -674,15 +676,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => c.IsRequest == false && c.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => false),
                 new bool[] { false, true },
                 (testDescriptor, testConfiguration, implementUrlResolver) =>
                 {
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
-                    if (testConfiguration.Format == ODataFormat.Json && testDescriptor.TestCase.JsonExtractor != null ||
-                        testConfiguration.Format == ODataFormat.Atom && testDescriptor.TestCase.AtomExtractor != null)
+                    if (testConfiguration.Format == ODataFormat.Json && testDescriptor.TestCase.JsonExtractor != null)
                     {
                         PayloadWriterTestDescriptor<ODataItem> payloadTestDescriptor = testDescriptor.Descriptor;
                         if (implementUrlResolver)
@@ -696,6 +697,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests that custom URL resolver works as expected.")]
         public void ResolverUriTest()
         {
@@ -754,15 +756,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 new bool[] { false, true },
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => c.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => false),
                 (testDescriptor, runInBatch, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
                     if ((!testConfiguration.IsRequest || !testDescriptor.TestCase.ResponseOnly) &&
-                        (testConfiguration.Format == ODataFormat.Json && testDescriptor.TestCase.JsonExtractor != null ||
-                        testConfiguration.Format == ODataFormat.Atom && testDescriptor.TestCase.AtomExtractor != null))
+                        (testConfiguration.Format == ODataFormat.Json && testDescriptor.TestCase.JsonExtractor != null))
                     {
                         var td = testDescriptor.Descriptor.DeferredLinksToEntityReferenceLinksInRequest(testConfiguration);
                         if (!runInBatch)
@@ -839,17 +840,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             return (testConfiguration) =>
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
-                {
-                    // In ATOM we expect an escaped URI
-                    string escapedUri = TestUriUtils.ToEscapedUriString(uri);
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Xml = "<uri>" + escapedUri + "</uri>",
-                        FragmentExtractor = element => testCase.AtomExtractor(testConfiguration, element),
-                    };
-                }
-                else if (testConfiguration.Format == ODataFormat.Json)
+                if (testConfiguration.Format == ODataFormat.Json)
                 {
                     // In JSON we always expect an absolute URI
                     string absoluteEscapedUri = TestUriUtils.ToAbsoluteUriString(uri, baseUri);

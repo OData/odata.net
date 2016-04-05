@@ -46,12 +46,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void RequestDescriptionResponseFormat_Atom()
-        {
-            RunNegotiatedFormatTest("application/xml", null, ODataProtocolVersion.V4, ODataFormat.Atom);
-        }
-
-        [TestMethod]
         public void RequestDescriptionResponseFormat_JsonLite()
         {
             RunNegotiatedFormatTest("application/json", "4.0", ODataProtocolVersion.V4, ODataFormat.Json);
@@ -203,7 +197,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                     new SegmentInfo(),
                     new SegmentInfo
                     {
-                       TargetKind = RequestTargetKind.Link,  
+                       TargetKind = RequestTargetKind.Link,
                     },
                     segment
                 };

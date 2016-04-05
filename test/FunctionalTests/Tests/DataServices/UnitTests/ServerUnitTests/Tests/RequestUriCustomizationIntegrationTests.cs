@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class RequestUriCustomizationIntegratiotnTests
     {
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void GetSmokeTestWhereRequestAndServiceUriAreCompletelyReplaced()
@@ -33,6 +34,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void GetSmokeTestWhereRequestUriPathIsReversed()
@@ -66,6 +68,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchSmokeTestWhereRequestAndServiceUriAreCompletelyReplaced()
         {
@@ -86,6 +89,7 @@ namespace AstoriaUnitTests.Tests
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchSmokeTestWhereRequestAndServiceUriAreReversed()
         {
@@ -106,6 +110,7 @@ namespace AstoriaUnitTests.Tests
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void BatchSmokeTestWhereRequestUriIsNotRelativeToService()
         {

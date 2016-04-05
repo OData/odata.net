@@ -33,11 +33,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// (since the odata.type annotation is not supported inside of spatial values); only used for error tests.</remarks>
         public static string GetSpatialStringValue(ODataFormat format, ISpatial spatial, string typeName = null)
         {
-            if (format == ODataFormat.Atom)
-            {
-                return GmlFormatter.Create().Write(spatial);
-            }
-
             IDictionary<string, object> dictionary = GeoJsonObjectFormatter.Create().Write(spatial);
 
             var converter = new DictionaryToJsonObjectConverter();
@@ -51,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 jsonObject.Insert(0, new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName, new JsonPrimitiveValue(typeName)));
             }
 
-            return jsonObject.ToText(format == ODataFormat.Json, indent:false);
+            return jsonObject.ToText(format == ODataFormat.Json, indent: false);
         }
     }
 }

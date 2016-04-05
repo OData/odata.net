@@ -25,7 +25,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void ProcessRequestCalledSecondTimeWithoutAttachHostShouldThrow()
         {
-            var host = new DataServiceHostSimulator {AbsoluteRequestUri = new Uri("http://example.com/Customers(1)"), AbsoluteServiceUri = new Uri("http://example.com/"), RequestHttpMethod = "GET", ResponseStream = new MemoryStream(), ProcessExceptionCallBack = (args) => { }};
+            var host = new DataServiceHostSimulator { AbsoluteRequestUri = new Uri("http://example.com/Customers(1)"), AbsoluteServiceUri = new Uri("http://example.com/"), RequestHttpMethod = "GET", ResponseStream = new MemoryStream(), ProcessExceptionCallBack = (args) => { } };
             var svc = new TestService();
             svc.AttachHost(host);
             svc.ProcessRequest();
@@ -48,7 +48,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void ProcessRequestCalledTwiceWithSameHostShouldWork()
         {
-            var host = new DataServiceHostSimulator {AbsoluteRequestUri = new Uri("http://example.com/Customers(1)"), AbsoluteServiceUri = new Uri("http://example.com/"), RequestHttpMethod = "GET", ResponseStream = new MemoryStream(), ProcessExceptionCallBack = (args) => { }};
+            var host = new DataServiceHostSimulator { AbsoluteRequestUri = new Uri("http://example.com/Customers(1)"), AbsoluteServiceUri = new Uri("http://example.com/"), RequestHttpMethod = "GET", ResponseStream = new MemoryStream(), ProcessExceptionCallBack = (args) => { } };
             var svc = new TestService();
             svc.AttachHost(host);
             svc.ProcessRequest();
@@ -75,6 +75,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         /// <summary>
         /// Tests that the ResponseStatusCode Is not set on the host after ProcessRequest() which results in a 404.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ResponseStatusCodeIsNotSetOnHostAfterProcessRequestWith404Error()
         {

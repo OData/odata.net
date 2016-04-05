@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     [TestClass]
     public class ClientSpatialTests
     {
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestCollectionOfSpatialTypes()
         {

@@ -3959,11 +3959,6 @@ public abstract class Microsoft.OData.Core.ODataFeedBase : Microsoft.OData.Core.
 public abstract class Microsoft.OData.Core.ODataFormat {
 	protected ODataFormat ()
 
-	[
-	ObsoleteAttribute(),
-	]
-	Microsoft.OData.Core.ODataFormat Atom  { public static get; }
-
 	Microsoft.OData.Core.ODataFormat Batch  { public static get; }
 	Microsoft.OData.Core.ODataFormat Json  { public static get; }
 	Microsoft.OData.Core.ODataFormat Metadata  { public static get; }
@@ -4894,176 +4889,6 @@ public sealed class Microsoft.OData.Core.SerializationTypeNameAnnotation {
 	public SerializationTypeNameAnnotation ()
 
 	string TypeName  { public get; public set; }
-}
-
-public enum Microsoft.OData.Core.Atom.AtomSyndicationItemProperty : int {
-	AuthorEmail = 1
-	AuthorName = 2
-	AuthorUri = 3
-	ContributorEmail = 4
-	ContributorName = 5
-	ContributorUri = 6
-	CustomProperty = 0
-	Published = 8
-	Rights = 9
-	Summary = 10
-	Title = 11
-	Updated = 7
-}
-
-public enum Microsoft.OData.Core.Atom.AtomSyndicationTextContentKind : int {
-	Html = 1
-	Plaintext = 0
-	Xhtml = 2
-}
-
-public enum Microsoft.OData.Core.Atom.AtomTextConstructKind : int {
-	Html = 1
-	Text = 0
-	Xhtml = 2
-}
-
-[
-ExtensionAttribute(),
-]
-public sealed class Microsoft.OData.Core.Atom.ExtensionMethods {
-	[
-	ExtensionAttribute(),
-	]
-	public static Microsoft.OData.Core.Atom.AtomResourceCollectionMetadata Atom (Microsoft.OData.Core.ODataEntitySetInfo entitySet)
-
-	[
-	ExtensionAttribute(),
-	]
-	public static Microsoft.OData.Core.Atom.AtomEntryMetadata Atom (Microsoft.OData.Core.ODataEntry entry)
-
-	[
-	ExtensionAttribute(),
-	]
-	public static Microsoft.OData.Core.Atom.AtomFeedMetadata Atom (Microsoft.OData.Core.ODataFeed feed)
-
-	[
-	ExtensionAttribute(),
-	]
-	public static Microsoft.OData.Core.Atom.AtomLinkMetadata Atom (Microsoft.OData.Core.ODataNavigationLink navigationLink)
-
-	[
-	ExtensionAttribute(),
-	]
-	public static Microsoft.OData.Core.Atom.AtomWorkspaceMetadata Atom (Microsoft.OData.Core.ODataServiceDocument serviceDocument)
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomCategoriesMetadata {
-	public AtomCategoriesMetadata ()
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] Fixed  { public get; public set; }
-	System.Uri Href  { public get; public set; }
-	string Scheme  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomCategoryMetadata : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomCategoryMetadata ()
-
-	string Label  { public get; public set; }
-	string Scheme  { public get; public set; }
-	string Term  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomEntryMetadata : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomEntryMetadata ()
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Authors  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomCategoryMetadata CategoryWithTypeName  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Contributors  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata EditLink  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomLinkMetadata]] Links  { public get; public set; }
-	System.Nullable`1[[System.DateTimeOffset]] Published  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Rights  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomFeedMetadata Source  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Summary  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
-	System.Nullable`1[[System.DateTimeOffset]] Updated  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomFeedMetadata : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomFeedMetadata ()
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Authors  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomCategoryMetadata]] Categories  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomPersonMetadata]] Contributors  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomGeneratorMetadata Generator  { public get; public set; }
-	System.Uri Icon  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.Atom.AtomLinkMetadata]] Links  { public get; public set; }
-	System.Uri Logo  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata NextPageLink  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Rights  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { public get; public set; }
-	System.Uri SourceId  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Subtitle  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
-	System.Nullable`1[[System.DateTimeOffset]] Updated  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomGeneratorMetadata {
-	public AtomGeneratorMetadata ()
-
-	string Name  { public get; public set; }
-	System.Uri Uri  { public get; public set; }
-	string Version  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomLinkMetadata : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomLinkMetadata ()
-
-	System.Uri Href  { public get; public set; }
-	string HrefLang  { public get; public set; }
-	System.Nullable`1[[System.Int32]] Length  { public get; public set; }
-	string MediaType  { public get; public set; }
-	string Relation  { public get; public set; }
-	string Title  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomPersonMetadata : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomPersonMetadata ()
-
-	string Email  { public get; public set; }
-	string Name  { public get; public set; }
-	System.Uri Uri  { public get; public set; }
-
-	public static Microsoft.OData.Core.Atom.AtomPersonMetadata ToAtomPersonMetadata (string name)
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomResourceCollectionMetadata {
-	public AtomResourceCollectionMetadata ()
-
-	string Accept  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomCategoriesMetadata Categories  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomStreamReferenceMetadata : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomStreamReferenceMetadata ()
-
-	Microsoft.OData.Core.Atom.AtomLinkMetadata EditLink  { public get; public set; }
-	Microsoft.OData.Core.Atom.AtomLinkMetadata SelfLink  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomTextConstruct : Microsoft.OData.Core.ODataAnnotatable {
-	public AtomTextConstruct ()
-
-	Microsoft.OData.Core.Atom.AtomTextConstructKind Kind  { public get; public set; }
-	string Text  { public get; public set; }
-
-	public static Microsoft.OData.Core.Atom.AtomTextConstruct ToTextConstruct (string text)
-}
-
-public sealed class Microsoft.OData.Core.Atom.AtomWorkspaceMetadata {
-	public AtomWorkspaceMetadata ()
-
-	Microsoft.OData.Core.Atom.AtomTextConstruct Title  { public get; public set; }
 }
 
 public enum Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind : int {
@@ -6755,11 +6580,6 @@ public sealed class Microsoft.OData.Client.DataServiceClientException : System.I
 public sealed class Microsoft.OData.Client.DataServiceClientFormat {
 	System.Func`1[[Microsoft.OData.Edm.IEdmModel]] LoadServiceModel  { public get; public set; }
 	Microsoft.OData.Core.ODataFormat ODataFormat  { public get; }
-
-	[
-	ObsoleteAttribute(),
-	]
-	public void UseAtom ()
 
 	public void UseJson ()
 	public void UseJson (Microsoft.OData.Edm.IEdmModel serviceModel)

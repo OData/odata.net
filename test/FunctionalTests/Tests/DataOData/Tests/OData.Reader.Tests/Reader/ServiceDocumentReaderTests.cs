@@ -95,15 +95,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException = null
                                 };
                             }
-
-                            if (tc.Format == ODataFormat.Atom)
-                            {
-                                return new PayloadReaderTestExpectedResult(this.PayloadExpectedResultSettings)
-                                {
-                                    ExpectedException = ODataExpectedExceptions.ODataException("ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified", "collection")
-                                };
-                            }
-
                             throw new NotImplementedException();
                         }
                 },

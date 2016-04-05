@@ -124,7 +124,7 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             // Resolution is based on the entry Id, so if we can't use that property, we don't even need to try to resolve it.
-            if (entry.IsAtomOrTracking)
+            if (entry.IsTracking)
             {
                 // The resolver methods below will both need access to Id, so first ensure it's not null
                 if (entry.Id == null)
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>true if the entity was resolved; false otherwise.</returns>
         private bool TryResolveFromContext(MaterializerEntry entry, Type expectedEntryType)
         {
-            Debug.Assert(entry.IsAtomOrTracking, "Should not be trying to resolve the entry from the context if entry.IsAtomOrTracking is false.");
+            Debug.Assert(entry.IsTracking, "Should not be trying to resolve the entry from the context if entry.isTracking is false.");
 
             // We should either create a new instance or grab one from the context.
             if (this.MergeOption != MergeOption.NoTracking)
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>true if the entity was resolved; false otherwise.</returns>
         private bool TryResolveAsCreated(MaterializerEntry entry)
         {
-            Debug.Assert(entry.IsAtomOrTracking, "Should not be trying to resolve the entry from the current materialization session if entry.IsAtomOrTracking is false.");
+            Debug.Assert(entry.IsTracking, "Should not be trying to resolve the entry from the current materialization session if entry.isTracking is false.");
 
             MaterializerEntry existingEntry;
             if (!this.MaterializationLog.TryResolve(entry, out existingEntry))

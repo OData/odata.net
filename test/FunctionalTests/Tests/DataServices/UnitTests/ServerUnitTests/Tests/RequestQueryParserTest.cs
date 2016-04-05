@@ -552,6 +552,7 @@ namespace AstoriaUnitTests.Tests
         /// To get the Unicode code point for a character in hexadecimal notation in Microsoft Word,
         /// type the character and press Alt+X.
         /// </remarks>
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestQueryParserReproTests()
         {

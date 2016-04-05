@@ -52,9 +52,10 @@ namespace AstoriaUnitTests.Tests
             {
                 AstoriaTestProperties.Host = Host.Cassini;
             }
-            
+
             #region Service Operations
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Service Operation rights is not checked, service operation always invoke even if there are errors in query syntax. Also Exception message should be more user friendly.")]
             public void ServiceOpInvokeAndRights()
             {
@@ -66,43 +67,43 @@ namespace AstoriaUnitTests.Tests
                 // Dimension 1: operation rights
                 var serviceOperationRights = new ServiceOperationRights[]
                 {
-                    ServiceOperationRights.All, 
-                    ServiceOperationRights.AllRead, 
-                    ServiceOperationRights.ReadMultiple, 
-                    ServiceOperationRights.ReadSingle, 
-                    ServiceOperationRights.OverrideEntitySetRights | ServiceOperationRights.ReadMultiple, 
+                    ServiceOperationRights.All,
+                    ServiceOperationRights.AllRead,
+                    ServiceOperationRights.ReadMultiple,
+                    ServiceOperationRights.ReadSingle,
+                    ServiceOperationRights.OverrideEntitySetRights | ServiceOperationRights.ReadMultiple,
                     ServiceOperationRights.OverrideEntitySetRights | ServiceOperationRights.ReadSingle
                 };
-                
+
                 // Dimension 2: result kind (skip void)
                 var providers = new Providers.ServiceOperationResultKind[]
                 {
-                    Providers.ServiceOperationResultKind.DirectValue, 
-                    Providers.ServiceOperationResultKind.QueryWithMultipleResults, 
-                    Providers.ServiceOperationResultKind.QueryWithSingleResult, 
+                    Providers.ServiceOperationResultKind.DirectValue,
+                    Providers.ServiceOperationResultKind.QueryWithMultipleResults,
+                    Providers.ServiceOperationResultKind.QueryWithSingleResult,
                     Providers.ServiceOperationResultKind.Enumeration
                 };
-                
+
                 // Dimension 3: uri string
                 var requestUris = new string[]
                 {
-                    "/GetEntity?id=1", 
-                    "/GetEntity?id=1&$filter=ID eq 1&$select=ID", 
-                    "/GetEntity?id=1&$top=1", "/GetEntity()?id=1", 
+                    "/GetEntity?id=1",
+                    "/GetEntity?id=1&$filter=ID eq 1&$select=ID",
+                    "/GetEntity?id=1&$top=1", "/GetEntity()?id=1",
                     "/GetEntity(1)?id=1", "/GetEntity(1)/ID?id=1"
                 };
-                    
+
                 // Dimension 4: entity set rights
                 var entitySetRights = new EntitySetRights[]
                 {
-                    EntitySetRights.All, 
-                    EntitySetRights.AllRead, 
-                    EntitySetRights.AllWrite, 
-                    EntitySetRights.None, 
-                    EntitySetRights.ReadMultiple, 
+                    EntitySetRights.All,
+                    EntitySetRights.AllRead,
+                    EntitySetRights.AllWrite,
+                    EntitySetRights.None,
+                    EntitySetRights.ReadMultiple,
                     EntitySetRights.ReadSingle
                 };
-    
+
                 TestUtil.RunCombinations(serviceOperationRights, providers, requestUris, entitySetRights, (sopRights, resultKind, uri, esRights) =>
                     {
                         DSPDataService serviceInstance = null;
@@ -244,6 +245,8 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Edm.Boolean should be returned in error messages, not System.Boolean
+
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Edm.Boolean should be returned in error messages, not System.Boolean")]
             public void ErrorMessageShouldReturnEdmBooleanInsteadOfSystemBoolean()
             {
@@ -259,6 +262,8 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Default ODataBatchReaderStreamBuffer Length
+
+            [Ignore] // Remove Atom
             [TestMethod]
             public void TestDefaultBatchReaderBufferLength()
             {
@@ -535,6 +540,7 @@ Content-ID: 1
             #endregion
 
             #region InvalidRequestVersionErrorMsg
+            [Ignore] // Remove Atom
             [TestMethod]
             public void InvalidRequestVersionErrorMsg()
             {
@@ -599,6 +605,7 @@ Content-ID: 1
                 public string Description { get; set; }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Assertion when inserting a short payload in batch")]
             public void InsertShortPayloadInBatchShouldWork()
             {
@@ -678,6 +685,8 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region Verify that setting reference property when FK is part of the PK in EF works.
+
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Verify that setting reference property when FK is part of the PK in EF works.")]
             public void SettingReferencePropertyWhenFKIsPartOfPKShouldWork()
             {
@@ -767,6 +776,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     });
             }
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation("In PUT requests to EF provider, we fire change interceptors with entities which do not have the new value")]
             public void FireChangeInterceptorsInPutToEFShouldWork_Batch()
             {
@@ -820,7 +830,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     });
             }
 
-            public class ObjectContext<T> : OpenWebDataService<T> where T: System.Data.Objects.ObjectContext
+            public class ObjectContext<T> : OpenWebDataService<T> where T : System.Data.Objects.ObjectContext
             {
                 [ChangeInterceptor("CustomObjectContext.Orders")]
                 public void OrderChangeInterceptor(EFFK.Order order, UpdateOperations operation)
@@ -841,6 +851,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region In batch case, if both If-Match and If-None-Match is specified, we fire an assert and then ignore the If-None-Match header
+            [Ignore] // Remove Atom
             [TestMethod, Variation("In batch case, if both If-Match and If-None-Match is specified, we fire an assert and then ignore the If-None-Match header")]
             public void IgnoreIfNoneMatchHeaderWhenIfMatchAndIfNonMatchIsSpecified()
             {
@@ -879,6 +890,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region Since we are calling the EF API directly, we need to catch the exceptions internally and throw DataServiceException
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Since we are calling the EF API directly, we need to catch the exceptions internally and throw DataServiceException")]
             public void ShouldThrowDataServiceExceptionInsteadOfInternalExceptions()
             {
@@ -979,6 +991,8 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region Ignore IncludeAssociationLinksInResponse knob value if the MPV is set to less than 4.0
+
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Ignore IncludeAssociationLinksInResponse knob value if the MPV is set to less than 4.0")]
             public void IgnoreIncludeAssociationLinksInResponseIfMPVLessThan40()
             {
@@ -1261,6 +1275,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
             #region JSON deserializer should fail on stream properties in requests.
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation("JSON deserializer should fail on stream properties in requests.")]
             public void JsonInsertPayloadWithNamedStream()
             {
@@ -1333,6 +1348,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 return metadata;
             }
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Hidden Navigation Properties causes type segment to be appended at the end of canonical uris")]
             public void HiddenNavigationPropertiesAppendTypeSegmentToCanonicalUri()
             {
@@ -1391,7 +1407,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     TypedCustomDataContext<TestEntity2>.ValuesRequested += (sender, args) =>
                     {
                         TypedCustomDataContext<TestEntity2> typedContext = (TypedCustomDataContext<TestEntity2>)sender;
-                        typedContext.SetValues(new TestEntity2[] { new TestEntity2 { ID = 1, Name = "Foo"} });
+                        typedContext.SetValues(new TestEntity2[] { new TestEntity2 { ID = 1, Name = "Foo" } });
                     };
 
                     OpenWebDataServiceHelper.IncludeRelationshipLinksInResponse.Value = true;
@@ -1469,9 +1485,9 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             [TestMethod, Variation("Ensure we error gracefully on service operations returning complex types that are then used in property access")]
             public void ShouldFailOnServiceOperationsReturningComplexTypeUsedInPropertyAccess()
             {
-                var serviceOps = new[] 
-                { 
-                    new {Operation = "GET", ServiceOpName="FirstAddress"}, 
+                var serviceOps = new[]
+                {
+                    new {Operation = "GET", ServiceOpName="FirstAddress"},
                     new {Operation = "POST", ServiceOpName="FirstAddressI"},
                     new {Operation = "GET", ServiceOpName="FirstAddressQ"},
                     new {Operation = "POST", ServiceOpName="FirstAddressQI"},
@@ -1542,7 +1558,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 {
                     config.SetEntitySetAccessRule("*", EntitySetRights.AllRead);
                     config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
-                    config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4; 
+                    config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
                 }
 
                 [WebGet]
@@ -1556,9 +1572,10 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 {
                     return this.CurrentDataSource.GetPeople();
                 }
- 
+
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ValueAfterCollectionOfPrimitives()
             {
@@ -1584,12 +1601,13 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ValueAfterCollectionOfObjects()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
-                    request.DataServiceType = typeof (TestDataService1);
+                    request.DataServiceType = typeof(TestDataService1);
                     request.RequestUriString = "/ServiceOp_IQueryablePeople/$value";
                     request.HttpMethod = "GET";
                     try
@@ -1630,7 +1648,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
 
                 [WebGet]
-                public int TestMethod_Int() 
+                public int TestMethod_Int()
                 {
                     throw new DataServiceException(400, "code1", ERROR_INT, null, null);
                 }
@@ -1642,10 +1660,11 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void VoidServiceOperationUnchangedResponse()
             {
-                var tests = new[] { new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT }, 
+                var tests = new[] { new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT },
                     new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT } };
                 TestUtil.RunCombinations(tests, serviceCallInfo =>
                 {
@@ -1675,6 +1694,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region Allow custom hosts in WCF scenarios
+            [Ignore] // Remove Atom
             [TestMethod, Description("Allow custom hosts in WCF scenarios")]
             public void AllowCustomHostsWcfScenarios()
             {
@@ -1795,7 +1815,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     request.Accept = "application/atom+xml,application/xml";
                     request.SendRequest();
 
-                    var responseBody =request.GetResponseStreamAsXmlDocument();
+                    var responseBody = request.GetResponseStreamAsXmlDocument();
                     UnitTestsUtil.VerifyXPaths(responseBody,
                         String.Format("atom:feed/atom:link[@rel = 'next' and contains(@href, \"{0}\") and contains(@href,\"{1}\") and contains(@href,\"{2}\")]", parameterExpr, filterExpr, orderExpr));
 
@@ -1805,6 +1825,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void SkipTokenEscape_NonStringLiteral()
             {
@@ -1880,6 +1901,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ShouldDisplayCorrectTypeStringForGenericEntityType()
             {
@@ -1896,6 +1918,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ShouldDisplayCorrectTypeStringForGenericComplexType()
             {
@@ -1934,6 +1957,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 public string Foo { get; set; }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod, Description("Querying the complex type property with a loop returned invalid response version")]
             public void ComplexTypePropertyWithLoopShouldReturnValidResponseVersion()
             {
@@ -1977,7 +2001,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             public void ExpandingReferencePropertyShouldWorkIfEntityInstanceTypeDerivesFromIEnumerable()
             {
                 DSPServiceDefinition service = GetService1();
-                var jsonXPaths = new string[] 
+                var jsonXPaths = new string[]
                 {
                     String.Format("{0}[odata.context='http://host/$metadata#Orders']", JsonValidator.ObjectString),
                     String.Format("{1}/value/{0}/{1}[Customer[ID=1 and Name='Customer 1'] and ID=1 and DollarAmount='1000']", JsonValidator.ArrayString, JsonValidator.ObjectString),
@@ -2169,7 +2193,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
                 metadata.AddKeyProperty(customerType, "ID", typeof(int));
                 metadata.AddPrimitiveProperty(customerType, "Name", typeof(string));
-                
+
                 Providers.ResourceType addressType = metadata.AddComplexType("Address", null, null, false);
                 metadata.AddPrimitiveProperty(addressType, "Street", typeof(string));
                 metadata.AddPrimitiveProperty(addressType, "Zip", typeof(int));
@@ -2351,6 +2375,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod]
             public void SingleResultAttributeShouldNotAffectNavProps()
             {
@@ -2362,7 +2387,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     // navigation should succeed
                     request.SendRequest();
                     request.GetResponseStreamAsXDocument();
-                    
+
                     request.RequestUriString = "/FirstCustomer?$top=1";
                     // Direct composition should fail
                     Exception ex = TestUtil.RunCatching(request.SendRequest);
@@ -2374,7 +2399,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     Assert.AreEqual(DataServicesResourceUtil.GetString("RequestQueryProcessor_QuerySetOptionsNotApplicable"), ex.Message);
                 }
             }
-            
+
             #endregion
 
             #region Abstract complex types and types in the System namespace cause $metadata to blow off (was: $metadata small breaking change after Edmlib integration on Reflection Service on Array Type)
@@ -2417,6 +2442,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
             #region [Astoria-ODataLib-Integration] In-stream errors due to XmlExceptions are written out backwards (error before partial valid payload)
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Astoria-ODataLib-Integration] In-stream errors due to XmlExceptions are written out backwards (error before partial valid payload")]
             public void InStreamErrorsDueToXmlExceptionsWrittenOutBackwards()
             {
@@ -2457,7 +2483,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                         Assert.IsTrue(reader.Read());
                         Assert.AreEqual(reader.NodeType, XmlNodeType.XmlDeclaration);
                         Assert.AreEqual(XmlNodeType.Element, reader.MoveToContent());
-                        
+
                         reader.ReadToFollowing("error", metadataNs);
                         Assert.AreEqual("error", reader.LocalName);
                         Assert.AreEqual(metadataNs, reader.NamespaceURI);
@@ -2589,6 +2615,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #endregion
 
             #region Invalid Content Id reference in batch produces null reference exception
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Invalid Content Id reference in batch produces null reference exception")]
             public void InvalidContentIdReferenceInBatchShouldProduceNullReferenceException()
             {
@@ -2617,7 +2644,7 @@ Accept: application/atom+xml
                 }
             }
             #endregion
-            
+
             #region Edm Version
             [TestMethod, Variation("Fix for: EDM version does not get a bump when the first Function Import is a service operation and there are actions later in the list")]
             public void EdmVersionShouldBe40IfThereIsAnAction()
@@ -2683,7 +2710,7 @@ Accept: application/atom+xml
                 [WebGet]
                 public Customers GetImportantCustomers()
                 {
-                    return  new Customers() { CustomerID = "765123", CompanyName = "StubHub"};
+                    return new Customers() { CustomerID = "765123", CompanyName = "StubHub" };
                 }
 
                 object IServiceProvider.GetService(Type serviceType)
@@ -2721,22 +2748,22 @@ Accept: application/atom+xml
 
                 // Replace Enabled In Config
                 RunReplaceFunctionTest(null, true, 3);
-           
+
                 // Replace Enabled In Both
                 RunReplaceFunctionTest(true, true, 4);
-            
+
                 // Replace Disabled In Code And Enabled In Config
                 RunReplaceFunctionTest(false, true, 5);
 
                 // Replace Disabled In Code
                 RunReplaceFunctionTest(false, null, 6);
-            
+
                 // Replace Disabled In Config
                 RunReplaceFunctionTest(null, false, 7);
-           
+
                 // Replace Enabled In Code And Disabled In Config
                 RunReplaceFunctionTest(true, false, 8);
-            
+
                 // Replace Disabled In Both
                 RunReplaceFunctionTest(false, false, 9);
             }
@@ -2755,7 +2782,7 @@ Accept: application/atom+xml
                         request.TestArguments["foo" + i] = "bar" + i;
                         if (configValue != null)
                         {
-                            var configFeaturesSection = new DataServicesFeaturesSection() {ReplaceFunction = new DataServicesReplaceFunctionFeature() {Enable = configValue.Value}};
+                            var configFeaturesSection = new DataServicesFeaturesSection() { ReplaceFunction = new DataServicesReplaceFunctionFeature() { Enable = configValue.Value } };
 
                             request.AddToConfig(configFeaturesSection);
                         }
@@ -2763,7 +2790,7 @@ Accept: application/atom+xml
                         // Set the configuration api value
                         if (apivalue != null)
                         {
-                            var initializeServiceCodeOptions = new DataServicesFeaturesSection() {ReplaceFunction = new DataServicesReplaceFunctionFeature() {Enable = apivalue.Value}};
+                            var initializeServiceCodeOptions = new DataServicesFeaturesSection() { ReplaceFunction = new DataServicesReplaceFunctionFeature() { Enable = apivalue.Value } };
 
                             request.AddToInitializeService(initializeServiceCodeOptions);
                         }
@@ -2827,7 +2854,7 @@ Accept: application/atom+xml
             [TestMethod]
             public void ServerShouldGenerateAbsoluteNextLinkForJsonLightNoMetadata()
             {
-                using(TestWebRequest request = TestWebRequest.CreateForInProcess())
+                using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {
                     request.ServiceType = typeof(SkipTokenEscapeService);
                     request.RequestUriString = "/GetCustomers()?parameter='p'";
@@ -2900,6 +2927,7 @@ Accept: application/atom+xml
             #endregion
 
             #region [Regression,Security] Infinite loop in 'prefer' header parsing when the value contains a separator character
+            [Ignore] // Remove Atom
             [TestMethod, Variation("[Regression,Security] Infinite loop in 'prefer' header parsing when the value contains a separator character")]
             public void PreferHeaderWithSeperator()
             {
@@ -2927,6 +2955,7 @@ Accept: application/atom+xml
             #endregion
 
             #region MicrosoftDataServicesRequestUri
+            [Ignore] // Remove Atom
             [TestMethod, Variation("Specifying MicrosoftDataServicesRequestUri in OnStartProcessingRequest does not get picked up")]
             public void MicrosoftDataServicesRequestUriShouldWorkInOnStartProcessingRequest()
             {
@@ -3079,7 +3108,7 @@ Accept: application/atom+xml
             /// Note that by default the "ConcurrencyMode" attribute of ServiceBehavior is "Single",
             /// so this service is "Single instance and "single-threaded"
             /// </summary>
-            [ServiceBehavior(IncludeExceptionDetailInFaults=true, InstanceContextMode=InstanceContextMode.Single)]
+            [ServiceBehavior(IncludeExceptionDetailInFaults = true, InstanceContextMode = InstanceContextMode.Single)]
             private class DataServiceWrapper : DataService<CustomDataContext>
             {
                 public static void InitializeService(DataServiceConfiguration config)
@@ -3092,6 +3121,7 @@ Accept: application/atom+xml
             /// <summary>
             /// Setting InstanceContextMode to Single on DataService results in cached query results being returned for subsequent queries
             /// </summary>
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ServiceWithSingleInstanceContextModeShouldReturnCorrectResults()
             {
@@ -3132,6 +3162,7 @@ Accept: application/atom+xml
             /// There is ConcurrencyMode which by default is "Single" and got tested in this particular test. 
             /// For "Multiple" ConcurrencyMode, the code throws exception. That is by design.
             /// </summary>
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ServiceWithSingleInstanceContextModeAndSingleConcurrencyMode_SimultaneousRequestsShouldBeProcessedSequentially()
             {
@@ -3142,11 +3173,11 @@ Accept: application/atom+xml
 
                     for (int i = 1; i <= 2; i++)
                     {
-                        string query = (i/2 == 0) ? "/Products(" + i + ")" : "/Customers(" + i + ")" ;
+                        string query = (i / 2 == 0) ? "/Products(" + i + ")" : "/Customers(" + i + ")";
 
                         var r1 = WebRequest.Create(request1.BaseUri + query + "?$format=atom");
 
-                        allDone[i-1] = new ManualResetEvent(false);
+                        allDone[i - 1] = new ManualResetEvent(false);
 
                         ObjectState currentRequestState = new ObjectState() { Query = query, Index = i - 1 };
 
@@ -3258,6 +3289,7 @@ Accept: application/atom+xml
             /// and in CreateDataSource, it would return the concrete implementation
             /// The test makes sure that it returns 200 (OK) status code
             /// </summary>
+            [Ignore] // Remove Atom
             [TestMethod]
             public void ReflectionServiceProviderShouldWorkIfGenericParameterInDataServiceIsAnInterface()
             {

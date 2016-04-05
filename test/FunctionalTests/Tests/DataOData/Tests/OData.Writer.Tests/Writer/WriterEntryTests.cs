@@ -56,6 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feed payloads from payload Generator.")]
         public void TaupoSingleEntryTests()
         {
@@ -78,7 +79,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ////        this.WriteAndVerifyODataPayloadElement(testCase, testConfiguration);
             ////    });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test default entry payload.")]
         public void DefaultEntryTests()
         {
@@ -86,39 +87,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback expectedCallback = (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = string.Join(
-                                "$(NL)",
-                                @"<entry xmlns=""" + TestAtomConstants.AtomNamespace + @""">",
-                                @"  <id>" + ObjectModelUtils.DefaultEntryId + "</id>",
-                                @"  <link rel=""self"" href=""" + ObjectModelUtils.DefaultEntryReadLink + @""" />",
-                                @"  <title />",
-                                @"  <updated>" + ObjectModelUtils.DefaultEntryUpdated + "</updated>",
-                                @"  <author>",
-                                @"    <name />",
-                                @"  </author>",
-                                @"  <content type=""application/xml"" />",
-                                @"</entry>"),
-                            FragmentExtractor = (element) => element
-                        };
-                    }
-                    else
-                    {
-                        var jsonResult = string.Join("$(NL)",
-                            "{",
-                            "\"@odata.id\":\"http://www.odata.org/entryid\",\"@odata.readLink\":\"http://www.odata.org/entry/readlink\"",
-                            "}"
-                        );
+                    var jsonResult = string.Join("$(NL)",
+                        "{",
+                        "\"@odata.id\":\"http://www.odata.org/entryid\",\"@odata.readLink\":\"http://www.odata.org/entry/readlink\"",
+                        "}"
+                    );
 
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = jsonResult,
-                            FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
-                        };
-                    }
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                    {
+                        Json = jsonResult,
+                        FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
+                    };
                 };
 
             var testCases = new[]
@@ -129,7 +108,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases.PayloadCases(WriterPayloads.EntryPayloads),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -139,6 +118,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test entry with entry Id not null.")]
         public void EntryIdTests()
         {
@@ -148,31 +128,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback expectedCallback = (testConfiguration) =>
                {
-                   if (testConfiguration.Format == ODataFormat.Atom)
-                   {
-                       return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                       {
-                           Xml = @"<id xmlns=""" + TestAtomConstants.AtomNamespace + @""">Some:Id</id>",
-                           FragmentExtractor = (element) => element
-                          .Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomIdElementName)
-                          .Single()
+                   var jsonResult = string.Join("$(NL)",
+                       "{",
+                       "\"@odata.id\":\"SomeId\"",
+                       "}"
+                   );
 
-                       };
-                   }
-                   else
+                   return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                    {
-                       var jsonResult = string.Join("$(NL)",
-                           "{",
-                           "\"@odata.id\":\"SomeId\"",
-                           "}"
-                       );
-
-                       return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                       {
-                           Json = jsonResult,
-                           FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
-                       };
-                   }
+                       Json = jsonResult,
+                       FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
+                   };
                };
 
             var testDescriptors = new[]
@@ -183,7 +149,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.EntryPayloads),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -193,6 +159,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test entry with self and/or edit link.")]
         public void NoEntryIdTests()
         {
@@ -201,30 +168,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback noIdExpectedCallback = (testConfiguration) =>
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
-                {
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Xml = @"<id xmlns=""" + TestAtomConstants.AtomNamespace + @"""/>",
-                        FragmentExtractor = (element) => element
-                            .Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomIdElementName)
-                            .Single()
-                    };
-                }
-                else
-                {
-                    var jsonResult = string.Join("$(NL)",
+                var jsonResult = string.Join("$(NL)",
                            "{",
                            "\"@odata.readLink\":\"http://www.odata.org/entry/readlink\"",
                            "}"
                        );
 
-                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Json = jsonResult,
-                        FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
-                    };
-                }
+                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                {
+                    Json = jsonResult,
+                    FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
+                };
             };
 
             var testCases = new[]
@@ -235,7 +189,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases.PayloadCases(WriterPayloads.EntryPayloads),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -245,6 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test entry with self and/or edit link.")]
         public void SelfAndEditLinkTests()
         {
@@ -267,116 +222,48 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             Func<WriterTestConfiguration, bool, WriterTestExpectedResults> selfLinkExpectedCallback = (testConfiguration, editLinkExpected) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = @"<link rel=""" + TestAtomConstants.AtomSelfRelationAttributeValue + @""" href=""" + ObjectModelUtils.DefaultEntryReadLink + @"""  xmlns=""" + TestAtomConstants.AtomNamespace + @"""/>",
-                            FragmentExtractor = (element) =>
-                            {
-                                if (!editLinkExpected)
-                                {
-                                    this.Assert.IsFalse(element.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                        .Where(e => e.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value == TestAtomConstants.AtomEditRelationAttributeValue)
-                                        .Any(), "No edit link should have been found.");
-                                }
-                                return element
-                                    .Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                    .Where(e => e.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value == TestAtomConstants.AtomSelfRelationAttributeValue)
-                                    .Single();
-                            }
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = "\"uri\":\"" + ObjectModelUtils.DefaultEntryReadLink + "\"",
-                            FragmentExtractor = (result) => result.Object().PropertyObject("__metadata").Property("uri").RemoveAllAnnotations(true)
-                        };
-                    }
+                        Json = "\"uri\":\"" + ObjectModelUtils.DefaultEntryReadLink + "\"",
+                        FragmentExtractor = (result) => result.Object().PropertyObject("__metadata").Property("uri").RemoveAllAnnotations(true)
+                    };
                 };
 
             Func<WriterTestConfiguration, bool, WriterTestExpectedResults> editLinkExpectedCallback = (testConfiguration, selfLinkExpected) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = @"<link rel=""" + TestAtomConstants.AtomEditRelationAttributeValue + @""" href=""" + editLink + @"""  xmlns=""" + TestAtomConstants.AtomNamespace + @"""/>",
-                            FragmentExtractor = (element) =>
-                            {
-                                if (!selfLinkExpected)
-                                {
-                                    this.Assert.IsFalse(element.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                        .Where(e => e.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value == TestAtomConstants.AtomSelfRelationAttributeValue)
-                                        .Any(), "No self link should have been found.");
-                                }
-                                return element
-                                    .Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                    .Where(e => e.Attribute(TestAtomConstants.AtomLinkRelationAttributeName).Value == TestAtomConstants.AtomEditRelationAttributeValue)
-                                    .Single();
-                            }
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = "\"uri\":\"" + editLink + "\"",
-                            FragmentExtractor = (result) => result.Object().PropertyObject("__metadata").Property("uri").RemoveAllAnnotations(true)
-                        };
-                    }
+                        Json = "\"uri\":\"" + editLink + "\"",
+                        FragmentExtractor = (result) => result.Object().PropertyObject("__metadata").Property("uri").RemoveAllAnnotations(true)
+                    };
                 };
 
             PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback noLinkExpectedCallback = (testConfiguration) =>
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
+                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                 {
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Xml = string.Join(
-                        "$(NL)",
-                        "<entry xmlns=\"" + TestAtomConstants.AtomNamespace + "\" xmlns:" + TestAtomConstants.ODataNamespacePrefix + "=\"" + TestAtomConstants.ODataNamespace + "\" xmlns:" + TestAtomConstants.ODataMetadataNamespacePrefix + "=\"" + TestAtomConstants.ODataMetadataNamespace + "\">",
-                        "  <id>http://www.odata.org/entryid</id>",
-                        "    <title />",
-                        "    <updated>2010-10-12T17:13:00Z</updated>",
-                        "    <author>",
-                        "    <name />",
-                        "  </author>",
-                        "  <content type=\"application/xml\" />",
-                        "</entry>"),
-                        FragmentExtractor = (element) => element
-                    };
-                }
-                else
-                {
-                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Json = string.Join("$(NL)",
+                    Json = string.Join("$(NL)",
                             "{",
                             "\"__metadata\":{",
                             "\"id\":\"http://www.odata.org/entryid\"",
                             "}",
                             "}"
                         ),
-                        FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
-                    };
-                }
+                    FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
+                };
             };
 
             var testCases = new[]
             {
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, selfLinkEntry, (testConfiguration) => selfLinkExpectedCallback(testConfiguration, false)),
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, editLinkEntry, (testConfiguration) => editLinkExpectedCallback(testConfiguration, false)),
-                new PayloadWriterTestDescriptor<ODataItem>(this.Settings, selfAndEditLinkEntry, (testConfiguration) => testConfiguration.Format == ODataFormat.Atom ? selfLinkExpectedCallback(testConfiguration, true) : editLinkExpectedCallback(testConfiguration, true)),
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, selfAndEditLinkEntry, (testConfiguration) => editLinkExpectedCallback(testConfiguration, true)),
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, noSelfOrEditLinkEntry, noLinkExpectedCallback),
             };
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases.PayloadCases(WriterPayloads.EntryPayloads),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -386,6 +273,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies writer behavior around TypeName property.")]
         public void EntryTypeNameTest()
         {
@@ -402,7 +290,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testCases = new[]
             {
-                new 
+                new
                 {
                     TypeName = (string)null,
                     ExpectedXml = "<categoryMissing/>",
@@ -442,19 +330,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry,
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                FragmentExtractor = (result) =>
-                                {
-                                    XElement category = result.Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomCategoryElementName);
-                                    return category ?? new XElement("categoryMissing"); ;
-                                },
-                                Xml = tc.ExpectedXml
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return tc.ExpectedJsonLight == null ? null :
                                 new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
@@ -473,11 +349,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             return null;
                         }
                     })
-                    {
-                        Model = tc.Model,
-                        PayloadEdmElementContainer = tc.Model == null ? null : entitySet,
-                        PayloadEdmElementType = tc.Model == null ? null : entityType
-                    };
+                {
+                    Model = tc.Model,
+                    PayloadEdmElementContainer = tc.Model == null ? null : entitySet,
+                    PayloadEdmElementType = tc.Model == null ? null : entityType
+                };
             });
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -502,6 +378,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public EntityType ExpectedEntityType { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies writer behavior around TypeName property and SerializationTypeNameAnnotation.")]
         public void EntrySerializationTypeNameAnnotationTest()
         {
@@ -603,19 +480,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry,
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                FragmentExtractor = (result) =>
-                                {
-                                    XElement category = result.Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomCategoryElementName);
-                                    return category ?? new XElement("categoryMissing"); ;
-                                },
-                                Xml = tc.ExpectedXml
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
@@ -633,11 +498,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             return null;
                         }
                     })
-                    {
-                        Model = tc.Model,
-                        PayloadEdmElementContainer = tc.Model == null ? null : entitySet,
-                        SkipTestConfiguration = testConfig => tc.Model == null && testConfig.Format == ODataFormat.Json,
-                    };
+                {
+                    Model = tc.Model,
+                    PayloadEdmElementContainer = tc.Model == null ? null : entitySet,
+                    SkipTestConfiguration = testConfig => tc.Model == null && testConfig.Format == ODataFormat.Json,
+                };
             });
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -652,6 +517,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies the recursion depth limit restriction on entries.")]
         public void PropertyValueDepthLimitTest()
         {
@@ -669,8 +535,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             // Create an entry where the total number of complex properties is greater than the depth limit, but no individual property exceeds the limit.
             ODataEntry belowLimitForSinglePropertyEntry = ObjectModelUtils.CreateDefaultEntry();
-            belowLimitForSinglePropertyEntry.Properties = new ODataProperty[] 
-            { 
+            belowLimitForSinglePropertyEntry.Properties = new ODataProperty[]
+            {
                 CreateDeeplyNestedComplexValues(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "FirstPropertyName"),
                 CreateDeeplyNestedComplexValues(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "SecondPropertyName")
             };
@@ -684,8 +550,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             // An entry where the total number of complex properties is greater than the depth limit, but no individual property exceeds the limit.
             ODataEntry belowLimitForSinglePropertyInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
-            belowLimitForSinglePropertyInCollectionEntry.Properties = new ODataProperty[] 
-            { 
+            belowLimitForSinglePropertyInCollectionEntry.Properties = new ODataProperty[]
+            {
                 CreateDeeplyNestedComplexValuesInCollections(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "FirstPropertyName"),
                 CreateDeeplyNestedComplexValuesInCollections(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "SecondPropertyName")
             };
@@ -753,6 +619,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Invalid entry payload.")]
         public void EntryErrorTests()
         {
@@ -776,9 +643,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataEntry nestedCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
             nestedCollectionEntry.Properties = new[]
                 {
-                    new ODataProperty() 
-                    { 
-                        Name = "FirstCollection", 
+                    new ODataProperty()
+                    {
+                        Name = "FirstCollection",
                         Value = new ODataCollectionValue()
                         {
                             TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType"),
@@ -796,17 +663,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testCases = new[]
             {
-                new 
+                new
                 {
                     Item = nullPropertyNameEntry,
                     ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_PropertiesMustHaveNonEmptyName"),
                 },
-                new 
+                new
                 {
                     Item = emptyPropertyNameEntry,
                     ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_PropertiesMustHaveNonEmptyName"),
                 },
-                new 
+                new
                 {
                     Item = nestedCollectionEntry,
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_NestedCollectionsAreNotSupported"),
@@ -816,7 +683,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testCase, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -835,6 +702,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing entry payloads with user exceptions being thrown at various points.")]
         public void EntryUserExceptionTests()
         {
@@ -892,7 +760,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.EntryPayloads),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => !tc.IsRequest && tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     foreach (int throwUserExceptionAt in Enumerable.Range(0, testDescriptor.PayloadItems.Count + 1))
@@ -919,27 +787,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 entryWithoutProperties,
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = null,
-                            FragmentExtractor = (result) => result
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = JsonUtils.WrapTopLevelValue(
-                                testConfiguration,
-                                JsonUtils.GetJsonLines(
-                                "{" +
-                                    "\"__metadata\":{\"id\":\"http://www.odata.org/entryid\",\"uri\":\"http://www.odata.org/entry/readlink\",\"type\":\"My.EntryWithoutProperties\"}" +
-                                "}")),
-                            FragmentExtractor = (result) => result
-                        };
-                    }
+                        Json = JsonUtils.WrapTopLevelValue(
+                            testConfiguration,
+                            JsonUtils.GetJsonLines(
+                            "{" +
+                                "\"__metadata\":{\"id\":\"http://www.odata.org/entryid\",\"uri\":\"http://www.odata.org/entry/readlink\",\"type\":\"My.EntryWithoutProperties\"}" +
+                            "}")),
+                        FragmentExtractor = (result) => result
+                    };
                 });
         }
 
@@ -954,27 +811,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 noPropertiesEntry,
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = null,
-                            FragmentExtractor = (result) => result
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = JsonUtils.WrapTopLevelValue(
-                                testConfiguration,
-                                JsonUtils.GetJsonLines(
-                                "{" +
-                                    "\"__metadata\":{\"id\":\"http://www.odata.org/entryid\",\"uri\":\"http://www.odata.org/entry/readlink\",\"type\":\"My.EntryWithoutProperties\"}" +
-                                "}")),
-                            FragmentExtractor = (result) => result
-                        };
-                    }
+                        Json = JsonUtils.WrapTopLevelValue(
+                            testConfiguration,
+                            JsonUtils.GetJsonLines(
+                            "{" +
+                                "\"__metadata\":{\"id\":\"http://www.odata.org/entryid\",\"uri\":\"http://www.odata.org/entry/readlink\",\"type\":\"My.EntryWithoutProperties\"}" +
+                            "}")),
+                        FragmentExtractor = (result) => result
+                    };
                 });
         }
 
@@ -986,101 +832,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataEntry primitivePropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
             primitivePropertiesEntry.TypeName = "My.EntryWithOpenProperties";
             primitivePropertiesEntry.Properties = ObjectModelUtils.CreateDefaultPrimitiveProperties();
-
-            string primitivePropertiesAtomResult = string.Join(
-                "$(NL)",
-                @"<{0}:{4} xmlns:{0}=""{1}"">",
-                @"  <{2}:Null {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:Double {0}:{5}=""Double"" xmlns:{2}=""{3}"">1</{2}:Double>",
-                @"  <{2}:Binary {0}:{5}=""Binary"" xmlns:{2}=""{3}"">AAEAAQ==</{2}:Binary>",
-                @"  <{2}:Single {0}:{5}=""Single"" xmlns:{2}=""{3}"">1</{2}:Single>",
-                @"  <{2}:Boolean {0}:{5}=""Boolean"" xmlns:{2}=""{3}"">true</{2}:Boolean>",
-                @"  <{2}:Byte {0}:{5}=""Byte"" xmlns:{2}=""{3}"">1</{2}:Byte>",
-                @"  <{2}:DateTimeOffset1 {0}:{5}=""DateTimeOffset"" xmlns:{2}=""{3}"">2010-10-10T10:10:10Z</{2}:DateTimeOffset1>",
-                @"  <{2}:DateTimeOffset2 {0}:{5}=""DateTimeOffset"" xmlns:{2}=""{3}"">2010-10-10T10:10:10+01:00</{2}:DateTimeOffset2>",
-                @"  <{2}:DateTimeOffset3 {0}:{5}=""DateTimeOffset"" xmlns:{2}=""{3}"">2010-10-10T10:10:10-08:00</{2}:DateTimeOffset3>",
-                @"  <{2}:Decimal {0}:{5}=""Decimal"" xmlns:{2}=""{3}"">1</{2}:Decimal>",
-                @"  <{2}:Guid {0}:{5}=""Guid"" xmlns:{2}=""{3}"">11111111-2222-3333-4444-555555555555</{2}:Guid>",
-                @"  <{2}:SByte {0}:{5}=""SByte"" xmlns:{2}=""{3}"">1</{2}:SByte>",
-                @"  <{2}:Int16 {0}:{5}=""Int16"" xmlns:{2}=""{3}"">1</{2}:Int16>",
-                @"  <{2}:Int32 {0}:{5}=""Int32"" xmlns:{2}=""{3}"">1</{2}:Int32>",
-                @"  <{2}:Int64 {0}:{5}=""Int64"" xmlns:{2}=""{3}"">1</{2}:Int64>",
-                @"  <{2}:String xmlns:{2}=""{3}"">1</{2}:String>",
-                @"  <{2}:Duration {0}:{5}=""Duration"" xmlns:{2}=""{3}"">PT12M20.4S</{2}:Duration>",
-                @"  <{2}:Geography {0}:{5}=""GeographyPoint"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyValue) + "</{2}:Geography>",
-                @"  <{2}:GeographyPoint {0}:{5}=""GeographyPoint"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPointValue) + "</{2}:GeographyPoint>",
-                @"  <{2}:GeographyLineString {0}:{5}=""GeographyLineString"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyLineStringValue) + "</{2}:GeographyLineString>",
-                @"  <{2}:GeographyPolygon {0}:{5}=""GeographyPolygon"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPolygonValue) + "</{2}:GeographyPolygon>",
-                @"  <{2}:GeographyCollection {0}:{5}=""GeographyCollection"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyCollectionValue) + "</{2}:GeographyCollection>",
-                @"  <{2}:GeographyMultiPoint {0}:{5}=""GeographyMultiPoint"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiPointValue) + "</{2}:GeographyMultiPoint>",
-                @"  <{2}:GeographyMultiLineString {0}:{5}=""GeographyMultiLineString"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiLineStringValue) + "</{2}:GeographyMultiLineString>",
-                @"  <{2}:GeographyMultiPolygon {0}:{5}=""GeographyMultiPolygon"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiPolygonValue) + "</{2}:GeographyMultiPolygon>",
-                @"  <{2}:Geometry {0}:{5}=""GeometryPoint"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryValue) + "</{2}:Geometry>",
-                @"  <{2}:GeometryPoint {0}:{5}=""GeometryPoint"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryPointValue) + "</{2}:GeometryPoint>",
-                @"  <{2}:GeometryLineString {0}:{5}=""GeometryLineString"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryLineStringValue) + "</{2}:GeometryLineString>",
-                @"  <{2}:GeometryPolygon {0}:{5}=""GeometryPolygon"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryPolygonValue) + "</{2}:GeometryPolygon>",
-                @"  <{2}:GeometryCollection {0}:{5}=""GeometryCollection"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryCollectionValue) + "</{2}:GeometryCollection>",
-                @"  <{2}:GeometryMultiPoint {0}:{5}=""GeometryMultiPoint"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryMultiPointValue) + "</{2}:GeometryMultiPoint>",
-                @"  <{2}:GeometryMultiLineString {0}:{5}=""GeometryMultiLineString"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryMultiLineStringValue) + "</{2}:GeometryMultiLineString>",
-                @"  <{2}:GeometryMultiPolygon {0}:{5}=""GeometryMultiPolygon"" xmlns:{2}=""{3}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryMultiPolygonValue) + "</{2}:GeometryMultiPolygon>",
-
-                @"  <{2}:NullableDouble {0}:{5}=""Double"" xmlns:{2}=""{3}"">1</{2}:NullableDouble>",
-                @"  <{2}:NullableSingle {0}:{5}=""Single"" xmlns:{2}=""{3}"">1</{2}:NullableSingle>",
-                @"  <{2}:NullableBoolean {0}:{5}=""Boolean"" xmlns:{2}=""{3}"">true</{2}:NullableBoolean>",
-                @"  <{2}:NullableByte {0}:{5}=""Byte"" xmlns:{2}=""{3}"">1</{2}:NullableByte>",
-                @"  <{2}:NullableDateTimeOffset1 {0}:{5}=""DateTimeOffset"" xmlns:{2}=""{3}"">2010-10-10T10:10:10Z</{2}:NullableDateTimeOffset1>",
-                @"  <{2}:NullableDateTimeOffset2 {0}:{5}=""DateTimeOffset"" xmlns:{2}=""{3}"">2010-10-10T10:10:10+01:00</{2}:NullableDateTimeOffset2>",
-                @"  <{2}:NullableDateTimeOffset3 {0}:{5}=""DateTimeOffset"" xmlns:{2}=""{3}"">2010-10-10T10:10:10-08:00</{2}:NullableDateTimeOffset3>",
-                @"  <{2}:NullableDecimal {0}:{5}=""Decimal"" xmlns:{2}=""{3}"">1</{2}:NullableDecimal>",
-                @"  <{2}:NullableGuid {0}:{5}=""Guid"" xmlns:{2}=""{3}"">11111111-2222-3333-4444-555555555555</{2}:NullableGuid>",
-                @"  <{2}:NullableSByte {0}:{5}=""SByte"" xmlns:{2}=""{3}"">1</{2}:NullableSByte>",
-                @"  <{2}:NullableInt16 {0}:{5}=""Int16"" xmlns:{2}=""{3}"">1</{2}:NullableInt16>",
-                @"  <{2}:NullableInt32 {0}:{5}=""Int32"" xmlns:{2}=""{3}"">1</{2}:NullableInt32>",
-                @"  <{2}:NullableInt64 {0}:{5}=""Int64"" xmlns:{2}=""{3}"">1</{2}:NullableInt64>",
-                @"  <{2}:NullableString xmlns:{2}=""{3}"">1</{2}:NullableString>",
-                @"  <{2}:NullableDuration {0}:{5}=""Duration"" xmlns:{2}=""{3}"">PT12M20.4S</{2}:NullableDuration>",
-
-                @"  <{2}:NullDouble {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullBinary {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullSingle {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullBoolean {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullByte {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullDateTimeOffset1 {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullDateTimeOffset2 {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullDateTimeOffset3 {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullDecimal {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGuid {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullSByte {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullInt16 {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullInt32 {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullInt64 {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullString {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullDuration {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeography {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyPoint {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyLineString {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyPolygon {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyMultiPoint {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyMultiLineString {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyMultiPolygon {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeographyCollection {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometry {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryPoint {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryLineString {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryPolygon {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryMultiPoint {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryMultiLineString {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryMultiPolygon {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"  <{2}:NullGeometryCollection {0}:null=""true"" xmlns:{2}=""{3}"" />",
-                @"</{0}:{4}>");
-            primitivePropertiesAtomResult =
-                string.Format(primitivePropertiesAtomResult,
-                    TestAtomConstants.ODataMetadataNamespacePrefix,
-                    TestAtomConstants.ODataMetadataNamespace,
-                    TestAtomConstants.ODataNamespacePrefix,
-                    odataNamespace,
-                    TestAtomConstants.AtomPropertiesElementName,
-                    TestAtomConstants.AtomTypeAttributeName);
 
             string primitivePropertiesJsonResult = string.Join(
                 ",",
@@ -1178,22 +929,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 primitivePropertiesEntry,
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = primitivePropertiesAtomResult,
-                            FragmentExtractor = TestAtomUtils.ExtractPropertiesFromEntry
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = JsonUtils.WrapTopLevelValue(testConfiguration, primitivePropertiesJsonResultLines),
-                            FragmentExtractor = (result) => result
-                        };
-                    }
+                        Json = JsonUtils.WrapTopLevelValue(testConfiguration, primitivePropertiesJsonResultLines),
+                        FragmentExtractor = (result) => result
+                    };
                 });
         }
         #endregion Entry with primitive properties
@@ -1262,22 +1002,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 complexPropertiesEntry,
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = complexPropertiesAtomResult,
-                            FragmentExtractor = TestAtomUtils.ExtractPropertiesFromEntry
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = JsonUtils.WrapTopLevelValue(testConfiguration, complexPropertiesJsonResult),
-                            FragmentExtractor = (result) => result
-                        };
-                    }
+                        Json = JsonUtils.WrapTopLevelValue(testConfiguration, complexPropertiesJsonResult),
+                        FragmentExtractor = (result) => result
+                    };
                 });
         }
         #endregion Entry with complex properties
@@ -1302,7 +1031,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Name = "ComplexCollectionWithoutTypeName",
                     Value = new ODataCollectionValue()
                     {
-                        Items = new[] 
+                        Items = new[]
                         {
                             new ODataComplexValue()
                             {
@@ -1365,67 +1094,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     "$(Indent)$(Indent)]");
             }
 
-            string collectionPropertiesAtomResult = string.Join(
-                "$(NL)",
-                @"<{0}:{4} xmlns:{0}=""{1}"">",
-                @"  <{2}:Id {0}:{6}=""Edm.Int32"" xmlns:{2}=""{3}"">1</{2}:Id>",
-                @"  <{2}:EmptyCollection {0}:{6}=""" + EntityModelUtils.GetCollectionTypeName("Edm.String") + @""" xmlns:{2}=""{3}"" />",
-                @"  <{2}:PrimitiveCollection {0}:{6}=""" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + @""" xmlns:{2}=""{3}"">",
-                @"    <{0}:{5}>0</{0}:{5}>",
-                @"    <{0}:{5}>1</{0}:{5}>",
-                @"    <{0}:{5}>2</{0}:{5}>",
-                @"    <{0}:{5}>3</{0}:{5}>",
-                @"    <{0}:{5}>4</{0}:{5}>",
-                @"    <{0}:{5}>5</{0}:{5}>",
-                @"    <{0}:{5}>6</{0}:{5}>",
-                @"    <{0}:{5}>7</{0}:{5}>",
-                @"    <{0}:{5}>8</{0}:{5}>",
-                @"    <{0}:{5}>9</{0}:{5}>",
-                @"  </{2}:PrimitiveCollection>",
-                @"  <{2}:IntCollectionNoTypeName" + (withModel ? " {0}:{6}=\"" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "\"" : string.Empty) + @" xmlns:{2}=""{3}"">",
-                @"    <{0}:{5}" + (withModel ? string.Empty : " {0}:{6}=\"Edm.Int32\"") + ">0</{0}:{5}>",
-                @"    <{0}:{5}" + (withModel ? string.Empty : " {0}:{6}=\"Edm.Int32\"") + ">1</{0}:{5}>",
-                @"    <{0}:{5}" + (withModel ? string.Empty : " {0}:{6}=\"Edm.Int32\"") + ">2</{0}:{5}>",
-                @"  </{2}:IntCollectionNoTypeName>",
-                @"  <{2}:StringCollectionNoTypeName" + (withModel ? " {0}:{6}=\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"" : string.Empty) + @" xmlns:{2}=""{3}"">",
-                @"    <{0}:{5}>One</{0}:{5}>",
-                @"    <{0}:{5}>Two</{0}:{5}>",
-                @"    <{0}:{5}>Three</{0}:{5}>",
-                @"  </{2}:StringCollectionNoTypeName>",
-                @"  <{2}:GeographyCollectionNoTypeName" + (withModel ? " {0}:{6}=\"" + EntityModelUtils.GetCollectionTypeName("Edm.Geography") + "\"" : string.Empty) + @" xmlns:{2}=""{3}"">",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyCollection"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyCollectionValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyLineString"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyLineStringValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyMultiLineString"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiLineStringValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyMultiPoint"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiPointValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyMultiPolygon"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiPolygonValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyPoint"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPointValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyPolygon"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPolygonValue) + "</{0}:{5}>",
-                @"    <{0}:{5} {0}:{6}=""Edm.GeographyPoint"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyValue) + "</{0}:{5}>",
-                @"  </{2}:GeographyCollectionNoTypeName>",
-                @"  <{2}:ComplexCollection {0}:{6}=""" + EntityModelUtils.GetCollectionTypeName("My.AddressType") + @""" xmlns:{2}=""{3}"">",
-                @"    <{0}:{5}>",
-                @"      <{2}:Street>One Redmond Way</{2}:Street>",
-                @"      <{2}:City xml:space=""preserve""> Redmond</{2}:City>",
-                @"    </{0}:{5}>",
-                @"    <{0}:{5}>",
-                @"      <{2}:Street>Am Euro Platz 3</{2}:Street>",
-                @"      <{2}:City xml:space=""preserve"">Vienna </{2}:City>",
-                @"    </{0}:{5}>",
-                @"  </{2}:ComplexCollection>",
-                collectionWithoutTypeNameAtomPayload,
-                @"</{0}:{4}>");
-
-            collectionPropertiesAtomResult =
-                string.Format(collectionPropertiesAtomResult,
-                    TestAtomConstants.ODataMetadataNamespacePrefix,
-                    TestAtomConstants.ODataMetadataNamespace,
-                    TestAtomConstants.ODataNamespacePrefix,
-                    odataNamespace,
-                    TestAtomConstants.AtomPropertiesElementName,
-                    TestAtomConstants.ODataCollectionItemElementName,
-                    TestAtomConstants.AtomTypeAttributeName,
-                    TestAtomConstants.ODataValueElementName);
-
             string[] collectionPropertiesJsonResult = StringUtils.Flatten(
                 "{",
                 "$(Indent)\"__metadata\":{",
@@ -1478,26 +1146,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 collectionPropertiesEntry,
                 (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
+                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = collectionPropertiesAtomResult,
-                            FragmentExtractor = TestAtomUtils.ExtractPropertiesFromEntry
-                        };
-                    }
-                    else
-                    {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Json = JsonUtils.WrapTopLevelValue(testConfiguration, collectionPropertiesJsonResult),
-                            FragmentExtractor = (result) => result
-                        };
-                    }
+                        Json = JsonUtils.WrapTopLevelValue(testConfiguration, collectionPropertiesJsonResult),
+                        FragmentExtractor = (result) => result
+                    };
                 });
         }
         #endregion Entry with collection properties
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test entry with self and/or edit link.")]
         public void EntryPropertyTests()
         {
@@ -1621,6 +1279,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test entry with self and/or edit link without metadata.")]
         public void EntryPropertyTestsWithoutMetadata()
         {
@@ -1647,6 +1306,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Writing null to proprties which cannot be null should fail.")]
         public void EntryNullPropertyErrorTests()
         {
@@ -1675,7 +1335,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             entryWithNullProperties.AddStructuralProperty("NamedStream", EdmPrimitiveTypeKind.Stream, isNullable: false);
             entryWithNullProperties.AddStructuralProperty("Complex", new EdmComplexTypeReference(complex, isNullable: false));
             model.AddElement(entryWithNullProperties);
-            
+
             model.AddElement(new EdmEntityType("OtherTestNamespace", "EntryWithNullProperties"));
 
             var container = new EdmEntityContainer("My", "TestContainer");
@@ -1761,6 +1421,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test type inference from metadata.")]
         public void InferredTypeNamesTests()
         {
@@ -1799,9 +1460,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new ODataProperty() { Name = "Id", Value = 1 },
                 new ODataProperty() { Name = "Name", Value = "Bill" },
-                new ODataProperty() 
-                { 
-                    Name = "Address", 
+                new ODataProperty()
+                {
+                    Name = "Address",
                     Value = new ODataComplexValue()
                     {
                         Properties = new []
@@ -1825,87 +1486,37 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new
                     {
                         ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
-                            (testConfiguration) => 
-                            { 
-                                if (testConfiguration.Format == ODataFormat.Atom)
-                                {
-                                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                    {
-                                        Xml = string.Format(
-                                            @"<{0}:Id {1}:{2}=""Edm.Int32"" xmlns:{1}=""{3}"" xmlns:{0}=""{4}"">1</{0}:Id>",
-                                            TestAtomConstants.ODataNamespacePrefix,
-                                            TestAtomConstants.ODataMetadataNamespacePrefix,
-                                            TestAtomConstants.AtomTypeAttributeName,
-                                            TestAtomConstants.ODataMetadataNamespace,
-                                            TestAtomConstants.ODataNamespace),
-                                        FragmentExtractor = (element) => TestAtomUtils.ExtractPropertiesFromEntry(element)
-                                            .Elements(TestAtomConstants.ODataXNamespace + "Id").Single()
-                                    };
-                                }
-                                else
-                                {
+                            (testConfiguration) =>
+                            {
+
                                     return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                     {
                                         Json = "$(JsonDataWrapperIndent)$(Indent)\"Id\":1",
                                         FragmentExtractor = (result) => JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Property("Id")
                                     };
-                                }
+
                             })
                     },
                     new
                     {
                         ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
-                            (testConfiguration) => 
-                            { 
-                                if (testConfiguration.Format == ODataFormat.Atom)
-                                {
-                                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                    {
-                                        Xml = string.Format(
-                                            @"<{0}:Name xmlns:{0}=""{1}"">Bill</{0}:Name>",
-                                            TestAtomConstants.ODataNamespacePrefix,
-                                            TestAtomConstants.ODataNamespace),
-                                        FragmentExtractor = (element) => TestAtomUtils.ExtractPropertiesFromEntry(element)
-                                            .Elements(TestAtomConstants.ODataXNamespace + "Name").Single()
-                                    };
-                                }
-                                else
-                                {
+                            (testConfiguration) =>
+                            {
+
                                     return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                     {
                                         Json = "$(JsonDataWrapperIndent)$(Indent)\"Name\":\"Bill\"",
                                         FragmentExtractor = (result) => JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Property("Name")
                                     };
-                                }
+
                             })
                     },
                     new
                     {
                         ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
-                            (testConfiguration) => 
-                            { 
-                                if (testConfiguration.Format == ODataFormat.Atom)
-                                {
-                                    string xmlTemplate = 
-                                        @"<{0}:Address {1}:{2}=""TestNS.AddressComplexType"" xmlns:{1}=""{3}"" xmlns:{0}=""{4}"">" +
-                                            @"<{0}:Name></{0}:Name>" +
-                                        @"</{0}:Address>";
-                                    xmlTemplate = string.Format(xmlTemplate,
-                                            TestAtomConstants.ODataNamespacePrefix,
-                                            TestAtomConstants.ODataMetadataNamespacePrefix,
-                                            TestAtomConstants.AtomTypeAttributeName,
-                                            TestAtomConstants.ODataMetadataNamespace,
-                                            TestAtomConstants.ODataNamespace);
+                            (testConfiguration) =>
+                            {
 
-                                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                    {
-                                        Xml = xmlTemplate,
-                                        FragmentExtractor = (element) => TestAtomUtils.ExtractPropertiesFromEntry(element)
-                                            .Elements(TestAtomConstants.ODataXNamespace + "Address").Single()
-                                    };
-                                }
-                                else
-                                {
                                     string json = string.Join(
                                         "$(NL)",
                                         "$(JsonDataWrapperIndent)$(Indent)\"Address\":{",
@@ -1918,34 +1529,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                         Json = json,
                                         FragmentExtractor = (result) => JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Property("Address")
                                     };
-                                }
+
                             })
                     },
                     new
                     {
                         ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
-                            (testConfiguration) => 
-                            { 
-                                if (testConfiguration.Format == ODataFormat.Atom)
-                                {
-                                    string xmlTemplate = @"<{0}:Scores {1}:{2}=""{5}"" xmlns:{1}=""{3}"" xmlns:{0}=""{4}"" />";
-                                    xmlTemplate = string.Format(xmlTemplate,
-                                            TestAtomConstants.ODataNamespacePrefix,
-                                            TestAtomConstants.ODataMetadataNamespacePrefix,
-                                            TestAtomConstants.AtomTypeAttributeName,
-                                            TestAtomConstants.ODataMetadataNamespace,
-                                            TestAtomConstants.ODataNamespace,
-                                            EntityModelUtils.GetCollectionTypeName("Edm.String"));
+                            (testConfiguration) =>
+                            {
 
-                                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                    {
-                                        Xml = xmlTemplate,
-                                        FragmentExtractor = (element) => TestAtomUtils.ExtractPropertiesFromEntry(element)
-                                            .Elements(TestAtomConstants.ODataXNamespace + "Scores").Single()
-                                    };
-                                }
-                                else
-                                {
                                     string json = string.Join(
                                         "$(NL)",
                                         "$(JsonDataWrapperIndent)$(Indent)\"Scores\":{",
@@ -1961,7 +1553,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                         Json = json,
                                         FragmentExtractor = (result) => JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Property("Scores")
                                     };
-                                }
+
                             })
                     },
                 };
@@ -1977,7 +1569,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testDescriptor, testConfig) =>
                 {
                     testConfig.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
@@ -1985,6 +1577,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies correct serialization of empty complex values in ATOM.")]
         public void EmptyComplexValueTest()
         {
@@ -2017,7 +1610,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     this.Settings,
                     new ODataEntry() { Properties = new [] { new ODataProperty { Name = "OuterComplex", Value =
                         new ODataComplexValue { Properties = new [] { new ODataProperty { Name = "InnerComplex", Value =
-                            new ODataComplexValue { Properties = null } 
+                            new ODataComplexValue { Properties = null }
                         } } }
                     } },
                     SerializationInfo = info},
@@ -2032,7 +1625,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     this.Settings,
                     new ODataEntry() { Properties = new [] { new ODataProperty { Name = "ComplexCollection", Value = new ODataCollectionValue { Items = new [] {
                         new ODataComplexValue { Properties = new [] { new ODataProperty { Name = "InnerComplex", Value =
-                            new ODataComplexValue { Properties = null } 
+                            new ODataComplexValue { Properties = null }
                         } } }
                     } } } },
                     SerializationInfo = info},
@@ -2044,7 +1637,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             TestAtomConstants.ODataMetadataNamespace),
                         FragmentExtractor = (result) => TestAtomUtils.ExtractPropertiesFromEntry(result)
                             .Element(TestAtomConstants.ODataXNamespace + "ComplexCollection")
-                    })            
+                    })
             };
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -2059,6 +1652,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Validates that if metadata is specified, null properties have the m:type attribute in ATOM in WCF DS compat scenarios.")]
         public void NullPropertyTypeNameTest()
         {
@@ -2179,7 +1773,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                         FragmentExtractor = (result) => new XElement("type",
                                             (string)extractor(result).Attribute(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomTypeAttributeName))
                                     }
-                                    ) { Model = model };
+                                    )
+                                { Model = model };
                             });
                     });
                 }));
@@ -2196,6 +1791,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that arbitrarily nested complex and collection properties within an entry are written correctly.")]
         public void NestedComplexCollectionExpandedLinksTest()
         {
@@ -2319,6 +1915,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies versioning with null value properties on open types.")]
         public void NullPropertiesOnOpenTypes()
         {
@@ -2368,7 +1965,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     PayloadElement = entityWithNullSpatialProperty,
                     Model = model,
-                    
+
                     ExpectedResultCallback = (tc) =>
                     {
                         return new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
@@ -2408,7 +2005,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                (testDescriptor, testConfiguration) =>
                {
                    testConfiguration = testConfiguration.Clone();
@@ -2459,7 +2056,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testDescriptors = new[]
             {
                 new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings,entityInstance)
-                { 
+                {
                     Model = model,
                     PayloadDescriptor = new PayloadTestDescriptor()
                     {
@@ -2499,6 +2096,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Ensures correct validation where typenames are null in the presence of a model.")]
         public void NullPropertyNameTest()
         {
@@ -2551,7 +2149,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             expectedEntity2.Id = "urn:Id";
             expectedEntity2.WithTypeAnnotation(entityType2);
 
-            PayloadWriterTestDescriptor<ODataPayloadElement>[] testDescriptors = new PayloadWriterTestDescriptor<ODataPayloadElement>[] 
+            PayloadWriterTestDescriptor<ODataPayloadElement>[] testDescriptors = new PayloadWriterTestDescriptor<ODataPayloadElement>[]
             {
                 new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings, (ODataPayloadElement)null)
                 {
@@ -2576,14 +2174,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             ExpectedPayload = expectedEntity2
                         };
                     },
-                    
+
                 }
             };
 
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                (testDescriptor, testConfiguration) =>
                {
                    testConfiguration = testConfiguration.Clone();
@@ -2596,6 +2194,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // These tests and helpers are disabled on Silverlight and Phone because they  
         // use private reflection not available on Silverlight and Phone
 #if !SILVERLIGHT && !WINDOWS_PHONE
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing entry payloads with duplicate property names.")]
         public void DuplicatePropertyNamesTest()
         {
@@ -2617,52 +2216,52 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             DuplicatePropertyNamesTestCase[] testCases = new DuplicatePropertyNamesTestCase[]
             {
                 #region Duplicate primitive properties
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, primitiveProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { complexProperty, complexProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, complexProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { collectionProperty, collectionProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, collectionProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { complexProperty, collectionProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, streamProperty } } },
-                    ExpectedException = (duplicatesAllowed, tc) => tc.IsRequest && tc.Format == ODataFormat.Atom ? streamPropertyInRequest : error,
+                    ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { complexProperty, streamProperty } } },
-                    ExpectedException = (duplicatesAllowed, tc) => tc.IsRequest && tc.Format == ODataFormat.Atom ? streamPropertyInRequest : error,
+                    ExpectedException = (duplicatesAllowed, tc) =>  error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { collectionProperty, streamProperty } } },
-                    ExpectedException = (duplicatesAllowed, tc) => tc.IsRequest && tc.Format == ODataFormat.Atom ? streamPropertyInRequest : error,
+                    ExpectedException = (duplicatesAllowed, tc) =>  error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { streamProperty, streamProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => tc.IsRequest ? streamPropertyInRequest : error,
@@ -2670,10 +2269,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 #endregion Duplicate primitive properties
 
                 #region Deferred navigation links
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         defaultEntry,
                             singletonLink,
                             null,
@@ -2683,10 +2282,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     // Duplicate singleton entity reference links are allowed in requests, they're used for binding
                     ExpectedException = (duplicatesAllowed, tc) => (duplicatesAllowed || tc.IsRequest) ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         defaultEntry,
                             singletonLink,
                             null,
@@ -2696,10 +2295,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     // Singleton and collection entity reference links are allowed in requests, possible binding case.
                     ExpectedException = (duplicatesAllowed, tc) => (duplicatesAllowed || tc.IsRequest) ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         defaultEntry,
                             collectionLink,
                             null,
@@ -2709,80 +2308,80 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     // Duplicate collection entity reference links are allowed in requests, possible binding case.
                     ExpectedException = (duplicatesAllowed, tc) => (duplicatesAllowed || tc.IsRequest) ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { primitiveProperty } },
                             singletonLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { primitiveProperty } },
                             collectionLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { complexProperty } },
                             singletonLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { complexProperty } },
                             collectionLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { collectionProperty } },
                             singletonLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { collectionProperty } },
                             collectionLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { streamProperty } },
                             singletonLink,
                             null,
                     },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { streamProperty } },
                             collectionLink,
                             null,
@@ -2792,10 +2391,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 #endregion Deferred navigation links
 
                 #region Expanded navigation links
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         defaultEntry,
                             singletonLink,
                                 defaultEntry,
@@ -2808,10 +2407,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : (tc.IsRequest ? duplicateExpandedLinkError : error),
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         defaultEntry,
                             singletonLink,
                                 defaultEntry,
@@ -2824,10 +2423,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : (tc.IsRequest ? duplicateExpandedLinkError : error),
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         defaultEntry,
                             collectionLink,
                                 defaultFeed,
@@ -2840,10 +2439,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : (tc.IsRequest ? null : error),
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { primitiveProperty } },
                             singletonLink,
                                 defaultEntry,
@@ -2852,10 +2451,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { primitiveProperty } },
                             collectionLink,
                                 defaultFeed,
@@ -2864,10 +2463,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { complexProperty } },
                             singletonLink,
                                 defaultEntry,
@@ -2876,10 +2475,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { complexProperty } },
                             collectionLink,
                                 defaultFeed,
@@ -2888,10 +2487,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { collectionProperty } },
                             singletonLink,
                                 defaultEntry,
@@ -2900,10 +2499,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { collectionProperty } },
                             collectionLink,
                                 defaultFeed,
@@ -2912,10 +2511,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { streamProperty } },
                             singletonLink,
                                 defaultEntry,
@@ -2924,10 +2523,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] 
-                    { 
+                    PayloadItems = new ODataItem[]
+                    {
                         new ODataEntry { Properties = new [] { streamProperty } },
                             collectionLink,
                                 defaultFeed,
@@ -2940,32 +2539,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 #region Duplicate properties on complex values
                 // We should also put these complex values at the top-level and inside of collections.
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, primitiveProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { complexProperty, complexProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { collectionProperty, collectionProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, complexProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, collectionProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
-                new DuplicatePropertyNamesTestCase 
+                new DuplicatePropertyNamesTestCase
                 {
                     PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { complexProperty, collectionProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
@@ -2983,18 +2582,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ExpectedException expectedError = testCase.ExpectedException(allowDuplicateNames, tc);
                         if (expectedError == null)
                         {
-                            if (tc.Format == ODataFormat.Atom)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    // we skip validation if we don't expect an error message
-                                    Xml = null
-                                };
-                            }
-                            else
-                            {
-                                throw new NotSupportedException("Only ATOM and JSON formats are supported.");
-                            }
+                            throw new NotSupportedException("Only ATOM and JSON formats are supported.");
                         }
                         else
                         {
@@ -3025,12 +2613,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         // Solve flush problem when disposing a writer in async mode.
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing payload asynchronously. Disposes before flush.")]
         public void EnsureSynchronousFlushWhenDisposingOnAsync()
         {
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
-            this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.MessageWriterSettings.DisableMessageStreamDisposal && !tc.Synchronous && tc.Format == ODataFormat.Atom),
+            this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
             (testConfiguration) =>
             {
                 testConfiguration = testConfiguration.Clone();
@@ -3041,20 +2630,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 TestMessage message = TestWriterUtils.CreateOutputMessageFromStream(messageStream, testConfiguration);
 
                 string expectedOutput = null;
-                if (testConfiguration.Format == ODataFormat.Atom)
+
+                if (testConfiguration.IsRequest)
                 {
-                    expectedOutput = "<?xml version=\"1.0\" encoding=\"utf-8\"?><entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:d=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:m=\"http://docs.oasis-open.org/odata/ns/metadata\" xmlns:georss=\"http://www.georss.org/georss\" xmlns:gml=\"http://www.opengis.net/gml\" m:context=\"http://www.odata.org/$metadata#MySet/$entity\"><id>urn:id</id>";
+                    expectedOutput = "{\"@odata.id\":\"urn:id\"";
                 }
                 else
                 {
-                    if (testConfiguration.IsRequest)
-                    {
-                        expectedOutput = "{\"@odata.id\":\"urn:id\"";
-                    }
-                    else
-                    {
-                        expectedOutput = "{\"@odata.id\":\"urn:id\"";
-                    }
+                    expectedOutput = "{\"@odata.id\":\"urn:id\"";
                 }
 
                 using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(message, null, testConfiguration, this.Assert))
@@ -3063,7 +2646,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entryWriter.WriteStart(new ODataEntry()
                     {
                         Id = new Uri("urn:id"),
-                        SerializationInfo = new ODataFeedAndEntrySerializationInfo() {
+                        SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                        {
                             NavigationSourceEntityTypeName = "Null",
                             NavigationSourceName = "MySet",
                             ExpectedTypeName = "Null"
@@ -3085,6 +2669,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 #endif
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing entry payloads with duplicate navigation links. This test is targetted at the binding scenarios.")]
         public void DuplicateNavigationLinkTest()
         {
@@ -3164,7 +2749,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
                     // ATOM requires IsCollection to be non-null, JSON in request request IsCollection to be non-null
-                    SkipTestConfiguration = tc => (tc.Format == ODataFormat.Atom)
+                    SkipTestConfiguration = tc => false
                 },
                 new DuplicateNavigationLinkTestCase
                 {
@@ -3229,7 +2814,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         }
                     },
                     // ATOM requires IsCollection to be non-null, JSON in request requires IsCollection to be non-null
-                    SkipTestConfiguration = tc => (tc.Format == ODataFormat.Atom)
+                    SkipTestConfiguration = tc => false
                 },
                 new DuplicateNavigationLinkTestCase
                 {
@@ -3412,33 +2997,36 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         filterNavigationLinks = input => input.Where(i => !(i is ODataEntityReferenceLink));
 
                         // In responses all duplicates will fail with the same error message since we don't allow any duplicates there.
-                        expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", duplicationPropertyName);
+                        expectedException =
+                            ODataExpectedExceptions.ODataException(
+                                "DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed",
+                                duplicationPropertyName);
                     }
 
                     PayloadWriterTestDescriptor<ODataItem> testDescriptor = new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
-                        new[] { entryInstance }.Concat(testCase.NavigationLinks.SelectMany(navigationLinkItems => filterNavigationLinks(navigationLinkItems))).ConcatSingle(null).ToArray(),
-                        tc => tc.Format == ODataFormat.Atom ?
-                            (WriterTestExpectedResults)new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                // Skip verification of payload in success cases
-                                Xml = null,
-                                ExpectedException2 = expectedException
-                            } :
-                            (WriterTestExpectedResults)new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                // Skip verification of payload in success cases
-                                Json = null,
-                                ExpectedException2 = expectedException
-                            })
-                        {
-                            Model = withMetadata ? model : null,
-                        };
+                        new[] { entryInstance }.Concat(
+                            testCase.NavigationLinks.SelectMany(
+                                navigationLinkItems => filterNavigationLinks(navigationLinkItems)))
+                            .ConcatSingle(null)
+                            .ToArray(),
+                        tc => (WriterTestExpectedResults)
+                                new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                                {
+                                    // Skip verification of payload in success cases
+                                    Json = null,
+                                    ExpectedException2 = expectedException
+                                })
+                    {
+                        Model = withMetadata ? model : null,
+                    };
 
-                    TestWriterUtils.WriteAndVerifyODataPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
+                    TestWriterUtils.WriteAndVerifyODataPayload(testDescriptor, testConfiguration, this.Assert,
+                        this.Logger);
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing entry payloads with assignable types that do not match the model exactly. This should fail.")]
         public void PrimitiveTypesMustMatchExactlyOnWriteTest()
         {
@@ -3476,37 +3064,37 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     Model = model,
                     PayloadElement = int64EntityWithInt32,
-                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings) 
-                    { 
-                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.Int32","False", "Edm.Int64", "False") 
+                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
+                    {
+                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.Int32","False", "Edm.Int64", "False")
                     }
                 },
                 new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings, (ODataPayloadElement)null)
                 {
                     Model = model,
                     PayloadElement = stringEntityWithInt,
-                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings) 
-                    { 
-                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.Int32","False", "Edm.String", "False") 
+                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
+                    {
+                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.Int32","False", "Edm.String", "False")
                     }
                 },
                 new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings, (ODataPayloadElement)null)
                 {
                     Model = model2,
                     PayloadElement = geographyEntityWithString,
-                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings) 
-                    { 
-                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.String","True", "Edm.GeographyPoint", "True") 
+                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
+                    {
+                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.String","True", "Edm.GeographyPoint", "True")
                     },
-                    
+
                 },
                 new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings, (ODataPayloadElement)null)
                 {
                     Model = model,
                     PayloadElement = intEntityWithGeography,
-                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings) 
-                    { 
-                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.GeographyPoint","True", "Edm.Int64", "False") 
+                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
+                    {
+                        ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.GeographyPoint","True", "Edm.Int64", "False")
                     }
                 }
             };
@@ -3618,7 +3206,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             {
                                 CreateDeeplyNestedComplexValuesInCollections(depth - 2, complexTypeName, propertyName)
                             }
-                        }           
+                        }
                     }
                 }
             };

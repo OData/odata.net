@@ -37,11 +37,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         private readonly PayloadMetadataParameterInterpreter defaultInterpreter = new PayloadMetadataParameterInterpreter(ODataFormat.Json, "minimal");
         private readonly PayloadMetadataParameterInterpreter noneInterpreter = new PayloadMetadataParameterInterpreter(ODataFormat.Json, "none");
         private readonly PayloadMetadataParameterInterpreter allInterpreter = new PayloadMetadataParameterInterpreter(ODataFormat.Json, "full");
-        private readonly PayloadMetadataParameterInterpreter nonJsonLightIntepreter = new PayloadMetadataParameterInterpreter(ODataFormat.Atom, "verbose");
         private readonly PayloadMetadataPropertyManager noneManager;
         private readonly PayloadMetadataPropertyManager defaultManager;
         private readonly PayloadMetadataPropertyManager allManager;
-        private readonly PayloadMetadataPropertyManager nonJsonLightManager;
         private readonly Uri tempUri = new Uri("http://real.org/");
         private const string RelativeNextLink = "foo?$skiptoken=bar";
         private readonly Uri absoluteNextLinkUri;
@@ -53,18 +51,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             this.noneManager = new PayloadMetadataPropertyManager(this.noneInterpreter);
             this.defaultManager = new PayloadMetadataPropertyManager(this.defaultInterpreter);
             this.allManager = new PayloadMetadataPropertyManager(this.allInterpreter);
-            this.nonJsonLightManager = new PayloadMetadataPropertyManager(this.nonJsonLightIntepreter);
             this.absoluteNextLinkUri = new Uri(this.tempUri, RelativeNextLink);
         }
         #endregion
 
         #region initialization/parsing tests
-        [TestMethod]
-        public void NullFormatShouldBeTreatedLikeAnyOtherNonJsonLightFormat()
-        {
-            CompareInterpreters(new PayloadMetadataParameterInterpreter(null, null), this.nonJsonLightIntepreter);
-        }
-
         [TestMethod]
         public void DefaultBehaviorForJsonLight()
         {
@@ -72,24 +63,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void DefaultBehaviorForOtherFormatsShouldBeLikeAnyOtherNonJsonLightFormat()
-        {
-            CompareInterpreters(new PayloadMetadataParameterInterpreter(ODataFormat.Atom, null), this.nonJsonLightIntepreter);
-            CompareInterpreters(new PayloadMetadataParameterInterpreter(ODataFormat.Metadata, null), this.nonJsonLightIntepreter);
-            CompareInterpreters(new PayloadMetadataParameterInterpreter(null, null), this.nonJsonLightIntepreter);
-        }
-
-        [TestMethod]
         public void MediaTypeParameterIntegrationTest()
         {
             CompareInterpreters(PayloadMetadataParameterInterpreter.Create(new ODataFormatWithParameters(ODataFormat.Json, "application/json;odata.metadata=full")), this.allInterpreter);
             CompareInterpreters(PayloadMetadataParameterInterpreter.Create(new ODataFormatWithParameters(ODataFormat.Json, "application/json;odata.metadata=minimal")), this.defaultInterpreter);
-        }
-
-        [TestMethod]
-        public void NullFormatWithParametersShouldBeTreatedLikeAnyOtherNonJsonLightFormat()
-        {
-            CompareInterpreters(PayloadMetadataParameterInterpreter.Create(null), this.nonJsonLightIntepreter);
         }
         #endregion
 
@@ -211,9 +188,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             foreach (var kind in this.allStreamKinds)
             {
-                if(kind != PayloadMetadataKind.Stream.EditLink)
+                if (kind != PayloadMetadataKind.Stream.EditLink)
                 {
-                    this.defaultInterpreter.ShouldIncludeStreamMetadata(kind).Should().BeTrue();    
+                    this.defaultInterpreter.ShouldIncludeStreamMetadata(kind).Should().BeTrue();
                 }
             }
         }
@@ -382,44 +359,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void SerializationTypeNameAnnotationShouldNotBeIncludedForNonJsonLightFormat()
-        {
-            string typeNameToWrite;
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue("stringValue"), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(42), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(true), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(1.2), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(Double.NaN), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(Double.NegativeInfinity), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(Double.PositiveInfinity), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataPrimitiveValue(Guid.NewGuid()), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.nonJsonLightIntepreter, new ODataComplexValue(), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            this.nonJsonLightIntepreter.ShouldSpecifyTypeNameAnnotation(new ODataNullValue(), StringResourceType, out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            this.nonJsonLightIntepreter.ShouldSpecifyTypeNameAnnotation(new ODataNullValue(), ComplexResourceType, out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-        }
-
-        [TestMethod]
         public void ShouldNotSetAbsoluteNextLinkUriForAllIntepreter()
         {
             this.allInterpreter.ShouldNextPageLinkBeAbsolute().Should().BeFalse();
@@ -429,18 +368,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void ShouldNotSetAbsoluteNextLinkUriForDefaultIntepreter()
         {
             this.defaultInterpreter.ShouldNextPageLinkBeAbsolute().Should().BeFalse();
-        }
-
-        [TestMethod]
-        public void ShouldSetAbsoluteNextLinkUriForNoneIntepreter()
-        {
-            this.noneInterpreter.ShouldNextPageLinkBeAbsolute().Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void ShouldSetAbsoluteNextLinkUriForNonJsonLightIntepreter()
-        {
-            this.nonJsonLightIntepreter.ShouldNextPageLinkBeAbsolute().Should().BeTrue();
         }
         #endregion
 
@@ -747,14 +674,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             this.noneManager.SetNextPageLink(feed, this.tempUri, this.absoluteNextLinkUri);
             feed.NextPageLink.Should().BeSameAs(this.absoluteNextLinkUri);
         }
-
-        [TestMethod]
-        public void FeedNextLinkShouldBeAbsoluteForNonJsonLight()
-        {
-            ODataFeed feed = new ODataFeed();
-            this.nonJsonLightManager.SetNextPageLink(feed, this.tempUri, this.absoluteNextLinkUri);
-            feed.NextPageLink.Should().BeSameAs(this.absoluteNextLinkUri);
-        }
         #endregion
 
         #region primitive value object model integration tests
@@ -801,7 +720,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             ODataNullValue nullValue = new ODataNullValue();
             this.noneManager.SetTypeName(nullValue, StringResourceType);
-            CompareSerializationTypeNameAnnotation(nullValue, new SerializationTypeNameAnnotation {TypeName = null});
+            CompareSerializationTypeNameAnnotation(nullValue, new SerializationTypeNameAnnotation { TypeName = null });
 
             nullValue = new ODataNullValue();
             this.noneManager.SetTypeName(nullValue, ComplexResourceType);
@@ -863,7 +782,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = null });
         }
-        
+
         [TestMethod]
         public void DynamicComplexTypeNameShouldBeWrittenByDefault()
         {
@@ -966,10 +885,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             TestAction(
                 a =>
                 {
-                    a.Title = "bar"; 
-                    this.defaultManager.CheckForUnmodifiedTitle(a, "foo"); 
-                }, 
-                l => l.Title, 
+                    a.Title = "bar";
+                    this.defaultManager.CheckForUnmodifiedTitle(a, "foo");
+                },
+                l => l.Title,
                 "bar");
         }
 
@@ -1031,10 +950,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             TestAction(
                 a =>
                 {
-                    a.Title = "foo"; 
-                    this.allManager.CheckForUnmodifiedTitle(a, "foo"); 
-                }, 
-                l => l.Title, 
+                    a.Title = "foo";
+                    this.allManager.CheckForUnmodifiedTitle(a, "foo");
+                },
+                l => l.Title,
                 "foo");
         }
 
@@ -1044,13 +963,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             TestAction(
                 a =>
                 {
-                    a.Target = this.tempUri; 
-                    this.allManager.CheckForUnmodifiedTarget(a, () => { throw new Exception(); }); 
-                }, 
-                l => l.Target, 
+                    a.Target = this.tempUri;
+                    this.allManager.CheckForUnmodifiedTarget(a, () => { throw new Exception(); });
+                },
+                l => l.Target,
                 this.tempUri);
         }
-        
+
         [TestMethod]
         public void ActionTitleShouldBeSetForNoneOptionIfAlwaysAdvertised()
         {
@@ -1136,7 +1055,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             foreach (var kind in this.allEntryKinds)
             {
-                (typeof (ODataEntry).GetProperty(kind.ToString()) as object).Should().NotBeNull();
+                (typeof(ODataEntry).GetProperty(kind.ToString()) as object).Should().NotBeNull();
             }
         }
 
@@ -1183,7 +1102,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             WriteFeedAndVerifyPayload(noMetadata: true);
         }
-        
+
         [TestMethod]
         public void WritingFeedInMinimalMetadataModeShouldMatchExpectedPayload()
         {
@@ -1192,10 +1111,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
         private void WriteFeedAndVerifyPayload(bool noMetadata)
         {
-            string expectedPayload = 
-                "{" + 
+            string expectedPayload =
+                "{" +
                 (noMetadata ? "" : "\"@odata.context\":\"http://fake.org/$metadata#Fake\",") +
-                    "\"value\":"+
+                    "\"value\":" +
                     "[" +
                         "{" +
                             "\"Complex\":{}," +
@@ -1206,8 +1125,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                                 "{" +
                                     "\"target\":\"http://real.org/Action\"" +
                                 "}" +
-                        "}"+
-                    "]"+
+                        "}" +
+                    "]" +
                 "}";
 
             Action<IEdmEntitySet, ODataMessageWriter> write = (entitySet, writer) =>
@@ -1250,8 +1169,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             DataServiceHostSimulator host = new DataServiceHostSimulator
             {
-                RequestAccept = "application/json;odata.metadata=none", 
-                RequestMaxVersion = "4.0", 
+                RequestAccept = "application/json;odata.metadata=none",
+                RequestMaxVersion = "4.0",
                 RequestVersion = "4.0",
                 RequestHttpMethod = "GET",
                 AbsoluteServiceUri = new Uri("http://fake.org/service/"),
@@ -1282,10 +1201,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             service.ProcessingPipeline = new DataServiceProcessingPipeline();
             service.Provider = new DataServiceProviderWrapper(
                 new DataServiceCacheItem(
-                    service.Configuration, 
-                    staticConfiguration), 
-                provider, 
-                provider, 
+                    service.Configuration,
+                    staticConfiguration),
+                provider,
+                provider,
                 service,
                 false);
 
@@ -1328,7 +1247,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
             var message = new ODataResponseMessageSimulator();
             var settings = new ODataMessageWriterSettings();
-            
+
             if (noMetadataMode)
             {
                 message.SetHeader("Content-Type", "application/json;odata.metadata=none");

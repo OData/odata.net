@@ -23,6 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Atom
         [InjectDependency]
         public MetadataWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test the writing of ATOM metadata document payloads.")]
         public void MetadataDocumentWriterAtomTest()
         {

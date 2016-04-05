@@ -146,12 +146,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         else
                         {
                             expectedContent = changeSetOperation.ODataPayload.ExpectedResult;
-                            if (changeSetOperation.ODataPayload.TestConfiguration.Format == ODataFormat.Atom)
-                            {
-                                expectedContent = XmlUtils.GetComparableXmlString(expectedContent, variables, indent);
-                                normalizer = (observed) => XmlUtils.GetComparableXmlString(observed, null, indent);
-                            }
-                            else if (changeSetOperation.ODataPayload.TestConfiguration.Format == ODataFormat.Json)
+                            if (changeSetOperation.ODataPayload.TestConfiguration.Format == ODataFormat.Json)
                             {
                                 expectedContent = JsonUtils.GetComparableJsonString(expectedContent, variables);
                             }
@@ -183,12 +178,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             else
                             {
                                 expectedContent = responseOperation.ODataPayload.ExpectedResult;
-                                if (responseOperation.ODataPayload.TestConfiguration.Format == ODataFormat.Atom)
-                                {
-                                    expectedContent = XmlUtils.GetComparableXmlString(expectedContent, variables, indent);
-                                    normalizer = (observed) => XmlUtils.GetComparableXmlString(observed, null, indent);
-                                }
-                                else if (responseOperation.ODataPayload.TestConfiguration.Format == ODataFormat.Json)
+                                if (responseOperation.ODataPayload.TestConfiguration.Format == ODataFormat.Json)
                                 {
                                     expectedContent = JsonUtils.GetComparableJsonString(expectedContent, variables);
                                 }
@@ -262,24 +252,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
         private static Func<string, string> GetComparerForWriterTestExpectedResults(BatchWriterUtils.ODataPayload odataPayload)
         {
-            if (odataPayload.TestConfiguration.Format == ODataFormat.Atom)
-            {
-                return (observed) =>
-                {
-                    string error;
-                    if (!TestWriterUtils.CompareAtomResults(
-                        ((AtomWriterTestExpectedResults)odataPayload.WriterTestExpectedResults),
-                        observed,
-                        odataPayload.TestConfiguration,
-                        out error))
-                    {
-                        return error;
-                    }
-
-                    return null;
-                };
-            }
-
             if (odataPayload.TestConfiguration.Format == ODataFormat.Json)
             {
                 return (observed) =>

@@ -24,6 +24,7 @@ namespace AstoriaUnitTests
         /// <summary>
         /// Northwind database, read only tests
         /// </summary>
+        [Ignore] // Remove Atom
         [TestClass]
         public class ClientBasicsNWReadOnly
         {

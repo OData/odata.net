@@ -388,12 +388,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
 
             stream.Position = 0;
             string payload = (new StreamReader(stream)).ReadToEnd();
-            if (format == ODataFormat.Atom)
-            {
-                // The <updated> element is computed dynamically, so we remove it from the both the baseline and the actual payload.
-                payload = Regex.Replace(payload, "<updated>[^<]*</updated>", "");
-                expectedPayload = Regex.Replace(expectedPayload, "<updated>[^<]*</updated>", "");
-            }
 
             payload.Should().Be(expectedPayload);
         }

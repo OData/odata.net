@@ -24,6 +24,7 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
+    [Ignore] // Remove Atom
     [TestClass]
     public class DbContextTest
     {

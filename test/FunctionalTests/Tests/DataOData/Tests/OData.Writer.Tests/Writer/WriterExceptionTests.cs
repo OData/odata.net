@@ -98,6 +98,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer behaves as expected in the presence of fatal exceptions.")]
         public void FatalExceptionTest()
         {
@@ -197,6 +198,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 #endif
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer can successfully dispose itself when nothing was written out.")]
         public void DisposeAfterWritingNothingTest()
         {
@@ -216,6 +218,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer fails when trying to be used after dispose.")]
         public void WriteAfterDisposeTest()
         {

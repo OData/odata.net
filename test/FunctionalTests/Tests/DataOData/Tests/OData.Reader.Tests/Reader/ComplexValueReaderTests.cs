@@ -122,7 +122,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             // Wrap the complex type in a property
             testDescriptors = testDescriptors
-                .Select((td, index) => new PayloadReaderTestDescriptor(td) { PayloadDescriptor = td.PayloadDescriptor.InProperty("propertyName" + index)})
+                .Select((td, index) => new PayloadReaderTestDescriptor(td) { PayloadDescriptor = td.PayloadDescriptor.InProperty("propertyName" + index) })
                 .SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
 
             // Handcrafted cases
@@ -142,10 +142,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -154,7 +150,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public void DuplicatePropertyNamesTest()
         {
             PropertyInstance primitiveProperty = PayloadBuilder.PrimitiveProperty("DuplicateProperty", 42);
-            PropertyInstance complexProperty = PayloadBuilder.Property("DuplicateProperty", 
+            PropertyInstance complexProperty = PayloadBuilder.Property("DuplicateProperty",
                 PayloadBuilder.ComplexValue("TestModel.DuplicateComplexType").PrimitiveProperty("Name", "foo"));
             PropertyInstance collectionProperty = PayloadBuilder.Property("DuplicateProperty",
                 PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.String")).WithTypeAnnotation(EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false))));
@@ -228,13 +224,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Now add the second property to it
                     ((ComplexInstance)testDescriptor.PayloadElement).Add(secondProperty);
 
-                    // [Astoria-ODataLib-Integration] Parsing of URLs on OData recognized places may fail, but Astoria server doesn't
-                    // Server does not read named stream links for Atom payload therefore the expected payload needs to be normalized
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        testDescriptor.ExpectedResultNormalizers.Add(config => (payloadElement => WcfDsServerPayloadElementNormalizer.Normalize(payloadElement, ODataFormat.Atom, testDescriptor.PayloadEdmModel as EdmModel)));
-                    }
-
                     // We expect failure only if we don't allow duplicates or if the property kind doesn't allow duplicates ever
                     if ((!duplicatePropertySet.DuplicationPotentiallyAllowed || !allowDuplicateProperties))
                     {
@@ -249,14 +238,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     };
 
                     this.CombinatorialEngineProvider.RunCombinations(
-                        testDescriptors, 
+                        testDescriptors,
                         td =>
                         {
                             var property = td.PayloadElement as PropertyInstance;
-                            if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                            {
-                                property.Name = null;
-                            }
                             td.RunTest(testConfiguration);
                         });
                 });
@@ -370,7 +355,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             {
                                 PayloadElement = payloadValue,
                                 PayloadEdmModel = edmModel,
-                                ExpectedResultPayloadElement = 
+                                ExpectedResultPayloadElement =
                                     tc =>
                                     {
                                         if (tc.Format == ODataFormat.Json)
@@ -389,8 +374,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                                         entity.WithSelfLink("http://odata.org/test/Customer(1)");
                                                     }
                                                 }
-                                            } 
-                                            
+                                            }
+
                                             var tempDescriptor = new PayloadReaderTestDescriptor(this.Settings)
                                             {
                                                 PayloadElement = resultValue,

@@ -27,6 +27,7 @@ namespace AstoriaUnitTests
     /// <summary>
     /// Test action and function descriptors.
     /// </summary>
+    [Ignore] // Remove Atom
     [TestClass]
     public class OperationDescriptorTests
     {
@@ -380,35 +381,6 @@ namespace AstoriaUnitTests
         }
 
         [TestMethod]
-        public void SingleEntityWithDuplicateActions()
-        {
-            var testCase = new TestCase()
-            {
-                Operations = new ServiceAction[] { this.GetServiceAction("Action1", CustomerResourceType), this.GetServiceAction("Action2", CustomerResourceType) },
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
-                {
-                    new MyOperationDescriptor() { Title="SomeTitle", Target="http://sometarget/", Metadata="SomeMetadata" },
-                    new MyOperationDescriptor() { Title="SomeTitle", Target="http://sometarget/", Metadata="SomeMetadata" },
-                }},
-                RequestUriString = "CustomerEntities(1)",
-                AddBaseUriToMetadata = false,
-                AddBaseUriToTarget = false,
-                SubstituteAdvertiseServiceAction = new MyDSPActionProvider.AdvertiseServiceActionDelegate((DataServiceOperationContext oc, ServiceAction so, object o, bool inFeed, ref ODataAction od) =>
-                {
-                    od.Metadata = new Uri("SomeMetadata", UriKind.RelativeOrAbsolute);
-                    od.Target = new Uri("http://sometarget", UriKind.Absolute);
-                    od.Title = "SomeTitle";
-                    return true;
-                })
-            };
-
-            // This scenario is specifically not allowed in JSON Light, the writer requires actions with the same metadata to have different targets,
-            // and the reader also fails if it sees duplicate metadata reference properties. Those error scenarios are already covered in the ODL tests,
-            // so no need to repeat them here. See ODL OperationReaderJsonLightTests and ODataJsonLightEntryAndFeedSerializerTests.
-            RunPositiveTest(ODataFormat.Atom, testCase);
-        }
-
-        [TestMethod]
         public void SingleEntityWithNoActions()
         {
             var testCase = new TestCase()
@@ -469,30 +441,6 @@ namespace AstoriaUnitTests
             };
 
             RunPositiveTestWithAllFormats(testCase);
-        }
-
-        [TestMethod]
-        public void RelativeUriInMetadata()
-        {
-            var testCase = new TestCase()
-            {
-                Operations = new ServiceAction[] { this.GetServiceAction("Action1", CustomerResourceType) },
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>()
-                {
-                    new MyOperationDescriptor() { Title="Action1", Metadata="somemetadata/Action1", Target="CustomerEntities(1)/TestNamespace.Action1" }
-                }},
-                RequestUriString = "CustomerEntities(1)",
-                AddBaseUriToMetadata = false,
-                SubstituteAdvertiseServiceAction = new MyDSPActionProvider.AdvertiseServiceActionDelegate((DataServiceOperationContext oc, ServiceAction so, object o, bool inFeed, ref ODataAction od) =>
-                {
-                    od.Metadata = new Uri("somemetadata/Action1", UriKind.RelativeOrAbsolute);
-                    return true;
-                })
-            };
-
-            // JSON Light requires the metadata URI to be absolute or start with #, so this is not a valid positive scenario
-            // See ODL tests ODataJsonLightDeserializerTests and WriterActionAndFunctionTests.
-            RunPositiveTest(ODataFormat.Atom, testCase);
         }
 
         [TestMethod]
@@ -629,7 +577,6 @@ namespace AstoriaUnitTests
 
         private void RunPositiveTestWithAllFormats(TestCase testCase)
         {
-            RunPositiveTest(ODataFormat.Atom, testCase);
             RunPositiveTest(ODataFormat.Json, testCase);
         }
 
@@ -682,7 +629,6 @@ namespace AstoriaUnitTests
 
         private void RunPositiveFunctionTestWithAllFormats(TestCase testCase)
         {
-            this.RunPositiveFunctionTest(ODataFormat.Atom, testCase);
             this.RunPositiveFunctionTest(ODataFormat.Json, testCase);
         }
 
@@ -720,27 +666,6 @@ namespace AstoriaUnitTests
             };
 
             this.RunPositiveFunctionTestWithAllFormats(testCase);
-        }
-
-        [TestMethod]
-        public void SingleEntityWithDuplicateFunctions()
-        {
-            var testCase = new TestCase()
-            {
-                ResponsePayloadBuilder = GetPayloadBuilder()
-                                            .AddFunction("#TestNamespace.Function1", "Function1", "http://sometarget")
-                                            .AddFunction("#TestNamespace.Function1", "Function1", "http://sometarget"),
-                InitializeExpectedDescriptors = (format) => new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>
-                {
-                    new MyOperationDescriptor() { Title="Function1", Target="http://sometarget/", Metadata="#TestNamespace.Function1" },
-                    new MyOperationDescriptor() { Title="Function1", Target="http://sometarget/", Metadata="#TestNamespace.Function1" },
-                }},
-                RequestUriString = "CustomerEntities(1)",
-            };
-
-            // This scenario is specifically not allowed in JSON Light, the reader fails if it sees duplicated metadata properties.
-            // Those scenarios are already covered in the ODL tests, so no need to repeat them here. See ODL OperationReaderJsonLightTests and ODataJsonLightEntryAndFeedSerializerTests.
-            this.RunPositiveFunctionTest(ODataFormat.Atom, testCase);
         }
 
         [TestMethod]

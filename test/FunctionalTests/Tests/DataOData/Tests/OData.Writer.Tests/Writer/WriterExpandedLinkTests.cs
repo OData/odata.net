@@ -32,6 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that we cannot write an expanded link with incorrect multiplicity or content (entry vs. feed).")]
         public void ExpandedLinkWithMultiplicityTests()
         {
@@ -94,7 +95,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Expanded link of singleton type without IsCollection value and an entry of a non-matching entity type;
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, cityEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Atom || !tc.IsRequest
+                        ExpectedError = tc => !tc.IsRequest
                             ? ODataExpectedExceptions.ODataException("WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType", "TestModel.CityType", "TestModel.OfficeType")
                             : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation"),
                         Model = model,
@@ -117,7 +118,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Expanded link of collection type without IsCollection value and an entry of a non-matching entity type;
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, cityEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest 
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
                             ? ODataExpectedExceptions.ODataException("WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType", "TestModel.CityType", "TestModel.OfficeType")
                             : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
                         Model = model,
@@ -126,8 +127,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Expanded link of collection type without IsCollection value and an entry of a matching entity type; no error expected.
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, officeEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest 
-                            ? null 
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
+                            ? null
                             : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
                         Model = model,
                     },
@@ -135,8 +136,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Expanded link of collection type without IsCollection and an entry of a derived entity type; no error expected.
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, officeWithNumberEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest 
-                            ? null 
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
+                            ? null
                             : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
                         Model = model,
                     },
@@ -171,7 +172,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Entry content, IsCollection == null, singleton nav prop; should not fail.
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, officeEntry },
-                        ExpectedError = tc => tc.IsRequest || tc.Format == ODataFormat.Atom
+                        ExpectedError = tc => tc.IsRequest
                             ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation")
                             : null,
                         Model = model,
@@ -222,7 +223,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Feed content, IsCollection == null, collection nav prop; should not fail.
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, officeEntry },
-                        ExpectedError = tc => tc.IsRequest || tc.Format == ODataFormat.Atom
+                        ExpectedError = tc => tc.IsRequest
                             ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall")
                             : null,
                         Model = model,
@@ -292,7 +293,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testCase, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -311,6 +312,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that we can write an expanded link with a null navigation entry.")]
         public void ExpandedLinkWithNullNavigationTests()
         {
@@ -327,43 +329,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback successCallback = (testConfiguration) =>
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
+                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                 {
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                    Json = "null", //new JsonPrimitiveValue(null).ToText(testConfiguration.MessageWriterSettings.Indent),
+                    FragmentExtractor = (result) =>
                     {
-                        Xml = new XElement(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName).ToString(),
-                        FragmentExtractor = (result) =>
-                            {
-                                return result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                             .First(e => e.Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName) != null)
-                                             .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName);
-                            }
-                    };
-                }
-                else
-                {
-                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Json = "null", //new JsonPrimitiveValue(null).ToText(testConfiguration.MessageWriterSettings.Indent),
-                        FragmentExtractor = (result) =>
-                        {
-                            return JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Properties.First(p => p.Name == ObjectModelUtils.DefaultLinkName).Value;
-                        }
-                    };
-                }
-
+                        return JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Properties.First(p => p.Name == ObjectModelUtils.DefaultLinkName).Value;
+                    }
+                };
             };
 
-            Func<ExpectedException,PayloadWriterTestDescriptor.WriterTestExpectedResultCallback> errorCallback = (expectedException) =>
-                {
-                    return (testConfiguration) =>
-                        {
-                            return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                ExpectedException2 = expectedException,
-                            };
-                        };
-                };
+            Func<ExpectedException, PayloadWriterTestDescriptor.WriterTestExpectedResultCallback> errorCallback = (expectedException) =>
+                 {
+                     return (testConfiguration) =>
+                         {
+                             return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                             {
+                                 ExpectedException2 = expectedException,
+                             };
+                         };
+                 };
 
             var testCases = new PayloadWriterTestDescriptor<ODataItem>[]
                 {
@@ -404,7 +389,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, testConfig) =>
                 {
                     testConfig = testConfig.Clone();

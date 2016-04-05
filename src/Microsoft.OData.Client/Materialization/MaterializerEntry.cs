@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client.Materialization
         private readonly EntityDescriptor entityDescriptor;
 
         /// <summary>True if the context format is Atom or if the MergeOption is anything other than NoTracking.</summary>
-        private readonly bool isAtomOrTracking;
+        private readonly bool isTracking;
 
         /// <summary>Entry flags.</summary>
         private EntryFlags flags;
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Client.Materialization
             this.entry = entry;
             this.Format = format;
             this.entityDescriptor = new EntityDescriptor(model);
-            this.isAtomOrTracking = isTracking;
+            this.isTracking = isTracking;
 
             string serverTypeName = this.Entry.TypeName;
             SerializationTypeNameAnnotation serializationTypeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             this.entityDescriptor = entityDescriptor;
             this.Format = format;
-            this.isAtomOrTracking = isTracking;
+            this.isTracking = isTracking;
             this.SetFlagValue(EntryFlags.ShouldUpdateFromPayload | EntryFlags.EntityHasBeenResolved | EntryFlags.ForLoadProperty, true);
         }
 
@@ -122,9 +122,9 @@ namespace Microsoft.OData.Client.Materialization
         /// as odata.id and odata.editlink. Since this information is always available in the payload with Atom, for
         /// backward compatibility we continue using it as we always have, even for NoTracking cases.
         /// </summary>
-        public bool IsAtomOrTracking
+        public bool IsTracking
         {
-            get { return this.isAtomOrTracking; }
+            get { return this.isTracking; }
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             get
             {
-                Debug.Assert(this.IsAtomOrTracking, "Id property should not be used when this.IsAtomOrTracking is false.");
+                Debug.Assert(this.IsTracking, "Id property should not be used when this.isTracking is false.");
                 return this.entry.Id;
             }
         }
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="link">The link.</param>
         public void AddNavigationLink(ODataNavigationLink link)
         {
-            if (this.IsAtomOrTracking)
+            if (this.IsTracking)
             {
                 this.EntityDescriptor.AddNavigationLink(link.Name, link.Url);
                 Uri associationLinkUrl = link.AssociationLinkUrl;
@@ -315,7 +315,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
                 }
 
-                if (this.IsAtomOrTracking)
+                if (this.IsTracking)
                 {
                     if (this.Id == null)
                     {

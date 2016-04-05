@@ -193,10 +193,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
 
             TestMessage testMessage = TestWriterUtils.CreateOutputMessageFromStream(
-                messageStream, 
-                testConfiguration, 
-                this.PayloadKind, 
-                this.PayloadElement.GetCustomContentTypeHeader(), 
+                messageStream,
+                testConfiguration,
+                this.PayloadKind,
+                this.PayloadElement.GetCustomContentTypeHeader(),
                 this.UrlResolver);
 
             return testMessage;
@@ -217,26 +217,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 //Fixup added as odatalib requires ids on feeds even though it can't be represented in json
                 payload.Accept(new AddFeedIDFixup());
             }
-            else if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                // TODO: Remove visitor
-                payload.Accept(new ODataPayloadElementNullIDVisitor());
-            }
-
+            
             ODataPayloadElementToObjectModelConverter converter = new ODataPayloadElementToObjectModelConverter(!testConfiguration.IsRequest);
             if (this.PayloadKind != ODataPayloadKind.Batch)
-            {    
+            {
                 this.settings.ObjectModelToMessageWriter.WriteMessage(messageWriter, this.PayloadKind, converter.Convert(payload));
             }
             else
             {
-                TestWriterUtils.WriteBatchPayload(messageWriter, 
-                    payload, 
-                    converter, 
-                    this.settings.ObjectModelToMessageWriter, 
+                TestWriterUtils.WriteBatchPayload(messageWriter,
+                    payload,
+                    converter,
+                    this.settings.ObjectModelToMessageWriter,
                     this.Model,
-                    this.settings.Assert, 
-                    testConfiguration, 
+                    this.settings.Assert,
+                    testConfiguration,
                     true);
             }
         }
@@ -363,8 +358,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     throw new NotSupportedException("Expected ODataFormat.Default but detected " + testConfig.Format.ToString());
                 }
 
-                return new RawValueWriterTestExpectedResults(this.settings.ExpectedResultSettings) 
-                { 
+                return new RawValueWriterTestExpectedResults(this.settings.ExpectedResultSettings)
+                {
                     RawValueAsText = rawValueAsString,
                     RawBytes = rawBytes,
                     ExpectedContentType = expectedContentType,
@@ -455,14 +450,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             this.ThrowUserExceptionAt = -1;
             this.ExpectedResultCallback = (testConfig) =>
             {
-                if (testConfig.Format == ODataFormat.Atom)
-                {
-                    return new AtomWriterTestExpectedResults(this.settings.ExpectedResultSettings) { Xml = atomResult, FragmentExtractor = atomExtractor, DisableNamespaceNormalization = disableXmlNamespaceNormalization };
-                }
-                else
-                {
-                    return new JsonWriterTestExpectedResults(this.settings.ExpectedResultSettings) { Json = jsonResult, FragmentExtractor = jsonExtractor };
-                }
+                return new JsonWriterTestExpectedResults(this.settings.ExpectedResultSettings) { Json = jsonResult, FragmentExtractor = jsonExtractor };
             };
         }
 

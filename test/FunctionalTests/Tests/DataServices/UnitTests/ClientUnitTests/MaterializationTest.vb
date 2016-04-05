@@ -28,7 +28,7 @@ Imports AstoriaUnitTests.Tests
 
 Partial Public Class ClientModule
 
-    <TestClass()> _
+    <TestClass()>
     Public Class MaterializeUnitTest
         Private Shared web As TestWebRequest = Nothing
         Private Shared random As New Random(4232008)
@@ -58,7 +58,7 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowOrder
             Private m_Foo As String
             Private m_employee As NarrowEmployee
@@ -95,10 +95,10 @@ Partial Public Class ClientModule
             End Property
         End Class
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub AssertWhenProjectingEntityTypeIntoComplex()
-            Dim q = From o In ctx.CreateQuery(Of NorthwindSimpleModel.Orders)("Orders") _
-                    Select New NarrowOrder() With {.ShipCity = o.ShipCity, _
+            Dim q = From o In ctx.CreateQuery(Of NorthwindSimpleModel.Orders)("Orders")
+                    Select New NarrowOrder() With {.ShipCity = o.ShipCity,
                                                                   .Employees = New NarrowEmployee() With {.Name = o.Employees.FirstName}}
             Dim nse As NotSupportedException = Nothing
             Try
@@ -109,8 +109,8 @@ Partial Public Class ClientModule
             TestUtil.AssertExceptionExpected(nse, True)
             TestUtil.AssertContains(nse.ToString(), "System.NotSupportedException: Initializing instances of the entity type AstoriaClientUnitTests.ClientModule+MaterializeUnitTest+NarrowOrder with the expression new NarrowEmployee() {Name = o.Employees.FirstName} is not supported.")
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CustomerOrders()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CustomerOrders()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders", True)
@@ -139,8 +139,8 @@ Partial Public Class ClientModule
             Dim openCustomer = ctx.Execute(openQuery).Single()
 #End If
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders($expand=Customers)")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders($expand=Customers)", True)
@@ -168,8 +168,8 @@ Partial Public Class ClientModule
             Dim openCustomer = ctx.Execute(openQuery).Single()
 #End If
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships_ExpandedFurther()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships_ExpandedFurther()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders($expand=Employees($expand=Orders($expand=Customers)))")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders($expand=Employees($expand=Orders($expand=Customers)))", True)
@@ -197,8 +197,8 @@ Partial Public Class ClientModule
             Dim openCustomer = ctx.Execute(openQuery).Single()
 #End If
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()>
         Public Sub CustomerExpandOrders()
             Dim query = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers?$top=5&$expand=Orders")
 
@@ -210,8 +210,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(0 < totalOrders, "no orders expanded")
             Assert.AreEqual(totalOrders, Enumerable.Count(From a In ctx.Entities Where GetType(NorthwindSimpleModel.Orders).IsInstanceOfType(a.Entity) Select a))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub SameEntityRepeatedWithOverwriteChanges()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SameEntityRepeatedWithOverwriteChanges()
             Dim requestUri = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers?$expand=Orders($expand=Customers)", True)
             ctx.MergeOption = MergeOption.OverwriteChanges
             Dim collection = New HashSet(Of NorthwindSimpleModel.Customers)()
@@ -246,8 +246,8 @@ Partial Public Class ClientModule
             End Try
         End Sub
 #End If
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub NoContent()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub NoContent()
             ' Original bug failure.
             Dim q = ctx.CreateQuery(Of NorthwindSimpleModel.Employees)("Employees(2)/Employees2")
             For Each o In q
@@ -265,8 +265,8 @@ Partial Public Class ClientModule
             Next
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub KeyValueWithSingleQuote()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub KeyValueWithSingleQuote()
             Dim products = ctx.Alphabetical_list_of_products.Execute().ToArray()
 
             ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of NorthwindSimpleModel.Alphabetical_list_of_products)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef Anton''s Cajun Seasoning')"))
@@ -309,7 +309,7 @@ Partial Public Class ClientModule
         End Function
 
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub BatchQueryFail()
             Dim data As DataServiceResponse = ctx.ExecuteBatch(ctx.CreateQuery(Of NorthwindSimpleModel.Customers)("Cust"))
 
@@ -332,8 +332,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, queryCount)
             Assert.AreEqual(0, data.Count, "0 batch")
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()>
         Public Sub BatchQuerySingle()
             Dim data As DataServiceResponse = ctx.ExecuteBatch(ctx.Customers)
 
@@ -363,8 +363,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, queryCount)
             Assert.AreEqual(0, data.Count)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()>
         Public Sub BatchQueryDouble()
             Dim data As DataServiceResponse = ctx.ExecuteBatch(ctx.Customers, ctx.Suppliers)
 
@@ -409,8 +409,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(2, queryCount)
             Assert.AreEqual(0, data.Count)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub InterleaveExecute()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub InterleaveExecute()
             Dim a = ctx.Customers.GetEnumerator()
             Dim b = ctx.Customers.GetEnumerator()
 
@@ -486,8 +486,8 @@ Partial Public Class ClientModule
                 semi.Release()
             End Try
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub EndExecuteFailure()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub EndExecuteFailure()
             Try
                 ctx.Categories.EndExecute(Nothing) ' calling EndExecute with null
                 Assert.Fail("expected ArgumentNullException")
@@ -588,8 +588,8 @@ Partial Public Class ClientModule
             End Try
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub EndLoadPropertyApiFailure()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub EndLoadPropertyApiFailure()
             Try
                 ctx.EndLoadProperty(Nothing) ' calling EndLoadProperty with null
                 Assert.Fail("expected ArgumentNullException")
@@ -763,16 +763,16 @@ Partial Public Class ClientModule
                 End If
             End Try
         End Function
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub NothingExtraOrMissing()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub NothingExtraOrMissing()
             ctx.IgnoreMissingProperties = False
             Assert.IsNotNull(ExtraMissing(Of NorthwindSimpleModel.Order_Details)(Nothing))
 
             ctx.IgnoreMissingProperties = True
             Assert.IsNotNull(ExtraMissing(Of NorthwindSimpleModel.Order_Details)(Nothing))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraKey()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraKey()
             ctx.IgnoreMissingProperties = False
             Dim od = ExtraMissing(Of Order_Details_ExtraKeys)(New InvalidOperationException())
             Assert.IsNull(od)
@@ -781,8 +781,8 @@ Partial Public Class ClientModule
             Dim oe = ExtraMissing(Of Order_Details_ExtraKeys)(New InvalidOperationException())
             Assert.IsNull(oe)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraProperty()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraProperty()
             ctx.IgnoreMissingProperties = False
             Dim od = ExtraMissing(Of Order_Details_ExtraProperties)(New InvalidOperationException())
             Assert.IsNull(od)
@@ -792,8 +792,8 @@ Partial Public Class ClientModule
             Assert.IsNull(oe)
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MismatchedNavigationPropertyType()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MismatchedNavigationPropertyType()
             ' Regression test for [Client-ODataLib-Integration] Astoria client does not fail if the client and server stream property does not match
             ctx.IgnoreMissingProperties = False
             Dim od = MismatchedNavigationType(Of Orders_ElementNotEntityType)(New InvalidOperationException())
@@ -810,32 +810,32 @@ Partial Public Class ClientModule
             ctx.IgnoreMissingProperties = True
             ExtraMissing(Of Order_Details_MissingDescribedKey)(New InvalidOperationException())
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingKey()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingKey()
             ctx.IgnoreMissingProperties = False
             ExtraMissing(Of Order_Details_MissingKeys)(New InvalidOperationException())
 
             ctx.IgnoreMissingProperties = True
             ExtraMissing(Of Order_Details_MissingKeys)(New InvalidOperationException())
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingProperty()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingProperty()
             ctx.IgnoreMissingProperties = False
             ExtraMissing(Of Order_Details_MissingProperties)(New InvalidOperationException())
 
             ctx.IgnoreMissingProperties = True
             ExtraMissing(Of Order_Details_MissingProperties)(New InvalidOperationException())
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingLink()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingLink()
             ctx.IgnoreMissingProperties = False
             ExtraMissing(Of Order_Details_MissingLinks)(New InvalidOperationException())
 
             ctx.IgnoreMissingProperties = True
             ExtraMissing(Of Order_Details_MissingLinks)(Nothing)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultAKeyID()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultAKeyID()
             ctx.IgnoreMissingProperties = True
             Assert.IsNotNull(ExtraMissing(Of AKey)(Nothing))
 
@@ -848,8 +848,8 @@ Partial Public Class ClientModule
             ctx.TryGetUri(a, identity)
             Assert.IsTrue(identity.ToString().Contains("a(1)"))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultBKeyID()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultBKeyID()
             ctx.IgnoreMissingProperties = True
             Assert.IsNotNull(ExtraMissing(Of BKey)(Nothing))
 
@@ -862,8 +862,8 @@ Partial Public Class ClientModule
             ctx.TryGetUri(b, identity)
             Assert.IsTrue(identity.ToString().Contains("b(1)"))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub VerifyIncludingPropertiesOnBaseClassesOfClassWithKEy()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub VerifyIncludingPropertiesOnBaseClassesOfClassWithKEy()
             Try
                 ctx.AttachTo("C", New CNoKey())
             Catch ex As ArgumentException
@@ -892,8 +892,8 @@ Partial Public Class ClientModule
 
             DProperties(wrappingStream.GetLoggingStreamAsXDocument().Elements.First)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod(), Variation("Verify Server Type in Entity Descriptors gets materialized correctly")> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("Verify Server Type in Entity Descriptors gets materialized correctly")>
         Public Sub ResolvingServerTypeNameInEntityDescriptor()
             Dim custs = ctx.Customers.Expand("Orders").FirstOrDefault()
             Dim custDescriptor = ctx.GetEntityDescriptor(custs)
@@ -903,7 +903,7 @@ Partial Public Class ClientModule
         End Sub
 
         Private Shared Sub DProperties(ByVal data As XElement)
-            Dim result As XElement = _
+            Dim result As XElement =
                 <entry xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
                     <title/>
                     <updated>2008-05-19T21:12:53.5671702Z</updated>
@@ -928,7 +928,7 @@ Partial Public Class ClientModule
 
     End Class
 
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")>
     Partial Public Class Order_Details_MissingDescribedKey
         Public Property OrderID() As Integer
             Get
@@ -1013,7 +1013,7 @@ Partial Public Class ClientModule
 
 
 #Region "Order_Details with additional key not on server, ExtraID"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")>
     Partial Public Class Order_Details_ExtraKeys
         Public Property OrderID() As Integer
             Get
@@ -1098,7 +1098,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Order_Details with additional property not on server, Quality"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")>
     Partial Public Class Order_Details_ExtraProperties
         Public Property OrderID() As Integer
             Get
@@ -1183,7 +1183,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Order_Details with missing ProductID"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")>
     Partial Public Class Order_Details_MissingKeys
         Public Property OrderID() As Integer
             Get
@@ -1248,7 +1248,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Order_Details with missing UnitPrice & Quantity"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")>
     Partial Public Class Order_Details_MissingProperties
         Public Property OrderID() As Integer
             Get
@@ -1301,7 +1301,7 @@ Partial Public Class ClientModule
         Private _Products As Products
     End Class
 #End Region
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")>
     Partial Public Class Orders_ElementNotEntityType
         '''<summary>
         '''Create a new Orders object.
@@ -1577,7 +1577,7 @@ Partial Public Class ClientModule
     End Class
 
 #Region "Order_Details with missing Orders & Products (links)"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")>
     Partial Public Class Order_Details_MissingLinks
         Public Property OrderID() As Integer
             Get

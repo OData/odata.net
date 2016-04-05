@@ -27,9 +27,9 @@ Imports p = Microsoft.OData.Service.Providers
 Imports AstoriaUnitTests.Tests
 
 Partial Public Class ClientModule
-
-    <TestClass()> _
-        Public Class MediaStreaming
+    'Remove Atom
+    <Ignore> <TestClass()>
+    Public Class MediaStreaming
         Inherits AstoriaTestCase
 
         Private Shared web As TestWebRequest = Nothing
@@ -49,7 +49,7 @@ Partial Public Class ClientModule
             'ctx.EnableAtom = True
             'ctx.Format.UseAtom()
             AddHandler ctx.SendingRequest2, AddressOf EntitySetResolverTests.SetAcceptHeader
-            ctx.Execute(Of Boolean)(New Uri("/SetContentServiceUri/$value?uri='" + HttpUtility.UrlEncode(webContent.ServiceRoot.ToString() + "'"), _
+            ctx.Execute(Of Boolean)(New Uri("/SetContentServiceUri/$value?uri='" + HttpUtility.UrlEncode(webContent.ServiceRoot.ToString() + "'"),
                                             UriKind.Relative))
             RemoveHandler ctx.SendingRequest2, AddressOf EntitySetResolverTests.SetAcceptHeader
         End Sub
@@ -65,7 +65,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "API"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub GetReadStreamUriApi()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -112,7 +112,7 @@ Partial Public Class ClientModule
             Assert.IsNull(ctx.GetReadStreamUri(photoNew))
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub BeginGetReadStreamApi()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -177,7 +177,7 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub EndGetReadStreamApi()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -274,24 +274,24 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub GetReadStream_Entity_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
             'ctx.Format.UseAtom()
 
-            GetReadStreamApiCommon(ctx, _
+            GetReadStreamApiCommon(ctx,
                 Function(context As DataServiceContext, entity As Object) context.GetReadStream(entity))
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub GetReadStream_Entity_ContentType_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
             'ctx.Format.UseAtom()
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
-            GetReadStreamApiCommon(ctx, _
+            GetReadStreamApiCommon(ctx,
                 Function(context As DataServiceContext, entity As Object) context.GetReadStream(entity, "*/*"))
 
             ' Failure case with NULL for contentType
@@ -309,7 +309,7 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub GetReadStream_Entity_Args_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -317,7 +317,7 @@ Partial Public Class ClientModule
             Dim photo = ctx.Execute(Of StreamingServicePhoto)(New Uri("/Photos(1)", UriKind.Relative)).SingleOrDefault()
 
             Dim args = New DataServiceRequestArgs()
-            GetReadStreamApiCommon(ctx, _
+            GetReadStreamApiCommon(ctx,
                 Function(context As DataServiceContext, entity As Object) context.GetReadStream(entity, args))
 
             ' Failure case with NULL for args
@@ -384,7 +384,7 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub SetSaveStream_Entity_Stream_ContentType_Slug_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -419,7 +419,7 @@ Partial Public Class ClientModule
             ctx.SetSaveStream(entity, stream, False, "MyContentType", "MySlug")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub SetSaveStream_Entity_Stream_Args_Api()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -443,12 +443,12 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Read MR"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadSingleMR()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("UseV1Entity", New Boolean() {False, True}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadSingleMR_Inner)
@@ -471,12 +471,12 @@ Partial Public Class ClientModule
             VerifySinglePhoto(photo, ctx, executionMethod)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadMultipleMRs()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("UseV1Entity", New Boolean() {False, True}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadMultipleMRs_Inner)
@@ -500,12 +500,12 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadMultipleMRsFromAlternativeUri()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("UseV1Entity", New Boolean() {False, True}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadMultipleMRsFromAlternativeUri_Inner)
@@ -529,11 +529,11 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadFailingMR()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadFailingMR_Inner)
@@ -560,11 +560,11 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadMRWithWrongContentType()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadMRWithWrongContentType_Inner)
@@ -590,11 +590,11 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadMRWithContentDisposition()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadMRWithContentDisposition_Inner)
@@ -612,11 +612,11 @@ Partial Public Class ClientModule
             Assert.IsNull(response.ContentDisposition, "Content-Disposition was not present, so it should be null")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadMRVerifyEvents()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadMRVerifyEvents_Inner)
@@ -640,7 +640,7 @@ Partial Public Class ClientModule
             e.RequestMessage.SetHeader("SendingRequest2Called", "true")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadSingleMRAbort()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -653,11 +653,11 @@ Partial Public Class ClientModule
             ctx.CancelRequest(asyncResult)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ReadSingleMRError()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ReadSingleMRError_Inner)
@@ -697,12 +697,12 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Request headers"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub AcceptHeader()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("API", New String() {"Args", "Param"}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf AcceptHeader_Inner)
@@ -744,11 +744,11 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub RequestHeaders()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf RequestHeaders_Inner)
@@ -787,11 +787,11 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Response headers"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ResponseHeaders()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ResponseHeaders_Inner)
@@ -813,11 +813,11 @@ Partial Public Class ClientModule
             End Using
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ResponseContentProperties()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf ResponseContentProperties_Inner)
@@ -840,7 +840,7 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub ResponseIsReadOnly()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
             'ctx.EnableAtom = True
@@ -881,14 +881,14 @@ Partial Public Class ClientModule
         End Sub
 
 #Region "Add MR"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub AddSingleMR()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}), _
-                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}),
+                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}),
                 New Dimension("Content", New Byte()() {New Byte() {1, 2, 3}, New Byte() {}}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf AddSingleMR_Inner)
@@ -939,13 +939,13 @@ Partial Public Class ClientModule
             Assert.AreEqual("NewPhoto", photo.Name, "The entity part of the Add didn't correctly save Name property.")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub AddMultipleMRs()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("MergeOption", New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf AddMultipleMRs_Inner)
@@ -1016,11 +1016,11 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub VerifyAddRemovesStream()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf VerifyAddRemovesStream_Inner)
@@ -1046,11 +1046,11 @@ Partial Public Class ClientModule
             Assert.IsFalse(headers.ContainsKey("/Photos"), "No request should have been sent.")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub AddMRHeaders()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf AddMRHeaders_Inner)
@@ -1075,7 +1075,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub AddMRWithoutStream()
             ResetServiceContent()
 
@@ -1092,11 +1092,11 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub VerifyChunkedEncoding()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf VerifyChunkedEncoding_Inner)
@@ -1119,14 +1119,14 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MRAddCloseStreamTests()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("CloseStream", New Boolean() {False, True}), _
-                New Dimension("FailRequest", New Boolean() {False, True}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("CloseStream", New Boolean() {False, True}),
+                New Dimension("FailRequest", New Boolean() {False, True}),
                 New Dimension("SaveChangesOptions", New SaveChangesOptions() {SaveChangesOptions.None, SaveChangesOptions.ContinueOnError}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MRAddCloseStream_Inner)
@@ -1170,12 +1170,12 @@ Partial Public Class ClientModule
 
         ' This test verifies that in the V1 case we fixed the problem with the POST failing (in which case we used to happily issue
         '   the MLE PUT if ContinueOnError was on)
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub V1AddMRWithFailingPOST()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("ContinueOnError", New Boolean() {False, True}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf V1AddMRWithFailingPOST_Inner)
@@ -1212,12 +1212,12 @@ Partial Public Class ClientModule
         End Sub
 
         ' Test which verifies that trying to perform an MR Add operation in a batch fails
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MRAddInBatch()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MRAddInBatch_Inner)
@@ -1254,22 +1254,22 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Update MR/MLE"
-        <Flags()> _
+        <Flags()>
         Public Enum UpdateEntityOptions
             UpdateMLE = 1
             UpdateMR = 2
         End Enum
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub UpdateSingleMRMLE()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}), _
-                New Dimension("UpdateEntityOptions", New UpdateEntityOptions() {UpdateEntityOptions.UpdateMR, UpdateEntityOptions.UpdateMLE, UpdateEntityOptions.UpdateMLE Or UpdateEntityOptions.UpdateMR}), _
-                New Dimension("Content", New Byte()() {New Byte() {41, 42, 43}, New Byte() {}}), _
-                New Dimension("SetContentLength", New Boolean() {False, True}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}),
+                New Dimension("UpdateEntityOptions", New UpdateEntityOptions() {UpdateEntityOptions.UpdateMR, UpdateEntityOptions.UpdateMLE, UpdateEntityOptions.UpdateMLE Or UpdateEntityOptions.UpdateMR}),
+                New Dimension("Content", New Byte()() {New Byte() {41, 42, 43}, New Byte() {}}),
+                New Dimension("SetContentLength", New Boolean() {False, True}),
                 New Dimension("EnableBuffering", New Boolean() {False, True}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf UpdateSingleMRMLE_Inner)
@@ -1302,7 +1302,7 @@ Partial Public Class ClientModule
                 photo = ctx.Execute(Of StreamingServiceV1Photo)(New Uri("/V1Photos(1)", UriKind.Relative)).SingleOrDefault()
             End If
 
-            If ((updateEntityOptions And MediaStreaming.UpdateEntityOptions.UpdateMLE) = MediaStreaming.UpdateEntityOptions.UpdateMLE) And _
+            If ((updateEntityOptions And MediaStreaming.UpdateEntityOptions.UpdateMLE) = MediaStreaming.UpdateEntityOptions.UpdateMLE) And
                 Not photoType Is Nothing Then
                 photo.Name = name
                 ctx.UpdateObject(photo)
@@ -1314,7 +1314,7 @@ Partial Public Class ClientModule
                 ctx.SetSaveStream(photo, New MemoryStream(content), False, contentType, "")
             End If
 
-            Dim sendingRequestHandler = _
+            Dim sendingRequestHandler =
                 Sub(sender As Object, e As SendingRequest2EventArgs)
                     Dim request = CType(e.RequestMessage, HttpWebRequestMessage).HttpWebRequest
                     If setContentLengthExplicitly Then
@@ -1325,11 +1325,11 @@ Partial Public Class ClientModule
                 End Sub
 
             Dim testHook = New HttpTestHookConsumer(ctx, False)
-            testHook.CustomSendRequestAction = _
+            testHook.CustomSendRequestAction =
                 Sub(request As Object)
                     Dim httpWebRequest = CType(request, HttpWebRequest)
                     If httpWebRequest.Method = "POST" OrElse httpWebRequest.Method = "PUT" Then
-                        Assert.AreEqual(enableBuffering, httpWebRequest.AllowWriteStreamBuffering, _
+                        Assert.AreEqual(enableBuffering, httpWebRequest.AllowWriteStreamBuffering,
                                         "Stream buffering is turned on when it should not have been, or off when it should.")
                     End If
                 End Sub
@@ -1353,13 +1353,13 @@ Partial Public Class ClientModule
             Assert.AreEqual(name, photo.Name, "The name was not updated properly (or was updated when it shouldn't have been)")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub UpdateMultipleMRMLEs()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo), Nothing}),
                 New Dimension("UpdateEntityOptions", New UpdateEntityOptions() {UpdateEntityOptions.UpdateMR, UpdateEntityOptions.UpdateMLE, UpdateEntityOptions.UpdateMLE Or UpdateEntityOptions.UpdateMR}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf UpdateMultipleMRMLEs_Inner)
@@ -1399,7 +1399,7 @@ Partial Public Class ClientModule
                 Next
             End If
 
-            If ((updateEntityOptions And MediaStreaming.UpdateEntityOptions.UpdateMLE) = MediaStreaming.UpdateEntityOptions.UpdateMLE) And _
+            If ((updateEntityOptions And MediaStreaming.UpdateEntityOptions.UpdateMLE) = MediaStreaming.UpdateEntityOptions.UpdateMLE) And
                 Not photoType Is Nothing Then
                 For i As Integer = 1 To 6
                     If i Mod 2 = 0 Then
@@ -1451,11 +1451,11 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub VerifyUpdateRemovesStream()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf VerifyUpdateRemovesStream_Inner)
@@ -1480,13 +1480,13 @@ Partial Public Class ClientModule
             Assert.IsFalse(headers.ContainsKey("/Photos"), "No request should have been sent.")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub UpdateMRHeaders()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("ContentTypeHeader", New String() {"my/type"}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("ContentTypeHeader", New String() {"my/type"}),
                 New Dimension("SlugHeader", New String() {"myslug", Nothing}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf UpdateMRHeaders_Inner)
@@ -1514,11 +1514,11 @@ Partial Public Class ClientModule
             End If
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub UpdateVerifyChunkedEncoding()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf UpdateVerifyChunkedEncoding_Inner)
@@ -1539,14 +1539,14 @@ Partial Public Class ClientModule
             Assert.AreEqual("chunked", headers("Transfer-Encoding"), "Chunked encoding was not enabled by default.")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MRUpdateCloseStreamTests()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("CloseStream", New Boolean() {False, True}), _
-                New Dimension("FailRequest", New Boolean() {False, True}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("CloseStream", New Boolean() {False, True}),
+                New Dimension("FailRequest", New Boolean() {False, True}),
                 New Dimension("SaveChangesOptions", New SaveChangesOptions() {SaveChangesOptions.None, SaveChangesOptions.ContinueOnError}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MRUpdateCloseStream_Inner)
@@ -1596,11 +1596,11 @@ Partial Public Class ClientModule
             Assert.IsFalse(stream2.DisposeCalled, "Stream was disposed even though it should never happen.")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MRUpdateOnNonMLE()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
+            Dim engine = CombinatorialEngine.FromDimensions(
                 New Dimension("ExecutionMethod", Util.ExecutionMethods))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MRUpdateOnNonMLE_Inner)
@@ -1625,13 +1625,13 @@ Partial Public Class ClientModule
         End Sub
 
         ' Test which verifies that trying to perform an MR Update operation in a batch fails
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MRUpdateInBatch()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
-                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto)}), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
+                New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto)}),
                 New Dimension("UpdateMLE", New Boolean() {False, True}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MRUpdateInBatch_Inner)
@@ -1661,12 +1661,12 @@ Partial Public Class ClientModule
         End Sub
 
         ' Test which verifies that trying to perform an MLE Update (without MR update) operation in a batch succeeds
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLEUpdateInBatch()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLEUpdateInBatch_Inner)
@@ -1696,7 +1696,7 @@ Partial Public Class ClientModule
         End Sub
 
         ' Test which verifies errors are handled correctly if the server fails to process a correct batch request from the client
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLEUpdateInBatchWhenServerErrors()
             Dim service As TestWebRequest = TestWebRequest.CreateForInProcessWcf
             Try
@@ -1705,9 +1705,9 @@ Partial Public Class ClientModule
                 service.ServiceType = GetType(AstoriaUnitTests.Stubs.StreamingService)
                 service.StartService()
 
-                Dim engine = CombinatorialEngine.FromDimensions( _
-                    New Dimension("Service", New TestWebRequest() {service}), _
-                    New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+                Dim engine = CombinatorialEngine.FromDimensions(
+                    New Dimension("Service", New TestWebRequest() {service}),
+                    New Dimension("ExecutionMethod", Util.ExecutionMethods),
                     New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto)}))
 
                 TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLEUpdateInBatchWhenServerErrors_Inner)
@@ -1777,10 +1777,10 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Create MLE Batch"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLECreateInBatch()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLECreateInBatch_Inner)
@@ -1824,10 +1824,10 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Delete MLE Batch"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLEDeleteInBatch()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLEDeleteInBatch_Inner)
@@ -1867,12 +1867,12 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Get MLE Batch"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLEGetInBatch()
             ResetServiceContent()
 
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLEGetInBatch_Inner)
@@ -1902,10 +1902,10 @@ Partial Public Class ClientModule
 
 #Region "Sequences of operations on MLE - Batch"
         ' Test which verifies that trying to perform an MLE Update (without MR update) operation in a batch succeeds
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLEUpdateDeleteInBatch()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLEUpdateDeleteInBatch_Inner)
@@ -1948,10 +1948,10 @@ Partial Public Class ClientModule
         End Sub
 
         ' Test which verifies that trying to perform an MLE Update (without MR update) operation in a batch succeeds
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub MLEUpdateUpdateInBatch()
-            Dim engine = CombinatorialEngine.FromDimensions( _
-                New Dimension("ExecutionMethod", Util.ExecutionMethods), _
+            Dim engine = CombinatorialEngine.FromDimensions(
+                New Dimension("ExecutionMethod", Util.ExecutionMethods),
                 New Dimension("PhotoType", New Type() {GetType(StreamingServicePhoto), GetType(StreamingServiceV1Photo)}))
 
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf MLEUpdateUpdateInBatch_Inner)
@@ -2006,7 +2006,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "DataServiceRequestArgs tests"
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub DataServiceRequestArgs_Defaults()
             Dim args = New DataServiceRequestArgs()
             Assert.IsNull(args.AcceptContentType, "AcceptContentType should be null by default.")
@@ -2016,17 +2016,17 @@ Partial Public Class ClientModule
             Assert.AreEqual(0, args.Headers.Count, "Headers should be empty by default.")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub DataServiceRequestArgs_AcceptContentType()
             DataServiceRequestArgs_Inner_PropertyTest("Accept", GetType(DataServiceRequestArgs).GetProperty("AcceptContentType", BindingFlags.Instance Or BindingFlags.Public))
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub DataServiceRequestArgs_ContentType()
             DataServiceRequestArgs_Inner_PropertyTest("Content-Type", GetType(DataServiceRequestArgs).GetProperty("ContentType", BindingFlags.Instance Or BindingFlags.Public))
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub DataServiceRequestArgs_Slug()
             DataServiceRequestArgs_Inner_PropertyTest("Slug", GetType(DataServiceRequestArgs).GetProperty("Slug", BindingFlags.Instance Or BindingFlags.Public))
         End Sub
@@ -2052,7 +2052,7 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("End to end tests using a service with some named streams")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("End to end tests using a service with some named streams")>
         Public Sub CloseStreamTiming()
             TestUtil.RunCombinations(Util.ExecutionMethods, AddressOf CloseStreamTiming_Internal)
         End Sub
@@ -2068,14 +2068,14 @@ Partial Public Class ClientModule
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
                 'context.EnableAtom = True
                 'context.Format.UseAtom()
-                Dim c As New DummyTypeWithStream With { _
-                    .ID = 12345, _
-                    .Name = "Microsoft" _
+                Dim c As New DummyTypeWithStream With {
+                    .ID = 12345,
+                    .Name = "Microsoft"
                 }
 
-                Dim cExtraCall As New DummyTypeWithStream With { _
-                    .ID = 12346, _
-                    .Name = "Extra to get another call to SendingRequest" _
+                Dim cExtraCall As New DummyTypeWithStream With {
+                    .ID = 12346,
+                    .Name = "Extra to get another call to SendingRequest"
                 }
 
                 Dim streams As New Dictionary(Of Integer, Tuple(Of Boolean, TestingStream))
@@ -2137,7 +2137,7 @@ Partial Public Class ClientModule
 
 #Region "End to End Named stream tests"
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("End to end tests using a service with some named streams")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("End to end tests using a service with some named streams")>
         Public Sub EndToEndNamedStreamTests()
             Dim source As tp.DSPContext = New tp.DSPContext()
             Using request As InProcessWcfWebRequest = DirectCast(SetUpDSPService(source, True).CreateForInProcessWcf(), InProcessWcfWebRequest)
@@ -2149,9 +2149,9 @@ Partial Public Class ClientModule
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
                 'context.EnableAtom = True
                 'context.Format.UseAtom()
-                Dim c As New DummyTypeWithStream With { _
-                 .ID = 12345, _
-                 .Name = "Microsoft" _
+                Dim c As New DummyTypeWithStream With {
+                 .ID = 12345,
+                 .Name = "Microsoft"
                 }
 
                 context.AddObject("MySet", c)
@@ -2167,8 +2167,8 @@ Partial Public Class ClientModule
                 Assert.AreNotEqual(sd.StreamLink.ETag, Nothing, "Etag must be present")
 
                 ' Get the stream and make sure that the etag and content type is updated
-                Dim r As DataServiceStreamResponse = context.GetReadStream(c, "Stream1", New DataServiceRequestArgs() With { _
-                 .AcceptContentType = "image/jpeg" _
+                Dim r As DataServiceStreamResponse = context.GetReadStream(c, "Stream1", New DataServiceRequestArgs() With {
+                 .AcceptContentType = "image/jpeg"
                 })
                 Assert.AreEqual(sd.StreamLink.ContentType, "image/jpeg", "After the get, there should be a content type")
                 Assert.AreEqual(sd.StreamLink.SelfLink, Nothing, "There should be no self link")
@@ -2182,7 +2182,7 @@ Partial Public Class ClientModule
             End Using
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Verify that GetReadStream api updates the etag and content type for named streams")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Verify that GetReadStream api updates the etag and content type for named streams")>
         Public Sub VerifyThatReadNamedStreamUpdatesTheETagAndContentType()
             Dim source As tp.DSPContext = New tp.DSPContext()
             Using request As InProcessWcfWebRequest = DirectCast(SetUpDSPService(source, False).CreateForInProcessWcf(), InProcessWcfWebRequest)
@@ -2194,9 +2194,9 @@ Partial Public Class ClientModule
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
                 'context.EnableAtom = True
                 'context.Format.UseAtom()
-                Dim c As New DummyType With { _
-                 .ID = 12345, _
-                 .Name = "Microsoft" _
+                Dim c As New DummyType With {
+                 .ID = 12345,
+                 .Name = "Microsoft"
                 }
 
                 context.AddObject("MySet", c)
@@ -2221,8 +2221,8 @@ Partial Public Class ClientModule
                 context1.SaveChanges()
 
                 ' Get the stream and make sure that the etag and content type is updated
-                Dim r As DataServiceStreamResponse = context.GetReadStream(c, "Stream1", New DataServiceRequestArgs() With { _
-                 .AcceptContentType = "image/bmp" _
+                Dim r As DataServiceStreamResponse = context.GetReadStream(c, "Stream1", New DataServiceRequestArgs() With {
+                 .AcceptContentType = "image/bmp"
                 })
                 Assert.AreEqual(sd.StreamLink.ContentType, "image/bmp", "After the get, there should be a content type")
                 Assert.AreEqual(sd.StreamLink.SelfLink, Nothing, "There should be no self link")
@@ -2236,7 +2236,7 @@ Partial Public Class ClientModule
             End Using
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Verify that GetReadStream api updates the etag and content type for MR")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Verify that GetReadStream api updates the etag and content type for MR")>
         Public Sub VerifyThatReadStreamUpdatesTheETag()
             Dim source As tp.DSPContext = New tp.DSPContext()
             Using request As InProcessWcfWebRequest = DirectCast(SetUpDSPService(source, True).CreateForInProcessWcf(), InProcessWcfWebRequest)
@@ -2248,9 +2248,9 @@ Partial Public Class ClientModule
                 Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
                 'context.EnableAtom = True
                 'context.Format.UseAtom()
-                Dim c As New DummyTypeWithStream With { _
-                 .ID = 12345, _
-                 .Name = "Microsoft" _
+                Dim c As New DummyTypeWithStream With {
+                 .ID = 12345,
+                 .Name = "Microsoft"
                 }
 
                 context.AddObject("MySet", c)
@@ -2271,8 +2271,8 @@ Partial Public Class ClientModule
                 context1.SaveChanges()
 
                 ' Get the stream and make sure that the etag and content type is updated
-                Dim r As DataServiceStreamResponse = context.GetReadStream(c, New DataServiceRequestArgs() With { _
-                 .AcceptContentType = "image/bmp" _
+                Dim r As DataServiceStreamResponse = context.GetReadStream(c, New DataServiceRequestArgs() With {
+                 .AcceptContentType = "image/bmp"
                 })
 
                 Assert.AreNotEqual(etag, ed.StreamETag, "The new etag must have been populated")
@@ -2332,7 +2332,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Verification methods"
-        Private Sub VerifySinglePhoto(ByVal photo As StreamingServicePhotoBase, ByVal ctx As DataServiceContext, _
+        Private Sub VerifySinglePhoto(ByVal photo As StreamingServicePhotoBase, ByVal ctx As DataServiceContext,
                                       ByVal executionMethod As Util.ExecutionMethod)
             Assert.IsNotNull(ctx.GetReadStreamUri(photo), "Photo is MLE so it must have a read stream URI.")
 

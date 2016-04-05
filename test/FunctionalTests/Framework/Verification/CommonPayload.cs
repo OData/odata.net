@@ -41,11 +41,6 @@ namespace System.Data.Test.Astoria
 
             switch (format)
             {
-                //case SerializationFormatKind.Atom:
-                //case SerializationFormatKind.PlainXml:
-                //case SerializationFormatKind.Default:
-                //    return new XMLPayload(rr);
-
                 case SerializationFormatKind.JSON:
                     return new JSONPayload(rr);
             }
