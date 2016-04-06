@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Values;
 
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client

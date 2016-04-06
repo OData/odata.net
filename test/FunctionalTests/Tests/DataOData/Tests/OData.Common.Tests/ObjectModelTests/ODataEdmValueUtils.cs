@@ -4,20 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Spatial;
+using Microsoft.Test.Taupo.Contracts;
+
 namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
-    #region Namespaces
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.Spatial;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData;
-    using Microsoft.Test.Taupo.Contracts;
-    #endregion Namespaces
-
     /// <summary>
     /// Helper class for comparing the ODataLib IEdmValue implementations
     /// </summary>

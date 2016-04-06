@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+<<<<<<< HEAD
 using System;
 using System.Diagnostics;
 using System.Xml;
@@ -11,6 +12,11 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
 
 #if ODATA_SERVICE
+=======
+using Microsoft.OData.Edm.Vocabularies;
+
+#if ASTORIA_SERVER
+>>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
 namespace Microsoft.OData.Service
 #else
 #if ODATA_CLIENT
@@ -24,6 +30,14 @@ namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 {
+<<<<<<< HEAD
+=======
+    using System;
+    using System.Diagnostics;
+    using System.Xml;
+    using Microsoft.OData.Edm.Library;
+
+>>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
     /// <summary>
     /// Contains methods to convert primitive values to their string representation.
     /// </summary>

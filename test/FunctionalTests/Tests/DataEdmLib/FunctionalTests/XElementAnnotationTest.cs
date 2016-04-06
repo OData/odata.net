@@ -7,16 +7,16 @@
 namespace EdmLibTests.FunctionalTests
 {
     using System;
-    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -366,7 +366,7 @@ namespace EdmLibTests.FunctionalTests
             try
             {
                 SetNullAnnotationNameModel();
-                Assert.Fail("exception exptected");
+                Assert.Fail("exception expected");
             }
             catch (ArgumentNullException)
             {

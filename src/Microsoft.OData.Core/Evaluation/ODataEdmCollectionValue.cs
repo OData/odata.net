@@ -4,18 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Metadata;
+
 namespace Microsoft.OData.Evaluation
 {
-    #region Namespaces
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-
-    #endregion Namespaces
-
     /// <summary>
     /// An <see cref="IEdmCollectionValue"/> implementation of an OData collection value.
     /// </summary>

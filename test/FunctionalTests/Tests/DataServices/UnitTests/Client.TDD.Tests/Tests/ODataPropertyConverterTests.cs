@@ -16,8 +16,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using AstoriaUnitTests.TDD.Common;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Tests a subset of the serializer functionality in the client. More tests should be added as changes are made.

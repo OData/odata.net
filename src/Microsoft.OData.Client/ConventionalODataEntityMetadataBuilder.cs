@@ -8,9 +8,8 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Implementation of <see cref="ODataResourceMetadataBuilder"/> which uses OData conventions.

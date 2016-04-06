@@ -11,7 +11,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Common;
 

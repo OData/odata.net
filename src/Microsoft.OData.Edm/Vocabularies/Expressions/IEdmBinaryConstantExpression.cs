@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Values;
-
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>

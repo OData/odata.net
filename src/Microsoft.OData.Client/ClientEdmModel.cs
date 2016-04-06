@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces.
@@ -22,7 +24,6 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using c = Microsoft.OData.Client;
 
     #endregion Namespaces.

@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
     using System.Linq.Expressions;
 
     /// <summary>
-    /// base vistor class for walking an expression tree bottom up.
+    /// base visitor class for walking an expression tree bottom up.
     /// </summary>
     internal abstract class ALinqExpressionVisitor
     {

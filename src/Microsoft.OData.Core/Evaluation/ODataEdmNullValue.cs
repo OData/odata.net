@@ -4,14 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Evaluation
 {
-    #region Namespaces
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-    #endregion Namespaces
-
     /// <summary>
     /// An <see cref="IEdmValue"/> implementation of an OData resource or complex value.
     /// </summary>

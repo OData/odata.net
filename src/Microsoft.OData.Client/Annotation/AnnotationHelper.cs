@@ -17,7 +17,6 @@ namespace Microsoft.OData.Client.Annotation
     using Microsoft.OData.Edm.EdmToClrConversion;
     using Microsoft.OData.Edm.Evaluation;
     using Microsoft.OData.Edm.Vocabularies;
-    using Microsoft.OData.Edm.Values;
 
     /// <summary>
     /// Provides functions to get instance annotation or metadata annotation, or to build metadata annotation dictionary.
@@ -225,7 +224,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="type">The specified annotated type.</param>
         /// <param name="term">The term name.</param>
         /// <param name="qualifier">The qualifier name.</param>
-        /// <returns>The vacabulary annotation that binds to a term and a qualifier for the specified annotated type.</returns>
+        /// <returns>The vocabulary annotation that binds to a term and a qualifier for the specified annotated type.</returns>
         private static IEdmValueAnnotation GetOrInsertCachedMetadataAnnotationForType(DataServiceContext context, Type type, string term, string qualifier)
         {
             var serviceModel = context.Format.ServiceModel;
@@ -282,7 +281,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="propertyInfo">The specified annotated propertyInfo.</param>
         /// <param name="term">The term name.</param>
         /// <param name="qualifier">The qualifier name.</param>
-        /// <returns>The vacabulary annotation that binds to a term and a qualifier for the specified annotated propertyInfo.</returns>
+        /// <returns>The vocabulary annotation that binds to a term and a qualifier for the specified annotated propertyInfo.</returns>
         private static IEdmValueAnnotation GetOrInsertCachedMetadataAnnotationForPropertyInfo(DataServiceContext context, PropertyInfo propertyInfo, string term, string qualifier)
         {
             var serviceModel = context.Format.ServiceModel;
@@ -351,7 +350,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="methodInfo">The specified annotated methodInfo.</param>
         /// <param name="term">The term name.</param>
         /// <param name="qualifier">The qualifier name.</param>
-        /// <returns>The vacabulary annotation that binds to a term and a qualifier for the specified annotated methodInfo.</returns>
+        /// <returns>The vocabulary annotation that binds to a term and a qualifier for the specified annotated methodInfo.</returns>
         private static IEdmValueAnnotation GetOrInsertCachedMetadataAnnotationForMethodInfo(DataServiceContext context, MethodInfo methodInfo, string term, string qualifier)
         {
             IEdmModel serviceModel = context.Format.ServiceModel;
@@ -401,7 +400,7 @@ namespace Microsoft.OData.Client.Annotation
         }
 
         /// <summary>
-        /// Get a cahced metadata annotation for a specified annotatable object from current context.
+        /// Get a cached metadata annotation for a specified annotatable object from current context.
         /// </summary>
         /// <param name="context">The data service context.</param>
         /// <param name="key">The specified annotatable object.</param>

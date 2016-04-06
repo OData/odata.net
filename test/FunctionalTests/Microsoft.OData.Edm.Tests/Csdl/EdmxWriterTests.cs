@@ -9,11 +9,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
@@ -35,8 +34,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             EdmStructuralProperty timeVer = entity.AddStructuralProperty("UpdatedTime", EdmCoreModel.Instance.GetDate(false));
             model.AddElement(entity);
 
-            SetComputedAnnotation(model, entityId);  // semantic meaning is V3's 'Identity' for Key profperty
-            SetComputedAnnotation(model, timeVer);   // semantic meaning is V3's 'Computed' for non-key profperty
+            SetComputedAnnotation(model, entityId);  // semantic meaning is V3's 'Identity' for Key property
+            SetComputedAnnotation(model, timeVer);   // semantic meaning is V3's 'Computed' for non-key property
 
             var entityContainer = new EdmEntityContainer("NS1", "Container");
             model.AddElement(entityContainer);

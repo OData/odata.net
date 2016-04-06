@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
 {
     using System;
@@ -16,7 +18,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
 
     public static class MeasuresHelpers

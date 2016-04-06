@@ -61,8 +61,5 @@
       <Name>Microsoft.Test.Taupo</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Microsoft.Test.Taupo.Edmlib.layering.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client
         /// <returns>An IAsyncResult that represents the asynchronous operation, which could still be pending</returns>
         internal delegate IAsyncResult AsyncAction(byte[] buffer, int offset, int length, AsyncCallback asyncCallback, object state);
 
-        #region IAsyncResult implmentation - AsyncState, AsyncWaitHandle, CompletedSynchronously, IsCompleted
+        #region IAsyncResult implementation - AsyncState, AsyncWaitHandle, CompletedSynchronously, IsCompleted
 
         /// <summary>user state object parameter</summary>
         public object AsyncState
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Client
             {
                 this.abortable = value;
                 if ((null != value) && this.IsAborted)
-                {   // if the value hadn't been set yet, but aborting then propogate the abort
+                {   // if the value hadn't been set yet, but aborting then propagate the abort
                     value.Abort();
                 }
             }
@@ -223,7 +223,7 @@ namespace Microsoft.OData.Client
             Debug.Assert((result.CompletedSynchronously && result.IsCompleted) || !result.CompletedSynchronously, "CompletedSynchronously && !IsCompleted");
 
             if (!result.IsCompleted)
-            {   // if the user doesn't want to wait forever, they should explictly wait on the handle with a timeout
+            {   // if the user doesn't want to wait forever, they should explicitly wait on the handle with a timeout
                 result.AsyncWaitHandle.WaitOne();
 
                 Debug.Assert(result.IsCompleted, "not completed after waiting");
@@ -571,7 +571,7 @@ namespace Microsoft.OData.Client
                 // If the read finishes synchronously the AsyncRequestContentEndRead will be called from inside the BeginRead
                 //   call below. In there we will call BeginWrite. If that completes synchronously we will loop
                 //   and call BeginRead again. If that completes synchronously as well we will call BeginWrite and so on.
-                //   AsyncEndWrite will return immedially if it finished synchronously (otherwise it calls BeginRead).
+                //   AsyncEndWrite will return immediately if it finished synchronously (otherwise it calls BeginRead).
                 // So in the worst case we will have a stack like this:
                 //   AsyncEndGetRequestStream
                 //     AsyncRequestContentEndRead
@@ -661,7 +661,7 @@ namespace Microsoft.OData.Client
         /// IAsyncResult.CompletedSynchronously is false, otherwise it returns immediately.
         /// </summary>
         /// <param name="callback">callback to be wrapped</param>
-        /// <returns>Returnes a callback which will only run the wrapped callback if IAsyncResult.CompletedSynchronously is false, otherwise it returns immediately.</returns>
+        /// <returns>Returns a callback which will only run the wrapped callback if IAsyncResult.CompletedSynchronously is false, otherwise it returns immediately.</returns>
         /// <remarks>
         /// Please see remarks on BaseAsyncResult.InvokeAsync().
         /// Also note that the GetDataServiceTaskCallback method below is a Win8 version of this method, so it should be kept in sync with any changes that occur here.

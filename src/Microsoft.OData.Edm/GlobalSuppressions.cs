@@ -41,7 +41,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Scope = "type", Target = "Microsoft.OData.Edm.IEdmStructuredTypeReference")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Scope = "type", Target = "Microsoft.OData.Edm.IEdmVocabularyAnnotatable")]
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.Edm.Values.IEdmBinaryValue.#Value")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.IEdmBinaryValue.#Value")]
 
 #endregion
 
@@ -62,12 +62,12 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Namespace", Scope = "member", Target = "Microsoft.OData.Edm.IEdmAnnotation.#Namespace")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "To", Scope = "member", Target = "Microsoft.OData.Edm.IEdmNavigationProperty.#To")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property", Scope = "member", Target = "Microsoft.OData.Edm.Values.IEdmPropertyValue.#Property")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.IEdmPropertyValue.#Property")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Namespace", Scope = "member", Target = "Microsoft.OData.Edm.IEdmSchemaElement.#Namespace")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property", Scope = "member", Target = "Microsoft.OData.Edm.Values.IEdmStructuredValue.#FindPropertyValue(Microsoft.OData.Edm.IEdmProperty)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue.#FindPropertyValue(Microsoft.OData.Edm.IEdmProperty)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmStructuredType.#RemoveProperty(Microsoft.OData.Edm.IEdmProperty)")]
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:AvoidTypeNamesInParameters", MessageId = "1#", Scope = "member", Target = "Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter.RegisterConvertedObject(Microsoft.OData.Edm.Values.IEdmStructuredValue,System.Object):System.Void")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:AvoidTypeNamesInParameters", MessageId = "1#", Scope = "member", Target = "Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter.RegisterConvertedObject(Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue,System.Object):System.Void")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "ANon", Scope = "member", Target = "Microsoft.OData.Edm.Validation.EdmErrorCode.#NullCannotBeAssertedToBeANonNullableType")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "BeSide", Scope = "member", Target = "Microsoft.OData.Edm.Validation.EdmErrorCode.#ComposableOperationImportCannotBeSideEffecting")]
@@ -83,7 +83,7 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmNamedElement.#elementName", Justification = "Making this a property would result in substantially worse code")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmStructuredType.#BaseStructuredType")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible", Scope = "member", Target = "Microsoft.OData.Edm.Library.Values.EdmNullExpression.#Instance")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmNullExpression.#Instance")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEntityType.#AddNavigation(System.String,Microsoft.OData.Edm.Library.EdmEntityType,Microsoft.OData.Edm.EdmMultiplicity)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEntityType.#AddNavigation(System.String,Microsoft.OData.Edm.Library.EdmEntityType,Microsoft.OData.Edm.EdmMultiplicity,Microsoft.OData.Edm.EdmMultiplicity)")]
 
@@ -238,7 +238,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Scope = "member", Target = "Microsoft.OData.Edm.Library.TimeOfDay.#op_Implicit(System.TimeSpan):Microsoft.OData.Edm.Library.TimeOfDay")]
 
 // By design.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Scope = "member", Target = "Microsoft.OData.Edm.Library.Values.EdmValue.#Microsoft.OData.Edm.Values.IEdmDelayedValue.Value")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmValue.#Microsoft.OData.Edm.Vocabularies.IEdmDelayedValue.Value")]
 
 // Already public APIs thus cannot be changed.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Scope = "member", Target = "Microsoft.OData.Edm.IEdmReference.#Uri")]
@@ -260,13 +260,13 @@
 
 // Already public APIs thus cannot be changed.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmReference.#.ctor(System.String)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Scope = "member", Target = "Microsoft.OData.Edm.EdmToClrConversion.TryCreateObjectInstance.#Invoke(Microsoft.OData.Edm.Values.IEdmStructuredValue,System.Type,Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter,System.Object&,System.Boolean&)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Scope = "member", Target = "Microsoft.OData.Edm.EdmToClrConversion.TryCreateObjectInstance.#Invoke(Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue,System.Type,Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter,System.Object&,System.Boolean&)")]
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmNavigationSource.#FindNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsComplexTypeDefinition.#ComputeBaseType()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition.#ComputeBaseType()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "propertyValue", Scope = "member", Target = "Microsoft.OData.Edm.Library.Values.EdmStructuredValue.#.ctor(Microsoft.OData.Edm.IEdmStructuredTypeReference,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.Values.IEdmPropertyValue>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "propertyValue", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmStructuredValue.#.ctor(Microsoft.OData.Edm.IEdmStructuredTypeReference,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.Vocabularies.IEdmPropertyValue>)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyModel.#.cctor()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.#.cctor()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyModel.#.cctor()")]
@@ -280,8 +280,8 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.UnresolvedEnumMember.#ComputeValue()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation.#FindParameterizedOperationImport(System.String,System.Func`2<System.String,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.IEdmOperationImport>>,System.Func`2<System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.IEdmOperationImport>,Microsoft.OData.Edm.IEdmOperationImport>)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel.#WrapExpression(Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase,Microsoft.OData.Edm.IEdmEntityType,Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#MatchesType(Microsoft.OData.Edm.IEdmTypeReference,Microsoft.OData.Edm.Values.IEdmValue,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#MatchesType(Microsoft.OData.Edm.IEdmTypeReference,Microsoft.OData.Edm.Vocabularies.IEdmValue,System.Boolean)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.Serialization.EdmModelCsdlSchemaWriter.#WriteInlineExpression(Microsoft.OData.Edm.Vocabularies.IEdmExpression)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.EdmModelVisitor.#VisitExpression(Microsoft.OData.Edm.Vocabularies.IEdmExpression)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#Eval(Microsoft.OData.Edm.Vocabularies.IEdmExpression,Microsoft.OData.Edm.Values.IEdmStructuredValue)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1809:AvoidExcessiveLocals", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#Eval(Microsoft.OData.Edm.Vocabularies.IEdmExpression,Microsoft.OData.Edm.Values.IEdmStructuredValue)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#Eval(Microsoft.OData.Edm.Vocabularies.IEdmExpression,Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1809:AvoidExcessiveLocals", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#Eval(Microsoft.OData.Edm.Vocabularies.IEdmExpression,Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue)")]

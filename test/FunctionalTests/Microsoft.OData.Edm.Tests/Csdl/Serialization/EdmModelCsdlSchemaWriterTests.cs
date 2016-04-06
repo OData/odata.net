@@ -12,7 +12,6 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Serialization

@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm
 {
     #region Namespaces
@@ -16,8 +18,7 @@ namespace Microsoft.OData.Edm
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Csdl.CsdlSemantics;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
+
     #endregion Namespaces
 
     /// <summary>

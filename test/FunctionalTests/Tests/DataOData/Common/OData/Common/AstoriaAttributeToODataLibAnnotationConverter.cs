@@ -4,23 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
+using Microsoft.Test.Taupo.Astoria.Contracts.OData;
+using Microsoft.Test.Taupo.Common;
+using Microsoft.Test.Taupo.OData.Contracts;
+using Microsoft.Test.Taupo.Platforms;
+
 namespace Microsoft.Test.Taupo.OData.Common
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Metadata;
-    using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
-    using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.OData.Atom;
-    using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.Platforms;
-
     /// <summary>
     /// Interface that looks at serializable CSDL annotations (attribute annotations) and converts them to 
     /// ODataLib product annotations (ODataEntityPropertyMappings) on an <see cref="IEdmModel"/>.

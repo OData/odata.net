@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using Microsoft.OData.Client;
@@ -11,8 +13,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

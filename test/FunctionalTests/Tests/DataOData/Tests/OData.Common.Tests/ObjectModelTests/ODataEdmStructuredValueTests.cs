@@ -4,23 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.Taupo.Common;
+using Microsoft.Test.Taupo.Execution;
+using Microsoft.Test.Taupo.OData.Contracts;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData;
-    using Microsoft.OData.UriParser;
-    using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Execution;
-    using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Library;
-    #endregion Namespaces
-
     /// <summary>
     /// Tests for the ODataEdmStructuredValue object model type.
     /// </summary>

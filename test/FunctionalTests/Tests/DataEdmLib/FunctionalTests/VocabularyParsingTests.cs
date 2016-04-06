@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.FunctionalTests
 {
     #if SILVERLIGHT
@@ -21,7 +23,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.Community.V1;
@@ -3180,7 +3181,7 @@ namespace EdmLibTests.FunctionalTests
                     var enumReferenceExpression = expression as IEdmEnumMemberReferenceExpression;
                     if (null != enumReferenceExpression)
                     {
-                        if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == Microsoft.OData.Edm.Values.EdmValueKind.String)
+                        if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == EdmValueKind.String)
                         {
                             var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmStringConstant;
 
@@ -3189,7 +3190,7 @@ namespace EdmLibTests.FunctionalTests
                                 annotationValues.Add(new PropertyValue(enumValue.Value));
                             }
                         }
-                        else if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == Microsoft.OData.Edm.Values.EdmValueKind.Integer)
+                        else if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == EdmValueKind.Integer)
                         {
                             var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmIntegerConstant;
 

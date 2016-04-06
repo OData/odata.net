@@ -307,7 +307,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="T:System.InvalidOperationException">When a previous call to <see cref="M:Microsoft.OData.Client.DataServiceCollection`1.LoadAsync" /> is not yet complete.</exception>
         /// <remarks>This method uses the event-based async pattern.
         /// The method returns immediately without waiting for the query to complete. Then it calls the handler of the
-        /// <see cref="LoadCompleted"/> event exactly once on the UI thread. The event will be raised regradless
+        /// <see cref="LoadCompleted"/> event exactly once on the UI thread. The event will be raised regardless
         /// if the query succeeded or not.
         /// This class only support one asynchronous operation in flight.</remarks>
         public void LoadAsync(System.Linq.IQueryable<T> query)

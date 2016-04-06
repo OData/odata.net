@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
@@ -17,7 +19,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using Microsoft.OData.Tests;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Service;
     using UrlConvention = Microsoft.OData.Service.UrlConvention;

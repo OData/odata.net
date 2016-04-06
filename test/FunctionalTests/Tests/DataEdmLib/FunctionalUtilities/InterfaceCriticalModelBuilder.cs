@@ -12,11 +12,9 @@ namespace EdmLibTests.FunctionalUtilities
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     class InterfaceCriticalModelBuilder
     {

@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.EdmToClrConversion
 {

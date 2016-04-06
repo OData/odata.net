@@ -13,7 +13,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Common;
 

@@ -8,7 +8,6 @@ namespace EdmLibTests.VocabularyStubs
 {
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm.Vocabularies;
-    using Microsoft.OData.Edm.Values;
 
     public class StubStringConstantExpression : StubEdmElement, IEdmStringConstantExpression
     {

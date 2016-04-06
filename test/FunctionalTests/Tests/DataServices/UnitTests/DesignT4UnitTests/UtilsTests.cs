@@ -7,15 +7,14 @@
 using System;
 using System.Xml.Linq;
 using FluentAssertions;
+using Microsoft.OData.Client.Design.T4;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Service.Design.UnitTests
 {
-    using Microsoft.OData.Client.Design.T4;
-
     public class EdmSchemaTypeForTest : EdmType, IEdmSchemaElement
     {
         private readonly string name;

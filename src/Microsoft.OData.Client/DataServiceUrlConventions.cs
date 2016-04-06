@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using ErrorStrings = Microsoft.OData.Client.Strings;
 
     /// <summary>

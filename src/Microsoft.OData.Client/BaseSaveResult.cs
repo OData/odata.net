@@ -748,7 +748,7 @@ namespace Microsoft.OData.Client
                         // note: SaveChanges operates with two passes
                         //      a) first send the request and then attach identity and append the result into a batch response  (Example: BeginSaveChanges)
                         //      b) process the batch response (shared code with SaveChanges(BatchWithSingleChangeset))  (Example: EndSaveChanges)
-                        // note: SaveResultWasProcessed is set when to the pre-save state when the save result is sucessfully processed
+                        // note: SaveResultWasProcessed is set when to the pre-save state when the save result is successfully processed
 
                         // scenario #1 when target entity started in modified or unchanged state
                         // 1) the link target entity was modified and now implicitly assumed to be unchanged (this is true in second pass)
@@ -1170,7 +1170,7 @@ namespace Microsoft.OData.Client
                     // For MR - entityDescriptor.State is merged, we don't need to do link folding since MR will never fold links.
                     foreach (LinkDescriptor end in this.RelatedLinks(entityDescriptor))
                     {
-                        Debug.Assert(0 != end.SaveResultWasProcessed, "link should have been saved with the enty");
+                        Debug.Assert(0 != end.SaveResultWasProcessed, "link should have been saved with the entity");
 
                         // Since we allow link folding on collection properties also, we need to check if the link
                         // was in added state also, and make sure we put that link in unchanged state.

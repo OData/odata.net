@@ -6,7 +6,7 @@
 
 using System;
 using System.Reflection;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.EdmToClrConversion
 {

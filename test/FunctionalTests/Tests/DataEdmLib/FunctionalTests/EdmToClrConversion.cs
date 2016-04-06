@@ -14,8 +14,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.EdmToClrConversion;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;

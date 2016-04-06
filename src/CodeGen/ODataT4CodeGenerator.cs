@@ -21,7 +21,6 @@ namespace Microsoft.OData.Client.Design.T4
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Edm.Vocabularies.Community.V1;

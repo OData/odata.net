@@ -4,16 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.Taupo.OData.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
 {
-    using System.Runtime.CompilerServices;
-    using Microsoft.OData;
-    using Microsoft.OData.UriParser;
-    using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class Expand : UriParserTestsBase
     {

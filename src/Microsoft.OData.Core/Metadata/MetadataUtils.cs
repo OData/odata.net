@@ -12,6 +12,7 @@ namespace Microsoft.OData.Metadata
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     #endregion Namespaces

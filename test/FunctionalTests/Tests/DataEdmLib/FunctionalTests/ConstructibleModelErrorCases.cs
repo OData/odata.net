@@ -6,18 +6,17 @@
 
 namespace EdmLibTests.FunctionalTests
 {
+    #if SILVERLIGHT
+    using Microsoft.Silverlight.Testing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -145,7 +144,7 @@ namespace EdmLibTests.FunctionalTests
             // Positive test
             var edmModel = new EdmModel();
             edmModel.AddElement(new AnEdmOperationElement());
-            Assert.IsTrue(edmModel.FindOperations("MyNamespace.MyName").Any(), "Faild to find the newly added element.");
+            Assert.IsTrue(edmModel.FindOperations("MyNamespace.MyName").Any(), "Failed to find the newly added element.");
         }
 
         [TestMethod]
@@ -158,13 +157,13 @@ namespace EdmLibTests.FunctionalTests
             }
             catch (InvalidCastException e)
             {
-                Assert.IsTrue(e.Message.Contains("IEdmEntityType"), "It should fail when cahsting to IEdmEntityType.");
+                Assert.IsTrue(e.Message.Contains("IEdmEntityType"), "It should fail when casting to IEdmEntityType.");
             }
 
             // Positive test
             var edmModel = new EdmModel();
             edmModel.AddElement(new AnEdmEntityType());
-            Assert.IsTrue(edmModel.SchemaElements.Any(n => n.FullName() == "MyNamespace.MyName"), "Faild to find the newly added element.");
+            Assert.IsTrue(edmModel.SchemaElements.Any(n => n.FullName() == "MyNamespace.MyName"), "Failed to find the newly added element.");
         }
 
         [TestMethod]

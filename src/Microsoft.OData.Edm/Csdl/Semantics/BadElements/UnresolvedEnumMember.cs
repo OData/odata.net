@@ -6,9 +6,8 @@
 
 using System;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {

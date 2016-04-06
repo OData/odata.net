@@ -5,29 +5,23 @@
 //---------------------------------------------------------------------
 
 #if ODATA_CLIENT
+    using Microsoft.OData;
+#endif
+using System;
+using System.Diagnostics;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Spatial;
+using ErrorStrings = Microsoft.OData.Strings;
+using PlatformHelpers = Microsoft.OData.PlatformHelper;
+
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Evaluation
 #endif
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using Microsoft.Spatial;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-#if ODATA_CLIENT
-    using Microsoft.OData;
-    using ErrorStrings = Microsoft.OData.Client.Strings;
-    using PlatformHelpers = Microsoft.OData.Client.PlatformHelper;
-#else
-    using ErrorStrings = Microsoft.OData.Strings;
-    using PlatformHelpers = Microsoft.OData.PlatformHelper;
-#endif
-    #endregion Namespaces
-
     /// <summary>
     /// Class with utility methods to deal with EDM values
     /// </summary>

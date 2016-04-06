@@ -8,7 +8,6 @@ namespace EdmLibTests.StubEdm
 {
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
-    using Microsoft.OData.Edm.Values;
 
     /// <summary>
     /// Represents an EDM string constant expression.

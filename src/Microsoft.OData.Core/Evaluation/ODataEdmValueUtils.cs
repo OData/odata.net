@@ -4,15 +4,26 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+<<<<<<< HEAD
 namespace Microsoft.OData.Evaluation
+=======
+using Microsoft.OData.Edm.Vocabularies;
+
+namespace Microsoft.OData.Core.Evaluation
+>>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
 {
     #region Namespaces
 
     using System.Diagnostics;
     using Microsoft.OData.Edm;
+<<<<<<< HEAD
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
     using ODataErrorStrings = Microsoft.OData.Strings;
+=======
+    using Microsoft.OData.Edm.Library;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+>>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
 
     #endregion Namespaces
 

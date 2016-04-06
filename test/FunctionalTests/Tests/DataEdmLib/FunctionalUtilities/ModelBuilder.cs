@@ -14,11 +14,10 @@ namespace EdmLibTests.FunctionalUtilities
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Vocabularies;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Common;
+    using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.OData.Utils.ODataLibTest;
 
     public static class ModelBuilder

@@ -6,17 +6,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
-using Microsoft.OData.Edm.Values;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Evaluation
 {
-    using System.Globalization;
-
     /// <summary>
     /// Expression evaluator.
     /// </summary>

@@ -4,26 +4,25 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using Microsoft.OData.Service;
+using Microsoft.OData.Service.Caching;
+using Microsoft.OData.Service.Providers;
+using Microsoft.OData.Service.Serializers;
+using System.IO;
+using System.Linq;
+using System.Text;
+using AstoriaUnitTests.TDD.Tests.Server.Simulators;
+using AstoriaUnitTests.Tests.Server.Simulators;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Microsoft.OData;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
+using FluentAssertions.Primitives;
+
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
-    using System;
-    using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Caching;
-    using Microsoft.OData.Service.Providers;
-    using Microsoft.OData.Service.Serializers;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using AstoriaUnitTests.TDD.Tests.Server.Simulators;
-    using AstoriaUnitTests.Tests.Server.Simulators;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using FluentAssertions;
-    using FluentAssertions.Primitives;
-
     [TestClass]
     public class PayloadMetadataVerbosityTests
     {

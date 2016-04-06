@@ -4,18 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using Microsoft.OData.JsonLight;
+
 namespace Microsoft.OData.Evaluation
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.OData.JsonLight;
-
-    #endregion
-
     /// <summary>
     /// Implementation of OData URI builder based on OData protocol conventions.
     /// </summary>

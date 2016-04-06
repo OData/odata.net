@@ -14,8 +14,7 @@ namespace EdmLibTests.FunctionalUtilities
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
-
+    using Microsoft.OData.Edm.Vocabularies;
     class ConstantExpressionModelBuilder
     {
         public static IEnumerable<XElement> ValueAnnotationInvalidIntegerConstantExpressionCsdl()

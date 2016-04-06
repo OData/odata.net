@@ -14,9 +14,8 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -39,7 +38,7 @@ namespace EdmLibTests.FunctionalTests
                 try
                 {
                     model.SetAnnotationValue(annotatable, q.NamespaceName, q.Name, q.MyFullName);
-                    Assert.Fail("exception exptected");
+                    Assert.Fail("exception expected");
                 }
                 catch (ArgumentNullException)
                 {

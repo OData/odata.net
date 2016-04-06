@@ -11,8 +11,7 @@ namespace Microsoft.OData.Edm
     using System.Globalization;
     using System.Linq;
     using System.Text;
-
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Enum helper

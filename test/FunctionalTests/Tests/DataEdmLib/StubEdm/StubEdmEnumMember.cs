@@ -7,7 +7,7 @@
 namespace EdmLibTests.StubEdm
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmEnumMember

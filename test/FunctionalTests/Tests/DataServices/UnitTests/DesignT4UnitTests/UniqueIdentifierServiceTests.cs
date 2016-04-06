@@ -5,12 +5,11 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
-    using System.Collections.Generic;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class UniqueIdentifierServiceTests
     {

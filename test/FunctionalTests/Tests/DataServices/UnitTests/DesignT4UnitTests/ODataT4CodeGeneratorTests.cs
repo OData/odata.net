@@ -4,26 +4,25 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
-using Microsoft.CSharp;
-using Microsoft.OData.Edm;
-using Microsoft.Spatial;
-using Microsoft.VisualBasic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
+using FluentAssertions;
+using Microsoft.CSharp;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Spatial;
+using Microsoft.VisualBasic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
-    using System.Reflection;
-    using Microsoft.OData;
-    using System.Text.RegularExpressions;
-
     [TestClass]
     public class ODataT4CodeGeneratorTests
     {

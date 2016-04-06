@@ -197,7 +197,7 @@ namespace Microsoft.OData.Client
                     // set the entity state to Unchanged, hence need to workaround that one scenario
                     if (this.mergeOption != MergeOption.PreserveChanges || descriptor.State != EntityStates.Deleted)
                     {
-                        // we should always reset descriptor's state to Unchanged (old v1 behaviour)
+                        // we should always reset descriptor's state to Unchanged (old v1 behavior)
                         descriptor.State = EntityStates.Unchanged;
                         descriptor.PropertiesToSerialize.Clear();
                     }

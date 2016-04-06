@@ -4,16 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Vocabularies;
+#if ASTORIA_DESIGN
+    using System.Xml.Linq;
+#endif
 
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client

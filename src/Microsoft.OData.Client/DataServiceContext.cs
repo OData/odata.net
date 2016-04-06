@@ -6,6 +6,8 @@
 
 // #define TESTUNIXNEWLINE
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -26,7 +28,6 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Values;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
     #endregion Namespaces

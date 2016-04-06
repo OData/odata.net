@@ -7,7 +7,7 @@
 using System;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.Evaluation
 {

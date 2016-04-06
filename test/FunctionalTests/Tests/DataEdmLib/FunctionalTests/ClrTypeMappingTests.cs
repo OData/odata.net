@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.FunctionalTests
 {
     using System;
@@ -17,8 +19,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.EdmToClrConversion;
     using Microsoft.OData.Edm.Evaluation;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using BindingFlags = System.Reflection.BindingFlags;
@@ -620,7 +620,7 @@ namespace EdmLibTests.FunctionalTests
                 return false;
             }
             bool result = true;
-            // TODO: We can update this function for the propertieys of the collection type such as Item. 
+            // TODO: We can update this function for the properties of the collection type such as Item. 
             foreach (var property in typeX.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(property.PropertyType))

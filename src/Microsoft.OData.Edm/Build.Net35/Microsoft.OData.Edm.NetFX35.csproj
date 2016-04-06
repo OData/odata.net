@@ -427,9 +427,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmUnknownEntitySet.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmUnknownEntitySet.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmDurationValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmDurationValue.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Annotations\IEdmDirectValueAnnotationBinding.cs">
       <Link>Microsoft\OData\Edm\Interfaces\Annotations\IEdmDirectValueAnnotationBinding.cs</Link>
     </Compile>
@@ -498,9 +495,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmReferentialConstraint.cs">
       <Link>Microsoft\OData\Edm\Library\EdmReferentialConstraint.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmDurationConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmDurationConstant.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\AmbiguousBinding.cs">
       <Link>Microsoft\OData\Edm\Library\AmbiguousBinding.cs</Link>
@@ -670,24 +664,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmVocabularyAnnotatable.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmVocabularyAnnotatable.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmEnumValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmEnumValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmBinaryValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmBinaryValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmBooleanValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmBooleanValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmDateValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmDateValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmDateTimeOffsetValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmDateTimeOffsetValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmDecimalValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmDecimalValue.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmEnumTypeReference.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmEnumTypeReference.cs</Link>
     </Compile>
@@ -696,21 +672,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmEnumType.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmEnumType.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmDelayedValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmDelayedValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmFloatingValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmFloatingValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmGuidValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmGuidValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmIntegerValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmIntegerValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmTimeOfDayValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmTimeOfDayValue.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmTerm.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmTerm.cs</Link>
@@ -724,15 +685,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmCollectionTypeReference.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmCollectionTypeReference.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmCollectionValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmCollectionValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmNullValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmNullValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmPropertyValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmPropertyValue.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Annotations\IEdmPropertyValueBinding.cs">
       <Link>Microsoft\OData\Edm\Interfaces\Annotations\IEdmPropertyValueBinding.cs</Link>
     </Compile>
@@ -741,18 +693,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\IEdmSpatialTypeReference.cs">
       <Link>Microsoft\OData\Edm\Interfaces\IEdmSpatialTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmStructuredValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmStructuredValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmStringValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmStringValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmPrimitiveValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmPrimitiveValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Interfaces\Values\IEdmValue.cs">
-      <Link>Microsoft\OData\Edm\Interfaces\Values\IEdmValue.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\CsdlConstants.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlConstants.cs</Link>
@@ -953,29 +893,8 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedValueTerm.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedValueTerm.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmEnumValue.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmEnumValue.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmBinaryConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmBinaryConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmBooleanConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmBooleanConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmDateTimeOffsetConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmDateTimeOffsetConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmDecimalConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmDecimalConstant.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmEnumTypeReference.cs">
       <Link>Microsoft\OData\Edm\Library\EdmEnumTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmFloatingConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmFloatingConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmGuidConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmGuidConstant.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
@@ -988,9 +907,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmCollectionTypeReference.cs">
       <Link>Microsoft\OData\Edm\Library\EdmCollectionTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmCollectionValue.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmCollectionValue.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsPrimitiveTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsPrimitiveTypeReference.cs</Link>
@@ -1196,12 +1112,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmNavigationProperty.cs">
       <Link>Microsoft\OData\Edm\Library\EdmNavigationProperty.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmIntegerConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmIntegerConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmPropertyValue.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmPropertyValue.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmSpatialTypeReference.cs">
       <Link>Microsoft\OData\Edm\Library\EdmSpatialTypeReference.cs</Link>
     </Compile>
@@ -1223,20 +1133,11 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmStructuredType.cs">
       <Link>Microsoft\OData\Edm\Library\EdmStructuredType.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmStringConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmStringConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmStructuredValue.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmStructuredValue.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Annotations\EdmDirectValueAnnotation.cs">
       <Link>Microsoft\OData\Edm\Library\Annotations\EdmDirectValueAnnotation.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmTypeReference.cs">
       <Link>Microsoft\OData\Edm\Library\EdmTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmValue.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmValue.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\RegistrationHelper.cs">
       <Link>Microsoft\OData\Edm\RegistrationHelper.cs</Link>
@@ -1273,12 +1174,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmConstants.cs">
       <Link>Microsoft\OData\Edm\Library\EdmConstants.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmDateConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmDateConstant.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\Values\EdmTimeOfDayConstant.cs">
-      <Link>Microsoft\OData\Edm\Library\Values\EdmTimeOfDayConstant.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\EdmDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Library\EdmDecimalTypeReference.cs</Link>
@@ -1489,6 +1384,111 @@
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmBinaryConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmBinaryConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmBooleanConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmBooleanConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmCollectionValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDateConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDateConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDateTimeOffsetConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDateTimeOffsetConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDecimalConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDecimalConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmDurationConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmDurationConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmEnumValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmFloatingConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmFloatingConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmGuidConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmGuidConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmIntegerConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmIntegerConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmPropertyValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmPropertyValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmStringConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmStringConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmStructuredValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmStructuredValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmTimeOfDayConstant.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmTimeOfDayConstant.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\EdmValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\EdmValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmBinaryValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmBinaryValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmBooleanValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmBooleanValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmCollectionValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDateTimeOffsetValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDateTimeOffsetValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDateValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDateValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDecimalValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDecimalValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDelayedValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDelayedValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmDurationValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmDurationValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmEnumValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmFloatingValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmFloatingValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmGuidValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmGuidValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmIntegerValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmIntegerValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmNullValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmNullValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmPrimitiveValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmPropertyValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmPropertyValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmStringValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmStringValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmStructuredValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmStructuredValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmTimeOfDayValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmTimeOfDayValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Values\IEdmValue.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmValue.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

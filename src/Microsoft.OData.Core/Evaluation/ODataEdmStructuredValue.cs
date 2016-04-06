@@ -4,20 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Metadata;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.OData.Evaluation
 {
-    #region Namespaces
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// An <see cref="IEdmValue"/> implementation of an OData resource or complex value.
     /// </summary>

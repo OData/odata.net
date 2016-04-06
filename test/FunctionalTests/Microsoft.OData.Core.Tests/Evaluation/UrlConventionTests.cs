@@ -9,13 +9,11 @@ using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Evaluation
 {
-    using Microsoft.OData.Edm.Vocabularies;
-
     public class UrlConventionTests
     {
         [Fact]
