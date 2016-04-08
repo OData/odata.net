@@ -225,10 +225,11 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void QueryUsingAtomShouldBeFailedClientTest()
         {
-            TestClientContext.Format.UseAtom();
+            // TestClientContext.Format.UseAtom();
 
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             try
@@ -244,6 +245,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void UpdateUsingAtomShouldBeFailedClientTest()
         {
@@ -256,7 +258,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             var homeAddress = person.HomeAddress as Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.HomeAddress;
             Assert.IsNotNull(homeAddress);
 
-            TestClientContext.Format.UseAtom();
+            // TestClientContext.Format.UseAtom();
             homeAddress.City = "Shanghai";
             TestClientContext.UpdateObject(person);
 
@@ -273,10 +275,11 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void InsertUsingAtomShouldBeFailedClientTest()
         {
-            TestClientContext.Format.UseAtom();
+            // TestClientContext.Format.UseAtom();
             
             Person newPerson = new Person()
             {

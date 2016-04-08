@@ -994,162 +994,111 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         [TestMethod]
         public void QueryContainedEntityFromODataClient()
         {
-            for (int i = 1; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
 
-                var queryable = TestClientContext.CreateQuery<GiftCard>("Accounts(101)/MyGiftCard");
-                Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(101)/MyGiftCard", StringComparison.Ordinal));
+            var queryable = TestClientContext.CreateQuery<GiftCard>("Accounts(101)/MyGiftCard");
+            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(101)/MyGiftCard", StringComparison.Ordinal));
 
-                List<GiftCard> result = queryable.ToList();
-                Assert.AreEqual(1, result.Count);
-                Assert.AreEqual(301, result[0].GiftCardID);
-                Assert.AreEqual("AAA123A", result[0].GiftCardNO);
-            }
+            List<GiftCard> result = queryable.ToList();
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(301, result[0].GiftCardID);
+            Assert.AreEqual("AAA123A", result[0].GiftCardNO);
         }
 
         [TestMethod]
         public void QueryContainedEntitySetFromODataClient()
         {
-            for (int i = 1; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
 
-                var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments");
-                Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments", StringComparison.Ordinal));
+            var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments");
+            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments", StringComparison.Ordinal));
 
-                List<PaymentInstrument> result = queryable.ToList();
-                Assert.AreEqual(4, result.Count);
-                Assert.AreEqual(103902, result[1].PaymentInstrumentID);
-                Assert.AreEqual("103 second PI", result[1].FriendlyName);
-
-            }
+            List<PaymentInstrument> result = queryable.ToList();
+            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(103902, result[1].PaymentInstrumentID);
+            Assert.AreEqual("103 second PI", result[1].FriendlyName);
         }
 
         [TestMethod]
         public void QuerySpecificEntityInContainedEntitySetFromODataClient()
         {
-            for (int i = 1; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
 
-                var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments(103902)");
-                Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)", StringComparison.Ordinal));
+            var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments(103902)");
+            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)", StringComparison.Ordinal));
 
-                List<PaymentInstrument> result = queryable.ToList();
-                Assert.AreEqual(1, result.Count);
-                Assert.AreEqual(103902, result[0].PaymentInstrumentID);
-                Assert.AreEqual("103 second PI", result[0].FriendlyName);
-            }
+            List<PaymentInstrument> result = queryable.ToList();
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(103902, result[0].PaymentInstrumentID);
+            Assert.AreEqual("103 second PI", result[0].FriendlyName);
+
         }
 
         [TestMethod]
         public void QueryIndividualPropertyOfContainedEntityFromODataClient()
         {
-            for (int i = 1; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
+            var queryable = TestClientContext.CreateQuery<int>("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID");
+            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID", StringComparison.Ordinal));
 
-                var queryable = TestClientContext.CreateQuery<int>("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID");
-                Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID", StringComparison.Ordinal));
+            List<int> result = queryable.ToList();
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(103902, result[0]);
 
-                List<int> result = queryable.ToList();
-                Assert.AreEqual(1, result.Count);
-                Assert.AreEqual(103902, result[0]);
-            }
         }
 
         [TestMethod]
         public void LinqUriTranslationTest()
         {
-            for (int i = 1; i < 2; i++)
+            TestClientContext.Format.UseJson(Model);
+            TestClientContext.MergeOption = MergeOption.OverwriteChanges;
+
+            //translate to key
+            var q1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 103901);
+            PaymentInstrument q1Result = q1.Single();
+            Assert.AreEqual(103901, q1Result.PaymentInstrumentID);
+
+            //$filter
+            var q2 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.CreatedDate > new DateTimeOffset(new DateTime(2013, 10, 1)));
+            PaymentInstrument q2Result = q2.Single();
+            Assert.AreEqual(103905, q2Result.PaymentInstrumentID);
+
+            //$orderby
+            var q3 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").OrderBy(pi => pi.CreatedDate).ThenByDescending(pi => pi.FriendlyName);
+            List<PaymentInstrument> q3Result = q3.ToList();
+            Assert.AreEqual(103902, q3Result[0].PaymentInstrumentID);
+
+            //$expand
+            var q4 = TestClientContext.Accounts.Expand(account => account.MyPaymentInstruments).Where(account => account.AccountID == 103);
+            Account q4Result = q4.Single();
+            Assert.IsNotNull(q4Result.MyPaymentInstruments);
+
+            var q5 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Expand(pi => pi.BillingStatements).Where(pi => pi.PaymentInstrumentID == 103901);
+            PaymentInstrument q5Result = q5.Single();
+            Assert.IsNotNull(q5Result.BillingStatements);
+
+            //$top
+            var q6 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Take(1);
+            var q6Result = q6.ToList();
+
+            //$count
+            var q7 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Count();
+
+            //$count=true
+            var q8 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").IncludeTotalCount();
+            var q8Result = q8.ToList();
+
+            //projection
+            var q9 = TestClientContext.Accounts.Where(a => a.AccountID == 103).Select(a => new Account() { AccountID = a.AccountID, MyGiftCard = a.MyGiftCard });
+            var q9Result = q9.Single();
+            Assert.IsNotNull(q9Result.MyGiftCard);
+
+            var q10 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 103901).Select(p => new PaymentInstrument()
             {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
-
-                TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-
-                //translate to key
-                var q1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 103901);
-                PaymentInstrument q1Result = q1.Single();
-                Assert.AreEqual(103901, q1Result.PaymentInstrumentID);
-
-                //$filter
-                var q2 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.CreatedDate > new DateTimeOffset(new DateTime(2013, 10, 1)));
-                PaymentInstrument q2Result = q2.Single();
-                Assert.AreEqual(103905, q2Result.PaymentInstrumentID);
-
-                //$orderby
-                var q3 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").OrderBy(pi => pi.CreatedDate).ThenByDescending(pi => pi.FriendlyName);
-                List<PaymentInstrument> q3Result = q3.ToList();
-                Assert.AreEqual(103902, q3Result[0].PaymentInstrumentID);
-
-                //$expand
-                var q4 = TestClientContext.Accounts.Expand(account => account.MyPaymentInstruments).Where(account => account.AccountID == 103);
-                Account q4Result = q4.Single();
-                Assert.IsNotNull(q4Result.MyPaymentInstruments);
-
-                var q5 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Expand(pi => pi.BillingStatements).Where(pi => pi.PaymentInstrumentID == 103901);
-                PaymentInstrument q5Result = q5.Single();
-                Assert.IsNotNull(q5Result.BillingStatements);
-
-                //$top
-                var q6 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Take(1);
-                var q6Result = q6.ToList();
-
-                //$count
-                var q7 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Count();
-
-                //$count=true
-                var q8 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").IncludeTotalCount();
-                var q8Result = q8.ToList();
-
-                //projection
-                var q9 = TestClientContext.Accounts.Where(a => a.AccountID == 103).Select(a => new Account() { AccountID = a.AccountID, MyGiftCard = a.MyGiftCard });
-                var q9Result = q9.Single();
-                Assert.IsNotNull(q9Result.MyGiftCard);
-
-                var q10 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 103901).Select(p => new PaymentInstrument()
-                {
-                    PaymentInstrumentID = p.PaymentInstrumentID,
-                    BillingStatements = p.BillingStatements
-                });
-                var q10Result = q10.ToList();
-            }
+                PaymentInstrumentID = p.PaymentInstrumentID,
+                BillingStatements = p.BillingStatements
+            });
+            var q10Result = q10.ToList();
         }
 
         [TestMethod]
@@ -1200,17 +1149,9 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         [TestMethod]
         public void CreateContainedEntityFromODataClientUsingAddRelatedObject()
         {
-            for (int i = 1; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
+           
                     TestClientContext.Format.UseJson(Model);
-                }
-
+             
                 // create an an account entity and a contained PI entity
                 Account newAccount = new Account()
                 {
@@ -1239,169 +1180,129 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var queryable1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(110)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 110901);
                 PaymentInstrument piResult = queryable1.Single();
                 Assert.AreEqual("110's first PI", piResult.FriendlyName);
-            }
         }
 
         [TestMethod]
         public void DeleteContainedEntityFromODataClientUsingDeleteObject()
         {
-            for (int i = 1; i < 2; i++)
+            TestClientContext.Format.UseJson(Model);
+
+            // create an an account entity and a contained PI entity
+            Account newAccount = new Account()
             {
-                if (i == 0)
+                AccountID = 115,
+                CountryRegion = "CN",
+                AccountInfo = new AccountInfo()
                 {
-                    TestClientContext.Format.UseAtom();
+                    FirstName = "New",
+                    LastName = "Guy"
                 }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            };
+            PaymentInstrument newPI = new PaymentInstrument()
+            {
+                PaymentInstrumentID = 115901,
+                FriendlyName = "115's first PI",
+                CreatedDate = new DateTimeOffset(new DateTime(2012, 12, 10))
+            };
+            TestClientContext.AddToAccounts(newAccount);
+            TestClientContext.AddRelatedObject(newAccount, "MyPaymentInstruments", newPI);
+            TestClientContext.SaveChanges();
 
-                // create an an account entity and a contained PI entity
-                Account newAccount = new Account()
-                {
-                    AccountID = 115,
-                    CountryRegion = "CN",
-                    AccountInfo = new AccountInfo()
-                    {
-                        FirstName = "New",
-                        LastName = "Guy"
-                    }
-                };
-                PaymentInstrument newPI = new PaymentInstrument()
-                {
-                    PaymentInstrumentID = 115901,
-                    FriendlyName = "115's first PI",
-                    CreatedDate = new DateTimeOffset(new DateTime(2012, 12, 10))
-                };
-                TestClientContext.AddToAccounts(newAccount);
-                TestClientContext.AddRelatedObject(newAccount, "MyPaymentInstruments", newPI);
-                TestClientContext.SaveChanges();
+            var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(115)/MyPaymentInstruments");
+            PaymentInstrument piResult = queryable.Single();
+            Assert.AreEqual("115's first PI", piResult.FriendlyName);
 
-                var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(115)/MyPaymentInstruments");
-                PaymentInstrument piResult = queryable.Single();
-                Assert.AreEqual("115's first PI", piResult.FriendlyName);
+            TestClientContext.DeleteObject(piResult);
+            TestClientContext.SaveChanges();
 
-                TestClientContext.DeleteObject(piResult);
-                TestClientContext.SaveChanges();
-
-                List<PaymentInstrument> piResult2 = queryable.ToList();
-                Assert.AreEqual(0, piResult2.Count);
-            }
+            List<PaymentInstrument> piResult2 = queryable.ToList();
+            Assert.AreEqual(0, piResult2.Count);
         }
 
         [TestMethod]
         public void UpdateContainedEntityFromODataClientUsingUpdateObject()
         {
-            for (int i = 1; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
 
-                // Get a contained PI entity
-                var queryable1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(101)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 101901);
-                PaymentInstrument piResult = queryable1.Single();
+            // Get a contained PI entity
+            var queryable1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(101)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 101901);
+            PaymentInstrument piResult = queryable1.Single();
 
-                piResult.FriendlyName = "Michael's first PI";
-                TestClientContext.UpdateObject(piResult);
-                TestClientContext.SaveChanges();
+            piResult.FriendlyName = "Michael's first PI";
+            TestClientContext.UpdateObject(piResult);
+            TestClientContext.SaveChanges();
 
-                piResult = queryable1.Single();
-                Assert.AreEqual("Michael's first PI", piResult.FriendlyName);
-            }
+            piResult = queryable1.Single();
+            Assert.AreEqual("Michael's first PI", piResult.FriendlyName);
         }
 
         [TestMethod]
         [Ignore]
         public void CreateContainedEntityFromODataClientUsingAddRelatedObjectUsingBatchRequest()
         {
-            for (int i = 1; i < 2; i++)
+            TestClientContext.Format.UseJson(Model);
+
+            // create an an account entity and a contained PI entity
+            Account newAccount = new Account()
             {
-                if (i == 0)
+                AccountID = 114,
+                CountryRegion = "CN",
+                AccountInfo = new AccountInfo()
                 {
-                    TestClientContext.Format.UseAtom();
+                    FirstName = "New",
+                    LastName = "Guy"
                 }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            };
+            PaymentInstrument newPI = new PaymentInstrument()
+            {
+                PaymentInstrumentID = 110905,
+                FriendlyName = "110's first PI",
+                CreatedDate = new DateTimeOffset(new DateTime(2012, 12, 10))
+            };
+            TestClientContext.AddToAccounts(newAccount);
+            TestClientContext.AddRelatedObject(newAccount, "MyPaymentInstruments", newPI);
+            TestClientContext.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations);
 
-                // create an an account entity and a contained PI entity
-                Account newAccount = new Account()
-                {
-                    AccountID = 114,
-                    CountryRegion = "CN",
-                    AccountInfo = new AccountInfo()
-                    {
-                        FirstName = "New",
-                        LastName = "Guy"
-                    }
-                };
-                PaymentInstrument newPI = new PaymentInstrument()
-                {
-                    PaymentInstrumentID = 110905,
-                    FriendlyName = "110's first PI",
-                    CreatedDate = new DateTimeOffset(new DateTime(2012, 12, 10))
-                };
-                TestClientContext.AddToAccounts(newAccount);
-                TestClientContext.AddRelatedObject(newAccount, "MyPaymentInstruments", newPI);
-                TestClientContext.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations);
+            var queryable0 = TestClientContext.CreateQuery<Account>("Accounts");
+            List<Account> accountResult = queryable0.ToList();
 
-                var queryable0 = TestClientContext.CreateQuery<Account>("Accounts");
-                List<Account> accountResult = queryable0.ToList();
+            var queryable1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(114)/MyPaymentInstruments");
+            List<PaymentInstrument> piResult = queryable1.ToList();
 
-                var queryable1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(114)/MyPaymentInstruments");
-                List<PaymentInstrument> piResult = queryable1.ToList();
-            }
         }
 
         [TestMethod]
         public void CreateContainedNonCollectionEntityFromODataClientUsingUpdateRelatedObject()
         {
-            for (int i = 1; i < 2; i++)
+            TestClientContext.Format.UseJson(Model);
+
+            // create an an account entity and a contained PI entity
+            Account newAccount = new Account()
             {
-                if (i == 0)
+                AccountID = 120,
+                CountryRegion = "GB",
+                AccountInfo = new AccountInfo()
                 {
-                    TestClientContext.Format.UseAtom();
+                    FirstName = "Diana",
+                    LastName = "Spencer"
                 }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            };
+            GiftCard giftCard = new GiftCard()
+            {
+                GiftCardID = 320,
+                GiftCardNO = "XX120ABCDE",
+                Amount = 76,
+                ExperationDate = new DateTimeOffset(new DateTime(2013, 12, 30))
+            };
 
-                // create an an account entity and a contained PI entity
-                Account newAccount = new Account()
-                {
-                    AccountID = 120,
-                    CountryRegion = "GB",
-                    AccountInfo = new AccountInfo()
-                    {
-                        FirstName = "Diana",
-                        LastName = "Spencer"
-                    }
-                };
-                GiftCard giftCard = new GiftCard()
-                {
-                    GiftCardID = 320,
-                    GiftCardNO = "XX120ABCDE",
-                    Amount = 76,
-                    ExperationDate = new DateTimeOffset(new DateTime(2013, 12, 30))
-                };
+            TestClientContext.AddToAccounts(newAccount);
+            TestClientContext.UpdateRelatedObject(newAccount, "MyGiftCard", giftCard);
+            TestClientContext.SaveChanges();
 
-                TestClientContext.AddToAccounts(newAccount);
-                TestClientContext.UpdateRelatedObject(newAccount, "MyGiftCard", giftCard);
-                TestClientContext.SaveChanges();
-
-                var queryable1 = TestClientContext.CreateQuery<GiftCard>("Accounts(120)/MyGiftCard");
-                List<GiftCard> giftCardResult = queryable1.ToList();
-                Assert.AreEqual(1, giftCardResult.Count);
-                Assert.AreEqual(76, giftCardResult[0].Amount);
-            }
+            var queryable1 = TestClientContext.CreateQuery<GiftCard>("Accounts(120)/MyGiftCard");
+            List<GiftCard> giftCardResult = queryable1.ToList();
+            Assert.AreEqual(1, giftCardResult.Count);
+            Assert.AreEqual(76, giftCardResult[0].Amount);
         }
 
         #endregion

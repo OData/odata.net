@@ -599,42 +599,22 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void QueryPropertyWithNullValueFromODataClient()
         {
-            for (int i = 0; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
 
-                var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName"));
-                List<string> enumResult = middleName.ToList();
-                Assert.AreEqual(0, enumResult.Count);
-            }
+            var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName"));
+            List<string> enumResult = middleName.ToList();
+            Assert.AreEqual(0, enumResult.Count);
         }
 
         [TestMethod]
         public void QueryPropertyValueWhichIsNullFromODataClient()
         {
-            for (int i = 0; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    TestClientContext.Format.UseAtom();
-                }
-                else
-                {
-                    TestClientContext.Format.UseJson(Model);
-                }
+            TestClientContext.Format.UseJson(Model);
 
-                TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "text/plain");
-                var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName/$value"));
-                List<string> enumResult = middleName.ToList();
-                Assert.AreEqual(0, enumResult.Count);
-            }
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "text/plain");
+            var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName/$value"));
+            List<string> enumResult = middleName.ToList();
+            Assert.AreEqual(0, enumResult.Count);
         }
 
         [TestMethod]

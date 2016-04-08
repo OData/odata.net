@@ -49,13 +49,6 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
 
-            // cover this for Json
-            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-            {
-                contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(
-                    PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
-            }
-
             var query = contextWrapper.CreateQuery<Customer>("Customer");
 
             var customers = Enumerable.Empty<Customer>();
@@ -91,13 +84,6 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
                 .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
-
-            // cover this for Json
-            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-            {
-                contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(
-                    PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
-            }
 
             IEnumerable<Customer> customers = null;
             IAsyncResult r = contextWrapper.BeginExecute<Customer>(
@@ -237,7 +223,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
                 var ar1 = context.BeginExecute<SpecialEmployee>(new Uri("Person(-10)", UriKind.Relative), null, null).EnqueueWait(this);
                 var specialEmployee = context.EndExecute<SpecialEmployee>(ar1).SingleOrDefault();
-                
+
                 var ar11 = context.BeginLoadProperty(specialEmployee, "Car", null, null).EnqueueWait(this);
                 var result = context.EndLoadProperty(ar11);
                 foreach (Car car in result)
@@ -293,17 +279,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 Thread.Sleep(1000);
             }
 
-
-            if (format == ODataFormat.Atom)
-            {
-                // Make the ATOM payload order consistence with JSON.
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"), "Unexpected primitive property");
-            }
-            else
-            {
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            }
-
+            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
             Assert.IsTrue(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
             Assert.IsTrue(customer.PrimaryContactInfo.EmailBag.Contains("UpdatedODataEntryPropertyValue"));
 
@@ -378,16 +354,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 Thread.Sleep(1000);
             }
 
-            if (format == ODataFormat.Atom)
-            {
-                // Make the ATOM payload order consistence with JSON.
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"), "Unexpected primitive property");
-            }
-            else
-            {
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            }
 
+            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
             Assert.IsTrue(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
             Assert.IsTrue(customer.PrimaryContactInfo.EmailBag.Contains("UpdatedODataEntryPropertyValue"));
 

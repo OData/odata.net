@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         public void SingletonClientTest()
         {
             Random rand = new Random();
-            ODataFormat[] formats = { ODataFormat.Atom, ODataFormat.Json };
+            ODataFormat[] formats = { ODataFormat.Json };
             foreach (var format in formats)
             {
                 //Query Singleton
@@ -229,7 +229,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 Name = tmpAssertId + "Name",
                 Number = tmpAssertId
             };
-            
+
             TestClientContext.AddRelatedObject(publicCompany, "Assets", tmpAssert);
             TestClientContext.SaveChanges();
 

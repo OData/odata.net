@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public static class PipelineEventsTestsHelper 
+    public static class PipelineEventsTestsHelper
     {
         public static Order CreateNewOrder(int id = 999)
         {
@@ -49,11 +49,6 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             Assert.IsTrue(descriptor.OperationDescriptors.Where(op => op.Title == "ModifyEntryAction").Any(), "Action not added");
             foreach (var linkInfo in descriptor.LinkInfos)
             {
-                if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-                {
-                    Assert.IsTrue(linkInfo.Name.EndsWith("ModifyLinkName"), "Link name not updated");
-                }
-
                 if (contextWrapper.Format.ODataFormat == ODataFormat.Json)
                 {
                     // In Jsonlight, navigation link is calculated using edit link after the reading delegates
@@ -67,7 +62,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Modify entry Id
         /// </summary>
-        public static Action<ReadingEntryArgs> ModifyEntryId_Reading {
+        public static Action<ReadingEntryArgs> ModifyEntryId_Reading
+        {
             get { return args => args.Entry.Id = new Uri(((args.Entry.Id == null ? string.Empty : args.Entry.Id.OriginalString) + "ModifyEntryId"), UriKind.RelativeOrAbsolute); }
         }
 
@@ -126,9 +122,9 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<ReadingEntryArgs> ModifyMessageEntry_Reading
         {
-            get 
-            { 
-                return args => 
+            get
+            {
+                return args =>
                 {
                     if (args.Entry.TypeName.EndsWith("Message"))
                     {
@@ -204,7 +200,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<ReadingEntryArgs> ModifyEntryAction_Reading
         {
-            get {
+            get
+            {
                 return args =>
                     {
                         args.Entry.AddAction(new ODataAction() { Title = "ModifyEntryAction", Metadata = new Uri("#ModifyEntryAction", UriKind.Relative), Target = new Uri("http://svc/Target", UriKind.Absolute) });
@@ -219,7 +216,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         {
             get { return args => args.Link.Name += "ModifyLinkName"; }
         }
-        
+
         /// <summary>
         /// modify association link value
         /// </summary>
@@ -284,9 +281,9 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<MaterializedEntityArgs> AddEnumPropertySpecialEmployeeEntity_Materialized
         {
-            get 
-            { 
-                return args => 
+            get
+            {
+                return args =>
                     {
                         if (args.Entry.TypeName.EndsWith("SpecialEmployee"))
                         {
@@ -330,7 +327,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Modify feed next link
         /// </summary>
-        public static Action<ReadingFeedArgs> ModifyNextlink_ReadingFeed {
+        public static Action<ReadingFeedArgs> ModifyNextlink_ReadingFeed
+        {
             get { return args => args.Feed.NextPageLink = new Uri(args.Feed.Id.OriginalString + "ModifyNextlink", UriKind.Absolute); }
         }
 
@@ -350,9 +348,9 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                         ODataProperty propertyName = properties.Where(p => p.Name == "Name").Single();
                         propertyName.Value = ((string)propertyName.Value) + propertyValue;
                         ODataProperty propertyPrimaryContactInfo = properties.Where(p => p.Name == "PrimaryContactInfo").Single();
-                        var propertyEmailBag =((ODataComplexValue)propertyPrimaryContactInfo.Value).Properties.Single(p => p.Name == "EmailBag");
+                        var propertyEmailBag = ((ODataComplexValue)propertyPrimaryContactInfo.Value).Properties.Single(p => p.Name == "EmailBag");
                         (propertyEmailBag.Value as ODataCollectionValue).Items = new string[] { propertyValue };
-                        
+
                         ODataProperty propertyAuditing = properties.Where(p => p.Name == "Auditing").Single();
                         (propertyAuditing.Value as ODataComplexValue).Properties.Single(p => p.Name == "ModifiedBy").Value = propertyValue;
 

@@ -47,13 +47,6 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
 
-            // cover this for Json
-            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-            {
-                contextWrapper.Configurations.ResponsePipeline.OnNavigationLinkStarted(
-                    PipelineEventsTestsHelper.ModifyLinkName_ReadingNavigationLink);
-            }
-
             var entryResultsLinq = contextWrapper.CreateQuery<Customer>("Customer").ToArray();
             foreach (var customer in entryResultsLinq)
             {
@@ -191,14 +184,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     contextWrapper.AddObject("Computer", newMachine);
                     contextWrapper.SaveChanges();
 
-                    if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-                    {
-                        Assert.IsTrue(newMachine.Name.EndsWith("new machineModifyTypeName_WritingModifyTypeName_Reading"), "Unexpected machine name");
-                    }
-                    else
-                    {
-                        Assert.IsTrue(newMachine.Name.EndsWith("new machineModifyTypeName_Reading"), "Unexpected machine name");
-                    }
+                    Assert.IsTrue(newMachine.Name.EndsWith("new machineModifyTypeName_Reading"), "Unexpected machine name");
 
                     contextWrapper.DeleteObject(newMachine);
                     contextWrapper.SaveChanges();
@@ -386,16 +372,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.AddObject("Customer", customer);
             contextWrapper.SaveChanges(saveChangesOption);
 
-            if (format == ODataFormat.Atom)
-            {
-                // Make the ATOM payload order consistence with JSON.
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"), "Unexpected primitive property");
-            }
-            else
-            {
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            }
-
+            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
             Assert.IsTrue(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
             Assert.IsTrue(customer.PrimaryContactInfo.EmailBag.Contains("UpdatedODataEntryPropertyValue"));
 
@@ -439,16 +416,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.UpdateObject(customer);
             contextWrapper.SaveChanges(saveChangesOption);
 
-            if (format == ODataFormat.Atom)
-            {
-                // Make the ATOM payload order consistence with JSON.
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"), "Unexpected primitive property");
-            }
-            else
-            {
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            }
-
+            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
             Assert.IsTrue(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
             Assert.IsTrue(customer.PrimaryContactInfo.EmailBag.Contains("UpdatedODataEntryPropertyValue"));
 
@@ -470,17 +438,17 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
             Car car = PipelineEventsTestsHelper.CreateNewCar();
             contextWrapper.AddObject("Car", car);
-            contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] {66, 67}), true, "text/plain", "slug");
-            contextWrapper.SetSaveStream(car, "Photo", new MemoryStream(new byte[] {66}), true,
-                new DataServiceRequestArgs() {ContentType = "text/plain"});
+            contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] { 66, 67 }), true, "text/plain", "slug");
+            contextWrapper.SetSaveStream(car, "Photo", new MemoryStream(new byte[] { 66 }), true,
+                new DataServiceRequestArgs() { ContentType = "text/plain" });
             contextWrapper.SaveChanges();
 
             // when DataServiceResponsePreference.IncludeContent is not set, property modified in OnEntryEnding will not be updated in client
             Assert.IsTrue(car.Description.EndsWith("ModifyPropertyValueCarEntity_Writing"), "Unexpected primitive property");
 
-            contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] {68, 69}), true, "text/plain", "slug");
-            contextWrapper.SetSaveStream(car, "Video", new MemoryStream(new byte[] {66}), true,
-                new DataServiceRequestArgs() {ContentType = "text/plain"});
+            contextWrapper.SetSaveStream(car, new MemoryStream(new byte[] { 68, 69 }), true, "text/plain", "slug");
+            contextWrapper.SetSaveStream(car, "Video", new MemoryStream(new byte[] { 66 }), true,
+                new DataServiceRequestArgs() { ContentType = "text/plain" });
             car.Description = "update";
             contextWrapper.UpdateObject(car);
             contextWrapper.SaveChanges();
@@ -515,19 +483,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
             contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
 
-            if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
-            {
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"),
-                    "Unexpected primitive property");
-                Assert.IsTrue(
-                    customer2.Name.EndsWith("UpdatedODataEntryPropertyValueModifyPropertyValueCustomerEntry_Writing"),
-                    "Unexpected primitive property");
-            }
-            else
-            {
-                Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-                Assert.IsTrue(customer2.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            }
+            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
+            Assert.IsTrue(customer2.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
 
             contextWrapper.DeleteObject(customer);
             contextWrapper.DeleteObject(customer2);
