@@ -87,7 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     testConfiguration.MessageWriterSettings.EnableWcfDataServicesClientBehavior();
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageWriterSettings.EnableODataServerBehavior(false);
+                    testConfiguration.MessageWriterSettings.EnableODataServerBehavior();
                     break;
             }
 

@@ -6,9 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-    using System;
     using System.Diagnostics;
-    using System.Xml;
     using Microsoft.OData.Core;
 
     /// <summary>
@@ -72,7 +70,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(requestMessage != null, "requestMessage != null");
             Debug.Assert(writerSettings != null, "writerSettings != null");
 
-            this.requestInfo.Context.Format.ValidateCanWriteRequestFormat(requestMessage, isParameterPayload);
+            DataServiceClientFormat.ValidateCanWriteRequestFormat(requestMessage);
 
             // When calling Execute() to invoke an Action, the client doesn't support parsing the target url
             // to determine which IEdmOperationImport to pass to the ODL writer. So the ODL writer is

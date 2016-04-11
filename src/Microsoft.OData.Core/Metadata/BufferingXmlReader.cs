@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Atom
+namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
@@ -113,11 +113,11 @@ namespace Microsoft.OData.Core.Atom
             this.maxInnerErrorDepth = maxInnerErrorDepth;
 
             XmlNameTable nameTable = this.reader.NameTable;
-            this.XmlNamespace = nameTable.Add(AtomConstants.XmlNamespace);
-            this.XmlBaseAttributeName = nameTable.Add(AtomConstants.XmlBaseAttributeName);
-            this.ODataMetadataNamespace = nameTable.Add(AtomConstants.ODataMetadataNamespace);
-            this.ODataNamespace = nameTable.Add(AtomConstants.ODataNamespace);
-            this.ODataErrorElementName = nameTable.Add(AtomConstants.ODataErrorElementName);
+            this.XmlNamespace = nameTable.Add(ODataMetadataConstants.XmlNamespace);
+            this.XmlBaseAttributeName = nameTable.Add(ODataMetadataConstants.XmlBaseAttributeName);
+            this.ODataMetadataNamespace = nameTable.Add(ODataMetadataConstants.ODataMetadataNamespace);
+            this.ODataNamespace = nameTable.Add(ODataMetadataConstants.ODataNamespace);
+            this.ODataErrorElementName = nameTable.Add(ODataMetadataConstants.ODataErrorElementName);
 
             this.bufferedNodes = new LinkedList<BufferedNode>();
             this.currentBufferedNode = null;

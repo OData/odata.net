@@ -183,7 +183,6 @@ namespace AstoriaUnitTests.Tests
                 config.UseVerboseErrors = true;
 
                 config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
-                config.DataServiceBehavior.AlwaysUseDefaultXmlNamespaceForRootElement = true;
             }
 
             [WebGet]

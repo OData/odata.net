@@ -73,10 +73,10 @@ namespace Microsoft.OData.Service
 
         /// <summary>Get or sets whether relationship links are included in responses from the data service.</summary>
         /// <returns>True when relationship links are returned; otherwise false. </returns>
-        public bool IncludeAssociationLinksInResponse 
-        { 
-            get; 
-            set; 
+        public bool IncludeAssociationLinksInResponse
+        {
+            get;
+            set;
         }
 
         /// <summary>Get or sets whether to use the order of key properties as defined in the metadata of an Entity Framework or reflection provider when constructing an implicit OrderBy query.</summary>
@@ -119,16 +119,6 @@ namespace Microsoft.OData.Service
                 WebUtil.CheckArgumentNull(value, "UrlConventions");
                 this.urlConventions = value;
             }
-        }
-
-        /// <summary>
-        /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 
-        /// All other elements in the same namespace will also not have prefixes.
-        /// </summary>
-        public bool AlwaysUseDefaultXmlNamespaceForRootElement
-        {
-            get;
-            set;
         }
 
         /// <summary>

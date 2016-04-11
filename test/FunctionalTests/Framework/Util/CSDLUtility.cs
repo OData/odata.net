@@ -9,7 +9,6 @@ namespace System.Data.Test.Astoria
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using Microsoft.OData.Core.Atom;
 
     public interface IMetadataItem
     {

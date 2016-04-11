@@ -65,7 +65,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
 
         internal PrimitiveValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy()
         {
-            return new PrimitiveValueMaterializationPolicy(new TestMaterializerContext(), new SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(OData.ODataFormat.Json)));
+            return new PrimitiveValueMaterializationPolicy(new TestMaterializerContext(), new SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter()));
         }
 
         public class UnknownPoint

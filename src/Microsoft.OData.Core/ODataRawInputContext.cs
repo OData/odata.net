@@ -297,7 +297,7 @@ namespace Microsoft.OData.Core
             object rawValue;
             if (expectedPrimitiveTypeReference != null && !this.MessageReaderSettings.DisablePrimitiveTypeConversion)
             {
-                rawValue = AtomValueUtils.ConvertStringToPrimitive(stringFromStream, expectedPrimitiveTypeReference);
+                rawValue = ODataRawValueUtils.ConvertStringToPrimitive(stringFromStream, expectedPrimitiveTypeReference);
             }
             else
             {

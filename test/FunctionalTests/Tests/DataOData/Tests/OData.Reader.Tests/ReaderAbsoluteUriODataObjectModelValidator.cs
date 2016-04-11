@@ -11,10 +11,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #region Namespaces
     using System;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Contracts;
     #endregion Namespaces
 

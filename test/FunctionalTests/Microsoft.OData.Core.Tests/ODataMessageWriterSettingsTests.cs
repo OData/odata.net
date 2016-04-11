@@ -486,22 +486,18 @@ namespace Microsoft.OData.Core.Tests
         public void SetBehaviorTest()
         {
             this.settings.EnableWcfDataServicesClientBehavior();
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient, /*apiBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient, false, false, false);
+            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient, /*apiBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient, false, false);
 
-            this.settings.EnableODataServerBehavior(true);
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.ODataServer, /*apiBehaviorKind*/ODataBehaviorKind.ODataServer, true, true, true);
-
-            this.settings.EnableODataServerBehavior(false);
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.ODataServer, /*apiBehaviorKind*/ODataBehaviorKind.ODataServer, false, true, true);
+            this.settings.EnableODataServerBehavior();
+            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.ODataServer, /*apiBehaviorKind*/ODataBehaviorKind.ODataServer, true, true);
 
             this.settings.EnableDefaultBehavior();
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.Default, /*apiBehaviorKind*/ODataBehaviorKind.Default, false, false, false);
+            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.Default, /*apiBehaviorKind*/ODataBehaviorKind.Default, false, false);
         }
 
         private void AssertWriterBehavior(
             ODataBehaviorKind formatBehaviorKind,
             ODataBehaviorKind apiBehaviorKind,
-            bool useV1ProviderBehavior,
             bool allowNullValuesForNonNullablePrimitiveTypes,
             bool allowDuplicatePropertyNames)
         {

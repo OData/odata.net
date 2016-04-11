@@ -597,15 +597,6 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model."
-        /// </summary>
-        internal static string DataServiceClientFormat_ValidServiceModelRequiredForJson {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceClientFormat_ValidServiceModelRequiredForJson);
-            }
-        }
-
-        /// <summary>
         /// A string like "{0}.{1} must return a non-null open property collection."
         /// </summary>
         internal static string Collection_NullCollectionReference(object p0, object p1) {

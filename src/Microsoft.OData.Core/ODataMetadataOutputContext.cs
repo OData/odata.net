@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core
     using System.IO;
     using System.Text;
     using System.Xml;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
@@ -59,7 +58,7 @@ namespace Microsoft.OData.Core
             try
             {
                 this.messageOutputStream = messageStream;
-                this.xmlWriter = ODataAtomWriterUtils.CreateXmlWriter(messageStream, messageWriterSettings, encoding);
+                this.xmlWriter = ODataMetadataWriterUtils.CreateXmlWriter(messageStream, messageWriterSettings, encoding);
             }
             catch (Exception e)
             {
@@ -104,7 +103,7 @@ namespace Microsoft.OData.Core
         {
             this.AssertSynchronous();
 
-            ODataAtomWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+            ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
             this.Flush();
         }
 

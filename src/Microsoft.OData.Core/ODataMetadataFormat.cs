@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 
@@ -172,7 +171,7 @@ namespace Microsoft.OData.Core
         {
             try
             {
-                using (XmlReader reader = ODataAtomReaderUtils.CreateXmlReader(messageStream, detectionInfo.GetEncoding(), detectionInfo.MessageReaderSettings))
+                using (XmlReader reader = ODataMetadataReaderUtils.CreateXmlReader(messageStream, detectionInfo.GetEncoding(), detectionInfo.MessageReaderSettings))
                 {
                     if (reader.TryReadToNextElement()
                         && string.CompareOrdinal(EdmConstants.EdmxName, reader.LocalName) == 0

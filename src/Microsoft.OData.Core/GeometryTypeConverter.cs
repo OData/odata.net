@@ -10,7 +10,6 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Xml;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
     using Microsoft.Spatial;
     #endregion

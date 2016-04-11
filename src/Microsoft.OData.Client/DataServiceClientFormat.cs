@@ -87,11 +87,6 @@ namespace Microsoft.OData.Client
 
                 return serviceModel;
             }
-
-            private set
-            {
-                serviceModel = value;
-            }
         }
 
         /// <summary>
@@ -125,7 +120,7 @@ namespace Microsoft.OData.Client
         /// <param name="headers">The headers to modify.</param>
         internal void SetRequestAcceptHeader(HeaderCollection headers)
         {
-            this.SetAcceptHeaderAndCharset(headers, this.ChooseMediaType(/*valueIfUsingAtom*/ MimeApplicationAtomOrXml, false));
+            this.SetAcceptHeaderAndCharset(headers, ChooseMediaType(false));
         }
 
         /// <summary>
@@ -135,7 +130,7 @@ namespace Microsoft.OData.Client
         /// <param name="components">The query components for the request.</param>
         internal void SetRequestAcceptHeaderForQuery(HeaderCollection headers, QueryComponents components)
         {
-            this.SetAcceptHeaderAndCharset(headers, this.ChooseMediaType(/*valueIfUsingAtom*/ MimeApplicationAtomOrXml, components.HasSelectQueryOption));
+            this.SetAcceptHeaderAndCharset(headers, ChooseMediaType(components.HasSelectQueryOption));
         }
 
         /// <summary>
@@ -171,7 +166,7 @@ namespace Microsoft.OData.Client
         /// <param name="headers">Dictionary of request headers.</param>
         internal void SetRequestContentTypeForEntry(HeaderCollection headers)
         {
-            this.SetRequestContentTypeHeader(headers, this.ChooseMediaType(/*valueIfUsingAtom*/ MimeApplicationAtom, false));
+            this.SetRequestContentTypeHeader(headers, ChooseMediaType(false));
         }
 
         /// <summary>
@@ -190,47 +185,34 @@ namespace Microsoft.OData.Client
         /// <param name="headers">Dictionary of request headers.</param>
         internal void SetRequestContentTypeForLinks(HeaderCollection headers)
         {
-            this.SetRequestContentTypeHeader(headers, this.ChooseMediaType(/*valueIfUsingAtom*/ MimeApplicationXml, false));
+            this.SetRequestContentTypeHeader(headers, ChooseMediaType(false));
         }
 
         /// <summary>
         /// Validates that we can write the request format.
         /// </summary>
         /// <param name="requestMessage">The request message to get the format from.</param>
-        /// <param name="isParameterPayload">true if the writer is intended to for a parameter payload, false otherwise.</param>
-        internal void ValidateCanWriteRequestFormat(IODataRequestMessage requestMessage, bool isParameterPayload)
+        internal static void ValidateCanWriteRequestFormat(IODataRequestMessage requestMessage)
         {
             string contentType = requestMessage.GetHeader(XmlConstants.HttpContentType);
-            this.ValidateContentType(contentType, isParameterPayload, false /*isResponse*/);
+            ValidateContentType(contentType);
         }
 
         /// <summary>
         /// Validates that we can read the response format.
         /// </summary>
         /// <param name="responseMessage">The response message to get the format from.</param>
-        internal void ValidateCanReadResponseFormat(IODataResponseMessage responseMessage)
+        internal static void ValidateCanReadResponseFormat(IODataResponseMessage responseMessage)
         {
             string contentType = responseMessage.GetHeader(XmlConstants.HttpContentType);
-            this.ValidateContentType(contentType, false /*isParameterPayload*/, true /*isResponse*/);
-        }
-
-        /// <summary>
-        /// Throws InvalidOperationException for JSON Light without a model.
-        /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataServiceContext", Justification = "The spelling is correct.")]
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UseJson", Justification = "The spelling is correct.")]
-        private static void ThrowInvalidOperationExceptionForJsonLightWithoutModel()
-        {
-            throw new InvalidOperationException(Strings.DataServiceClientFormat_ValidServiceModelRequiredForJson);
+            ValidateContentType(contentType);
         }
 
         /// <summary>
         /// Validates that we can read or write a message with the given content-type value.
         /// </summary>
         /// <param name="contentType">The content-type value in question.</param>
-        /// <param name="isParameterPayload">true if the writer is intended to for a parameter payload, false otherwise.</param>
-        /// <param name="isResponse">true if content-type header value is from response, false otherwise.</param>
-        private void ValidateContentType(string contentType, bool isParameterPayload, bool isResponse)
+        private static void ValidateContentType(string contentType)
         {
             if (string.IsNullOrEmpty(contentType))
             {
@@ -278,13 +260,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Chooses between using JSON-Light and the context-dependent media type for when Atom is selected based on the user-selected format.
         /// </summary>
-        /// <param name="valueIfUsingAtom">The value if using atom.</param>
         /// <param name="hasSelectQueryOption">
         ///   Whether or not the select query option is present in the request URI. 
         ///   If true, indicates that the client should ask the server to include all metadata in a JSON-Light response.
         /// </param>
         /// <returns>The media type to use (either JSON-Light or the provided value)</returns>
-        private string ChooseMediaType(string valueIfUsingAtom, bool hasSelectQueryOption)
+        private static string ChooseMediaType(bool hasSelectQueryOption)
         {
             if (hasSelectQueryOption)
             {

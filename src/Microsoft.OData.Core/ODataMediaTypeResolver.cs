@@ -16,14 +16,8 @@ namespace Microsoft.OData.Core
     /// </summary>
     public class ODataMediaTypeResolver
     {
-        /// <summary>application/atom+xml media type</summary>
-        private static readonly ODataMediaType ApplicationAtomXmlMediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeAtomXmlSubType);
-
         /// <summary>application/xml media type</summary>
         private static readonly ODataMediaType ApplicationXmlMediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType);
-
-        /// <summary>text/xml media type</summary>
-        private static readonly ODataMediaType TextXmlMediaType = new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimeXmlSubType);
 
         /// <summary>application/json media type</summary>
         private static readonly ODataMediaType ApplicationJsonMediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);

@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client.Materialization
             this.nextLinkTable = new Dictionary<IEnumerable, DataServiceQueryContinuation>(DSClient.ReferenceEqualityComparer<IEnumerable>.Instance);
 
             this.enumValueMaterializationPolicy = new EnumValueMaterializationPolicy(this.MaterializerContext);
-            this.lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(this.Format));
+            this.lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             this.primitiveValueMaterializationPolicy = new PrimitiveValueMaterializationPolicy(this.MaterializerContext, this.lazyPrimitivePropertyConverter);
             this.collectionValueMaterializationPolicy = new CollectionValueMaterializationPolicy(this.MaterializerContext, this.primitiveValueMaterializationPolicy);
             this.complexValueMaterializerPolicy = new ComplexValueMaterializationPolicy(this.MaterializerContext, this.lazyPrimitivePropertyConverter);

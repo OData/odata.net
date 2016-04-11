@@ -53,9 +53,6 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataMessageWriter.WriteMetadataDocument</summary>
         ODataMessageWriter_WriteMetadataDocument,
 
-        /// <summary>Unreachable codepath in ODataAtomConvert.ToString(AtomTextConstructKind)</summary>
-        ODataAtomConvert_ToString,
-
         /// <summary>Unreachable codepath in ODataCollectionWriter.CreateCollectionWriter</summary>
         ODataCollectionWriter_CreateCollectionWriter_UnreachableCodePath,
 
@@ -167,14 +164,8 @@ namespace Microsoft.OData.Core
         /// <summary>The value from the parameter reader must be a primitive value, an ODataComplexValue or null</summary>
         ODataParameterReaderCore_ValueMustBePrimitiveOrComplexOrNull,
 
-        /// <summary>Unreachable codepath in ODataAtomReader.ReadAtNavigationLinkStartImplementation.</summary>
-        ODataAtomReader_ReadAtNavigationLinkStartImplementation,
-
-        /// <summary>Unreachable codepath in ODataAtomPropertyAndValueDeserializer.ReadNonEntityValue.</summary>
-        ODataAtomPropertyAndValueDeserializer_ReadNonEntityValue,
-
-        /// <summary>Unreachable codepath in AtomValueUtils.ConvertStringToPrimitive.</summary>
-        AtomValueUtils_ConvertStringToPrimitive,
+        /// <summary>Unreachable codepath in ODataRawValueUtils.ConvertStringToPrimitive.</summary>
+        ODataRawValueUtils_ConvertStringToPrimitive,
 
         /// <summary>Unreachable codepath in EdmCoreModel.PrimitiveType (unsupported type).</summary>
         EdmCoreModel_PrimitiveType,

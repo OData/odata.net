@@ -13,7 +13,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -31,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     /// <summary>
     /// Helper methods to generate interesting writer payloads for specific item/property/value
     /// </summary>
-    
+
     internal static class WriterPayloads
     {
         /// <summary>

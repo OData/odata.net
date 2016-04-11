@@ -288,7 +288,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
 
         internal CollectionValueMaterializationPolicy CreateCollectionValueMaterializationPolicy(IODataMaterializerContext materializerContext)
         {
-            var lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(ODataFormat.Json));
+            var lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);
             var complexPolicy = new ComplexValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);
             var collectionPolicy = new CollectionValueMaterializationPolicy(materializerContext, primitiveValueMaterializerPolicy);

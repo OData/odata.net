@@ -1,10 +1,10 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataAtomReaderUtils.cs" company="Microsoft">
+// <copyright file="ODataMetadataReaderUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Atom
+namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Diagnostics;
@@ -14,9 +14,9 @@ namespace Microsoft.OData.Core.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Helper methods used by the OData reader for the ATOM format.
+    /// Helper methods used by the OData reader for the Metadata format.
     /// </summary>
-    internal static class ODataAtomReaderUtils
+    internal static class ODataMetadataReaderUtils
     {
         /// <summary>
         /// Creates an Xml reader over the specified stream with the provided settings.

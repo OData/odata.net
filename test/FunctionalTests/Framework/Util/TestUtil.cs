@@ -15,7 +15,6 @@ namespace System.Data.Test.Astoria
     using System.Data.Entity.Design;
     using System.Data.Metadata.Edm;
 #endif
-    using Microsoft.OData.Core.Atom;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;

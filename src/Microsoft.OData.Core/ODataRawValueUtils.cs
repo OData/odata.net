@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="AtomValueUtils.cs" company="Microsoft">
+// <copyright file="ODataRawValueUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,15 +10,14 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Xml;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
-    /// Utility methods around writing of ATOM values.
+    /// Utility methods around writing of raw values.
     /// </summary>
-    internal static class AtomValueUtils
+    internal static class ODataRawValueUtils
     {
         /// <summary>The characters that are considered to be whitespace by XmlConvert.</summary>
         private static readonly char[] XmlWhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
@@ -36,35 +35,35 @@ namespace Microsoft.OData.Core
             switch (typeCode)
             {
                 case TypeCode.Boolean:
-                    result = ODataAtomConvert.ToString((bool)value);
+                    result = ODataRawValueConverter.ToString((bool)value);
                     break;
 
                 case TypeCode.Byte:
-                    result = ODataAtomConvert.ToString((byte)value);
+                    result = ODataRawValueConverter.ToString((byte)value);
                     break;
 
                 case TypeCode.Decimal:
-                    result = ODataAtomConvert.ToString((decimal)value);
+                    result = ODataRawValueConverter.ToString((decimal)value);
                     break;
 
                 case TypeCode.Double:
-                    result = ODataAtomConvert.ToString((double)value);
+                    result = ODataRawValueConverter.ToString((double)value);
                     break;
 
                 case TypeCode.Int16:
-                    result = ODataAtomConvert.ToString((Int16)value);
+                    result = ODataRawValueConverter.ToString((Int16)value);
                     break;
 
                 case TypeCode.Int32:
-                    result = ODataAtomConvert.ToString((Int32)value);
+                    result = ODataRawValueConverter.ToString((Int32)value);
                     break;
 
                 case TypeCode.Int64:
-                    result = ODataAtomConvert.ToString((Int64)value);
+                    result = ODataRawValueConverter.ToString((Int64)value);
                     break;
 
                 case TypeCode.SByte:
-                    result = ODataAtomConvert.ToString((SByte)value);
+                    result = ODataRawValueConverter.ToString((SByte)value);
                     break;
 
                 case TypeCode.String:
@@ -72,47 +71,47 @@ namespace Microsoft.OData.Core
                     break;
 
                 case TypeCode.Single:
-                    result = ODataAtomConvert.ToString((Single)value);
+                    result = ODataRawValueConverter.ToString((Single)value);
                     break;
 
                 default:
                     byte[] bytes = value as byte[];
                     if (bytes != null)
                     {
-                        result = ODataAtomConvert.ToString(bytes);
+                        result = ODataRawValueConverter.ToString(bytes);
                         break;
                     }
 
                     if (value is DateTimeOffset)
                     {
-                        result = ODataAtomConvert.ToString((DateTimeOffset)value);
+                        result = ODataRawValueConverter.ToString((DateTimeOffset)value);
                         break;
                     }
 
                     if (value is Guid)
                     {
-                        result = ODataAtomConvert.ToString((Guid)value);
+                        result = ODataRawValueConverter.ToString((Guid)value);
                         break;
                     }
 
                     if (value is TimeSpan)
                     {
                         // Edm.Duration
-                        result = ODataAtomConvert.ToString((TimeSpan)value);
+                        result = ODataRawValueConverter.ToString((TimeSpan)value);
                         break;
                     }
 
                     if (value is Date)
                     {
                         // Edm.Date
-                        result = ODataAtomConvert.ToString((Date)value);
+                        result = ODataRawValueConverter.ToString((Date)value);
                         break;
                     }
 
                     if (value is TimeOfDay)
                     {
                         // Edm.TimeOfDay
-                        result = ODataAtomConvert.ToString((TimeOfDay)value);
+                        result = ODataRawValueConverter.ToString((TimeOfDay)value);
                         break;
                     }
 
@@ -195,7 +194,7 @@ namespace Microsoft.OData.Core
                     default:
                         // Note that Astoria supports XElement and Binary as well, but they are serialized as string or byte[]
                         // and the metadata will actually talk about string and byte[] as well. Astoria will perform the conversion if necessary.
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.AtomValueUtils_ConvertStringToPrimitive));
+                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataRawValueUtils_ConvertStringToPrimitive));
                 }
             }
             catch (Exception e)

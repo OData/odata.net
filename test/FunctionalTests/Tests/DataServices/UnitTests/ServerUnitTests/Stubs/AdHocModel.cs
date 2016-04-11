@@ -11,7 +11,6 @@ namespace AstoriaUnitTests.Stubs
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.Atom;
     using System.Data.Test.Astoria;
     using System.Diagnostics;
     using System.IO;
@@ -60,7 +59,7 @@ namespace AstoriaUnitTests.Stubs
         /// <summary>Adds navigation properties to the type for both ends.</summary>
         public void AddNavigationProperties()
         {
-            Ends[0].Type.Properties.Add(new AdHocNavigationProperty() 
+            Ends[0].Type.Properties.Add(new AdHocNavigationProperty()
             {
                 Name = Ends[1].RoleName,
                 AssociationType = this,
@@ -149,15 +148,15 @@ namespace AstoriaUnitTests.Stubs
             this.DerivedTypes = new List<AdHocEntityType>();
             this.BaseType.DerivedTypes.Add(this);
         }
-        
-        public AdHocEntityType() : this ("T" + ++typeID)
+
+        public AdHocEntityType() : this("T" + ++typeID)
         {
         }
 
         public AdHocEntityType(string name)
         {
             this.Name = name;
-            
+
             this.Properties = new List<AdHocProperty>();
             this.Properties.Add(new AdHocScalarProperty() { Name = name + "ID", Type = new AdHocPrimitiveType() });
             this.Properties.Add(new AdHocScalarProperty() { Name = name + "Data", Type = new AdHocPrimitiveType() });
@@ -233,7 +232,7 @@ namespace AstoriaUnitTests.Stubs
         {
             [DebuggerStepThrough]
             get { return this.name; }
-            
+
             set
             {
                 if (value == null || value.IndexOf('.') == -1)
@@ -456,7 +455,7 @@ namespace AstoriaUnitTests.Stubs
         public Exception Error(string message)
         {
             return new Exception(
-                "At offset " + this.offset + " on '" + this.CurrentValue + "' near '" + 
+                "At offset " + this.offset + " on '" + this.CurrentValue + "' near '" +
                 this.text.Substring(this.offset) + "': " + message);
         }
 
@@ -616,7 +615,7 @@ namespace AstoriaUnitTests.Stubs
 
         public string Name { get; set; }
         public string Namespace { get; set; }
-        
+
         public List<AdHocAssociationSet> AssociationSets { get; set; }
         public List<AdHocEntitySet> EntitySets { get; set; }
         public List<AdHocAssociationType> ExtraAssociationTypes { get; set; }
@@ -691,7 +690,7 @@ namespace AstoriaUnitTests.Stubs
                     new AdHocAssociationSetEnd() { EndType = associationType.ManyEnd, EntitySet = childSet },
                 }
             };
-            
+
             this.AssociationSets.Add(set);
         }
 
@@ -798,13 +797,13 @@ namespace AstoriaUnitTests.Stubs
         /// <summary>Initializes a new <see cref="AdHocModel"/> with the specified containers.</summary>
         /// <param name="containers">Containers to include in the model.</param>
         public AdHocModel(params AdHocContainer[] containers) : this()
-        { 
+        {
             this.Containers = new List<AdHocContainer>(containers);
         }
-        
+
         public IEnumerable<AdHocAssociationType> AssociationTypes
         {
-            get { return (this.Containers.SelectMany((c)=>c.AssociationTypes)).Distinct(); }
+            get { return (this.Containers.SelectMany((c) => c.AssociationTypes)).Distinct(); }
         }
 
         public IEnumerable<AdHocComplexType> ComplexTypes
@@ -814,7 +813,7 @@ namespace AstoriaUnitTests.Stubs
 
         public IEnumerable<AdHocEntityType> EntityTypes
         {
-            get { return (this.Containers.SelectMany((c)=>c.EntityTypes)).Distinct(); }
+            get { return (this.Containers.SelectMany((c) => c.EntityTypes)).Distinct(); }
         }
 
         public List<AdHocContainer> Containers { get; set; }
@@ -827,7 +826,7 @@ namespace AstoriaUnitTests.Stubs
 
         /// <summary>Default entity connection string for model.</summary>
         public string DefaultEntityConnectionString { get; set; }
-        
+
         public string Namespace
         {
             get
@@ -1018,7 +1017,7 @@ namespace AstoriaUnitTests.Stubs
                         {
                             case "string":
                                 property = new AdHocScalarProperty();
-                                property.Type = new AdHocPrimitiveType(typeof(string)); 
+                                property.Type = new AdHocPrimitiveType(typeof(string));
                                 break;
                             case "int":
                                 property = new AdHocScalarProperty();
@@ -1063,7 +1062,7 @@ namespace AstoriaUnitTests.Stubs
                             entityType.KeyProperties.Add(property);
                             fieldEndKind = lexer.ReadNextOrThrow();
                         }
-                        
+
                         if (fieldEndKind == COLLECTION)
                         {
                             if (navigationProperty == null) throw lexer.Error("Only navigation properties can be collections.");
@@ -1332,7 +1331,7 @@ namespace AstoriaUnitTests.Stubs
             // 'navigation' identifier(name) dotted-identifier(associationtype) identifier(role-on-end) dotted-identifier(type)
             AdHocNavigationProperty result = new AdHocNavigationProperty();
             lexer.CheckCurrentKind(NAVIGATION, "'navigation' keyword expected.");
-            
+
             lexer.ReadNextKindOrThrow(IDENTIFIER, "Identifier for property name expected.");
             result.Name = lexer.CurrentValue;
 
@@ -1405,7 +1404,7 @@ namespace AstoriaUnitTests.Stubs
                     return false;
                 }
             }
-            
+
             File.WriteAllText(path, text, writer.Settings.Encoding);
             return true;
         }
@@ -1454,7 +1453,7 @@ namespace AstoriaUnitTests.Stubs
                 this.WriteStorageModel(Path.Combine(basePath, name + ".ssdl"));
             }
 
-            if (String.IsNullOrEmpty(this.DefaultEntityConnectionString) && 
+            if (String.IsNullOrEmpty(this.DefaultEntityConnectionString) &&
                 !String.IsNullOrEmpty(this.DefaultConnectionString))
             {
                 var b = new System.Data.EntityClient.EntityConnectionStringBuilder();
@@ -1483,7 +1482,7 @@ namespace AstoriaUnitTests.Stubs
                 System.Reflection.MethodAttributes.Public |
                 System.Reflection.MethodAttributes.SpecialName |
                 System.Reflection.MethodAttributes.HideBySig;
-            const System.Reflection.PropertyAttributes propertyAttributes = 
+            const System.Reflection.PropertyAttributes propertyAttributes =
                 System.Reflection.PropertyAttributes.HasDefault;
             const System.Reflection.TypeAttributes typeAttributes =
                 System.Reflection.TypeAttributes.Public;
@@ -1502,9 +1501,9 @@ namespace AstoriaUnitTests.Stubs
             foreach (AdHocEntityType type in this.EntityTypes)
             {
                 TypeBuilder typeBuilder = builders[type];
-                ConstructorInfo ctor = typeof(KeyAttribute).GetConstructor(new Type[] {typeof(string[])});
+                ConstructorInfo ctor = typeof(KeyAttribute).GetConstructor(new Type[] { typeof(string[]) });
                 string[] keys = type.KeyProperties.Select(kp => kp.Name).ToArray();
-                typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(ctor,  new object[] {keys}));
+                typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(ctor, new object[] { keys }));
                 foreach (AdHocProperty property in type.Properties)
                 {
                     AdHocScalarProperty scalar = property as AdHocScalarProperty;
@@ -1540,7 +1539,7 @@ namespace AstoriaUnitTests.Stubs
                             FieldBuilder fieldBuilder = typeBuilder.DefineField("_" + property.Name, propertyType, FieldAttributes.Private);
                             if (initializeInstance)
                             {
-                                
+
                                 // create the default constructor
                                 ConstructorBuilder ctorBuilder = typeBuilder.DefineConstructor(
                                         MethodAttributes.Public | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName,
@@ -1567,7 +1566,7 @@ namespace AstoriaUnitTests.Stubs
 
                 }
             }
-            
+
             // Generate a top-level 'object context'.
             TypeBuilder contextTypeBuilder = builder.DefineType(this.Containers[0].Name + "Context", typeAttributes);
             foreach (AdHocEntitySet entitySet in this.Containers[0].EntitySets)
@@ -1860,7 +1859,7 @@ namespace AstoriaUnitTests.Stubs
         {
             writer.WriteStartElement("Mapping", MappingNs);
             writer.WriteAttributeString("Space", "C-S");
-            
+
             writer.WriteStartElement("Alias", MappingNs);
             writer.WriteAttributeString("Key", "CNs");
             writer.WriteAttributeString("Value", this.Namespace);
@@ -1902,7 +1901,7 @@ namespace AstoriaUnitTests.Stubs
                             {
                                 writer.WriteAttributeString("TypeName", type.FullName);
                             }
-                            
+
                             writer.WriteStartElement("MappingFragment");
                             writer.WriteAttributeString("StoreEntitySet", entitySet.Name + type.Name + "Table");
                             foreach (var property in type.Properties)
@@ -1936,7 +1935,7 @@ namespace AstoriaUnitTests.Stubs
                     writer.WriteStartElement("AssociationSetMapping");
                     writer.WriteAttributeString("Name", associationSet.Name);
                     writer.WriteAttributeString("TypeName", "CNs." + associationSet.Type.Name);
-                    writer.WriteAttributeString("StoreEntitySet", 
+                    writer.WriteAttributeString("StoreEntitySet",
                         TableNameForEntitySetAndType(associationSet.ManyEnd.EntitySet, associationSet.ManyEnd.EndType.Type));
                     foreach (var end in associationSet.Ends)
                     {
@@ -2126,7 +2125,7 @@ namespace AstoriaUnitTests.Stubs
                 }
             }
         }
-        
+
         public string ConceptualNs { get; set; }
         private const string MappingNs = "urn:schemas-microsoft-com:windows:storage:mapping:CS";
         private const string StorageNs = "http://schemas.microsoft.com/ado/2006/04/edm/ssdl";

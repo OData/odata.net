@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Atom
+namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Diagnostics;
@@ -17,30 +17,6 @@ namespace Microsoft.OData.Core.Atom
     /// </summary>
     internal static class XmlReaderExtensions
     {
-        /// <summary>
-        /// Asserts that the reader is not buffer.
-        /// </summary>
-        /// <param name="bufferedXmlReader">The <see cref="BufferingXmlReader"/> to read from.</param>
-        [Conditional("DEBUG")]
-        internal static void AssertNotBuffering(this BufferingXmlReader bufferedXmlReader)
-        {
-#if DEBUG
-            Debug.Assert(!bufferedXmlReader.IsBuffering, "!bufferedXmlReader.IsBuffering");
-#endif
-        }
-
-        /// <summary>
-        /// Asserts that the reader is buffer.
-        /// </summary>
-        /// <param name="bufferedXmlReader">The <see cref="BufferingXmlReader"/> to read from.</param>
-        [Conditional("DEBUG")]
-        internal static void AssertBuffering(this BufferingXmlReader bufferedXmlReader)
-        {
-#if DEBUG
-            Debug.Assert(bufferedXmlReader.IsBuffering, "bufferedXmlReader.IsBuffering");
-#endif
-        }
-
         /// <summary>
         /// Reads the value of the element as a string.
         /// </summary>
@@ -193,84 +169,6 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
-        /// Skips the content of the element and leaves the reader on the end element (or empty start element)
-        /// </summary>
-        /// <param name="reader">The reader to read from.</param>
-        /// <remarks>
-        /// Pre-Condition:   XmlNodeType.Element - the element to read
-        ///                  XmlNodeType.Attribute - attribute on the element to read
-        /// Post-Condition:  XmlNodeType.Element - if the element was empty element with no content.
-        ///                  XmlNodeType.EndElement - if the element was element with empty content.
-        /// </remarks>
-        internal static void SkipElementContent(this XmlReader reader)
-        {
-            Debug.Assert(reader != null, "reader != null");
-            Debug.Assert(
-                reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.Attribute,
-                "Pre-Condition: XML reader must be on Element or Attribute node.");
-
-            reader.MoveToElement();
-            if (!reader.IsEmptyElement)
-            {
-                // Move to the first child.
-                reader.Read();
-
-                while (reader.NodeType != XmlNodeType.EndElement)
-                {
-                    // Skip all children until we find the end element.
-                    reader.Skip();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Reads from the input until the first element is found.
-        /// </summary>
-        /// <param name="reader">The XML reader to read from.</param>
-        /// <remarks>
-        /// Pre-Condition:  XmlNodeType.None    - the reader hasn't been used yet.
-        /// Post-Condition: XmlNodeType.Element - the reader is positioned on the root/first element.
-        /// Note that the method will fail if the top-level contains any significant node other than the root element
-        /// or if no root element is found.
-        /// </remarks>
-        internal static void ReadPayloadStart(this XmlReader reader)
-        {
-            Debug.Assert(reader != null, "reader != null");
-            Debug.Assert(reader.NodeType == XmlNodeType.None, "Pre-Condition: XML reader must not have been used yet.");
-
-            reader.SkipInsignificantNodes();
-            if (reader.NodeType != XmlNodeType.Element)
-            {
-                throw new ODataException(Strings.XmlReaderExtension_InvalidRootNode(reader.NodeType));
-            }
-
-            Debug.Assert(reader.NodeType == XmlNodeType.Element, "Post-Condition: XML reader must be on Element node.");
-        }
-
-        /// <summary>
-        /// Reads till the end of the input payload.
-        /// </summary>
-        /// <param name="reader">The XML reader to read from.</param>
-        /// <remarks>
-        /// Pre-Condition:  any               - the reader will verify that only insignificant node is present.
-        /// Post-Condition: XmlNodeType.None  - the reader is at the end of the input.
-        /// </remarks>
-        internal static void ReadPayloadEnd(this XmlReader reader)
-        {
-            Debug.Assert(reader != null, "reader != null");
-
-            reader.SkipInsignificantNodes();
-            if (reader.NodeType != XmlNodeType.None && !reader.EOF)
-            {
-                throw new ODataException(Strings.XmlReaderExtension_InvalidRootNode(reader.NodeType));
-            }
-
-            Debug.Assert(
-                reader.NodeType == XmlNodeType.None && reader.EOF,
-                "Post-Condition: XML reader must be positioned at the end of the input.");
-        }
-
-        /// <summary>
         /// Determines if the current node's namespace equals to the specified <paramref name="namespaceUri"/>
         /// </summary>
         /// <param name="reader">The XML reader to get the current node from.</param>
@@ -302,39 +200,6 @@ namespace Microsoft.OData.Core.Atom
             Debug.Assert(object.ReferenceEquals(reader.NameTable.Get(localName), localName), "The localName was not atomized on this reader.");
 
             return object.ReferenceEquals(reader.LocalName, localName);
-        }
-
-        /// <summary>
-        /// Tries to read the current element as an empty element (no or empty content).
-        /// </summary>
-        /// <param name="reader">The XML reader to read from.</param>
-        /// <returns>true if the reader was on an empty element; false otherwise.</returns>
-        /// <remarks>
-        /// Pre-Condition:   XmlNodeType.Element - the element to read
-        ///                  XmlNodeType.Attribute - attribute on the element to read
-        /// Post-Condition:  XmlNodeType.Element - if the element was empty element with no content.
-        ///                  XmlNodeType.EndElement - if the element was element with empty content.
-        ///                  any other - the first child node of the element, in this case the method returns false.
-        /// </remarks>
-        internal static bool TryReadEmptyElement(this XmlReader reader)
-        {
-            Debug.Assert(reader != null, "reader != null");
-            Debug.Assert(
-                reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.Attribute,
-                "Pre-Condition: XML reader must be on Element or Attribute node.");
-
-            reader.MoveToElement();
-            if (reader.IsEmptyElement)
-            {
-                return true;
-            }
-
-            if (reader.Read() && reader.NodeType == XmlNodeType.EndElement)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>

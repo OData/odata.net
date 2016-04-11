@@ -13,22 +13,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Linq;
     using System.Runtime.CompilerServices;
     using ApprovalTests;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
+    using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.JsonLight;
     using Microsoft.Test.Taupo.OData.Tests.WriterTests.BatchWriter;
     using Microsoft.Test.Taupo.OData.Writer.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter;
     using Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Test.OData.Utils.CombinatorialEngine;
 
     /// <summary>
     /// Tests for writing different OData payloads with a variety of accept headers.

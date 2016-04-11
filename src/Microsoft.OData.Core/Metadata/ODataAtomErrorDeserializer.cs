@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Atom
+namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core.Atom
         {
             Debug.Assert(xmlReader != null, "this.XmlReader != null");
             Debug.Assert(xmlReader.NodeType == XmlNodeType.Element, "xmlReader.NodeType == XmlNodeType.Element");
-            Debug.Assert(xmlReader.LocalName == AtomConstants.ODataErrorElementName, "Expected reader to be positioned on <m:error> element.");
+            Debug.Assert(xmlReader.LocalName == ODataMetadataConstants.ODataErrorElementName, "Expected reader to be positioned on <m:error> element.");
             Debug.Assert(xmlReader.NamespaceEquals(xmlReader.ODataMetadataNamespace), "this.XmlReader.NamespaceEquals(atomizedMetadataNamespace)");
 
             ODataError error = new ODataError();
@@ -99,29 +99,29 @@ namespace Microsoft.OData.Core.Atom
                                 switch (xmlReader.LocalName)
                                 {
                                     // <m:code>
-                                    case AtomConstants.ODataErrorCodeElementName:
+                                    case ODataMetadataConstants.ODataErrorCodeElementName:
                                         VerifyErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateErrorElementPropertyBitMask.Code,
-                                            AtomConstants.ODataErrorCodeElementName);
+                                            ODataMetadataConstants.ODataErrorCodeElementName);
                                         error.ErrorCode = xmlReader.ReadElementValue();
                                         continue;
 
                                     // <m:message >
-                                    case AtomConstants.ODataErrorMessageElementName:
+                                    case ODataMetadataConstants.ODataErrorMessageElementName:
                                         VerifyErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateErrorElementPropertyBitMask.Message,
-                                            AtomConstants.ODataErrorMessageElementName);
+                                            ODataMetadataConstants.ODataErrorMessageElementName);
                                         error.Message = xmlReader.ReadElementValue();
                                         continue;
 
                                     // <m:innererror>
-                                    case AtomConstants.ODataInnerErrorElementName:
+                                    case ODataMetadataConstants.ODataInnerErrorElementName:
                                         VerifyErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateErrorElementPropertyBitMask.InnerError,
-                                            AtomConstants.ODataInnerErrorElementName);
+                                            ODataMetadataConstants.ODataInnerErrorElementName);
                                         error.InnerError = ReadInnerErrorElement(xmlReader, 0 /* recursionDepth */, maxInnerErrorDepth);
                                         continue;
 
@@ -207,8 +207,8 @@ namespace Microsoft.OData.Core.Atom
             Debug.Assert(xmlReader != null, "this.XmlReader != null");
             Debug.Assert(xmlReader.NodeType == XmlNodeType.Element, "xmlReader.NodeType == XmlNodeType.Element");
             Debug.Assert(
-                xmlReader.LocalName == AtomConstants.ODataInnerErrorElementName ||
-                xmlReader.LocalName == AtomConstants.ODataInnerErrorInnerErrorElementName,
+                xmlReader.LocalName == ODataMetadataConstants.ODataInnerErrorElementName ||
+                xmlReader.LocalName == ODataMetadataConstants.ODataInnerErrorInnerErrorElementName,
                 "Expected reader to be positioned on 'm:innererror' or 'm:internalexception' element.");
             Debug.Assert(xmlReader.NamespaceEquals(xmlReader.ODataMetadataNamespace), "this.XmlReader.NamespaceEquals(this.ODataMetadataNamespace)");
 
@@ -236,38 +236,38 @@ namespace Microsoft.OData.Core.Atom
                                 switch (xmlReader.LocalName)
                                 {
                                     // <m:message>
-                                    case AtomConstants.ODataInnerErrorMessageElementName:
+                                    case ODataMetadataConstants.ODataInnerErrorMessageElementName:
                                         VerifyInnerErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.Message,
-                                            AtomConstants.ODataInnerErrorMessageElementName);
+                                            ODataMetadataConstants.ODataInnerErrorMessageElementName);
                                         innerError.Message = xmlReader.ReadElementValue();
                                         continue;
 
                                     // <m:type>
-                                    case AtomConstants.ODataInnerErrorTypeElementName:
+                                    case ODataMetadataConstants.ODataInnerErrorTypeElementName:
                                         VerifyInnerErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.TypeName,
-                                            AtomConstants.ODataInnerErrorTypeElementName);
+                                            ODataMetadataConstants.ODataInnerErrorTypeElementName);
                                         innerError.TypeName = xmlReader.ReadElementValue();
                                         continue;
 
                                     // <m:stacktrace>
-                                    case AtomConstants.ODataInnerErrorStackTraceElementName:
+                                    case ODataMetadataConstants.ODataInnerErrorStackTraceElementName:
                                         VerifyInnerErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.StackTrace,
-                                            AtomConstants.ODataInnerErrorStackTraceElementName);
+                                            ODataMetadataConstants.ODataInnerErrorStackTraceElementName);
                                         innerError.StackTrace = xmlReader.ReadElementValue();
                                         continue;
 
                                     // <m:internalexception>
-                                    case AtomConstants.ODataInnerErrorInnerErrorElementName:
+                                    case ODataMetadataConstants.ODataInnerErrorInnerErrorElementName:
                                         VerifyInnerErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.InternalException,
-                                            AtomConstants.ODataInnerErrorInnerErrorElementName);
+                                            ODataMetadataConstants.ODataInnerErrorInnerErrorElementName);
                                         innerError.InnerError = ReadInnerErrorElement(xmlReader, recursionDepth, maxInnerErrorDepth);
                                         continue;
 

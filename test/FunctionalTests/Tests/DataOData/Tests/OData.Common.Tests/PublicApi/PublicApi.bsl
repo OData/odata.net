@@ -4792,7 +4792,6 @@ public sealed class Microsoft.OData.Core.ODataMessageWriterSettings : Microsoft.
 
 	public void EnableDefaultBehavior ()
 	public void EnableODataServerBehavior ()
-	public void EnableODataServerBehavior (bool alwaysUseDefaultXmlNamespaceForRootElement)
 	public void EnableWcfDataServicesClientBehavior ()
 	public void SetContentType (Microsoft.OData.Core.ODataFormat payloadFormat)
 	public void SetContentType (string acceptableMediaTypes, string acceptableCharSets)

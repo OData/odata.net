@@ -14,18 +14,14 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
     using System.Net;
     using System.Text;
     using System.Xml.Linq;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.CodeDomExtensions;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Query.Contracts;
     using Microsoft.Test.Taupo.Query.Contracts.CommonExpressions;
-    using Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions;
 
     /// <summary>
     /// Extension methods that make writing astoria tests easier, mostly pieces that connect various 

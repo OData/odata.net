@@ -1040,9 +1040,9 @@ namespace Microsoft.OData.Core
 
             this.VerifyWriterNotDisposedAndNotUsed();
 
-            // We cannot use AtomValueUtils.TryConvertPrimitiveToString for all cases since binary values are
+            // We cannot use ODataRawValueUtils.TryConvertPrimitiveToString for all cases since binary values are
             // converted into unencoded byte streams in the raw format 
-            // (as opposed to base64 encoded byte streams in the AtomValueUtils); see OIPI 2.2.6.4.1.
+            // (as opposed to base64 encoded byte streams in the ODataRawValueUtils); see OIPI 2.2.6.4.1.
             return value is byte[] ? ODataPayloadKind.BinaryValue : ODataPayloadKind.Value;
         }
 

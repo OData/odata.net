@@ -106,8 +106,8 @@
       <Link>Common.cs</Link>
     </Compile>
     <!-- Main server files. -->
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Atom\AtomConstants.cs">
-      <Link>Microsoft\OData\Service\AtomConstants.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Metadata\ODataMetadataConstants.cs">
+      <Link>Microsoft\OData\Service\ODataMetadataConstants.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ErrorUtils.cs">
       <Link>Microsoft\OData\Service\ErrorUtils.cs</Link>

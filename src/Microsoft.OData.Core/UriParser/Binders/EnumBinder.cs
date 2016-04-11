@@ -22,20 +22,6 @@ namespace Microsoft.OData.Core.UriParser.Binders
     internal sealed class EnumBinder
     {
         /// <summary>
-        /// Method to use for binding the parent node, if needed.
-        /// </summary>
-        private readonly MetadataBinder.QueryTokenVisitor bindMethod;
-
-        /// <summary>
-        /// Constructs a EnumBinder with the given method to be used binding the parent token if needed.
-        /// </summary>
-        /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
-        internal EnumBinder(MetadataBinder.QueryTokenVisitor bindMethod)
-        {
-            this.bindMethod = bindMethod;
-        }
-
-        /// <summary>
         /// Try to bind a dotted identifier as enum node
         /// </summary>
         /// <param name="dottedIdentifierToken">a dotted identifier token</param>

@@ -196,15 +196,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void ValidateCanWriteRequestMessageShouldNotThrowForV3AndJsonLightWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
-            this.v3TestSubject.ValidateCanWriteRequestFormat(RequestWithApplicationJson, isParameterPayload: false);
-            this.v3TestSubject.ValidateCanWriteRequestFormat(RequestWithApplicationJson, isParameterPayload: true);
+            DataServiceClientFormat.ValidateCanWriteRequestFormat(RequestWithApplicationJson);
         }
 
         [TestMethod]
         public void ValidateCanReadResponseMessageShouldNotThrowForV3AndJsonLightWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
-            this.v3TestSubject.ValidateCanReadResponseFormat(ResponseWithApplicationJson);
+            DataServiceClientFormat.ValidateCanReadResponseFormat(ResponseWithApplicationJson);
         }
 
         private void TestSetRequestContentTypeHeaderForEntry(Action<DataServiceClientFormat> configureFormat, string initialHeaderValue, string expectedValueAfterSet)

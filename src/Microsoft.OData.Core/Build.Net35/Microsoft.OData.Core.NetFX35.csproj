@@ -58,36 +58,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\AsyncBufferedStream.cs">
       <Link>Microsoft\OData\Core\AsyncBufferedStream.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\AtomAndVerboseJsonTypeNameOracle.cs">
-      <Link>Microsoft\OData\Core\AtomAndVerboseJsonTypeNameOracle.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomConstants.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomConstants.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomValueUtils.cs">
-      <Link>Microsoft\OData\Core\Atom\AtomValueUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\BufferingXmlReader.cs">
-      <Link>Microsoft\OData\Core\Atom\BufferingXmlReader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\DefaultNamespaceCompensatingXmlWriter.cs">
-      <Link>Microsoft\OData\Core\Atom\DefaultNamespaceCompensatingXmlWriter.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomConvert.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomConvert.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomErrorDeserializer.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomErrorDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomReaderUtils.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomReaderUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomWriterUtils.cs">
-      <Link>Microsoft\OData\Core\Atom\ODataAtomWriterUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\XmlReaderExtensions.cs">
-      <Link>Microsoft\OData\Core\Atom\XmlReaderExtensions.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\BufferedReadStream.cs">
       <Link>Microsoft\OData\Core\BufferedReadStream.cs</Link>
     </Compile>
@@ -439,6 +409,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\MessageStreamWrapper.cs">
       <Link>Microsoft\OData\Core\MessageStreamWrapper.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\BufferingXmlReader.cs">
+      <Link>Microsoft\OData\Core\Metadata\BufferingXmlReader.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\CachedPrimitiveKeepInContentAnnotation.cs">
       <Link>Microsoft\OData\Core\Metadata\CachedPrimitiveKeepInContentAnnotation.cs</Link>
     </Compile>
@@ -463,11 +436,26 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\MetadataUtilsCommon.cs">
       <Link>Microsoft\OData\Core\Metadata\MetadataUtilsCommon.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataAtomErrorDeserializer.cs">
+      <Link>Microsoft\OData\Core\Metadata\ODataAtomErrorDeserializer.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataEdmPropertyAnnotation.cs">
       <Link>Microsoft\OData\Core\Metadata\ODataEdmPropertyAnnotation.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataMetadataConstants.cs">
+      <Link>Microsoft\OData\Core\Metadata\ODataMetadataConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataMetadataReaderUtils.cs">
+      <Link>Microsoft\OData\Core\Metadata\ODataMetadataReaderUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataMetadataWriterUtils.cs">
+      <Link>Microsoft\OData\Core\Metadata\ODataMetadataWriterUtils.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataNullValueBehaviorKind.cs">
       <Link>Microsoft\OData\Core\Metadata\ODataNullValueBehaviorKind.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\XmlReaderExtensions.cs">
+      <Link>Microsoft\OData\Core\Metadata\XmlReaderExtensions.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MimeConstants.cs">
       <Link>Microsoft\OData\Core\MimeConstants.cs</Link>
@@ -790,8 +778,14 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataRawOutputContext.cs">
       <Link>Microsoft\OData\Core\ODataRawOutputContext.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataRawValueConverter.cs">
+      <Link>Microsoft\OData\Core\ODataRawValueConverter.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataRawValueFormat.cs">
       <Link>Microsoft\OData\Core\ODataRawValueFormat.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataRawValueUtils.cs">
+      <Link>Microsoft\OData\Core\ODataRawValueUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReader.cs">
       <Link>Microsoft\OData\Core\ODataReader.cs</Link>
@@ -1681,8 +1675,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Microsoft\OData\Core\Atom\Common\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -461,7 +461,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         private ComplexValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy(TestMaterializerContext context)
         {
-            var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(ODataFormat.Json));
+            var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(context, lazyPrimitivePropertyConverter);
             var complexPolicy = new ComplexValueMaterializationPolicy(context, lazyPrimitivePropertyConverter);
             var collectionPolicy = new CollectionValueMaterializationPolicy(context, primitiveValueMaterializerPolicy);

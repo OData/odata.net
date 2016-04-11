@@ -69,7 +69,6 @@
     <Compile Include="AnnotationFilterPatternTests.cs" />
     <Compile Include="AnnotationFilterTests.cs" />
     <Compile Include="ArgumentValidationUtils.cs" />
-    <Compile Include="Atom\DefaultNamespaceCompensatingXmlWriterTests.cs" />
     <Compile Include="DummyRequestMessage.cs" />
     <Compile Include="DuplicatePropertyNamesCheckerTests.cs" />
     <Compile Include="Evaluation\EdmStructuredValueSimulator.cs" />

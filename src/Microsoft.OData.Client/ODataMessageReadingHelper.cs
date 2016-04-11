@@ -8,9 +8,8 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics;
-    using System.Xml;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Helper class for creating ODataLib readers, settings, and other read-related classes based on an instance of <see cref="ResponseInfo"/>.
@@ -76,7 +75,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(responseMessage != null, "responseMessage != null");
             Debug.Assert(settings != null, "settings != null");
 
-            this.responseInfo.Context.Format.ValidateCanReadResponseFormat(responseMessage);
+            DataServiceClientFormat.ValidateCanReadResponseFormat(responseMessage);
             return new ODataMessageReader(responseMessage, settings, this.responseInfo.TypeResolver.ReaderModel);
         }
     }

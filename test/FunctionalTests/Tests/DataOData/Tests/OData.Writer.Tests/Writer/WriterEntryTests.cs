@@ -2603,7 +2603,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     if (allowDuplicates)
                     {
                         testConfiguration = testConfiguration.Clone();
-                        testConfiguration.MessageWriterSettings.EnableODataServerBehavior(false);
+                        testConfiguration.MessageWriterSettings.EnableODataServerBehavior();
                     }
 
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);

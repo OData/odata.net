@@ -13,25 +13,22 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Xml.Linq;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
-    using Microsoft.OData.Core.Atom;
-
     #endregion Namespaces
 
     /// <summary>

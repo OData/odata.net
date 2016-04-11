@@ -6,7 +6,6 @@
 
 namespace System.Data.Test.Astoria
 {
-    using Microsoft.OData.Core.Atom;
     using System.Collections.Generic;
     using System.Linq;
 

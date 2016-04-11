@@ -12,7 +12,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces
 

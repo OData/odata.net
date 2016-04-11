@@ -119,7 +119,7 @@ namespace Microsoft.OData.Core
             {
                 PrimitiveConverter.Instance.TryWriteAtom(value, textWriter);
             }
-            else if (AtomValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
+            else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
             {
                 this.textWriter.Write(valueAsString);
             }

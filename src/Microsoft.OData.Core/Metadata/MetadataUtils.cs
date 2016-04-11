@@ -12,7 +12,6 @@ namespace Microsoft.OData.Core.Metadata
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     #endregion Namespaces
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Core.Metadata
                 return null;
             }
 
-            return annotations.Where(a => a.NamespaceUri == AtomConstants.ODataMetadataNamespace);
+            return annotations.Where(a => a.NamespaceUri == ODataMetadataConstants.ODataMetadataNamespace);
         }
 
         /// <summary>

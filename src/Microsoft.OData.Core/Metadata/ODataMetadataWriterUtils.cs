@@ -1,10 +1,10 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataAtomWriterUtils.cs" company="Microsoft">
+// <copyright file="ODataMetadataWriterUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Atom
+namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Diagnostics;
@@ -14,9 +14,9 @@ namespace Microsoft.OData.Core.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Helper methods used by the OData writer for the ATOM format.
+    /// Helper methods used by the OData writer for the Metadata format.
     /// </summary>
-    internal static class ODataAtomWriterUtils
+    internal static class ODataMetadataWriterUtils
     {
         /// <summary>
         /// Creates an Xml writer over the specified stream, with the provided settings and encoding.
@@ -33,10 +33,6 @@ namespace Microsoft.OData.Core.Atom
             XmlWriterSettings xmlWriterSettings = CreateXmlWriterSettings(messageWriterSettings, encoding);
 
             XmlWriter writer = XmlWriter.Create(stream, xmlWriterSettings);
-            if (messageWriterSettings.AlwaysUseDefaultXmlNamespaceForRootElement)
-            {
-                writer = new DefaultNamespaceCompensatingXmlWriter(writer);
-            }
 
             return writer;
         }

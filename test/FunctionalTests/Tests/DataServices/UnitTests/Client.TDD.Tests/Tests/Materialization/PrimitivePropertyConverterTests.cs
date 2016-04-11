@@ -20,7 +20,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     [TestClass]
     public class PrimitivePropertyConverterTests
     {
-        private readonly PrimitivePropertyConverter jsonConverter = new PrimitivePropertyConverter(ODataFormat.Json);
+        private readonly PrimitivePropertyConverter jsonConverter = new PrimitivePropertyConverter();
 
         private readonly Dictionary<object, object> basicConversionsList = new Dictionary<object, object>
         {

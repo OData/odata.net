@@ -12,7 +12,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;

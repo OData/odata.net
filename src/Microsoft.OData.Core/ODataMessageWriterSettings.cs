@@ -56,12 +56,6 @@ namespace Microsoft.OData.Core
         private Func<string, bool> shouldIncludeAnnotation;
 
         /// <summary>
-        /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 
-        /// All other elements in the same namespace will also not have prefixes.
-        /// </summary>
-        private bool alwaysUseDefaultXmlNamespaceForRootElement;
-
-        /// <summary>
         /// The parse result of request Uri
         /// </summary>
         private ODataUri odataUri;
@@ -102,7 +96,6 @@ namespace Microsoft.OData.Core
             this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
             this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
-            this.alwaysUseDefaultXmlNamespaceForRootElement = other.alwaysUseDefaultXmlNamespaceForRootElement;
             this.ODataUri = other.ODataUri;
 
             // NOTE: writer behavior is immutable; copy by reference is ok.
@@ -207,18 +200,6 @@ namespace Microsoft.OData.Core
         /// Whether OData Simplified is enabled.
         /// </summary>
         public bool ODataSimplified { get; set; }
-
-        /// <summary>
-        /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 
-        /// All other elements in the same namespace will also not have prefixes.
-        /// </summary>
-        internal bool AlwaysUseDefaultXmlNamespaceForRootElement
-        {
-            get
-            {
-                return this.alwaysUseDefaultXmlNamespaceForRootElement;
-            }
-        }
 
         /// <summary>
         /// The acceptable media types used to determine the content type of the message.
@@ -384,14 +365,6 @@ namespace Microsoft.OData.Core
         {
             // We have to reset the ATOM entry XML customization since in the server behavior no atom entry customization is used.
             this.writerBehavior = ODataWriterBehavior.CreateODataServerBehavior();
-        }
-
-        /// <summary>Specifies whether the OData services server behavior is enabled.</summary>
-        /// <param name="alwaysUseDefaultXmlNamespaceForRootElement">true if the server is configured to leave prefixes off all root elements and anything else in the same namespace, otherwise, false.</param>
-        public void EnableODataServerBehavior(bool alwaysUseDefaultXmlNamespaceForRootElement)
-        {
-            this.EnableODataServerBehavior();
-            this.alwaysUseDefaultXmlNamespaceForRootElement = alwaysUseDefaultXmlNamespaceForRootElement;
         }
 
         /// <summary>Enables the WCF data services client behavior.</summary>

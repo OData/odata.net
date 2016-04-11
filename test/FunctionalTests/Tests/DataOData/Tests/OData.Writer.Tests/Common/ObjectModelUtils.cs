@@ -10,11 +10,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Spatial;
+    using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 

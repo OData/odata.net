@@ -170,8 +170,7 @@ namespace Microsoft.OData.Service
             writerSettings.Version = CommonUtil.ConvertToODataVersion(responseVersion);
             writerSettings.PayloadBaseUri = serviceUri;
 
-            writerSettings.EnableODataServerBehavior(
-                dataService.Configuration.DataServiceBehavior.AlwaysUseDefaultXmlNamespaceForRootElement);
+            writerSettings.EnableODataServerBehavior();
             writerSettings.DisableMessageStreamDisposal = responseMessage is AstoriaResponseMessage;
         }
 

@@ -51,7 +51,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents);
             this.EntityTrackingAdapter = entityTrackingAdapter;
-            DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(this.Format));
+            DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
 
             this.entryValueMaterializerPolicy = new EntryValueMaterializationPolicy(this.MaterializerContext, this.EntityTrackingAdapter, converter, nextLinkTable);
             this.entryValueMaterializerPolicy.CollectionValueMaterializationPolicy = this.CollectionValueMaterializationPolicy;

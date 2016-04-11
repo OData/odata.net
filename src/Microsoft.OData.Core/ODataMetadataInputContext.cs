@@ -19,7 +19,6 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core.Atom;
     #endregion Namespaces
 
     /// <summary>
@@ -63,7 +62,7 @@ namespace Microsoft.OData.Core
             try
             {
                 // Which encoding do we use when reading XML payloads
-                this.baseXmlReader = ODataAtomReaderUtils.CreateXmlReader(messageStream, encoding, messageReaderSettings);
+                this.baseXmlReader = ODataMetadataReaderUtils.CreateXmlReader(messageStream, encoding, messageReaderSettings);
 
                 // We use the buffering reader here only for in-stream error detection (not for buffering).
                 this.xmlReader = new BufferingXmlReader(

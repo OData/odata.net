@@ -9,9 +9,6 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Diagnostics;
     using System.Globalization;
-    using System.IO;
-    using System.Xml;
-    using Microsoft.OData.Core;
     using Microsoft.Spatial;
     using PlatformHelper = Microsoft.OData.Client.PlatformHelper;
 
@@ -22,24 +19,8 @@ namespace Microsoft.OData.Client.Materialization
     /// </summary>
     internal class PrimitivePropertyConverter
     {
-        /// <summary>The response format the values were originally read from. Required for re-interpreting spatial values correctly.</summary>
-        private readonly ODataFormat format;
-
         /// <summary>Geo JSON formatter used for converting spatial values. Lazily created in case no spatial values are ever converted.</summary>
         private readonly SimpleLazy<GeoJsonObjectFormatter> lazyGeoJsonFormatter = new SimpleLazy<GeoJsonObjectFormatter>(GeoJsonObjectFormatter.Create);
-
-        /// <summary>Gml formatter used for converting spatial values. Lazily created in case no spatial values are ever converted.</summary>
-        private readonly SimpleLazy<GmlFormatter> lazyGmlFormatter = new SimpleLazy<GmlFormatter>(GmlFormatter.Create);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PrimitivePropertyConverter"/> class.
-        /// </summary>
-        /// <param name="format">The response format the values were originally read from. Required for re-interpreting spatial values correctly.</param>
-        internal PrimitivePropertyConverter(ODataFormat format)
-        {
-            Debug.Assert(format != null, "format != null");
-            this.format = format;
-        }
 
         /// <summary>
         /// Converts a value to primitive value.
@@ -217,7 +198,6 @@ namespace Microsoft.OData.Client.Materialization
             where TIn : ISpatial
             where TOut : class, ISpatial
         {
-            Debug.Assert(this.format == ODataFormat.Json, "Expected a JSON-based format.");
             var json = this.lazyGeoJsonFormatter.Value.Write(valueToConvert);
             return this.lazyGeoJsonFormatter.Value.Read<TOut>(json);
         }
