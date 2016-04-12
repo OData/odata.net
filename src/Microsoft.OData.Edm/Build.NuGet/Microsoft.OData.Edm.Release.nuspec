@@ -17,18 +17,6 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <releaseNotes>http://odata.github.io/odata.net/#ODL-$VersionFullSemantic$</releaseNotes>
   </metadata>
   <files>
-    <file src="Net45\Microsoft.OData.Edm.dll" target="lib\dnx451" />
-    <file src="Net45\Microsoft.OData.Edm.pdb" target="lib\dnx451" />
-    <file src="Net45\Microsoft.OData.Edm.xml" target="lib\dnx451" />
-    <file src="Net45\2052\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\zh-Hans" />
-    <file src="Net45\1028\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\zh-Hant" />
-    <file src="Net45\1031\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\de" />
-    <file src="Net45\3082\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\es" />
-    <file src="Net45\1036\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\fr" />
-    <file src="Net45\1040\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\it" />
-    <file src="Net45\1041\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\ja" />
-    <file src="Net45\1042\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\ko" />
-    <file src="Net45\1049\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\ru" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.dll" target="lib\portable-net40+sl5+wp8+win8+wpa" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.pdb" target="lib\portable-net40+sl5+wp8+win8+wpa" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.xml" target="lib\portable-net40+sl5+wp8+win8+wpa" />
@@ -41,18 +29,6 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1041\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ja" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1042\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ko" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1049\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ru" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\Microsoft.OData.Edm.dll" target="lib\dnxcore50" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\Microsoft.OData.Edm.pdb" target="lib\dnxcore50" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\Microsoft.OData.Edm.xml" target="lib\dnxcore50" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\2052\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\zh-Hans" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1028\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\zh-Hant" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1031\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\de" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\3082\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\es" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1036\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\fr" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1040\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\it" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1041\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ja" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1042\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ko" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1049\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ru" />
     <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.dll" target="lib\portable-net45+win+wpa81" />
     <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.pdb" target="lib\portable-net45+win+wpa81" />
     <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.xml" target="lib\portable-net45+win+wpa81" />
