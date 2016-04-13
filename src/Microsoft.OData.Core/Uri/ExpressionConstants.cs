@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.Core
 {
     /// <summary>This type provides constants used in URI query expressions.</summary>
     internal static class ExpressionConstants

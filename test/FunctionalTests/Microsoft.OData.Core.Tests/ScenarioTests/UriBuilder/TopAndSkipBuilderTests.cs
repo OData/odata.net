@@ -6,8 +6,6 @@
 
 using System;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
-using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Xunit;
 
@@ -62,8 +60,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
             Assert.Equal(uri.ParameterAliasNodes.Count, 0);
 
-            ODataUriBuilder builder = new ODataUriBuilder(ODataUrlConventions.Default, uri);
-            Uri res = builder.BuildUri();
+            Uri res = uri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=5&$skip=4"), res);
         }
         #endregion

@@ -11,7 +11,6 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriBuilder;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -97,12 +96,10 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             SearchTermNode searchTermNode = (SearchTermNode)odataUri.Search.Expression;
             Assert.AreEqual(searchTermNode.Text, "FA");
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
         }
 
@@ -167,8 +164,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             //verify $search
             SearchTermNode searchTermNode = (SearchTermNode)odataUri.Search.Expression;
             Assert.AreEqual(searchTermNode.Text, "FA");
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.AreEqual(new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
         }
 
@@ -226,8 +222,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             //verify $count
             Assert.AreEqual(odataUri.QueryCount, false);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            Uri actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.AreEqual(new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$top=1&$skip=2&$count=false"), actualUri);
         }
 
@@ -240,8 +235,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             odataUriParser.UrlConventions = ODataUrlConventions.Default;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.AreEqual(queryUri, actualUri);
         }
 
@@ -254,8 +248,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             odataUriParser.UrlConventions = ODataUrlConventions.Default;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.AreEqual(queryUri, actualUri);
         }
 

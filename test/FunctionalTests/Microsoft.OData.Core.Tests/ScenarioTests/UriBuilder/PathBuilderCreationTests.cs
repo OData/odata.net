@@ -7,8 +7,6 @@
 using System;
 using System.Linq;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
-using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -30,8 +28,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
                 new IEdmOperationImport[] { functionImport },
                 reference.ReferencedEntitySet,
                 parameters));
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actual = odataUriBuilder.BuildUri();
+            Uri actual = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(new Uri("http://gobbledygook/GetPet1(id=1)"), actual);
         }
     }

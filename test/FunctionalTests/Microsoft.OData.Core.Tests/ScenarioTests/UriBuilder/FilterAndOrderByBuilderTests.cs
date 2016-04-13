@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder

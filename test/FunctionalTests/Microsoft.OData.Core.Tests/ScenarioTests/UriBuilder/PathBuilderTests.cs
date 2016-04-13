@@ -6,7 +6,6 @@
 
 using System;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.Spatial;
 using Xunit;
@@ -134,8 +133,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/service.svc"), queryUri);
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(new Uri("http://gobbldygook/service.svc/Dogs"), actualUri);
         }
 
@@ -531,8 +529,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("https://www.tomatosoup.com:1234/OData/V3/"), queryUri);
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(new Uri("https://www.tomatosoup.com:1234/OData/V3/Dogs"), actualUri);
         }
 
@@ -543,8 +540,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("https://www.blah.org/OData/"), queryUri);
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(new Uri("https://www.blah.org/OData/People"), actualUri);
         }
 

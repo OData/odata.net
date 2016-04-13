@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -39,16 +38,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -71,16 +67,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
             aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -99,16 +92,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -125,16 +115,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
             aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -151,16 +138,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(s => (s as IEdmFunction).Parameters.Count() == 2)).As<IEdmFunction>();
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.NotEqual(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
         #endregion
@@ -179,16 +163,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -211,16 +192,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
             aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -243,16 +221,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("238563");
             aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -269,16 +244,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -296,16 +268,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -323,16 +292,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -350,16 +316,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].Should().BeNull();
             aliasNodes["@p2"].Should().BeNull();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -376,16 +339,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
             aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And.Right.ShouldBeConstantQueryNode(2);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -402,16 +362,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.Filter.Expression.As<SingleValueFunctionCallNode>().Parameters.First().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
         #endregion
@@ -431,16 +388,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(fullUri, actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -457,16 +411,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUri.OrderBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
             aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).And.Right.ShouldBeConstantQueryNode(2);
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(odataUriParser.UrlConventions, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
         }
         #endregion
@@ -486,16 +437,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             node.Parameters.Last().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeConstantQueryNode("abc");
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(odataUriParser.UrlConventions, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
 
-            ODataUriBuilder uriBuilderWithODataSimplified = new ODataUriBuilder(ODataUrlConventions.ODataSimplified, odataUri);
-            actualUri = uriBuilderWithODataSimplified.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
         }
         #endregion

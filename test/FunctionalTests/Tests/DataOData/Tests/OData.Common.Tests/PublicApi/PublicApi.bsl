@@ -4255,6 +4255,23 @@ public sealed class Microsoft.OData.Core.ODataObjectModelExtensions {
 [
 ExtensionAttribute(),
 ]
+public sealed class Microsoft.OData.Core.ODataUriExtensions {
+	[
+	ExtensionAttribute(),
+	]
+	public static System.Uri BuildUri (Microsoft.OData.Core.ODataUri odataUri, Microsoft.OData.Core.ODataUrlConventions urlConventions)
+}
+
+public sealed class Microsoft.OData.Core.ODataUriUtils {
+	public static object ConvertFromUriLiteral (string value, Microsoft.OData.Core.ODataVersion version)
+	public static object ConvertFromUriLiteral (string value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version)
+	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
+}
+
+[
+ExtensionAttribute(),
+]
 public sealed class Microsoft.OData.Core.ODataUtils {
 	public static string AppendDefaultHeaderValue (string headerName, string headerValue)
 	public static System.Func`2[[System.String],[System.Boolean]] CreateAnnotationFilter (string annotationFilter)
@@ -4881,6 +4898,12 @@ public sealed class Microsoft.OData.Core.ODataUri {
 	public Microsoft.OData.Core.ODataUri Clone ()
 }
 
+public sealed class Microsoft.OData.Core.ODataUrlConventions {
+	Microsoft.OData.Core.ODataUrlConventions Default  { public static get; }
+	Microsoft.OData.Core.ODataUrlConventions KeyAsSegment  { public static get; }
+	Microsoft.OData.Core.ODataUrlConventions ODataSimplified  { public static get; }
+}
+
 public sealed class Microsoft.OData.Core.ProjectedPropertiesAnnotation {
 	public ProjectedPropertiesAnnotation (System.Collections.Generic.IEnumerable`1[[System.String]] projectedPropertyNames)
 }
@@ -4903,12 +4926,6 @@ public sealed class Microsoft.OData.Core.Metadata.ODataEdmPropertyAnnotation {
 	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { public get; public set; }
 }
 
-public sealed class Microsoft.OData.Core.UriBuilder.ODataUriBuilder {
-	public ODataUriBuilder (Microsoft.OData.Core.UriParser.ODataUrlConventions urlConventions, Microsoft.OData.Core.ODataUri odataUri)
-
-	public System.Uri BuildUri ()
-}
-
 public enum Microsoft.OData.Core.UriParser.OrderByDirection : int {
 	Ascending = 0
 	Descending = 1
@@ -4923,13 +4940,6 @@ public sealed class Microsoft.OData.Core.UriParser.CustomUriFunctions {
 public sealed class Microsoft.OData.Core.UriParser.CustomUriLiteralPrefixes {
 	public static void AddCustomLiteralPrefix (string literalPrefix, Microsoft.OData.Edm.IEdmTypeReference literalEdmTypeReference)
 	public static bool RemoveCustomLiteralPrefix (string literalPrefix)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.ODataUriUtils {
-	public static object ConvertFromUriLiteral (string value, Microsoft.OData.Core.ODataVersion version)
-	public static object ConvertFromUriLiteral (string value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference)
-	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version)
-	public static string ConvertToUriLiteral (object value, Microsoft.OData.Core.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
 }
 
 public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
@@ -4989,7 +4999,7 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriParser {
 	Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver Resolver  { public get; public set; }
 	System.Uri ServiceRoot  { public get; }
 	Microsoft.OData.Core.UriParser.ODataUriParserSettings Settings  { public get; }
-	Microsoft.OData.Core.UriParser.ODataUrlConventions UrlConventions  { public get; public set; }
+	Microsoft.OData.Core.ODataUrlConventions UrlConventions  { public get; public set; }
 
 	public Microsoft.OData.Core.UriParser.Aggregation.ApplyClause ParseApply ()
 	public System.Nullable`1[[System.Boolean]] ParseCount ()
@@ -5011,12 +5021,6 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriParserSettings {
 
 	int MaximumExpansionCount  { public get; public set; }
 	int MaximumExpansionDepth  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.ODataUrlConventions {
-	Microsoft.OData.Core.UriParser.ODataUrlConventions Default  { public static get; }
-	Microsoft.OData.Core.UriParser.ODataUrlConventions KeyAsSegment  { public static get; }
-	Microsoft.OData.Core.UriParser.ODataUrlConventions ODataSimplified  { public static get; }
 }
 
 public enum Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod : int {

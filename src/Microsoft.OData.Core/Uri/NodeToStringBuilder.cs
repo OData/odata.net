@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriBuilder
+namespace Microsoft.OData.Core
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Visitors;

@@ -838,9 +838,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUntypedValue.cs">
       <Link>Microsoft\OData\Core\ODataUntypedValue.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUri.cs">
-      <Link>Microsoft\OData\Core\ODataUri.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUtils.cs">
       <Link>Microsoft\OData\Core\ODataUtils.cs</Link>
     </Compile>
@@ -873,15 +870,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ProjectedPropertiesAnnotation.cs">
       <Link>Microsoft\OData\Core\ProjectedPropertiesAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Query\ExpressionConstants.cs">
-      <Link>Microsoft\OData\Core\Query\ExpressionConstants.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Query\ODataUriConversionUtils.cs">
-      <Link>Microsoft\OData\Core\Query\ODataUriConversionUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Query\ODataUriUtils.cs">
-      <Link>Microsoft\OData\Core\Query\ODataUriUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\RawValueWriter.cs">
       <Link>Microsoft\OData\Core\RawValueWriter.cs</Link>
@@ -921,18 +909,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\TypeUtils.cs">
       <Link>Microsoft\OData\Core\TypeUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriBuilder\NodeToStringBuilder.cs">
-      <Link>Microsoft\OData\Core\UriBuilder\NodeToStringBuilder.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriBuilder\ODataUriBuilder.cs">
-      <Link>Microsoft\OData\Core\UriBuilder\ODataUriBuilder.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriBuilder\PathSegmentToResourcePathTranslator.cs">
-      <Link>Microsoft\OData\Core\UriBuilder\PathSegmentToResourcePathTranslator.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriBuilder\SelectExpandClauseToStringBuilder.cs">
-      <Link>Microsoft\OData\Core\UriBuilder\SelectExpandClauseToStringBuilder.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\BinaryOperatorBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\BinaryOperatorBinder.cs</Link>
@@ -1077,9 +1053,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\ODataUriParserSettings.cs">
       <Link>Microsoft\OData\Core\UriParser\ODataUriParserSettings.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\ODataUrlConventions.cs">
-      <Link>Microsoft\OData\Core\UriParser\ODataUrlConventions.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\OrderByDirection.cs">
       <Link>Microsoft\OData\Core\UriParser\OrderByDirection.cs</Link>
@@ -1631,6 +1604,33 @@
     </Compile>
     <Compile Include="..\UriParser\FunctionSignatureWithReturnType.cs">
       <Link>Microsoft\OData\Core\UriParser\FunctionSignatureWithReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs">
+      <Link>Microsoft\OData\Core\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ExpressionConstants.cs">
+      <Link>Microsoft\OData\Core\Uri\ExpressionConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\NodeToStringBuilder.cs">
+      <Link>Microsoft\OData\Core\Uri\NodeToStringBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUri.cs">
+      <Link>Microsoft\OData\Core\Uri\ODataUri.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUriConversionUtils.cs">
+      <Link>Microsoft\OData\Core\Uri\ODataUriConversionUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUriExtensions.cs">
+      <Link>Microsoft\OData\Core\Uri\ODataUriExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUriUtils.cs">
+      <Link>Microsoft\OData\Core\Uri\ODataUriUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUrlConventions.cs">
+      <Link>Microsoft\OData\Core\Uri\ODataUrlConventions.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\SelectExpandClauseToStringBuilder.cs">
+      <Link>Microsoft\OData\Core\Uri\SelectExpandClauseToStringBuilder.cs</Link>
     </Compile>
     <Compile Include="..\ValidatorFactory.cs">
       <Link>ValidatorFactory.cs</Link>

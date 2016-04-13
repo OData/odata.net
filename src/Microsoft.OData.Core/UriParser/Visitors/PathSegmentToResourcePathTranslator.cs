@@ -4,29 +4,25 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Edm;
+
 #if !INTERNAL_DROP || ODATALIB
 
-namespace Microsoft.OData.Core.UriBuilder
+namespace Microsoft.OData.Core.UriParser.Visitors
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    #endregion Namespaces
-
     /// <summary>
     /// Translator to translate query url path segments to strings.
     /// </summary>
-    internal sealed class PathSegmentToResourcePathTranslator : PathSegmentTranslator<String>
+    internal sealed class PathSegmentToResourcePathTranslator : PathSegmentTranslator<string>
     {
         /// <summary>
         /// Key Serializer for KeySegment
@@ -39,7 +35,7 @@ namespace Microsoft.OData.Core.UriBuilder
         /// <param name="urlConventions">Whether use key as segment</param>
         public PathSegmentToResourcePathTranslator(UrlConvention urlConventions)
         {
-            KeySerializer = KeySerializer.Create(urlConventions);
+            this.KeySerializer = KeySerializer.Create(urlConventions);
         }
 
         /// <summary>
@@ -105,7 +101,7 @@ namespace Microsoft.OData.Core.UriBuilder
             List<KeyValuePair<string, object>> keys = segment.Keys.ToList();
 
             StringBuilder builder = new StringBuilder();
-            KeySerializer.AppendKeyExpression(builder, new Collection<KeyValuePair<string, object>>(keys), p => p.Key, p => p.Value);
+            this.KeySerializer.AppendKeyExpression(builder, new Collection<KeyValuePair<string, object>>(keys), p => p.Key, p => p.Value);
 
             return builder.ToString();
         }

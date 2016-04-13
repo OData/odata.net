@@ -4,25 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
-{
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
-    using System.Text;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
-    #endregion
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
 
+namespace Microsoft.OData.Core
+{
     /// <summary>
     /// Utility functions for writing values for use in a URL.
     /// </summary>

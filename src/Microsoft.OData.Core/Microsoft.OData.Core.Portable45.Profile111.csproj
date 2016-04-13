@@ -305,7 +305,7 @@
     <Compile Include="ODataStreamReferenceValue.cs" />
     <Compile Include="ODataTypeAnnotation.cs" />
     <Compile Include="ODataUndeclaredPropertyBehaviorKinds.cs" />
-    <Compile Include="ODataUri.cs" />
+    <Compile Include="Uri\ODataUri.cs" />
     <Compile Include="ODataUtils.cs" />
     <Compile Include="ODataUtilsInternal.cs" />
     <Compile Include="ODataValue.cs" />
@@ -317,9 +317,6 @@
     <Compile Include="ODataWriterCore.cs" />
     <Compile Include="PrimitiveConverter.cs" />
     <Compile Include="ProjectedPropertiesAnnotation.cs" />
-    <Compile Include="Query\ExpressionConstants.cs" />
-    <Compile Include="Query\ODataUriConversionUtils.cs" />
-    <Compile Include="Query\ODataUriUtils.cs" />
     <Compile Include="RawValueWriter.cs" />
     <Compile Include="ReadOnlyEnumerable.cs" />
     <Compile Include="ReadOnlyEnumerableExtensions.cs" />
@@ -333,10 +330,11 @@
     <Compile Include="TaskUtils.cs" />
     <Compile Include="TypeNameOracle.cs" />
     <Compile Include="TypeUtils.cs" />
-    <Compile Include="UriBuilder\NodeToStringBuilder.cs" />
-    <Compile Include="UriBuilder\ODataUriBuilder.cs" />
-    <Compile Include="UriBuilder\PathSegmentToResourcePathTranslator.cs" />
-    <Compile Include="UriBuilder\SelectExpandClauseToStringBuilder.cs" />
+    <Compile Include="Uri\ExpressionConstants.cs" />
+    <Compile Include="Uri\NodeToStringBuilder.cs" />
+    <Compile Include="Uri\ODataUriConversionUtils.cs" />
+    <Compile Include="Uri\ODataUriExtensions.cs" />
+    <Compile Include="Uri\ODataUriUtils.cs" />
     <Compile Include="UriParser\Binders\BinaryOperatorBinder.cs" />
     <Compile Include="UriParser\Binders\BinderBase.cs" />
     <Compile Include="UriParser\Binders\BindingState.cs" />
@@ -389,7 +387,6 @@
     <Compile Include="UriParser\ODataUriParser.cs" />
     <Compile Include="UriParser\ODataUriParserConfiguration.cs" />
     <Compile Include="UriParser\ODataUriParserSettings.cs" />
-    <Compile Include="UriParser\ODataUrlConventions.cs" />
     <Compile Include="UriParser\OrderByDirection.cs" />
     <Compile Include="UriParser\Parsers\ExpandDepthAndCountValidator.cs" />
     <Compile Include="UriParser\Parsers\ExpandOptionParser.cs" />
@@ -543,6 +540,7 @@
     <Compile Include="UriParser\Visitors\IsCollectionTranslator.cs" />
     <Compile Include="UriParser\Visitors\PathSegmentHandler.cs" />
     <Compile Include="UriParser\Visitors\PathSegmentToContextUrlPathTranslator.cs" />
+    <Compile Include="UriParser\Visitors\PathSegmentToResourcePathTranslator.cs" />
     <Compile Include="UriParser\Visitors\PathSegmentToStringTranslator.cs" />
     <Compile Include="UriParser\Visitors\PathSegmentTokenEqualityComparer.cs" />
     <Compile Include="UriParser\Visitors\PathSegmentTokenVisitor.cs" />
@@ -554,6 +552,8 @@
     <Compile Include="UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs" />
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitor.cs" />
     <Compile Include="UriUtils.cs" />
+    <Compile Include="Uri\ODataUrlConventions.cs" />
+    <Compile Include="Uri\SelectExpandClauseToStringBuilder.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="ValidationUtils.cs" />
     <Compile Include="ValidatorFactory.cs" />

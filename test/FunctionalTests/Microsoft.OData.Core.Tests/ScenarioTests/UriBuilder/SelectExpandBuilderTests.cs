@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -661,7 +660,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
                 SelectAndExpand = new SelectExpandClause(new[] { expand }, true)
             };
 
-            Uri actualUri = new ODataUriBuilder(ODataUrlConventions.Default, uri).BuildUri();
+            Uri actualUri = uri.BuildUri(ODataUrlConventions.Default);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=Color eq 'Brown';$orderby=Color;$top=1;$count=true;$search=termX)"), actualUri.OriginalString);
         }
         #endregion
@@ -672,8 +671,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlConventions = urlConventions;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(urlConventions, odataUri);
-            return odataUriBuilder.BuildUri();
+            return odataUri.BuildUri(urlConventions);
         }
     }
 }

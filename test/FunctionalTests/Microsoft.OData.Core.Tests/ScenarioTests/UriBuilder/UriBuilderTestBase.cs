@@ -6,7 +6,6 @@
 
 using System;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
 using Microsoft.OData.Core.UriParser;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
@@ -33,8 +32,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlConventions = urlConventions;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(urlConventions, odataUri);
-            return odataUriBuilder.BuildUri();
+            return odataUri.BuildUri(urlConventions);
         }
         #endregion  
     }
