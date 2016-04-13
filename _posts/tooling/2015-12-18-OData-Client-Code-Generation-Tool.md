@@ -1,13 +1,28 @@
 ---
 layout: post
-title: "OData Connected Service"
-description: "How to use OData Connected Service to generate client proxy file"
+title: "OData Client Code Generation Tool"
+description: "How to generate client proxy file for an OData service"
 category: "8. Tooling"
 ---
 
+OData provide two tools to generate client proxy file for an OData Service.
 
-The OData Connected Service tool lets app developers connect their applications to OData Services and generate the client proxy files for the services.
+- [OData Client Code Generator](https://visualstudiogallery.msdn.microsoft.com/9b786c0e-79d1-4a50-89a5-125e57475937?SRC=Featured) support generating client proxy file for OData V4 Service. It supports following Visual Studio:
 
+	- Visual Studio 2010 (The last version of this tool for VS 2010 is 2.3.0, You can download it from [ODataItemTemplate.2.3.0.vsix](https://github.com/OData/lab/blob/Tools/Tools/ODataT4ItemTemplate.2.3.0.vsix).)
+	- Visual Studio 2012
+	- Visual Studio 2013
+	- Visual Studio 2015
+
+	For full documentation, please refere to "[How to use odata client generator to generate client proxy file]((http://blogs.msdn.com/b/odatateam/archive/2014/03/12/how-to-use-odata-client-code-generator-to-generate-client-side-proxy-class.aspx))".
+
+- [OData Connected Service](https://visualstudiogallery.msdn.microsoft.com/b343d0eb-6493-44c2-b558-13a0408d013f) lets app developers connect their applications to OData Services (both V3 & V4) and generate the client proxy files for the services. It supports following Visual Studio:
+
+	- Visual Studio 2015
+	
+The following part will mainly focus on how to use the OData Connected Service to generate client proxy file.  
+	
+	
 # Install OData Connected Service Extension #
 
 You can install this extension by [this link](https://visualstudiogallery.msdn.microsoft.com/b343d0eb-6493-44c2-b558-13a0408d013f/file/163980/4/Microsoft.OData.ConnectedService.vsix) from vs gallery. Or, you can install it in Visual Studio 2015.
