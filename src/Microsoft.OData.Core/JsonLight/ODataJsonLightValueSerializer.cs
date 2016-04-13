@@ -322,7 +322,19 @@ namespace Microsoft.OData.Core.JsonLight
                             }
                             else if (item != null)
                             {
-                                this.WritePrimitiveValue(item, expectedItemTypeReference);
+                                if (isInUri && PlatformHelper.GetTypeCode(item.GetType()) == TypeCode.String)
+                                {
+                                    string text = (string) item;
+                                    //escape single quote by two single quotes
+                                    text = text.Replace("'", "''");
+                                    //use single quotes in uri
+                                    text = String.Format("'{0}'", text);
+                                    this.JsonWriter.WriteRawValue(text);
+                                }
+                                else
+                                {
+                                    this.WritePrimitiveValue(item, expectedItemTypeReference);
+                                }
                             }
                             else
                             {

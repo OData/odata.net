@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.Query
 {
-    public class ODataUriConvesionUtilsTests
+    public class ODataUriConversionUtilsTests
     {
         [Fact]
         public void DoubleLiteralShouldNotHaveDecimalPointForScientificNotation()
@@ -46,6 +46,18 @@ namespace Microsoft.OData.Core.Tests.Query
         {
             PrimitiveLiteral(100D).Should().Be("100.0");
             PrimitiveLiteral(-100D).Should().Be("-100.0");
+        }
+
+        [Fact]
+        public void StringCollectionShouldHaveSingleQuotes()
+        {
+            ODataCollectionValue value = new ODataCollectionValue
+            {
+                Items = new string[] { "123", "abc" },
+                TypeName = "Collection(Edm.String)"
+            };
+            var collectionString = ODataUriConversionUtils.ConvertToUriCollectionLiteral(value, Microsoft.OData.Edm.Library.EdmCoreModel.Instance, ODataVersion.V4);
+            collectionString.Should().Be("['123','abc']");
         }
 
         private static string PrimitiveLiteral(object value)

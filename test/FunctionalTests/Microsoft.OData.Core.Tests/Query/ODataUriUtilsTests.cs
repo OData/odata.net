@@ -153,6 +153,31 @@ namespace Microsoft.OData.Core.Tests.Query
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_UnrecognizedLiteral("Edm.Binary", "binary'AwEEAQUJAgYFAwUJ='", "0", "binary'AwEEAQUJAgYFAwUJ='"));
         }
 
+        [Fact]
+        public void TestStringConvertToUriLiteral()
+        {
+            string stringString = ODataUriUtils.ConvertToUriLiteral(String.Empty, ODataVersion.V4);
+            stringString.Should().Be("''");
+
+            stringString = ODataUriUtils.ConvertToUriLiteral("abc", ODataVersion.V4);
+            stringString.Should().Be("'abc'");
+
+            stringString = ODataUriUtils.ConvertToUriLiteral("a'bc", ODataVersion.V4);
+            stringString.Should().Be("'a''bc'");
+        }
+
+        [Fact]
+        public void TestStringCollectionConvertToUriLiteral()
+        {
+            ODataCollectionValue value = new ODataCollectionValue
+            {
+                Items = new string[] {"123", "abc", "a'bc"},
+                TypeName = "Collection(Edm.String)"
+            };
+            string collectionString = ODataUriUtils.ConvertToUriLiteral(value, ODataVersion.V4);
+            collectionString.Should().Be("['123','abc','a''bc']");
+        }
+
         #region enum testings
         [Fact]
         public void TestEnumConvertFromUriLiteral_EnumName()
