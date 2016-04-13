@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
-    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <AssemblyName>Microsoft.OData.Edm</AssemblyName>
     <OutputType>Library</OutputType>
     <TransparentAssembly>true</TransparentAssembly>
@@ -14,7 +15,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <UseSLVersion>true</UseSLVersion>
+    <DefineConstants>$(DefineConstants);DNXCORE50;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <HasIntellisenseFile>true</HasIntellisenseFile>
     <EnableLocalization>true</EnableLocalization>
     <!-- from Build.Props... but can't reference it at this level -->
@@ -23,7 +24,6 @@
     <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">false</CodeAnalysisUseAdditionalODataRules>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
   <!-- Generated files -->
   <ItemGroup>
     <TextStringResource Include="Microsoft.OData.Edm.txt">
@@ -237,8 +237,8 @@
     <Compile Include="Vocabularies\CapabilitiesVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyModel.cs" />
     <Compile Include="Vocabularies\AlternateKeysVocabularyConstants.cs" />
-    <Compile Include="Vocabularies\CoreVocabularyConstants.cs" />
     <Compile Include="Vocabularies\AlternateKeysVocabularyModel.cs" />
+    <Compile Include="Vocabularies\CoreVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CoreVocabularyModel.cs" />
     <Compile Include="Vocabularies\Expressions\EdmApplyExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCastExpression.cs" />
