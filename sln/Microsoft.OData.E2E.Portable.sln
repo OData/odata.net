@@ -2,13 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.Portable45.Profile111", "..\src\Microsoft.Spatial\Microsoft.Spatial.Portable45.Profile111.csproj", "{0852538C-EF36-4720-950E-320150C1AF9C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm.Portable45.Profile111", "..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.Portable45.Profile111.csproj", "{0EA3792B-B967-44BB-8B7C-0625ED6231FA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.Portable45.Profile111", "..\src\Microsoft.OData.Core\Microsoft.OData.Core.Portable45.Profile111.csproj", "{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Profile111.Tests", "..\test\EndToEndTests\Microsoft.OData.Profile111.Tests\Microsoft.OData.Profile111.Tests.csproj", "{8C9A1B86-4474-484C-9545-223F9C6185FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.E2E.Profile111", "..\test\EndToEndTests\Microsoft.OData.E2E.Portable\Microsoft.OData.E2E.Profile111.csproj", "{8C9A1B86-4474-484C-9545-223F9C6185FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.Portable", "..\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj", "{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}"
 EndProject
@@ -22,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Framework.Portable", "..\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj", "{134D2AD7-3C82-45C9-AC43-75F482081F8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Profile7.Tests", "..\test\EndToEndTests\Microsoft.OData.Profile111.Tests\Microsoft.OData.Profile7.Tests.csproj", "{A5A3F799-3B12-4BE6-85C7-51AD75565DE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.E2E.Profile7", "..\test\EndToEndTests\Microsoft.OData.E2E.Portable\Microsoft.OData.E2E.Profile7.csproj", "{A5A3F799-3B12-4BE6-85C7-51AD75565DE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,60 +31,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Cover|x64.ActiveCfg = Cover|x64
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Cover|x64.Build.0 = Cover|x64
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Cover|x86.ActiveCfg = Cover|x86
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Cover|x86.Build.0 = Cover|x86
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Debug|x64.ActiveCfg = Debug|x64
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Debug|x64.Build.0 = Debug|x64
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Debug|x86.ActiveCfg = Debug|x86
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Debug|x86.Build.0 = Debug|x86
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Release|x64.ActiveCfg = Release|x64
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Release|x64.Build.0 = Release|x64
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Release|x86.ActiveCfg = Release|x86
-		{0852538C-EF36-4720-950E-320150C1AF9C}.Release|x86.Build.0 = Release|x86
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Cover|x64.ActiveCfg = Cover|x64
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Cover|x64.Build.0 = Cover|x64
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Cover|x86.ActiveCfg = Cover|x86
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Cover|x86.Build.0 = Cover|x86
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Debug|x64.ActiveCfg = Debug|x64
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Debug|x64.Build.0 = Debug|x64
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Debug|x86.ActiveCfg = Debug|x86
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Debug|x86.Build.0 = Debug|x86
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Release|x64.ActiveCfg = Release|x64
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Release|x64.Build.0 = Release|x64
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Release|x86.ActiveCfg = Release|x86
-		{0EA3792B-B967-44BB-8B7C-0625ED6231FA}.Release|x86.Build.0 = Release|x86
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Cover|x64.ActiveCfg = Cover|x64
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Cover|x64.Build.0 = Cover|x64
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Cover|x86.ActiveCfg = Cover|x86
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Cover|x86.Build.0 = Cover|x86
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Debug|x64.ActiveCfg = Debug|x64
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Debug|x64.Build.0 = Debug|x64
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Debug|x86.ActiveCfg = Debug|x86
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Debug|x86.Build.0 = Debug|x86
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Release|x64.ActiveCfg = Release|x64
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Release|x64.Build.0 = Release|x64
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Release|x86.ActiveCfg = Release|x86
-		{6F6FEA67-E323-4DD4-8B83-DD837FD3BEB7}.Release|x86.Build.0 = Release|x86
 		{8C9A1B86-4474-484C-9545-223F9C6185FC}.Cover|Any CPU.ActiveCfg = Release|Any CPU
 		{8C9A1B86-4474-484C-9545-223F9C6185FC}.Cover|Any CPU.Build.0 = Release|Any CPU
 		{8C9A1B86-4474-484C-9545-223F9C6185FC}.Cover|x64.ActiveCfg = Release|Any CPU

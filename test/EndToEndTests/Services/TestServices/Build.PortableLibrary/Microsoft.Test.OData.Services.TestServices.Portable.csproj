@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <AssemblyName>Microsoft.Test.OData.Services.TestServices.Portable</AssemblyName>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Test.OData.Services.TestServices</RootNamespace>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <AssemblyName>Microsoft.Test.OData.Framework.Portable</AssemblyName>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Test.OData.Framework</RootNamespace>
@@ -40,9 +40,6 @@
     <Compile Include="..\Verification\StringResourceUtil.cs" />
     <Compile Include="..\Verification\IStringResourceVerifier.cs" />
     <Compile Include="..\Verification\StringResourceVerifier.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
 </Project>
