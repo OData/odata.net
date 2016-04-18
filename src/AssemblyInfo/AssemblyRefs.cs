@@ -151,6 +151,13 @@ internal static class DataFxAssemblyRef
         internal const string DataSvcUtil = "DataSvcUtil.exe";
         internal const string ODataLib = "Microsoft.OData.Core.dll";
         internal const string SpatialCore = "Microsoft.Spatial.dll";
+
+        internal const string System = "System.dll";
+        internal const string SystemCore = "System.Core.dll";
+        internal const string SystemIO = "System.IO.dll";
+        internal const string SystemRuntime = "System.Runtime.dll";
+        internal const string SystemXml = "System.Xml.dll";
+        internal const string SystemXmlReaderWriter = "System.Xml.ReaderWriter.dll";
     }
 
     internal const string DataFxAssemblyVersion = VersionConstants.AssemblyVersion;

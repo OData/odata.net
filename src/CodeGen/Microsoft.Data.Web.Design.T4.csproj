@@ -9,7 +9,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
     <ProjectGuid>{E4167281-C1AF-48C1-9BBD-0453BFB8CE2D}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <EnableStyleCop>false</EnableStyleCop>
     <ShouldGenerateVersionConstantsFile>true</ShouldGenerateVersionConstantsFile>
   </PropertyGroup>

@@ -14,8 +14,11 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <#@ template debug="true" hostSpecific="true" visibility="internal" linePragmas="false"#>
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.IO.dll" #>
+<#@ Assembly Name="System.Runtime.dll" #>
 <#@ Assembly Name="System.Xml.dll" #>
 <#@ Assembly Name="System.Xml.Linq.dll" #>
+<#@ Assembly Name="System.Xml.ReaderWriter.dll" #>
 <#@ Assembly Name="System.Windows.Forms.dll" #>
 <#@ Assembly Name="Microsoft.OData.Client.dll" #>
 <#@ Assembly Name="Microsoft.OData.Core.dll" #>

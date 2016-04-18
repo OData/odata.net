@@ -511,14 +511,16 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 WarningLevel = 4,
                 ReferencedAssemblies =
                 {
-                    typeof(DataServiceContext).Assembly.Location, 
-                    typeof(IEdmModel).Assembly.Location, 
+                    typeof(DataServiceContext).Assembly.Location,
+                    typeof(IEdmModel).Assembly.Location,
                     typeof(GeographyPoint).Assembly.Location,
-                    typeof(Uri).Assembly.Location, 
-                    typeof(IQueryable).Assembly.Location, 
-                    typeof(INotifyPropertyChanged).Assembly.Location, 
-                    typeof(XmlReader).Assembly.Location,
                     typeof(ODataVersion).Assembly.Location,
+                    DataFxAssemblyRef.File.System,
+                    DataFxAssemblyRef.File.SystemCore,
+                    DataFxAssemblyRef.File.SystemIO,
+                    DataFxAssemblyRef.File.SystemRuntime,
+                    DataFxAssemblyRef.File.SystemXml,
+                    DataFxAssemblyRef.File.SystemXmlReaderWriter
                 }
             };
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <OutputType>Library</OutputType>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);ASTORIA_CLIENT;DNXCORE50;</DefineConstants>
