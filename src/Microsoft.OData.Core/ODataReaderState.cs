@@ -18,42 +18,42 @@ namespace Microsoft.OData.Core
         /// <summary>The start of a feed has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataFeed"/> but no properties may be filled in until the FeedEnd state is reached.
+        /// an <see cref="ODataResourceSet"/> but no properties may be filled in until the ResourceSetEnd state is reached.
         /// </remarks>
-        FeedStart,
+        ResourceSetStart,
 
         /// <summary>The end of a feed has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataFeed"/> with all properties filled in.
+        /// an <see cref="ODataResourceSet"/> with all properties filled in.
         /// </remarks>
-        FeedEnd,
+        ResourceSetEnd,
 
-        /// <summary>The start of an entry has been read.</summary>
+        /// <summary>The start of a resource has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataEntry"/> but no properties may be filled in until the EntryEnd state is reached.
+        /// an <see cref="ODataResource"/> but no properties may be filled in until the EntryEnd state is reached.
         /// </remarks>
-        EntryStart,
+        ResourceStart,
 
-        /// <summary>The end of an entry has been read.</summary>
+        /// <summary>The end of a resource has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataEntry"/> with all properties filled in.
+        /// an <see cref="ODataResource"/> with all properties filled in.
         /// </remarks>
-        EntryEnd,
+        ResourceEnd,
 
         /// <summary>The start of a navigation link has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataNavigationLink"/> but no properties may be filled in until the LinkEnd state is reached.
+        /// an <see cref="ODataNestedResourceInfo"/> but no properties may be filled in until the LinkEnd state is reached.
         /// </remarks>
         NavigationLinkStart,
 
         /// <summary>The end of a navigation link has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataNavigationLink"/> with all properties filled in.
+        /// an <see cref="ODataNestedResourceInfo"/> with all properties filled in.
         /// </remarks>
         NavigationLinkEnd,
 

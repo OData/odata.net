@@ -24,43 +24,43 @@ namespace Microsoft.OData.Core
     public abstract class ODataWriter
     {
         /// <summary>Starts the writing of a feed.</summary>
-        /// <param name="feed">The feed or collection to write.</param>
-        public abstract void WriteStart(ODataFeed feed);
+        /// <param name="resourceSet">The feed or collection to write.</param>
+        public abstract void WriteStart(ODataResourceSet resourceSet);
 
 #if ODATALIB_ASYNC
         /// <summary> Asynchronously start writing a feed. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="feed">The feed or collection to write.</param>
-        public abstract Task WriteStartAsync(ODataFeed feed);
+        /// <param name="resourceSet">The feed or collection to write.</param>
+        public abstract Task WriteStartAsync(ODataResourceSet resourceSet);
 #endif
 
-        /// <summary>Starts the writing of an entry.</summary>
-        /// <param name="entry">The entry or item to write.</param>
-        public abstract void WriteStart(ODataEntry entry);
+        /// <summary>Starts the writing of a resource.</summary>
+        /// <param name="resource">The resource or item to write.</param>
+        public abstract void WriteStart(ODataResource resource);
 
 #if ODATALIB_ASYNC
-        /// <summary> Asynchronously start writing an entry. </summary>
+        /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="entry">The entry or item to write.</param>
-        public abstract Task WriteStartAsync(ODataEntry entry);
+        /// <param name="resource">The resource or item to write.</param>
+        public abstract Task WriteStartAsync(ODataResource resource);
 #endif
 
         /// <summary>Starts the writing of a navigation link.</summary>
         /// <param name="navigationLink">The navigation link to write.</param>
-        public abstract void WriteStart(ODataNavigationLink navigationLink);
+        public abstract void WriteStart(ODataNestedResourceInfo navigationLink);
 
 #if ODATALIB_ASYNC
         /// <summary> Asynchronously start writing a navigation link. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="navigationLink">The navigation link to writer.</param>
-        public abstract Task WriteStartAsync(ODataNavigationLink navigationLink);
+        public abstract Task WriteStartAsync(ODataNestedResourceInfo navigationLink);
 #endif
 
-        /// <summary>Finishes the writing of a feed, an entry, or a navigation link.</summary>
+        /// <summary>Finishes the writing of a feed, a resource, or a navigation link.</summary>
         public abstract void WriteEnd();
 
 #if ODATALIB_ASYNC
-        /// <summary> Asynchronously finish writing a feed, entry, or navigation link. </summary>
+        /// <summary> Asynchronously finish writing a feed, resource, or navigation link. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteEndAsync();
 #endif
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Core
         /// <remarks>
         /// This method can only be called for writing request messages. The entity reference link must be surrounded
         /// by a navigation link written through WriteStart/WriteEnd.
-        /// The <see cref="ODataNavigationLink.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
         public abstract void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink);
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Core
         /// <remarks>
         /// This method can only be called for writing request messages. The entity reference link must be surrounded
         /// by a navigation link written through WriteStart/WriteEnd.
-        /// The <see cref="ODataNavigationLink.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
         public abstract Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink);

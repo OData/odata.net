@@ -50,7 +50,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// <param name="expandedNavigationProperties">A list of navigation property names to expand.</param>
         public static void WriteFeed(ODataWriter writer, IEnumerable entries, IEdmEntitySet entitySet, IEdmModel model, ODataVersion targetVersion, IEnumerable<string> expandedNavigationProperties)
         {
-            var feed = new ODataFeed {Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name)};
+            var feed = new ODataResourceSet {Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name)};
             writer.WriteStart(feed);
 
             foreach (var element in entries)
@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                 IEdmTypeReference propertyTypeReference = navigationProperty.Type;
                 bool isCollection = navigationProperty.Type.IsCollection();
 
-                var navigationLink = new ODataNavigationLink
+                var navigationLink = new ODataNestedResourceInfo
                                          {
                                              Url = new Uri(parentEntryUri, navigationProperty.Name),
                                              IsCollection = isCollection,

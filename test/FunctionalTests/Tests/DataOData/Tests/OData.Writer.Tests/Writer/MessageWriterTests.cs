@@ -42,10 +42,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             new WriterActionForPayloadKind[]
             {
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Unsupported, WriterAction = messageWriter => { throw new InvalidOperationException("Must not get here for unsupported kinds."); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Entry, WriterAction = messageWriter =>
-                    { ODataWriter writer = messageWriter.CreateODataEntryWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultEntry("TestModel.CityType")); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Feed, WriterAction = messageWriter =>
-                    { ODataWriter writer = messageWriter.CreateODataFeedWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultFeed()); writer.WriteEnd(); writer.Flush(); } },
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Resource, WriterAction = messageWriter => 
+                    { ODataWriter writer = messageWriter.CreateODataResourceWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultEntry("TestModel.CityType")); writer.WriteEnd(); writer.Flush(); } },
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.ResourceSet, WriterAction = messageWriter => 
+                    { ODataWriter writer = messageWriter.CreateODataResourceSetWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultFeed()); writer.WriteEnd(); writer.Flush(); } },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Collection, WriterAction = messageWriter =>
                     { ODataCollectionWriter writer = messageWriter.CreateODataCollectionWriter(); writer.WriteStart(new ODataCollectionStart { Name = "collection" }); writer.WriteEnd(); writer.Flush(); } },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Batch, WriterAction = messageWriter =>
@@ -102,8 +102,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             UseWriterOnceTestCase[] messageWriterOperations = new UseWriterOnceTestCase[]
             {
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataCollectionWriter() },
-                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataEntryWriter() },
-                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataEntryWriter() },
+                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataResourceWriter() },
+                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataResourceWriter() },
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.WriteError(error, false), IsWriteError = true },
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.WriteEntityReferenceLink(link) },
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.WriteEntityReferenceLinks(links) },
@@ -161,13 +161,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     new
                     {
-                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataEntryWriter()),
+                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataResourceWriter()),
                         WriteAction = (Action<ODataWriter>)(writer => writer.WriteStart(ObjectModelUtils.CreateDefaultFeed())),
                         ExpectedErrorMessage = "Cannot write a top-level feed with a writer that was created to write a top-level entry."
                     },
                     new
                     {
-                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataFeedWriter()),
+                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataResourceSetWriter()),
                         WriteAction = (Action<ODataWriter>)(writer => writer.WriteStart(ObjectModelUtils.CreateDefaultEntry())),
                         ExpectedErrorMessage = "Cannot write a top-level entry with a writer that was created to write a top-level feed."
                     },
@@ -307,7 +307,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Entry,
+                        PayloadKind = ODataPayloadKind.Resource,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
                     new SetHeadersForPayloadTestCase
@@ -317,7 +317,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Feed,
+                        PayloadKind = ODataPayloadKind.ResourceSet,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
                     new SetHeadersForPayloadTestCase
@@ -375,7 +375,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Entry,
+                        PayloadKind = ODataPayloadKind.Resource,
                         AcceptHeader = multipleTypesWithQualityValues,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
@@ -387,7 +387,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Feed,
+                        PayloadKind = ODataPayloadKind.ResourceSet,
                         AcceptHeader = multipleTypesWithQualityValues,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
@@ -866,7 +866,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEnumerable<ContentTypeMessageHeaderTestCase> testCases;
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
@@ -874,7 +874,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     };
 
                     break;
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
                         AppJsonLightTestCase,

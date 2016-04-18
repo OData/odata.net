@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="NoOpEntityMetadataBuilder.cs" company="Microsoft">
+// <copyright file="NoOpResourceMetadataBuilder.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,22 +13,22 @@ namespace Microsoft.OData.Core.Evaluation
     /// <summary>
     /// Implementation of the metadata builder which only returns values which were explicitly set (never computing or modifying them).
     /// </summary>
-    internal sealed class NoOpEntityMetadataBuilder : ODataEntityMetadataBuilder
+    internal sealed class NoOpResourceMetadataBuilder : ODataResourceMetadataBuilder
     {
         /// <summary>
-        /// The entry whose payload metadata is being queried.
+        /// The resource whose payload metadata is being queried.
         /// </summary>
-        private readonly ODataEntry entry;
+        private readonly ODataResource resource;
 
         /// <summary>
         /// Creates a new no-op metadata builder.
         /// </summary>
-        /// <param name="entry">The entry whose payload metadata is being queried.</param>
-        internal NoOpEntityMetadataBuilder(ODataEntry entry)
+        /// <param name="resource">The resource whose payload metadata is being queried.</param>
+        internal NoOpResourceMetadataBuilder(ODataResource resource)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
-            this.entry = entry;
+            this.resource = resource;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetEditLink()
         {
-            return this.entry.NonComputedEditLink;
+            return this.resource.NonComputedEditLink;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetReadLink()
         {
-            return this.entry.NonComputedReadLink;
+            return this.resource.NonComputedReadLink;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetId()
         {
-            return this.entry.IsTransient ? null : this.entry.NonComputedId;
+            return this.resource.IsTransient ? null : this.resource.NonComputedId;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override string GetETag()
         {
-            return this.entry.NonComputedETag;
+            return this.resource.NonComputedETag;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override ODataStreamReferenceValue GetMediaResource()
         {
-            return this.entry.NonComputedMediaResource;
+            return this.resource.NonComputedMediaResource;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The list of computed and non-computed actions for the entity.</returns>
         internal override IEnumerable<ODataAction> GetActions()
         {
-            return this.entry.NonComputedActions;
+            return this.resource.NonComputedActions;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The list of computed and non-computed functions for the entity.</returns>
         internal override IEnumerable<ODataFunction> GetFunctions()
         {
-            return this.entry.NonComputedFunctions;
+            return this.resource.NonComputedFunctions;
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override bool TryGetIdForSerialization(out Uri id)
         {
-            if (this.entry.IsTransient)
+            if (this.resource.IsTransient)
             {
                 id = null;
                 return true;

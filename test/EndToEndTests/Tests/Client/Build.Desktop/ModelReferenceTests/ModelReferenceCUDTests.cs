@@ -31,7 +31,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         public void PostDeleteTypeInReferencdModel()
         {
             #region New Entry
-            ODataEntry newVehicleGPS = new ODataEntry { TypeName = TestModelNameSpace + ".GPS.VehicleGPSType" };
+            ODataResource newVehicleGPS = new ODataResource { TypeName = TestModelNameSpace + ".GPS.VehicleGPSType" };
 
             newVehicleGPS.Properties = new[]
             {
@@ -190,7 +190,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 requestMessage.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(vehicleGPSSet, vehicleGPSType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(vehicleGPSSet, vehicleGPSType);
                     odataWriter.WriteStart(newVehicleGPS);
                     odataWriter.WriteEnd();
                 }
@@ -200,7 +200,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
                 // Verify Created
                 Assert.AreEqual(201, responseMessage.StatusCode);
-                ODataEntry entry = this.QueryEntityItem("VehicleGPSSet('000')") as ODataEntry;
+                ODataResource entry = this.QueryEntityItem("VehicleGPSSet('000')") as ODataResource;
                 Assert.AreEqual("000", entry.Properties.Single(p => p.Name == "Key").Value);
 
                 // Delete the entry
@@ -210,7 +210,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
                 // Verift Deleted
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("VehicleGPSSet('000')", 204) as ODataEntry;
+                ODataResource deletedEntry = this.QueryEntityItem("VehicleGPSSet('000')", 204) as ODataResource;
                 Assert.IsNull(deletedEntry);
             }
             #endregion
@@ -220,7 +220,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         public void PostDeleteTypeInReferencingModel()
         {
             #region New Entry
-            ODataEntry newVehicleGPS = new ODataEntry { TypeName = TestModelNameSpace + ".TruckDemo.DerivedVehicleGPSType" };
+            ODataResource newVehicleGPS = new ODataResource { TypeName = TestModelNameSpace + ".TruckDemo.DerivedVehicleGPSType" };
 
             newVehicleGPS.Properties = new[]
             {
@@ -385,7 +385,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 requestMessage.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(vehicleGPSSet, vehicleGPSType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(vehicleGPSSet, vehicleGPSType);
                     odataWriter.WriteStart(newVehicleGPS);
                     odataWriter.WriteEnd();
                 }
@@ -395,7 +395,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
                 // Verify Created
                 Assert.AreEqual(201, responseMessage.StatusCode);
-                ODataEntry entry = this.QueryEntityItem("VehicleGPSSetInGPS('000')") as ODataEntry;
+                ODataResource entry = this.QueryEntityItem("VehicleGPSSetInGPS('000')") as ODataResource;
                 Assert.AreEqual("000", entry.Properties.Single(p => p.Name == "Key").Value);
 
                 // Delete the entry
@@ -405,7 +405,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
                 // Verift Deleted
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("VehicleGPSSetInGPS('000')", 204) as ODataEntry;
+                ODataResource deletedEntry = this.QueryEntityItem("VehicleGPSSetInGPS('000')", 204) as ODataResource;
                 Assert.IsNull(deletedEntry);
             }
             #endregion
@@ -435,10 +435,10 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             item = reader.Item;
                         }

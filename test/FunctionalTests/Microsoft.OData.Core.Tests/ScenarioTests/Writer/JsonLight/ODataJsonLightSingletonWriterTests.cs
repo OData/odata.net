@@ -46,7 +46,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WriteSimpleSingletonTest()
         {
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             entry.Properties = new[]
             {
                 new ODataProperty {Name = "WebId", Value = 10},
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WriteSingletonInstanceAnnotationTest()
         {
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             entry.Properties = new[]
             {
                 new ODataProperty {Name = "WebId", Value = 10}
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WriteSingletonWithNoPropertiesTest()
         {
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             const string expectedPayload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@odata.type\":\"#NS.Web\"," +
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         public void WriteSingletonWithOnlyNavigationLinksTest()
         {
             this.NavigationLinkTestSetting();
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             string expectedPayload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@odata.type\":\"#NS.Web\"," +
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         public void WriteSingletonWhichHasBoundAction()
         {
             this.BoundActionTestSetting();
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             const string expectedPayload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@odata.type\":\"#NS.Web\"," +
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         public void WriteSingletonSteamPropertyWithDefaultValueTest()
         {
             this.StreamTestSetting();
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             entry.Properties = new[]
             {
                 new ODataProperty { Name = "Logo", Value = new ODataStreamReferenceValue() }
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         public void WriteSingletonStreamPropertyWithValueSettingTest()
         {
             this.StreamTestSetting();
-            var entry = new ODataEntry { TypeName = "NS.Web" };
+            var entry = new ODataResource { TypeName = "NS.Web" };
             entry.Properties = new[]
             {
                 new ODataProperty { 
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         public void WriteSingletonAsMediaEntryTest()
         {
             this.MediaEntrySetSetting();
-            var entry = new ODataEntry()
+            var entry = new ODataResource()
             {
                 TypeName = "NS.Web",
                 MediaResource = new ODataStreamReferenceValue()
@@ -268,7 +268,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WriteSingletonWithEtagTest()
         {
-            var entry = new ODataEntry()
+            var entry = new ODataResource()
             {
                 TypeName = "NS.Web",
                 ETag = "Bla"
@@ -285,12 +285,12 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             this.WriteEntryAndValidatePayloadWithModel(entry, expectedPayload);
         }
 
-        private void WriteEntryAndValidatePayloadWithoutModel(ODataEntry entry, string expectedPayload, bool writingResponse = true, bool setMetadataDocumentUri = true)
+        private void WriteEntryAndValidatePayloadWithoutModel(ODataResource entry, string expectedPayload, bool writingResponse = true, bool setMetadataDocumentUri = true)
         {
             MemoryStream stream = new MemoryStream();
             ODataJsonLightOutputContext outputContext = CreateJsonLightOutputContext(stream, writingResponse, this.userModel, setMetadataDocumentUri ? this.serviceDocumentUri : null);
 
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceName = "MySingleton",
                 NavigationSourceEntityTypeName = "NS.Web",
@@ -302,7 +302,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             WriteEntryAndValidatePayload(entry, stream, writer, expectedPayload);
         }
 
-        private void WriteEntryAndValidatePayloadWithModel(ODataEntry entry, string expectedPayload, bool writingResponse = true, bool setMetadataDocumentUri = true)
+        private void WriteEntryAndValidatePayloadWithModel(ODataResource entry, string expectedPayload, bool writingResponse = true, bool setMetadataDocumentUri = true)
         {
             MemoryStream stream = new MemoryStream();
             ODataJsonLightOutputContext outputContext = CreateJsonLightOutputContext(stream, writingResponse, this.userModel, setMetadataDocumentUri ? this.serviceDocumentUri : null);
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             WriteEntryAndValidatePayload(entry, stream, writer, expectedPayload);
         }
 
-        private static void WriteEntryAndValidatePayload(ODataEntry entry, MemoryStream stream, ODataJsonLightWriter writer, string expectedPayload)
+        private static void WriteEntryAndValidatePayload(ODataResource entry, MemoryStream stream, ODataJsonLightWriter writer, string expectedPayload)
         {
             writer.WriteStart(entry);
             writer.WriteEnd();

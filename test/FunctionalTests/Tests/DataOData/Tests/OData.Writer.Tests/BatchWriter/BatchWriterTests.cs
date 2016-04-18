@@ -529,7 +529,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             Func<Uri, string, WriterTestConfiguration, BatchWriterUtils.ODataPayload> createODataPayload = (uri, expectedUri, testConfig) =>
                 {
                     Debug.Assert(!uri.IsAbsoluteUri, "Expected a relative Uri.");
-                    ODataEntry sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+                    ODataResource sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
                     sampleEntry.ReadLink = uri;
                     ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
 
@@ -580,7 +580,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$1", UriKind.Relative), "$1", testConfig)),
                         },
                     },
@@ -595,7 +595,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$1/foo", UriKind.Relative), "$1/foo", testConfig)),
                         },
                     },
@@ -610,7 +610,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$/foo", UriKind.Relative), "$/foo", testConfig)),
                         },
                     },
@@ -625,7 +625,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$$$$", UriKind.Relative), "$$$$", testConfig)),
                         },
                     },
@@ -640,7 +640,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$NonExisting", UriKind.Relative), null, testConfig)),
                         },
                         ExpectedExceptionNoBaseUri = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "$NonExisting"),
@@ -655,7 +655,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/1"),
                                 "1",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$2", UriKind.Relative), null, testConfig)),
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/2"), "2", /*headers*/ null, payloadString),
                         },
@@ -675,7 +675,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$1", UriKind.Relative), null, testConfig)),
                         },
                         ExpectedExceptionNoBaseUri = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "$1"),
@@ -694,7 +694,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://odata.org/2"),
                                 "2",
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$2", UriKind.Relative), null, testConfig)),
                         },
                         ExpectedExceptionNoBaseUri = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "$2"),
@@ -941,8 +941,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         public void ODataBatchWriterODataPayloadSmokeTests()
         {
             // Create OData payloads
-            ODataEntry sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
-            ODataFeed sampleFeed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
+            ODataResource sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResourceSet sampleFeed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
             ODataAnnotatedError sampleError = ObjectModelUtils.CreateDefaultError(true);
 
             ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
@@ -1000,7 +1000,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             Batch = BatchWriterUtils.CreateQueryResponseBatch(
                                 200,
                                 new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry)),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource)),
                             ForRequests = false
                         };
                     },
@@ -1016,7 +1016,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             Batch = BatchWriterUtils.CreateQueryResponseBatch(
                                 200,
                                 new BatchWriterUtils.ODataPayload() { Items = feedPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Feed)),
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.ResourceSet)),
                             ForRequests = false
                         };
                     },
@@ -1049,7 +1049,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 "POST",
                                 new Uri("http://services.odata.org/OData/OData.svc/Products"),
                                 new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry)
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource)
                                 ),
                             ForRequests = true
                         };
@@ -1066,7 +1066,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             Batch = BatchWriterUtils.CreateChangeSetResponseBatch(
                                 200,
                                 new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry)
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource)
                                 ),
                             ForRequests = false
                         };
@@ -1456,7 +1456,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 batchWriter.WriteStartBatch();
                 var newMessage = batchWriter.CreateOperationRequestMessage("GET", new Uri("http://www.odata.org"));
                 // This line should fail
-                messageWriterWrapper.CreateODataEntryWriter();
+                messageWriterWrapper.CreateODataResourceWriter();
             }
         }
 
@@ -1562,8 +1562,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
                 using (ODataMessageWriterTestWrapper opWriterWrapper = TestWriterUtils.CreateMessageWriter(opmessage1.GetStream(), messageConfig, this.Assert, messageWriterSettings, null))
                 {
-                    var entryWriter = opWriterWrapper.CreateODataEntryWriter();
-                    entryWriter.WriteStart(new ODataEntry()
+                    var entryWriter = opWriterWrapper.CreateODataResourceWriter();
+                    entryWriter.WriteStart(new ODataResource()
                     {
                         Id = new Uri("http://id"),
                         TypeName = "Entry1",
@@ -1663,10 +1663,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             Dictionary<string, string> expectedHeaders = null;
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                     expectedHeaders = jsonPayloadHeaders;
                     break;
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     expectedHeaders = jsonPayloadHeaders;
                     break;
                 case ODataPayloadKind.Error:

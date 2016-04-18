@@ -24,13 +24,13 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="objectModelItem">The item to visit.</param>
         public virtual T Visit(object objectModelItem)
         {
-            ODataFeed feed = objectModelItem as ODataFeed;
+            ODataResourceSet feed = objectModelItem as ODataResourceSet;
             if (feed != null)
             {
                 return this.VisitFeed(feed);
             }
 
-            ODataEntry entry = objectModelItem as ODataEntry;
+            ODataResource entry = objectModelItem as ODataResource;
             if (entry != null)
             {
                 return this.VisitEntry(entry);
@@ -42,7 +42,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return this.VisitProperty(property);
             }
 
-            ODataNavigationLink navigationLink = objectModelItem as ODataNavigationLink;
+            ODataNestedResourceInfo navigationLink = objectModelItem as ODataNestedResourceInfo;
             if (navigationLink != null)
             {
                 return this.VisitNavigationLink(navigationLink);
@@ -145,13 +145,13 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a feed item.
         /// </summary>
         /// <param name="feed">The feed to visit.</param>
-        protected abstract T VisitFeed(ODataFeed feed);
+        protected abstract T VisitFeed(ODataResourceSet resourceCollection);
 
         /// <summary>
         /// Visits an entry item.
         /// </summary>
         /// <param name="entry">The entry to visit.</param>
-        protected abstract T VisitEntry(ODataEntry entry);
+        protected abstract T VisitEntry(ODataResource entry);
 
         /// <summary>
         /// Visits a property item.
@@ -163,7 +163,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a navigation link item.
         /// </summary>
         /// <param name="navigationLink">The navigation link to visit.</param>
-        protected abstract T VisitNavigationLink(ODataNavigationLink navigationLink);
+        protected abstract T VisitNavigationLink(ODataNestedResourceInfo navigationLink);
 
         /// <summary>
         /// Visits a complex value item.

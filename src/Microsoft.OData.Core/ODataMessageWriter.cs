@@ -176,9 +176,9 @@ namespace Microsoft.OData.Core
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataFeedWriter()
+        public ODataWriter CreateODataResourceSetWriter()
         {
-            return CreateODataFeedWriter(/*entitySet*/null, /*entityType*/null);
+            return CreateODataResourceSetWriter(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        public ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet)
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet)
         {
-            return CreateODataFeedWriter(entitySet, /*entityType*/null);
+            return CreateODataResourceSetWriter(entitySet, /*entityType*/null);
         }
 
         /// <summary>
@@ -197,13 +197,13 @@ namespace Microsoft.OData.Core
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        public ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataFeedWriter();
+            this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutput(
-                ODataPayloadKind.Feed,
+                ODataPayloadKind.ResourceSet,
                 null /* verifyHeaders */,
-                (context) => context.CreateODataFeedWriter(entitySet, entityType));
+                (context) => context.CreateODataResourceSetWriter(entitySet, entityType));
         }
 
 #if ODATALIB_ASYNC
@@ -220,9 +220,9 @@ namespace Microsoft.OData.Core
 
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataFeedWriterAsync()
+        public Task<ODataWriter> CreateODataResourceSetWriterAsync()
         {
-            return CreateODataFeedWriterAsync(/*entitySet*/null, /*entityType*/null);
+            return CreateODataResourceSetWriterAsync(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
@@ -230,9 +230,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet)
+        public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet)
         {
-            return CreateODataFeedWriterAsync(entitySet, /*entityType*/null);
+            return CreateODataResourceSetWriterAsync(entitySet, /*entityType*/null);
         }
 
         /// <summary>
@@ -241,13 +241,13 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataFeedWriter();
+            this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
-                ODataPayloadKind.Feed,
+                ODataPayloadKind.ResourceSet,
                 null /* verifyHeaders */,
-                (context) => context.CreateODataFeedWriterAsync(entitySet, entityType));
+                (context) => context.CreateODataResourceSetWriterAsync(entitySet, entityType));
         }
 #endif
 
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Core
         {
             this.VerifyCanCreateODataDeltaWriter();
             return this.WriteToOutput(
-                ODataPayloadKind.Feed,
+                ODataPayloadKind.ResourceSet,
                 null /* verifyHeaders */,
                 (context) => context.CreateODataDeltaWriter(entitySet, entityType));
         }
@@ -275,48 +275,48 @@ namespace Microsoft.OData.Core
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataFeedWriter();
+            this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
-                ODataPayloadKind.Feed,
+                ODataPayloadKind.ResourceSet,
                 null /* verifyHeaders */,
                 (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write an entry. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter()
+        public ODataWriter CreateODataResourceWriter()
         {
-            return CreateODataEntryWriter(/*navigationSource*/null, /*entityType*/ null);
+            return CreateODataResourceWriter(/*navigationSource*/null, /*entityType*/ null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource)
+        public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource)
         {
-            return CreateODataEntryWriter(navigationSource, /*entityType*/ null);
+            return CreateODataResourceWriter(navigationSource, /*entityType*/ null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
         {
             this.VerifyCanCreateODataEntryWriter();
             return this.WriteToOutput(
-                ODataPayloadKind.Entry,
+                ODataPayloadKind.Resource,
                 null /* verifyHeaders */,
-                (context) => context.CreateODataEntryWriter(navigationSource, entityType));
+                (context) => context.CreateODataResourceWriter(navigationSource, resourceType));
         }
 
 #if ODATALIB_ASYNC
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write an entry. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataEntryWriterAsync()
         {
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
@@ -334,7 +334,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
@@ -343,9 +343,9 @@ namespace Microsoft.OData.Core
         {
             this.VerifyCanCreateODataEntryWriter();
             return this.WriteToOutputAsync(
-                ODataPayloadKind.Entry,
+                ODataPayloadKind.Resource,
                 null /* verifyHeaders */,
-                (context) => context.CreateODataEntryWriterAsync(navigationSource, entityType));
+                (context) => context.CreateODataResourceWriterAsync(navigationSource, entityType));
         }
 #endif
 
@@ -504,7 +504,7 @@ namespace Microsoft.OData.Core
         {
             // We currently assume that the error is top-level if no create/write method has been called on this message writer.
             // It is possible that the user would create a Json writer, but writes nothing to it before writes the first error.
-            // For example it is valid to call CreateEntryWriter() and then WriteError(). In that case the Json payload would
+            // For example it is valid to call CreateResourceWriter() and then WriteError(). In that case the Json payload would
             // contain just an error without the Json wrapper.
             if (this.outputContext == null)
             {
@@ -531,7 +531,7 @@ namespace Microsoft.OData.Core
         {
             // We currently assume that the error is top-level if no create/write method has been called on this message writer.
             // It is possible that the user would create a Json writer, but writes nothing to it before writes the first error.
-            // For example it is valid to call CreateEntryWriter() and then WriteError(). In that case the Json payload would
+            // For example it is valid to call CreateResourceWriter() and then WriteError(). In that case the Json payload would
             // contain just an error without the Json wrapper.
             if (this.outputContext == null)
             {
@@ -833,7 +833,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Verifies that feed writer can be created.
         /// </summary>
-        private void VerifyCanCreateODataFeedWriter()
+        private void VerifyCanCreateODataResourceSetWriter()
         {
             this.VerifyWriterNotDisposedAndNotUsed();
         }
@@ -854,7 +854,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verifies that entry writer can be created.
+        /// Verifies that resource writer can be created.
         /// </summary>
         private void VerifyCanCreateODataEntryWriter()
         {

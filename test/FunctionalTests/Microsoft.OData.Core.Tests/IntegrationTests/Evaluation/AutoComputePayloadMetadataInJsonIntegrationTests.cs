@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 {
     public class AutoComputePayloadMetadataInJsonIntegrationTests
     {
-        private readonly ODataEntry entryWithPayloadMetadata = new ODataEntry
+        private readonly ODataResource entryWithPayloadMetadata = new ODataResource
         {
             Properties = new[] {
                     new ODataProperty { Name = "ID", Value = 123 }, 
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             },
         };
 
-        private readonly ODataNavigationLink navLinkWithPayloadMetadata = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo navLinkWithPayloadMetadata = new ODataNestedResourceInfo
         {
             AssociationLinkUrl = new Uri("http://example.com/association"),
             IsCollection = true,
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             Url = new Uri("http://example.com/navigation")
         };
 
-        private readonly ODataNavigationLink containedCollectionNavLinkWithPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo containedCollectionNavLinkWithPayloadMetadata = new ODataNestedResourceInfo()
         {
             AssociationLinkUrl = new Uri("http://example.com/expanded/association"),
             IsCollection = true,
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             Url = new Uri("http://example.com/expanded/navigation")
         };
 
-        private readonly ODataNavigationLink derivedContainedCollectionNavLinkWithPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo derivedContainedCollectionNavLinkWithPayloadMetadata = new ODataNestedResourceInfo()
         {
             AssociationLinkUrl = new Uri("http://example.com/expanded/association"),
             IsCollection = true,
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             Url = new Uri("http://example.com/expanded/navigation")
         };
 
-        private readonly ODataNavigationLink containedNavLinkWithPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo containedNavLinkWithPayloadMetadata = new ODataNestedResourceInfo()
         {
             AssociationLinkUrl = new Uri("http://example.com/expanded/association"),
             IsCollection = false,
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             Url = new Uri("http://example.com/expanded/navigation")
         };
 
-        private readonly ODataNavigationLink expandedNavLinkWithPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo expandedNavLinkWithPayloadMetadata = new ODataNestedResourceInfo()
         {
             AssociationLinkUrl = new Uri("http://example.com/expanded/association"),
             IsCollection = true,
@@ -88,19 +88,19 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             Url = new Uri("http://example.com/expanded/navigation")
         };
 
-        private readonly ODataNavigationLink navLinkWithoutPayloadMetadata = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo navLinkWithoutPayloadMetadata = new ODataNestedResourceInfo
         {
             IsCollection = true,
             Name = "DeferredNavLink",
         };
 
-        private readonly ODataNavigationLink expandedNavLinkWithoutPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo expandedNavLinkWithoutPayloadMetadata = new ODataNestedResourceInfo()
         {
             IsCollection = true,
             Name = "ExpandedNavLink",
         };
 
-        private readonly ODataNavigationLink unknownNonCollectionNavLinkWithPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo unknownNonCollectionNavLinkWithPayloadMetadata = new ODataNestedResourceInfo()
         {
             AssociationLinkUrl = new Uri("http://example.com/expanded/association"),
             IsCollection = false,
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             Url = new Uri("http://example.com/expanded/navigation")
         };
 
-        private readonly ODataNavigationLink unknownCollectionNavLinkWithPayloadMetadata = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo unknownCollectionNavLinkWithPayloadMetadata = new ODataNestedResourceInfo()
         {
             AssociationLinkUrl = new Uri("http://example.com/expanded/association"),
             IsCollection = true,
@@ -181,21 +181,21 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             "\"@context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
             PayloadMetadataWithoutOpeningBraceODataSimplified;
 
-        private ODataEntry entryWithOnlyData;
-        private ODataEntry entryWithOnlyData2;
-        private ODataEntry entryWithOnlyData3;
-        private ODataEntry derivedEntry;
+        private ODataResource entryWithOnlyData;
+        private ODataResource entryWithOnlyData2;
+        private ODataResource entryWithOnlyData3;
+        private ODataResource derivedEntry;
 
         public AutoComputePayloadMetadataInJsonIntegrationTests()
         {
             entryWithPayloadMetadata.AddAction(new ODataAction { Metadata = new Uri("http://example.com/$metadata#Action"), Target = new Uri("http://example.com/DoAction"), Title = "ActionTitle" });
             entryWithPayloadMetadata.AddFunction(new ODataFunction() { Metadata = new Uri("http://example.com/$metadata#Function"), Target = new Uri("http://example.com/DoFunction"), Title = "FunctionTitle" });
 
-            this.entryWithOnlyData = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 123 }, new ODataProperty { Name = "Name", Value = "Bob" } }, };
-            this.entryWithOnlyData2 = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 234 }, new ODataProperty { Name = "Name", Value = "Foo" } }, };
-            this.entryWithOnlyData3 = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 345 }, new ODataProperty { Name = "Name", Value = "Bar" } }, };
+            this.entryWithOnlyData = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 123 }, new ODataProperty { Name = "Name", Value = "Bob" } }, };
+            this.entryWithOnlyData2 = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 234 }, new ODataProperty { Name = "Name", Value = "Foo" } }, };
+            this.entryWithOnlyData3 = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 345 }, new ODataProperty { Name = "Name", Value = "Bar" } }, };
 
-            this.derivedEntry = new ODataEntry
+            this.derivedEntry = new ODataResource
             {
                 TypeName = "Namespace.DerivedType",
                 Properties = new[] { new ODataProperty { Name = "ID", Value = 345 }, new ODataProperty { Name = "Name", Value = "Bar" } },
@@ -575,9 +575,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
-                this.expandedNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData2, this.navLinkWithoutPayloadMetadata,
-                this.expandedNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData3
+                new ODataResourceSet(), this.entryWithOnlyData,
+                this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData2, this.navLinkWithoutPayloadMetadata,
+                this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData3
             };
 
             const string selectClause = "StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink";
@@ -591,9 +591,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
-                this.expandedNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData2, this.navLinkWithoutPayloadMetadata,
-                this.expandedNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData3
+                new ODataResourceSet(), this.entryWithOnlyData,
+                this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData2, this.navLinkWithoutPayloadMetadata,
+                this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData3
             };
 
             const string selectClause = "StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink";
@@ -610,8 +610,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
-                this.containedCollectionNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData2
+                new ODataResourceSet(), this.entryWithOnlyData,
+                this.containedCollectionNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData2
             };
 
             const string selectClause = "ContainedNavProp";
@@ -683,7 +683,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData, this.entryWithOnlyData2
+                new ODataResourceSet(), this.entryWithOnlyData, this.entryWithOnlyData2
             };
 
             IEdmNavigationProperty containedDerivedNavProp = EntityType.FindProperty("ContainedNavProp") as IEdmNavigationProperty;
@@ -700,7 +700,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData
+                new ODataResourceSet(), this.entryWithOnlyData
             };
 
             IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedNavProp") as IEdmNavigationProperty;
@@ -720,7 +720,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
+                new ODataResourceSet(), this.entryWithOnlyData,
                 this.containedNavLinkWithPayloadMetadata, this.entryWithOnlyData2,
                 this.containedNavLinkWithPayloadMetadata, this.entryWithOnlyData3
             };
@@ -740,7 +740,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataResourceSet(), 
                 this.derivedEntry,
                 this.containedNavLinkWithPayloadMetadata,
                 this.entryWithOnlyData
@@ -757,7 +757,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataResourceSet(), 
                 this.derivedEntry,
             };
 
@@ -775,7 +775,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataResourceSet(), 
                 this.derivedEntry,
             };
 
@@ -793,10 +793,10 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), 
+                new ODataResourceSet(), 
                 this.derivedEntry,
                 this.derivedContainedCollectionNavLinkWithPayloadMetadata,
-                new ODataFeed(), 
+                new ODataResourceSet(), 
                 this.entryWithOnlyData
             };
 
@@ -811,7 +811,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
+                new ODataResourceSet(), this.entryWithOnlyData,
                 this.containedNavLinkWithPayloadMetadata, this.entryWithOnlyData2,
                 this.containedNavLinkWithPayloadMetadata, this.entryWithOnlyData3
             };
@@ -827,10 +827,10 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         [Fact]
         public void WritingInFullMetadataModeWithExpandWithContainedElementShouldThrowExceptionIfEntryKeyIsNotSet()
         {
-            var entryWithoutKey = new ODataEntry { Properties = new[] { new ODataProperty { Name = "Name", Value = "IHaveNoKey" } }, };
+            var entryWithoutKey = new ODataResource { Properties = new[] { new ODataProperty { Name = "Name", Value = "IHaveNoKey" } }, };
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), entryWithoutKey,
+                new ODataResourceSet(), entryWithoutKey,
                 this.containedNavLinkWithPayloadMetadata, this.entryWithOnlyData2,
                 this.containedNavLinkWithPayloadMetadata, this.entryWithOnlyData3
             };
@@ -847,8 +847,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
-                this.unknownCollectionNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData2
+                new ODataResourceSet(), this.entryWithOnlyData,
+                this.unknownCollectionNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData2
             };
 
             const string selectClause = "UnknownCollectionNavProp";
@@ -863,15 +863,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData,
-                this.unknownCollectionNavLinkWithPayloadMetadata, new ODataFeed(), this.entryWithOnlyData2
+                new ODataResourceSet(), this.entryWithOnlyData,
+                this.unknownCollectionNavLinkWithPayloadMetadata, new ODataResourceSet(), this.entryWithOnlyData2
             };
 
             this.entryWithOnlyData2.TypeName = EntityType.FullName();
             this.entryWithOnlyData2.MediaResource = new ODataStreamReferenceValue();
             this.entryWithOnlyData2.Properties.First(p => p.Name == "ID").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
             this.entryWithOnlyData2.Properties.First(p => p.Name == "Name").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
-            this.entryWithOnlyData2.SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+            this.entryWithOnlyData2.SerializationInfo = new ODataResourceSerializationInfo()
             {
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
                 ExpectedTypeName = EntityType.FullName(),
@@ -909,18 +909,18 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=mini");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataFeedReader(EntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceSetReader(EntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -929,7 +929,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(123)/ContainedNonCollectionNavProp");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -949,20 +949,20 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("ContainedNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataFeedReader(containedEntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceSetReader(containedEntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -971,7 +971,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/ContainedNavProp(123)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -992,20 +992,20 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("AnotherContainedNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataFeedReader(containedEntitySet, AnotherEntityType);
+                var reader = messageReader.CreateODataResourceSetReader(containedEntitySet, AnotherEntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1014,7 +1014,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/AnotherContainedNavProp(123)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1035,18 +1035,18 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataFeedReader();
+                var reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1055,7 +1055,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/AnotherContainedNavProp(123)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1073,20 +1073,20 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("ContainedNonCollectionNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataEntryReader(containedEntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceReader(containedEntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1095,7 +1095,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/ContainedNonCollectionNavProp");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1113,20 +1113,20 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("AnotherContainedNonCollectionNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataEntryReader(containedEntitySet, AnotherEntityType);
+                var reader = messageReader.CreateODataResourceReader(containedEntitySet, AnotherEntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1135,7 +1135,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/AnotherContainedNonCollectionNavProp");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1156,21 +1156,21 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("ContainedNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
                 containedEntitySet = containedEntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataFeedReader(containedEntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceSetReader(containedEntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1179,7 +1179,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/ContainedNavProp(2)/ContainedNavProp(123)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1200,8 +1200,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
@@ -1209,13 +1209,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
                 var anotherNavProp = EntityType.FindProperty("AnotherContainedNavProp") as IEdmNavigationProperty;
                 containedEntitySet = containedEntitySet.FindNavigationTarget(anotherNavProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataFeedReader(containedEntitySet, AnotherEntityType);
+                var reader = messageReader.CreateODataResourceSetReader(containedEntitySet, AnotherEntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1224,7 +1224,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/ContainedNavProp(2)/AnotherContainedNavProp(123)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1245,20 +1245,20 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("ContainedNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataFeedReader(containedEntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceSetReader(containedEntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1267,7 +1267,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/ContainedNavProp(123)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1284,20 +1284,20 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
                 var navProp = EntityType.FindProperty("ContainedNonCollectionNavProp") as IEdmNavigationProperty;
                 var containedEntitySet = EntitySet.FindNavigationTarget(navProp) as IEdmEntitySetBase;
-                var reader = messageReader.CreateODataEntryReader(containedEntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceReader(containedEntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1306,7 +1306,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(1)/ContainedNonCollectionNavProp");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1330,18 +1330,18 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataEntryReader(EntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceReader(EntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1350,7 +1350,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(123)/ContainedNavProp(234)");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1374,18 +1374,18 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            ODataResource topLevelEntry = null;
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataEntryReader(EntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceReader(EntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             entryList.Add(topLevelEntry);
                             break;
                     }
@@ -1394,7 +1394,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             Uri containedId = new Uri("http://example.com/EntitySet(123)/ContainedNonCollectionNavProp");
 
-            ODataEntry containedEntry = entryList[0];
+            ODataResource containedEntry = entryList[0];
             containedEntry.Id.Should().Be(containedId);
         }
 
@@ -1442,9 +1442,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                     "}]" +
                 "}";
 
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = EntitySet.Name, NavigationSourceEntityTypeName = EntityType.FullName(), ExpectedTypeName = EntityType.FullName() };
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = EntitySet.Name, NavigationSourceEntityTypeName = EntityType.FullName(), ExpectedTypeName = EntityType.FullName() };
 
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             feed.SetSerializationInfo(serializationInfo);
             this.entryWithOnlyData.TypeName = EntityType.FullName();
             this.entryWithOnlyData.MediaResource = new ODataStreamReferenceValue();
@@ -1526,12 +1526,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                     "}]" +
                 "}";
 
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = EntitySet.Name, NavigationSourceEntityTypeName = EntityType.FullName(), ExpectedTypeName = EntityType.FullName() };
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = EntitySet.Name, NavigationSourceEntityTypeName = EntityType.FullName(), ExpectedTypeName = EntityType.FullName() };
 
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             feed.SetSerializationInfo(serializationInfo);
 
-            this.entryWithOnlyData = new ODataEntry
+            this.entryWithOnlyData = new ODataResource
             {
                 TypeName = EntityType.FullName(),
                 MediaResource = new ODataStreamReferenceValue(),
@@ -1545,7 +1545,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             this.entryWithOnlyData.AddAction(new ODataAction { Metadata = new Uri("http://example.com/$metadata#Container.AlwaysBindableAction1") });
             this.entryWithOnlyData.AddFunction(new ODataFunction { Metadata = new Uri("#Container.AlwaysBindableFunction1", UriKind.Relative) });
 
-            this.entryWithOnlyData2 = new ODataEntry
+            this.entryWithOnlyData2 = new ODataResource
             {
                 TypeName = EntityType.FullName(),
                 MediaResource = new ODataStreamReferenceValue(),
@@ -1558,7 +1558,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             };
             this.entryWithOnlyData2.AddAction(new ODataAction { Metadata = new Uri("http://example.com/$metadata#Container.AlwaysBindableAction1") });
 
-            this.entryWithOnlyData3 = new ODataEntry
+            this.entryWithOnlyData3 = new ODataResource
             {
                 TypeName = EntityType.FullName(),
                 MediaResource = new ODataStreamReferenceValue(),
@@ -1613,12 +1613,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                     "}]" +
                 "}";
 
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = EntitySet.Name, NavigationSourceEntityTypeName = EntityType.FullName(), ExpectedTypeName = EntityType.FullName() };
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = EntitySet.Name, NavigationSourceEntityTypeName = EntityType.FullName(), ExpectedTypeName = EntityType.FullName() };
 
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             feed.SetSerializationInfo(serializationInfo);
 
-            this.entryWithOnlyData = new ODataEntry
+            this.entryWithOnlyData = new ODataResource
             {
                 TypeName = EntityType.FullName(),
                 MediaResource = new ODataStreamReferenceValue(),
@@ -1632,7 +1632,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             this.entryWithOnlyData.AddAction(new ODataAction { Metadata = new Uri("http://example.com/$metadata#Container.AlwaysBindableAction1") });
             this.entryWithOnlyData.AddFunction(new ODataFunction { Metadata = new Uri("#Container.AlwaysBindableFunction1", UriKind.Relative) });
 
-            this.entryWithOnlyData2 = new ODataEntry
+            this.entryWithOnlyData2 = new ODataResource
             {
                 TypeName = EntityType.FullName(),
                 MediaResource = new ODataStreamReferenceValue(),
@@ -1645,7 +1645,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             };
             this.entryWithOnlyData2.AddAction(new ODataAction { Metadata = new Uri("http://example.com/$metadata#Container.AlwaysBindableAction1") });
 
-            this.entryWithOnlyData3 = new ODataEntry
+            this.entryWithOnlyData3 = new ODataResource
             {
                 TypeName = EntityType.FullName(),
                 MediaResource = new ODataStreamReferenceValue(),
@@ -1677,7 +1677,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             string selectClause = null,
             bool odataSimplified = false)
         {
-            ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithPayloadMetadata, this.navLinkWithPayloadMetadata, this.expandedNavLinkWithPayloadMetadata, new ODataFeed() };
+            ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithPayloadMetadata, this.navLinkWithPayloadMetadata, this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet() };
             return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause, odataSimplified: odataSimplified);
         }
 
@@ -1686,7 +1686,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             bool autoComputePayloadMetadataInJson,
             string selectClause = null)
         {
-            ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithOnlyData, this.navLinkWithoutPayloadMetadata, this.expandedNavLinkWithoutPayloadMetadata, new ODataFeed() };
+            ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithOnlyData, this.navLinkWithoutPayloadMetadata, this.expandedNavLinkWithoutPayloadMetadata, new ODataResourceSet() };
             return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause);
         }
 
@@ -1723,14 +1723,14 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             {
                 int currentIdx = 0;
 
-                if (itemsToWrite[currentIdx] is ODataFeed)
+                if (itemsToWrite[currentIdx] is ODataResourceSet)
                 {
-                    ODataWriter writer = messageWriter.CreateODataFeedWriter(edmEntitySet, edmEntityType);
+                    ODataWriter writer = messageWriter.CreateODataResourceSetWriter(edmEntitySet, edmEntityType);
                     this.WriteFeed(writer, itemsToWrite, ref currentIdx);
                 }
-                else if (itemsToWrite[currentIdx] is ODataEntry)
+                else if (itemsToWrite[currentIdx] is ODataResource)
                 {
-                    ODataWriter writer = messageWriter.CreateODataEntryWriter(edmEntitySet, edmEntityType);
+                    ODataWriter writer = messageWriter.CreateODataResourceWriter(edmEntitySet, edmEntityType);
                     this.WriteEntry(writer, itemsToWrite, ref currentIdx);
                 }
                 else
@@ -1751,9 +1751,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             if (currentIdx < itemsToWrite.Length)
             {
-                ODataFeed feed = (ODataFeed)itemsToWrite[currentIdx++];
+                ODataResourceSet feed = (ODataResourceSet)itemsToWrite[currentIdx++];
                 writer.WriteStart(feed);
-                while (currentIdx < itemsToWrite.Length && itemsToWrite[currentIdx] is ODataEntry)
+                while (currentIdx < itemsToWrite.Length && itemsToWrite[currentIdx] is ODataResource)
                 {
                     this.WriteEntry(writer, itemsToWrite, ref currentIdx);
                 }
@@ -1766,9 +1766,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             if (currentIdx < itemsToWrite.Length)
             {
-                ODataEntry entry = (ODataEntry)itemsToWrite[currentIdx++];
+                ODataResource entry = (ODataResource)itemsToWrite[currentIdx++];
                 writer.WriteStart(entry);
-                while (currentIdx < itemsToWrite.Length && itemsToWrite[currentIdx] is ODataNavigationLink)
+                while (currentIdx < itemsToWrite.Length && itemsToWrite[currentIdx] is ODataNestedResourceInfo)
                 {
                     this.WriteLink(writer, itemsToWrite, ref currentIdx);
                 }
@@ -1781,15 +1781,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         {
             if (currentIdx < itemsToWrite.Length)
             {
-                ODataNavigationLink link = (ODataNavigationLink)itemsToWrite[currentIdx++];
+                ODataNestedResourceInfo link = (ODataNestedResourceInfo)itemsToWrite[currentIdx++];
                 writer.WriteStart(link);
                 if (currentIdx < itemsToWrite.Length)
                 {
-                    if (itemsToWrite[currentIdx] is ODataEntry)
+                    if (itemsToWrite[currentIdx] is ODataResource)
                     {
                         this.WriteEntry(writer, itemsToWrite, ref currentIdx);
                     }
-                    else if (itemsToWrite[currentIdx] is ODataFeed)
+                    else if (itemsToWrite[currentIdx] is ODataResourceSet)
                     {
                         this.WriteFeed(writer, itemsToWrite, ref currentIdx);
                     }

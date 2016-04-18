@@ -50,14 +50,14 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(metadataProviderEdmModel.Mode == MetadataProviderEdmModelMode.Serialization, "Model expected to be in serialization mode.");
 
             IEdmEntitySet expectedEntitySet = WebUtil.GetEntitySet(this.Service.Provider, metadataProviderEdmModel, segmentInfo.TargetResourceSet);
-            ODataReader odataReader = this.MessageReader.CreateODataEntryReader(expectedEntitySet, expectedEntityType);
+            ODataReader odataReader = this.MessageReader.CreateODataResourceReader(expectedEntitySet, expectedEntityType);
             AssertReaderFormatIsExpected(this.MessageReader, ODataFormat.Json);
 
             // Read the entry and all its children into a tree. We use annotation to connect the items into the tree.
             // Note that we must cache the entire payload to preserve call order for navigation properties.
             // Due to the fact that the payload order on the wire is arbitrary, but we always set all non-navigation properties first
             // and then apply all navigation properties, we must cache the entire tree.
-            ODataEntry topLevelEntry = this.ReadEntry(odataReader, segmentInfo);
+            ODataResource topLevelEntry = this.ReadEntry(odataReader, segmentInfo);
 
             ODataEntryAnnotation topLevelEntryAnnotation = topLevelEntry.GetAnnotation<ODataEntryAnnotation>();
             Debug.Assert(topLevelEntryAnnotation != null, "Each entry we read must have the entry annotation.");
@@ -73,14 +73,14 @@ namespace Microsoft.OData.Service.Serializers
         /// </summary>
         /// <param name="odataReader">The ODataReader to read from.</param>
         /// <param name="topLevelSegmentInfo">The segment info for the top-level entry to read.</param>
-        /// <returns>The <see cref="ODataEntry"/> with annotations which store the navigation links and their expanded values.</returns>
-        private ODataEntry ReadEntry(ODataReader odataReader, SegmentInfo topLevelSegmentInfo)
+        /// <returns>The <see cref="ODataResource"/> with annotations which store the navigation links and their expanded values.</returns>
+        private ODataResource ReadEntry(ODataReader odataReader, SegmentInfo topLevelSegmentInfo)
         {
             Debug.Assert(odataReader != null, "odataReader != null");
             Debug.Assert(odataReader.State == ODataReaderState.Start, "The ODataReader must not have been used yet.");
             Debug.Assert(topLevelSegmentInfo != null, "topLevelSegmentInfo != null");
 
-            ODataEntry topLevelEntry = null;
+            ODataResource topLevelEntry = null;
             Stack<ODataItem> itemsStack = new Stack<ODataItem>();
             while (odataReader.Read())
             {
@@ -92,8 +92,8 @@ namespace Microsoft.OData.Service.Serializers
 
                 switch (odataReader.State)
                 {
-                    case ODataReaderState.EntryStart:
-                        ODataEntry entry = (ODataEntry)odataReader.Item;
+                    case ODataReaderState.ResourceStart:
+                        ODataResource entry = (ODataResource)odataReader.Item;
                         ODataEntryAnnotation entryAnnotation = null;
                         if (entry != null)
                         {
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Service.Serializers
                         else
                         {
                             ODataItem parentItem = itemsStack.Peek();
-                            ODataFeed parentFeed = parentItem as ODataFeed;
+                            ODataResourceSet parentFeed = parentItem as ODataResourceSet;
                             if (parentFeed != null)
                             {
                                 ODataFeedAnnotation parentFeedAnnotation = parentFeed.GetAnnotation<ODataFeedAnnotation>();
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Service.Serializers
                             }
                             else
                             {
-                                ODataNavigationLink parentNavigationLink = (ODataNavigationLink)parentItem;
+                                ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)parentItem;
                                 ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = parentNavigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
                                 Debug.Assert(parentNavigationLinkAnnotation != null, "Every navigation link we added to the stack should have the navigation link annotation on it.");
 
@@ -137,19 +137,19 @@ namespace Microsoft.OData.Service.Serializers
                         itemsStack.Push(entry);
                         break;
 
-                    case ODataReaderState.EntryEnd:
+                    case ODataReaderState.ResourceEnd:
                         Debug.Assert(itemsStack.Count > 0 && itemsStack.Peek() == odataReader.Item, "The entry which is ending should be on the top of the items stack.");
                         itemsStack.Pop();
                         break;
 
                     case ODataReaderState.NavigationLinkStart:
-                        ODataNavigationLink navigationLink = (ODataNavigationLink)odataReader.Item;
+                        ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)odataReader.Item;
                         Debug.Assert(navigationLink != null, "Navigation link should never be null.");
 
                         navigationLink.SetAnnotation(new ODataNavigationLinkAnnotation());
                         Debug.Assert(itemsStack.Count > 0, "Navigation link can't appear as top-level item.");
                         {
-                            ODataEntry parentEntry = (ODataEntry)itemsStack.Peek();
+                            ODataResource parentEntry = (ODataResource)itemsStack.Peek();
                             ODataEntryAnnotation parentEntryAnnotation = parentEntry.GetAnnotation<ODataEntryAnnotation>();
                             Debug.Assert(parentEntryAnnotation != null, "Every entry we added to the stack should have the navigation link annotation on it.");
                             parentEntryAnnotation.Add(navigationLink);
@@ -163,14 +163,14 @@ namespace Microsoft.OData.Service.Serializers
                         itemsStack.Pop();
                         break;
 
-                    case ODataReaderState.FeedStart:
-                        ODataFeed feed = (ODataFeed)odataReader.Item;
+                    case ODataReaderState.ResourceSetStart:
+                        ODataResourceSet feed = (ODataResourceSet)odataReader.Item;
                         Debug.Assert(feed != null, "Feed should never be null.");
 
                         feed.SetAnnotation(new ODataFeedAnnotation());
                         Debug.Assert(itemsStack.Count > 0, "Since we always start reading entry, we should never get a feed as the top-level item.");
                         {
-                            ODataNavigationLink parentNavigationLink = (ODataNavigationLink)itemsStack.Peek();
+                            ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)itemsStack.Peek();
                             ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = parentNavigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
                             Debug.Assert(parentNavigationLinkAnnotation != null, "Every navigation link we added to the stack should have the navigation link annotation on it.");
 
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Service.Serializers
                         itemsStack.Push(feed);
                         break;
 
-                    case ODataReaderState.FeedEnd:
+                    case ODataReaderState.ResourceSetEnd:
                         Debug.Assert(itemsStack.Count > 0 && itemsStack.Peek() == odataReader.Item, "The feed which is ending should be on the top of the items stack.");
                         itemsStack.Pop();
                         break;
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Service.Serializers
 
                         Debug.Assert(itemsStack.Count > 0, "Entity reference link should never be reported as top-level item.");
                         {
-                            ODataNavigationLink parentNavigationLink = (ODataNavigationLink)itemsStack.Peek();
+                            ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)itemsStack.Peek();
                             ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = parentNavigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
                             Debug.Assert(parentNavigationLinkAnnotation != null, "Every navigation link we added to the stack should have the navigation link annotation on it.");
 
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entry">The OData entry instance read from the payload.</param>
         /// <param name="entryAnnotation">The entry annotation for the entry to process.</param>
         /// <param name="topLevel">true if this is a top-level entry, false otherwise.</param>
-        private void CreateEntityResource(SegmentInfo segmentInfo, ODataEntry entry, ODataEntryAnnotation entryAnnotation, bool topLevel)
+        private void CreateEntityResource(SegmentInfo segmentInfo, ODataResource entry, ODataEntryAnnotation entryAnnotation, bool topLevel)
         {
             Debug.Assert(segmentInfo != null, "segmentInfo != null");
             Debug.Assert(entry != null, "Null entries should not be tried to translated to entity instances, instead they should be handled separately.");
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="segmentInfo">The segment info describing the entity in question.</param>
         /// <param name="entry">The OData entry instance read from the payload.</param>
         /// <param name="entryAnnotation">The entry annotation for the entry to process.</param>
-        private void ApplyEntityProperties(SegmentInfo segmentInfo, ODataEntry entry, ODataEntryAnnotation entryAnnotation)
+        private void ApplyEntityProperties(SegmentInfo segmentInfo, ODataResource entry, ODataEntryAnnotation entryAnnotation)
         {
             Debug.Assert(segmentInfo != null, "segmentInfo != null");
             Debug.Assert(entry != null, "Null entries should not be tried to translated to entity instances, instead they should be handled separately.");
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entry">The OData entry instance read from the payload.</param>
         /// <returns>The entity resource update token for the created entity.</returns>
         /// <remarks>This method should only be called on nested entries!</remarks>
-        private object CreateNestedEntityAndApplyProperties(SegmentInfo segmentInfo, ODataEntry entry)
+        private object CreateNestedEntityAndApplyProperties(SegmentInfo segmentInfo, ODataResource entry)
         {
             Debug.Assert(segmentInfo != null, "segmentInfo != null");
             Debug.Assert(entry != null, "entry != null");
@@ -347,7 +347,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="expectedType">Expected base type for the entity.</param>
         /// <returns>Resolved type.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to access these properties.")]
-        private ResourceType GetEntryResourceType(ODataEntry entry, ResourceType expectedType)
+        private ResourceType GetEntryResourceType(ODataResource entry, ResourceType expectedType)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(expectedType != null, "We must always have an expected type for entities.");
@@ -402,14 +402,14 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entry">The entry object to read the properties from.</param>
         /// <param name="entityResourceType">The type of the entity to apply the properties to.</param>
         /// <param name="entityResource">The entity resource to apply the properties to.</param>
-        private void ApplyValueProperties(ODataEntry entry, ResourceType entityResourceType, object entityResource)
+        private void ApplyValueProperties(ODataResource entry, ResourceType entityResourceType, object entityResource)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entityResourceType != null, "entityResourceType != null");
             Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
             Debug.Assert(entityResource != null, "entityResource != null");
 
-            Debug.Assert(entry.Properties != null, "The ODataLib reader should always populate the ODataEntry.Properties collection.");
+            Debug.Assert(entry.Properties != null, "The ODataLib reader should always populate the ODataResource.Properties collection.");
             foreach (ODataProperty entryProperty in entry.Properties)
             {
                 this.ApplyProperty(entryProperty, entityResourceType, entityResource);
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
             Debug.Assert(entityResource != null, "entityResource != null");
 
-            foreach (ODataNavigationLink navigationLink in entryAnnotation)
+            foreach (ODataNestedResourceInfo navigationLink in entryAnnotation)
             {
                 ResourceProperty navigationProperty = entityResourceType.TryResolvePropertyName(navigationLink.Name, exceptKind: ResourcePropertyKind.Stream);
                 Debug.Assert(navigationProperty != null, "ODataLib reader should have already validated that all navigation properties are declared and none is open.");
@@ -454,7 +454,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="navigationProperty">The navigation property which coresponds with the navigation link.</param>
         /// <param name="entityResource">The entity resource to apply the properties to.</param>
         private void ApplyNavigationProperty(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             ResourceSetWrapper entityResourceSet,
             ResourceType entityResourceType,
             ResourceProperty navigationProperty,
@@ -498,7 +498,7 @@ namespace Microsoft.OData.Service.Serializers
                     continue;
                 }
 
-                ODataFeed feed = childItem as ODataFeed;
+                ODataResourceSet feed = childItem as ODataResourceSet;
                 if (feed != null)
                 {
                     this.ApplyFeedInNavigationProperty(navigationProperty, targetResourceSet, entityResource, feed);
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Service.Serializers
                 }
 
                 // It must be entry by now.
-                ODataEntry entry = (ODataEntry)childItem;
+                ODataResource entry = (ODataResource)childItem;
                 this.ApplyEntryInNavigationProperty(navigationProperty, targetResourceSet, entityResource, entry);
             }
         }
@@ -551,7 +551,7 @@ namespace Microsoft.OData.Service.Serializers
             ResourceProperty navigationProperty,
             ResourceSetWrapper targetResourceSet,
             object entityResource,
-            ODataFeed feed)
+            ODataResourceSet feed)
         {
             Debug.Assert(
                 navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType,
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Service.Serializers
                     "Must be navigation set property.");
 
             // Look through the entries in the feed.
-            foreach (ODataEntry entryInFeed in feedAnnotation)
+            foreach (ODataResource entryInFeed in feedAnnotation)
             {
                 // For each entry create the corresponding entity resource.
                 object childEntityResource = this.CreateNestedEntityAndApplyProperties(propertySegmentInfo, entryInFeed);
@@ -606,7 +606,7 @@ namespace Microsoft.OData.Service.Serializers
             ResourceProperty navigationProperty,
             ResourceSetWrapper targetResourceSet,
             object entityResource,
-            ODataEntry entry)
+            ODataResource entry)
         {
             Debug.Assert(
                 navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType,
@@ -720,9 +720,9 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// The annotation used on ODataEntry instances to store the list of navigation links for that entry.
+        /// The annotation used on ODataResource instances to store the list of navigation links for that entry.
         /// </summary>
-        internal sealed class ODataEntryAnnotation : List<ODataNavigationLink>
+        internal sealed class ODataEntryAnnotation : List<ODataNestedResourceInfo>
         {
             /// <summary>The entity resource update token for the entry.</summary>
             internal object EntityResource { get; set; }
@@ -732,18 +732,18 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// The annotation used on ODataFeed instances to store the list of entries in that feed.
+        /// The annotation used on ODataResourceSet instances to store the list of entries in that feed.
         /// </summary>
-        private sealed class ODataFeedAnnotation : List<ODataEntry>
+        private sealed class ODataFeedAnnotation : List<ODataResource>
         {
         }
 
         /// <summary>
-        /// The annotation used on ODataNavigationLink instances to store the list of children for that navigation link.
+        /// The annotation used on ODataNestedResourceInfo instances to store the list of children for that navigation link.
         /// </summary>
         /// <remarks>
-        /// A navigation link for a singleton navigation property can only contain one item - either ODataEntry or ODataEntityReferenceLink.
-        /// A navigation link for a collection navigation property can contain any number of items - each is either ODataFeed or ODataEntityReferenceLink.
+        /// A navigation link for a singleton navigation property can only contain one item - either ODataResource or ODataEntityReferenceLink.
+        /// A navigation link for a collection navigation property can contain any number of items - each is either ODataResourceSet or ODataEntityReferenceLink.
         /// </remarks>
         private sealed class ODataNavigationLinkAnnotation : List<ODataItem>
         {

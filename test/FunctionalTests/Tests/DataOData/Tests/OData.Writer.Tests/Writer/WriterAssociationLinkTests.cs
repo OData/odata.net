@@ -94,7 +94,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCasesWithMultipleLinks.Select(testCase =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestModel.CustomerType";
                 List<ODataItem> items = new ODataItem[] { entry }.ToList();
                 foreach (var navLink in testCase.NavigationLinks)
@@ -207,7 +207,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 // Both nav link URL and association link URL
                 new {
-                    NavigationLink = new ODataNavigationLink() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
+                    NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
                     Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
                     JsonLight =
@@ -216,21 +216,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 // Just nav link URL
                 new {
-                    NavigationLink = new ODataNavigationLink() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = null },
+                    NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = null },
                     PropertyName = "NavProp1",
                     Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
                     JsonLight = "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\""
                 },
                 // Just association link URL
                 new {
-                    NavigationLink = new ODataNavigationLink() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
+                    NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
                     Atom = (string)null,
                     JsonLight = "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
                 },
                 // Navigation link with both URLs null
                 new {
-                    NavigationLink = new ODataNavigationLink() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = null },
+                    NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = null },
                     PropertyName = "NavProp1",
                     Atom = (string)null,
                     JsonLight = string.Empty
@@ -239,7 +239,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.TypeName = "TestModel.CustomerType";
                     return new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
@@ -388,9 +388,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(testCase =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.TypeName = testCase.TypeName;
-                    ODataNavigationLink navigationLink = testCase.NavigationLink;
+                    ODataNestedResourceInfo navigationLink = testCase.NavigationLink;
                     navigationLink.AssociationLinkUrl = associationLinkUrl;
 
                     return new PayloadWriterTestDescriptor<ODataItem>(

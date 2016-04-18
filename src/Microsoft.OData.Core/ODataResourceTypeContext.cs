@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataFeedAndEntryTypeContext.cs" company="Microsoft">
+// <copyright file="ODataResourceTypeContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,9 +12,9 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.Evaluation;
 
     /// <summary>
-    /// The context object to answer basic questions regarding the type of the entry or feed.
+    /// The context object to answer basic questions regarding the type of the resource or feed.
     /// </summary>
-    internal class ODataFeedAndEntryTypeContext : IODataFeedAndEntryTypeContext
+    internal class ODataResourceTypeContext : IODataResourceTypeContext
     {
         /// <summary>
         /// Default Url convention.
@@ -27,16 +27,16 @@ namespace Microsoft.OData.Core
         private readonly bool throwIfMissingTypeInfo;
 
         /// <summary>
-        /// Constructs an instance of <see cref="ODataFeedAndEntryTypeContext"/>.
+        /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
         /// </summary>
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
-        private ODataFeedAndEntryTypeContext(bool throwIfMissingTypeInfo)
+        private ODataResourceTypeContext(bool throwIfMissingTypeInfo)
         {
             this.throwIfMissingTypeInfo = throwIfMissingTypeInfo;
         }
 
         /// <summary>
-        /// The navigation source name of the feed or entry.
+        /// The navigation source name of the feed or resource.
         /// </summary>
         public virtual string NavigationSourceName
         {
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The entity type name of the navigation source of the feed or entry.
+        /// The entity type name of the navigation source of the feed or resource.
         /// </summary>
         public virtual string NavigationSourceEntityTypeName
         {
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The full type name of the navigation source of the feed or entry.
+        /// The full type name of the navigation source of the feed or resource.
         /// </summary>
         public virtual string NavigationSourceFullTypeName
         {
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The kind of the navigation source of the feed or entry.
+        /// The kind of the navigation source of the feed or resource.
         /// </summary>
         public virtual EdmNavigationSourceKind NavigationSourceKind
         {
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The expected entity type name of the entry.
+        /// The expected entity type name of the resource.
         /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
         /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
         /// </summary>
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The type kind of the entity type of the feed or entry.
+        /// The type kind of the entity type of the feed or resource.
         /// </summary>
         public virtual bool IsFromCollection
         {
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// true if the entry is an MLE, false otherwise.
+        /// true if the resource is an MLE, false otherwise.
         /// </summary>
         public virtual bool IsMediaLinkEntry
         {
@@ -102,16 +102,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="ODataFeedAndEntryTypeContext"/>.
+        /// Creates an instance of <see cref="ODataResourceTypeContext"/>.
         /// </summary>
-        /// <param name="serializationInfo">The serialization info from the feed or entry instance.</param>
-        /// <param name="navigationSource">The navigation source of the feed or entry.</param>
+        /// <param name="serializationInfo">The serialization info from the feed or resource instance.</param>
+        /// <param name="navigationSource">The navigation source of the feed or resource.</param>
         /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
-        /// <param name="expectedEntityType">The expected entity type of the feed or entry.</param>
+        /// <param name="expectedEntityType">The expected entity type of the feed or resource.</param>
         /// <param name="model">The Edm model instance to use.</param>
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
-        /// <returns>A new instance of <see cref="ODataFeedAndEntryTypeContext"/>.</returns>
-        internal static ODataFeedAndEntryTypeContext Create(ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model, bool throwIfMissingTypeInfo)
+        /// <returns>A new instance of <see cref="ODataResourceTypeContext"/>.</returns>
+        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model, bool throwIfMissingTypeInfo)
         {
             Debug.Assert(model != null, "model != null");
             if (serializationInfo != null)
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core
                 return new ODataFeedAndEntryTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedEntityType, model);
             }
 
-            return new ODataFeedAndEntryTypeContext(throwIfMissingTypeInfo);
+            return new ODataResourceTypeContext(throwIfMissingTypeInfo);
         }
 
         /// <summary>
@@ -146,20 +146,20 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the entry or feed based on the serialization info.
+        /// The context object to answer basic questions regarding the type of the resource or feed based on the serialization info.
         /// </summary>
-        internal sealed class ODataFeedAndEntryTypeContextWithoutModel : ODataFeedAndEntryTypeContext
+        internal sealed class ODataFeedAndEntryTypeContextWithoutModel : ODataResourceTypeContext
         {
             /// <summary>
-            /// The serialization info of the entry for writing without model.
+            /// The serialization info of the resource for writing without model.
             /// </summary>
-            private readonly ODataFeedAndEntrySerializationInfo serializationInfo;
+            private readonly ODataResourceSerializationInfo serializationInfo;
 
             /// <summary>
-            /// Constructs an instance of <see cref="ODataFeedAndEntryTypeContext"/>.
+            /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
             /// </summary>
-            /// <param name="serializationInfo">The serialization info from the feed or entry instance.</param>
-            internal ODataFeedAndEntryTypeContextWithoutModel(ODataFeedAndEntrySerializationInfo serializationInfo)
+            /// <param name="serializationInfo">The serialization info from the feed or resource instance.</param>
+            internal ODataFeedAndEntryTypeContextWithoutModel(ODataResourceSerializationInfo serializationInfo)
                 : base(/*throwIfMissingTypeInfo*/false)
             {
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The navigation source name of the feed or entry.
+            /// The navigation source name of the feed or resource.
             /// </summary>
             public override string NavigationSourceName
             {
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity type name of the navigation source of the feed or entry.
+            /// The entity type name of the navigation source of the feed or resource.
             /// </summary>
             public override string NavigationSourceEntityTypeName
             {
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The full type name of the navigation source of the feed or entry.
+            /// The full type name of the navigation source of the feed or resource.
             /// </summary>
             public override string NavigationSourceFullTypeName
             {
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The kind of the navigation source of the feed or entry.
+            /// The kind of the navigation source of the feed or resource.
             /// </summary>
             public override EdmNavigationSourceKind NavigationSourceKind
             {
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The expected entity type name of the entry.
+            /// The expected entity type name of the resource.
             /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
             /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
             /// </summary>
@@ -220,13 +220,13 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// true if the entry is an MLE, false otherwise.
+            /// true if the resource is an MLE, false otherwise.
             /// </summary>
             public override bool IsMediaLinkEntry
             {
                 get
                 {
-                    // When writing without model, user should always set the ODataEntry.MediaResource property if the entry is a media link entry.
+                    // When writing without model, user should always set the ODataResource.MediaResource property if the resource is a media link resource.
                     // This is consistent with the requirement for the with model scenario.
                     // Returning false here so the metadata builder won't create a new instance of the ODataStreamReferenceValue.
                     return false;
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The type kind of the entity type of the feed or entry.
+            /// The type kind of the entity type of the feed or resource.
             /// </summary>
             public override bool IsFromCollection
             {
@@ -251,9 +251,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the entry or feed based on the metadata.
+        /// The context object to answer basic questions regarding the type of the resource or feed based on the metadata.
         /// </summary>
-        internal sealed class ODataFeedAndEntryTypeContextWithModel : ODataFeedAndEntryTypeContext
+        internal sealed class ODataFeedAndEntryTypeContextWithModel : ODataResourceTypeContext
         {
             /// <summary>
             /// The Edm model instance to use.
@@ -261,29 +261,29 @@ namespace Microsoft.OData.Core
             private readonly IEdmModel model;
 
             /// <summary>
-            /// The navigation source of the feed or entry.
+            /// The navigation source of the feed or resource.
             /// </summary>
             private readonly IEdmNavigationSource navigationSource;
 
             /// <summary>
-            /// The entity type of the navigation source of the feed or entry.
+            /// The entity type of the navigation source of the feed or resource.
             /// </summary>
             private readonly IEdmEntityType navigationSourceEntityType;
 
             /// <summary>
-            /// The expected entity type of the feed or entry.
+            /// The expected entity type of the feed or resource.
             /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
             /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
             /// </summary>
             private readonly IEdmEntityType expectedEntityType;
 
             /// <summary>
-            /// The navigation source name of the feed or entry.
+            /// The navigation source name of the feed or resource.
             /// </summary>
             private readonly string navigationSourceName;
 
             /// <summary>
-            /// true if the entry is an media link entry or if the feed contains media link entries, false otherwise.
+            /// true if the resource is an media link resource or if the feed contains media link entries, false otherwise.
             /// </summary>
             private readonly bool isMediaLinkEntry;
 
@@ -293,16 +293,16 @@ namespace Microsoft.OData.Core
             private readonly SimpleLazy<UrlConvention> lazyUrlConvention;
 
             /// <summary>
-            /// The flag we use to identify if the current entry is from a navigation property with collection type or not.
+            /// The flag we use to identify if the current resource is from a navigation property with collection type or not.
             /// </summary>
             private readonly bool isFromCollection = false;
 
             /// <summary>
-            /// Constructs an instance of <see cref="ODataFeedAndEntryTypeContext"/>.
+            /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
             /// </summary>
-            /// <param name="navigationSource">The navigation source of the feed or entry.</param>
+            /// <param name="navigationSource">The navigation source of the feed or resource.</param>
             /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
-            /// <param name="expectedEntityType">The expected entity type of the feed or entry.</param>
+            /// <param name="expectedEntityType">The expected entity type of the feed or resource.</param>
             /// <param name="model">The Edm model instance to use.</param>
             internal ODataFeedAndEntryTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model)
                 : base(/*throwIfMissingTypeInfo*/false)
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The navigation source name of the feed or entry.
+            /// The navigation source name of the feed or resource.
             /// </summary>
             public override string NavigationSourceName
             {
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity type name of the navigation source of the feed or entry.
+            /// The entity type name of the navigation source of the feed or resource.
             /// </summary>
             public override string NavigationSourceEntityTypeName
             {
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The full type name of the navigation source of the feed or entry.
+            /// The full type name of the navigation source of the feed or resource.
             /// </summary>
             public override string NavigationSourceFullTypeName
             {
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The kind of the navigation source of the feed or entry.
+            /// The kind of the navigation source of the feed or resource.
             /// </summary>
             public override EdmNavigationSourceKind NavigationSourceKind
             {
@@ -373,7 +373,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The expected entity type name of the entry.
+            /// The expected entity type name of the resource.
             /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
             /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
             /// </summary>
@@ -383,7 +383,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// true if the entry is an MLE, false otherwise.
+            /// true if the resource is an MLE, false otherwise.
             /// </summary>
             public override bool IsMediaLinkEntry
             {
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The type kind of the entity type of the feed or entry.
+            /// The type kind of the entity type of the feed or resource.
             /// </summary>
             public override bool IsFromCollection
             {
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity type of the navigation source of the feed or entry.
+            /// The entity type of the navigation source of the feed or resource.
             /// </summary>
             internal IEdmEntityType NavigationSourceEntityType
             {

@@ -148,19 +148,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Creates an <see cref="ODataWriter" /> to write a feed.
         /// </summary>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataFeedWriter()
+        public ODataWriter CreateODataResourceSetWriter()
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.messageWriter.CreateODataFeedWriter(), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.messageWriter.CreateODataResourceSetWriter(), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT
-                var feedWriter = this.messageWriter.CreateODataFeedWriter();
+                var feedWriter = this.messageWriter.CreateODataResourceSetWriter();
                 return new ODataWriterTestWrapper(feedWriter, testConfiguration);
 #else
-                return this.messageWriter.CreateODataFeedWriterAsync().ContinueWith(
+                return this.messageWriter.CreateODataResourceSetWriterAsync().ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -173,19 +173,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataFeedWriter(IEdmEntitySet entitySet)
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySet entitySet)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.messageWriter.CreateODataFeedWriter(entitySet), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.messageWriter.CreateODataResourceSetWriter(entitySet), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT
-                var feedWriter = this.messageWriter.CreateODataFeedWriter(entitySet);
+                var feedWriter = this.messageWriter.CreateODataResourceSetWriter(entitySet);
                 return new ODataWriterTestWrapper(feedWriter, testConfiguration);
 #else
-                return this.messageWriter.CreateODataFeedWriterAsync(entitySet).ContinueWith(
+                return this.messageWriter.CreateODataResourceSetWriterAsync(entitySet).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -199,19 +199,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataFeedWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.messageWriter.CreateODataFeedWriter(entitySet, entityType), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.messageWriter.CreateODataResourceSetWriter(entitySet, entityType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT
-                var feedWriter = this.messageWriter.CreateODataFeedWriter(entitySet, entityType);
+                var feedWriter = this.messageWriter.CreateODataResourceSetWriter(entitySet, entityType);
                 return new ODataWriterTestWrapper(feedWriter, testConfiguration);
 #else
-                return this.messageWriter.CreateODataFeedWriterAsync(entitySet, entityType).ContinueWith(
+                return this.messageWriter.CreateODataResourceSetWriterAsync(entitySet, entityType).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -223,16 +223,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter()
+        public ODataWriter CreateODataResourceWriter()
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.messageWriter.CreateODataEntryWriter(), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.messageWriter.CreateODataResourceWriter(), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT
-                var entryWriter = this.messageWriter.CreateODataEntryWriter();
+                var entryWriter = this.messageWriter.CreateODataResourceWriter();
                 return new ODataWriterTestWrapper(entryWriter, testConfiguration);
 #else
                 return this.messageWriter.CreateODataEntryWriterAsync().ContinueWith(
@@ -248,16 +248,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter(IEdmEntitySet entitySet)
+        public ODataWriter CreateODataResourceWriter(IEdmEntitySet entitySet)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.messageWriter.CreateODataEntryWriter(entitySet), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.messageWriter.CreateODataResourceWriter(entitySet), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT
-                var entryWriter = this.messageWriter.CreateODataEntryWriter(entitySet);
+                var entryWriter = this.messageWriter.CreateODataResourceWriter(entitySet);
                 return new ODataWriterTestWrapper(entryWriter, testConfiguration);
 #else
                 return this.messageWriter.CreateODataEntryWriterAsync(entitySet).ContinueWith(
@@ -274,16 +274,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        public ODataWriter CreateODataResourceWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.messageWriter.CreateODataEntryWriter(entitySet, entityType), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.messageWriter.CreateODataResourceWriter(entitySet, entityType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT
-                var entryWriter = this.messageWriter.CreateODataEntryWriter(entitySet, entityType);
+                var entryWriter = this.messageWriter.CreateODataResourceWriter(entitySet, entityType);
                 return new ODataWriterTestWrapper(entryWriter, testConfiguration);
 #else
                 return this.messageWriter.CreateODataEntryWriterAsync(entitySet, entityType).ContinueWith(
@@ -298,10 +298,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Creates an <see cref="ODataWriter" /> to write an entry or a feed.
         /// </summary>
         /// <param name="isFeed">Specify whether to create a writer for a feed or an entry.</param>
-        /// <returns>If <paramref name="isFeed"/> is true, return the result of CreateODataFeedWriter, otherwise return the result of CreateODataEntryWriter.</returns>
+        /// <returns>If <paramref name="isFeed"/> is true, return the result of CreateODataResourceSetWriter, otherwise return the result of CreateODataResourceWriter.</returns>
         internal ODataWriter CreateODataWriter(bool isFeed)
         {
-            return isFeed ? this.CreateODataFeedWriter() : this.CreateODataEntryWriter();
+            return isFeed ? this.CreateODataResourceSetWriter() : this.CreateODataResourceWriter();
         }
 
         /// <summary>
@@ -309,10 +309,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// </summary>
         /// <param name="isFeed">Specify whether to create a writer for a feed or an entry.</param>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <returns>If <paramref name="isFeed"/> is true, return the result of CreateODataFeedWriter, otherwise return the result of CreateODataEntryWriter.</returns>
+        /// <returns>If <paramref name="isFeed"/> is true, return the result of CreateODataResourceSetWriter, otherwise return the result of CreateODataResourceWriter.</returns>
         internal ODataWriter CreateODataWriter(bool isFeed, IEdmEntitySet entitySet)
         {
-            return isFeed ? this.CreateODataFeedWriter(entitySet) : this.CreateODataEntryWriter(entitySet);
+            return isFeed ? this.CreateODataResourceSetWriter(entitySet) : this.CreateODataResourceWriter(entitySet);
         }
 
         /// <summary>
@@ -321,10 +321,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <param name="isFeed">Specify whether to create a writer for a feed or an entry.</param>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        /// <returns>If <paramref name="isFeed"/> is true, return the result of CreateODataFeedWriter, otherwise return the result of CreateODataEntryWriter.</returns>
+        /// <returns>If <paramref name="isFeed"/> is true, return the result of CreateODataResourceSetWriter, otherwise return the result of CreateODataResourceWriter.</returns>
         internal ODataWriter CreateODataWriter(bool isFeed, IEdmEntitySet entitySet, IEdmEntityType entityType)
         {
-            return isFeed ? this.CreateODataFeedWriter(entitySet, entityType) : this.CreateODataEntryWriter(entitySet, entityType);
+            return isFeed ? this.CreateODataResourceSetWriter(entitySet, entityType) : this.CreateODataResourceWriter(entitySet, entityType);
         }
 
         /// <summary>

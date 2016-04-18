@@ -22,9 +22,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
         #region Entities
 
-        private static readonly ODataFeed districtFeed = new ODataFeed();
+        private static readonly ODataResourceSet districtFeed = new ODataResourceSet();
 
-        private static readonly ODataEntry districtEntry = new ODataEntry
+        private static readonly ODataResource districtEntry = new ODataResource
         {
             Properties = new List<ODataProperty>
             {
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 var navigationSource = this.GetCitySet().FindNavigationTarget(
                     this.GetCityDistrictsProperty()) as IEdmEntitySetBase;
-                var writer = messageWriter.CreateODataFeedWriter(navigationSource);
+                var writer = messageWriter.CreateODataResourceSetWriter(navigationSource);
                 writer.WriteStart(districtFeed);
                 writer.WriteStart(districtEntry);
                 writer.WriteEnd(); // districtEntry
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 var navigationSource = this.GetCitySet().FindNavigationTarget(
                     this.GetCityCentralDistrictProperty()) as IEdmEntitySetBase;
-                var writer = messageWriter.CreateODataEntryWriter(navigationSource);
+                var writer = messageWriter.CreateODataResourceWriter(navigationSource);
                 writer.WriteStart(districtEntry);
                 writer.WriteEnd(); // districtEntry
                 writer.Flush();
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             this.TestInit();
 
-            districtFeed.SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+            districtFeed.SerializationInfo = new ODataResourceSerializationInfo()
             {
                 IsFromCollection = true,
                 NavigationSourceEntityTypeName = "MyNS.District",
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(false))
             {
-                var writer = messageWriter.CreateODataFeedWriter();
+                var writer = messageWriter.CreateODataResourceSetWriter();
                 writer.WriteStart(districtFeed);
                 writer.WriteStart(districtEntry);
                 writer.WriteEnd(); // districtEntry
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             this.TestInit();
 
-            districtEntry.SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+            districtEntry.SerializationInfo = new ODataResourceSerializationInfo()
             {
                 IsFromCollection = false,
                 NavigationSourceEntityTypeName = "MyNS.District",
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(false))
             {
-                var writer = messageWriter.CreateODataEntryWriter();
+                var writer = messageWriter.CreateODataResourceWriter();
                 writer.WriteStart(districtEntry);
                 writer.WriteEnd(); // districtEntry
                 writer.Flush();

@@ -56,7 +56,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
                 IODataRequestMessage requestMessageToWrite = new InMemoryMessage { Method = "GET", Stream = stream };
                 using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataFeedWriter(EntitySet, EntityType) : messageWriter.CreateODataEntryWriter(EntitySet, EntityType);
+                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataResourceSetWriter(EntitySet, EntityType) : messageWriter.CreateODataResourceWriter(EntitySet, EntityType);
                     action(odataWriter);
                 }
             }
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
                 IODataResponseMessage responseMessageToWrite = new InMemoryMessage { StatusCode = 200, Stream = stream };
                 using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataFeedWriter(EntitySet, EntityType) : messageWriter.CreateODataEntryWriter(EntitySet, EntityType);
+                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataResourceSetWriter(EntitySet, EntityType) : messageWriter.CreateODataResourceWriter(EntitySet, EntityType);
                     action(odataWriter);
                 }
             }

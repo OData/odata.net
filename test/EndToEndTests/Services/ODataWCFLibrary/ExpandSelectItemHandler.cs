@@ -18,18 +18,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
     public class ExpandSelectItemHandler : SelectItemHandler
     {
-        public ODataEntry OriginalEntry { get; set; }
-        public ODataEntry ProjectedEntry { get; set; }
+        public ODataResource OriginalEntry { get; set; }
+        public ODataResource ProjectedEntry { get; set; }
 
         public object ParentElement { get; set; }
         public object ExpandedChildElement { get; set; }
 
         public ExpandSelectItemHandler(object original)
         {
-            this.OriginalEntry = original as ODataEntry;
+            this.OriginalEntry = original as ODataResource;
             if (this.OriginalEntry != null)
             {
-                this.ProjectedEntry = new ODataEntry()
+                this.ProjectedEntry = new ODataResource()
                 {
                     IsTransient = this.OriginalEntry.IsTransient,
                     InstanceAnnotations = this.OriginalEntry.InstanceAnnotations,

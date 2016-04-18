@@ -390,7 +390,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             this.CombinatorialEngineProvider.RunCombinations(
                 new[] { ApplicationJson, ApplicationJsonODataLight },
-                new[] { ODataPayloadKind.Entry, ODataPayloadKind.Feed },
+                new[] { ODataPayloadKind.Resource, ODataPayloadKind.ResourceSet },
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
                 (contentType, payloadKind, testConfiguration) =>
                 {
@@ -473,9 +473,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // ignore some payloads in some formats
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                     return format == null;
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     return format == null;
                 case ODataPayloadKind.Property:
                     return format == null;
@@ -518,11 +518,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             bool isJsonLightRequest = isRequest && testConfig.Format == ODataFormat.Json;
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                     {
                         return PayloadBuilder.EntitySet().WithTypeAnnotation(cityType).ExpectedEntityType(cityType, citySet);
                     }
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     {
                         return PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).WithTypeAnnotation(cityType).ExpectedEntityType(cityType, citySet);
                     }

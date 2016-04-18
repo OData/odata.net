@@ -84,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(testCase =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.Properties = new ODataProperty[] { new ODataProperty { Name = "ID", Value = "foo" } };
                     entry.MediaResource = testCase.DefaultStream;
                     return new PayloadWriterTestDescriptor<ODataItem>(

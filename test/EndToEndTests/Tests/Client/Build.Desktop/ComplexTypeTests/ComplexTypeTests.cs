@@ -48,13 +48,13 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 ODataComplexValue homeAddress = (entry.Properties.Single(p => p.Name == "HomeAddress").Value as ODataComplexValue);
                                 Assert.IsNotNull(homeAddress);
                                 string typeName = NameSpacePrefix + "HomeAddress";
@@ -159,13 +159,13 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.AreEqual(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
                                 ODataComplexValue homeAddress = (entry.Properties.Single(p => p.Name == "HomeAddress").Value as ODataComplexValue);
                                 Assert.IsNotNull(homeAddress);
@@ -196,12 +196,12 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             {
                 ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
-                ODataEntry entry = this.QueryEntry("People(1)");
+                ODataResource entry = this.QueryEntry("People(1)");
                 ODataComplexValue homeAddress = (entry.Properties.Single(p => p.Name == "HomeAddress").Value as ODataComplexValue);
                 Assert.AreEqual(familyNames[i], homeAddress.Properties.Single(p => p.Name == "FamilyName").Value);
 
                 //update
-                entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+                entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
                 entry.Properties = new[] 
                 {
                     new ODataProperty
@@ -240,7 +240,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(personSet, personType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
@@ -270,7 +270,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             for (int i = 0; i < types.Length; i++)
             {
                 // insert
-                var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+                var entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
                 entry.Properties = new[]
                 {
                     new ODataProperty { Name = "PersonID", Value = 101 },
@@ -344,7 +344,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 requestMessage.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(peopleSet, personType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(peopleSet, personType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
@@ -367,7 +367,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntry("People(101)", 204);
+                ODataResource deletedEntry = this.QueryEntry("People(101)", 204);
                 Assert.IsNull(deletedEntry);
             }
         }
@@ -547,13 +547,13 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 ODataComplexValue accountInfo = (entry.Properties.Single(p => p.Name == "AccountInfo").Value as ODataComplexValue);
                                 Assert.IsNotNull(accountInfo);
                                 string typeName = NameSpacePrefix + "AccountInfo";
@@ -626,13 +626,13 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 int? accountID = entry.Properties.Single(p => p.Name == "AccountID").Value as int?;
                                 Assert.AreEqual(101, accountID);
                                 ODataComplexValue accountInfo = (entry.Properties.Single(p => p.Name == "AccountInfo").Value as ODataComplexValue);
@@ -664,13 +664,13 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             string[] middleNames = { "Hood", "MN1", "MN2", "MN3" };
             for (int i = 0; i < types.Length; i++)
             {
-                ODataEntry entry = this.QueryEntry("Accounts(101)");
+                ODataResource entry = this.QueryEntry("Accounts(101)");
                 ODataComplexValue accountInfo = (entry.Properties.Single(p => p.Name == "AccountInfo").Value as ODataComplexValue);
                 Assert.AreEqual(middleNames[i], accountInfo.Properties.Single(p => p.Name == "MiddleName").Value);
 
                 // update
                 bool isPersonalAccount = (i % 2 == 0);
-                entry = new ODataEntry() { TypeName = NameSpacePrefix + "Account" };
+                entry = new ODataResource() { TypeName = NameSpacePrefix + "Account" };
                 entry.Properties = new[] 
                 {
                     new ODataProperty
@@ -719,7 +719,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(accountSet, accountType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
@@ -748,7 +748,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
             foreach (var mimetype in types)
             {
-                var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Account" };
+                var entry = new ODataResource() { TypeName = NameSpacePrefix + "Account" };
                 entry.Properties = new[]
                 {
                     new ODataProperty { Name = "AccountID", Value = 10086 },
@@ -793,7 +793,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 requestMessage.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(accountSet, accountType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
@@ -816,7 +816,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntry("Accounts(10086)", 204);
+                ODataResource deletedEntry = this.QueryEntry("Accounts(10086)", 204);
                 Assert.IsNull(deletedEntry);
             }
         }
@@ -998,7 +998,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             deleteRequestMessage.Method = "DELETE";
             var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Account" };
+            var entry = new ODataResource() { TypeName = NameSpacePrefix + "Account" };
             entry.Properties = new[]
             {
                 new ODataProperty { Name = "AccountID", Value = 101 },
@@ -1037,7 +1037,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             requestMessage.Method = "POST";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(accountSet, accountType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }
@@ -1126,7 +1126,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
         #region Helper
 
-        private ODataEntry QueryEntry(string uri, int expectedStatusCode = 200)
+        private ODataResource QueryEntry(string uri, int expectedStatusCode = 200)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
@@ -1135,17 +1135,17 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             var queryResponseMessage = queryRequestMessage.GetResponse();
             Assert.AreEqual(expectedStatusCode, queryResponseMessage.StatusCode);
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
             if (expectedStatusCode == 200)
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            entry = reader.Item as ODataEntry;
+                            entry = reader.Item as ODataResource;
                         }
                     }
 

@@ -32,12 +32,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             this.AvroWriter = new AvroWriter(new StreamWrapper(outputStream));
         }
 
-        public override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
             return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, entityType), false);
         }
 
-        public override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, entityType, true), true);
         }

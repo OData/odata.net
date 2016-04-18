@@ -150,7 +150,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             using (var memoryStream = new MemoryStream())
             using (var testMemoryStream = CreateTestStream(testConfiguration, memoryStream, ignoreDispose: true))
             {
-                bool feedWriter = descriptor.PayloadItems[0] is ODataFeed;
+                bool feedWriter = descriptor.PayloadItems[0] is ODataResourceSet;
                 TestMessage testMessage = null;
                 Exception exception = TestExceptionUtils.RunCatching(() =>
                 {
@@ -532,19 +532,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             try
             {
-                var feed = item as ODataFeed;
+                var feed = item as ODataResourceSet;
                 if (feed != null)
                 {
                     WritePayload(messageWriter, writer, feed);
                 }
 
-                var entry = item as ODataEntry;
+                var entry = item as ODataResource;
                 if (entry != null)
                 {
                     WritePayload(messageWriter, writer, entry);
                 }
 
-                var navLink = item as ODataNavigationLink;
+                var navLink = item as ODataNestedResourceInfo;
                 if (navLink != null)
                 {
                     WritePayload(messageWriter, writer, navLink);
@@ -568,7 +568,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
         }
 
-        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataEntry entry)
+        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataResource entry)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
             ExceptionUtilities.CheckArgumentNotNull(writer, "writer");
@@ -582,7 +582,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             if (entry.IsNullEntry())
             {
-                writer.WriteStart((ODataEntry)null);
+                writer.WriteStart((ODataResource)null);
             }
             else
             {
@@ -591,7 +591,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             //Write Navigation Links
             var expandedLinksAnnotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
-            ODataNavigationLink link = null;
+            ODataNestedResourceInfo link = null;
             if (expandedLinksAnnotation != null)
             {
                 for (int i = 0; i < expandedLinksAnnotation.Count; ++i)
@@ -605,7 +605,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataNavigationLink link)
+        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataNestedResourceInfo link)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
             ExceptionUtilities.CheckArgumentNotNull(writer, "writer");
@@ -632,7 +632,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataFeed feed)
+        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataResourceSet feed)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
             ExceptionUtilities.CheckArgumentNotNull(writer, "writer");
@@ -709,7 +709,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     }
                     else
                     {
-                        ODataEntry entry = item as ODataEntry;
+                        ODataResource entry = item as ODataResource;
                         if (entry != null)
                         {
                             WriteEntryCallbacksAnnotation callbacksAnnotation = entry.GetAnnotation<WriteEntryCallbacksAnnotation>();
@@ -720,7 +720,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                             if (entry.IsNullEntry())
                             {
-                                writer.WriteStart((ODataEntry)null);
+                                writer.WriteStart((ODataResource)null);
                             }
                             else
                             {
@@ -731,26 +731,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         }
                         else
                         {
-                            ODataFeed feed = item as ODataFeed;
-                            if (feed != null)
+                            ODataResourceSet resourceCollection = item as ODataResourceSet;
+                            if (resourceCollection != null)
                             {
-                                WriteFeedCallbacksAnnotation callbacksAnnotation = feed.GetAnnotation<WriteFeedCallbacksAnnotation>();
+                                WriteFeedCallbacksAnnotation callbacksAnnotation = resourceCollection.GetAnnotation<WriteFeedCallbacksAnnotation>();
                                 if (callbacksAnnotation != null && callbacksAnnotation.BeforeWriteStartCallback != null)
                                 {
-                                    callbacksAnnotation.BeforeWriteStartCallback(feed);
+                                    callbacksAnnotation.BeforeWriteStartCallback(resourceCollection);
                                 }
 
-                                writer.WriteStart(feed);
+                                writer.WriteStart(resourceCollection);
                                 if (callbacksAnnotation != null && callbacksAnnotation.AfterWriteStartCallback != null)
                                 {
-                                    callbacksAnnotation.AfterWriteStartCallback(feed);
+                                    callbacksAnnotation.AfterWriteStartCallback(resourceCollection);
                                 }
 
-                                itemsStack.Push(feed);
+                                itemsStack.Push(resourceCollection);
                             }
                             else
                             {
-                                ODataNavigationLink navigationLink = item as ODataNavigationLink;
+                                ODataNestedResourceInfo navigationLink = item as ODataNestedResourceInfo;
                                 if (navigationLink != null)
                                 {
                                     writer.WriteStart(navigationLink);
@@ -1093,7 +1093,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             {
                 for (int i = 0; i < newItems.Count; i++)
                 {
-                    ODataNavigationLink navigationLink = newItems[i] as ODataNavigationLink;
+                    ODataNestedResourceInfo navigationLink = newItems[i] as ODataNestedResourceInfo;
                     if (navigationLink != null)
                     {
                         if (i == newItems.Count - 1)
@@ -1779,7 +1779,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             if (item != null)
             {
-                ODataEntry entry = item as ODataEntry;
+                ODataResource entry = item as ODataResource;
                 if (entry != null)
                 {
                     WriteEntryCallbacksAnnotation callbacksAnnotation = entry.GetAnnotation<WriteEntryCallbacksAnnotation>();
@@ -1789,7 +1789,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     }
                 }
 
-                ODataFeed feed = item as ODataFeed;
+                ODataResourceSet feed = item as ODataResourceSet;
                 if (feed != null)
                 {
                     WriteFeedCallbacksAnnotation callbacksAnnotation = feed.GetAnnotation<WriteFeedCallbacksAnnotation>();

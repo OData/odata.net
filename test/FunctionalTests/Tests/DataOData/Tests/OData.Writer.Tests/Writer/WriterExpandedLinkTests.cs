@@ -36,29 +36,29 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test that we cannot write an expanded link with incorrect multiplicity or content (entry vs. feed).")]
         public void ExpandedLinkWithMultiplicityTests()
         {
-            ODataNavigationLink expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedEntryLink.IsCollection = false;
 
-            ODataNavigationLink expandedFeedLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedFeedLink = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedFeedLink.IsCollection = true;
 
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
             ODataEntityReferenceLink defaultEntityReferenceLink = ObjectModelUtils.CreateDefaultEntityReferenceLink();
 
-            ODataEntry officeEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeType");
-            ODataEntry officeWithNumberEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeWithNumberType");
-            ODataEntry cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
+            ODataResource officeEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeType");
+            ODataResource officeWithNumberEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeWithNumberType");
+            ODataResource cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
 
             // CityHall is a nav prop with multiplicity '*' of type 'TestModel.OfficeType'
-            ODataNavigationLink cityHallLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ null);
-            ODataNavigationLink cityHallLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ true);
-            ODataNavigationLink cityHallLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ false);
+            ODataNestedResourceInfo cityHallLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ null);
+            ODataNestedResourceInfo cityHallLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ true);
+            ODataNestedResourceInfo cityHallLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ false);
 
             // PoliceStation is a nav prop with multiplicity '1' of type 'TestModel.OfficeType'
-            ODataNavigationLink policeStationLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ null);
-            ODataNavigationLink policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
-            ODataNavigationLink policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
+            ODataNestedResourceInfo policeStationLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ null);
+            ODataNestedResourceInfo policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
+            ODataNestedResourceInfo policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
 
             ExpectedException expandedEntryLinkWithFeedContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/link");
             ExpectedException expandedFeedLinkWithEntryContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/link");
@@ -316,16 +316,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test that we can write an expanded link with a null navigation entry.")]
         public void ExpandedLinkWithNullNavigationTests()
         {
-            ODataNavigationLink expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedEntryLink.IsCollection = false;
 
-            ODataNavigationLink expandedEntryLink2 = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedEntryLink2 = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedEntryLink2.IsCollection = false;
             expandedEntryLink2.Name = expandedEntryLink2.Name + "2";
 
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
-            ODataEntry nullEntry = ObjectModelUtils.ODataNullEntry;
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource nullEntry = ObjectModelUtils.ODataNullEntry;
 
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback successCallback = (testConfiguration) =>
             {

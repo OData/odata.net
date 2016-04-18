@@ -53,8 +53,8 @@ namespace Microsoft.OData.Core
         /// <summary>Parameter name for 'type' parameters.</summary>
         internal const string MimeTypeParameterName = "type";
 
-        /// <summary>Parameter value for type 'entry'.</summary>
-        internal const string MimeTypeParameterValueEntry = "entry";
+        /// <summary>Parameter value for type 'resource'.</summary>
+        internal const string MimeTypeParameterValueEntry = "resource";
 
         /// <summary>Parameter value for type 'feed'.</summary>
         internal const string MimeTypeParameterValueFeed = "feed";
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core
         /// <summary>Media type for ATOM payloads.</summary>
         internal const string MimeApplicationAtomXml = MimeApplicationType + Separator + MimeAtomXmlSubType;
 
-        /// <summary>Media type for links referencing a single entry.</summary>
+        /// <summary>Media type for links referencing a single resource.</summary>
         internal const string MimeApplicationAtomXmlTypeEntry = MimeApplicationAtomXml + ";" + MimeTypeParameterName + "=" + MimeTypeParameterValueEntry;
 
         /// <summary>Media type for links referencing a collection of entries.</summary>

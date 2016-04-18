@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Represents a single property of an entry.
+    /// Represents a single property of a resource.
     /// </summary>
     public sealed class ODataProperty : ODataAnnotatable
     {

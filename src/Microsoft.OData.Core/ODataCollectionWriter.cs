@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core
         public abstract Task WriteStartAsync(ODataCollectionStart collectionStart);
 #endif
 
-        /// <summary>Starts writing an entry.</summary>
+        /// <summary>Starts writing a resource.</summary>
         /// <param name="item">The collection item to write.</param>
         public abstract void WriteItem(object item);
 

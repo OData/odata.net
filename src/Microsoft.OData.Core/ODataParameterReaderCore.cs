@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core
             /// <summary>No sub-reader has been created for the current parameter.</summary>
             None,
 
-            /// <summary>CreateEntryReader(), CreateFeedReader() or CreateCollectionReader() has been called for the current parameter
+            /// <summary>CreateResourceReader(), CreateResourceSetReader() or CreateCollectionReader() has been called for the current parameter
             /// and the newly created reader is not in Completed state.</summary>
             /// <remarks>If the sub-reader is in Error state, the ODataParameterReader will enter ODataParameterReaderState.Error.</remarks>
             Active,
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>
         /// This property returns a primitive value, an ODataComplexValue or null when State is ODataParameterReaderState.Value.
-        /// This property returns null when State is ODataParameterReaderState.Entry, ODataParameterReaderState.Feed or ODataParameterReaderState.Collection.
+        /// This property returns null when State is ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet or ODataParameterReaderState.Collection.
         /// </remarks>
         public override object Value
         {
@@ -124,39 +124,39 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the entry value when the state is ODataParameterReaderState.Entry.
+        /// This method creates an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
         /// </summary>
         /// <remarks>
-        /// When the state is ODataParameterReaderState.Entry, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the entry value when the state is ODataParameterReaderState.Entry.</returns>
-        public override ODataReader CreateEntryReader()
+        /// <returns>Returns an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.</returns>
+        public override ODataReader CreateResourceReader()
         {
-            this.VerifyCanCreateSubReader(ODataParameterReaderState.Entry);
+            this.VerifyCanCreateSubReader(ODataParameterReaderState.Resource);
             this.subReaderState = SubReaderState.Active;
             Debug.Assert(this.Name != null, "this.Name != null");
             Debug.Assert(this.Value == null, "this.Value == null");
             IEdmEntityType expectedEntityType = (IEdmEntityType)this.GetParameterTypeReference(this.Name).Definition;
-            return this.CreateEntryReader(expectedEntityType);
+            return this.CreateResourceReader(expectedEntityType);
         }
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.
+        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.
         /// </summary>
         /// <remarks>
-        /// When the state is ODataParameterReaderState.Feed, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.</returns>
-        public override ODataReader CreateFeedReader()
+        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.</returns>
+        public override ODataReader CreateResourceSetReader()
         {
-            this.VerifyCanCreateSubReader(ODataParameterReaderState.Feed);
+            this.VerifyCanCreateSubReader(ODataParameterReaderState.ResourceSet);
             this.subReaderState = SubReaderState.Active;
             Debug.Assert(this.Name != null, "this.Name != null");
             Debug.Assert(this.Value == null, "this.Value == null");
             IEdmEntityType expectedEntityType = (IEdmEntityType)((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType.Definition;
-            return this.CreateFeedReader(expectedEntityType);
+            return this.CreateResourceSetReader(expectedEntityType);
         }
 
         /// <summary>
@@ -206,8 +206,8 @@ namespace Microsoft.OData.Core
         void IODataReaderWriterListener.OnException()
         {
             Debug.Assert(
-                this.State == ODataParameterReaderState.Entry ||
-                this.State == ODataParameterReaderState.Feed || this.State == ODataParameterReaderState.Collection,
+                this.State == ODataParameterReaderState.Resource ||
+                this.State == ODataParameterReaderState.ResourceSet || this.State == ODataParameterReaderState.Collection,
                 "OnException called in unexpected state: " + this.State);
             Debug.Assert(this.State == ODataParameterReaderState.Exception || this.subReaderState == SubReaderState.Active, "OnException called in unexpected subReaderState: " + this.subReaderState);
             this.EnterScope(ODataParameterReaderState.Exception, null, null);
@@ -219,8 +219,8 @@ namespace Microsoft.OData.Core
         void IODataReaderWriterListener.OnCompleted()
         {
             Debug.Assert(
-                this.State == ODataParameterReaderState.Entry ||
-                this.State == ODataParameterReaderState.Feed ||
+                this.State == ODataParameterReaderState.Resource ||
+                this.State == ODataParameterReaderState.ResourceSet ||
 this.State == ODataParameterReaderState.Collection,
                 "OnCompleted called in unexpected state: " + this.State);
             Debug.Assert(this.State == ODataParameterReaderState.Exception || this.subReaderState == SubReaderState.Active, "OnCompleted called in unexpected subReaderState: " + this.subReaderState);
@@ -344,26 +344,26 @@ this.State == ODataParameterReaderState.Collection,
                     result = this.ReadAtStartImplementation();
                     Debug.Assert(
                         this.State == ODataParameterReaderState.Value ||
-                        this.State == ODataParameterReaderState.Entry ||
-                        this.State == ODataParameterReaderState.Feed ||
+                        this.State == ODataParameterReaderState.Resource ||
+                        this.State == ODataParameterReaderState.ResourceSet ||
                         this.State == ODataParameterReaderState.Collection ||
                         this.State == ODataParameterReaderState.Completed,
-                        "ReadAtStartImplementation should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
+                        "ReadAtStartImplementation should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
                     break;
 
                 case ODataParameterReaderState.Value:   // fall through
-                case ODataParameterReaderState.Entry:
-                case ODataParameterReaderState.Feed:
+                case ODataParameterReaderState.Resource:
+                case ODataParameterReaderState.ResourceSet:
                 case ODataParameterReaderState.Collection:
                     this.OnParameterCompleted();
                     result = this.ReadNextParameterImplementation();
                     Debug.Assert(
                         this.State == ODataParameterReaderState.Value ||
-                        this.State == ODataParameterReaderState.Entry ||
-                        this.State == ODataParameterReaderState.Feed ||
+                        this.State == ODataParameterReaderState.Resource ||
+                        this.State == ODataParameterReaderState.ResourceSet ||
                         this.State == ODataParameterReaderState.Collection ||
                         this.State == ODataParameterReaderState.Completed,
-                        "ReadNextParameterImplementation should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
+                        "ReadNextParameterImplementation should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
                     break;
 
                 case ODataParameterReaderState.Exception:    // fall through
@@ -386,24 +386,24 @@ this.State == ODataParameterReaderState.Collection,
         protected abstract bool ReadAtStartImplementation();
 
         /// <summary>
-        /// Implementation of the reader logic when in state Value, Entry, Feed or Collection state.
+        /// Implementation of the reader logic when in state Value, Resource, Feed or Collection state.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         protected abstract bool ReadNextParameterImplementation();
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
         /// </summary>
         /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.</returns>
-        protected abstract ODataReader CreateEntryReader(IEdmEntityType expectedEntityType);
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
+        protected abstract ODataReader CreateResourceReader(IEdmEntityType expectedEntityType);
 
         /// <summary>
         /// Cretes an <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.
         /// </summary>
         /// <param name="expectedEntityType">Expected feed element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
-        protected abstract ODataReader CreateFeedReader(IEdmEntityType expectedEntityType);
+        protected abstract ODataReader CreateResourceSetReader(IEdmEntityType expectedEntityType);
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
@@ -443,12 +443,12 @@ this.State == ODataParameterReaderState.Collection,
         /// <returns>Returns the name of the method to create the correct reader for the given state.</returns>
         private static string GetCreateReaderMethodName(ODataParameterReaderState state)
         {
-            Debug.Assert(state == ODataParameterReaderState.Entry || state == ODataParameterReaderState.Feed || state == ODataParameterReaderState.Collection, "state must be Entry, Feed or Collection.");
+            Debug.Assert(state == ODataParameterReaderState.Resource || state == ODataParameterReaderState.ResourceSet || state == ODataParameterReaderState.Collection, "state must be Resource, ResourceSet or Collection.");
             return "Create" + state.ToString() + "Reader";
         }
 
         /// <summary>
-        /// Verifies that one of CreateEntryReader(), CreateFeedReader() or CreateCollectionReader() can be called.
+        /// Verifies that one of CreateResourceReader(), CreateResourceSetReader() or CreateCollectionReader() can be called.
         /// </summary>
         /// <param name="expectedState">The expected state of the reader.</param>
         private void VerifyCanCreateSubReader(ODataParameterReaderState expectedState)
@@ -505,7 +505,7 @@ this.State == ODataParameterReaderState.Collection,
                 throw new ODataException(Strings.ODataParameterReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
             }
 
-            if (this.State == ODataParameterReaderState.Entry || this.State == ODataParameterReaderState.Feed || this.State == ODataParameterReaderState.Collection)
+            if (this.State == ODataParameterReaderState.Resource || this.State == ODataParameterReaderState.ResourceSet || this.State == ODataParameterReaderState.Collection)
             {
                 if (this.subReaderState == SubReaderState.None)
                 {
@@ -587,8 +587,8 @@ this.State == ODataParameterReaderState.Collection,
                 Debug.Assert(
                    state == ODataParameterReaderState.Start && name == null && value == null ||
                    state == ODataParameterReaderState.Value && !string.IsNullOrEmpty(name) && (value == null || value is ODataEnumValue || value is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(value.GetType())) ||
-                   state == ODataParameterReaderState.Entry && !string.IsNullOrEmpty(name) && value == null ||
-                   state == ODataParameterReaderState.Feed && !string.IsNullOrEmpty(name) && value == null ||
+                   state == ODataParameterReaderState.Resource && !string.IsNullOrEmpty(name) && value == null ||
+                   state == ODataParameterReaderState.ResourceSet && !string.IsNullOrEmpty(name) && value == null ||
                    state == ODataParameterReaderState.Collection && !string.IsNullOrEmpty(name) && value == null ||
                    state == ODataParameterReaderState.Exception && name == null && value == null ||
                    state == ODataParameterReaderState.Completed && name == null && value == null,

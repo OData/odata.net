@@ -145,10 +145,10 @@ namespace Microsoft.OData.Core
                 return ODataUriConversionUtils.ConvertToUriEnumLiteral(enumValue, version);
             }
 
-            ODataEntry entry = value as ODataEntry;
-            if (entry != null)
+            ODataResource resource = value as ODataResource;
+            if (resource != null)
             {
-                return ODataUriConversionUtils.ConvertToUriEntityLiteral(entry, model);
+                return ODataUriConversionUtils.ConvertToUriEntityLiteral(resource, model);
             }
 
             ODataEntityReferenceLink link = value as ODataEntityReferenceLink;
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Core
                 return ODataUriConversionUtils.ConvertToUriEntityReferencesLiteral(links, model);
             }
 
-            var list = value as IEnumerable<ODataEntry>;
+            var list = value as IEnumerable<ODataResource>;
             if (list != null)
             {
                 return ODataUriConversionUtils.ConvertToUriEntitiesLiteral(list, model);

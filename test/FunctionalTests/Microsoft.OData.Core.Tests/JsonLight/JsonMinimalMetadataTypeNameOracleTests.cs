@@ -17,10 +17,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
     public class JsonMinimalMetadataTypeNameOracleTests
     {
         private readonly JsonMinimalMetadataTypeNameOracle testSubject = new JsonMinimalMetadataTypeNameOracle();
-        private readonly ODataEntry entryWithoutTypeName = new ODataEntry();
-        private readonly ODataEntry entryWithTypeName = new ODataEntry { TypeName = "TypeNameFromOM" };
-        private readonly ODataEntry entryWithTypeAnnotationAndTypeName = new ODataEntry { TypeName = "TypeNameFromOM" };
-        private readonly ODataEntry entryWithTypeAnnotationWithoutTypeName = new ODataEntry();
+        private readonly ODataResource entryWithoutTypeName = new ODataResource();
+        private readonly ODataResource entryWithTypeName = new ODataResource { TypeName = "TypeNameFromOM" };
+        private readonly ODataResource entryWithTypeAnnotationAndTypeName = new ODataResource { TypeName = "TypeNameFromOM" };
+        private readonly ODataResource entryWithTypeAnnotationWithoutTypeName = new ODataResource();
 
         private readonly EdmComplexTypeReference complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("Namespace", "ComplexTypeName"), false);
         private const string ComplexTypeName = "Namespace.ComplexTypeName";
@@ -39,31 +39,31 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void WhenAnnotationIsSetTypeNameShouldAlwaysComeFromAnnotation()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationAndTypeName).Should().Be("TypeNameFromSTNA");
-            this.testSubject.GetEntryTypeNameForWriting(null, this.entryWithTypeAnnotationAndTypeName).Should().Be("TypeNameFromSTNA");
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationWithoutTypeName).Should().Be("TypeNameFromSTNA");
-            this.testSubject.GetEntryTypeNameForWriting(null, this.entryWithTypeAnnotationWithoutTypeName).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationAndTypeName).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceTypeNameForWriting(null, this.entryWithTypeAnnotationAndTypeName).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationWithoutTypeName).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceTypeNameForWriting(null, this.entryWithTypeAnnotationWithoutTypeName).Should().Be("TypeNameFromSTNA");
         }
 
         [Fact]
         public void WhenAnnotationIsNotSetTypeNameShouldAlwaysComeFromObjectModelWhenTypeNameFromObjectModelDoesNotMatchExpectedTypeName()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeName).Should().Be("TypeNameFromOM");
-            this.testSubject.GetEntryTypeNameForWriting(null, this.entryWithTypeName).Should().Be("TypeNameFromOM");
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithoutTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeName).Should().Be("TypeNameFromOM");
+            this.testSubject.GetResourceTypeNameForWriting(null, this.entryWithTypeName).Should().Be("TypeNameFromOM");
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithoutTypeName).Should().BeNull();
         }
 
         [Fact]
         public void TypeNameShouldNotBeOmittedWhenTypeNameFromAnnotationMatchesExpectedTypeName()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromSTNA", this.entryWithTypeAnnotationAndTypeName).Should().Be("TypeNameFromSTNA");
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromSTNA", this.entryWithTypeAnnotationWithoutTypeName).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromSTNA", this.entryWithTypeAnnotationAndTypeName).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromSTNA", this.entryWithTypeAnnotationWithoutTypeName).Should().Be("TypeNameFromSTNA");
         }
 
         [Fact]
         public void TypeNameShouldBeOmittedWhenTypeNameFromObjectModelMatchesExpectedTypeName()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromOM", this.entryWithTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromOM", this.entryWithTypeName).Should().BeNull();
         }
         #endregion Minimal metadata entry type name tests
 

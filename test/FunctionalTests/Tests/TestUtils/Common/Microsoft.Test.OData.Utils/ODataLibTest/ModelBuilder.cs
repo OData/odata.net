@@ -411,10 +411,10 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             ExceptionUtilities.CheckArgumentNotNull(model, "model");
 
             ExceptionUtilities.Assert(
-                payloadElement is ODataEntry || payloadElement is ODataFeed,
+                payloadElement is ODataResource || payloadElement is ODataResourceSet,
                 "Can only determine entity type for entry or feed payloads.");
 
-            ODataFeed feed = payloadElement as ODataFeed;
+            ODataResourceSet feed = payloadElement as ODataResourceSet;
             if (feed != null)
             {
                 // A feed doesn't know it's type. If it doesn't have any entries we can't determine the type.
@@ -427,7 +427,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
                 return null;
             }
 
-            ODataEntry entry = payloadElement as ODataEntry;
+            ODataResource entry = payloadElement as ODataResource;
             if (entry != null)
             {
                 return model.FindDeclaredType(entry.TypeName) as IEdmEntityType;

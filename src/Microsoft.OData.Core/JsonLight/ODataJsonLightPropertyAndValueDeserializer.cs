@@ -198,7 +198,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Gets and validates the type name annotation for the specified property.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the entry content.</param>
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the resource content.</param>
         /// <param name="propertyName">The name of the property to get the type name for.</param>
         /// <returns>The type name for the property or null if no type name was found.</returns>
         protected static string ValidateDataPropertyTypeNameAnnotation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string propertyName)
@@ -1185,7 +1185,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// Detects whether we are currently reading a complex property or not. This can be determined from metadata (if we have it)
         /// or from the presence of the odata.type instance annotation in the payload.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the entry content.</param>
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the resource content.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <param name="payloadTypeName">The type name of the complex value if found in the payload; otherwise null.</param>
         /// <returns>true if we are reading a complex property; otherwise false.</returns>

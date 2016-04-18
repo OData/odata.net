@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core.Tests
 
         public ODataAnnotatableTests()
         {
-            this.annotatable = new ODataFeed();
+            this.annotatable = new ODataResourceSet();
         }
 
         [Fact]

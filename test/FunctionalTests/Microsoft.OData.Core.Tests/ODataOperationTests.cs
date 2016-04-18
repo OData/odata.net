@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core.Tests
         {
             this.testSubject = new TestODataOperation();
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 TypeName = "ns.DerivedType",
                 Properties = new[]
@@ -42,11 +42,11 @@ namespace Microsoft.OData.Core.Tests
                 }
             };
 
-            var serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
-            var typeContext = ODataFeedAndEntryTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
             var metadataContext = new TestMetadataContext();
-            var entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            var fullMetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
+            var fullMetadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
             this.operationWithFullBuilder = new TestODataOperation { Metadata = ContextUri };
             this.operationWithFullBuilder.SetMetadataBuilder(fullMetadataBuilder, MetadataDocumentUri);
         }
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Core.Tests
         public void MetadataBuilderShouldNotAffectUserAssignedContextUri()
         {
             this.testSubject.Metadata = ContextUri;
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             this.testSubject.Metadata.Should().BeSameAs(ContextUri);
         }
 
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core.Tests
         {
             this.testSubject.Metadata = ContextUri;
             this.testSubject.Title = OperationName;
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             this.testSubject.Title.Should().Be(OperationName);
         }
 
@@ -112,14 +112,14 @@ namespace Microsoft.OData.Core.Tests
         {
             this.testSubject.Metadata = ContextUri;
             this.testSubject.Target = Target;
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             this.testSubject.Target.Should().BeSameAs(Target);
         }
 
         [Fact]
         public void SetMetadataBuilderShouldThrowWhemContextUriIsNotSet()
         {
-            Action test = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action test = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(this.testSubject.GetType().Name));
         }
 
@@ -128,17 +128,17 @@ namespace Microsoft.OData.Core.Tests
         {
             this.testSubject.GetMetadataBuilder().Should().BeNull();
             this.testSubject.Metadata = ContextUri;
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
-            this.testSubject.GetMetadataBuilder().Should().BeSameAs(ODataEntityMetadataBuilder.Null);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.GetMetadataBuilder().Should().BeSameAs(ODataResourceMetadataBuilder.Null);
         }
 
         [Fact]
         public void ChangingMetadataBuilderShouldUpdateCalculatedTitle()
         {
             this.testSubject.Metadata = ContextUri;
-            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataEntry()), MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataResource()), MetadataDocumentUri);
             this.testSubject.Title.Should().Be("MyOperation");
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             this.testSubject.Title.Should().BeNull();
         }
 
@@ -146,9 +146,9 @@ namespace Microsoft.OData.Core.Tests
         public void ChangingMetadataBuilderShouldUpdateCalculatedTarget()
         {
             this.testSubject.Metadata = ContextUri;
-            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataEntry()), MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataResource()), MetadataDocumentUri);
             this.testSubject.Target.OriginalString.Should().Be("http://service/ComputedTargetUri/MyOperation()");
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             this.testSubject.Target.Should().BeNull();
         }
 
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void SetMetadataBuildShouldThrowWhenMetadataIsNull()
         {
-            Action test = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action test = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             test.ShouldThrow<ODataException>(Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(this.testSubject.GetType().Name));
         }
 
@@ -179,14 +179,14 @@ namespace Microsoft.OData.Core.Tests
         public void SetMetadataBuilderShouldNotThrowWhenMetadataIsRelativeAndStartsWithHash()
         {
             this.testSubject.Metadata = new Uri("#Action1", UriKind.Relative);
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
         }
 
         [Fact]
         public void SetMetadataBuilderShouldThrowWhenNameIsOpenMetadataReferenceProperty()
         {
             this.testSubject.Metadata = new Uri("http://www.example.com/$metadata#foo");
-            Action test = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action test = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/$metadata#foo", MetadataDocumentUri.AbsoluteUri));
         }
 
@@ -194,14 +194,14 @@ namespace Microsoft.OData.Core.Tests
         public void SetMetadataBuilderShouldNotThrowWhenNameIsMetadataDocumentUriWithHashThenValidIdentifier()
         {
             this.testSubject.Metadata = new Uri(MetadataDocumentUri, "#Action1");
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
         }
 
         [Fact]
         public void SetMetadataBuilderShouldThrowWhenNameIsWithoutHash()
         {
             this.testSubject.Metadata = new Uri("Action1", UriKind.Relative);
-            Action action = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_InvalidMetadataReferenceProperty("Action1"));
         }
 
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Core.Tests
         public void SetMetadataBuilderShouldThrowWhenNameIsAbsoluteUriWithoutHash()
         {
             this.testSubject.Metadata = new Uri("http://www.example.com/Action1");
-            Action action = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_InvalidMetadataReferenceProperty("http://www.example.com/Action1"));
         }
 
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Core.Tests
         public void SetMetadataBuilderShouldThrowWhenNameIsIdentifierHashIdentifier()
         {
             this.testSubject.Metadata = new Uri("Action#1", UriKind.Relative);
-            Action action = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_InvalidMetadataReferenceProperty("Action#1"));
         }
 
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Core.Tests
         public void SetMetadataBuilderShouldThrowWhenNameIsJustHash()
         {
             this.testSubject.Metadata = new Uri("#", UriKind.Relative);
-            Action action = () => this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_InvalidMetadataReferenceProperty("#"));
         }
 
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Core.Tests
         public void SetMetadataBuilderShouldNotThrowWhenNameHasTwoHashes()
         {
             this.testSubject.Metadata = new Uri("#Action#1", UriKind.Relative);
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, MetadataDocumentUri);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
         }
     }
 }

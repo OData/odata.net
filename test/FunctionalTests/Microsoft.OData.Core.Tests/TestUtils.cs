@@ -20,15 +20,15 @@ namespace Microsoft.OData.Core.Tests
     public static class TestUtils
     {
         /// <summary>
-        /// Creates a new ODataEntry from the specified entity set, instance, and type.
+        /// Creates a new ODataResource from the specified entity set, instance, and type.
         /// </summary>
         /// <param name="entitySet">Entity set for the new entry.</param>
         /// <param name="value">Entity instance for the new entry.</param>
         /// <param name="entityType">Entity type for the new entry.</param>
-        /// <returns>New ODataEntry with the specified entity set and type, property values from the specified instance.</returns>
-        internal static ODataEntry CreateODataEntry(IEdmEntitySet entitySet, IEdmStructuredValue value, IEdmEntityType entityType)
+        /// <returns>New ODataResource with the specified entity set and type, property values from the specified instance.</returns>
+        internal static ODataResource CreateODataEntry(IEdmEntitySet entitySet, IEdmStructuredValue value, IEdmEntityType entityType)
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             entry.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
             entry.Properties = value.PropertyValues.Select(p =>
             {
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core.Tests
                 }
                 else
                 {
-                    Assert.True(false, "Test only currently supports creating ODataEntry from IEdmPrimitiveValue instances.");
+                    Assert.True(false, "Test only currently supports creating ODataResource from IEdmPrimitiveValue instances.");
                     return null;
                 }
 

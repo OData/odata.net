@@ -68,10 +68,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 var avroReader = new ODataAvroReader(this.CreateODataInputContext(stream), false);
                 Assert.AreEqual(ODataReaderState.Start, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.EntryStart, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceStart, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.EntryEnd, avroReader.State);
-                var entry = avroReader.Item as ODataEntry;
+                Assert.AreEqual(ODataReaderState.ResourceEnd, avroReader.State);
+                var entry = avroReader.Item as ODataResource;
                 Assert.IsNotNull(entry);
                 Assert.AreEqual("TestNS.Person", entry.TypeName);
                 var properties = entry.Properties.ToList();
@@ -134,14 +134,14 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 var avroReader = new ODataAvroReader(this.CreateODataInputContext(stream), true);
                 Assert.AreEqual(ODataReaderState.Start, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.FeedStart, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceSetStart, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
 
                 // Entry 1
-                Assert.AreEqual(ODataReaderState.EntryStart, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceStart, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.EntryEnd, avroReader.State);
-                var entry = avroReader.Item as ODataEntry;
+                Assert.AreEqual(ODataReaderState.ResourceEnd, avroReader.State);
+                var entry = avroReader.Item as ODataResource;
                 Assert.IsNotNull(entry);
                 var properties = entry.Properties.ToList();
                 Assert.AreEqual(2, properties.Count);
@@ -152,10 +152,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
                 // Entry 2
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.EntryStart, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceStart, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.EntryEnd, avroReader.State);
-                entry = avroReader.Item as ODataEntry;
+                Assert.AreEqual(ODataReaderState.ResourceEnd, avroReader.State);
+                entry = avroReader.Item as ODataResource;
                 Assert.IsNotNull(entry);
                 properties = entry.Properties.ToList();
                 Assert.AreEqual(2, properties.Count);
@@ -164,7 +164,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 Assert.AreEqual("Title", properties[1].Name);
                 Assert.AreEqual("s2", properties[1].Value);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.FeedEnd, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceSetEnd, avroReader.State);
 
                 Assert.IsFalse(avroReader.Read());
                 Assert.AreEqual(ODataReaderState.Completed, avroReader.State);
@@ -200,9 +200,9 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 var avroReader = new ODataAvroReader(this.CreateODataInputContext(stream), true);
                 Assert.AreEqual(ODataReaderState.Start, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.FeedStart, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceSetStart, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
-                Assert.AreEqual(ODataReaderState.FeedEnd, avroReader.State);
+                Assert.AreEqual(ODataReaderState.ResourceSetEnd, avroReader.State);
                 Assert.IsFalse(avroReader.Read());
                 Assert.AreEqual(ODataReaderState.Completed, avroReader.State);
             }
@@ -347,15 +347,15 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             Assert.AreEqual("p1", reader.Name);
             Assert.AreEqual("dat", reader.Value);
             Assert.IsTrue(reader.Read());
-            Assert.AreEqual(ODataParameterReaderState.Entry, reader.State);
+            Assert.AreEqual(ODataParameterReaderState.Resource, reader.State);
             Assert.AreEqual("p2", reader.Name);
-            var ew = reader.CreateEntryReader();
+            var ew = reader.CreateResourceReader();
             Assert.AreEqual(ODataReaderState.Start, ew.State);
             Assert.IsTrue(ew.Read());
-            Assert.AreEqual(ODataReaderState.EntryStart, ew.State);
+            Assert.AreEqual(ODataReaderState.ResourceStart, ew.State);
             Assert.IsTrue(ew.Read());
-            Assert.AreEqual(ODataReaderState.EntryEnd, ew.State);
-            var entry = ew.Item as ODataEntry;
+            Assert.AreEqual(ODataReaderState.ResourceEnd, ew.State);
+            var entry = ew.Item as ODataResource;
             Assert.IsFalse(ew.Read());
             Assert.AreEqual(ODataReaderState.Completed, ew.State);
 

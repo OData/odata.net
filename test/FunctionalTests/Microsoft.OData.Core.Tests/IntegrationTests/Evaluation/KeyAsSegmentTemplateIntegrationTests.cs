@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             entry2.EditLink.Should().Be(UrlUsingKeyAsSegmentConvention);
         }
 
-        private static ODataEntry CreateEntryWithKeyAsSegmentConvention(bool addAnnotation, bool? useKeyAsSegment)
+        private static ODataResource CreateEntryWithKeyAsSegmentConvention(bool addAnnotation, bool? useKeyAsSegment)
         {
             var model = new EdmModel();
             var container = new EdmEntityContainer("Fake", "Container");
@@ -72,9 +72,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                 new Uri("http://temp.org/$metadata"),
                 null /*requestUri*/);
 
-            var thing = new ODataEntry {Properties = new[] {new ODataProperty {Name = "Id", Value = 1}}};
+            var thing = new ODataResource {Properties = new[] {new ODataProperty {Name = "Id", Value = 1}}};
             thing.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
-            thing.MetadataBuilder = metadataContext.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = thing, SelectedProperties = new SelectedPropertiesNode("*")}, useKeyAsSegment);
+            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*")}, useKeyAsSegment);
             return thing;
         }
     }

@@ -723,7 +723,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             using (ODataJsonLightInputContext inputContext = this.CreateJsonLightInputContext(jsonInput))
             {
-                ODataJsonLightEntryAndFeedDeserializer deserializer = new ODataJsonLightEntryAndFeedDeserializer(inputContext);
+                ODataJsonLightResourceDeserializer deserializer = new ODataJsonLightResourceDeserializer(inputContext);
                 deserializer.ReadPayloadStart(ODataPayloadKind.Unsupported, duplicatePropertyNamesChecker, false, false);
 
                 Action readEntryContentAction = () => deserializer.ReadEntryContent(new TestJsonLightReaderEntryState());

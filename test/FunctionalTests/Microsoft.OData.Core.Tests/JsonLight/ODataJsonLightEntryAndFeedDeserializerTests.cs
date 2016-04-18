@@ -254,7 +254,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         public void ReadAndApplyFeedInstanceAnnotationValueShouldThrowOnReservedODataAnnotationNamesNotApplicableToFeeds()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{}");
-            Action action = () => deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.type", new ODataFeed(), null /*duplicatePropertyNamesChecker*/);
+            Action action = () => deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.type", new ODataResourceSet(), null /*duplicatePropertyNamesChecker*/);
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.type"));
         }
 
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.count\":3}");
 
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.count", feed, duplicatePropertyNamesChecker: null);
             Assert.Equal(3, feed.Count);
         }
@@ -275,7 +275,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.count\":\"3\"}", false, true);
 
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.count", feed, duplicatePropertyNamesChecker: null);
             Assert.Equal(3, feed.Count);
         }
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.count\":\"3\"}");
 
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             Action test = () => deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.count", feed, null /*duplicatePropertyNamesChecker*/);
             test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
         }
@@ -297,10 +297,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.context\":\"http://host/$metadata#TestEntitySet\",\"@odata.nextLink\":\"relativeUrl\"}");
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadPayloadStart(ODataPayloadKind.Feed, duplicatePropertyNamesChecker, false /*isReadingNestedPayload*/, false /*allowEmptyPayload*/);
+            deserializer.ReadPayloadStart(ODataPayloadKind.ResourceSet, duplicatePropertyNamesChecker, false /*isReadingNestedPayload*/, false /*allowEmptyPayload*/);
             deserializer.JsonReader.NodeType.Should().Be(JsonNodeType.Property);
             deserializer.JsonReader.Read();
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.nextLink", feed, null /*duplicatePropertyNamesChecker*/);
             Assert.Equal(new Uri("http://host/relativeUrl", UriKind.Absolute), feed.NextPageLink);
         }
@@ -310,10 +310,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.context\":\"http://host/$metadata#TestEntitySet\",\"@odata.deltaLink\":\"relativeUrl\"}");
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadPayloadStart(ODataPayloadKind.Feed, duplicatePropertyNamesChecker, false /*isReadingNestedPayload*/, false /*allowEmptyPayload*/);
+            deserializer.ReadPayloadStart(ODataPayloadKind.ResourceSet, duplicatePropertyNamesChecker, false /*isReadingNestedPayload*/, false /*allowEmptyPayload*/);
             deserializer.JsonReader.NodeType.Should().Be(JsonNodeType.Property);
             deserializer.JsonReader.Read();
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             deserializer.ReadAndApplyFeedInstanceAnnotationValue("odata.deltaLink", feed, null /*duplicatePropertyNamesChecker*/);
             Assert.Equal(new Uri("http://host/relativeUrl", UriKind.Absolute), feed.DeltaLink);
         }
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.Int32Annotation\":123}");
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             deserializer.ReadAndApplyFeedInstanceAnnotationValue("custom.Int32Annotation", feed, duplicatePropertyNamesChecker);
             Assert.Equal(1, feed.InstanceAnnotations.Count);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation").Value);
@@ -373,8 +373,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ApplyEntryInstanceAnnotation(entryState, "custom.Int32Annotation", 123);
-            Assert.Equal(1, entryState.Entry.InstanceAnnotations.Count);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Entry.InstanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation").Value);
+            Assert.Equal(1, entryState.Resource.InstanceAnnotations.Count);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Resource.InstanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation").Value);
         }
 
         #endregion Test ApplyEntryInstanceAnnotation
@@ -382,49 +382,49 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         #region Test ReadTopLevelFeedAnnotations
 
         [Fact]
-        public void ReadTopLevelFeedAnnotationsForFeedStartAndBufferingShouldReadAllInstanceAnnotations()
+        public void ReadTopLevelFeedAnnotationsForResourceSetStartAndBufferingShouldReadAllInstanceAnnotations()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.before\":123,\"value\":[],\"@custom.after\":456}");
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forFeedStart*/, true /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forResourceSetStart*/, true /*readAllFeedProperties*/);
             Assert.Equal(2, feed.InstanceAnnotations.Count);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.before").Value);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.after").Value);
         }
 
         [Fact]
-        public void ReadTopLevelFeedAnnotationsForFeedStartAndBufferingShouldSkipInstanceAnnotationsBasedOnReaderSettings()
+        public void ReadTopLevelFeedAnnotationsForResourceSetStartAndBufferingShouldSkipInstanceAnnotationsBasedOnReaderSettings()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.before\":123,\"value\":[],\"@custom.after\":456}", shouldReadAndValidateCustomInstanceAnnotations: false);
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forFeedStart*/, true /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forResourceSetStart*/, true /*readAllFeedProperties*/);
             Assert.Equal(0, feed.InstanceAnnotations.Count);
         }
 
         [Fact]
-        public void ReadTopLevelFeedAnnotationsForFeedStartAndNonBufferingShouldReadOnlyInstanceAnnotationsBeforeValue()
+        public void ReadTopLevelFeedAnnotationsForResourceSetStartAndNonBufferingShouldReadOnlyInstanceAnnotationsBeforeValue()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.before\":123,\"value\":[],\"@custom.after\":456}");
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forFeedStart*/, false /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forResourceSetStart*/, false /*readAllFeedProperties*/);
             Assert.Equal(1, feed.InstanceAnnotations.Count);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.before").Value);
         }
 
         [Fact]
-        public void ReadTopLevelFeedAnnotationsForFeedStartAndNonBufferingShouldSkipInstanceAnnotationsBasedOnReaderSettings()
+        public void ReadTopLevelFeedAnnotationsForResourceSetStartAndNonBufferingShouldSkipInstanceAnnotationsBasedOnReaderSettings()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.before\":123,\"value\":[],\"@custom.after\":456}", shouldReadAndValidateCustomInstanceAnnotations: false);
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forFeedStart*/, false /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, true /*forResourceSetStart*/, false /*readAllFeedProperties*/);
             Assert.Equal(0, feed.InstanceAnnotations.Count);
         }
 
@@ -433,9 +433,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.before\":123,\"value\":[],\"@custom.after\":456}");
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, false /*forFeedStart*/, true /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, false /*forResourceSetStart*/, true /*readAllFeedProperties*/);
             feed.InstanceAnnotations.Should().BeEmpty();
         }
 
@@ -444,9 +444,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.after\":456}");
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, false /*forFeedStart*/, false /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, false /*forResourceSetStart*/, false /*readAllFeedProperties*/);
             Assert.Equal(1, feed.InstanceAnnotations.Count);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.after").Value);
         }
@@ -456,9 +456,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.after\":456}", shouldReadAndValidateCustomInstanceAnnotations: false);
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, false /*forFeedStart*/, false /*readAllFeedProperties*/);
+            deserializer.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, false /*forResourceSetStart*/, false /*readAllFeedProperties*/);
             Assert.Equal(0, feed.InstanceAnnotations.Count);
         }
 
@@ -473,9 +473,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadEntryContent(entryState);
-            Assert.Equal(2, entryState.Entry.InstanceAnnotations.Count);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Entry.InstanceAnnotations.Single(ia => ia.Name == "odataa.unknown").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), entryState.Entry.InstanceAnnotations.Single(ia => ia.Name == "custom.annotation").Value);
+            Assert.Equal(2, entryState.Resource.InstanceAnnotations.Count);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Resource.InstanceAnnotations.Single(ia => ia.Name == "odataa.unknown").Value);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), entryState.Resource.InstanceAnnotations.Single(ia => ia.Name == "custom.annotation").Value);
         }
 
         [Fact]
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadEntryContent(entryState);
-            Assert.Equal(0, entryState.Entry.InstanceAnnotations.Count);
+            Assert.Equal(0, entryState.Resource.InstanceAnnotations.Count);
         }
 
         #endregion Test ReadEntryContent
@@ -509,8 +509,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadEntryContent(entryState);
-            entryState.Entry.Properties.First().InstanceAnnotations.Count.Should().Be(1);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Entry.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "custom.annotation").Value);
+            entryState.Resource.Properties.First().InstanceAnnotations.Count.Should().Be(1);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Resource.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "custom.annotation").Value);
         }
 
         [Fact]
@@ -520,10 +520,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadEntryContent(entryState);
-            entryState.Entry.Properties.First().InstanceAnnotations.Count.Should().Be(3);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), entryState.Entry.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Entry.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.2").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("annotation"), entryState.Entry.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.3").Value);
+            entryState.Resource.Properties.First().InstanceAnnotations.Count.Should().Be(3);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), entryState.Resource.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Resource.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.2").Value);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("annotation"), entryState.Resource.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.3").Value);
         }
 
         [Fact]
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadEntryContent(entryState);
-            entryState.Entry.Properties.First().InstanceAnnotations.Count.Should().Be(0);
+            entryState.Resource.Properties.First().InstanceAnnotations.Count.Should().Be(0);
         }
 
         #endregion
@@ -557,10 +557,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 /*urlResolver*/ null);
         }
 
-        private ODataJsonLightEntryAndFeedDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool isIeee754Compatible = false)
+        private ODataJsonLightResourceDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool isIeee754Compatible = false)
         {
             var inputContext = this.CreateJsonLightInputContext(payload, shouldReadAndValidateCustomInstanceAnnotations, isIeee754Compatible);
-            return new ODataJsonLightEntryAndFeedDeserializer(inputContext);
+            return new ODataJsonLightResourceDeserializer(inputContext);
         }
 
         private static void AdvanceReaderToFirstProperty(BufferingJsonReader bufferingJsonReader)

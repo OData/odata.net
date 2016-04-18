@@ -397,7 +397,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             const string entitySetBaseTypeName = "baseType";
             const string entryTypeName = "baseType";
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             this.defaultManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
             entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().BeNull();
             entry.TypeName.Should().Be(entryTypeName);
@@ -415,7 +415,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             const string entitySetBaseTypeName = "baseType";
             const string entryTypeName = "derivedType";
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             this.defaultManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
             entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(entryTypeName);
             entry.TypeName.Should().Be(entryTypeName);
@@ -451,7 +451,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             const string entitySetBaseTypeName = "baseType";
             const string entryTypeName = "baseType";
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             this.allManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
             entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(entryTypeName);
             entry.TypeName.Should().Be(entryTypeName);
@@ -469,7 +469,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             const string entitySetBaseTypeName = "baseType";
             const string entryTypeName = "derivedType";
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             this.allManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
             entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(entryTypeName);
             entry.TypeName.Should().Be(entryTypeName);
@@ -496,7 +496,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void EntryTypeShouldNotBeWrittenForBaseTypeForTheNoneOption()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             this.noneManager.SetTypeName(entry, "baseType", "baseType");
             entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().BeNull(); // annotation must be set with null type name
             entry.TypeName.Should().Be("baseType");
@@ -505,7 +505,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void EntryTypeShouldNotBeWrittenForDerivedTypeForTheNoneOption()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             this.noneManager.SetTypeName(entry, "baseType", "derivedType");
             entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().BeNull(); // annotation must be set with null type name
             entry.TypeName.Should().Be("derivedType");
@@ -654,7 +654,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void FeedNextLinkShouldBeRelativeForAllMetadata()
         {
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             this.allManager.SetNextPageLink(feed, this.tempUri, this.absoluteNextLinkUri);
             feed.NextPageLink.OriginalString.Should().Be(RelativeNextLink);
         }
@@ -662,7 +662,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void FeedNextLinkShouldBeRelativeForMinimalMetadata()
         {
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             this.defaultManager.SetNextPageLink(feed, this.tempUri, this.absoluteNextLinkUri);
             feed.NextPageLink.OriginalString.Should().Be(RelativeNextLink);
         }
@@ -670,7 +670,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void FeedNextLinkShouldBeAbsoluteForNoMetadata()
         {
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             this.noneManager.SetNextPageLink(feed, this.tempUri, this.absoluteNextLinkUri);
             feed.NextPageLink.Should().BeSameAs(this.absoluteNextLinkUri);
         }
@@ -1055,7 +1055,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             foreach (var kind in this.allEntryKinds)
             {
-                (typeof(ODataEntry).GetProperty(kind.ToString()) as object).Should().NotBeNull();
+                (typeof(ODataResource).GetProperty(kind.ToString()) as object).Should().NotBeNull();
             }
         }
 
@@ -1064,7 +1064,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             foreach (var kind in this.allFeedKinds)
             {
-                (typeof(ODataFeed).GetProperty(kind.ToString()) as object).Should().NotBeNull();
+                (typeof(ODataResourceSet).GetProperty(kind.ToString()) as object).Should().NotBeNull();
             }
         }
 
@@ -1082,7 +1082,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             foreach (var kind in this.allNavigationKinds)
             {
-                (typeof(ODataNavigationLink).GetProperty(kind.ToString()) as object).Should().NotBeNull();
+                (typeof(ODataNestedResourceInfo).GetProperty(kind.ToString()) as object).Should().NotBeNull();
             }
         }
 
@@ -1131,15 +1131,15 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
             Action<IEdmEntitySet, ODataMessageWriter> write = (entitySet, writer) =>
             {
-                var feedWriter = writer.CreateODataFeedWriter(entitySet);
-                var feed = new ODataFeed();
+                var feedWriter = writer.CreateODataResourceSetWriter(entitySet);
+                var feed = new ODataResourceSet();
                 feedWriter.WriteStart(feed);
 
                 // ODL requires type name on dynamic complex values, but we can still omit it from the payload using an annotation
                 ODataComplexValue dynamicComplex = new ODataComplexValue { TypeName = "Fake.Complex", };
                 dynamicComplex.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
 
-                var entry = new ODataEntry
+                var entry = new ODataResource
                 {
                     MediaResource = new ODataStreamReferenceValue(),
                     Properties = new[]
@@ -1154,7 +1154,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                 entry.AddAction(new ODataAction { Metadata = new Uri("http://fake.org/$metadata#Action"), Target = new Uri("http://real.org/Action") });
 
                 feedWriter.WriteStart(entry);
-                var navigation = new ODataNavigationLink { Name = "Navigation" };
+                var navigation = new ODataNestedResourceInfo { Name = "Navigation" };
                 feedWriter.WriteStart(navigation);
                 feedWriter.WriteEnd();
                 feedWriter.WriteEnd();
@@ -1273,9 +1273,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             actualPayload.Should().Be(expectedPayload);
         }
 
-        private static void TestEntry<TValue>(Action<ODataEntry> setValue, Func<ODataEntry, TValue> getValue, TValue expectedValue)
+        private static void TestEntry<TValue>(Action<ODataResource> setValue, Func<ODataResource, TValue> getValue, TValue expectedValue)
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             setValue(entry);
             getValue(entry).Should().Be(expectedValue);
         }
@@ -1287,16 +1287,16 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             getValue(streamReference).Should().Be(expectedValue);
         }
 
-        private static void TestNavigationLink<TValue>(Action<ODataNavigationLink> setValue, Func<ODataNavigationLink, TValue> getValue, TValue expectedValue)
+        private static void TestNavigationLink<TValue>(Action<ODataNestedResourceInfo> setValue, Func<ODataNestedResourceInfo, TValue> getValue, TValue expectedValue)
         {
-            var link = new ODataNavigationLink();
+            var link = new ODataNestedResourceInfo();
             setValue(link);
             getValue(link).Should().Be(expectedValue);
         }
 
-        private static void TestFeed<TValue>(Action<ODataFeed> setValue, Func<ODataFeed, TValue> getValue, TValue expectedValue)
+        private static void TestFeed<TValue>(Action<ODataResourceSet> setValue, Func<ODataResourceSet, TValue> getValue, TValue expectedValue)
         {
-            var feed = new ODataFeed();
+            var feed = new ODataResourceSet();
             setValue(feed);
             getValue(feed).Should().Be(expectedValue);
         }

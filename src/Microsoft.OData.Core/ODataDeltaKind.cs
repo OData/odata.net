@@ -15,12 +15,12 @@ namespace Microsoft.OData.Core
         None,
 
         /// <summary>Delta feed</summary>
-        Feed,
+        ResourceSet,
 
-        /// <summary>Delta entry</summary>
-        Entry,
+        /// <summary>Delta resource</summary>
+        Resource,
 
-        /// <summary>Delta deleted entry</summary>
+        /// <summary>Delta deleted resource</summary>
         DeletedEntry,
 
         /// <summary>Delta link</summary>

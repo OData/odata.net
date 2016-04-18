@@ -19,7 +19,7 @@ namespace AstoriaUnitTests.Tests
     {
         private static readonly Uri MetadataDocumentUri = new Uri("http://http://temp.org/$metadata");
         private static readonly ODataMessageWriterSettings Settings = new ODataMessageWriterSettings();
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
             NavigationSourceEntityTypeName = "Null",
             NavigationSourceName = "MySet",
@@ -58,7 +58,7 @@ namespace AstoriaUnitTests.Tests
             var message = new SimpleResponseMessage(this.StatusCode, this.ContentType);
             using (var writer = new ODataMessageWriter(message, Settings))
             {
-                WriteEntry(writer.CreateODataEntryWriter(), entity, projectedProperties);
+                WriteEntry(writer.CreateODataResourceWriter(), entity, projectedProperties);
             }
 
             return message.GetMessageString();
@@ -69,8 +69,8 @@ namespace AstoriaUnitTests.Tests
             var message = new SimpleResponseMessage(this.StatusCode, this.ContentType);
             using (var writer = new ODataMessageWriter(message, Settings))
             {
-                var feedWriter = writer.CreateODataFeedWriter();
-                feedWriter.WriteStart(new ODataFeed() { Id = new Uri("http://temp.org/feed"), SerializationInfo = MySerializationInfo });
+                var feedWriter = writer.CreateODataResourceSetWriter();
+                feedWriter.WriteStart(new ODataResourceSet() { Id = new Uri("http://temp.org/feed"), SerializationInfo = MySerializationInfo });
                 foreach (var entity in entities)
                 {
                     WriteEntry(feedWriter, entity, projectedProperties);
@@ -84,7 +84,7 @@ namespace AstoriaUnitTests.Tests
 
         private static void WriteEntry(ODataWriter writer, object entity, IEnumerable<string> projectedProperties)
         {
-            var entry = new ODataEntry()
+            var entry = new ODataResource()
             {
                 Id = new Uri("http://temp.org/" + Guid.NewGuid()),
                 SerializationInfo = MySerializationInfo

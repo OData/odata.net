@@ -18,8 +18,8 @@ namespace Microsoft.OData.Core
     /// </summary>
     public sealed class ODataStreamReferenceValue : ODataValue
     {
-        /// <summary>the metadata builder for this OData entry.</summary>
-        private ODataEntityMetadataBuilder metadataBuilder;
+        /// <summary>the metadata builder for this OData resource.</summary>
+        private ODataResourceMetadataBuilder metadataBuilder;
 
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="builder">The metadata builder used to compute values from model annotations.</param>
         /// <param name="propertyName">The property name for the named stream; null for the default media resource.</param>
-        internal void SetMetadataBuilder(ODataEntityMetadataBuilder builder, string propertyName)
+        internal void SetMetadataBuilder(ODataResourceMetadataBuilder builder, string propertyName)
         {
             this.metadataBuilder = builder;
             this.edmPropertyName = propertyName;
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Core
         /// Gets the metadata builder for this stream reference value.
         /// </summary>
         /// <returns>The metadata builder used to compute links.</returns>
-        internal ODataEntityMetadataBuilder GetMetadataBuilder()
+        internal ODataResourceMetadataBuilder GetMetadataBuilder()
         {
             return this.metadataBuilder;
         }

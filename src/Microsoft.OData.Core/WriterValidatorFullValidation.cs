@@ -73,13 +73,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an entry in an expanded link to make sure the entity types match.
+        /// Validates a resource in an expanded link to make sure the entity types match.
         /// </summary>
-        /// <param name="entryEntityType">The <see cref="IEdmEntityType"/> of the entry.</param>
+        /// <param name="resourceType">The <see cref="IEdmEntityType"/> of the resource.</param>
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        public void ValidateEntryInExpandedLink(IEdmEntityType entryEntityType, IEdmEntityType parentNavigationPropertyType)
+        public void ValidateResourceInExpandedLink(IEdmEntityType resourceType, IEdmEntityType parentNavigationPropertyType)
         {
-            WriterValidationUtils.ValidateEntryInExpandedLink(entryEntityType, parentNavigationPropertyType);
+            WriterValidationUtils.ValidateEntryInExpandedLink(resourceType, parentNavigationPropertyType);
         }
 
         /// <summary>
@@ -93,31 +93,31 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataFeed"/> to ensure all required information is specified and valid on the WriteEnd call.
+        /// Validates an <see cref="ODataResourceSet"/> to ensure all required information is specified and valid on the WriteEnd call.
         /// </summary>
-        /// <param name="feed">The feed to validate.</param>
+        /// <param name="resourceSet">The feed to validate.</param>
         /// <param name="writingRequest">Flag indicating whether the feed is written as part of a request or a response.</param>
-        public void ValidateFeedAtEnd(ODataFeed feed, bool writingRequest)
+        public void ValidateResourceSetAtEnd(ODataResourceSet resourceSet, bool writingRequest)
         {
-            WriterValidationUtils.ValidateFeedAtEnd(feed, writingRequest);
+            WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, writingRequest);
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataEntry"/> to ensure all required information is specified and valid on WriteStart call.
+        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteStart call.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        public void ValidateEntryAtStart(ODataEntry entry)
+        /// <param name="resource">The resource to validate.</param>
+        public void ValidateResourceAtStart(ODataResource resource)
         {
-            WriterValidationUtils.ValidateEntryAtStart(entry);
+            WriterValidationUtils.ValidateEntryAtStart(resource);
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataEntry"/> to ensure all required information is specified and valid on WriteEnd call.
+        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteEnd call.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        public void ValidateEntryAtEnd(ODataEntry entry)
+        /// <param name="resource">The resource to validate.</param>
+        public void ValidateResourceAtEnd(ODataResource resource)
         {
-            WriterValidationUtils.ValidateEntryAtEnd(entry);
+            WriterValidationUtils.ValidateEntryAtEnd(resource);
         }
 
         /// <summary>
@@ -162,14 +162,14 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataNavigationLink"/> to ensure all required information is specified and valid.
+        /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="navigationLink">The navigation link to validate.</param>
         /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this navigation link or null for deferred links.</param>
         /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
         public IEdmNavigationProperty ValidateNavigationLink(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmEntityType declaringEntityType,
             ODataPayloadKind? expandedPayloadKind)
         {
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Core
         /// Validates that the specified navigation link has a Url.
         /// </summary>
         /// <param name="navigationLink">The navigation link to validate.</param>
-        public void ValidateNavigationLinkUrlPresent(ODataNavigationLink navigationLink)
+        public void ValidateNavigationLinkUrlPresent(ODataNestedResourceInfo navigationLink)
         {
             WriterValidationUtils.ValidateNavigationLinkUrlPresent(navigationLink);
         }
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Core
         /// Validates that the sepcified navigation link has cardinality, that is it has the IsCollection value set.
         /// </summary>
         /// <param name="navigationLink">The navigation link to validate.</param>
-        public void ValidateNavigationLinkHasCardinality(ODataNavigationLink navigationLink)
+        public void ValidateNavigationLinkHasCardinality(ODataNestedResourceInfo navigationLink)
         {
             WriterValidationUtils.ValidateNavigationLinkHasCardinality(navigationLink);
         }

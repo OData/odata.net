@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         public void CreateDeleteEntityWithEnumProperties()
         {
             // construct the request message to create an entity
-            var productEntry = new ODataEntry
+            var productEntry = new ODataResource
             {
                 TypeName = NameSpacePrefix + "Product",
                 Properties = new[]
@@ -82,7 +82,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 requestMessage.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(productSet, productType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(productSet, productType);
                     odataWriter.WriteStart(productEntry);
                     odataWriter.WriteEnd();
                 }
@@ -92,7 +92,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // verify the create
                 Assert.AreEqual(201, responseMessage.StatusCode);
-                ODataEntry entry = this.QueryEntityItem("Products(101)") as ODataEntry;
+                ODataResource entry = this.QueryEntityItem("Products(101)") as ODataResource;
                 ODataEnumValue skinColor = entry.Properties.Single(p => p.Name == "SkinColor").Value as ODataEnumValue;
                 ODataEnumValue userAccess = entry.Properties.Single(p => p.Name == "UserAccess").Value as ODataEnumValue;
                 Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "ProductID").Value);
@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // verify the delete
                 Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-                ODataEntry deletedEntry = this.QueryEntityItem("Products(101)", 204) as ODataEntry;
+                ODataResource deletedEntry = this.QueryEntityItem("Products(101)", 204) as ODataResource;
                 Assert.IsNull(deletedEntry);
             }
         }
@@ -118,10 +118,10 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         public void UpdateEnumProperty()
         {
             // query an entry
-            ODataEntry productEntry = this.QueryEntityItem("Products(5)") as ODataEntry;
+            ODataResource productEntry = this.QueryEntityItem("Products(5)") as ODataResource;
 
             // send a request to update an entry property
-            productEntry = new ODataEntry()
+            productEntry = new ODataResource()
             {
                 TypeName = NameSpacePrefix + "Product",
                 Properties = new[]
@@ -147,7 +147,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(productSet, productType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(productSet, productType);
                     odataWriter.WriteStart(productEntry);
                     odataWriter.WriteEnd();
                 }
@@ -156,7 +156,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // verify the update
                 Assert.AreEqual(204, responseMessage.StatusCode);
-                ODataEntry updatedProduct = this.QueryEntityItem("Products(5)") as ODataEntry;
+                ODataResource updatedProduct = this.QueryEntityItem("Products(5)") as ODataResource;
                 ODataEnumValue skinColor = updatedProduct.Properties.Single(p => p.Name == "SkinColor").Value as ODataEnumValue;
                 ODataEnumValue userAccess = updatedProduct.Properties.Single(p => p.Name == "UserAccess").Value as ODataEnumValue;
                 Assert.AreEqual("Green", skinColor.Value);
@@ -242,10 +242,10 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             item = reader.Item;
                         }

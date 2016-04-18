@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Common
     #endregion Namespaces
 
     /// <summary>
-    /// OData object model validator for the IsCollection property on ODataNavigationLink objects.
+    /// OData object model validator for the IsCollection property on ODataNestedResourceInfo objects.
     /// </summary>
     [ImplementationName(typeof(IODataObjectModelValidator), "NavigationLinkIsCollectionPropertyValidator")]
     public class NavigationLinkIsCollectionPropertyValidator : IODataObjectModelValidator
@@ -44,7 +44,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Common
                 this.assertionHandler = assertionHandler;
             }
 
-            protected override void  VisitNavigationLink(ODataNavigationLink navigationLink)
+            protected override void  VisitNavigationLink(ODataNestedResourceInfo navigationLink)
             {
                 bool? expectedIsCollectionValue;
                 if (this.expectedIsCollectionValues != null && this.expectedIsCollectionValues.TryGetValue(navigationLink.Name, out expectedIsCollectionValue))

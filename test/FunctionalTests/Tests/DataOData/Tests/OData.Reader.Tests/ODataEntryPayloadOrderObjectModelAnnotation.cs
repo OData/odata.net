@@ -48,10 +48,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Adds an ODataNavigationLink to the end of the payload order items.
+        /// Adds an ODataNestedResourceInfo to the end of the payload order items.
         /// </summary>
         /// <param name="navigationLink">The navigation link.</param>
-        public void AddODataNavigationLink(ODataNavigationLink navigationLink)
+        public void AddODataNavigationLink(ODataNestedResourceInfo navigationLink)
         {
             this.AddItem("NavigationLink_" + navigationLink.Name);
         }

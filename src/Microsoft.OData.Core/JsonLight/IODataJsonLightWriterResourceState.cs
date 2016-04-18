@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IODataJsonLightWriterEntryState.cs" company="Microsoft">
+// <copyright file="IODataJsonLightWriterResourceState.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,29 +11,29 @@ namespace Microsoft.OData.Core.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Interface representing a state of the JSON writer for entry.
+    /// Interface representing a state of the JSON writer for resource.
     /// </summary>
-    internal interface IODataJsonLightWriterEntryState
+    internal interface IODataJsonLightWriterResourceState
     {
         /// <summary>
-        /// The entry being written.
+        /// The resource being written.
         /// </summary>
-        ODataEntry Entry { get; }
+        ODataResource Resource { get; }
 
         /// <summary>
-        /// The entity type for the entry (if available)
+        /// The entity type for the resource (if available)
         /// </summary>
-        IEdmEntityType EntityType { get; }
+        IEdmEntityType ResourceType { get; }
 
         /// <summary>
         /// The entity type which was derived from the model (may be either the same as entity type or its base type.
         /// </summary>
-        IEdmEntityType EntityTypeFromMetadata { get; }
+        IEdmEntityType ResourceTypeFromMetadata { get; }
 
         /// <summary>
-        /// The serialization info for the current entry.
+        /// The serialization info for the current resource.
         /// </summary>
-        ODataFeedAndEntrySerializationInfo SerializationInfo { get; }
+        ODataResourceSerializationInfo SerializationInfo { get; }
 
         /// <summary>
         /// Flag which indicates that the odata.editLink metadata property has been written.
@@ -66,11 +66,11 @@ namespace Microsoft.OData.Core.JsonLight
         bool MediaETagWritten { get; set; }
 
         /// <summary>
-        /// Gets or creates the type context to answer basic questions regarding the type info of the entry.
+        /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
         /// </summary>
         /// <param name="model">The Edm model to use.</param>
         /// <param name="writingResponse">True if writing a response payload, false otherwise.</param>
-        /// <returns>The type context to answer basic questions regarding the type info of the entry.</returns>
-        ODataFeedAndEntryTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse);
+        /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
+        ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse);
     }
 }

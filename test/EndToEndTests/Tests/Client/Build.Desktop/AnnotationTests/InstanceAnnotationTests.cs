@@ -49,13 +49,13 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.AreEqual(
                                     true,
                                     (entry.InstanceAnnotations.Single(i => i.Name.Equals(string.Format("{0}.IsBoss", TestModelNameSpace))).Value as ODataPrimitiveValue).Value);
@@ -83,13 +83,13 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
 
                                 // Get Value of Complex Type Property HomeAddress
                                 var complexValue = entry.Properties.Single(p => p.Name.Equals("HomeAddress")).Value as ODataComplexValue;

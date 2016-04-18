@@ -117,11 +117,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void RequestDescriptionPayloadKind_Resource()
         {
             var resourceType = new ResourceType(typeof(object), ResourceTypeKind.EntityType, null, "fake", "fake", false);
-            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, true, false, ODataPayloadKind.Entry);
-            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.Feed);
+            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, true, false, ODataPayloadKind.Resource);
+            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.ResourceSet);
 
             resourceType = new ResourceType(typeof(object), ResourceTypeKind.EntityCollection, "fake", "fake");
-            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.Feed);
+            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.ResourceSet);
         }
 
         [TestMethod]

@@ -148,12 +148,12 @@ namespace Microsoft.OData.Core.JsonLight
                     detectedPayloadKindMatchesExpectation = true;
                 }
             }
-            else if (detectedPayloadKind == ODataPayloadKind.Entry)
+            else if (detectedPayloadKind == ODataPayloadKind.Resource)
             {
-                this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Entry, ODataPayloadKind.Delta };
+                this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Resource, ODataPayloadKind.Delta };
                 if (expectedPayloadKind == ODataPayloadKind.Delta)
                 {
-                    this.parseResult.DeltaKind = ODataDeltaKind.Entry;
+                    this.parseResult.DeltaKind = ODataDeltaKind.Resource;
                     detectedPayloadKindMatchesExpectation = true;
                 }
             }
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core.JsonLight
             string selectQueryOption = this.parseResult.SelectQueryOption;
             if (selectQueryOption != null)
             {
-                if (detectedPayloadKind != ODataPayloadKind.Feed && detectedPayloadKind != ODataPayloadKind.Entry && detectedPayloadKind != ODataPayloadKind.Delta)
+                if (detectedPayloadKind != ODataPayloadKind.ResourceSet && detectedPayloadKind != ODataPayloadKind.Resource && detectedPayloadKind != ODataPayloadKind.Delta)
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption(expectedPayloadKind.ToString()));
                 }
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else if (fragment.EndsWith(ODataConstants.ContextUriDeltaFeed, StringComparison.Ordinal))
             {
-                kind = ODataDeltaKind.Feed;
+                kind = ODataDeltaKind.ResourceSet;
                 fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeltaFeed.Length);
             }
             else if (fragment.EndsWith(ODataConstants.ContextUriDeletedEntry, StringComparison.Ordinal))
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Core.JsonLight
                         // Feed: {schema.entity-container.entity-set} or Singleton: {schema.entity-container.singleton}
                         this.parseResult.NavigationSource = foundNavigationSource;
                         this.parseResult.EdmType = edmTypeResolver.GetElementType(foundNavigationSource);
-                        detectedPayloadKind = foundNavigationSource is IEdmSingleton ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                        detectedPayloadKind = foundNavigationSource is IEdmSingleton ? ODataPayloadKind.Resource : ODataPayloadKind.ResourceSet;
                     }
                     else
                     {
@@ -352,7 +352,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
                     else
                     {
-                        detectedPayloadKind = hasItemSelector ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                        detectedPayloadKind = hasItemSelector ? ODataPayloadKind.Resource : ODataPayloadKind.ResourceSet;
                     }
 
                     if (this.parseResult.EdmType is IEdmCollectionType)
@@ -366,7 +366,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
                 else if (lastSegment is SingletonSegment)
                 {
-                    detectedPayloadKind = ODataPayloadKind.Entry;
+                    detectedPayloadKind = ODataPayloadKind.Resource;
                 }
                 else if (path.IsIndividualProperty())
                 {
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (resolvedType.TypeKind == EdmTypeKind.Entity)
             {
                 this.parseResult.EdmType = resolvedType;
-                return isCollection ? ODataPayloadKind.Feed : ODataPayloadKind.Entry;
+                return isCollection ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
             }
 
             resolvedType = isCollection ? EdmLibraryExtensions.GetCollectionType(resolvedType.ToTypeReference(true /*nullable*/)) : resolvedType;

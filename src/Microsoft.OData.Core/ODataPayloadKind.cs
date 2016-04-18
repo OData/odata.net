@@ -12,10 +12,10 @@ namespace Microsoft.OData.Core
     public enum ODataPayloadKind
     {
         /// <summary>Payload kind for a feed.</summary>
-        Feed = 0,
+        ResourceSet = 0,
 
-        /// <summary>Payload kind for an entry.</summary>
-        Entry = 1,
+        /// <summary>Payload kind for a resource.</summary>
+        Resource = 1,
 
         /// <summary>Payload kind for a property.</summary>
         Property = 2,

@@ -30,7 +30,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             this.TestClientContext.MergeOption = MergeOption.OverwriteChanges;
 
             int expectedPropertyCount = 0;
-            ODataEntry entry = null;
+            ODataResource entry = null;
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding((arg) =>
             {
                 entry = arg.Entry;
@@ -196,7 +196,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             var batchFlags = new SaveChangesOptions[] { SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.BatchWithIndependentOperations };
             foreach (var batchFlag in batchFlags)
             {
-                List<ODataEntry> entries = new List<ODataEntry>();
+                List<ODataResource> entries = new List<ODataResource>();
                 this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding((arg) =>
                 {
                     entries.Add(arg.Entry);
@@ -258,7 +258,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
         public void PostFullProperties()
         {
             int expectedPropertyCount = 0;
-            ODataEntry entry = null;
+            ODataResource entry = null;
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding((arg) =>
             {
                 entry = arg.Entry;
@@ -309,7 +309,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             var batchFlags = new SaveChangesOptions[] { SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.BatchWithIndependentOperations };
             foreach (var batchFlag in batchFlags)
             {
-                List<ODataEntry> entries = new List<ODataEntry>();
+                List<ODataResource> entries = new List<ODataResource>();
                 this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding((arg) =>
                 {
                     entries.Add(arg.Entry);

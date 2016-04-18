@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             IEdmEntitySet peopleSet = model.FindDeclaredEntitySet("People");
             model.SetOptimisticConcurrencyAnnotation(peopleSet, new[] { nameProperty, classProperty });
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             IEdmEntitySet peopleSet = model.FindDeclaredEntitySet("People");
             model.SetOptimisticConcurrencyControlAnnotation(peopleSet, new[] {nameProperty, classProperty});
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             model.AddElement(container);
             IEdmEntitySet peopleSet = model.FindDeclaredEntitySet("People");
 
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             model.SetOptimisticConcurrencyAnnotation(managerSet, new[] { nameProperty, tsProperty });
 
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             model.SetOptimisticConcurrencyControlAnnotation(managerSet, new[] {nameProperty, tsProperty});
 
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -273,7 +273,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             model.AddElement(container);
             IEdmEntitySet peopleSet = model.FindDeclaredEntitySet("People");
 
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -323,7 +323,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             valueAnnotationOnEntitySet.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(valueAnnotationOnEntitySet);
 
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.EdmValueUtils_PropertyDoesntExist("MyNs.Person", "NameName"));
         }
 
-        private string GetWriterOutputForContentTypeAndKnobValue(ODataEntry entry, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType)
+        private string GetWriterOutputForContentTypeAndKnobValue(ODataResource entry, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
@@ -350,7 +350,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             string output;
             using (var messageWriter = new ODataMessageWriter(message, settings, model))
             {
-                ODataWriter writer = messageWriter.CreateODataEntryWriter(entitySet, entityType);
+                ODataWriter writer = messageWriter.CreateODataResourceWriter(entitySet, entityType);
                 writer.WriteStart(entry);
                 writer.WriteEnd();
                 outputStream.Seek(0, SeekOrigin.Begin);

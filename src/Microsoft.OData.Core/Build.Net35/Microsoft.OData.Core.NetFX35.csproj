@@ -76,8 +76,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\EdmValueUtils.cs">
       <Link>Microsoft\OData\Core\Evaluation\EdmValueUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\IODataEntryMetadataContext.cs">
-      <Link>Microsoft\OData\Core\Evaluation\IODataEntryMetadataContext.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\IODataResourceMetadataContext.cs">
+      <Link>Microsoft\OData\Core\Evaluation\IODataResourceMetadataContext.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\KeySerializer.cs">
       <Link>Microsoft\OData\Core\Evaluation\KeySerializer.cs</Link>
@@ -85,11 +85,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\LiteralFormatter.cs">
       <Link>Microsoft\OData\Core\Evaluation\LiteralFormatter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\NoOpEntityMetadataBuilder.cs">
-      <Link>Microsoft\OData\Core\Evaluation\NoOpEntityMetadataBuilder.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\NoOpResourceMetadataBuilder.cs">
+      <Link>Microsoft\OData\Core\Evaluation\NoOpResourceMetadataBuilder.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataConventionalEntityMetadataBuilder.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataConventionalEntityMetadataBuilder.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataConventionalResourceMetadataBuilder.cs">
+      <Link>Microsoft\OData\Core\Evaluation\ODataConventionalResourceMetadataBuilder.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataConventionalUriBuilder.cs">
       <Link>Microsoft\OData\Core\Evaluation\ODataConventionalUriBuilder.cs</Link>
@@ -106,11 +106,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEdmValueUtils.cs">
       <Link>Microsoft\OData\Core\Evaluation\ODataEdmValueUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEntityMetadataBuilder.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataEntityMetadataBuilder.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataResourceMetadataBuilder.cs">
+      <Link>Microsoft\OData\Core\Evaluation\ODataResourceMetadataBuilder.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEntryMetadataContext.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataEntryMetadataContext.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataResourceMetadataContext.cs">
+      <Link>Microsoft\OData\Core\Evaluation\ODataResourceMetadataContext.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataMetadataContext.cs">
       <Link>Microsoft\OData\Core\Evaluation\ODataMetadataContext.cs</Link>
@@ -127,8 +127,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ExceptionUtils.cs">
       <Link>Microsoft\OData\Core\ExceptionUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\FeedWithoutExpectedTypeValidator.cs">
-      <Link>Microsoft\OData\Core\FeedWithoutExpectedTypeValidator.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ResourceSetWithoutExpectedTypeValidator.cs">
+      <Link>Microsoft\OData\Core\ResourceSetWithoutExpectedTypeValidator.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\GeographyTypeConverter.cs">
       <Link>Microsoft\OData\Core\GeographyTypeConverter.cs</Link>
@@ -151,8 +151,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\IODataBatchOperationListener.cs">
       <Link>Microsoft\OData\Core\IODataBatchOperationListener.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataFeedAndEntryTypeContext.cs">
-      <Link>Microsoft\OData\Core\IODataFeedAndEntryTypeContext.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataResourceTypeContext.cs">
+      <Link>Microsoft\OData\Core\IODataResourceTypeContext.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\IODataOutputInStreamErrorListener.cs">
       <Link>Microsoft\OData\Core\IODataOutputInStreamErrorListener.cs</Link>
@@ -187,14 +187,14 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\InternalErrorCodesCommon.cs">
       <Link>Microsoft\OData\Core\InternalErrorCodesCommon.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightReaderEntryState.cs">
-      <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightReaderEntryState.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightReaderResourceState.cs">
+      <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightReaderResourceState.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightValueSerializer.cs">
       <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightValueSerializer.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightWriterEntryState.cs">
-      <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightWriterEntryState.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightWriterResourceState.cs">
+      <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightWriterResourceState.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonFullMetadataLevel.cs">
       <Link>Microsoft\OData\Core\JsonLight\JsonFullMetadataLevel.cs</Link>
@@ -262,11 +262,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightEntityReferenceLinkSerializer.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightEntityReferenceLinkSerializer.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightEntryAndFeedDeserializer.cs">
-      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightEntryAndFeedDeserializer.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightResourceDeserializer.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightResourceDeserializer.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightEntryAndFeedSerializer.cs">
-      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightEntryAndFeedSerializer.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightResourceSerializer.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightResourceSerializer.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightErrorDeserializer.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightErrorDeserializer.cs</Link>
@@ -583,11 +583,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataDeltaDeletedLink.cs">
       <Link>Microsoft\OData\Core\ODataDeltaDeletedLink.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataDeltaFeed.cs">
-      <Link>Microsoft\OData\Core\ODataDeltaFeed.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataDeltaResourceSet.cs">
+      <Link>Microsoft\OData\Core\ODataDeltaResourceSet.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataDeltaFeedSerializationInfo.cs">
-      <Link>Microsoft\OData\Core\ODataDeltaFeedSerializationInfo.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataDeltaResourceSetSerializationInfo.cs">
+      <Link>Microsoft\OData\Core\ODataDeltaResourceSetSerializationInfo.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataDeltaKind.cs">
       <Link>Microsoft\OData\Core\ODataDeltaKind.cs</Link>
@@ -622,8 +622,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataEntitySetInfo.cs">
       <Link>Microsoft\OData\Core\ODataEntitySetInfo.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataEntry.cs">
-      <Link>Microsoft\OData\Core\ODataEntry.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataResource.cs">
+      <Link>Microsoft\OData\Core\ODataResource.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataEnumValue.cs">
       <Link>Microsoft\OData\Core\ODataEnumValue.cs</Link>
@@ -637,17 +637,17 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataException.cs">
       <Link>Microsoft\OData\Core\ODataException.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataFeed.cs">
-      <Link>Microsoft\OData\Core\ODataFeed.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataResourceSet.cs">
+      <Link>Microsoft\OData\Core\ODataResourceSet.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataFeedAndEntrySerializationInfo.cs">
-      <Link>Microsoft\OData\Core\ODataFeedAndEntrySerializationInfo.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataResourceSerializationInfo.cs">
+      <Link>Microsoft\OData\Core\ODataResourceSerializationInfo.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataFeedAndEntryTypeContext.cs">
-      <Link>Microsoft\OData\Core\ODataFeedAndEntryTypeContext.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataResourceTypeContext.cs">
+      <Link>Microsoft\OData\Core\ODataResourceTypeContext.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataFeedBase.cs">
-      <Link>Microsoft\OData\Core\ODataFeedBase.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataResourceSetBase.cs">
+      <Link>Microsoft\OData\Core\ODataResourceSetBase.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataFormat.cs">
       <Link>Microsoft\OData\Core\ODataFormat.cs</Link>
@@ -712,8 +712,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMetadataOutputContext.cs">
       <Link>Microsoft\OData\Core\ODataMetadataOutputContext.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataNavigationLink.cs">
-      <Link>Microsoft\OData\Core\ODataNavigationLink.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataNestedResourceInfo.cs">
+      <Link>Microsoft\OData\Core\ODataNestedResourceInfo.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataNullValue.cs">
       <Link>Microsoft\OData\Core\ODataNullValue.cs</Link>

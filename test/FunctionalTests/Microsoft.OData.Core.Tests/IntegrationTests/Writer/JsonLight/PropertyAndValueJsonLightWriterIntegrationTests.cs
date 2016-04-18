@@ -48,7 +48,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = new EdmEntitySet(container, "MyTestEntitySet", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 Id = new Uri("http://mytest"),
                 TypeName = "NS.MyTestEntity",
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -243,7 +243,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -343,7 +343,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             write.ShouldThrow<ODataException>().WithMessage("The value of type 'System.UInt64' is not supported and cannot be converted to a JSON representation.");
         }
 
-        private string WriterEntry(IEdmModel userModel, ODataEntry entry, EdmEntitySet entitySet, IEdmEntityType entityType, bool fullMetadata = false)
+        private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType, bool fullMetadata = false)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
 
@@ -420,7 +420,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             using (var msgReader = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, userModel))
             {
-                var writer = msgReader.CreateODataEntryWriter(entitySet, entityType);
+                var writer = msgReader.CreateODataResourceWriter(entitySet, entityType);
                 writer.WriteStart(entry);
                 writer.WriteEnd();
             }

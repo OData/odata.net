@@ -61,7 +61,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits a feed item.
             /// </summary>
             /// <param name="feed">The feed to visit.</param>
-            protected override void VisitFeed(ODataFeed feed)
+            protected override void VisitFeed(ODataResourceSet feed)
             {
                 this.ValidateUri(feed.NextPageLink);
                 base.VisitFeed(feed);
@@ -71,7 +71,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits an entry item.
             /// </summary>
             /// <param name="entry">The entry to visit.</param>
-            protected override void VisitEntry(ODataEntry entry)
+            protected override void VisitEntry(ODataResource entry)
             {
                 this.ValidateUri(entry.EditLink);
                 this.ValidateUri(entry.ReadLink);
@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits a navigation link item.
             /// </summary>
             /// <param name="navigationLink">The navigation link to visit.</param>
-            protected override void VisitNavigationLink(ODataNavigationLink navigationLink)
+            protected override void VisitNavigationLink(ODataNestedResourceInfo navigationLink)
             {
                 this.ValidateUri(navigationLink.Url);
                 base.VisitNavigationLink(navigationLink);

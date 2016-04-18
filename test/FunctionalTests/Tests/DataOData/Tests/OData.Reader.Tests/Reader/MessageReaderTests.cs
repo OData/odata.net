@@ -165,8 +165,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateFeedReader method in regard to argument validation.")]
-        public void CreateFeedReaderArgumentTest()
+        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateResourceSetReader method in regard to argument validation.")]
+        public void CreateResourceSetReaderArgumentTest()
         {
             IEdmEntityType entityType = null;
             IEdmComplexType complexType = null;
@@ -180,15 +180,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     using (ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, null, testConfiguration))
                     {
                         this.Assert.ExpectedException(
-                            () => messageReader.CreateODataFeedReader(entityType),
+                            () => messageReader.CreateODataResourceSetReader(entityType),
                             ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "expectedBaseEntityType"),
                             this.ExceptionVerifier);
                     }
                 });
         }
 
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateEntryReader method in regard to argument validation.")]
-        public void CreateEntryReaderArgumentTest()
+        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateResourceReader method in regard to argument validation.")]
+        public void CreateResourceReaderArgumentTest()
         {
             IEdmEntityType entityType = null;
             IEdmComplexType complexType = null;
@@ -201,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     TestMessage message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration);
                     ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, null, testConfiguration);
                     this.Assert.ExpectedException(
-                        () => messageReader.CreateODataEntryReader(entityType),
+                        () => messageReader.CreateODataResourceReader(entityType),
                         ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "entityType"),
                         this.ExceptionVerifier);
                 });

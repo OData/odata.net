@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataFeedAndEntrySerializationInfo.cs" company="Microsoft">
+// <copyright file="ODataResourceSerializationInfo.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,12 +9,12 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Class to provide additional serialization information to the <see cref="ODataWriter"/> for an <see cref="ODataEntry"/>.
+    /// Class to provide additional serialization information to the <see cref="ODataWriter"/> for an <see cref="ODataResource"/>.
     /// </summary>
-    public sealed class ODataFeedAndEntrySerializationInfo
+    public sealed class ODataResourceSerializationInfo
     {
         /// <summary>
-        /// The navigation source name of the entry to be written. Should be fully qualified if the navigation source is not in the default container.
+        /// The navigation source name of the resource to be written. Should be fully qualified if the navigation source is not in the default container.
         /// </summary>
         private string navigationSourceName;
 
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core
         private string expectedTypeName;
 
         /// <summary>
-        /// The navigation source name of the entry to be written. Should be fully qualified if the navigation source is not in the default container.
+        /// The navigation source name of the resource to be written. Should be fully qualified if the navigation source is not in the default container.
         /// </summary>
         public string NavigationSourceName
         {
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core
         public EdmNavigationSourceKind NavigationSourceKind { get; set; }
 
         /// <summary>
-        /// The flag we use to identify if the current entry is from a navigation property with collection type or not.
+        /// The flag we use to identify if the current resource is from a navigation property with collection type or not.
         /// </summary>
         public bool IsFromCollection { get; set; }
 
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="serializationInfo">The serialization info instance to validate.</param>
         /// <returns>The <paramref name="serializationInfo"/> instance.</returns>
-        internal static ODataFeedAndEntrySerializationInfo Validate(ODataFeedAndEntrySerializationInfo serializationInfo)
+        internal static ODataResourceSerializationInfo Validate(ODataResourceSerializationInfo serializationInfo)
         {
             if (serializationInfo != null)
             {

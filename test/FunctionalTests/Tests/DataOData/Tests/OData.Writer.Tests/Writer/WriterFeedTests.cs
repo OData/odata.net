@@ -107,12 +107,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             IEdmModel edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
 
-            ODataFeed cityFeed = ObjectModelUtils.CreateDefaultFeed();
-            ODataEntry cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
-            ODataNavigationLink cityHallCollectionLink = ObjectModelUtils.CreateDefaultCollectionLink("CityHall");
-            ODataNavigationLink policeStationSingletonLink = ObjectModelUtils.CreateDefaultSingletonLink("PoliceStation");
-            ODataFeed officeFeed = ObjectModelUtils.CreateDefaultFeed();
-            ODataEntry officeEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeType");
+            ODataResourceSet cityFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
+            ODataNestedResourceInfo cityHallCollectionLink = ObjectModelUtils.CreateDefaultCollectionLink("CityHall");
+            ODataNestedResourceInfo policeStationSingletonLink = ObjectModelUtils.CreateDefaultSingletonLink("PoliceStation");
+            ODataResourceSet officeFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource officeEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeType");
 
             var container = edmModel.FindEntityContainer("DefaultContainer");
             var citySet = container.FindEntitySet("Cities") as EdmEntitySet;
@@ -205,14 +205,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test feed payloads with next link value set after writing Feed Start.")]
-        public void SetNextLinkAfterFeedStartTests()
+        public void SetNextLinkAfterResourceSetStartTests()
         {
             var testPayloads = this.CreateFeedNextLinkDescriptors().ToArray();
             foreach (var descriptor in testPayloads)
             {
                 // Replace each feed with one without the next link value, and an action to write it back
                 // after writing Feed Start.
-                var nextLink = new Uri(descriptor.PayloadItems.OfType<ODataFeed>().Single().NextPageLink.OriginalString);
+                var nextLink = new Uri(descriptor.PayloadItems.OfType<ODataResourceSet>().Single().NextPageLink.OriginalString);
                 var newFeed = ObjectModelUtils.CreateDefaultFeed().WithAnnotation(new WriteFeedCallbacksAnnotation { AfterWriteStartCallback = (f) => f.NextPageLink = nextLink });
                 descriptor.PayloadItems = new ReadOnlyCollection<ODataItem>(new List<ODataItem> { newFeed });
             }
@@ -252,7 +252,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test feeds with invalid content.")]
         public void FeedInvalidContentTests()
         {
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
 
             ODataItem[] invalidPayload1 = new ODataItem[] { defaultFeed, defaultFeed };
 
@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new
                     {
                         Items = invalidPayload1,
-                        ExpectedError = "Cannot transition from state 'Feed' to state 'Feed'. The only valid action in state 'Feed' is to write an entry."
+                        ExpectedError = "Cannot transition from state 'ResourceSet' to state 'ResourceSet'. The only valid action in state 'ResourceSet' is to write a resource."
                     }
                 };
 
@@ -464,7 +464,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 model = new EdmModel();
             }
 
-            ODataFeed feed = ObjectModelUtils.CreateDefaultFeed("CustomersSet", "CustomerType", model);
+            ODataResourceSet resourceCollection = ObjectModelUtils.CreateDefaultFeed("CustomersSet", "CustomerType", model);
 
             EdmEntitySet customerSet = null;
             EdmEntityType customerType = null;
@@ -510,9 +510,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private PayloadWriterTestDescriptor<ODataItem>[] CreateFeedQueryCountDescriptors()
         {
-            Func<long?, ODataFeed> feedCreator = (c) =>
+            Func<long?, ODataResourceSet> feedCreator = (c) =>
             {
-                ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                 feed.Count = c;
                 return feed;
             };
@@ -520,7 +520,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             long?[] counts = new long?[] { 0, 1, 2, 1000, -1 - 10, long.MaxValue, long.MinValue, null };
 
             EdmModel model = new EdmModel();
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata("DefaultEntitySet", "DefaultEntityType", model);
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata("DefaultEntitySet", "DefaultEntityType", model);
 
             var container = model.FindEntityContainer("DefaultContainer");
             var entitySet = container.FindEntitySet("DefaultEntitySet") as EdmEntitySet;
@@ -590,16 +590,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 "http://my.customers.com/?$filter=geo.distance(Point,%20geometry'SRID=0;Point(6.28E%2B3%20-2.1e%2B4)')%20eq%20null",
             };
 
-            Func<string, ODataFeed> feedCreator = (nextLink) =>
+            Func<string, ODataResourceSet> feedCreator = (nextLink) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
-                    feed.NextPageLink = new Uri(nextLink);
-                    return feed;
+                    ODataResourceSet resourceCollection = ObjectModelUtils.CreateDefaultFeed();
+                    resourceCollection.NextPageLink = new Uri(nextLink);
+                    return resourceCollection;
                 };
 
             EdmModel model = new EdmModel();
 
-            ODataFeed dummyFeed = ObjectModelUtils.CreateDefaultFeed("CustomersSet", "CustomerType", model);
+            ODataResourceSet dummyFeed = ObjectModelUtils.CreateDefaultFeed("CustomersSet", "CustomerType", model);
 
             var container = model.FindEntityContainer("DefaultContainer");
             var customerSet = container.FindEntitySet("CustomersSet") as EdmEntitySet;
@@ -647,7 +647,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 model = new EdmModel();
             }
 
-            ODataFeed feed = ObjectModelUtils.CreateDefaultFeed("CustomersSet", "CustomerType", model);
+            ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed("CustomersSet", "CustomerType", model);
 
             EdmEntitySet customerSet = null;
             EdmEntityType customerType = null;

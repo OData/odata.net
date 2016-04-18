@@ -219,16 +219,16 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 
             var responseMessage = requestMessage.GetResponse();
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, this.model))
             {
-                var reader = messageReader.CreateODataEntryReader();
+                var reader = messageReader.CreateODataResourceReader();
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = (ODataEntry)reader.Item;
+                        entry = (ODataResource)reader.Item;
                     }
                 }
             }

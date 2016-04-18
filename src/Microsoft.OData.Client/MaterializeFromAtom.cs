@@ -100,7 +100,7 @@ namespace Microsoft.OData.Client
         /// <param name="entries">entries that needs to be materialized.</param>
         /// <param name="elementType">result type.</param>
         /// <param name="format">The format of the response being materialized from.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataEntry> entries, Type elementType, ODataFormat format)
+        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;

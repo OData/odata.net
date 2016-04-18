@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// The navigation link to report.
         /// </summary>
-        private readonly ODataNavigationLink navigationLink;
+        private readonly ODataNestedResourceInfo navigationLink;
 
         /// <summary>
         /// The navigation property for which the link will be reported.
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// The expanded feed for expanded navigation link to be reported.
         /// </summary>
-        private ODataFeed expandedFeed;
+        private ODataResourceSet expandedFeed;
 
         /// <summary>
         /// List of entity reference links to be reported to the navigation link.
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="navigationLink">The navigation link to report.</param>
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
         /// <param name="isExpanded">true if the navigation link is expanded.</param>
-        private ODataJsonLightReaderNavigationLinkInfo(ODataNavigationLink navigationLink, IEdmNavigationProperty navigationProperty, bool isExpanded)
+        private ODataJsonLightReaderNavigationLinkInfo(ODataNestedResourceInfo navigationLink, IEdmNavigationProperty navigationProperty, bool isExpanded)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationProperty == null || navigationProperty.Name == navigationLink.Name, "The name of the navigation link doesn't match the name of the property.");
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// The navigation link to report.
         /// </summary>
-        internal ODataNavigationLink NavigationLink
+        internal ODataNestedResourceInfo NavigationLink
         {
             get
             {
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// The expanded feed for expanded navigation link to be reported.
         /// </summary>
-        internal ODataFeed ExpandedFeed
+        internal ODataResourceSet ExpandedFeed
         {
             get
             {
@@ -125,24 +125,24 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
         /// <returns>The navigation link info created.</returns>
         internal static ODataJsonLightReaderNavigationLinkInfo CreateDeferredLinkInfo(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmNavigationProperty navigationProperty)
         {
             return new ODataJsonLightReaderNavigationLinkInfo(navigationLink, navigationProperty, /*isExpanded*/ false);
         }
 
         /// <summary>
-        /// Creates a navigation link info for an expanded entry link.
+        /// Creates a navigation link info for an expanded resource link.
         /// </summary>
         /// <param name="navigationLink">The navigation link to report.</param>
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
         /// <returns>The navigation link info created.</returns>
         internal static ODataJsonLightReaderNavigationLinkInfo CreateExpandedEntryLinkInfo(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmNavigationProperty navigationProperty)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
-            Debug.Assert(navigationLink.IsCollection == false, "Expanded entry can only be reported for a singleton navigation link.");
+            Debug.Assert(navigationLink.IsCollection == false, "Expanded resource can only be reported for a singleton navigation link.");
 
             ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = new ODataJsonLightReaderNavigationLinkInfo(navigationLink, navigationProperty, /*isExpanded*/ true);
             return navigationLinkInfo;
@@ -156,9 +156,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="expandedFeed">The expanded feed for the navigation link to report.</param>
         /// <returns>The navigation link info created.</returns>
         internal static ODataJsonLightReaderNavigationLinkInfo CreateExpandedFeedLinkInfo(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmNavigationProperty navigationProperty,
-            ODataFeed expandedFeed)
+            ODataResourceSet expandedFeed)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.IsCollection == true, "Expanded feeds can only be reported for collection navigation links.");
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="isExpanded">true if the navigation link is expanded.</param>
         /// <returns>The navigation link info created.</returns>
         internal static ODataJsonLightReaderNavigationLinkInfo CreateSingletonEntityReferenceLinkInfo(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmNavigationProperty navigationProperty,
             ODataEntityReferenceLink entityReferenceLink,
             bool isExpanded)
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="isExpanded">true if the navigation link is expanded.</param>
         /// <returns>The navigation link info created.</returns>
         internal static ODataJsonLightReaderNavigationLinkInfo CreateCollectionEntityReferenceLinksInfo(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmNavigationProperty navigationProperty,
             LinkedList<ODataEntityReferenceLink> entityReferenceLinks,
             bool isExpanded)
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink { Name = navigationProperty.Name, IsCollection = navigationProperty.Type.IsCollection() };
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo { Name = navigationProperty.Name, IsCollection = navigationProperty.Type.IsCollection() };
             ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = new ODataJsonLightReaderNavigationLinkInfo(navigationLink, navigationProperty, /*isExpanded*/ false);
             return navigationLinkInfo;
         }

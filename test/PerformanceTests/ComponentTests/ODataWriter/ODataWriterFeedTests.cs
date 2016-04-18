@@ -91,8 +91,8 @@ namespace Microsoft.OData.Performance
         private void WriterTestMetaProperties(ODataMessageWriter messageWriter, bool expandNavigationLinks, bool includeSpatial, int entryCount)
         {
             #region ODatalib Writer code
-            var writer = messageWriter.CreateODataFeedWriter(TestEntitySet);
-            writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product") });
+            var writer = messageWriter.CreateODataResourceSetWriter(TestEntitySet);
+            writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product") });
 
             for (int i0 = 0; i0 < entryCount; ++i0)
             {
@@ -103,12 +103,12 @@ namespace Microsoft.OData.Performance
                 if (expandNavigationLinks)
                 {
                     #region Nav Prop 1
-                    writer.WriteStart(new ODataNavigationLink { Name = "BillOfMaterials", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/BillOfMaterials") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "BillOfMaterials", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/BillOfMaterials") });
                     for (int i3 = 0; i3 < 10; ++i3)
                     {
                         #region entry 4
-                        var entry4 = new ODataEntry
+                        var entry4 = new ODataResource
                         {
                             Properties = new[]
                             {
@@ -133,11 +133,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 2
-                    writer.WriteStart(new ODataNavigationLink { Name = "BillOfMaterials1", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/BillOfMaterials1") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "BillOfMaterials1", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/BillOfMaterials1") });
                     for (int i6 = 0; i6 < 10; ++i6)
                     {
-                        var entry7 = new ODataEntry
+                        var entry7 = new ODataResource
                         {
                             Properties = new[]
                             {
@@ -160,8 +160,8 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 3
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductModel", IsCollection = false, });
-                    var entry9 = new ODataEntry
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductModel", IsCollection = false, });
+                    var entry9 = new ODataResource
                     {
                         Properties = new[]
                         {
@@ -179,8 +179,8 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 4
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductSubcategory", IsCollection = false, });
-                    var entry11 = new ODataEntry
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductSubcategory", IsCollection = false, });
+                    var entry11 = new ODataResource
                     {
                         Properties = new[]
                         {
@@ -197,8 +197,8 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 5
-                    writer.WriteStart(new ODataNavigationLink { Name = "UnitMeasure", IsCollection = false, });
-                    var entry13 = new ODataEntry
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "UnitMeasure", IsCollection = false, });
+                    var entry13 = new ODataResource
                     {
                         Properties = new[]
                         {
@@ -213,8 +213,8 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 6
-                    writer.WriteStart(new ODataNavigationLink { Name = "UnitMeasure1", IsCollection = false, });
-                    var entry14 = new ODataEntry
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "UnitMeasure1", IsCollection = false, });
+                    var entry14 = new ODataResource
                     {
                         Properties = new[]
                         {
@@ -229,11 +229,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 7
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductCostHistory", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductCostHistory") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductCostHistory", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductCostHistory") });
                     for (int i15 = 0; i15 < 10; ++i15)
                     {
-                        var entry16 = new ODataEntry
+                        var entry16 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -252,11 +252,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 8
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductDocument", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductDocument") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductDocument", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductDocument") });
                     for (int i18 = 0; i18 < 10; ++i18)
                     {
-                        var entry19 = new ODataEntry
+                        var entry19 = new ODataResource
                         {
                             Properties = new[]
                             {
@@ -273,11 +273,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 9
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductInventory", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductInventory") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductInventory", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductInventory") });
                     for (int i22 = 0; i22 < 10; ++i22)
                     {
-                        var entry23 = new ODataEntry
+                        var entry23 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -298,11 +298,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 10
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductListPriceHistory", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductListPriceHistory") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductListPriceHistory", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductListPriceHistory") });
                     for (int i26 = 0; i26 < 10; ++i26)
                     {
-                        var entry27 = new ODataEntry
+                        var entry27 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -321,11 +321,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 11
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductProductPhoto", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductProductPhoto") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductProductPhoto", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductProductPhoto") });
                     for (int i29 = 0; i29 < 10; ++i29)
                     {
-                        var entry30 = new ODataEntry
+                        var entry30 = new ODataResource
                         {
                             Properties = new[]
                             {
@@ -343,11 +343,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 12
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductReview", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductReview") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductReview", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductReview") });
                     for (int i33 = 0; i33 < 10; ++i33)
                     {
-                        var entry34 = new ODataEntry
+                        var entry34 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -369,11 +369,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 13
-                    writer.WriteStart(new ODataNavigationLink { Name = "ProductVendor", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductVendor") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ProductVendor", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ProductVendor") });
                     for (int i36 = 0; i36 < 10; ++i36)
                     {
-                        var entry37 = new ODataEntry
+                        var entry37 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -398,11 +398,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 14
-                    writer.WriteStart(new ODataNavigationLink { Name = "PurchaseOrderDetail", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/PurchaseOrderDetail") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "PurchaseOrderDetail", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/PurchaseOrderDetail") });
                     for (int i40 = 0; i40 < 10; ++i40)
                     {
-                        var entry41 = new ODataEntry
+                        var entry41 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -427,11 +427,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 15
-                    writer.WriteStart(new ODataNavigationLink { Name = "ShoppingCartItem", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ShoppingCartItem") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "ShoppingCartItem", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/ShoppingCartItem") });
                     for (int i44 = 0; i44 < 10; ++i44)
                     {
-                        var entry45 = new ODataEntry
+                        var entry45 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -451,11 +451,11 @@ namespace Microsoft.OData.Performance
                     #endregion Nav Prop 16
 
                     #region Nav Prop 16
-                    writer.WriteStart(new ODataNavigationLink { Name = "SpecialOfferProduct", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/SpecialOfferProduct") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "SpecialOfferProduct", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/SpecialOfferProduct") });
                     for (int i47 = 0; i47 < 10; ++i47)
                     {
-                        var entry48 = new ODataEntry
+                        var entry48 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -473,11 +473,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 17
-                    writer.WriteStart(new ODataNavigationLink { Name = "TransactionHistory", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/TransactionHistory") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "TransactionHistory", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/TransactionHistory") });
                     for (int i51 = 0; i51 < 10; ++i51)
                     {
-                        var entry52 = new ODataEntry
+                        var entry52 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -500,11 +500,11 @@ namespace Microsoft.OData.Performance
                     #endregion
 
                     #region Nav Prop 18
-                    writer.WriteStart(new ODataNavigationLink { Name = "WorkOrder", IsCollection = true, });
-                    writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/WorkOrder") });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "WorkOrder", IsCollection = true, });
+                    writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc/Product(2)/WorkOrder") });
                     for (int i54 = 0; i54 < 10; ++i54)
                     {
-                        var entry55 = new ODataEntry
+                        var entry55 = new ODataResource
                         {
                             Properties = new[]
                                 {
@@ -536,9 +536,9 @@ namespace Microsoft.OData.Performance
             #endregion
         }
 
-        private ODataEntry EntryWithSpatialData()
+        private ODataResource EntryWithSpatialData()
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Properties = new[]
                 {
@@ -616,9 +616,9 @@ namespace Microsoft.OData.Performance
             return entry;
         }
 
-        private ODataEntry EntryWithoutSpatialData()
+        private ODataResource EntryWithoutSpatialData()
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Properties = new[]
                 {

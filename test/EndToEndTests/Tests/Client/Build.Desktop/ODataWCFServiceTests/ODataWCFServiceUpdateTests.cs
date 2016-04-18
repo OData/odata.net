@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void UpsertEntityInstance()
         {
             // create entry and insert
-            var orderEntry = new ODataEntry() { TypeName = NameSpacePrefix + "Order" };
+            var orderEntry = new ODataResource() { TypeName = NameSpacePrefix + "Order" };
             var orderP1 = new ODataProperty { Name = "OrderID", Value = 101 };
             var orderp2 = new ODataProperty { Name = "OrderDate", Value = new DateTimeOffset(new DateTime(2013, 8, 29, 14, 11, 57)) };
             var orderp3 = new ODataProperty
@@ -60,7 +60,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.Method = "PUT";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(orderSet, orderType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(orderSet, orderType);
                 odataWriter.WriteStart(orderEntry);
                 odataWriter.WriteEnd();
             }
@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the insert
             Assert.AreEqual(201, responseMessage.StatusCode);
-            ODataEntry entry = this.QueryEntityItem("Orders(101)") as ODataEntry;
+            ODataResource entry = this.QueryEntityItem("Orders(101)") as ODataResource;
             Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "OrderID").Value);
 
             // delete the entry
@@ -79,7 +79,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the delete
             Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-            ODataEntry deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataEntry;
+            ODataResource deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataResource;
             Assert.IsNull(deletedEntry);
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void InsertDeleteEntityInstance()
         {
             // create entry and insert
-            var orderEntry = new ODataEntry() { TypeName = NameSpacePrefix + "Order" };
+            var orderEntry = new ODataResource() { TypeName = NameSpacePrefix + "Order" };
             var orderP1 = new ODataProperty { Name = "OrderID", Value = 101 };
             var orderp2 = new ODataProperty { Name = "OrderDate", Value = new DateTimeOffset(new DateTime(2013, 8, 29, 14, 11, 57)) };
             var orderp3 = new ODataProperty
@@ -112,7 +112,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.Method = "POST";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(orderSet, orderType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(orderSet, orderType);
                 odataWriter.WriteStart(orderEntry);
                 odataWriter.WriteEnd();
             }
@@ -121,7 +121,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the insert
             Assert.AreEqual(201, responseMessage.StatusCode);
-            ODataEntry entry = this.QueryEntityItem("Orders(101)") as ODataEntry;
+            ODataResource entry = this.QueryEntityItem("Orders(101)") as ODataResource;
             Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "OrderID").Value);
 
             // delete the entry
@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the delete
             Assert.AreEqual(204, deleteResponseMessage.StatusCode);
-            ODataEntry deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataEntry;
+            ODataResource deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataResource;
             Assert.IsNull(deletedEntry);
         }
 
@@ -142,11 +142,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void UpdateEntityInstanceProperty()
         {
             // query an entry
-            ODataEntry customerEntry = this.QueryEntityItem("Customers(1)") as ODataEntry;
+            ODataResource customerEntry = this.QueryEntityItem("Customers(1)") as ODataResource;
             Assert.AreEqual("London", customerEntry.Properties.Single(p => p.Name == "City").Value);
 
             // send a request to update an entry property
-            customerEntry = new ODataEntry() { TypeName = NameSpacePrefix + "Customer" };
+            customerEntry = new ODataResource() { TypeName = NameSpacePrefix + "Customer" };
             customerEntry.Properties = new[] { new ODataProperty { Name = "City", Value = "Seattle" } };
 
             var settings = new ODataMessageWriterSettings();
@@ -162,7 +162,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(customerSet, customerType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(customerSet, customerType);
                 odataWriter.WriteStart(customerEntry);
                 odataWriter.WriteEnd();
             }
@@ -171,7 +171,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             // verify the update
             Assert.AreEqual(204, responseMessage.StatusCode);
-            ODataEntry updatedCustomer = this.QueryEntityItem("Customers(1)") as ODataEntry;
+            ODataResource updatedCustomer = this.QueryEntityItem("Customers(1)") as ODataResource;
             Assert.AreEqual("Seattle", updatedCustomer.Properties.Single(p => p.Name == "City").Value);
         }
 
@@ -189,10 +189,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             item = reader.Item;
                         }

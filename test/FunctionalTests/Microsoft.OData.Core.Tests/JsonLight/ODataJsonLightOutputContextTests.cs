@@ -80,57 +80,57 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #endregion WriteProperty
 
-        #region CreateFeedWriter
+        #region CreateResourceSetWriter
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriter(entitySet:null, entityType:null), "", writingResponse: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet:null, entityType:null), "", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterForResponseWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriter(entitySet: null, entityType: null), "", writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet: null, entityType: null), "", writingResponse: true);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterAsyncForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterAsyncForResponseWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterAsyncForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
         }
-        #endregion CreateFeedWriter
+        #endregion CreateResourceSetWriter
 
-        #region CreateEntryWriter
+        #region CreateResourceWriter
         [Fact]
-        public void ShouldBeAbleToCreateEntryWriterForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceWriterForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriter(navigationSource: null, entityType: null), "", writingResponse: false);
-        }
-
-        [Fact]
-        public void ShouldBeAbleToCreateEntryWriterForResponseWithoutModelAndWithoutSet()
-        {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriter(navigationSource: null, entityType: null), "", writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriter(navigationSource: null, resourceType: null), "", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateEntryWriterAsyncForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceWriterForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriterAsync(navigationSource: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriter(navigationSource: null, resourceType: null), "", writingResponse: true);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateEntryWriterAsyncForResponseWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriterAsync(navigationSource: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
         }
-        #endregion CreateEntryWriter
+
+        [Fact]
+        public void ShouldBeAbleToCreateResourceWriterAsyncForResponseWithoutModelAndWithoutSet()
+        {
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+        }
+        #endregion CreateResourceWriter
 
         #region CreateCollectionWriter
         [Fact]

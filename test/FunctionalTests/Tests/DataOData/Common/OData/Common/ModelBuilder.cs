@@ -510,7 +510,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             ODataPayloadKind payloadKind = payloadElement.GetPayloadKindFromPayloadElement();
             ExceptionUtilities.Assert(
-                payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed,
+                payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet,
                 "Can only determine entity type for entry or feed payloads.");
 
             EntityModelTypeAnnotation typeAnnotation = payloadElement.GetAnnotation<EntityModelTypeAnnotation>();
@@ -522,7 +522,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
 
             string entityTypeName;
-            if (payloadKind == ODataPayloadKind.Entry)
+            if (payloadKind == ODataPayloadKind.Resource)
             {
                 EntityInstance entity = payloadElement as EntityInstance;
                 Debug.Assert(entity != null, "entity != null");

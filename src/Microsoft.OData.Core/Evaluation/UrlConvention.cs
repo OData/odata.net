@@ -239,9 +239,9 @@ namespace Microsoft.OData.Service.Design
         /// </summary>
         /// <param name="keyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
-        /// <param name="typeContext">The type context for the entry or feed being written.</param>
+        /// <param name="typeContext">The type context for the resource or feed being written.</param>
         /// <returns>The convention to use when generating URLs.</returns>
-        internal static UrlConvention ForUserSettingAndTypeContext(bool? keyAsSegment, IODataFeedAndEntryTypeContext typeContext)
+        internal static UrlConvention ForUserSettingAndTypeContext(bool? keyAsSegment, IODataResourceTypeContext typeContext)
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 

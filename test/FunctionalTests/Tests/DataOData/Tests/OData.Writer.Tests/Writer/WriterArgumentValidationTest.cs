@@ -22,12 +22,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataFeed) method")]
+        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataResourceSet) method")]
         public void WriteStartFeedTest()
         {
             ForWriters(true, (writer) =>
             {
-                this.VerifyArgumentNullException(() => writer.WriteStart((ODataFeed)null));
+                this.VerifyArgumentNullException(() => writer.WriteStart((ODataResourceSet)null));
             });
         }
 
@@ -37,17 +37,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             ForWriters(false, (writer) =>
             {
-                this.VerifyArgumentNullException(() => writer.WriteStart((ODataEntry)null));
+                this.VerifyArgumentNullException(() => writer.WriteStart((ODataResource)null));
             });
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataNavigationLink) method")]
+        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataNestedResourceInfo) method")]
         public void WriteStartLinkTest()
         {
             ForWriters(false, (writer) =>
             {
-                this.VerifyArgumentNullException(() => writer.WriteStart((ODataNavigationLink)null));
+                this.VerifyArgumentNullException(() => writer.WriteStart((ODataNestedResourceInfo)null));
             });
         }
 

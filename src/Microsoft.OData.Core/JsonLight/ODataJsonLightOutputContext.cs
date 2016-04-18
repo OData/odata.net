@@ -123,11 +123,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.AssertSynchronous();
 
-            return this.CreateODataFeedWriterImplementation(entitySet, entityType);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, entityType);
         }
 
 #if ODATALIB_ASYNC
@@ -138,41 +138,41 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public override Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataFeedWriterImplementation(entitySet, entityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, entityType));
         }
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
         {
             this.AssertSynchronous();
 
-            return this.CreateODataEntryWriterImplementation(navigationSource, entityType);
+            return this.CreateODataResourceWriterImplementation(navigationSource, resourceType);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public override Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(navigationSource, entityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceWriterImplementation(navigationSource, resourceType));
         }
 #endif
 
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/true);
             this.outputInStreamErrorListener = odataJsonWriter;
@@ -520,12 +520,12 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataEntryWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        private ODataWriter CreateODataResourceWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
             ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingFeed*/false);
             this.outputInStreamErrorListener = odataJsonWriter;

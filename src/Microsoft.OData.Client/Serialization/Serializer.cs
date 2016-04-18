@@ -161,16 +161,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates an ODataEntry for the given EntityDescriptor and fills in its ODataLib metadata.
+        /// Creates an ODataResource for the given EntityDescriptor and fills in its ODataLib metadata.
         /// </summary>
         /// <param name="entityDescriptor">The entity descriptor.</param>
         /// <param name="serverTypeName">Name of the server type.</param>
         /// <param name="entityType">The client-side entity type.</param>
         /// <param name="clientFormat">The current client format.</param>
         /// <returns>An odata entry with its metadata filled in.</returns>
-        internal static ODataEntry CreateODataEntry(EntityDescriptor entityDescriptor, string serverTypeName, ClientTypeAnnotation entityType, DataServiceClientFormat clientFormat)
+        internal static ODataResource CreateODataEntry(EntityDescriptor entityDescriptor, string serverTypeName, ClientTypeAnnotation entityType, DataServiceClientFormat clientFormat)
         {
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
 
             // If the client type name is different from the server type name, then add SerializationTypeNameAnnotation
             // which tells ODataLib to write the type name in the annotation in the payload.
@@ -235,9 +235,9 @@ namespace Microsoft.OData.Client
                             case EdmTypeKind.Entity:
                                 {
                                     Debug.Assert(model.GetClientTypeAnnotation(edmType).ElementType != null, "model.GetClientTypeAnnotation(edmType).ElementType != null");
-                                    ODataEntry entry = this.CreateODataEntryFromEntityOperationParameter(model.GetClientTypeAnnotation(edmType), operationParameter.Value);
+                                    ODataResource entry = this.CreateODataEntryFromEntityOperationParameter(model.GetClientTypeAnnotation(edmType), operationParameter.Value);
                                     Debug.Assert(entry != null, "entry != null");
-                                    var entryWriter = parameterWriter.CreateEntryWriter(operationParameter.Name);
+                                    var entryWriter = parameterWriter.CreateResourceWriter(operationParameter.Name);
                                     entryWriter.WriteStart(entry);
                                     entryWriter.WriteEnd();
                                     break;
@@ -377,7 +377,7 @@ namespace Microsoft.OData.Client
                     end.ContentGeneratedForSave = true;
                     Debug.Assert(null != end.Target, "null is DELETE");
 
-                    ODataNavigationLink navigationLink = new ODataNavigationLink();
+                    ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo();
                     navigationLink.Url = this.requestInfo.EntityTracker.GetEntityDescriptor(end.Target).GetLatestEditLink();
                     Debug.Assert(Uri.IsWellFormedUriString(UriUtil.UriToString(navigationLink.Url), UriKind.Absolute), "Uri.IsWellFormedUriString(targetEditLink, UriKind.Absolute)");
 
@@ -562,8 +562,8 @@ namespace Microsoft.OData.Client
 
             if (edmCollectionType.ElementType.TypeKind() == EdmTypeKind.Entity)
             {
-                ODataWriter feedWriter = parameterWriter.CreateFeedWriter(operationParameter.Name);
-                feedWriter.WriteStart(new ODataFeed());
+                ODataWriter feedWriter = parameterWriter.CreateResourceSetWriter(operationParameter.Name);
+                feedWriter.WriteStart(new ODataResourceSet());
 
                 IEnumerator enumerator = ((ICollection)operationParameter.Value).GetEnumerator();
 
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Client
                     }
 
                     Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
-                    ODataEntry entry = this.CreateODataEntryFromEntityOperationParameter(model.GetClientTypeAnnotation(edmItemType), collectionItem);
+                    ODataResource entry = this.CreateODataEntryFromEntityOperationParameter(model.GetClientTypeAnnotation(edmItemType), collectionItem);
                     Debug.Assert(entry != null, "entry != null");
                     feedWriter.WriteStart(entry);
                     feedWriter.WriteEnd();
@@ -689,8 +689,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Converts the object to ODataValue, the result could be null, the original primitive object, ODataNullValue,
-        /// ODataEnumValue, ODataCollectionValue, ODataEntry, ODataEntityReferenceLinks, ODataEntityReferenceLinks, or
-        /// a list of ODataEntry.
+        /// ODataEnumValue, ODataCollectionValue, ODataResource, ODataEntityReferenceLinks, ODataEntityReferenceLinks, or
+        /// a list of ODataResource.
         /// </summary>
         /// <param name="paramName">The name of the <see cref="UriOperationParameter"/>. Used for error reporting.</param>
         /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
@@ -783,7 +783,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Converts the object to ODataCollectionValue, ODataEntityReferenceLinks, or
-        /// a list of ODataEntry.
+        /// a list of ODataResource.
         /// </summary>
         /// <param name="paramName">The name of the <see cref="UriOperationParameter"/>. Used for error reporting.</param>
         /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
@@ -833,7 +833,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Converts the object to ODataEntry or ODataEntityReferenceLink.
+        /// Converts the object to ODataResource or ODataEntityReferenceLink.
         /// </summary>
         /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
         /// <param name="elementType">The type of the value</param>
@@ -847,7 +847,7 @@ namespace Microsoft.OData.Client
             {
                 valueInODataFormat = this.propertyConverter.CreateODataEntry(elementType, value);
 
-                ODataEntry entry = (ODataEntry)valueInODataFormat;
+                ODataResource entry = (ODataResource)valueInODataFormat;
                 SerializationTypeNameAnnotation serializedTypeNameAnnotation =
                     entry.GetAnnotation<SerializationTypeNameAnnotation>();
                 if (serializedTypeNameAnnotation == null ||
@@ -870,12 +870,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates an ODataEntry using some properties extracted from an entity operation parameter.
+        /// Creates an ODataResource using some properties extracted from an entity operation parameter.
         /// </summary>
         /// <param name="clientTypeAnnotation">The client type annotation of the entity.</param>
         /// <param name="parameterValue">The Clr value of the entity.</param>
-        /// <returns>The ODataEntry created.</returns>
-        private ODataEntry CreateODataEntryFromEntityOperationParameter(ClientTypeAnnotation clientTypeAnnotation, object parameterValue)
+        /// <returns>The ODataResource created.</returns>
+        private ODataResource CreateODataEntryFromEntityOperationParameter(ClientTypeAnnotation clientTypeAnnotation, object parameterValue)
         {
             ClientPropertyAnnotation[] properties = new ClientPropertyAnnotation[0];
             if (sendOption == EntityParameterSendOption.SendOnlySetProperties)

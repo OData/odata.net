@@ -44,7 +44,7 @@ namespace Microsoft.OData.Client
         /// <returns>The odata Writer Wrapper</returns>
         internal static ODataWriterWrapper CreateForEntry(ODataMessageWriter messageWriter, DataServiceClientRequestPipelineConfiguration requestPipeline)
         {
-            return new ODataWriterWrapper(messageWriter.CreateODataEntryWriter(), requestPipeline);
+            return new ODataWriterWrapper(messageWriter.CreateODataResourceWriter(), requestPipeline);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void WriteStart(ODataEntry entry, object entity)
+        internal void WriteStart(ODataResource entry, object entity)
         {
             this.requestPipeline.ExecuteOnEntryStartActions(entry, entity);
             this.odataWriter.WriteStart(entry);
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void WriteEnd(ODataEntry entry, object entity)
+        internal void WriteEnd(ODataResource entry, object entity)
         {
             this.requestPipeline.ExecuteOnEntryEndActions(entry, entity);
             this.odataWriter.WriteEnd();
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Client
         /// <param name="navlink">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void WriteEnd(ODataNavigationLink navlink, object source, object target)
+        internal void WriteEnd(ODataNestedResourceInfo navlink, object source, object target)
         {
             this.requestPipeline.ExecuteOnNavigationLinkEndActions(navlink, source, target);
             this.odataWriter.WriteEnd();
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Client
         /// <param name="navlink">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void WriteNavigationLinkEnd(ODataNavigationLink navlink, object source, object target)
+        internal void WriteNavigationLinkEnd(ODataNestedResourceInfo navlink, object source, object target)
         {
             this.requestPipeline.ExecuteOnNavigationLinkEndActions(navlink, source, target);
         }
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Client
         /// <param name="navigationLink">The navigation link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void WriteStart(ODataNavigationLink navigationLink, object source, object target)
+        internal void WriteStart(ODataNestedResourceInfo navigationLink, object source, object target)
         {
             this.requestPipeline.ExecuteOnNavigationLinkStartActions(navigationLink, source, target);
             this.odataWriter.WriteStart(navigationLink);
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Client
         /// <param name="navigationLink">The navigation link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void WriteNavigationLinkStart(ODataNavigationLink navigationLink, object source, object target)
+        internal void WriteNavigationLinkStart(ODataNestedResourceInfo navigationLink, object source, object target)
         {
             this.requestPipeline.ExecuteOnNavigationLinkStartActions(navigationLink, source, target);
         }
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Client
         /// Writes the start for a collection of navigation links.
         /// </summary>
         /// <param name="navigationLink">The navigation link.</param>
-        internal void WriteNavigationLinksStart(ODataNavigationLink navigationLink)
+        internal void WriteNavigationLinksStart(ODataNestedResourceInfo navigationLink)
         {
             this.odataWriter.WriteStart(navigationLink);
         }

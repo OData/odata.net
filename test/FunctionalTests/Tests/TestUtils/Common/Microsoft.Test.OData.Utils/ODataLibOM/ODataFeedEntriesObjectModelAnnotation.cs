@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibOM
     /// <summary>
     /// An OData object model annotation for feeds to capture all the entries of the feed.
     /// </summary>
-    public sealed class ODataFeedEntriesObjectModelAnnotation : List<ODataEntry>
+    public sealed class ODataFeedEntriesObjectModelAnnotation : List<ODataResource>
     {
     }
 }

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataJsonLightEntryAndFeedSerializer.cs" company="Microsoft">
+// <copyright file="ODataJsonLightResourceSerializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,13 +17,13 @@ namespace Microsoft.OData.Core.JsonLight
     /// <summary>
     /// OData JsonLight serializer for entries and feeds.
     /// </summary>
-    internal sealed class ODataJsonLightEntryAndFeedSerializer : ODataJsonLightPropertySerializer
+    internal sealed class ODataJsonLightResourceSerializer : ODataJsonLightPropertySerializer
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
-        internal ODataJsonLightEntryAndFeedSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
+        internal ODataJsonLightResourceSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
             : base(jsonLightOutputContext, /*initContextUriBuilder*/ true)
         {
         }
@@ -41,17 +41,17 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes the metadata properties for an entry which can only occur at the start.
+        /// Writes the metadata properties for a resource which can only occur at the start.
         /// </summary>
-        /// <param name="entryState">The entry state for which to write the metadata properties.</param>
-        internal void WriteEntryStartMetadataProperties(IODataJsonLightWriterEntryState entryState)
+        /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
+        internal void WriteResourceStartMetadataProperties(IODataJsonLightWriterResourceState resourceState)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
 
-            ODataEntry entry = entryState.Entry;
+            ODataResource resource = resourceState.Resource;
 
             // Write the "@odata.type": "typename"
-            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetEntryTypeNameForWriting(entryState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedEntityTypeName, entry);
+            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(resourceState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedEntityTypeName, resource);
             if (typeName != null)
             {
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
@@ -59,10 +59,10 @@ namespace Microsoft.OData.Core.JsonLight
 
             // Write the "@odata.id": "Entity Id"
             Uri id;
-            if (entry.MetadataBuilder.TryGetIdForSerialization(out id))
+            if (resource.MetadataBuilder.TryGetIdForSerialization(out id))
             {
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
-                if (id != null && !entry.HasNonComputedId)
+                if (id != null && !resource.HasNonComputedId)
                 {
                     id = this.MetadataDocumentBaseUri.MakeRelativeUri(id);
                 }
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Write the "@odata.etag": "ETag value"
-            string etag = entry.ETag;
+            string etag = resource.ETag;
             if (etag != null)
             {
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataETag);
@@ -80,88 +80,88 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes the metadata properties for an entry which can occur both at the start or at the end.
+        /// Writes the metadata properties for a resource which can occur both at the start or at the end.
         /// </summary>
-        /// <param name="entryState">The entry state for which to write the metadata properties.</param>
+        /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
         /// <remarks>
         /// This method will only write properties which were not written yet.
         /// </remarks>
-        internal void WriteEntryMetadataProperties(IODataJsonLightWriterEntryState entryState)
+        internal void WriteEntryMetadataProperties(IODataJsonLightWriterResourceState resourceState)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
 
-            ODataEntry entry = entryState.Entry;
+            ODataResource resource = resourceState.Resource;
 
             // Write the "@odata.editLink": "edit-link-uri"
-            Uri editLinkUriValue = entry.EditLink;
-            if (editLinkUriValue != null && !entryState.EditLinkWritten)
+            Uri editLinkUriValue = resource.EditLink;
+            if (editLinkUriValue != null && !resourceState.EditLinkWritten)
             {
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataEditLink);
                 this.JsonWriter.WriteValue(this.UriToString(
-                    entry.HasNonComputedEditLink
+                    resource.HasNonComputedEditLink
                     ? editLinkUriValue
                     : this.MetadataDocumentBaseUri.MakeRelativeUri(editLinkUriValue)));
-                entryState.EditLinkWritten = true;
+                resourceState.EditLinkWritten = true;
             }
 
             // Write the "@odata.readLink": "read-link-uri".
             // If readlink is identical to editlink, don't write readlink.
-            Uri readLinkUriValue = entry.ReadLink;
-            if (readLinkUriValue != null && readLinkUriValue != editLinkUriValue && !entryState.ReadLinkWritten)
+            Uri readLinkUriValue = resource.ReadLink;
+            if (readLinkUriValue != null && readLinkUriValue != editLinkUriValue && !resourceState.ReadLinkWritten)
             {
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataReadLink);
                 this.JsonWriter.WriteValue(this.UriToString(
-                    entry.HasNonComputedReadLink
+                    resource.HasNonComputedReadLink
                     ? readLinkUriValue
                     : this.MetadataDocumentBaseUri.MakeRelativeUri(readLinkUriValue)));
-                entryState.ReadLinkWritten = true;
+                resourceState.ReadLinkWritten = true;
             }
 
             // Write MLE metadata
-            ODataStreamReferenceValue mediaResource = entry.MediaResource;
+            ODataStreamReferenceValue mediaResource = resource.MediaResource;
             if (mediaResource != null)
             {
                 // Write the "@odata.mediaEditLink": "edit-link-uri"
                 Uri mediaEditLinkUriValue = mediaResource.EditLink;
-                if (mediaEditLinkUriValue != null && !entryState.MediaEditLinkWritten)
+                if (mediaEditLinkUriValue != null && !resourceState.MediaEditLinkWritten)
                 {
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaEditLink);
                     this.JsonWriter.WriteValue(this.UriToString(
                         mediaResource.HasNonComputedEditLink
                         ? mediaEditLinkUriValue
                         : this.MetadataDocumentBaseUri.MakeRelativeUri(mediaEditLinkUriValue)));
-                    entryState.MediaEditLinkWritten = true;
+                    resourceState.MediaEditLinkWritten = true;
                 }
 
                 // Write the "@odata.mediaReadLink": "read-link-uri"
                 // If mediaReadLink is identical to mediaEditLink, don't write readlink.
                 Uri mediaReadLinkUriValue = mediaResource.ReadLink;
-                if (mediaReadLinkUriValue != null && mediaReadLinkUriValue != mediaEditLinkUriValue && !entryState.MediaReadLinkWritten)
+                if (mediaReadLinkUriValue != null && mediaReadLinkUriValue != mediaEditLinkUriValue && !resourceState.MediaReadLinkWritten)
                 {
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaReadLink);
                     this.JsonWriter.WriteValue(this.UriToString(
                         mediaResource.HasNonComputedReadLink
                         ? mediaReadLinkUriValue
                         : this.MetadataDocumentBaseUri.MakeRelativeUri(mediaReadLinkUriValue)));
-                    entryState.MediaReadLinkWritten = true;
+                    resourceState.MediaReadLinkWritten = true;
                 }
 
                 // Write the "@odata.mediaContentType": "content/type"
                 string mediaContentType = mediaResource.ContentType;
-                if (mediaContentType != null && !entryState.MediaContentTypeWritten)
+                if (mediaContentType != null && !resourceState.MediaContentTypeWritten)
                 {
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaContentType);
                     this.JsonWriter.WriteValue(mediaContentType);
-                    entryState.MediaContentTypeWritten = true;
+                    resourceState.MediaContentTypeWritten = true;
                 }
 
                 // Write the "@odata.mediaEtag": "ETAG"
                 string mediaETag = mediaResource.ETag;
-                if (mediaETag != null && !entryState.MediaETagWritten)
+                if (mediaETag != null && !resourceState.MediaETagWritten)
                 {
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaETag);
                     this.JsonWriter.WriteValue(mediaETag);
-                    entryState.MediaETagWritten = true;
+                    resourceState.MediaETagWritten = true;
                 }
             }
 
@@ -171,35 +171,35 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes the metadata properties for an entry which can only occur at the end.
+        /// Writes the metadata properties for a resource which can only occur at the end.
         /// </summary>
-        /// <param name="entryState">The entry state for which to write the metadata properties.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate names checker for properties of this entry.</param>
-        internal void WriteEntryEndMetadataProperties(IODataJsonLightWriterEntryState entryState, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
+        /// <param name="duplicatePropertyNamesChecker">The duplicate names checker for properties of this resource.</param>
+        internal void WriteEntryEndMetadataProperties(IODataJsonLightWriterResourceState resourceState, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
 
-            ODataEntry entry = entryState.Entry;
+            ODataResource resource = resourceState.Resource;
 
-            var navigationLinkInfo = entry.MetadataBuilder.GetNextUnprocessedNavigationLink();
+            var navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             while (navigationLinkInfo != null)
             {
-                Debug.Assert(entry.MetadataBuilder != null, "entry.MetadataBuilder != null");
-                navigationLinkInfo.NavigationLink.MetadataBuilder = entry.MetadataBuilder;
+                Debug.Assert(resource.MetadataBuilder != null, "resource.MetadataBuilder != null");
+                navigationLinkInfo.NavigationLink.MetadataBuilder = resource.MetadataBuilder;
 
                 this.WriteNavigationLinkMetadata(navigationLinkInfo.NavigationLink, duplicatePropertyNamesChecker);
-                navigationLinkInfo = entry.MetadataBuilder.GetNextUnprocessedNavigationLink();
+                navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             }
 
             // write "odata.actions" metadata
-            IEnumerable<ODataAction> actions = entry.Actions;
+            IEnumerable<ODataAction> actions = resource.Actions;
             if (actions != null && actions.Any())
             {
                 this.WriteOperations(actions.Cast<ODataOperation>(), /*isAction*/ true);
             }
 
             // write "odata.functions" metadata
-            IEnumerable<ODataFunction> functions = entry.Functions;
+            IEnumerable<ODataFunction> functions = resource.Functions;
             if (functions != null && functions.Any())
             {
                 this.WriteOperations(functions.Cast<ODataOperation>(), /*isAction*/ false);
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="navigationLink">The navigation link to write the metadata for.</param>
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
-        internal void WriteNavigationLinkMetadata(ODataNavigationLink navigationLink, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo navigationLink, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(!string.IsNullOrEmpty(navigationLink.Name), "The navigation link Name should have been validated by now.");
@@ -239,16 +239,16 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="navigationLink">The navigation link to write the metadata for.</param>
         /// <param name="contextUrlInfo">The contextUrl information for current element.</param>
-        internal void WriteNavigationLinkContextUrl(ODataNavigationLink navigationLink, ODataContextUrlInfo contextUrlInfo)
+        internal void WriteNavigationLinkContextUrl(ODataNestedResourceInfo navigationLink, ODataContextUrlInfo contextUrlInfo)
         {
-            this.WriteContextUriProperty(ODataPayloadKind.Entry, () => contextUrlInfo, /* parentContextUrlInfo*/ null, navigationLink.Name);
+            this.WriteContextUriProperty(ODataPayloadKind.Resource, () => contextUrlInfo, /* parentContextUrlInfo*/ null, navigationLink.Name);
         }
 
         /// <summary>
         /// Writes "actions" or "functions" metadata.
         /// </summary>
         /// <param name="operations">The operations to write.</param>
-        /// <param name="isAction">true when writing the entry's actions; false when writing the entry's functions.</param>
+        /// <param name="isAction">true when writing the resource's actions; false when writing the resource's functions.</param>
         internal void WriteOperations(IEnumerable<ODataOperation> operations, bool isAction)
         {
             // We cannot compare two URI's directly because the 'Equals' method on the 'Uri' class compares two 'Uri' instances without regard to the 
@@ -270,27 +270,27 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Tries to writes the context URI property for delta entry/feed/link into the payload if one is available.
+        /// Tries to writes the context URI property for delta resource/feed/link into the payload if one is available.
         /// </summary>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
         /// <param name="kind">The delta kind to write.</param>
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <returns>The created context uri info.</returns>
-        internal ODataContextUrlInfo WriteDeltaContextUri(ODataFeedAndEntryTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
+        internal ODataContextUrlInfo WriteDeltaContextUri(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
             return this.WriteContextUriProperty(ODataPayloadKind.Delta, () => ODataContextUrlInfo.Create(typeContext, kind, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>
-        /// Tries to writes the context URI property for an entry into the payload if one is available.
+        /// Tries to writes the context URI property for a resource into the payload if one is available.
         /// </summary>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        internal void WriteEntryContextUri(ODataFeedAndEntryTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
+        internal void WriteEntryContextUri(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            this.WriteContextUriProperty(ODataPayloadKind.Entry, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
+            this.WriteContextUriProperty(ODataPayloadKind.Resource, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>
@@ -298,10 +298,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the feed.</param>
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
-        internal ODataContextUrlInfo WriteFeedContextUri(ODataFeedAndEntryTypeContext typeContext)
+        internal ODataContextUrlInfo WriteFeedContextUri(ODataResourceTypeContext typeContext)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            return this.WriteContextUriProperty(ODataPayloadKind.Feed, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri));
+            return this.WriteContextUriProperty(ODataPayloadKind.ResourceSet, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri));
         }
 
         /// <summary>

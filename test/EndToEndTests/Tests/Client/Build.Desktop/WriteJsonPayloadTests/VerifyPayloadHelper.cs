@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Some helper methods to verify various ODataFeed/Entry/value payloads.
+    /// Some helper methods to verify various ODataResourceSet/Entry/value payloads.
     /// </summary>
     public static partial class WritePayloadHelper
     {
@@ -39,33 +39,33 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <param name="verifyNavigation">Action to verify the navigation</param>
         public static void ReadAndVerifyFeedEntryMessage(bool isFeed, StreamResponseMessage responseMessage,
                                    IEdmEntitySet expectedSet, IEdmEntityType expectedType,
-                                   Action<ODataFeed> verifyFeed, Action<ODataEntry> verifyEntry,
-                                   Action<ODataNavigationLink> verifyNavigation)
+                                   Action<ODataResourceSet> verifyFeed, Action<ODataResource> verifyEntry,
+                                   Action<ODataNestedResourceInfo> verifyNavigation)
         {
             var settings = new ODataMessageReaderSettings() { BaseUri = ServiceUri };
             settings.ShouldIncludeAnnotation = s => true;
             ODataMessageReader messageReader = new ODataMessageReader(responseMessage, settings, Model);
             ODataReader reader = isFeed
-                                     ? messageReader.CreateODataFeedReader(expectedSet, expectedType)
-                                     : messageReader.CreateODataEntryReader(expectedSet, expectedType);
+                                     ? messageReader.CreateODataResourceSetReader(expectedSet, expectedType)
+                                     : messageReader.CreateODataResourceReader(expectedSet, expectedType);
             while (reader.Read())
             {
                 switch (reader.State)
                 {
-                    case ODataReaderState.FeedEnd:
+                    case ODataReaderState.ResourceSetEnd:
                         {
                             if (verifyFeed != null)
                             {
-                                verifyFeed((ODataFeed)reader.Item);
+                                verifyFeed((ODataResourceSet)reader.Item);
                             }
 
                             break;
                         }
-                    case ODataReaderState.EntryEnd:
+                    case ODataReaderState.ResourceEnd:
                         {
                             if (verifyEntry != null)
                             {
-                                verifyEntry((ODataEntry)reader.Item);
+                                verifyEntry((ODataResource)reader.Item);
                             }
 
                             break;
@@ -74,7 +74,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         {
                             if (verifyNavigation != null)
                             {
-                                verifyNavigation((ODataNavigationLink)reader.Item);
+                                verifyNavigation((ODataNestedResourceInfo)reader.Item);
                             }
 
                             break;
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <param name="hasModel">Whether IEdmModel is provided to writer</param>
         /// <param name="isDerivedType">Whether the entry is of derived type</param>
         /// <returns>The expected Json object</returns>
-        internal static Dictionary<string, object> ComputeExpectedFullMetadataEntryObject(IEdmEntityType entityType, string relativeEditLink, ODataEntry entry, bool hasModel, bool isDerivedType = false)
+        internal static Dictionary<string, object> ComputeExpectedFullMetadataEntryObject(IEdmEntityType entityType, string relativeEditLink, ODataResource entry, bool hasModel, bool isDerivedType = false)
         {
             var derivedTypeNameSegment = string.Empty;
             if (isDerivedType)
@@ -198,7 +198,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <param name="expectedEntryObject">The expected Json object</param>
         /// <param name="hasStream">Whether the entity type has MLE stream</param>
         /// <param name="hasModel">Whether IEdmModel is provided to writer</param>
-        internal static void ComputeDefaultExpectedFullMetadataEntryMedia(IEdmEntityType entityType, string relativeEditLink, ODataEntry entry, Dictionary<string, object> expectedEntryObject, bool hasStream, bool hasModel)
+        internal static void ComputeDefaultExpectedFullMetadataEntryMedia(IEdmEntityType entityType, string relativeEditLink, ODataResource entry, Dictionary<string, object> expectedEntryObject, bool hasStream, bool hasModel)
         {
             if (hasStream)
             {

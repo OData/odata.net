@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test default entry payload.")]
         public void DefaultEntryTests()
         {
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
 
             PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback expectedCallback = (testConfiguration) =>
                 {
@@ -122,7 +122,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test entry with entry Id not null.")]
         public void EntryIdTests()
         {
-            ODataEntry idEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource idEntry = ObjectModelUtils.CreateDefaultEntry();
             idEntry.Id = new Uri("Some:Id");
             idEntry.ReadLink = null;
 
@@ -163,7 +163,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test entry with self and/or edit link.")]
         public void NoEntryIdTests()
         {
-            ODataEntry noIdEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource noIdEntry = ObjectModelUtils.CreateDefaultEntry();
             noIdEntry.Id = null;
 
             PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback noIdExpectedCallback = (testConfiguration) =>
@@ -204,18 +204,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public void SelfAndEditLinkTests()
         {
             const string editLink = "http://www.odata.org/entry/editlink";
-            ODataEntry selfLinkEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource selfLinkEntry = ObjectModelUtils.CreateDefaultEntry();
             this.Assert.IsNotNull(selfLinkEntry.ReadLink, "ReadLink property of default entry must not be null.");
 
-            ODataEntry editLinkEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource editLinkEntry = ObjectModelUtils.CreateDefaultEntry();
             editLinkEntry.ReadLink = null;
             editLinkEntry.EditLink = new Uri(editLink);
 
-            ODataEntry selfAndEditLinkEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource selfAndEditLinkEntry = ObjectModelUtils.CreateDefaultEntry();
             this.Assert.IsNotNull(selfLinkEntry.ReadLink, "ReadLink property of default entry must not be null.");
             selfAndEditLinkEntry.EditLink = new Uri(editLink);
 
-            ODataEntry noSelfOrEditLinkEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource noSelfOrEditLinkEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             noSelfOrEditLinkEntry.ReadLink = null;
             this.Assert.IsNull(noSelfOrEditLinkEntry.ReadLink, "noSelfOrEditLinkEntry.ReadLink");
             this.Assert.IsNull(noSelfOrEditLinkEntry.EditLink, "noSelfOrEditLinkEntry.EditLink");
@@ -323,7 +323,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = tc.TypeName;
                 return new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
@@ -468,7 +468,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = tc.TypeName;
                 if (tc.SerializationTypeNameAnnotation != null)
                 {
@@ -527,31 +527,31 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             int depthOverHalfButStillBelowLimit = 10;
 
             // Create entries with properties that nest complex values inside complex values.
-            ODataEntry overLimitEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource overLimitEntry = ObjectModelUtils.CreateDefaultEntry();
             overLimitEntry.Properties = new ODataProperty[] { CreateDeeplyNestedComplexValues(depthLimit + 1, "TestModel.ComplexType", "PropertyName") };
 
-            ODataEntry atLimitEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource atLimitEntry = ObjectModelUtils.CreateDefaultEntry();
             atLimitEntry.Properties = new ODataProperty[] { CreateDeeplyNestedComplexValues(depthLimit, "TestModel.ComplexType", "PropertyName") };
 
             // Create an entry where the total number of complex properties is greater than the depth limit, but no individual property exceeds the limit.
-            ODataEntry belowLimitForSinglePropertyEntry = ObjectModelUtils.CreateDefaultEntry();
-            belowLimitForSinglePropertyEntry.Properties = new ODataProperty[]
-            {
+            ODataResource belowLimitForSinglePropertyEntry = ObjectModelUtils.CreateDefaultEntry();
+            belowLimitForSinglePropertyEntry.Properties = new ODataProperty[] 
+            { 
                 CreateDeeplyNestedComplexValues(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "FirstPropertyName"),
                 CreateDeeplyNestedComplexValues(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "SecondPropertyName")
             };
 
             // Create entries that nest complex values inside collections inside complex values (V3 only).
-            ODataEntry overLimitInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource overLimitInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
             overLimitInCollectionEntry.Properties = new ODataProperty[] { CreateDeeplyNestedComplexValuesInCollections(depthLimit + 1, "TestModel.ComplexType", "PropertyName") };
 
-            ODataEntry atLimitInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource atLimitInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
             atLimitInCollectionEntry.Properties = new ODataProperty[] { CreateDeeplyNestedComplexValuesInCollections(depthLimit, "TestModel.ComplexType", "PropertyName") };
 
             // An entry where the total number of complex properties is greater than the depth limit, but no individual property exceeds the limit.
-            ODataEntry belowLimitForSinglePropertyInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
-            belowLimitForSinglePropertyInCollectionEntry.Properties = new ODataProperty[]
-            {
+            ODataResource belowLimitForSinglePropertyInCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
+            belowLimitForSinglePropertyInCollectionEntry.Properties = new ODataProperty[] 
+            { 
                 CreateDeeplyNestedComplexValuesInCollections(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "FirstPropertyName"),
                 CreateDeeplyNestedComplexValuesInCollections(depthOverHalfButStillBelowLimit, "TestModel.ComplexType", "SecondPropertyName")
             };
@@ -623,16 +623,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Invalid entry payload.")]
         public void EntryErrorTests()
         {
-            ODataEntry emptyIdEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource emptyIdEntry = ObjectModelUtils.CreateDefaultEntry();
             emptyIdEntry.Id = null;
 
-            ODataEntry nullPropertyNameEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource nullPropertyNameEntry = ObjectModelUtils.CreateDefaultEntry();
             nullPropertyNameEntry.Properties = new[]
                 {
                     new ODataProperty()
                 };
 
-            ODataEntry emptyPropertyNameEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource emptyPropertyNameEntry = ObjectModelUtils.CreateDefaultEntry();
             emptyPropertyNameEntry.Properties = new[]
                 {
                     new ODataProperty() { Name = string.Empty }
@@ -640,7 +640,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             // TODO, ckerer: follow up to see whether title has to be non-empty, is required at all on self/edit link, etc.
 
-            ODataEntry nestedCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource nestedCollectionEntry = ObjectModelUtils.CreateDefaultEntry();
             nestedCollectionEntry.Properties = new[]
                 {
                     new ODataProperty()
@@ -706,10 +706,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test writing entry payloads with user exceptions being thrown at various points.")]
         public void EntryUserExceptionTests()
         {
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataNavigationLink defaultCollectionLink = ObjectModelUtils.CreateDefaultCollectionLink();
-            ODataNavigationLink defaultSingletonLink = ObjectModelUtils.CreateDefaultSingletonLink();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataNestedResourceInfo defaultCollectionLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo defaultSingletonLink = ObjectModelUtils.CreateDefaultSingletonLink();
 
             ODataItem[][] writerPayloads = new ODataItem[][]
             {
@@ -779,7 +779,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private PayloadWriterTestDescriptor<ODataItem> CreateEntryWithNullPropertyListDescriptor()
         {
-            ODataEntry entryWithoutProperties = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource entryWithoutProperties = ObjectModelUtils.CreateDefaultEntry();
             entryWithoutProperties.TypeName = "My.EntryWithoutProperties";
 
             return new PayloadWriterTestDescriptor<ODataItem>(
@@ -802,7 +802,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private PayloadWriterTestDescriptor<ODataItem> CreateEntryWithEmptyPropertyListDescriptor()
         {
-            ODataEntry noPropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource noPropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
             noPropertiesEntry.TypeName = "My.EntryWithoutProperties";
             noPropertiesEntry.Properties = Enumerable.Empty<ODataProperty>();
 
@@ -829,7 +829,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         #region Entry with primitive properties
         private PayloadWriterTestDescriptor<ODataItem> CreatePrimitivePropertiesEntryDescriptor(string odataNamespace)
         {
-            ODataEntry primitivePropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource primitivePropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
             primitivePropertiesEntry.TypeName = "My.EntryWithOpenProperties";
             primitivePropertiesEntry.Properties = ObjectModelUtils.CreateDefaultPrimitiveProperties();
 
@@ -941,7 +941,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         #region Entry with complex properties
         private PayloadWriterTestDescriptor<ODataItem> CreateComplexPropertiesEntryDescriptor(string odataNamespace)
         {
-            ODataEntry complexPropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource complexPropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
             complexPropertiesEntry.TypeName = "My.EntryWithOpenProperties";
 
             List<ODataProperty> properties = new List<ODataProperty>();
@@ -1014,7 +1014,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         #region Entry with collection properties
         private PayloadWriterTestDescriptor<ODataItem> CreateCollectionPropertiesEntryDescriptor(bool withModel, string odataNamespace, bool addCollectionWithoutTypeName = false)
         {
-            ODataEntry collectionPropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource collectionPropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
             collectionPropertiesEntry.TypeName = "My.EntryWithOpenProperties";
 
             List<ODataProperty> properties = new List<ODataProperty>();
@@ -1371,7 +1371,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 this.WriterTestConfigurationProvider.AtomFormatConfigurationsWithIndent,
                 (propertyName, dataServiceVersion, edmVersion, behaviorKind, testConfig) =>
                 {
-                    ODataEntry primitivePropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource primitivePropertiesEntry = ObjectModelUtils.CreateDefaultEntry();
                     primitivePropertiesEntry.TypeName = "My.EntryWithNullProperties";
                     primitivePropertiesEntry.Properties = new ODataProperty[] { new ODataProperty { Name = propertyName, Value = null } };
 
@@ -1454,7 +1454,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var container = new EdmEntityContainer("TestNS", "TestContainer");
             model.AddElement(container);
 
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             entry.TypeName = "TestNS.EntityType";
             entry.Properties = new ODataProperty[]
             {
@@ -1581,7 +1581,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Verifies correct serialization of empty complex values in ATOM.")]
         public void EmptyComplexValueTest()
         {
-            ODataFeedAndEntrySerializationInfo info = new ODataFeedAndEntrySerializationInfo()
+            ODataResourceSerializationInfo info = new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "Null",
                 NavigationSourceName = "MySet",
@@ -1593,7 +1593,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Empty entry level complex value -> no property written and no m:properties included either
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataEntry() {
+                    new ODataResource() {
                         Properties = new [] { new ODataProperty { Name = "EmptyComplex", Value =
                             new ODataComplexValue { Properties = null }
                         } },
@@ -1608,7 +1608,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Empty second level complex value -> no property written and no m:properties included either
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataEntry() { Properties = new [] { new ODataProperty { Name = "OuterComplex", Value =
+                    new ODataResource() { Properties = new [] { new ODataProperty { Name = "OuterComplex", Value =
                         new ODataComplexValue { Properties = new [] { new ODataProperty { Name = "InnerComplex", Value =
                             new ODataComplexValue { Properties = null }
                         } } }
@@ -1623,7 +1623,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Empty second level complex value in collection
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataEntry() { Properties = new [] { new ODataProperty { Name = "ComplexCollection", Value = new ODataCollectionValue { Items = new [] {
+                    new ODataResource() { Properties = new [] { new ODataProperty { Name = "ComplexCollection", Value = new ODataCollectionValue { Items = new [] {
                         new ODataComplexValue { Properties = new [] { new ODataProperty { Name = "InnerComplex", Value =
                             new ODataComplexValue { Properties = null }
                         } } }
@@ -1756,11 +1756,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                                 return new PayloadWriterTestDescriptor<ODataItem>(
                                     this.Settings,
-                                    new ODataEntry()
+                                    new ODataResource()
                                     {
                                         TypeName = "TestNS.EntityType",
                                         Properties = new[] { property },
-                                        SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                                        SerializationInfo = new ODataResourceSerializationInfo()
                                         {
                                             NavigationSourceEntityTypeName = "TestNS.EntityType",
                                             NavigationSourceName = "MySet",
@@ -2198,16 +2198,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test writing entry payloads with duplicate property names.")]
         public void DuplicatePropertyNamesTest()
         {
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
 
             ODataProperty primitiveProperty = new ODataProperty { Name = "Foo", Value = 1 };
             ODataProperty complexProperty = new ODataProperty { Name = "Foo", Value = new ODataComplexValue { Properties = new[] { new ODataProperty() { Name = "StringProperty", Value = "xyz" } } } };
             ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new int[] { 1, 2 } } };
             ODataProperty streamProperty = new ODataProperty { Name = "Foo", Value = new ODataStreamReferenceValue { ReadLink = new Uri("http://odata.org/readlink") } };
 
-            ODataNavigationLink singletonLink = new ODataNavigationLink { Name = "Foo", IsCollection = false, Url = new Uri("http://odata.org/link") };
-            ODataNavigationLink collectionLink = new ODataNavigationLink { Name = "Foo", IsCollection = true, Url = new Uri("http://odata.org/links") };
+            ODataNestedResourceInfo singletonLink = new ODataNestedResourceInfo { Name = "Foo", IsCollection = false, Url = new Uri("http://odata.org/link") };
+            ODataNestedResourceInfo collectionLink = new ODataNestedResourceInfo { Name = "Foo", IsCollection = true, Url = new Uri("http://odata.org/links") };
 
             ExpectedException error = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "Foo");
             ExpectedException duplicateExpandedLinkError = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "Foo");
@@ -2218,52 +2218,52 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 #region Duplicate primitive properties
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, primitiveProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { primitiveProperty, primitiveProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { complexProperty, complexProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { complexProperty, complexProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, complexProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { primitiveProperty, complexProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { collectionProperty, collectionProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { collectionProperty, collectionProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, collectionProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { primitiveProperty, collectionProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { complexProperty, collectionProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { complexProperty, collectionProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { primitiveProperty, streamProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { primitiveProperty, streamProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { complexProperty, streamProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { complexProperty, streamProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) =>  error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { collectionProperty, streamProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { collectionProperty, streamProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) =>  error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { streamProperty, streamProperty } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { streamProperty, streamProperty } } },
                     ExpectedException = (duplicatesAllowed, tc) => tc.IsRequest ? streamPropertyInRequest : error,
                 },
                 #endregion Duplicate primitive properties
@@ -2310,9 +2310,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { primitiveProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { primitiveProperty } },
                             singletonLink,
                             null,
                     },
@@ -2320,9 +2320,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { primitiveProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { primitiveProperty } },
+
                             collectionLink,
                             null,
                     },
@@ -2330,9 +2331,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { complexProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { complexProperty } },
+
                             singletonLink,
                             null,
                     },
@@ -2340,9 +2342,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { complexProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { complexProperty } },
                             collectionLink,
                             null,
                     },
@@ -2350,9 +2352,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { collectionProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { collectionProperty } },
                             singletonLink,
                             null,
                     },
@@ -2360,9 +2362,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { collectionProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { collectionProperty } },
                             collectionLink,
                             null,
                     },
@@ -2370,9 +2372,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { streamProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { streamProperty } },
                             singletonLink,
                             null,
                     },
@@ -2380,9 +2382,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { streamProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { streamProperty } },
                             collectionLink,
                             null,
                     },
@@ -2441,9 +2443,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { primitiveProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { primitiveProperty } },
+
                             singletonLink,
                                 defaultEntry,
                                 null,
@@ -2453,9 +2456,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { primitiveProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { primitiveProperty } },
                             collectionLink,
                                 defaultFeed,
                                 null,
@@ -2465,9 +2468,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { complexProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { complexProperty } },
                             singletonLink,
                                 defaultEntry,
                                 null,
@@ -2477,9 +2480,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { complexProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { complexProperty } },
                             collectionLink,
                                 defaultFeed,
                                 null,
@@ -2489,9 +2492,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { collectionProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { collectionProperty } },
                             singletonLink,
                                 defaultEntry,
                                 null,
@@ -2501,9 +2504,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { collectionProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { collectionProperty } },
                             collectionLink,
                                 defaultFeed,
                                 null,
@@ -2513,9 +2516,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { streamProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { streamProperty } },
                             singletonLink,
                                 defaultEntry,
                                 null,
@@ -2525,9 +2528,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[]
-                    {
-                        new ODataEntry { Properties = new [] { streamProperty } },
+                    PayloadItems = new ODataItem[] 
+                    { 
+                        new ODataResource { Properties = new [] { streamProperty } },
                             collectionLink,
                                 defaultFeed,
                                 null,
@@ -2541,32 +2544,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // We should also put these complex values at the top-level and inside of collections.
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, primitiveProperty } } } } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, primitiveProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { complexProperty, complexProperty } } } } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { complexProperty, complexProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { collectionProperty, collectionProperty } } } } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { collectionProperty, collectionProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, complexProperty } } } } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, complexProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => duplicatesAllowed ? null : error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, collectionProperty } } } } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { primitiveProperty, collectionProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 new DuplicatePropertyNamesTestCase
                 {
-                    PayloadItems = new ODataItem[] { new ODataEntry { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { complexProperty, collectionProperty } } } } } },
+                    PayloadItems = new ODataItem[] { new ODataResource { Properties = new [] { new ODataProperty { Name = "ComplexProp", Value = new ODataComplexValue { Properties = new [] { complexProperty, collectionProperty } } } } } },
                     ExpectedException = (duplicatesAllowed, tc) => error,
                 },
                 #endregion Duplicate properties on complex values
@@ -2642,12 +2645,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(message, null, testConfiguration, this.Assert))
                 {
-                    var entryWriter = messageWriterWrapper.CreateODataEntryWriter();
-                    entryWriter.WriteStart(new ODataEntry()
+                    var entryWriter = messageWriterWrapper.CreateODataResourceWriter();
+                    entryWriter.WriteStart(new ODataResource()
                     {
                         Id = new Uri("urn:id"),
-                        SerializationInfo = new ODataFeedAndEntrySerializationInfo()
-                        {
+                        SerializationInfo = new ODataResourceSerializationInfo() {
                             NavigationSourceEntityTypeName = "Null",
                             NavigationSourceName = "MySet",
                             ExpectedTypeName = "Null"
@@ -2676,7 +2678,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
 
             Uri navLinkUri = new Uri("http://odata.org/navlink");
-            ODataEntry officeEntryInstance = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource officeEntryInstance = ObjectModelUtils.CreateDefaultEntry();
             officeEntryInstance.TypeName = "TestModel.OfficeType";
 
             // Note that these tests specify behavior for requests. For responses we compute the behavior from these.
@@ -2689,7 +2691,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 ObjectModelUtils.CreateDefaultFeed(),
                                     officeEntryInstance,
                                     null,
@@ -2698,7 +2700,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 ObjectModelUtils.CreateDefaultFeed(),
                                 null,
                             null
@@ -2712,14 +2714,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 officeEntryInstance,
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 ObjectModelUtils.ODataNullEntry,
                                 null,
                             null
@@ -2735,14 +2737,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 officeEntryInstance,
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = null },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = null },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2758,14 +2760,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 officeEntryInstance,
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2779,14 +2781,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 officeEntryInstance,
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "PoliceStation", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2801,14 +2803,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 ObjectModelUtils.CreateDefaultFeed(),
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = null },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = null },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2823,14 +2825,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 ObjectModelUtils.CreateDefaultFeed(),
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2846,14 +2848,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 ObjectModelUtils.CreateDefaultFeed(),
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2867,13 +2869,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2889,13 +2891,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2908,13 +2910,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2931,20 +2933,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 ObjectModelUtils.CreateDefaultFeed(),
                                 null,
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = true },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = true },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         },
                         new ODataItem[]
                         {
-                            new ODataNavigationLink { Name = "CityHall", Url = navLinkUri, IsCollection = false },
+                            new ODataNestedResourceInfo { Name = "CityHall", Url = navLinkUri, IsCollection = false },
                                 new ODataEntityReferenceLink { Url = navLinkUri },
                             null
                         }
@@ -2977,12 +2979,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         return;
                     }
 
-                    ODataEntry entryInstance = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entryInstance = ObjectModelUtils.CreateDefaultEntry();
                     entryInstance.TypeName = "TestModel.CityType";
 
                     string duplicationPropertyName = null;
                     ODataItem firstItem = testCase.NavigationLinks[0][0];
-                    ODataNavigationLink firstNavigationLink = firstItem as ODataNavigationLink;
+                    ODataNestedResourceInfo firstNavigationLink = firstItem as ODataNestedResourceInfo;
                     if (firstNavigationLink != null)
                     {
                         duplicationPropertyName = firstNavigationLink.Name;

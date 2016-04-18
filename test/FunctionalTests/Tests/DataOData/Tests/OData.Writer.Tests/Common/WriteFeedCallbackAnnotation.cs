@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #endregion Namespaces
 
     /// <summary>
-    /// Annotation to be used on the ODataFeed to tell the writer test descriptor to invoke a callback
+    /// Annotation to be used on the ODataResourceSet to tell the writer test descriptor to invoke a callback
     /// before/after the WriteStart and before the WriteEnd for that feed is called.
     /// </summary>
     public sealed class WriteFeedCallbacksAnnotation
@@ -21,18 +21,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Actions called right before the WriteStart for the feed is called.
         /// The parameter is the feed which is about to be written.
         /// </summary>
-        public Action<ODataFeed> BeforeWriteStartCallback { get; set; }
+        public Action<ODataResourceSet> BeforeWriteStartCallback { get; set; }
 
         /// <summary>
         /// Actions called right after the WriteStart for the feed is called.
         /// The parameter is the feed which is being written.
         /// </summary>
-        public Action<ODataFeed> AfterWriteStartCallback { get; set; }
+        public Action<ODataResourceSet> AfterWriteStartCallback { get; set; }
 
         /// <summary>
         /// Actions called right before the WriteEnd for the feed is called.
         /// The parameter is the feed which is about to be closed.
         /// </summary>
-        public Action<ODataFeed> BeforeWriteEndCallback { get; set; }
+        public Action<ODataResourceSet> BeforeWriteEndCallback { get; set; }
     }
 }

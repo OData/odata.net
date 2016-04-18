@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Removes the entry with the specified <paramref name="key"/> from the headers.
+        /// Removes the resource with the specified <paramref name="key"/> from the headers.
         /// </summary>
         /// <param name="key">The key of the item to remove.</param>
         /// <returns>true if the item with the specified <paramref name="key"/> was removed; otherwise false.</returns>

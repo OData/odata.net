@@ -14,14 +14,14 @@ using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.Core.Tests
 {
-    internal class TestJsonLightReaderEntryState : IODataJsonLightReaderEntryState
+    internal class TestJsonLightReaderEntryState : IODataJsonLightReaderResourceState
     {
-        private ODataEntry entry = ReaderUtils.CreateNewEntry();
+        private ODataResource entry = ReaderUtils.CreateNewEntry();
         private readonly EdmEntityType edmEntityType = new EdmEntityType("TestNamespace", "EntityType");
         private SelectedPropertiesNode selectedProperties;
         private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
 
-        public ODataEntry Entry
+        public ODataResource Resource
         {
             get { return this.entry; }
             set { this.entry = value; }
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Core.Tests
             }
         }
 
-        public ODataEntityMetadataBuilder MetadataBuilder { get; set; }
+        public ODataResourceMetadataBuilder MetadataBuilder { get; set; }
 
         public bool AnyPropertyFound { get; set; }
 

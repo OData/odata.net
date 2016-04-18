@@ -1071,11 +1071,11 @@ namespace Microsoft.OData.Service
                 ResourceTypeKind resourceTypeKind = this.TargetResourceType.ResourceTypeKind;
                 if (resourceTypeKind == ResourceTypeKind.EntityType)
                 {
-                    return this.IsSingleResult ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                    return this.IsSingleResult ? ODataPayloadKind.Resource : ODataPayloadKind.ResourceSet;
                 }
 
                 Debug.Assert(resourceTypeKind == ResourceTypeKind.EntityCollection, "description.TargetResourceType.ResourceTypeKind == ResourceTypeKind.EntityCollection");
-                return ODataPayloadKind.Feed;
+                return ODataPayloadKind.ResourceSet;
             }
 
             if (this.TargetSource == RequestTargetSource.Property)

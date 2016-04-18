@@ -27,13 +27,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #region Entities
 
-        private readonly ODataDeltaFeed feed = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet feed = new ODataDeltaResourceSet
         {
             Count = 5,
             DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
         };
 
-        private readonly ODataEntry customerUpdated = new ODataEntry
+        private readonly ODataResource customerUpdated = new ODataResource
         {
             Id = new Uri("Customers('BOTTM')", UriKind.Relative),
             Properties = new List<ODataProperty>
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private readonly ODataDeltaLink linkToOrder10645 = new ODataDeltaLink(new Uri("Customers('BOTTM')", UriKind.Relative), new Uri("Orders('10645')", UriKind.Relative), "Orders");
 
-        private readonly ODataEntry order10643 = new ODataEntry
+        private readonly ODataResource order10643 = new ODataResource
         {
             Id = new Uri("Orders(10643)", UriKind.Relative),
             Properties = new List<ODataProperty>
@@ -491,39 +491,39 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             {
                 switch (tuple.Item2)
                 {
-                    case ODataDeltaReaderState.DeltaFeedStart:
-                        ODataDeltaFeed deltaFeed = tuple.Item1 as ODataDeltaFeed;
+                    case ODataDeltaReaderState.DeltaResourceSetStart:
+                        ODataDeltaResourceSet deltaFeed = tuple.Item1 as ODataDeltaResourceSet;
                         Assert.NotNull(deltaFeed);
                         if (deltaFeed.Count.HasValue)
                         {
                             Assert.Equal(deltaFeed.Count, feed.Count);
                         }
                         break;
-                    case ODataDeltaReaderState.FeedEnd:
-                        Assert.NotNull(tuple.Item1 as ODataDeltaFeed);
+                    case ODataDeltaReaderState.DeltaResourceSetEnd:
+                        Assert.NotNull(tuple.Item1 as ODataDeltaResourceSet);
                         if (nextLink != null)
                         {
-                            Assert.Equal(nextLink, ((ODataDeltaFeed)tuple.Item1).NextPageLink);
+                            Assert.Equal(nextLink, ((ODataDeltaResourceSet)tuple.Item1).NextPageLink);
                         }
                         if (feedDeltaLink != null)
                         {
-                            Assert.Equal(feedDeltaLink, ((ODataDeltaFeed)tuple.Item1).DeltaLink);
+                            Assert.Equal(feedDeltaLink, ((ODataDeltaResourceSet)tuple.Item1).DeltaLink);
                         }
                         break;
-                    case ODataDeltaReaderState.DeltaEntryStart:
-                        Assert.True(tuple.Item1 is ODataEntry);
+                    case ODataDeltaReaderState.DeltaResourceStart:
+                        Assert.True(tuple.Item1 is ODataResource);
                         break;
-                    case ODataDeltaReaderState.DeltaEntryEnd:
-                        var deltaEntry = tuple.Item1 as ODataEntry;
-                        Assert.NotNull(deltaEntry);
-                        Assert.NotNull(deltaEntry.Id);
-                        if (this.IdEqual(deltaEntry.Id, customerUpdated.Id))
+                    case ODataDeltaReaderState.DeltaResourceEnd:
+                        var deltaResource = tuple.Item1 as ODataResource;
+                        Assert.NotNull(deltaResource);
+                        Assert.NotNull(deltaResource.Id);
+                        if (this.IdEqual(deltaResource.Id, customerUpdated.Id))
                         {
-                            Assert.True(PropertiesEqual(deltaEntry.Properties, customerUpdated.Properties));
+                            Assert.True(PropertiesEqual(deltaResource.Properties, customerUpdated.Properties));
                         }
-                        else if (this.IdEqual(deltaEntry.Id, order10643.Id))
+                        else if (this.IdEqual(deltaResource.Id, order10643.Id))
                         {
-                            Assert.True(this.PropertiesEqual(deltaEntry.Properties, order10643.Properties));
+                            Assert.True(this.PropertiesEqual(deltaResource.Properties, order10643.Properties));
                         }
                         else
                         {
@@ -558,8 +558,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 break;
                             case ODataReaderState.EntityReferenceLink:
                                 break;
-                            case ODataReaderState.EntryEnd:
-                                ODataEntry entry = tuple.Item1 as ODataEntry;
+                            case ODataReaderState.ResourceEnd:
+                                ODataResource entry = tuple.Item1 as ODataResource;
                                 Assert.NotNull(entry);
                                 if (entry.TypeName == "MyNS.Order")
                                 {
@@ -574,20 +574,20 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                     Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
                                 }
                                 break;
-                            case ODataReaderState.EntryStart:
-                                Assert.NotNull(tuple.Item1 as ODataEntry);
+                            case ODataReaderState.ResourceStart:
+                                Assert.NotNull(tuple.Item1 as ODataResource);
                                 break;
-                            case ODataReaderState.FeedEnd:
-                                Assert.NotNull(tuple.Item1 as ODataFeed);
+                            case ODataReaderState.ResourceSetEnd:
+                                Assert.NotNull(tuple.Item1 as ODataResourceSet);
                                 break;
-                            case ODataReaderState.FeedStart:
-                                Assert.NotNull(tuple.Item1 as ODataFeed);
+                            case ODataReaderState.ResourceSetStart:
+                                Assert.NotNull(tuple.Item1 as ODataResourceSet);
                                 break;
                             case ODataReaderState.NavigationLinkEnd:
-                                Assert.NotNull(tuple.Item1 as ODataNavigationLink);
+                                Assert.NotNull(tuple.Item1 as ODataNestedResourceInfo);
                                 break;
                             case ODataReaderState.NavigationLinkStart:
-                                ODataNavigationLink navigationLink = tuple.Item1 as ODataNavigationLink;
+                                ODataNestedResourceInfo navigationLink = tuple.Item1 as ODataNestedResourceInfo;
                                 Assert.NotNull(navigationLink);
                                 Assert.Equal("Details", navigationLink.Name);
                                 break;

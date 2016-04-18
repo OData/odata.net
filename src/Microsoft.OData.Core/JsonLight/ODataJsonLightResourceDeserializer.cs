@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataJsonLightEntryAndFeedDeserializer.cs" company="Microsoft">
+// <copyright file="ODataJsonLightResourceDeserializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -24,24 +24,24 @@ namespace Microsoft.OData.Core.JsonLight
     /// OData JsonLight deserializer for entries and feeds.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Need to keep the logic together for better readability.")]
-    internal sealed class ODataJsonLightEntryAndFeedDeserializer : ODataJsonLightPropertyAndValueDeserializer
+    internal sealed class ODataJsonLightResourceDeserializer : ODataJsonLightPropertyAndValueDeserializer
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightInputContext">The JsonLight input context to read from.</param>
-        internal ODataJsonLightEntryAndFeedDeserializer(ODataJsonLightInputContext jsonLightInputContext)
+        internal ODataJsonLightResourceDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
         }
 
         /// <summary>
-        /// Reads the start of the JSON array for the content of the feed.
+        /// Reads the start of the JSON array for the content of the resource set.
         /// </summary>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.StartArray:    The start of the feed property array; this method will fail if the node is anything else.
-        /// Post-Condition: JsonNodeType.StartObject:   The first item in the feed
-        ///                 JsonNodeType.EndArray:      The end of the feed
+        /// Pre-Condition:  JsonNodeType.StartArray:    The start of the resource set property array; this method will fail if the node is anything else.
+        /// Post-Condition: JsonNodeType.StartObject:   The first item in the resource set
+        ///                 JsonNodeType.EndArray:      The end of the resource set
         /// </remarks>
         internal void ReadFeedContentStart()
         {
@@ -63,12 +63,12 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads the end of the array containing the feed content.
+        /// Reads the end of the array containing the resource set content.
         /// </summary>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.EndArray
-        /// Post-Condition: JsonNodeType.Property   if the feed is part of an expanded navigation link and there are more properties in the object
-        ///                 JsonNodeType.EndObject  if the feed is a top-level feed or the expanded navigation link is the last property of the payload
+        /// Post-Condition: JsonNodeType.Property   if the resource set is part of an expanded navigation link and there are more properties in the object
+        ///                 JsonNodeType.EndObject  if the resource set is a top-level resource set or the expanded navigation link is the last property of the payload
         /// </remarks>
         internal void ReadFeedContentEnd()
         {
@@ -81,20 +81,20 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads the entry type name annotation (odata.type)
+        /// Reads the resource type name annotation (odata.type)
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property          The first property after the odata.context in the entry object.
-        ///                 JsonNodeType.EndObject         End of the entry object.
+        /// Pre-Condition:  JsonNodeType.Property          The first property after the odata.context in the resource object.
+        ///                 JsonNodeType.EndObject         End of the resource object.
         /// Post-Condition: JsonNodeType.Property          The property after the odata.type (if there was any), or the property on which the method was called.
-        ///                 JsonNodeType.EndObject         End of the entry object.
+        ///                 JsonNodeType.EndObject         End of the resource object.
         ///                 
-        /// This method fills the ODataEntry.TypeName property if the type name is found in the payload.
+        /// This method fills the ODataResource.TypeName property if the type name is found in the payload.
         /// </remarks>
-        internal void ReadEntryTypeName(IODataJsonLightReaderEntryState entryState)
+        internal void ReadEntryTypeName(IODataJsonLightReaderResourceState resourceState)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             // If the current node is the odata.type property - read it.
@@ -104,13 +104,13 @@ namespace Microsoft.OData.Core.JsonLight
                 if (string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataType, propertyName) == 0
                     || this.CompareSimplifiedODataAnnotation(JsonLightConstants.SimplifiedODataTypePropertyName, propertyName))
                 {
-                    Debug.Assert(entryState.Entry.TypeName == null, "type name should not have already been set");
+                    Debug.Assert(resourceState.Resource.TypeName == null, "type name should not have already been set");
 
                     // Read over the property to move to its value.
                     this.JsonReader.Read();
 
                     // Read the annotation value.
-                    entryState.Entry.TypeName = this.ReadODataTypeAnnotationValue();
+                    resourceState.Resource.TypeName = this.ReadODataTypeAnnotationValue();
                 }
             }
 
@@ -118,38 +118,38 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads the content of an entry until a navigation link is detected.
+        /// Reads the content of a resource until a navigation link is detected.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
-        /// <returns>A reader navigation link info representing the navigation link detected while reading the entry contents; null if no navigation link was detected.</returns>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <returns>A reader navigation link info representing the navigation link detected while reading the resource contents; null if no navigation link was detected.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property               The property to read
-        ///                 JsonNodeType.EndObject              If no (more) properties exist in the entry's content
-        /// Post-Condition: JsonNodeType.EndObject              If no (more) properties exist in the entry's content
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         ///                 JsonNodeType.Property               If we've read a deferred link (this is the property after the deferred link)
-        ///                 JsonNodeType.StartObject            Expanded entry
-        ///                 JsonNodeType.StartArray             Expanded feed
+        ///                 JsonNodeType.StartObject            Expanded resource
+        ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null
         /// </remarks>
-        internal ODataJsonLightReaderNavigationLinkInfo ReadEntryContent(IODataJsonLightReaderEntryState entryState)
+        internal ODataJsonLightReaderNavigationLinkInfo ReadEntryContent(IODataJsonLightReaderResourceState resourceState)
         {
-            Debug.Assert(entryState != null, "entryState != null");
-            Debug.Assert(entryState.EntityType != null && this.Model.IsUserModel(), "A non-null entity type and non-null model are required.");
+            Debug.Assert(resourceState != null, "resourceState != null");
+            Debug.Assert(resourceState.EntityType != null && this.Model.IsUserModel(), "A non-null entity type and non-null model are required.");
             Debug.Assert(
                 this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Pre-Condition: JsonNodeType.Property or JsonNodeType.EndObject");
             this.JsonReader.AssertNotBuffering();
 
             ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = null;
-            Debug.Assert(entryState.EntityType != null, "In JSON we must always have an entity type when reading entity.");
+            Debug.Assert(resourceState.EntityType != null, "In JSON we must always have an entity type when reading entity.");
 
-            // Figure out whether we have more properties for this entry
+            // Figure out whether we have more properties for this resource
             // read all the properties until we hit a link
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 this.ProcessProperty(
-                    entryState.DuplicatePropertyNamesChecker,
+                    resourceState.DuplicatePropertyNamesChecker,
                     this.ReadEntryPropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -157,22 +157,22 @@ namespace Microsoft.OData.Core.JsonLight
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                object value = this.ReadEntryInstanceAnnotation(propertyName, entryState.AnyPropertyFound, /*typeAnnotationFound*/ true, entryState.DuplicatePropertyNamesChecker);
-                                this.ApplyEntryInstanceAnnotation(entryState, propertyName, value);
+                                object value = this.ReadEntryInstanceAnnotation(propertyName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.DuplicatePropertyNamesChecker);
+                                this.ApplyEntryInstanceAnnotation(resourceState, propertyName, value);
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                entryState.AnyPropertyFound = true;
-                                navigationLinkInfo = this.ReadEntryPropertyWithoutValue(entryState, propertyName);
+                                resourceState.AnyPropertyFound = true;
+                                navigationLinkInfo = this.ReadEntryPropertyWithoutValue(resourceState, propertyName);
                                 break;
 
                             case PropertyParsingResult.PropertyWithValue:
-                                entryState.AnyPropertyFound = true;
-                                navigationLinkInfo = this.ReadEntryPropertyWithValue(entryState, propertyName);
+                                resourceState.AnyPropertyFound = true;
+                                navigationLinkInfo = this.ReadEntryPropertyWithValue(resourceState, propertyName);
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                this.ReadMetadataReferencePropertyValue(entryState, propertyName);
+                                this.ReadMetadataReferencePropertyValue(resourceState, propertyName);
                                 break;
 
                             case PropertyParsingResult.EndOfObject:
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (navigationLinkInfo != null)
                 {
                     // we found a navigation link
-                    // stop parsing the entry content and return to the caller
+                    // stop parsing the resource content and return to the caller
                     break;
                 }
 
@@ -195,11 +195,11 @@ namespace Microsoft.OData.Core.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // The reader can be either on
-            //  - StartObject - if it's an expanded entry
-            //  - StartArray - if it's an expanded feed
+            //  - StartObject - if it's an expanded resource
+            //  - StartArray - if it's an expanded resource set
             //  - Property - if it's a deferred link
-            //  - PrimitiveValue (null) - if it's an expanded null entry
-            //  - EndObject - end of the entry
+            //  - PrimitiveValue (null) - if it's an expanded null resource
+            //  - EndObject - end of the resource
             Debug.Assert(
                 navigationLinkInfo != null && this.JsonReader.NodeType == JsonNodeType.StartObject ||
                 navigationLinkInfo != null && this.JsonReader.NodeType == JsonNodeType.StartArray ||
@@ -212,24 +212,24 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Validates entry metadata.
+        /// Validates resource metadata.
         /// </summary>
-        /// <param name="entryState">The entry state to use.</param>
-        internal void ValidateEntryMetadata(IODataJsonLightReaderEntryState entryState)
+        /// <param name="resourceState">The resource state to use.</param>
+        internal void ValidateEntryMetadata(IODataJsonLightReaderResourceState resourceState)
         {
-            ODataEntry entry = entryState.Entry;
-            if (entry != null)
+            ODataResource resource = resourceState.Resource;
+            if (resource != null)
             {
-                IEdmEntityType entityType = entryState.EntityType;
+                IEdmEntityType entityType = resourceState.EntityType;
 
-                // If the entry in the model has a default stream and if no MR related metadata exists in the entry payload, create an empty MediaResource.
+                // If the resource in the model has a default stream and if no MR related metadata exists in the resource payload, create an empty MediaResource.
                 // Note that for responses the metadata builder will compute the default stream.  For requests we really don't need to add the default stream since the service knows its metadata.
                 // We leave this here for now so we don't introduce a breaking change.
-                if (!this.ReadingResponse && entityType.HasStream && entry.MediaResource == null)
+                if (!this.ReadingResponse && entityType.HasStream && resource.MediaResource == null)
                 {
-                    ODataStreamReferenceValue mediaResource = entry.MediaResource;
+                    ODataStreamReferenceValue mediaResource = resource.MediaResource;
                     ODataJsonLightReaderUtils.EnsureInstance(ref mediaResource);
-                    this.SetEntryMediaResource(entryState, mediaResource);
+                    this.SetEntryMediaResource(resourceState, mediaResource);
                 }
 
                 // By default validate media resource
@@ -240,22 +240,22 @@ namespace Microsoft.OData.Core.JsonLight
                 // Server doesn't validate default media resource when reading Verbose JSON against the model
                 // So it doesn't fail if the model says the entity should have an MR, but the payload doesn't and vice versa.
                 bool validateMediaResource = this.UseDefaultFormatBehavior || this.UseServerFormatBehavior;
-                ValidationUtils.ValidateEntryMetadataResource(entry, entityType, this.Model, validateMediaResource);
+                ValidationUtils.ValidateEntryMetadataResource(resource, entityType, this.Model, validateMediaResource);
             }
         }
 
         /// <summary>
-        /// Reads the feed instance annotations for a top-level feed.
+        /// Reads the resource set instance annotations for a top-level resource set.
         /// </summary>
-        /// <param name="feed">The <see cref="ODataFeed"/> to read the instance annotations for.</param>
+        /// <param name="resourceSet">The <see cref="ODataResourceSet"/> to read the instance annotations for.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the top-level scope.</param>
-        /// <param name="forFeedStart">true when parsing the instance annotations before the feed property; 
-        /// false when parsing the instance annotations after the feed property.</param>
+        /// <param name="forResourceSetStart">true when parsing the instance annotations before the resource set property; 
+        /// false when parsing the instance annotations after the resource set property.</param>
         /// <param name="readAllFeedProperties">true if we should scan ahead for the annotations and ignore the actual data properties (used with
         /// the reordering reader); otherwise false.</param>
-        internal void ReadTopLevelFeedAnnotations(ODataFeedBase feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forFeedStart, bool readAllFeedProperties)
+        internal void ReadTopLevelFeedAnnotations(ODataResourceSetBase resourceSet, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forResourceSetStart, bool readAllFeedProperties)
         {
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             this.JsonReader.AssertNotBuffering();
 
@@ -266,9 +266,9 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     bool foundValueProperty = false;
 
-                    if (!forFeedStart && readAllFeedProperties)
+                    if (!forResourceSetStart && readAllFeedProperties)
                     {
-                        // If this is not called for reading FeedStart and we already scanned ahead and processed all feed properties, we already checked for duplicate property names.
+                        // If this is not called for reading ResourceSetStart and we already scanned ahead and processed all resource set properties, we already checked for duplicate property names.
                         // Use an empty duplicate property name checker since this.ParseProperty() read through the same property annotation of instance annotations again. 
                         duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(/*allowDuplicateProperties*/ true, this.JsonLightInputContext.ReadingResponse, !this.JsonLightInputContext.MessageReaderSettings.EnableFullValidation);
                     }
@@ -282,12 +282,12 @@ namespace Microsoft.OData.Core.JsonLight
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
                                 case PropertyParsingResult.CustomInstanceAnnotation:
-                                    // When we are reading the start of a feed (in scan-ahead mode or not) or when
-                                    // we read the end of a feed and not in scan-ahead mode, read the value;
+                                    // When we are reading the start of a resource set (in scan-ahead mode or not) or when
+                                    // we read the end of a resource set and not in scan-ahead mode, read the value;
                                     // otherwise skip it.
-                                    if (forFeedStart || !readAllFeedProperties)
+                                    if (forResourceSetStart || !readAllFeedProperties)
                                     {
-                                        this.ReadAndApplyFeedInstanceAnnotationValue(propertyName, feed, duplicatePropertyNamesChecker);
+                                        this.ReadAndApplyFeedInstanceAnnotationValue(propertyName, resourceSet, duplicatePropertyNamesChecker);
                                     }
                                     else
                                     {
@@ -299,10 +299,10 @@ namespace Microsoft.OData.Core.JsonLight
                                 case PropertyParsingResult.PropertyWithValue:
                                     if (string.CompareOrdinal(JsonLightConstants.ODataValuePropertyName, propertyName) == 0)
                                     {
-                                        // We found the feed property and are done parsing property annotations;
-                                        // When we are in the mode where we scan ahead and read all feed properties
+                                        // We found the resource set property and are done parsing property annotations;
+                                        // When we are in the mode where we scan ahead and read all resource set properties
                                         // (for the reordering scenario), we have to start buffering and continue 
-                                        // reading. Otherwise we found the feed's data property and are done.
+                                        // reading. Otherwise we found the resourceSet's data property and are done.
                                         if (readAllFeedProperties)
                                         {
                                             this.JsonReader.StartBuffering();
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                                     break;
                                 case PropertyParsingResult.PropertyWithoutValue:
-                                    // If we find a property without a value it means that we did not find the feed property (yet)
+                                    // If we find a property without a value it means that we did not find the resource set property (yet)
                                     // but an invalid property annotation
                                     throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyAnnotationInTopLevelFeed(propertyName));
 
@@ -330,12 +330,12 @@ namespace Microsoft.OData.Core.JsonLight
                                     break;
 
                                 case PropertyParsingResult.MetadataReferenceProperty:
-                                    if (!(feed is ODataFeed))
+                                    if (!(resourceSet is ODataResourceSet))
                                     {
                                         throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
                                     }
 
-                                    this.ReadMetadataReferencePropertyValue((ODataFeed)feed, propertyName);
+                                    this.ReadMetadataReferencePropertyValue((ODataResourceSet)resourceSet, propertyName);
                                     break;
 
                                 default:
@@ -358,7 +358,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            if (forFeedStart && !readAllFeedProperties)
+            if (forResourceSetStart && !readAllFeedProperties)
             {
                 // We did not find any properties or only instance annotations.
                 throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound(JsonLightConstants.ODataValuePropertyName));
@@ -366,18 +366,18 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads a value of property annotation on the entry level.
+        /// Reads a value of property annotation on the resource level.
         /// </summary>
         /// <param name="propertyAnnotationName">The name of the property annotation to read.</param>
         /// <returns>The value of the property annotation.</returns>
         /// <remarks>
         /// This method should read the property annotation value and return a representation of the value which will be later
-        /// consumed by the entry reading code.
+        /// consumed by the resource reading code.
         /// 
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property annotation property
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
-        /// Post-Condition: JsonNodeType.EndObject              The end of the entry object
+        /// Post-Condition: JsonNodeType.EndObject              The end of the resource object
         ///                 JsonNodeType.Property               The next property after the property annotation
         /// </remarks>
         internal object ReadEntryPropertyAnnotationValue(string propertyAnnotationName)
@@ -453,18 +453,18 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads instance annotation in the entry object.
+        /// Reads instance annotation in the resource object.
         /// </summary>
         /// <param name="annotationName">The name of the instance annotation found.</param>
         /// <param name="anyPropertyFound">true if a non-annotation property has already been encountered.</param>
         /// <param name="typeAnnotationFound">true if the 'odata.type' annotation has already been encountered, or should have been by now.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the entry being read.</param>
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the resource being read.</param>
         /// <returns>The value of the annotation.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the instance annotation property
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
-        /// Post-Condition: JsonNodeType.EndObject              The end of the entry object
+        /// Post-Condition: JsonNodeType.EndObject              The end of the resource object
         ///                 JsonNodeType.Property               The next property after the instance annotation
         /// </remarks>
         internal object ReadEntryInstanceAnnotation(string annotationName, bool anyPropertyFound, bool typeAnnotationFound, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
@@ -520,54 +520,54 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads instance annotation in the entry object.
+        /// Reads instance annotation in the resource object.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="annotationName">The name of the instance annotation found.</param>
         /// <param name="annotationValue">The value of the annotation.</param>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the instance annotation property
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
-        /// Post-Condition: JsonNodeType.EndObject              The end of the entry object
+        /// Post-Condition: JsonNodeType.EndObject              The end of the resource object
         ///                 JsonNodeType.Property               The next property after the instance annotation
         /// </remarks>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "The casts aren't actually being done multiple times, since they occur in different cases of the switch statement.")]
-        internal void ApplyEntryInstanceAnnotation(IODataJsonLightReaderEntryState entryState, string annotationName, object annotationValue)
+        internal void ApplyEntryInstanceAnnotation(IODataJsonLightReaderResourceState resourceState, string annotationName, object annotationValue)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
-            ODataEntry entry = entryState.Entry;
-            ODataStreamReferenceValue mediaResource = entry.MediaResource;
+            ODataResource resource = resourceState.Resource;
+            ODataStreamReferenceValue mediaResource = resource.MediaResource;
             switch (annotationName)
             {
                 case ODataAnnotationNames.ODataType:   // 'odata.type'
-                    entry.TypeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)annotationValue));
+                    resource.TypeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)annotationValue));
                     break;
 
                 case ODataAnnotationNames.ODataId:   // 'odata.id'
                     if (annotationValue == null)
                     {
-                        entry.IsTransient = true;
+                        resource.IsTransient = true;
                     }
                     else
                     {
-                        entry.Id = (Uri)annotationValue;
+                        resource.Id = (Uri)annotationValue;
                     }
 
                     break;
 
                 case ODataAnnotationNames.ODataETag:   // 'odata.etag'
-                    entry.ETag = (string)annotationValue;
+                    resource.ETag = (string)annotationValue;
                     break;
 
                 case ODataAnnotationNames.ODataEditLink:    // 'odata.editLink'
-                    entry.EditLink = (Uri)annotationValue;
+                    resource.EditLink = (Uri)annotationValue;
                     break;
 
                 case ODataAnnotationNames.ODataReadLink:    // 'odata.readLink'
-                    entry.ReadLink = (Uri)annotationValue;
+                    resource.ReadLink = (Uri)annotationValue;
                     break;
 
                 case ODataAnnotationNames.ODataMediaEditLink:   // 'odata.mediaEditLink'
@@ -595,44 +595,44 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    entry.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, annotationValue.ToODataValue()));
+                    resource.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, annotationValue.ToODataValue()));
                     break;
             }
 
-            if (mediaResource != null && entry.MediaResource == null)
+            if (mediaResource != null && resource.MediaResource == null)
             {
-                this.SetEntryMediaResource(entryState, mediaResource);
+                this.SetEntryMediaResource(resourceState, mediaResource);
             }
         }
 
         /// <summary>
-        /// Reads the value of a feed annotation (count or next link).
+        /// Reads the value of a resource set annotation (count or next link).
         /// </summary>
         /// <param name="annotationName">The name of the annotation found.</param>
-        /// <param name="feed">The feed to read the annotation for; if non-null, the annotation value will be assigned to the feed.</param>
+        /// <param name="resourceSet">The resource set to read the annotation for; if non-null, the annotation value will be assigned to the resource set.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker instance.</param>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the annotation
-        /// Post-Condition: JsonNodeType.EndObject              The end of the feed object
+        /// Post-Condition: JsonNodeType.EndObject              The end of the resource set object
         ///                 JsonNodeType.Property               The next annotation after the current annotation
         /// </remarks>
-        internal void ReadAndApplyFeedInstanceAnnotationValue(string annotationName, ODataFeedBase feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal void ReadAndApplyFeedInstanceAnnotationValue(string annotationName, ODataResourceSetBase resourceSet, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
 
             switch (annotationName)
             {
                 case ODataAnnotationNames.ODataCount:
-                    feed.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
+                    resourceSet.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
                     break;
 
                 case ODataAnnotationNames.ODataNextLink:
-                    feed.NextPageLink = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataNextLink);
+                    resourceSet.NextPageLink = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataNextLink);
                     break;
 
                 case ODataAnnotationNames.ODataDeltaLink:
-                    feed.DeltaLink = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataDeltaLink);
+                    resourceSet.DeltaLink = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataDeltaLink);
                     break;
 
                 default:
@@ -641,31 +641,31 @@ namespace Microsoft.OData.Core.JsonLight
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
                     object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
-                    feed.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue()));
+                    resourceSet.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue()));
                     break;
             }
         }
 
         /// <summary>
-        /// Reads entry property which doesn't have value, just annotations.
+        /// Reads resource property which doesn't have value, just annotations.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="propertyName">The name of the property read.</param>
-        /// <returns>A reader navigation link info representing the navigation link detected while reading the entry contents; null if no navigation link was detected.</returns>
+        /// <returns>A reader navigation link info representing the navigation link detected while reading the resource contents; null if no navigation link was detected.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.EndObject              The end of the entry object.
+        /// Pre-Condition:  JsonNodeType.EndObject              The end of the resource object.
         ///                 JsonNodeType.Property               The property after the one we're to read.
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
         ///                 JsonNodeType.Property               
         /// </remarks>
-        internal ODataJsonLightReaderNavigationLinkInfo ReadEntryPropertyWithoutValue(IODataJsonLightReaderEntryState entryState, string propertyName)
+        internal ODataJsonLightReaderNavigationLinkInfo ReadEntryPropertyWithoutValue(IODataJsonLightReaderResourceState resourceState, string propertyName)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = null;
-            IEdmEntityType entityType = entryState.EntityType;
+            IEdmEntityType entityType = resourceState.EntityType;
             IEdmProperty edmProperty = ReaderValidationUtils.FindDefinedProperty(propertyName, entityType);
             if (edmProperty != null)
             {
@@ -676,14 +676,14 @@ namespace Microsoft.OData.Core.JsonLight
                     if (this.ReadingResponse)
                     {
                         // Deferred link
-                        navigationLinkInfo = ReadDeferredNavigationLink(entryState, propertyName, navigationProperty);
+                        navigationLinkInfo = ReadDeferredNavigationLink(resourceState, propertyName, navigationProperty);
                     }
                     else
                     {
                         // Entity reference link or links
                         navigationLinkInfo = navigationProperty.Type.IsCollection()
-                            ? ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(entryState, navigationProperty, /*isExpanded*/ false)
-                            : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(entryState, navigationProperty, /*isExpanded*/ false);
+                            ? ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, /*isExpanded*/ false)
+                            : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, navigationProperty, /*isExpanded*/ false);
 
                         if (!navigationLinkInfo.HasEntityReferenceLink)
                         {
@@ -691,7 +691,7 @@ namespace Microsoft.OData.Core.JsonLight
                         }
                     }
 
-                    entryState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNavigationLinkStart(navigationLinkInfo.NavigationLink);
+                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNavigationLinkStart(navigationLinkInfo.NavigationLink);
                 }
                 else
                 {
@@ -699,8 +699,8 @@ namespace Microsoft.OData.Core.JsonLight
                     if (propertyTypeReference.IsStream())
                     {
                         Debug.Assert(propertyName == edmProperty.Name, "propertyName == edmProperty.Name");
-                        ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(entryState, propertyName);
-                        AddEntryProperty(entryState, edmProperty.Name, streamPropertyValue);
+                        ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
+                        AddResourceProperty(resourceState, edmProperty.Name, streamPropertyValue);
                     }
                     else
                     {
@@ -711,7 +711,7 @@ namespace Microsoft.OData.Core.JsonLight
             else
             {
                 // Undeclared property - we need to run detection alogorithm here.
-                navigationLinkInfo = this.ReadUndeclaredProperty(entryState, propertyName, /*propertyWithValue*/ false);
+                navigationLinkInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ false);
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -719,57 +719,57 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads any next link annotation immediately after the end of a feed.
+        /// Reads any next link annotation immediately after the end of a resource set.
         /// </summary>
-        /// <param name="feed">The feed being read.</param>
-        /// <param name="expandedNavigationLinkInfo">The information about the expanded link. This must be non-null if we're reading an expanded feed, and must be null if we're reading a top-level feed.</param>
-        /// <param name="duplicatePropertyNamesChecker">The top-level duplicate property names checker, if we're reading a top-level feed.</param>
-        internal void ReadNextLinkAnnotationAtFeedEnd(
-            ODataFeedBase feed,
+        /// <param name="resourceSet">The resource set being read.</param>
+        /// <param name="expandedNavigationLinkInfo">The information about the expanded link. This must be non-null if we're reading an expanded resource set, and must be null if we're reading a top-level resource set.</param>
+        /// <param name="duplicatePropertyNamesChecker">The top-level duplicate property names checker, if we're reading a top-level resource set.</param>
+        internal void ReadNextLinkAnnotationAtResourceSetEnd(
+            ODataResourceSetBase resourceSet,
             ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            // Check for annotations on the feed that occur after the feed itself. (Note: the only allowed one is odata.nextLink, and we fail for anything else.)
-            // We do this slightly differently depending on whether the feed was an expanded navigation or a top-level feed.
+            // Check for annotations on the resource set that occur after the resource set itself. (Note: the only allowed one is odata.nextLink, and we fail for anything else.)
+            // We do this slightly differently depending on whether the resource set was an expanded navigation or a top-level resource set.
             if (expandedNavigationLinkInfo != null)
             {
-                this.ReadExpandedFeedAnnotationsAtFeedEnd(feed, expandedNavigationLinkInfo);
+                this.ReadExpandedFeedAnnotationsAtResourceSetEnd(resourceSet, expandedNavigationLinkInfo);
             }
             else
             {
                 Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
-                // Check for feed instance annotations that appear after the feed.
+                // Check for resource set instance annotations that appear after the resource set.
                 bool isReordering = this.JsonReader is ReorderingJsonReader;
-                this.ReadTopLevelFeedAnnotations(feed, duplicatePropertyNamesChecker, /*forFeedStart*/false, /*readAllFeedProperties*/isReordering);
+                this.ReadTopLevelFeedAnnotations(resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/false, /*readAllFeedProperties*/isReordering);
             }
         }
 
         /// <summary>
         /// Reads the information of a deferred link.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationPropertyName">The name of the navigation property for which to read the deferred link.</param>
         /// <param name="navigationProperty">The navigation property for which to read the deferred link. This can be null.</param>
         /// <returns>Returns the navigation link info for the deferred navigation link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        private static ODataJsonLightReaderNavigationLinkInfo ReadDeferredNavigationLink(IODataJsonLightReaderEntryState entryState, string navigationPropertyName, IEdmNavigationProperty navigationProperty)
+        private static ODataJsonLightReaderNavigationLinkInfo ReadDeferredNavigationLink(IODataJsonLightReaderResourceState resourceState, string navigationPropertyName, IEdmNavigationProperty navigationProperty)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
             Debug.Assert(navigationProperty == null || navigationPropertyName == navigationProperty.Name, "navigationProperty == null || navigationPropertyName == navigationProperty.Name");
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = navigationPropertyName,
                 IsCollection = navigationProperty == null ? null : (bool?)navigationProperty.Type.IsCollection()
             };
 
-            Dictionary<string, object> propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
             if (propertyAnnotations != null)
             {
                 foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
@@ -796,26 +796,26 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads expanded entry navigation link.
+        /// Reads expanded resource navigation link.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the expanded link.</param>
         /// <returns>The navigation link info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        private static ODataJsonLightReaderNavigationLinkInfo ReadExpandedEntryNavigationLink(IODataJsonLightReaderEntryState entryState, IEdmNavigationProperty navigationProperty)
+        private static ODataJsonLightReaderNavigationLinkInfo ReadExpandedEntryNavigationLink(IODataJsonLightReaderResourceState resourceState, IEdmNavigationProperty navigationProperty)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = navigationProperty.Name,
                 IsCollection = false
             };
 
-            Dictionary<string, object> propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
             if (propertyAnnotations != null)
             {
                 foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
@@ -847,28 +847,28 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads expanded feed navigation link.
+        /// Reads expanded resource set navigation link.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the expanded link.</param>
         /// <returns>The navigation link info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        private static ODataJsonLightReaderNavigationLinkInfo ReadExpandedFeedNavigationLink(IODataJsonLightReaderEntryState entryState, IEdmNavigationProperty navigationProperty)
+        private static ODataJsonLightReaderNavigationLinkInfo ReadExpandedFeedNavigationLink(IODataJsonLightReaderResourceState resourceState, IEdmNavigationProperty navigationProperty)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = navigationProperty.Name,
                 IsCollection = true
             };
 
-            ODataFeed expandedFeed = new ODataFeed();
+            ODataResourceSet expandedFeed = new ODataResourceSet();
 
-            Dictionary<string, object> propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
             if (propertyAnnotations != null)
             {
                 foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
@@ -912,7 +912,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads entity reference link for a singleton navigation link in request.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <param name="isExpanded">true if the navigation link is expanded.</param>
         /// <returns>The navigation link info for the entity reference link read.</returns>
@@ -920,20 +920,20 @@ namespace Microsoft.OData.Core.JsonLight
         /// This method doesn't move the reader.
         /// </remarks>
         private static ODataJsonLightReaderNavigationLinkInfo ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(
-            IODataJsonLightReaderEntryState entryState,
+            IODataJsonLightReaderResourceState resourceState,
             IEdmNavigationProperty navigationProperty,
             bool isExpanded)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = navigationProperty.Name,
                 IsCollection = false
             };
 
-            Dictionary<string, object> propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
             ODataEntityReferenceLink entityReferenceLink = null;
             if (propertyAnnotations != null)
             {
@@ -974,7 +974,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads entity reference links for a collection navigation link in request.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <param name="isExpanded">true if the navigation link is expanded.</param>
         /// <returns>The navigation link info for the entity reference links read.</returns>
@@ -982,20 +982,20 @@ namespace Microsoft.OData.Core.JsonLight
         /// This method doesn't move the reader.
         /// </remarks>
         private static ODataJsonLightReaderNavigationLinkInfo ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(
-            IODataJsonLightReaderEntryState entryState,
+            IODataJsonLightReaderResourceState resourceState,
             IEdmNavigationProperty navigationProperty,
             bool isExpanded)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = navigationProperty.Name,
                 IsCollection = true
             };
 
-            Dictionary<string, object> propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(navigationLink.Name);
             LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = null;
             if (propertyAnnotations != null)
             {
@@ -1027,20 +1027,20 @@ namespace Microsoft.OData.Core.JsonLight
 
             return ODataJsonLightReaderNavigationLinkInfo.CreateCollectionEntityReferenceLinksInfo(navigationLink, navigationProperty, entityReferenceLinksList, isExpanded);
         }
-
+        
         /// <summary>
-        /// Adds a new property to an entry.
+        /// Adds a new property to a resource.
         /// </summary>
-        /// <param name="entryState">The entry state for the entry to add the property to.</param>
+        /// <param name="resourceState">The resource state for the resource to add the property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="propertyValue">The value of the property to add.</param>
-        private static void AddEntryProperty(IODataJsonLightReaderEntryState entryState, string propertyName, object propertyValue)
+        private static void AddResourceProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, object propertyValue)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             ODataProperty property = new ODataProperty { Name = propertyName, Value = propertyValue };
-            var propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
+            var propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
             if (propertyAnnotations != null)
             {
                 foreach (var annotation in propertyAnnotations)
@@ -1053,25 +1053,25 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            entryState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+            resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
 
-            ODataEntry entry = entryState.Entry;
-            Debug.Assert(entry != null, "entry != null");
-            entry.Properties = entry.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+            ODataResource resource = resourceState.Resource;
+            Debug.Assert(resource != null, "resource != null");
+            resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
         }
 
         /// <summary>
-        /// Checks if there is a next link annotation immediately after an expanded feed, and reads and stores it if there is one. 
+        /// Checks if there is a next link annotation immediately after an expanded resource set, and reads and stores it if there is one. 
         /// We fail here if we encounter any other property annotation for the expanded navigation (since these should come before the property itself).
         /// </summary>
-        /// <param name="feed">The feed that was just read.</param>
+        /// <param name="resourceSet">The resource set that was just read.</param>
         /// <param name="expandedNavigationLinkInfo">The information for the current expanded navigation link being read.</param>
-        private void ReadExpandedFeedAnnotationsAtFeedEnd(ODataFeedBase feed, ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo)
+        private void ReadExpandedFeedAnnotationsAtResourceSetEnd(ODataResourceSetBase resourceSet, ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo)
         {
             Debug.Assert(expandedNavigationLinkInfo != null, "expandedNavigationLinkInfo != null");
-            Debug.Assert(expandedNavigationLinkInfo.NavigationLink.IsCollection == true, "Only collection navigation properties can have feed content.");
+            Debug.Assert(expandedNavigationLinkInfo.NavigationLink.IsCollection == true, "Only collection navigation properties can have resourceSet content.");
 
-            // Look at the next property in the owning entry, if it's a property annotation for the expanded navigation link info property, read it.
+            // Look at the next property in the owning resource, if it's a property annotation for the expanded navigation link info property, read it.
             string propertyName, annotationName;
             while (this.JsonReader.NodeType == JsonNodeType.Property &&
                    TryParsePropertyAnnotation(this.JsonReader.GetPropertyName(), out propertyName, out annotationName) &&
@@ -1088,23 +1088,23 @@ namespace Microsoft.OData.Core.JsonLight
                 switch (this.CompleteSimplifiedODataAnnotation(annotationName))
                 {
                     case ODataAnnotationNames.ODataNextLink:
-                        if (feed.NextPageLink != null)
+                        if (resourceSet.NextPageLink != null)
                         {
                             throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation(ODataAnnotationNames.ODataNextLink, expandedNavigationLinkInfo.NavigationLink.Name));
                         }
 
                         // Read the property value.
-                        feed.NextPageLink = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataNextLink);
+                        resourceSet.NextPageLink = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataNextLink);
                         break;
 
                     case ODataAnnotationNames.ODataCount:
-                        if (feed.Count != null)
+                        if (resourceSet.Count != null)
                         {
                             throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation(ODataAnnotationNames.ODataCount, expandedNavigationLinkInfo.NavigationLink.Name));
                         }
 
                         // Read the property value.
-                        feed.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
+                        resourceSet.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
                         break;
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded feeds.
@@ -1115,46 +1115,46 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Sets specified media resource on an entry and hooks up metadata builder.
+        /// Sets specified media resource on a resource and hooks up metadata builder.
         /// </summary>
-        /// <param name="entryState">The entry state to use.</param>
+        /// <param name="resourceState">The resource state to use.</param>
         /// <param name="mediaResource">The media resource to set.</param>
-        private void SetEntryMediaResource(IODataJsonLightReaderEntryState entryState, ODataStreamReferenceValue mediaResource)
+        private void SetEntryMediaResource(IODataJsonLightReaderResourceState resourceState, ODataStreamReferenceValue mediaResource)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(mediaResource != null, "mediaResource != null");
-            ODataEntry entry = entryState.Entry;
-            Debug.Assert(entry != null, "entry != null");
+            ODataResource resource = resourceState.Resource;
+            Debug.Assert(resource != null, "resource != null");
 
-            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+            ODataResourceMetadataBuilder builder = this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
             mediaResource.SetMetadataBuilder(builder, /*propertyName*/ null);
-            entry.MediaResource = mediaResource;
+            resource.MediaResource = mediaResource;
         }
 
         /// <summary>
-        /// Reads entry property (which is neither instance nor property annotation) which has a value.
+        /// Reads resource property (which is neither instance nor property annotation) which has a value.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="propertyName">The name of the property read.</param>
-        /// <returns>A reader navigation link info representing the navigation link detected while reading the entry contents; null if no navigation link was detected.</returns>
+        /// <returns>A reader navigation link info representing the navigation link detected while reading the resource contents; null if no navigation link was detected.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
-        /// Post-Condition: JsonNodeType.EndObject              The end of the entry object
+        /// Post-Condition: JsonNodeType.EndObject              The end of the resource object
         ///                 JsonNodeType.Property               The next property after the property
-        ///                 JsonNodeType.StartObject            Expanded entry
-        ///                 JsonNodeType.StartArray             Expanded feed
-        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null entry
+        ///                 JsonNodeType.StartObject            Expanded resource
+        ///                 JsonNodeType.StartArray             Expanded resource set
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource
         /// </remarks>
-        private ODataJsonLightReaderNavigationLinkInfo ReadEntryPropertyWithValue(IODataJsonLightReaderEntryState entryState, string propertyName)
+        private ODataJsonLightReaderNavigationLinkInfo ReadEntryPropertyWithValue(IODataJsonLightReaderResourceState resourceState, string propertyName)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
             ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = null;
-            IEdmEntityType entityType = entryState.EntityType;
+            IEdmEntityType entityType = resourceState.EntityType;
             IEdmProperty edmProperty = ReaderValidationUtils.FindDefinedProperty(propertyName, entityType);
             if (edmProperty != null)
             {
@@ -1168,17 +1168,17 @@ namespace Microsoft.OData.Core.JsonLight
                     if (isCollection)
                     {
                         navigationLinkInfo = this.ReadingResponse
-                            ? ReadExpandedFeedNavigationLink(entryState, navigationProperty)
-                            : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(entryState, navigationProperty, /*isExpanded*/ true);
+                            ? ReadExpandedFeedNavigationLink(resourceState, navigationProperty)
+                            : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, /*isExpanded*/ true);
                     }
                     else
                     {
                         navigationLinkInfo = this.ReadingResponse
-                            ? ReadExpandedEntryNavigationLink(entryState, navigationProperty)
-                            : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(entryState, navigationProperty, /*isExpanded*/ true);
+                            ? ReadExpandedEntryNavigationLink(resourceState, navigationProperty)
+                            : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, navigationProperty, /*isExpanded*/ true);
                     }
 
-                    entryState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNavigationLinkStart(navigationLinkInfo.NavigationLink);
+                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNavigationLinkStart(navigationLinkInfo.NavigationLink);
                 }
                 else
                 {
@@ -1190,13 +1190,13 @@ namespace Microsoft.OData.Core.JsonLight
 
                     // NOTE: we currently do not check whether the property should be skipped
                     //       here because this can only happen for navigation properties and open properties.
-                    this.ReadEntryDataProperty(entryState, edmProperty, ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName));
+                    this.ReadEntryDataProperty(resourceState, edmProperty, ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName));
                 }
             }
             else
             {
                 // Undeclared property - we need to run detection alogorithm here.
-                navigationLinkInfo = this.ReadUndeclaredProperty(entryState, propertyName, /*propertyWithValue*/ true);
+                navigationLinkInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ true);
 
                 // Note that if navigation link is returned it's already validated, so we just report it here.
             }
@@ -1206,19 +1206,19 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Read an entry-level data property and check its version compliance. 
+        /// Read a resource-level data property and check its version compliance. 
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="edmProperty">The EDM property of the property being read, or null if the property is an open property.</param>
         /// <param name="propertyTypeName">The type name specified for the property in property annotation, or null if no such type name is available.</param>
         /// <remarks>
         /// Pre-Condition:  The reader is positioned on the first node of the property value
-        /// Post-Condition: JsonNodeType.Property:    the next property of the entry
-        ///                 JsonNodeType.EndObject:   the end-object node of the entry
+        /// Post-Condition: JsonNodeType.Property:    the next property of the resource
+        ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private void ReadEntryDataProperty(IODataJsonLightReaderEntryState entryState, IEdmProperty edmProperty, string propertyTypeName)
+        private void ReadEntryDataProperty(IODataJsonLightReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(edmProperty != null, "edmProperty != null");
             this.JsonReader.AssertNotBuffering();
 
@@ -1239,7 +1239,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
             {
-                AddEntryProperty(entryState, edmProperty.Name, propertyValue);
+                AddResourceProperty(resourceState, edmProperty.Name, propertyValue);
             }
 
             this.JsonReader.AssertNotBuffering();
@@ -1251,17 +1251,17 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Read an open property.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="propertyName">The name of the open property to read.</param>
         /// <param name="propertyWithValue">true if the property has a value, false if it doesn't.</param>
         /// <remarks>
         /// Pre-Condition:  The reader is positioned on the first node of the property value
-        /// Post-Condition: JsonNodeType.Property:    the next property of the entry
-        ///                 JsonNodeType.EndObject:   the end-object node of the entry
+        /// Post-Condition: JsonNodeType.Property:    the next property of the resource
+        ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private void ReadOpenProperty(IODataJsonLightReaderEntryState entryState, string propertyName, bool propertyWithValue)
+        private void ReadOpenProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool propertyWithValue)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.JsonReader.AssertNotBuffering();
 
@@ -1271,7 +1271,7 @@ namespace Microsoft.OData.Core.JsonLight
                 throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue(propertyName));
             }
 
-            string propertyTypeName = ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
+            string propertyTypeName = ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName);
 
             object propertyValue = this.ReadNonEntityValue(
                 propertyTypeName,
@@ -1285,7 +1285,7 @@ namespace Microsoft.OData.Core.JsonLight
                 true);
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
-            AddEntryProperty(entryState, propertyName, propertyValue);
+            AddResourceProperty(resourceState, propertyName, propertyValue);
 
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(
@@ -1296,7 +1296,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Read an undeclared property. That is a property which is not declared by the model, but the owning type is not an open type.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="propertyName">The name of the open property to read.</param>
         /// <param name="propertyWithValue">true if the property has a value, false if it doesn't.</param>
         /// <remarks>
@@ -1305,14 +1305,14 @@ namespace Microsoft.OData.Core.JsonLight
         ///                 JsonNodeType.StartArray:
         ///                 JsonNodeType.Property:        propertyWithValue is false and the reader is positioned on the node after the property.
         ///                 JsonNodeType.EndObject:
-        /// Post-Condition: JsonNodeType.Property:    the next property of the entry
-        ///                 JsonNodeType.EndObject:   the end-object node of the entry
+        /// Post-Condition: JsonNodeType.Property:    the next property of the resource
+        ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
         /// <returns>A navigation link info instance if the propery read is a navigation link which should be reported to the caller.
-        /// Otherwise null if the property was either ignored or read and added to the list of properties on the entry.</returns>
-        private ODataJsonLightReaderNavigationLinkInfo ReadUndeclaredProperty(IODataJsonLightReaderEntryState entryState, string propertyName, bool propertyWithValue)
+        /// Otherwise null if the property was either ignored or read and added to the list of properties on the resource.</returns>
+        private ODataJsonLightReaderNavigationLinkInfo ReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool propertyWithValue)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 #if DEBUG
             if (propertyWithValue)
@@ -1327,10 +1327,10 @@ namespace Microsoft.OData.Core.JsonLight
             // to preserve error messages, if we're not going to report undeclared links, then read open properties first.
             if (!this.MessageReaderSettings.ReportUndeclaredLinkProperties)
             {
-                if (entryState.EntityType.IsOpen)
+                if (resourceState.EntityType.IsOpen)
                 {
                     // Open property - read it as such.
-                    this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+                    this.ReadOpenProperty(resourceState, propertyName, propertyWithValue);
                     return null;
                 }
             }
@@ -1338,7 +1338,7 @@ namespace Microsoft.OData.Core.JsonLight
             // Undeclared property
             // Detect whether it's a link property or value property.
             // Link properties are stream properties and deferred links.
-            Dictionary<string, object> odataPropertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+            Dictionary<string, object> odataPropertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
             if (odataPropertyAnnotations != null)
             {
                 object propertyAnnotationValue;
@@ -1350,19 +1350,19 @@ namespace Microsoft.OData.Core.JsonLight
                     // Undeclared link properties are reported if the right flag is used, otherwise we need to fail.
                     if (!this.MessageReaderSettings.ReportUndeclaredLinkProperties)
                     {
-                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
+                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.EntityType.FullTypeName()));
                     }
 
                     // Read it as a deferred link - we never read the expanded content.
-                    ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = ReadDeferredNavigationLink(entryState, propertyName, /*navigationProperty*/ null);
-                    entryState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNavigationLinkStart(navigationLinkInfo.NavigationLink);
+                    ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = ReadDeferredNavigationLink(resourceState, propertyName, /*navigationProperty*/ null);
+                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNavigationLinkStart(navigationLinkInfo.NavigationLink);
 
                     // If the property is expanded, ignore the content if we're asked to do so.
                     if (propertyWithValue)
                     {
                         if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
                         {
-                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
+                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.EntityType.FullTypeName()));
                         }
 
                         this.ValidateExpandedNavigationLinkPropertyValue(null, propertyName);
@@ -1386,7 +1386,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // Undeclared link properties are reported if the right flag is used, otherwise we need to fail.
                     if (!this.MessageReaderSettings.ReportUndeclaredLinkProperties)
                     {
-                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
+                        throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.EntityType.FullTypeName()));
                     }
 
                     // Stream properties can't have a value
@@ -1395,16 +1395,16 @@ namespace Microsoft.OData.Core.JsonLight
                         throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue(propertyName));
                     }
 
-                    ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(entryState, propertyName);
-                    AddEntryProperty(entryState, propertyName, streamPropertyValue);
+                    ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
+                    AddResourceProperty(resourceState, propertyName, streamPropertyValue);
                     return null;
                 }
             }
 
-            if (entryState.EntityType.IsOpen)
+            if (resourceState.EntityType.IsOpen)
             {
                 // Open property - read it as such.
-                this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+                this.ReadOpenProperty(resourceState, propertyName, propertyWithValue);
                 return null;
             }
 
@@ -1417,27 +1417,27 @@ namespace Microsoft.OData.Core.JsonLight
             // Property with value can only be ignored if we're asked to do so.
             if (!this.MessageReaderSettings.IgnoreUndeclaredValueProperties)
             {
-                throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.FullTypeName()));
+                throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.EntityType.FullTypeName()));
             }
 
             // Validate that the property doesn't have unrecognized annotations
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
-            ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
+            ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName);
 
             // Read it as such.
-            this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+            this.ReadOpenProperty(resourceState, propertyName, propertyWithValue);
             return null;
         }
 
         /// <summary>
         /// Reads a stream property value from the property annotations.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="streamPropertyName">The name of the stream property to read the value for.</param>
         /// <returns>The newly created stream reference value.</returns>
-        private ODataStreamReferenceValue ReadStreamPropertyValue(IODataJsonLightReaderEntryState entryState, string streamPropertyName)
+        private ODataStreamReferenceValue ReadStreamPropertyValue(IODataJsonLightReaderResourceState resourceState, string streamPropertyName)
         {
-            Debug.Assert(entryState != null, "entryState != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(streamPropertyName), "!string.IsNullOrEmpty(streamPropertyName)");
 
             // Fail on stream properties in requests as they cannot appear there.
@@ -1448,7 +1448,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             ODataStreamReferenceValue streamReferenceValue = new ODataStreamReferenceValue();
 
-            Dictionary<string, object> propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(streamPropertyName);
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(streamPropertyName);
             if (propertyAnnotations != null)
             {
                 foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
@@ -1481,7 +1481,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+            ODataResourceMetadataBuilder builder = this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
 
             // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
             // For undeclared stream properties, we will apply conventional metadata evaluation just as declared stream properties.
@@ -1491,10 +1491,10 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads one operation for the entry being read.
+        /// Reads one operation for the resource being read.
         /// </summary>
         /// <param name="readerContext">The Json operation deserializer context.</param>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
         /// <param name="insideArray">true if the operation value is inside an array, i.e. multiple targets for the operation; false otherwise.</param>
         /// <remarks>
@@ -1503,7 +1503,7 @@ namespace Microsoft.OData.Core.JsonLight
         ///                 JsonNodeType.StartObject:   the first node of the next operation value when there are multiple targets for the operation.
         ///                 JsonNodeType.EndArray:      the end-array of the operation values when there are multiple target for the operation.
         /// </remarks>
-        private void ReadSingleOperationValue(IODataJsonOperationsDeserializerContext readerContext, IODataJsonLightReaderEntryState entryState, string metadataReferencePropertyName, bool insideArray)
+        private void ReadSingleOperationValue(IODataJsonOperationsDeserializerContext readerContext, IODataJsonLightReaderResourceState resourceState, string metadataReferencePropertyName, bool insideArray)
         {
             Debug.Assert(readerContext != null, "readerContext != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
@@ -1580,18 +1580,18 @@ namespace Microsoft.OData.Core.JsonLight
             // Sets the metadata builder to evaluate by convention any operation property that's not on the wire.
             // Note we must only set this after the operation is read from the wire since we lose the ability to tell
             // what was on the wire and what is being dynamically computed.
-            this.SetMetadataBuilder(entryState, operation);
+            this.SetMetadataBuilder(resourceState, operation);
         }
 
         /// <summary>
-        /// Reads one operation for the feed being read.
+        /// Reads one operation for the resource set being read.
         /// </summary>
-        /// <param name="feed">The feed to read.</param>
+        /// <param name="resourceSet">The resource set to read.</param>
         /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
         /// <param name="insideArray">true if the operation value is inside an array, i.e. multiple targets for the operation; false otherwise.</param>
-        private void ReadSingleOperationValue(ODataFeed feed, string metadataReferencePropertyName, bool insideArray)
+        private void ReadSingleOperationValue(ODataResourceSet resourceSet, string metadataReferencePropertyName, bool insideArray)
         {
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
             Debug.Assert(ODataJsonLightUtils.IsMetadataReferenceProperty(metadataReferencePropertyName), "ODataJsonLightReaderUtils.IsMetadataReferenceProperty(metadataReferencePropertyName)");
 
@@ -1603,7 +1603,7 @@ namespace Microsoft.OData.Core.JsonLight
             // read over the start-object node of the metadata object for the operations
             this.JsonReader.ReadStartObject();
 
-            var operation = this.CreateODataOperationAndAddToFeed(feed, metadataReferencePropertyName);
+            var operation = this.CreateODataOperationAndAddToFeed(resourceSet, metadataReferencePropertyName);
 
             // Ignore the unrecognized operation.
             if (operation == null)
@@ -1667,11 +1667,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Sets the metadata builder for the operation.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="operation">The operation to set the metadata builder on.</param>
-        private void SetMetadataBuilder(IODataJsonLightReaderEntryState entryState, ODataOperation operation)
+        private void SetMetadataBuilder(IODataJsonLightReaderResourceState resourceState, ODataOperation operation)
         {
-            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+            ODataResourceMetadataBuilder builder = this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
             operation.SetMetadataBuilder(builder, this.ContextUriParseResult.MetadataDocumentUri);
         }
 
@@ -1711,10 +1711,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates a new instance of ODataAction or ODataFunction for the <paramref name="metadataReferencePropertyName"/>.
         /// </summary>
-        /// <param name="feed">The feed to add the action or function .</param>
+        /// <param name="resourceSet">The resource set to add the action or function .</param>
         /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
         /// <returns>A new instance of ODataAction or ODataFunction for the <paramref name="metadataReferencePropertyName"/>.</returns>
-        private ODataOperation CreateODataOperationAndAddToFeed(ODataFeed feed, string metadataReferencePropertyName)
+        private ODataOperation CreateODataOperationAndAddToFeed(ODataResourceSet resourceSet, string metadataReferencePropertyName)
         {
             string fullyQualifiedOperationName = ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
             IEdmOperation firstActionOrFunction = this.JsonLightInputContext.Model.ResolveOperations(fullyQualifiedOperationName).FirstOrDefault();
@@ -1731,32 +1731,32 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (isAction)
             {
-                feed.AddAction((ODataAction)operation);
+                resourceSet.AddAction((ODataAction)operation);
             }
             else
             {
-                feed.AddFunction((ODataFunction)operation);
+                resourceSet.AddFunction((ODataFunction)operation);
             }
 
             return operation;
         }
 
         /// <summary>
-        /// Read the metadata reference property value for the entry being read.
+        /// Read the metadata reference property value for the resource being read.
         /// </summary>
-        /// <param name="entryState">The state of the reader for entry to read.</param>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property:      first node of the metadata reference property's value. Currently 
         ///                                             actions and functions are the only supported metadata reference property,
         ///                                             we will throw if this is not a start object or start array node.
         /// Post-Condition: JsonNodeType.Property:      the property after the annotation value
-        ///                 JsonNodeType.EndObject:     the end-object of the entry
+        ///                 JsonNodeType.EndObject:     the end-object of the resource
         /// </remarks>
-        private void ReadMetadataReferencePropertyValue(IODataJsonLightReaderEntryState entryState, string metadataReferencePropertyName)
+        private void ReadMetadataReferencePropertyValue(IODataJsonLightReaderResourceState resourceState, string metadataReferencePropertyName)
         {
-            Debug.Assert(entryState != null, "entryState != null");
-            Debug.Assert(entryState.Entry != null, "entryState.Entry != null");
+            Debug.Assert(resourceState != null, "resourceState != null");
+            Debug.Assert(resourceState.Resource != null, "resourceState.Resource != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
             Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
@@ -1766,7 +1766,7 @@ namespace Microsoft.OData.Core.JsonLight
             // Validate that the property name is a valid absolute URI or a valid URI fragment.
             ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
 
-            IODataJsonOperationsDeserializerContext readerContext = new OperationsDeserializerContext(entryState.Entry, this);
+            IODataJsonOperationsDeserializerContext readerContext = new OperationsDeserializerContext(resourceState.Resource, this);
 
             bool insideArray = false;
             if (readerContext.JsonReader.NodeType == JsonNodeType.StartArray)
@@ -1777,7 +1777,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             do
             {
-                this.ReadSingleOperationValue(readerContext, entryState, metadataReferencePropertyName, insideArray);
+                this.ReadSingleOperationValue(readerContext, resourceState, metadataReferencePropertyName, insideArray);
             }
             while (insideArray && readerContext.JsonReader.NodeType != JsonNodeType.EndArray);
 
@@ -1791,13 +1791,13 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Read the metadata reference property value for the feed being read.
+        /// Read the metadata reference property value for the resource set being read.
         /// </summary>
-        /// <param name="feed">The feed to read.</param>
+        /// <param name="resourceSet">The resource set to read.</param>
         /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
-        private void ReadMetadataReferencePropertyValue(ODataFeed feed, string metadataReferencePropertyName)
+        private void ReadMetadataReferencePropertyValue(ODataResourceSet resourceSet, string metadataReferencePropertyName)
         {
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
             Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
@@ -1816,7 +1816,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             do
             {
-                this.ReadSingleOperationValue(feed, metadataReferencePropertyName, insideArray);
+                this.ReadSingleOperationValue(resourceSet, metadataReferencePropertyName, insideArray);
             }
             while (insideArray && this.JsonReader.NodeType != JsonNodeType.EndArray);
 
@@ -1847,9 +1847,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="propertyName">Name for the navigation property, used in error message only.</param>
         private void ValidateExpandedNavigationLinkPropertyValue(bool? isCollection, string propertyName)
         {
-            // an expanded link with entry requires a StartObject node here;
-            // an expanded link with feed requires a StartArray node here;
-            // an expanded link with null entry requires a primitive null node here;
+            // an expanded link with resource requires a StartObject node here;
+            // an expanded link with resource set requires a StartArray node here;
+            // an expanded link with null resource requires a primitive null node here;
             JsonNodeType nodeType = this.JsonReader.NodeType;
             if (nodeType == JsonNodeType.StartArray)
             {
@@ -1860,7 +1860,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else if ((nodeType == JsonNodeType.PrimitiveValue && this.JsonReader.Value == null) || nodeType == JsonNodeType.StartObject)
             {
-                // Expanded entry (null or non-null)
+                // Expanded resource (null or non-null)
                 if (isCollection == true)
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(nodeType, propertyName));
@@ -1879,27 +1879,27 @@ namespace Microsoft.OData.Core.JsonLight
         private sealed class OperationsDeserializerContext : IODataJsonOperationsDeserializerContext
         {
             /// <summary>
-            /// The entry to add operations to.
+            /// The resource to add operations to.
             /// </summary>
-            private ODataEntry entry;
+            private ODataResource resource;
 
             /// <summary>
             /// The deserializer to use.
             /// </summary>
-            private ODataJsonLightEntryAndFeedDeserializer jsonLightEntryAndFeedDeserializer;
+            private ODataJsonLightResourceDeserializer jsonLightResourceDeserializer;
 
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="entry">The entry to add operations to.</param>
+            /// <param name="resource">The resource to add operations to.</param>
             /// <param name="jsonLightEntryAndFeedDeserializer">The deserializer to use.</param>
-            public OperationsDeserializerContext(ODataEntry entry, ODataJsonLightEntryAndFeedDeserializer jsonLightEntryAndFeedDeserializer)
+            public OperationsDeserializerContext(ODataResource resource, ODataJsonLightResourceDeserializer jsonLightEntryAndFeedDeserializer)
             {
-                Debug.Assert(entry != null, "entry != null");
+                Debug.Assert(resource != null, "resource != null");
                 Debug.Assert(jsonLightEntryAndFeedDeserializer != null, "jsonLightEntryAndFeedDeserializer != null");
 
-                this.entry = entry;
-                this.jsonLightEntryAndFeedDeserializer = jsonLightEntryAndFeedDeserializer;
+                this.resource = resource;
+                this.jsonLightResourceDeserializer = jsonLightEntryAndFeedDeserializer;
             }
 
             /// <summary>
@@ -1909,7 +1909,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 get
                 {
-                    return this.jsonLightEntryAndFeedDeserializer.JsonReader;
+                    return this.jsonLightResourceDeserializer.JsonReader;
                 }
             }
 
@@ -1920,27 +1920,27 @@ namespace Microsoft.OData.Core.JsonLight
             /// <returns>An absolute URI to report.</returns>
             public Uri ProcessUriFromPayload(string uriFromPayload)
             {
-                return this.jsonLightEntryAndFeedDeserializer.ProcessUriFromPayload(uriFromPayload);
+                return this.jsonLightResourceDeserializer.ProcessUriFromPayload(uriFromPayload);
             }
 
             /// <summary>
-            /// Adds the specified action to the current entry.
+            /// Adds the specified action to the current resource.
             /// </summary>
             /// <param name="action">The action whcih is fully populated with the data from the payload.</param>
             public void AddActionToEntry(ODataAction action)
             {
                 Debug.Assert(action != null, "action != null");
-                this.entry.AddAction(action);
+                this.resource.AddAction(action);
             }
 
             /// <summary>
-            /// Adds the specified function to the current entry.
+            /// Adds the specified function to the current resource.
             /// </summary>
             /// <param name="function">The function whcih is fully populated with the data from the payload.</param>
             public void AddFunctionToEntry(ODataFunction function)
             {
                 Debug.Assert(function != null, "function != null");
-                this.entry.AddFunction(function);
+                this.resource.AddFunction(function);
             }
         }
     }

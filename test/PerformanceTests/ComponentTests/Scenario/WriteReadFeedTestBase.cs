@@ -22,12 +22,12 @@ namespace Microsoft.OData.Performance
         /// <param name="entry"></param>
         /// <param name="entitySet"></param>
         /// <returns>The payload size</returns>
-        protected Int64 WriteFeed(Stream writeStream, IEdmModel edmModel, long numberOfEntries, ODataEntry entry, IEdmEntitySetBase entitySet)
+        protected Int64 WriteFeed(Stream writeStream, IEdmModel edmModel, long numberOfEntries, ODataResource entry, IEdmEntitySetBase entitySet)
         {
             using (var messageWriter = ODataMessageHelper.CreateMessageWriter(writeStream, edmModel))
             {
-                ODataWriter writer = messageWriter.CreateODataFeedWriter(entitySet);
-                writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc") });
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet);
+                writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
                 for (long i = 0; i < numberOfEntries; ++i)
                 {
                     writer.WriteStart(entry);
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Performance
             readStream.Seek(0, SeekOrigin.Begin);
             using (var messageReader = ODataMessageHelper.CreateMessageReader(readStream, edmModel))
             {
-                ODataReader feedReader = messageReader.CreateODataFeedReader(entitySet, expectedBaseEntityType);
+                ODataReader feedReader = messageReader.CreateODataResourceSetReader(entitySet, expectedBaseEntityType);
                 while (feedReader.Read()) { }
             }
         }

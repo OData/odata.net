@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>
         /// The set of supported media types is ordered (desc) by their precedence/priority with respect to (1) format and (2) media type.
-        /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
+        /// As a result the default media type for a given payloadKind is the first resource in the MediaTypeWithFormat array.
         /// </remarks>
         private static readonly ODataMediaTypeFormat[][] defaultMediaTypes =
             new ODataMediaTypeFormat[][]
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core
                 {
                 },
 
-                // entry
+                // resource
                 new ODataMediaTypeFormat[]
                 {
                 },
@@ -133,8 +133,8 @@ namespace Microsoft.OData.Core
         /// </summary>
         private static readonly ODataPayloadKind[] JsonPayloadKinds = new[]
         {
-            ODataPayloadKind.Feed,
-            ODataPayloadKind.Entry,
+            ODataPayloadKind.ResourceSet,
+            ODataPayloadKind.Resource,
             ODataPayloadKind.Property,
             ODataPayloadKind.EntityReferenceLink,
             ODataPayloadKind.EntityReferenceLinks,

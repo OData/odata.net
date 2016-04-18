@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        public WritingEntryArgs(ODataEntry entry, object entity)
+        public WritingEntryArgs(ODataResource entry, object entity)
         {
             Util.CheckArgumentNull(entry, "entry");
             Util.CheckArgumentNull(entity, "entity");
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client
         /// <value>
         /// The entry.
         /// </value>
-        public ODataEntry Entry { get; private set; }
+        public ODataResource Entry { get; private set; }
 
         /// <summary>
         /// Gets the entity.

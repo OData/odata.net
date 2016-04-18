@@ -39,18 +39,18 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Visits an entity set instance: creates a new ODataFeed instance, calls ODataWriter.WriteStart()
+        /// Visits an entity set instance: creates a new ODataResourceSet instance, calls ODataWriter.WriteStart()
         /// before visiting the entries and then calls ODataWriter.WriteEnd()
         /// </summary>
         /// <param name="payloadElement">The entity set instance to write.</param>
         public override void Visit(EntitySetInstance payloadElement)
         {
-            // create an ODataFeed and write it
-            ODataFeed feed = new ODataFeed()
+            // create an ODataResourceSet and write it
+            ODataResourceSet feed = new ODataResourceSet()
             {
                 // NOTE: the required Id is set when processing the annotations in AddFeedMetadata()
                 Count = payloadElement.InlineCount,
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     NavigationSourceEntityTypeName = "Null",
                     NavigationSourceName = "MySet",
@@ -76,9 +76,9 @@ namespace Microsoft.Test.Taupo.OData.Common
                 feed.NextPageLink = new Uri(payloadElement.NextLink);
             }
 
-            if (this.items.Count > 0 && this.items.Peek() is ODataNavigationLink)
+            if (this.items.Count > 0 && this.items.Peek() is ODataNestedResourceInfo)
             {
-                var currentLink = this.items.Peek() as ODataNavigationLink;
+                var currentLink = this.items.Peek() as ODataNestedResourceInfo;
                 ExceptionUtilities.CheckObjectNotNull(currentLink, "Feed can only exist at top level or inside a navigation link");
                 currentLink.SetAnnotation(new ODataNavigationLinkExpandedItemObjectModelAnnotation() { ExpandedItem = feed });
             }
@@ -90,7 +90,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             finally
             {
-                feed = (ODataFeed)items.Pop();
+                feed = (ODataResourceSet)items.Pop();
             }
 
             // If we are at the top level push this to items to make it the result.
@@ -101,18 +101,18 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Visits an entity instance: creates a new ODataEntry instance, collects and sets all the properties,
+        /// Visits an entity instance: creates a new ODataResource instance, collects and sets all the properties,
         /// calls ODataWriter.WriteStart(), then visits the navigation properties and calls ODataWriter.WriteEnd()
         /// </summary>
         /// <param name="payloadElement">The entity instance to write.</param>
         public override void Visit(EntityInstance payloadElement)
         {
-            // create an ODataEntry and write it
+            // create an ODataResource and write it
             string editLinkString = payloadElement.GetEditLink();
             string selfLinkString = payloadElement.GetSelfLink();
             string entryId = payloadElement.Id;
 
-            var entry = new ODataEntry()
+            var entry = new ODataResource()
             {
                 Id = string.IsNullOrEmpty(entryId) ? null : new Uri(entryId),
                 ETag = payloadElement.ETag,
@@ -120,7 +120,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 ReadLink = string.IsNullOrEmpty(selfLinkString) ? null : new Uri(selfLinkString),
                 TypeName = payloadElement.FullTypeName,
                 Properties = new List<ODataProperty>(),
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     NavigationSourceEntityTypeName = payloadElement.FullTypeName,
                     NavigationSourceName = "MySet",
@@ -143,14 +143,14 @@ namespace Microsoft.Test.Taupo.OData.Common
             if (this.items.Count > 0)
             {
                 var parent = this.items.Peek();
-                var navLink = parent as ODataNavigationLink;
+                var navLink = parent as ODataNestedResourceInfo;
                 if (navLink != null)
                 {
                     navLink.SetAnnotation(new ODataNavigationLinkExpandedItemObjectModelAnnotation() { ExpandedItem = entry });
                 }
                 else
                 {
-                    var feed = parent as ODataFeed;
+                    var feed = parent as ODataResourceSet;
                     ExceptionUtilities.CheckObjectNotNull(feed, "Feed was expected");
                     ODataFeedEntriesObjectModelAnnotation annotation = feed.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>();
                     if (annotation == null)
@@ -174,7 +174,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             finally
             {
-                entry = (ODataEntry)this.items.Pop();
+                entry = (ODataResource) this.items.Pop();
             }
 
             //Return to original values
@@ -219,7 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             else
             {
-                var entry = parent as ODataEntry;
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;
@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             else
             {
-                var entry = parent as ODataEntry;
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;
@@ -305,7 +305,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             else
             {
-                var entry = parent as ODataEntry;
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;
@@ -353,7 +353,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             if (parent != null)
             {
-                var entry = parent as ODataEntry;
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;
@@ -470,7 +470,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             if (parent != null)
             {
-                var entry = parent as ODataEntry;
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;
@@ -562,8 +562,8 @@ namespace Microsoft.Test.Taupo.OData.Common
                 this.items.Push(property);
             }
             else
-            {
-                var entry = parent as ODataEntry;
+            { 
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;
@@ -643,7 +643,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 collection = contentType.StringRepresentation.Contains("feed");
             }
 
-            var link = new ODataNavigationLink()
+            var link = new ODataNestedResourceInfo()
             {
                 Name = payloadElement.Name,
                 IsCollection = collection
@@ -660,19 +660,19 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
             finally
             {
-                link = (ODataNavigationLink)this.items.Pop();
+                link = (ODataNestedResourceInfo)this.items.Pop();
             }
         }
 
         /// <summary>
-        /// Initializes an ODataNavigationLink instance for the deferred link payload.
+        /// Initializes an ODataNestedResourceInfo instance for the deferred link payload.
         /// </summary>
         /// <param name="payloadElement">The deferred link to process.</param>
         public override void Visit(DeferredLink payloadElement)
         {
-            if (this.items.Peek() is ODataNavigationLink)
+            if (this.items.Peek() is ODataNestedResourceInfo)
             {
-                ODataNavigationLink navigationLink = (ODataNavigationLink)this.items.Pop();
+                ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)this.items.Pop();
                 navigationLink.Url = new Uri(payloadElement.UriString);
 
                 var contentType = payloadElement.Annotations.Where(a => a is ContentTypeAnnotation).SingleOrDefault();
@@ -681,7 +681,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                     navigationLink.IsCollection = contentType.StringRepresentation.Contains("feed");
                 }
 
-                var entry = (ODataEntry)this.items.Peek();
+                var entry = (ODataResource)this.items.Peek();
 
                 var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
                 if (annotation == null)
@@ -712,13 +712,13 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Initializes a new expanded ODataNavigationLink instance and visits the payload.
+        /// Initializes a new expanded ODataNestedResourceInfo instance and visits the payload.
         /// </summary>
         /// <param name="payloadElement">The expanded link to visit.</param>
         public override void Visit(ExpandedLink payloadElement)
         {
-            Debug.Assert(this.items.Peek() is ODataNavigationLink);
-            ODataNavigationLink navigationLink = (ODataNavigationLink)this.items.Pop();
+            Debug.Assert(this.items.Peek() is ODataNestedResourceInfo);
+            ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)this.items.Pop();
 
             navigationLink.IsCollection = !payloadElement.IsSingleEntity;
             // TODO, ckerer: where do I get the info whether this links is a singleton or collection?
@@ -726,8 +726,9 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 navigationLink.Url = new Uri(payloadElement.UriString);
             }
+            
+            var entry = (ODataResource) this.items.Peek();
 
-            var entry = (ODataEntry)this.items.Peek();
             var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
             if (annotation == null)
             {
@@ -785,7 +786,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             var parent = this.items.Peek();
             if (parent != null)
             {
-                var entry = parent as ODataEntry;
+                var entry = parent as ODataResource;
                 if (entry != null)
                 {
                     var properties = (List<ODataProperty>)entry.Properties;

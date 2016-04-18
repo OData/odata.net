@@ -42,31 +42,31 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             }
         }
 
-        public override void WriteStart(ODataFeed feed)
+        public override void WriteStart(ODataResourceSet resourceCollection)
         {
         }
 
-        public override System.Threading.Tasks.Task WriteStartAsync(ODataFeed feed)
+        public override System.Threading.Tasks.Task WriteStartAsync(ODataResourceSet resourceCollection)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void WriteStart(ODataEntry entry)
+        public override void WriteStart(ODataResource entry)
         {
             this.WriteEntryImplementation(entry);
         }
 
-        public override System.Threading.Tasks.Task WriteStartAsync(ODataEntry entry)
+        public override System.Threading.Tasks.Task WriteStartAsync(ODataResource entry)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void WriteStart(ODataNavigationLink navigationLink)
+        public override void WriteStart(ODataNestedResourceInfo navigationLink)
         {
             throw new System.NotImplementedException();
         }
 
-        public override System.Threading.Tasks.Task WriteStartAsync(ODataNavigationLink navigationLink)
+        public override System.Threading.Tasks.Task WriteStartAsync(ODataNestedResourceInfo navigationLink)
         {
             throw new System.NotImplementedException();
         }
@@ -109,7 +109,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             throw new System.NotImplementedException();
         }
 
-        private void WriteEntryImplementation(ODataEntry entry)
+        private void WriteEntryImplementation(ODataResource entry)
         {
             if (this.schema == null)
             {

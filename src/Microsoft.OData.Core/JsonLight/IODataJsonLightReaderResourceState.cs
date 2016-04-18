@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IODataJsonLightReaderEntryState.cs" company="Microsoft">
+// <copyright file="IODataJsonLightReaderResourceState.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,27 +13,27 @@ namespace Microsoft.OData.Core.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Interface representing a state of the JSON reader for entry.
+    /// Interface representing a state of the JSON reader for resource.
     /// </summary>
-    internal interface IODataJsonLightReaderEntryState
+    internal interface IODataJsonLightReaderResourceState
     {
         /// <summary>
-        /// The entry being read.
+        /// The resource being read.
         /// </summary>
-        ODataEntry Entry { get; }
+        ODataResource Resource { get; }
 
         /// <summary>
-        /// The entity type for the entry (if available)
+        /// The entity type for the resource (if available)
         /// </summary>
         IEdmEntityType EntityType { get; }
 
         /// <summary>
-        /// The metadata builder instance for the entry.
+        /// The metadata builder instance for the resource.
         /// </summary>
-        ODataEntityMetadataBuilder MetadataBuilder { get; set; }
+        ODataResourceMetadataBuilder MetadataBuilder { get; set; }
 
         /// <summary>
-        /// Flag which indicates that during parsing of the entry represented by this state,
+        /// Flag which indicates that during parsing of the resource represented by this state,
         /// any property which is not an instance annotation was found. This includes property annotations
         /// for property which is not present in the payload.
         /// </summary>
@@ -43,13 +43,13 @@ namespace Microsoft.OData.Core.JsonLight
         bool AnyPropertyFound { get; set; }
 
         /// <summary>
-        /// If the reader finds a navigation link to report, but it must first report the parent entry
-        /// it will store the navigation link info in this property. So this will only ever store the first navigation link of an entry.
+        /// If the reader finds a navigation link to report, but it must first report the parent resource
+        /// it will store the navigation link info in this property. So this will only ever store the first navigation link of a resource.
         /// </summary>
         ODataJsonLightReaderNavigationLinkInfo FirstNavigationLinkInfo { get; set; }
 
         /// <summary>
-        /// The duplicate property names checker for the entry represented by the current state. May be null.
+        /// The duplicate property names checker for the resource represented by the current state. May be null.
         /// </summary>
         DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker { get; }
 
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Core.JsonLight
         SelectedPropertiesNode SelectedProperties { get; }
 
         /// <summary>
-        /// The set of names of the navigation properties we have read so far while reading the entry.
+        /// The set of names of the navigation properties we have read so far while reading the resource.
         /// </summary>
         List<string> NavigationPropertiesRead { get; }
 

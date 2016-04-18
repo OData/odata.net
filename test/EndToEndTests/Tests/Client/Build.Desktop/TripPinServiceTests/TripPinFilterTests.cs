@@ -322,13 +322,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
         #region private methods
-        private void requestAndCheckResult(string uri, Action<ODataEntry> verify)
+        private void requestAndCheckResult(string uri, Action<ODataResource> verify)
         {
             foreach (var mimeType in mimeTypes)
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataEntry> entries = QueryFeed(uri, mimeType);
+                    List<ODataResource> entries = QueryFeed(uri, mimeType);
                     entries.ForEach(item =>
                     {
                         verify.Invoke(item);
@@ -337,21 +337,21 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        private void requestAndCheckFeedResult(string uri, Action<List<ODataEntry>> verify)
+        private void requestAndCheckFeedResult(string uri, Action<List<ODataResource>> verify)
         {
             foreach (var mimeType in mimeTypes)
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataEntry> entries = QueryFeed(uri, mimeType);
+                    List<ODataResource> entries = QueryFeed(uri, mimeType);
                     verify.Invoke(entries);
                 }
             }
         }
 
-        private List<ODataEntry> QueryFeed(string requestUri, string mimeType)
+        private List<ODataResource> QueryFeed(string requestUri, string mimeType)
         {
-            List<ODataEntry> entries = new List<ODataEntry>();
+            List<ODataResource> entries = new List<ODataResource>();
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -363,18 +363,18 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataFeedReader();
+                    var reader = messageReader.CreateODataResourceSetReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            ODataEntry entry = reader.Item as ODataEntry;
+                            ODataResource entry = reader.Item as ODataResource;
                             entries.Add(entry);
                         }
-                        else if (reader.State == ODataReaderState.FeedEnd)
+                        else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataFeed);
+                            Assert.IsNotNull(reader.Item as ODataResourceSet);
                         }
                     }
 

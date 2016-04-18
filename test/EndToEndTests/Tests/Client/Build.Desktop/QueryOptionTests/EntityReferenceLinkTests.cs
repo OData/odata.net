@@ -76,7 +76,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataEntry> entries = this.TestsHelper.QueryEntries("People(2)?$expand=Parent/$ref", mimeType);
+                    List<ODataResource> entries = this.TestsHelper.QueryEntries("People(2)?$expand=Parent/$ref", mimeType);
                     Assert.AreEqual(2, entries.Count);
                     ODataInstanceAnnotation annotation = entries.First().InstanceAnnotations.SingleOrDefault(ia => ia.Name == "Link.AnnotationByEntry");
                     Assert.IsNotNull(annotation);
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataFeed feed = this.TestsHelper.QueryInnerFeed("Products(5)?$expand=Details/$ref", mimeType);
+                    ODataResourceSet feed = this.TestsHelper.QueryInnerFeed("Products(5)?$expand=Details/$ref", mimeType);
                     Assert.AreEqual(1, feed.InstanceAnnotations.Count);
                     ODataInstanceAnnotation annotation = feed.InstanceAnnotations.SingleOrDefault(ia => ia.Name == "Links.AnnotationByFeed");
                     Assert.IsNotNull(annotation);

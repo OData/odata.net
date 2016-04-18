@@ -78,7 +78,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     {
                         IEdmEntitySetBase entitySet = (IEdmEntitySetBase)entitySource;
 
-                        resultWriter = messageWriter.CreateODataFeedWriter(entitySet, (IEdmEntityType)this.QueryContext.Target.ElementType);
+                        resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, (IEdmEntityType)this.QueryContext.Target.ElementType);
                         ResponseWriter.WriteFeed(resultWriter, (IEdmEntityType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
                     }
                     else
@@ -100,7 +100,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             }
                         }
 
-                        resultWriter = messageWriter.CreateODataEntryWriter(entitySource, (IEdmEntityType)this.QueryContext.Target.Type);
+                        resultWriter = messageWriter.CreateODataResourceWriter(entitySource, (IEdmEntityType)this.QueryContext.Target.Type);
                         ResponseWriter.WriteEntry(resultWriter, result, entitySource, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.RequestHeaders);
                     }
                 }
@@ -163,20 +163,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                 parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
                                 break;
                             }
-                        case ODataParameterReaderState.Entry:
+                        case ODataParameterReaderState.Resource:
                             {
-                                var entryReader = parameterReader.CreateEntryReader();
+                                var entryReader = parameterReader.CreateResourceReader();
                                 object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadEntryParameterValue(entryReader));
                                 parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
                                 break;
                             }
-                        case ODataParameterReaderState.Feed:
+                        case ODataParameterReaderState.ResourceSet:
                             {
                                 IList collectionList = null;
-                                var feedReader = parameterReader.CreateFeedReader();
+                                var feedReader = parameterReader.CreateResourceSetReader();
                                 while (feedReader.Read())
                                 {
-                                    if (feedReader.State == ODataReaderState.EntryEnd)
+                                    if (feedReader.State == ODataReaderState.ResourceEnd)
                                     {
                                         object clrItem = ODataObjectModelConverter.ConvertPropertyValue(feedReader.Item);
                                         if (collectionList == null)

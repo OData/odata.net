@@ -54,13 +54,13 @@ namespace Microsoft.OData.Core.Tests
 
             using (var innerMessageReader = new ODataMessageReader(asyncResponse, new ODataMessageReaderSettings(), userModel))
             {
-                var reader = innerMessageReader.CreateODataEntryReader();
+                var reader = innerMessageReader.CreateODataResourceReader();
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataEntry entry = reader.Item as ODataEntry;
+                        ODataResource entry = reader.Item as ODataResource;
                         Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
                     }
                 }

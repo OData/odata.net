@@ -53,13 +53,13 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                         while (deltaReader.Read())
                         {
-                            if (deltaReader.State == ODataDeltaReaderState.DeltaEntryEnd)
+                            if (deltaReader.State == ODataDeltaReaderState.DeltaResourceEnd)
                             {
-                                ODataEntry entry = deltaReader.Item as ODataEntry;
+                                ODataResource entry = deltaReader.Item as ODataResource;
                             }
-                            else if (deltaReader.State == ODataDeltaReaderState.FeedEnd)
+                            else if (deltaReader.State == ODataDeltaReaderState.DeltaResourceSetEnd)
                             {
-                                ODataDeltaFeed feed = deltaReader.Item as ODataDeltaFeed;
+                                ODataDeltaResourceSet feed = deltaReader.Item as ODataDeltaResourceSet;
                             }
                         }
                         Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
@@ -94,9 +94,9 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                         while (deltaReader.Read())
                         {
-                            if (deltaReader.State == ODataDeltaReaderState.DeltaEntryEnd)
+                            if (deltaReader.State == ODataDeltaReaderState.DeltaResourceEnd)
                             {
-                                ODataEntry entry = deltaReader.Item as ODataEntry;
+                                ODataResource entry = deltaReader.Item as ODataResource;
 
                             }
                         }
@@ -129,9 +129,9 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                         while (deltaReader.Read())
                         {
-                            if (deltaReader.State == ODataDeltaReaderState.DeltaEntryEnd)
+                            if (deltaReader.State == ODataDeltaReaderState.DeltaResourceEnd)
                             {
-                                ODataEntry entry = deltaReader.Item as ODataEntry;
+                                ODataResource entry = deltaReader.Item as ODataResource;
 
                             }
                         }
@@ -166,26 +166,26 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                         while (deltaReader.Read())
                         {
-                            if (deltaReader.State == ODataDeltaReaderState.FeedEnd)
+                            if (deltaReader.State == ODataDeltaReaderState.DeltaResourceSetEnd)
                             {
-                                Assert.IsNotNull(deltaReader.Item as ODataDeltaFeed);
+                                Assert.IsNotNull(deltaReader.Item as ODataDeltaResourceSet);
                             }
-                            else if (deltaReader.State == ODataDeltaReaderState.DeltaEntryEnd)
+                            else if (deltaReader.State == ODataDeltaReaderState.DeltaResourceEnd)
                             {
-                                Assert.IsNotNull(deltaReader.Item as ODataEntry);
+                                Assert.IsNotNull(deltaReader.Item as ODataResource);
                             }
                             else if (deltaReader.State == ODataDeltaReaderState.ExpandedNavigationProperty)
                             {
                                 switch (deltaReader.SubState)
                                 {
-                                    case ODataReaderState.FeedEnd:
-                                        Assert.IsNotNull(deltaReader.Item as ODataFeed);
+                                    case ODataReaderState.ResourceSetEnd:
+                                        Assert.IsNotNull(deltaReader.Item as ODataResourceSet);
                                         break;
-                                    case ODataReaderState.EntryEnd:
-                                        Assert.IsNotNull(deltaReader.Item as ODataEntry);
+                                    case ODataReaderState.ResourceEnd:
+                                        Assert.IsNotNull(deltaReader.Item as ODataResource);
                                         break;
                                     case ODataReaderState.NavigationLinkEnd:
-                                        Assert.IsNotNull(deltaReader.Item as ODataNavigationLink);
+                                        Assert.IsNotNull(deltaReader.Item as ODataNestedResourceInfo);
                                         break;
                                 }
                             }
@@ -220,9 +220,9 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                         while (deltaReader.Read())
                         {
-                            if (deltaReader.State == ODataDeltaReaderState.DeltaEntryEnd)
+                            if (deltaReader.State == ODataDeltaReaderState.DeltaResourceEnd)
                             {
-                                ODataEntry entry = deltaReader.Item as ODataEntry;
+                                ODataResource entry = deltaReader.Item as ODataResource;
 
                             }
                         }

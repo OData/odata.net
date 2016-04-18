@@ -1445,7 +1445,7 @@ namespace Microsoft.OData.Service.Providers
             //       we don't consider visibility at all since it depends
             //       not only on the type but also the entity set the type came from (MEST scenarios!).
             //       ODataLib has no knowledge of entity sets so the design is for Astoria to not include
-            //       hidden navigation properties in the ODataEntry to begin with and not bother with
+            //       hidden navigation properties in the ODataResource to begin with and not bother with
             //       visibility here.
             // NOTE: We get here in materialization state 'Full' when we create the association types.
             //       We get here in cache state 'Full' when delay-loading the properties.

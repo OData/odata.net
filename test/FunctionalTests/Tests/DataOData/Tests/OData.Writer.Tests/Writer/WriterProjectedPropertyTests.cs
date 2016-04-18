@@ -30,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     public class WriterProjectedPropertyTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
             ExpectedTypeName = "TestModel.EntityType",
             NavigationSourceEntityTypeName = "TestModel.EntityType",
@@ -181,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             return testCases.Select(testCase =>
             {
                 var payload = this.CreatePayload(testCase);
-                string typeName = ((ODataEntry)payload.First()).TypeName;
+                string typeName = ((ODataResource)payload.First()).TypeName;
 
                 EdmEntitySet containerSet;
                 switch (typeName)
@@ -272,7 +272,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private IEnumerable<ODataItem> CreatePayload(ProjectedPropertiesTestCase testCase)
         {
             // First create the entry itself (it might get wrapped later)
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "TestModel.EntityType",
                 Properties = new List<ODataProperty>()
@@ -325,11 +325,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataItem[] entryItems = new ODataItem[]
             {
                 entry,
-                new ODataNavigationLink { Name = "DeferredNavigation", IsCollection = false, Url = new Uri("http://odata.org/deferred"), AssociationLinkUrl = testCase.ResponseOnly ? new Uri("http://odata.org/associationlink2") : null },
+                new ODataNestedResourceInfo { Name = "DeferredNavigation", IsCollection = false, Url = new Uri("http://odata.org/deferred"), AssociationLinkUrl = testCase.ResponseOnly ? new Uri("http://odata.org/associationlink2") : null },
                 null, // End deferred link
 
-                new ODataNavigationLink { Name = "ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/entry") },
-                    new ODataEntry()
+                new ODataNestedResourceInfo { Name = "ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/entry") },
+                    new ODataResource() 
                     {
                         TypeName = "TestModel.ExpandedEntryType",
                         Properties = new ODataProperty[] {
@@ -337,20 +337,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         },
                         SerializationInfo = MySerializationInfo
                     },
-                        new ODataNavigationLink { Name = "ExpandedEntry_DeferredNavigation", IsCollection = false, Url = new Uri("http://odata.org/deferred") },
+                        new ODataNestedResourceInfo { Name = "ExpandedEntry_DeferredNavigation", IsCollection = false, Url = new Uri("http://odata.org/deferred") },
                         null, // End deffered link
-                        new ODataNavigationLink { Name = "ExpandedEntry_ExpandedFeed", IsCollection = true, Url = new Uri("http://odata.org/feed") },
-                            new ODataFeed { Id = new Uri("http://test/feedid1"), SerializationInfo = MySerializationInfo },
+                        new ODataNestedResourceInfo { Name = "ExpandedEntry_ExpandedFeed", IsCollection = true, Url = new Uri("http://odata.org/feed") },
+                            new ODataResourceSet { Id = new Uri("http://test/feedid1"), SerializationInfo = MySerializationInfo },
                             null, // End feed
                         null, // End exanded expanded feed link
                     null, // End expanded entry
                 null, // End expanded entry nav link
 
-                new ODataNavigationLink { Name = "ExpandedFeed", IsCollection = true, Url = new Uri("http://odata.org/feed") },
-                    new ODataFeed { Id = new Uri("http://test/feedid2") },
-                        new ODataEntry { TypeName = "TestModel.EntityType" },
+                new ODataNestedResourceInfo { Name = "ExpandedFeed", IsCollection = true, Url = new Uri("http://odata.org/feed") },
+                    new ODataResourceSet { Id = new Uri("http://test/feedid2") },
+                        new ODataResource { TypeName = "TestModel.EntityType" },
                         null, // End entry
-                        new ODataEntry { TypeName = "TestModel.EntityType", SerializationInfo = MySerializationInfo },
+                        new ODataResource { TypeName = "TestModel.EntityType", SerializationInfo = MySerializationInfo },
                         null, // End entry
                     null, // End expanded feed
                 null, // End expanded feed nav link
@@ -368,14 +368,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             }
 
             // If we are processing a test case for a nested payload, wrap the entry items into a wrapping entry with an expanded navigation link.
-            ODataEntry wrappingEntry = new ODataEntry()
+            ODataResource wrappingEntry = new ODataResource()
             {
                 TypeName = "TestModel.WrappingEntityType",
                 Properties = new[] { new ODataProperty { Name = "Wrapping_ID", Value = 1 } },
                 SerializationInfo = MySerializationInfo
             };
             IEnumerable<ODataItem> wrappedItems =
-                new ODataItem[] { wrappingEntry, new ODataNavigationLink { Name = "Wrapping_ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/wrapping") } }
+                new ODataItem[] { wrappingEntry, new ODataNestedResourceInfo { Name = "Wrapping_ExpandedEntry", IsCollection = false, Url = new Uri("http://odata.org/wrapping") } }
                 .Concat(entryItems)
                 .Concat(new ODataItem[] { null, null });
 

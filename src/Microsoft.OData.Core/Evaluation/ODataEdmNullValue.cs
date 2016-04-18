@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core.Evaluation
     #endregion Namespaces
 
     /// <summary>
-    /// An <see cref="IEdmValue"/> implementation of an OData entry or complex value.
+    /// An <see cref="IEdmValue"/> implementation of an OData resource or complex value.
     /// </summary>
     internal sealed class ODataEdmNullValue : EdmValue, IEdmNullValue
     {

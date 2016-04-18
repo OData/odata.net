@@ -88,8 +88,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new
                 {   // invalid value (entry)
-                    Value = (object)new ODataEntry(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataEntry' could not be converted to a raw string."
+                    Value = (object)new ODataResource(),
+                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataResource' could not be converted to a raw string."
                 },
                 new
                 {   // null value

@@ -342,7 +342,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             foreach (var testCase in testCases)
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "MyProperty", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "MyProperty", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation(testCase.InstanceName, testCase.CollectionValue));
                 string result = this.WriteODataEntry(entryToWrite);
                 result.Should().Contain(testCase.Expect);
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             return result;
         }
 
-        private string WriteODataEntry(ODataEntry entryToWrite)
+        private string WriteODataEntry(ODataResource entryToWrite)
         {
             var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
             writerSettings.SetContentType(ODataFormat.Json);
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             IODataRequestMessage requestMessageToWrite = new InMemoryMessage { Method = "GET", Stream = stream };
             using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, this.model))
             {
-                ODataWriter odataWriter = messageWriter.CreateODataEntryWriter(this.entitySet, this.entityType);
+                ODataWriter odataWriter = messageWriter.CreateODataResourceWriter(this.entitySet, this.entityType);
                 odataWriter.WriteStart(entryToWrite);
                 odataWriter.WriteEnd();
             }

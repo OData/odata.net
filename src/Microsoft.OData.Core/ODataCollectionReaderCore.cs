@@ -150,7 +150,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns true if we are reading a nested payload, e.g. an entry, a feed or a collection within a parameters payload.
+        /// Returns true if we are reading a nested payload, e.g. a resource, a feed or a collection within a parameters payload.
         /// </summary>
         protected bool IsReadingNestedPayload
         {

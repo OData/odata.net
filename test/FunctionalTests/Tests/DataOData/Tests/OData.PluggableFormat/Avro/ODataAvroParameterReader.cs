@@ -51,12 +51,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             get { return value; }
         }
 
-        public override ODataReader CreateEntryReader()
+        public override ODataReader CreateResourceReader()
         {
             return new ODataAvroReader(this.inputContext, false, this.value);
         }
 
-        public override ODataReader CreateFeedReader()
+        public override ODataReader CreateResourceSetReader()
         {
             return new ODataAvroReader(this.inputContext, true, this.value);
         }
@@ -87,8 +87,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                     this.enumerator = this.avroRecord.Schema.Fields.GetEnumerator();
                     return this.UpdateState();
                 case ODataParameterReaderState.Value:
-                case ODataParameterReaderState.Entry:
-                case ODataParameterReaderState.Feed:
+                case ODataParameterReaderState.Resource:
+                case ODataParameterReaderState.ResourceSet:
                     return this.UpdateState();
                 default:
                     throw new ApplicationException("Invalid state " + this.State);
@@ -120,7 +120,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 }
                 else if (parameter.Type.Definition is IEdmEntityType)
                 {
-                    this.state = ODataParameterReaderState.Entry;
+                    this.state = ODataParameterReaderState.Resource;
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             }
             else if (this.value is Array && !(this.value is byte[]))
             {
-                this.state = ODataParameterReaderState.Feed;
+                this.state = ODataParameterReaderState.ResourceSet;
             }
             else
             {

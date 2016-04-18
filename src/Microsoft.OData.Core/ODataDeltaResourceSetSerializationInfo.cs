@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataDeltaFeedSerializationInfo.cs" company="Microsoft">
+// <copyright file="ODataDeltaResourceSetSerializationInfo.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -7,12 +7,12 @@
 namespace Microsoft.OData.Core
 {
     /// <summary>
-    /// Class to provide additional serialization information to the <see cref="ODataDeltaWriter"/> for an <see cref="ODataDeltaFeed"/>.
+    /// Class to provide additional serialization information to the <see cref="ODataDeltaWriter"/> for an <see cref="ODataDeltaResourceSet"/>.
     /// </summary>
-    public sealed class ODataDeltaFeedSerializationInfo
+    public sealed class ODataDeltaResourceSetSerializationInfo
     {
         /// <summary>
-        /// The entity set name of the entry/source entry to be written. Should be fully qualified if the entity set is not in the default container.
+        /// The entity set name of the resource/source resource to be written. Should be fully qualified if the entity set is not in the default container.
         /// </summary>
         private string entitySetName;
 
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core
         private string expectedEntityTypeName;
 
         /// <summary>
-        /// The entity set name of the entry/source entry to be written. Should be fully qualified if the entity set is not in the default container.
+        /// The entity set name of the resource/source resource to be written. Should be fully qualified if the entity set is not in the default container.
         /// </summary>
         public string EntitySetName
         {
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="serializationInfo">The serialization info instance to validate.</param>
         /// <returns>The <paramref name="serializationInfo"/> instance.</returns>
-        internal static ODataDeltaFeedSerializationInfo Validate(ODataDeltaFeedSerializationInfo serializationInfo)
+        internal static ODataDeltaResourceSetSerializationInfo Validate(ODataDeltaResourceSetSerializationInfo serializationInfo)
         {
             if (serializationInfo != null)
             {

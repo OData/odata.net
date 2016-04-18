@@ -50,7 +50,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 return record;
             }
 
-            var entry = value as ODataEntry;
+            var entry = value as ODataResource;
             if (entry != null)
             {
                 var record = new AvroRecord(schema);
@@ -89,9 +89,9 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             return value;
         }
 
-        public static ODataEntry ToODataEntry(AvroRecord record)
+        public static ODataResource ToODataEntry(AvroRecord record)
         {
-            return new ODataEntry
+            return new ODataResource
             {
                 TypeName = record.Schema.FullName,
                 Properties = GetProperties(record)

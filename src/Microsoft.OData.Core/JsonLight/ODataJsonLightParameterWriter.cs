@@ -152,7 +152,7 @@ namespace Microsoft.OData.Core.JsonLight
             return new ODataJsonLightCollectionWriter(this.jsonLightOutputContext, expectedItemType, /*listener*/this);
         }
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write an entry.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>

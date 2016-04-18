@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
     using Microsoft.OData.Core;
 
     /// <summary>
-    /// Class that keeps track of the ODataNavigationLink and other information
+    /// Class that keeps track of the ODataNestedResourceInfo and other information
     /// that we need to provide to the service author when they choose to provide their own
     /// instance of ODataWriter.
     /// </summary>
@@ -19,10 +19,10 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Creates a new instance of DataServiceODataWriterNavigationLinkArgs.
         /// </summary>
-        /// <param name="navigationLink">Instance of ODataNavigationLink.</param>
+        /// <param name="navigationLink">Instance of ODataNestedResourceInfo.</param>
         /// <param name="operationContext">Instance of DataServiceOperationContext.</param>
         public DataServiceODataWriterNavigationLinkArgs(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             DataServiceOperationContext operationContext)
         {
             WebUtil.CheckArgumentNull(navigationLink, "navigationLink != null");
@@ -32,9 +32,9 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Gets the ODataNavigationLink instance that is going to be serialized.
+        /// Gets the ODataNestedResourceInfo instance that is going to be serialized.
         /// </summary>
-        public ODataNavigationLink NavigationLink
+        public ODataNestedResourceInfo NavigationLink
         {
             get;
             private set;

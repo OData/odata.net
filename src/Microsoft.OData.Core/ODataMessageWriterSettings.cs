@@ -153,8 +153,8 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>
         /// Payload metadata includes the type names of entries and property values as well as any information that may be computed automatically, such as edit links.
-        /// If, for example, ODataEntry.EditLink is not specified, then it will be automatically computed and written out in full metadata mode.
-        /// If ODataEntry.EditLink is specified, then that value will be considered an "override" of the default computed edit link, and will be written out in full and minimal metadata modes. It will not be written in no metadata mode.
+        /// If, for example, ODataResource.EditLink is not specified, then it will be automatically computed and written out in full metadata mode.
+        /// If ODataResource.EditLink is specified, then that value will be considered an "override" of the default computed edit link, and will be written out in full and minimal metadata modes. It will not be written in no metadata mode.
         /// </remarks>
         public bool AutoComputePayloadMetadataInJson { get; set; }
 
@@ -363,7 +363,7 @@ namespace Microsoft.OData.Core
         /// <summary>Specifies whether the WCF data services server behavior is enabled.</summary>
         public void EnableODataServerBehavior()
         {
-            // We have to reset the ATOM entry XML customization since in the server behavior no atom entry customization is used.
+            // We have to reset the ATOM resource XML customization since in the server behavior no atom resource customization is used.
             this.writerBehavior = ODataWriterBehavior.CreateODataServerBehavior();
         }
 

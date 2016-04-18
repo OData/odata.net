@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             model.AddElement(customerType);
             model.AddElement(orderType);
 
-            ODataEntry expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedOrderInstance.TypeName = "TestModel.Order";
 
             var testCases = new WriterNavigationLinkTests.NavigationLinkTestCase[]
@@ -60,7 +60,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
@@ -71,7 +71,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                             expandedOrderInstance,
                             null,
@@ -84,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
@@ -96,7 +96,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,

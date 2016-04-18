@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input to read the payload from.</param>
-        /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
+        /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading a resource.</param>
         /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCoreAsync(
@@ -44,32 +44,32 @@ namespace Microsoft.OData.Core
         protected abstract Task<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'FeedStart'.
+        /// Implementation of the reader logic when in state 'ResourceSetStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtFeedStartImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceSetStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'FeedEnd'.
+        /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtFeedEndImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceSetEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtEntryStartImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtEntryEndImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NavigationLinkStart'.
@@ -108,22 +108,22 @@ namespace Microsoft.OData.Core
                     result = this.ReadAtStartImplementationAsync();
                     break;
 
-                case ODataReaderState.FeedStart:
-                    result = this.ReadAtFeedStartImplementationAsync();
+                case ODataReaderState.ResourceSetStart:
+                    result = this.ReadAtResourceSetStartImplementationAsync();
                     break;
 
-                case ODataReaderState.FeedEnd:
-                    result = this.ReadAtFeedEndImplementationAsync();
+                case ODataReaderState.ResourceSetEnd:
+                    result = this.ReadAtResourceSetEndImplementationAsync();
                     break;
 
-                case ODataReaderState.EntryStart:
+                case ODataReaderState.ResourceStart:
                     result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseEntryDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtEntryStartImplementationAsync());
+                        .FollowOnSuccessWithTask(t => this.ReadAtResourceStartImplementationAsync());
                     break;
 
-                case ODataReaderState.EntryEnd:
+                case ODataReaderState.ResourceEnd:
                     result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseEntryDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtEntryEndImplementationAsync());
+                        .FollowOnSuccessWithTask(t => this.ReadAtResourceEndImplementationAsync());
                     break;
 
                 case ODataReaderState.NavigationLinkStart:
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Core
 
             return result.FollowOnSuccessWith(t =>
                 {
-                    if ((this.State == ODataReaderState.EntryStart || this.State == ODataReaderState.EntryEnd) && this.Item != null)
+                    if ((this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd) && this.Item != null)
                     {
                         ReaderValidationUtils.ValidateEntry(this.CurrentEntry);
                     }

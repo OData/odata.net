@@ -143,10 +143,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             using(var messageWriter = new ODataMessageWriter((IODataResponseMessage)responseMessage, settings, edmModel))
             {
-                var entryWriter = messageWriter.CreateODataEntryWriter(entitySet, entityType);
+                var entryWriter = messageWriter.CreateODataResourceWriter(entitySet, entityType);
                 ODataProperty keyProperty = new ODataProperty() {Name = "Key", Value = "KeyValue"};
 
-                var entry = new ODataEntry {Properties = new[] {keyProperty}, TypeName = "Namespace.Person"};
+                var entry = new ODataResource {Properties = new[] {keyProperty}, TypeName = "Namespace.Person"};
 
                 if (edmModel == null)
                 {
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                         PropertyKind = ODataPropertyKind.Key
                     });
 
-                    entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                    entry.SetSerializationInfo(new ODataResourceSerializationInfo
                     {
                         NavigationSourceEntityTypeName = "Namespace.Person",
                         NavigationSourceName = "People",

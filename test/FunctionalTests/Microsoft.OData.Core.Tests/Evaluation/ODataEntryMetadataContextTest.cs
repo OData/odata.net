@@ -24,9 +24,9 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         private static readonly EdmFunction Function2;
         private static readonly EdmFunctionImport FunctionImport1;
         private static readonly EdmFunctionImport FunctionImport2;
-        private ODataEntryMetadataContext entryMetadataContextWithoutModel;
-        private ODataEntryMetadataContext entryMetadataContextWithModel;
-        private ODataEntry entry;
+        private ODataResourceMetadataContext entryMetadataContextWithoutModel;
+        private ODataResourceMetadataContext entryMetadataContextWithModel;
+        private ODataResource entry;
         private TestFeedAndEntryTypeContext typeContext;
 
         static ODataEntryMetadataContextTest()
@@ -70,31 +70,31 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
         public ODataEntryMetadataContextTest()
         {
-            this.entry = new ODataEntry {TypeName = ActualEntityType.FullName()};
+            this.entry = new ODataResource {TypeName = ActualEntityType.FullName()};
             this.typeContext = new TestFeedAndEntryTypeContext();
-            this.entryMetadataContextWithoutModel = ODataEntryMetadataContext.Create(this.entry, this.typeContext, new ODataFeedAndEntrySerializationInfo(), /*actualEntityType*/null, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
-            this.entryMetadataContextWithModel = ODataEntryMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            this.entryMetadataContextWithoutModel = ODataResourceMetadataContext.Create(this.entry, this.typeContext, new ODataResourceSerializationInfo(), /*actualEntityType*/null, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            this.entryMetadataContextWithModel = ODataResourceMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
         }
 
         [Fact]
         public void CreateShouldReturnMetadataContextWithoutModel()
         {
-            var entryMetadataContext = ODataEntryMetadataContext.Create(this.entry, this.typeContext, new ODataFeedAndEntrySerializationInfo(), ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            var entryMetadataContext = ODataResourceMetadataContext.Create(this.entry, this.typeContext, new ODataResourceSerializationInfo(), ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
             entryMetadataContext.GetType().FullName.EndsWith("WithoutModel").Should().BeTrue();
         }
 
         [Fact]
         public void CreateShouldReturnMetadataContextWithModel()
         {
-            var entryMetadataContext = ODataEntryMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            var entryMetadataContext = ODataResourceMetadataContext.Create(this.entry, this.typeContext, /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
             entryMetadataContext.GetType().FullName.EndsWith("WithModel").Should().BeTrue();
         }
 
         [Fact]
         public void EntryShouldReturnODataEntry()
         {
-            this.entryMetadataContextWithoutModel.Entry.Should().BeSameAs(this.entry);
-            this.entryMetadataContextWithModel.Entry.Should().BeSameAs(this.entry);
+            this.entryMetadataContextWithoutModel.Resource.Should().BeSameAs(this.entry);
+            this.entryMetadataContextWithModel.Resource.Should().BeSameAs(this.entry);
         }
 
         [Fact]
@@ -213,8 +213,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact(Skip = "we should remove this case because we need model to calc ETag")]
         public void ETagPropertiesShouldReturnEmptyForEntryMetadataContextWithModelWithoutETagsAndThereAreSerializationInfoOnEntryProperties()
         {
-            var odataEntry = new ODataEntry { Properties = new[] { new ODataProperty { Name = "Name", Value = null, SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } } } };
-            var entryMetadataContext = ODataEntryMetadataContext.Create(odataEntry, this.typeContext, /*serializationInfo*/null, new EdmEntityType("ns", "TypeName"), new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
+            var odataEntry = new ODataResource { Properties = new[] { new ODataProperty { Name = "Name", Value = null, SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } } } };
+            var entryMetadataContext = ODataResourceMetadataContext.Create(odataEntry, this.typeContext, /*serializationInfo*/null, new EdmEntityType("ns", "TypeName"), new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
             entryMetadataContext.ETagProperties.Should().BeEmpty();
         }
 
@@ -292,7 +292,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void SelectedNaigationPropertiesShouldReturnPropertiesBasedOnSelectAndMetadata()
         {
-            var entryMetadataContext = ODataEntryMetadataContext.Create(new ODataEntry(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.Create("NavProp1"));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(new ODataResource(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.Create("NavProp1"));
             entryMetadataContext.SelectedNavigationProperties.Should().HaveCount(1).And.Contain(p => p.Name == "NavProp1");
         }
         #endregion SelectedNavigationProperties
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void SelectedStreamPropertiesShouldReturnPropertiesBasedOnMetadata()
         {
-            var entryMetadataContext = ODataEntryMetadataContext.Create(new ODataEntry(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.Create("StreamProp1"));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(new ODataResource(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, new TestMetadataContext(), SelectedPropertiesNode.Create("StreamProp1"));
             entryMetadataContext.SelectedStreamProperties.ContainsKey("StreamProp1").Should().BeTrue();
         }
         #endregion SelectedStreamProperties
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public void SelectedBindableOperationsShouldReturnEmptyWithoutModel()
         {
             var metadataContext = new TestMetadataContext { GetBindableOperationsForTypeFunc = type => new IEdmOperation[] { Action1, Action2, Function1, Function2 }, OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = type => false };
-            var entryMetadataContext = ODataEntryMetadataContext.Create(new ODataEntry(), new TestFeedAndEntryTypeContext(), new ODataFeedAndEntrySerializationInfo(), /*actualEntityType*/null, metadataContext, SelectedPropertiesNode.Create("Action1,Function1"));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(new ODataResource(), new TestFeedAndEntryTypeContext(), new ODataResourceSerializationInfo(), /*actualEntityType*/null, metadataContext, SelectedPropertiesNode.Create("Action1,Function1"));
             entryMetadataContext.SelectedBindableOperations.Should().BeEmpty();
         }
 
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public void SelectedBindableOperationsShouldReturnPropertiesBasedOnMetadata()
         {
             var metadataContext = new TestMetadataContext { GetBindableOperationsForTypeFunc = type => new IEdmOperation[] { Action1, Action2, Function1, Function2 }, OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = type => false };
-            var entryMetadataContext = ODataEntryMetadataContext.Create(new ODataEntry(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, metadataContext, SelectedPropertiesNode.Create("Action1,Function1"));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(new ODataResource(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, metadataContext, SelectedPropertiesNode.Create("Action1,Function1"));
             entryMetadataContext.SelectedBindableOperations.Should().HaveCount(2).And.Contain(Action1).And.Contain(Function1);
         }
         #endregion SelectedBindableOperations

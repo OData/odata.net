@@ -25,10 +25,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #region Entities
 
-        private readonly ODataDeltaFeed feed = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet feed = new ODataDeltaResourceSet
         {
             Count = 5,
-            SerializationInfo = new ODataDeltaFeedSerializationInfo
+            SerializationInfo = new ODataDeltaResourceSetSerializationInfo
             {
                 EntitySetName = "Customers",
                 EntityTypeName = "MyNS.Customer",
@@ -37,20 +37,20 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
         };
 
-        private readonly ODataDeltaFeed feedWithoutInfo = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet feedWithoutInfo = new ODataDeltaResourceSet
         {
             Count = 5,
             DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
         };
 
-        private readonly ODataEntry customerUpdated = new ODataEntry
+        private readonly ODataResource customerUpdated = new ODataResource
         {
             Id = new Uri("Customers('BOTTM')", UriKind.Relative),
             Properties = new List<ODataProperty>
             {
                 new ODataProperty { Name = "ContactName", Value = "Susan Halvenstern" }
             },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "Customer",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private readonly ODataDeltaLink linkToOrder10645 = new ODataDeltaLink(new Uri("Customers('BOTTM')", UriKind.Relative), new Uri("Orders('10645')", UriKind.Relative), "Orders");
 
-        private readonly ODataEntry order10643 = new ODataEntry
+        private readonly ODataResource order10643 = new ODataResource
         {
             Id = new Uri("Orders(10643)", UriKind.Relative),
             Properties = new List<ODataProperty>
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     }
                 }
             },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "Order",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -152,8 +152,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
-            ODataEntry containedEntry = new ODataEntry()
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+            ODataResource containedEntry = new ODataResource()
             {
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
@@ -163,14 +163,14 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
             };
 
-            containedEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+            containedEntry.SetSerializationInfo(new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "MyNS.ProductDetail",
                 NavigationSourceName = "Products(1)/Details",
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet
             });
 
-            ODataEntry containedInContainedEntity = new ODataEntry()
+            ODataResource containedInContainedEntity = new ODataResource()
             {
                 TypeName = "MyNS.ProductDetailItem",
                 Properties = new[]
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
             };
 
-            containedInContainedEntity.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+            containedInContainedEntity.SetSerializationInfo(new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "MyNS.ProductDetailItem",
                 NavigationSourceName = "Products(1)/Details(1)/Items",
@@ -204,9 +204,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "MyNS.Product",
                 Properties = new[]
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
             };
 
-            ODataEntry containedEntry = new ODataEntry()
+            ODataResource containedEntry = new ODataResource()
             {
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
             };
 
-            containedEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+            containedEntry.SetSerializationInfo(new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "MyNS.ProductDetail",
                 NavigationSourceName = "Products(1)/Details",
@@ -260,9 +260,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
 
-            ODataEntry orderEntry= new ODataEntry()
+            ODataResource orderEntry= new ODataResource()
             {
                 Properties = new List<ODataProperty>
                 {
@@ -278,7 +278,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         }
                     }
                 },
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo
+                SerializationInfo = new ODataResourceSerializationInfo
                 {
                     NavigationSourceEntityTypeName = "Order",
                     NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -311,8 +311,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
-            ODataEntry derivedEntity = new ODataEntry()
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+            ODataResource derivedEntity = new ODataResource()
             {
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
@@ -338,8 +338,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
-            ODataEntry derivedEntity = new ODataEntry()
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+            ODataResource derivedEntity = new ODataResource()
             {
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
 
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     ExpectedTypeName = "MyNS.Product",
                     NavigationSourceEntityTypeName = "MyNS.Product",
@@ -371,18 +371,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #region Test Data
 
-        private readonly ODataDeltaFeed deltaFeed = new ODataDeltaFeed();
+        private readonly ODataDeltaResourceSet deltaFeed = new ODataDeltaResourceSet();
 
-        private readonly ODataDeltaFeed deltaFeedWithInfo = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet deltaFeedWithInfo = new ODataDeltaResourceSet
         {
-            SerializationInfo = new ODataDeltaFeedSerializationInfo
+            SerializationInfo = new ODataDeltaResourceSetSerializationInfo
             {
                 EntitySetName = "Customers",
                 EntityTypeName = "MyNS.Customer"
             }
         };
 
-        private readonly ODataEntry customerEntry = new ODataEntry
+        private readonly ODataResource customerEntry = new ODataResource
         {
             Id = new Uri("http://host/service/Customers('BOTTM')"),
             Properties = new[]
@@ -392,15 +392,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             TypeName = "MyNS.Customer",
         };
 
-        private readonly ODataNavigationLink ordersNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo ordersNavigationLink = new ODataNestedResourceInfo
         {
             Name = "Orders",
             IsCollection = true
         };
 
-        private readonly ODataFeed ordersFeed = new ODataFeed();
+        private readonly ODataResourceSet ordersFeed = new ODataResourceSet();
 
-        private readonly ODataEntry orderEntry = new ODataEntry
+        private readonly ODataResource orderEntry = new ODataResource
         {
             Id = new Uri("http://host/service/Orders(10643)"),
             Properties = new[]
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             TypeName = "MyNS.Order"
         };
 
-        private readonly ODataEntry orderEntryWithInfo = new ODataEntry
+        private readonly ODataResource orderEntryWithInfo = new ODataResource
         {
             Id = new Uri("http://host/service/Orders(10643)"),
             Properties = new[]
@@ -445,7 +445,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         }
                     }
                 },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "MyNS.Order",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -453,15 +453,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             }
         };
 
-        private readonly ODataNavigationLink favouriteProductsNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo favouriteProductsNavigationLink = new ODataNestedResourceInfo
         {
             Name = "FavouriteProducts",
             IsCollection = true
         };
 
-        private readonly ODataFeed favouriteProductsFeed = new ODataFeed();
+        private readonly ODataResourceSet favouriteProductsFeed = new ODataResourceSet();
 
-        private readonly ODataEntry productEntry = new ODataEntry
+        private readonly ODataResource productEntry = new ODataResource
         {
             Id = new Uri("http://host/service/Product(1)"),
             Properties = new[]
@@ -472,14 +472,14 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             TypeName = "MyNS.Product",
         };
 
-        private readonly ODataEntry customerEntryWithInfo = new ODataEntry
+        private readonly ODataResource customerEntryWithInfo = new ODataResource
         {
             Id = new Uri("http://host/service/Customers('BOTTM')"),
             Properties = new[]
                 {
                     new ODataProperty { Name = "ContactName", Value = "Susan Halvenstern" },
                 },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "MyNS.Customer",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             }
         };
 
-        private readonly ODataEntry productDetailEntry = new ODataEntry()
+        private readonly ODataResource productDetailEntry = new ODataResource()
         {
             Properties = new[]
                 {
@@ -497,15 +497,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             TypeName = "MyNS.ProductDetail",
         };
 
-        private readonly ODataNavigationLink detailsNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo detailsNavigationLink = new ODataNestedResourceInfo
         {
             Name = "Details",
             IsCollection = true
         };
 
-        private readonly ODataFeed detailsFeed = new ODataFeed();
+        private readonly ODataResourceSet detailsFeed = new ODataResourceSet();
 
-        private readonly ODataNavigationLink productBeingViewedNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo productBeingViewedNavigationLink = new ODataNestedResourceInfo
         {
             Name = "ProductBeingViewed",
             IsCollection = false

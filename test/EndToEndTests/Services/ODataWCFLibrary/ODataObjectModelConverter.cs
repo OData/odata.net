@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="navigationSource">The navigation source that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <returns>The converted ODataEntry.</returns>
-        public static ODataEntry ConvertToODataEntry(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
+        public static ODataResource ConvertToODataEntry(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
         {
             IEdmStructuredType entityType = EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element) as IEdmStructuredType;
 
@@ -41,7 +41,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 throw new InvalidOperationException("Can not create an entry for " + entitySource.Name);
             }
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Properties = GetProperties(element, entityType)
             };
@@ -117,7 +117,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="navigationSource">The navigation source that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <returns>The converted ODataEntityReferenceLink represent with ODataEntry.</returns>
-        public static ODataEntry ConvertToODataEntityReferenceLink(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
+        public static ODataResource ConvertToODataEntityReferenceLink(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
         {
             IEdmStructuredType entityType = EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element) as IEdmStructuredType;
 
@@ -126,7 +126,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 throw new InvalidOperationException("Can not create an entry for " + entitySource.Name);
             }
 
-            var link = new ODataEntry();
+            var link = new ODataResource();
             if (!string.IsNullOrEmpty(((ClrObject)element).EntitySetName) && entitySource is IEdmEntitySet && entityType is IEdmEntityType)
             {
                 entitySource = new EdmEntitySet(((IEdmEntitySet)entitySource).Container, ((ClrObject)element).EntitySetName, (IEdmEntityType)entityType);
@@ -158,12 +158,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="navigationSource">The navigation source that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <returns>The converted ODataEntityReferenceLinks represent with list of ODataEntry.</returns>
-        public static IEnumerable<ODataEntry> ConvertToODataEntityReferenceLinks(IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
+        public static IEnumerable<ODataResource> ConvertToODataEntityReferenceLinks(IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
         {
-            List<ODataEntry> links = new List<ODataEntry>();
+            List<ODataResource> links = new List<ODataResource>();
             foreach (var each in element)
             {
-                ODataEntry link = ConvertToODataEntityReferenceLink(each, entitySource, targetVersion);
+                ODataResource link = ConvertToODataEntityReferenceLink(each, entitySource, targetVersion);
                 links.Add(link);
             }
 
@@ -413,9 +413,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 return newInstance;
             }
 
-            if (propertyValue is ODataEntry)
+            if (propertyValue is ODataResource)
             {
-                ODataEntry entry = (ODataEntry)propertyValue;
+                ODataResource entry = (ODataResource)propertyValue;
                 var type = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
                 var newInstance = Utility.QuickCreateInstance(type);
                 foreach (var p in entry.Properties)
@@ -461,28 +461,28 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             return result;
         }
 
-        public static ODataEntry ReadEntryParameterValue(ODataReader entryReader)
+        public static ODataResource ReadEntryParameterValue(ODataReader entryReader)
         {
-            ODataEntry entry = null;
+            ODataResource entry = null;
             while (entryReader.Read())
             {
-                if (entryReader.State == ODataReaderState.EntryEnd)
+                if (entryReader.State == ODataReaderState.ResourceEnd)
                 {
-                    entry = entryReader.Item as ODataEntry;
+                    entry = entryReader.Item as ODataResource;
                 }
             }
 
             return entry;
         }
 
-        public static ODataFeed ReadFeedParameterValue(ODataReader feedReader)
+        public static ODataResourceSet ReadFeedParameterValue(ODataReader feedReader)
         {
-            ODataFeed entry = null;
+            ODataResourceSet entry = null;
             while (feedReader.Read())
             {
-                if (feedReader.State == ODataReaderState.FeedEnd)
+                if (feedReader.State == ODataReaderState.ResourceSetEnd)
                 {
-                    entry = feedReader.Item as ODataFeed;
+                    entry = feedReader.Item as ODataResourceSet;
                 }
             }
 

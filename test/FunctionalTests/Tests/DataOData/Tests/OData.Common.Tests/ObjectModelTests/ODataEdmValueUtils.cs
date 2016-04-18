@@ -37,7 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 return;
             }
 
-            ODataEntry entry = odataValue as ODataEntry;
+            ODataResource entry = odataValue as ODataResource;
             if (entry != null)
             {
                 CompareStructuralValue(edmValue, entry, assert);
@@ -61,7 +61,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             ComparePrimitiveValue(edmValue, odataValue, assert);
         }
 
-        internal static IEdmValue CreateStructuredEdmValue(ODataEntry entry, IEdmEntitySet entitySet, IEdmEntityTypeReference entityType)
+        internal static IEdmValue CreateStructuredEdmValue(ODataResource entry, IEdmEntitySet entitySet, IEdmEntityTypeReference entityType)
         {
             if (entitySet != null)
             {
@@ -74,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             return (IEdmValue)ReflectionUtils.CreateInstance(
                 odataEdmStructuredValueType, 
-                new Type[] { typeof(ODataEntry) },
+                new Type[] { typeof(ODataResource) },
                 entry);
         }
 
@@ -275,7 +275,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             }
         }
 
-        private static void CompareStructuralValue(IEdmValue edmValue, ODataEntry entry, AssertionHandler assert)
+        private static void CompareStructuralValue(IEdmValue edmValue, ODataResource entry, AssertionHandler assert)
         {
             assert.IsNotNull(edmValue, "EDM value instance must not be null.");
 

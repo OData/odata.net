@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Reader class used to read all OData payloads (entries, feeds, metadata documents, service documents, etc.).
     /// </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Main entry point for reader functionality")]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Main resource point for reader functionality")]
     public sealed class ODataMessageReader : IDisposable
     {
         /// <summary>The message for which the message reader was created.</summary>
@@ -317,9 +317,9 @@ namespace Microsoft.OData.Core
 
         /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a feed.</summary>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataFeedReader()
+        public ODataReader CreateODataResourceSetReader()
         {
-            return this.CreateODataFeedReader(/*entitySet*/null, /*expectedBaseEntityType*/null);
+            return this.CreateODataResourceSetReader(/*entitySet*/null, /*expectedBaseEntityType*/null);
         }
 
         /// <summary>
@@ -327,9 +327,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataFeedReader(IEdmEntityType expectedBaseEntityType)
+        public ODataReader CreateODataResourceSetReader(IEdmEntityType expectedBaseEntityType)
         {
-            return this.CreateODataFeedReader(/*entitySet*/null, expectedBaseEntityType);
+            return this.CreateODataResourceSetReader(/*entitySet*/null, expectedBaseEntityType);
         }
 
         /// <summary>
@@ -338,21 +338,21 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public ODataReader CreateODataResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            this.VerifyCanCreateODataFeedReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataResourceSetReader(entitySet, expectedBaseEntityType);
             expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
             return this.ReadFromInput(
-                (context) => context.CreateFeedReader(entitySet, expectedBaseEntityType),
-                ODataPayloadKind.Feed);
+                (context) => context.CreateResourceSetReader(entitySet, expectedBaseEntityType),
+                ODataPayloadKind.ResourceSet);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a feed.</summary>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataFeedReaderAsync()
+        public Task<ODataReader> CreateODataResourceSetReaderAsync()
         {
-            return this.CreateODataFeedReaderAsync(/*entitySet*/null, /*entityType*/null);
+            return this.CreateODataResourceSetReaderAsync(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
@@ -360,9 +360,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataFeedReaderAsync(IEdmEntityType expectedBaseEntityType)
+        public Task<ODataReader> CreateODataResourceSetReaderAsync(IEdmEntityType expectedBaseEntityType)
         {
-            return this.CreateODataFeedReaderAsync(/*entitySet*/null, expectedBaseEntityType);
+            return this.CreateODataResourceSetReaderAsync(/*entitySet*/null, expectedBaseEntityType);
         }
 
         /// <summary>
@@ -371,13 +371,13 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public Task<ODataReader> CreateODataResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            this.VerifyCanCreateODataFeedReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataResourceSetReader(entitySet, expectedBaseEntityType);
             expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
             return this.ReadFromInputAsync(
-                (context) => context.CreateFeedReaderAsync(entitySet, expectedBaseEntityType),
-                ODataPayloadKind.Feed);
+                (context) => context.CreateResourceSetReaderAsync(entitySet, expectedBaseEntityType),
+                ODataPayloadKind.ResourceSet);
         }
 #endif
 
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Core
             expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
             return this.ReadFromInput(
                 (context) => context.CreateDeltaReader(entitySet, expectedBaseEntityType),
-                ODataPayloadKind.Feed);
+                ODataPayloadKind.ResourceSet);
         }
 
 #if ODATALIB_ASYNC
@@ -405,77 +405,77 @@ namespace Microsoft.OData.Core
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataDeltaReader> CreateODataDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            this.VerifyCanCreateODataFeedReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataResourceSetReader(entitySet, expectedBaseEntityType);
             expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
             return this.ReadFromInputAsync(
                 (context) => context.CreateDeltaReaderAsync(entitySet, expectedBaseEntityType),
-                ODataPayloadKind.Feed);
+                ODataPayloadKind.ResourceSet);
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read an entry.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource.</summary>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataEntryReader()
+        public ODataReader CreateODataResourceReader()
         {
-            return this.CreateODataEntryReader(/*entitySet*/null, /*entityType*/null);
+            return this.CreateODataResourceReader(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read an entry.
+        /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="entityType">The expected entity type for the entry to be read.</param>
+        /// <param name="entityType">The expected entity type for the resource to be read.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataEntryReader(IEdmEntityType entityType)
+        public ODataReader CreateODataResourceReader(IEdmEntityType entityType)
         {
-            return this.CreateODataEntryReader(/*entitySet*/null, entityType);
+            return this.CreateODataResourceReader(/*entitySet*/null, entityType);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read an entry.
+        /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="entityType">The expected entity type for the entry to be read.</param>
+        /// <param name="entityType">The expected entity type for the resource to be read.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public ODataReader CreateODataResourceReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataEntryReader(navigationSource, entityType);
+            this.VerifyCanCreateODataResourceReader(navigationSource, entityType);
             entityType = entityType ?? this.edmTypeResolver.GetElementType(navigationSource);
             return this.ReadFromInput(
-                (context) => context.CreateEntryReader(navigationSource, entityType),
-                ODataPayloadKind.Entry);
+                (context) => context.CreateResourceReader(navigationSource, entityType),
+                ODataPayloadKind.Resource);
         }
 
 #if ODATALIB_ASYNC
-        /// <summary>Asynchronously creates an <see cref="T:System.Data.OData.ODataReader" /> to read an entry.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:System.Data.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataEntryReaderAsync()
+        public Task<ODataReader> CreateODataResourceReaderAsync()
         {
-            return this.CreateODataEntryReaderAsync(/*entitySet*/null, /*entityType*/null);
+            return this.CreateODataResourceReaderAsync(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="entityType">The expected entity type for the entry to be read.</param>
+        /// <param name="entityType">The expected entity type for the resource to be read.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataEntryReaderAsync(IEdmEntityType entityType)
+        public Task<ODataReader> CreateODataResourceReaderAsync(IEdmEntityType entityType)
         {
-            return this.CreateODataEntryReaderAsync(/*entitySet*/null, entityType);
+            return this.CreateODataResourceReaderAsync(/*entitySet*/null, entityType);
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="entityType">The expected entity type for the entry to be read.</param>
+        /// <param name="entityType">The expected entity type for the resource to be read.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public Task<ODataReader> CreateODataResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataEntryReader(navigationSource, entityType);
+            this.VerifyCanCreateODataResourceReader(navigationSource, entityType);
             entityType = entityType ?? this.edmTypeResolver.GetElementType(navigationSource);
             return this.ReadFromInputAsync(
-                (context) => context.CreateEntryReaderAsync(navigationSource, entityType),
-                ODataPayloadKind.Entry);
+                (context) => context.CreateResourceReaderAsync(navigationSource, entityType),
+                ODataPayloadKind.Resource);
         }
 #endif
 
@@ -874,7 +874,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
-        private void VerifyCanCreateODataFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        private void VerifyCanCreateODataResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.VerifyReaderNotDisposedAndNotUsed();
 
@@ -921,11 +921,11 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verify arguments for creation of an <see cref="ODataReader" /> to read an entry.
+        /// Verify arguments for creation of an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="entityType">The expected entity type for the entry to be read.</param>
-        private void VerifyCanCreateODataEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        /// <param name="entityType">The expected entity type for the resource to be read.</param>
+        private void VerifyCanCreateODataResourceReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
             this.VerifyReaderNotDisposedAndNotUsed();
 

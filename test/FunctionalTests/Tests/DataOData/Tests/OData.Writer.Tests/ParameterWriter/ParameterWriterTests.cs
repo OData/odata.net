@@ -303,8 +303,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             var container = new EdmEntityContainer("TestModel", "TestContainer");
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry() { TypeName = "TestModel.TestEntityType", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "Name", Value = "TestName" }, new ODataProperty() { Name = "ComplexProperty", Value = new ODataComplexValue() { } } } };
-            ODataFeed feed = new ODataFeed();
+            ODataResource entry = new ODataResource() { TypeName = "TestModel.TestEntityType", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "Name", Value = "TestName" }, new ODataProperty() { Name = "ComplexProperty", Value = new ODataComplexValue() { } } } };
+            ODataResourceSet feed = new ODataResourceSet();
             feed.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { entry });
 
             var testCases = new[]

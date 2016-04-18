@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
 
-        private static readonly ODataFeedAndEntrySerializationInfo SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo SerializationInfo = new ODataResourceSerializationInfo()
         {
             NavigationSourceEntityTypeName = "Null",
             NavigationSourceName = "MySet",
@@ -45,8 +45,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             string expectedError = "The base URI '" + relativeUriString + "' specified in ODataMessageWriterSettings.PayloadBaseUri is invalid; it must either be null or an absolute URI.";
 
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
-            var testDescriptors = new[]
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
+            var testDescriptors = new []
                 {
                     new
                     {
@@ -78,7 +78,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             var testCases = new[] {
                 new { // type name must not be empty
-                    InvalidateEntry = new Action<ODataEntry>(entry => entry.TypeName = string.Empty),
+                    InvalidateEntry = new Action<ODataResource>(entry => entry.TypeName = string.Empty),
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_TypeNameMustNotBeEmpty")
                 },
             };
@@ -86,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // Convert test cases to test descriptions
             var testDescriptors = testCases.Select(testCase =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     testCase.InvalidateEntry(entry);
                     return new PayloadWriterTestDescriptor<ODataItem>(this.Settings, entry, testConfiguration =>
                         new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException });
@@ -128,7 +128,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     return new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
-                        new ODataEntry() { Properties = new ODataProperty[] { testCase.Property } },
+                        new ODataResource() { Properties = new ODataProperty[] { testCase.Property } },
                         testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException });
                 });
 
@@ -146,8 +146,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private sealed class NavigationLinkValidationTestCase
         {
-            public Action<ODataNavigationLink> InvalidateLink { get; set; }
-            public Func<ODataNavigationLink, ExpectedException> ExpectedException { get; set; }
+            public Action<ODataNestedResourceInfo> InvalidateLink { get; set; }
+            public Func<ODataNestedResourceInfo, ExpectedException> ExpectedException { get; set; }
             public Func<Microsoft.Test.Taupo.OData.Common.TestConfiguration, bool> SkipTestConfiguration { get; set; }
         }
 
@@ -173,7 +173,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(testCase =>
             {
-                ODataNavigationLink link = ObjectModelUtils.CreateDefaultCollectionLink();
+                ODataNestedResourceInfo link = ObjectModelUtils.CreateDefaultCollectionLink();
                 testCase.InvalidateLink(link);
                 return new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
@@ -212,7 +212,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new NamedStreamValidationTestCase
                 {
                     StreamProperty = (ODataProperty)null,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataEntry.Properties"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataResource.Properties"),
                 },
                 // null property name is not valid
                 new NamedStreamValidationTestCase
@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testDescriptors = testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataEntry() { Properties = new ODataProperty[] { testCase.StreamProperty } },
+                    new ODataResource() { Properties = new ODataProperty[] { testCase.StreamProperty } },
                     testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException }));
 
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
@@ -310,17 +310,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     // entity etag
                     new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
-                        new ODataEntry() { ETag = etagValue, Properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(), SerializationInfo = SerializationInfo },
+                        new ODataResource() { ETag = etagValue, Properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(), SerializationInfo = SerializationInfo },
                         formatSelector),
                     // default stream etag
                     new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
-                        new ODataEntry() { MediaResource = stream1, Properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(), SerializationInfo = SerializationInfo },
+                        new ODataResource() { MediaResource = stream1, Properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(), SerializationInfo = SerializationInfo },
                         formatSelector),
                     // named stream etag
                     new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
-                        new ODataEntry() { Properties = new ODataProperty[] { new ODataProperty() { Name = "Stream1", Value = stream1 }}, SerializationInfo = SerializationInfo},
+                        new ODataResource() { Properties = new ODataProperty[] { new ODataProperty() { Name = "Stream1", Value = stream1 }}, SerializationInfo = SerializationInfo},
                         formatSelector)
                         {
                             // No stream properties in requests
@@ -356,7 +356,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 return new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataEntry() { Properties = new ODataProperty[] { new ODataProperty() { Name = "ComplexProperty", Value = testCase.ComplexValue } } },
+                    new ODataResource() { Properties = new ODataProperty[] { new ODataProperty() { Name = "ComplexProperty", Value = testCase.ComplexValue } } },
                     testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedODataExceptionMessage = testCase.ExpectedExceptionMessage });
             });
 
@@ -388,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 return new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataEntry() { Properties = new ODataProperty[] { new ODataProperty() { Name = "CollectionProperty", Value = testCase.Collection } } },
+                    new ODataResource() { Properties = new ODataProperty[] { new ODataProperty() { Name = "CollectionProperty", Value = testCase.Collection } } },
                     testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException });
             });
 
@@ -432,7 +432,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 ODataStreamReferenceValue mediaResource = ObjectModelUtils.CreateDefaultStream();
                 testCase.InvalidateDefaultStream(mediaResource);
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.MediaResource = mediaResource;
                 return new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,

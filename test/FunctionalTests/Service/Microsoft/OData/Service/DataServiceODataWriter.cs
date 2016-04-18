@@ -33,7 +33,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing a feed.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataFeed and the collection instance to serialize.</param>
+        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataResourceSet and the collection instance to serialize.</param>
         public virtual void WriteStart(DataServiceODataWriterFeedArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing an entry.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataEntry and the entry instance to serialize.</param>
+        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataResource and the entry instance to serialize.</param>
         public virtual void WriteStart(DataServiceODataWriterEntryArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing a navigation link.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNavigationLink to serialize.</param>
+        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNestedResourceInfo to serialize.</param>
         public virtual void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing a feed.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataFeed and the collection instance that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataResourceSet and the collection instance that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for feed.
         /// </remarks>
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing an entry.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataEntry and the entry instance that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataResource and the entry instance that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for Entry.
         /// </remarks>
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing a navigation link.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNavigationLink that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNestedResourceInfo that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for Link.
         /// </remarks>

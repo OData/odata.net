@@ -170,7 +170,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         throw new InvalidOperationException("Invalid target when query feed.");
                     }
 
-                    ODataWriter resultWriter = messageWriter.CreateODataFeedWriter(entitySet, entityType);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, entityType);
 
                     ResponseWriter.WriteFeed(resultWriter, entityType, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
                     resultWriter.Flush();
@@ -194,7 +194,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     // Query a single entity
                     IEdmEntityType entityType = this.QueryContext.Target.Type as IEdmEntityType;
 
-                    ODataWriter resultWriter = messageWriter.CreateODataEntryWriter(navigationSource, entityType);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceWriter(navigationSource, entityType);
                     ResponseWriter.WriteEntry(resultWriter, queryResults, navigationSource, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.RequestHeaders);
                     resultWriter.Flush();
                 }

@@ -30,14 +30,14 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>MergeOption information to determine how to merge descriptors.</summary>
         private readonly MergeOption mergeOption;
 
-        /// <summary>An enumerator of <see cref="ODataEntry"/> values.</summary>
-        private IEnumerator<ODataEntry> feedEntries;
+        /// <summary>An enumerator of <see cref="ODataResource"/> values.</summary>
+        private IEnumerator<ODataResource> feedEntries;
 
         /// <summary>The current feed.</summary>
-        private ODataFeed currentFeed;
+        private ODataResourceSet currentFeed;
 
         /// <summary>The current entry.</summary>
-        private ODataEntry currentEntry;
+        private ODataResource currentEntry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedAndEntryMaterializerAdapter"/> class.
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the current feed.
         /// </summary>
-        public ODataFeed CurrentFeed
+        public ODataResourceSet CurrentFeed
         {
             get { return this.currentFeed; }
         }
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the current entry.
         /// </summary>
-        public ODataEntry CurrentEntry
+        public ODataResource CurrentEntry
         {
             get { return this.currentEntry; }
         }
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Client.Materialization
                     return false;
                 case ODataReaderState.Start:
                     {
-                        ODataFeed feed;
+                        ODataResourceSet feed;
                         MaterializerEntry entryAndState;
                         if (this.TryReadFeedOrEntry(true, out feed, out entryAndState))
                         {
@@ -163,8 +163,8 @@ namespace Microsoft.OData.Client.Materialization
                         }
                     }
 
-                case ODataReaderState.FeedEnd:
-                case ODataReaderState.EntryEnd:
+                case ODataReaderState.ResourceSetEnd:
+                case ODataReaderState.ResourceEnd:
                     if (this.TryRead() || this.reader.State != ODataReaderState.Completed)
                     {
                         throw DSClient.Error.InternalError(InternalError.UnexpectedReadState);
@@ -196,11 +196,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="feed">The feed.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true if a value was read, otherwise false</returns>
-        private bool TryReadFeedOrEntry(bool lazy, out ODataFeed feed, out MaterializerEntry entry)
+        private bool TryReadFeedOrEntry(bool lazy, out ODataResourceSet feed, out MaterializerEntry entry)
         {
             if (this.TryStartReadFeedOrEntry())
             {
-                if (this.reader.State == ODataReaderState.EntryStart)
+                if (this.reader.State == ODataReaderState.ResourceStart)
                 {
                     entry = this.ReadEntryCore();
                     feed = null;
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>true if a value was read, otherwise false</returns>
         private bool TryStartReadFeedOrEntry()
         {
-            return this.TryRead() && (this.reader.State == ODataReaderState.FeedStart || this.reader.State == ODataReaderState.EntryStart);
+            return this.TryRead() && (this.reader.State == ODataReaderState.ResourceSetStart || this.reader.State == ODataReaderState.ResourceStart);
         }
 
         /// <summary>
@@ -236,11 +236,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="lazy">if set to <c>true</c> [lazy].</param>
         /// <param name="feed">The feed.</param>
         /// <returns>true if a value was read, otherwise false</returns>
-        private bool TryReadFeed(bool lazy, out ODataFeed feed)
+        private bool TryReadFeed(bool lazy, out ODataResourceSet feed)
         {
             if (this.TryStartReadFeedOrEntry())
             {
-                this.ExpectState(ODataReaderState.FeedStart);
+                this.ExpectState(ODataReaderState.ResourceSetStart);
                 feed = this.ReadFeedCore(lazy);
             }
             else
@@ -256,13 +256,13 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="lazy">if set to <c>true</c> [lazy].</param>
         /// <returns>A feed.</returns>
-        private ODataFeed ReadFeedCore(bool lazy)
+        private ODataResourceSet ReadFeedCore(bool lazy)
         {
-            this.ExpectState(ODataReaderState.FeedStart);
+            this.ExpectState(ODataReaderState.ResourceSetStart);
 
-            ODataFeed result = (ODataFeed)this.reader.Item;
+            ODataResourceSet result = (ODataResourceSet)this.reader.Item;
 
-            IEnumerable<ODataEntry> lazyEntries = this.LazyReadEntries();
+            IEnumerable<ODataResource> lazyEntries = this.LazyReadEntries();
 
             if (lazy)
             {
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                MaterializerFeed.CreateFeed(result, new List<ODataEntry>(lazyEntries));
+                MaterializerFeed.CreateFeed(result, new List<ODataResource>(lazyEntries));
             }
 
             return result;
@@ -280,7 +280,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Lazily reads entries.
         /// </summary>
         /// <returns>An enumerable that will lazily read entries when enumerated.</returns>
-        private IEnumerable<ODataEntry> LazyReadEntries()
+        private IEnumerable<ODataResource> LazyReadEntries()
         {
             MaterializerEntry entryAndState;
             while (this.TryReadEntry(out entryAndState))
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             if (this.TryStartReadFeedOrEntry())
             {
-                this.ExpectState(ODataReaderState.EntryStart);
+                this.ExpectState(ODataReaderState.ResourceStart);
                 entry = this.ReadEntryCore();
                 return true;
             }
@@ -315,12 +315,12 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>An entry.</returns>
         private MaterializerEntry ReadEntryCore()
         {
-            this.ExpectState(ODataReaderState.EntryStart);
+            this.ExpectState(ODataReaderState.ResourceStart);
 
-            ODataEntry result = (ODataEntry)this.reader.Item;
+            ODataResource result = (ODataResource)this.reader.Item;
 
             MaterializerEntry entry;
-            List<ODataNavigationLink> navigationLinks = new List<ODataNavigationLink>();
+            List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
             if (result != null)
             {
                 entry = MaterializerEntry.CreateEntry(
@@ -339,13 +339,13 @@ namespace Microsoft.OData.Client.Materialization
                             // Cache the list of navigation links here but don't add them to the entry because all of the key properties may not be available yet.
                             navigationLinks.Add(this.ReadNavigationLink());
                             break;
-                        case ODataReaderState.EntryEnd:
+                        case ODataReaderState.ResourceEnd:
                             break;
                         default:
                             throw DSClient.Error.InternalError(InternalError.UnexpectedReadState);
                     }
                 }
-                while (this.reader.State != ODataReaderState.EntryEnd);
+                while (this.reader.State != ODataReaderState.ResourceEnd);
 
                 if (!entry.Entry.IsTransient)
                 {
@@ -355,11 +355,11 @@ namespace Microsoft.OData.Client.Materialization
             else
             {
                 entry = MaterializerEntry.CreateEmpty();
-                this.ReadAndExpectState(ODataReaderState.EntryEnd);
+                this.ReadAndExpectState(ODataReaderState.ResourceEnd);
             }
 
             // Add the navigation links here now that all of the property values have been read and are available to build the links.
-            foreach (ODataNavigationLink navigationLink in navigationLinks)
+            foreach (ODataNestedResourceInfo navigationLink in navigationLinks)
             {
                 entry.AddNavigationLink(navigationLink);
             }
@@ -371,14 +371,14 @@ namespace Microsoft.OData.Client.Materialization
         /// Reads a navigation link.
         /// </summary>
         /// <returns>A navigation link.</returns>
-        private ODataNavigationLink ReadNavigationLink()
+        private ODataNestedResourceInfo ReadNavigationLink()
         {
             Debug.Assert(this.reader.State == ODataReaderState.NavigationLinkStart, "this.reader.State == ODataReaderState.NavigationLinkStart");
 
-            ODataNavigationLink link = (ODataNavigationLink)this.reader.Item;
+            ODataNestedResourceInfo link = (ODataNestedResourceInfo)this.reader.Item;
 
             MaterializerEntry entry;
-            ODataFeed feed;
+            ODataResourceSet feed;
             if (this.TryReadFeedOrEntry(false, out feed, out entry))
             {
                 if (feed != null)

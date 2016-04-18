@@ -227,7 +227,7 @@ namespace Microsoft.OData.Client
         /// Executes the on entry end actions.
         /// </summary>
         /// <param name="entry">The entry.</param>
-        internal void ExecuteOnEntryEndActions(ODataEntry entry)
+        internal void ExecuteOnEntryEndActions(ODataResource entry)
         {
             // Be noticed that the entry could be null in some case, like expand.
             if (this.readingEndEntryActions.Count > 0)
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Client
         /// Executes the on entry start actions.
         /// </summary>
         /// <param name="entry">The entry.</param>
-        internal void ExecuteOnEntryStartActions(ODataEntry entry)
+        internal void ExecuteOnEntryStartActions(ODataResource entry)
         {
             // Be noticed that the entry could be null in some case, like expand.
             if (this.readingStartEntryActions.Count > 0)
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Client
         /// Executes the on feed end actions.
         /// </summary>
         /// <param name="feed">The feed.</param>
-        internal void ExecuteOnFeedEndActions(ODataFeed feed)
+        internal void ExecuteOnFeedEndActions(ODataResourceSet feed)
         {
             Debug.Assert(feed != null, "entry != null");
 
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Client
         /// Executes the on feed start actions.
         /// </summary>
         /// <param name="feed">The feed.</param>
-        internal void ExecuteOnFeedStartActions(ODataFeed feed)
+        internal void ExecuteOnFeedStartActions(ODataResourceSet feed)
         {
             Debug.Assert(feed != null, "feed != null");
             if (this.readingStartFeedActions.Count > 0)
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Client
         /// Executes the on navigation end actions.
         /// </summary>
         /// <param name="link">The link.</param>
-        internal void ExecuteOnNavigationEndActions(ODataNavigationLink link)
+        internal void ExecuteOnNavigationEndActions(ODataNestedResourceInfo link)
         {
             Debug.Assert(link != null, "link != null");
             if (this.readingEndNavigationLinkActions.Count > 0)
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Client
         /// Executes the on navigation start actions.
         /// </summary>
         /// <param name="link">The link.</param>
-        internal void ExecuteOnNavigationStartActions(ODataNavigationLink link)
+        internal void ExecuteOnNavigationStartActions(ODataNestedResourceInfo link)
         {
             Debug.Assert(link != null, "link != null");
 
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void ExecuteEntityMaterializedActions(ODataEntry entry, object entity)
+        internal void ExecuteEntityMaterializedActions(ODataResource entry, object entity)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entity != null, "entity != entity");

@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             for (int i = 0; i < mimeTypes.Length; i++)
             {
-                ODataEntry entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                ODataResource entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(cities[i], entry.Properties.Single(p => p.Name == "City").Value);
@@ -42,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var properties = new[] { new ODataProperty { Name = "City", Value = cities[i + 1] } };
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
 
-                ODataEntry updatedEntry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                ODataResource updatedEntry = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(cities[i + 1], updatedEntry.Properties.Single(p => p.Name == "City").Value);
@@ -93,7 +93,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                     currentHomeAddress = homeAddress1;
                     updatedHomeAddress = homeAddress0;
                 }
-                ODataEntry entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                ODataResource entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     ODataValueAssertEqualHelper.AssertODataPropertyAreEqual((ODataProperty)entry.Properties.Single(p => p.Name == "HomeAddress"), currentHomeAddress);
@@ -102,7 +102,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var properties = new[] { updatedHomeAddress };
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
 
-                ODataEntry updatedentry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                ODataResource updatedentry = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     ODataValueAssertEqualHelper.AssertODataPropertyAreEqual(updatedHomeAddress, (ODataProperty)updatedentry.Properties.Single(p => p.Name == "HomeAddress"));
@@ -112,9 +112,9 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         #region Help function
 
-        private ODataEntry QueryEntry(string requestUri, string mimeType)
+        private ODataResource QueryEntry(string requestUri, string mimeType)
         {
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -126,13 +126,13 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            entry = reader.Item as ODataEntry;
+                            entry = reader.Item as ODataResource;
                         }
                     }
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -143,7 +143,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         private void UpdateEntry(string singletonType, string singletonName, string mimeType, IEnumerable<ODataProperty> properties)
         {
-            ODataEntry entry = new ODataEntry() { TypeName = NameSpacePrefix + singletonType };
+            ODataResource entry = new ODataResource() { TypeName = NameSpacePrefix + singletonType };
             entry.Properties = properties;
 
             var settings = new ODataMessageWriterSettings();
@@ -159,7 +159,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(customerSet, customerType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(customerSet, customerType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }

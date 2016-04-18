@@ -50,8 +50,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var entityType = entitySet.EntityType();
                     ODataDeltaWriter deltaWriter = messageWriter.CreateODataDeltaWriter(entitySet, entityType);
 
-                    var deltaFeed = new ODataDeltaFeed();
-                    var deltaEntry = new ODataEntry
+                    var deltaFeed = new ODataDeltaResourceSet();
+                    var deltaEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), 
                         Properties = new[] {new ODataProperty {Name = "FirstName", Value = "GGGG"}}
@@ -60,7 +60,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), new Uri(ServiceConstants.ServiceBaseUri, "Orders(8)"), "Orders");
                     var addedLink = new ODataDeltaLink(
                         new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), new Uri(ServiceConstants.ServiceBaseUri, "Orders(7)"), "Orders");
-                    var navigationEntry = new ODataEntry
+                    var navigationEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, "Orders(100)"),
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
@@ -70,7 +70,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             new ODataProperty {Name = "OrderDate", Value = new DateTimeOffset(DateTime.Now)}
                         }
                     };
-                    navigationEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                    navigationEntry.SetSerializationInfo(new ODataResourceSerializationInfo
                     {
                         NavigationSourceEntityTypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
                         NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -105,8 +105,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var piType = piSet.EntityType();
                     ODataDeltaWriter deltaWriter = messageWriter.CreateODataDeltaWriter(piSet as IEdmContainedEntitySet, piType);
 
-                    var deltaFeed = new ODataDeltaFeed();
-                    var deltaEntry = new ODataEntry
+                    var deltaFeed = new ODataDeltaResourceSet();
+                    var deltaEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)"), 
                         Properties = new[] { new ODataProperty { Name = "FriendlyName", Value = "GGGG" } }
@@ -125,7 +125,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)"), 
                         "BillingStatements");
 
-                    var navigationEntry = new ODataEntry
+                    var navigationEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901005)"),
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Statement",
@@ -136,7 +136,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             new ODataProperty { Name = "Amount", Value = 32.1 }
                         }
                     };
-                    navigationEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                    navigationEntry.SetSerializationInfo(new ODataResourceSerializationInfo
                     {
                         NavigationSourceEntityTypeName = "Microsoft.Test.OData.Services.ODataWCFService.Statement",
                         NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
@@ -168,8 +168,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var personType = peopleSet.EntityType();
                     ODataDeltaWriter deltaWriter = messageWriter.CreateODataDeltaWriter(peopleSet, personType);
 
-                    var deltaFeed = new ODataDeltaFeed();
-                    var deltaEntry = new ODataEntry
+                    var deltaFeed = new ODataDeltaResourceSet();
+                    var deltaEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, "People(1)"),
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Customer",
@@ -191,7 +191,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         new Uri(ServiceConstants.ServiceBaseUri, "Orders(8)"),
                         "Orders");
 
-                    var navigationEntry = new ODataEntry
+                    var navigationEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, "Orders(100)"),
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
@@ -201,7 +201,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             new ODataProperty {Name = "OrderDate", Value = new DateTimeOffset(DateTime.Now)}
                         }
                     };
-                    navigationEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                    navigationEntry.SetSerializationInfo(new ODataResourceSerializationInfo
                     {
                         NavigationSourceEntityTypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
                         NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -231,24 +231,24 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     ODataDeltaWriter deltaWriter = messageWriter.CreateODataDeltaWriter(customerSet, customerType);
 
                     // Delta feed and entry
-                    var deltaFeed = new ODataDeltaFeed
+                    var deltaFeed = new ODataDeltaResourceSet
                     {
                         DeltaLink = new Uri(ServiceConstants.ServiceBaseUri, "$delta?$token=expanded")
                     };
-                    var deltaEntry = new ODataEntry
+                    var deltaEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, customerSet.Name + "(1)"),
                         Properties = new[] { new ODataProperty { Name = "FirstName", Value = "GGGG" } }
                     };
 
                     // Expanded feed
-                    var navigationLink = new ODataNavigationLink()
+                    var navigationLink = new ODataNestedResourceInfo()
                     {
                         Name = "Orders",
                         IsCollection = true,
                     };
-                    var expandedFeed = new ODataFeed();
-                    var expandedEntry = new ODataEntry
+                    var expandedFeed = new ODataResourceSet();
+                    var expandedEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, orderSet.Name + "(8)"),
                         Properties = new[]
@@ -263,12 +263,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     };
 
                     // Expanded entry
-                    var navigationLinkSingle = new ODataNavigationLink()
+                    var navigationLinkSingle = new ODataNestedResourceInfo()
                     {
                         Name = "Parent",
                         IsCollection = false,
                     };
-                    var expandedEntrySingle = new ODataEntry
+                    var expandedEntrySingle = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, peopleSet.Name + "(2)"),
                         Properties = new[]
@@ -314,8 +314,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var entityType = entitySet.EntityType();
                     ODataDeltaWriter deltaWriter = messageWriter.CreateODataDeltaWriter(entitySet, entityType);
 
-                    var deltaFeed = new ODataDeltaFeed();
-                    var deltaEntry1 = new ODataEntry
+                    var deltaFeed = new ODataDeltaResourceSet();
+                    var deltaEntry1 = new ODataResource
                     {
                         Properties = new[]
                         {
@@ -329,7 +329,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), new Uri(ServiceConstants.ServiceBaseUri, "Orders(8)"), "Orders");
                     var addedLink = new ODataDeltaLink(
                         new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), new Uri(ServiceConstants.ServiceBaseUri, "Orders(7)"), "Orders");
-                    var navigationEntry = new ODataEntry
+                    var navigationEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, "Orders(100)"),
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
@@ -339,7 +339,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             new ODataProperty {Name = "OrderDate", Value = new DateTimeOffset(DateTime.Now)}
                         }
                     };
-                    navigationEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                    navigationEntry.SetSerializationInfo(new ODataResourceSerializationInfo
                     {
                         NavigationSourceEntityTypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
                         NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -353,7 +353,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         NavigationSourceName = "Orders"
                     });
 
-                    var deltaEntry2 = new ODataEntry
+                    var deltaEntry2 = new ODataResource
                     {
                         Properties = new[]
                         {

@@ -126,13 +126,13 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates and returns an ODataEntry from the given value.
+        /// Creates and returns an ODataResource from the given value.
         /// </summary>
         /// <param name="entityType">The value type.</param>
         /// <param name="value">The entry value.</param>
         /// <param name="properties">The given properties to serialize.</param>
-        /// <returns>An ODataEntry representing the given value.</returns>
-        internal ODataEntry CreateODataEntry(Type entityType, object value, params ClientPropertyAnnotation[] properties)
+        /// <returns>An ODataResource representing the given value.</returns>
+        internal ODataResource CreateODataEntry(Type entityType, object value, params ClientPropertyAnnotation[] properties)
         {
             Debug.Assert(entityType != null, "entityType != null");
             Debug.Assert(value != null, "value != null");
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(entityTypeAnnotation != null, "entityTypeAnnotation != null");
             Debug.Assert(entityTypeAnnotation.IsEntityType, "Unexpected type");
 
-            ODataEntry odataEntityValue = new ODataEntry()
+            ODataResource odataEntityValue = new ODataResource()
             {
                 TypeName = entityTypeAnnotation.ElementTypeName,
             };
@@ -156,18 +156,18 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates and returns an ODataEntry from the given value.
+        /// Creates and returns an ODataResource from the given value.
         /// </summary>
         /// <param name="entityType">The value type.</param>
         /// <param name="value">The entry value.</param>
-        /// <returns>An ODataEntry representing the given value.</returns>
-        internal IEnumerable<ODataEntry> CreateODataEntries(Type entityType, object value)
+        /// <returns>An ODataResource representing the given value.</returns>
+        internal IEnumerable<ODataResource> CreateODataEntries(Type entityType, object value)
         {
             Debug.Assert(entityType != null, "entityType != null");
             Debug.Assert(value != null, "value != null");
 
             var list = value as IEnumerable;
-            var entries = new List<ODataEntry>();
+            var entries = new List<ODataResource>();
             if (list != null)
             {
                 entries.AddRange(from object o in list select this.CreateODataEntry(entityType, o));

@@ -20,7 +20,7 @@ namespace Microsoft.OData.Client.Materialization
     using DSClient = Microsoft.OData.Client;
 
     /// <summary>
-    /// Used to materialize entities from a <see cref="ODataEntry"/> objects.
+    /// Used to materialize entities from a <see cref="ODataResource"/> objects.
     /// </summary>
     internal abstract class ODataEntityMaterializer : ODataMaterializer
     {
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Client.Materialization
 
             bool result = false;
             MaterializerNavigationLink atomProperty = default(MaterializerNavigationLink);
-            IEnumerable<ODataNavigationLink> properties = entry.NavigationLinks;
+            IEnumerable<ODataNestedResourceInfo> properties = entry.NavigationLinks;
             ClientEdmModel model = entry.EntityDescriptor.Model;
             for (int i = 0; i < path.Count; i++)
             {
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="entry">Entry to get sub-entry from.</param>
         /// <param name="name">Name of sub-entry.</param>
         /// <returns>The sub-entry (never null).</returns>
-        internal static ODataEntry ProjectionGetEntry(MaterializerEntry entry, string name)
+        internal static ODataResource ProjectionGetEntry(MaterializerEntry entry, string name)
         {
             Debug.Assert(entry.Entry != null, "entry != null -- ProjectionGetEntry never returns a null entry, and top-level materialization shouldn't pass one in");
 
@@ -595,9 +595,9 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             object result = null;
-            ODataNavigationLink link = null;
+            ODataNestedResourceInfo link = null;
             ODataProperty odataProperty = null;
-            ICollection<ODataNavigationLink> links = entry.NavigationLinks;
+            ICollection<ODataNestedResourceInfo> links = entry.NavigationLinks;
             IEnumerable<ODataProperty> properties = entry.Entry.Properties;
             ClientEdmModel edmModel = this.MaterializerContext.Model;
             for (int i = 0; i < path.Count; i++)
@@ -947,13 +947,13 @@ namespace Microsoft.OData.Client.Materialization
             ODataEntityMaterializer materializer,
             IEnumerable list,
             Type nestedExpectedType,
-            IEnumerable<ODataEntry> entries)
+            IEnumerable<ODataResource> entries)
         {
             Debug.Assert(materializer != null, "materializer != null");
             Debug.Assert(list != null, "list != null");
 
             Action<object, object> addMethod = ClientTypeUtil.GetAddToCollectionDelegate(list.GetType());
-            foreach (ODataEntry feedEntry in entries)
+            foreach (ODataResource feedEntry in entries)
             {
                 MaterializerEntry feedEntryState = MaterializerEntry.GetEntry(feedEntry);
                 if (!feedEntryState.EntityHasBeenResolved)
@@ -969,9 +969,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="links">List to get value from.</param>
         /// <param name="propertyName">Property name to look up.</param>
         /// <returns>The specified property (never null).</returns>
-        private static MaterializerNavigationLink GetPropertyOrThrow(IEnumerable<ODataNavigationLink> links, string propertyName)
+        private static MaterializerNavigationLink GetPropertyOrThrow(IEnumerable<ODataNestedResourceInfo> links, string propertyName)
         {
-            ODataNavigationLink link = null;
+            ODataNestedResourceInfo link = null;
             if (links != null)
             {
                 link = links.Where(p => p.Name == propertyName).FirstOrDefault();

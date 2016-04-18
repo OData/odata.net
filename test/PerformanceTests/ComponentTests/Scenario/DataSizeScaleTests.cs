@@ -128,9 +128,9 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        private ODataEntry CreateEntry()
+        private ODataResource CreateEntry()
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Id = new Uri("http://www.odata.org/Perf.svc/PropertyTest(1)"),
                 EditLink = new Uri("PropertyTest(1)", UriKind.Relative),

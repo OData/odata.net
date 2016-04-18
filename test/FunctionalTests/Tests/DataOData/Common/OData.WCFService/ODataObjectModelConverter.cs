@@ -23,19 +23,19 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     public static class ODataObjectModelConverter
     {
         /// <summary>
-        /// Converts an item from the data store into an ODataEntry.
+        /// Converts an item from the data store into an ODataResource.
         /// </summary>
         /// <param name="element">The item to convert.</param>
         /// <param name="entitySet">The entity set that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
-        /// <returns>The converted ODataEntry.</returns>
-        public static ODataEntry ConvertToODataEntry(object element, IEdmEntitySet entitySet, ODataVersion targetVersion)
+        /// <returns>The converted ODataResource.</returns>
+        public static ODataResource ConvertToODataEntry(object element, IEdmEntitySet entitySet, ODataVersion targetVersion)
         {
             IEdmEntityType entityType = entitySet.EntityType();
 
             Uri entryUri = BuildEntryUri(element, entitySet, targetVersion);
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 // writes out the edit link including the service base uri  , e.g.: http://<serviceBase>/Customers('ALFKI')
                 EditLink = entryUri,

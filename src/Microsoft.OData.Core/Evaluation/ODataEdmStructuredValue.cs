@@ -19,26 +19,26 @@ namespace Microsoft.OData.Core.Evaluation
     #endregion Namespaces
 
     /// <summary>
-    /// An <see cref="IEdmValue"/> implementation of an OData entry or complex value.
+    /// An <see cref="IEdmValue"/> implementation of an OData resource or complex value.
     /// </summary>
     internal sealed class ODataEdmStructuredValue : EdmValue, IEdmStructuredValue
     {
-        /// <summary>Properties of an OData entry or complex value.</summary>
+        /// <summary>Properties of an OData resource or complex value.</summary>
         private readonly IEnumerable<ODataProperty> properties;
 
         /// <summary>The type of this structured value.</summary>
         private readonly IEdmStructuredTypeReference structuredType;
 
         /// <summary>
-        /// Creates a new Edm structured value from an OData entry.
+        /// Creates a new Edm structured value from an OData resource.
         /// </summary>
-        /// <param name="entry">The <see cref="ODataEntry"/> to create the structured value for.</param>
-        internal ODataEdmStructuredValue(ODataEntry entry)
-            : base(entry.GetEdmType())
+        /// <param name="resource">The <see cref="ODataResource"/> to create the structured value for.</param>
+        internal ODataEdmStructuredValue(ODataResource resource)
+            : base(resource.GetEdmType())
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
-            this.properties = entry.NonComputedProperties;
+            this.properties = resource.NonComputedProperties;
             this.structuredType = this.Type == null ? null : this.Type.AsStructured();
         }
 

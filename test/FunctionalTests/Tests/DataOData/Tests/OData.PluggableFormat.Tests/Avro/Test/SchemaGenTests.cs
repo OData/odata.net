@@ -18,7 +18,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         [TestMethod]
         public void SimpleODataEntrySchema()
         {
-            ODataEntry entry = new ODataEntry
+            ODataResource entry = new ODataResource
             {
                 TypeName = "NS.SimpleEntry",
                 Properties = new[]

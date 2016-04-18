@@ -48,9 +48,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             }
         }
 
-        private ODataEntry CreateEntryWithMaterializerEntry(ODataFormat format, object resolvedObject)
+        private ODataResource CreateEntryWithMaterializerEntry(ODataFormat format, object resolvedObject)
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             entry.Id = new Uri("http://www.odata.org/Northwind.Svc/Customer(1)");
             entry.Properties = new ODataProperty[] { new ODataProperty() { Name = "ID", Value = 1 } };
 

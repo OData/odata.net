@@ -148,7 +148,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void AddActionShouldAddActionToEntry()
         {
-            ODataEntry entry = ReaderUtils.CreateNewEntry();
+            ODataResource entry = ReaderUtils.CreateNewEntry();
             entry.Actions.Count().Should().Be(0);
             entry.AddAction(new ODataAction());
             entry.Actions.Count().Should().Be(1);
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void AddFunctionShouldAddFunctionToEntry()
         {
-            ODataEntry entry = ReaderUtils.CreateNewEntry();
+            ODataResource entry = ReaderUtils.CreateNewEntry();
             entry.Functions.Count().Should().Be(0);
             entry.AddFunction(new ODataFunction());
             entry.Functions.Count().Should().Be(1);
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void AddActionShouldAddActionToFeed()
         {
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             feed.Actions.Count().Should().Be(0);
             feed.AddAction(new ODataAction());
             feed.Actions.Count().Should().Be(1);
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void AddFunctionShouldAddFunctionToFeed()
         {
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             feed.Functions.Count().Should().Be(0);
             feed.AddFunction(new ODataFunction());
             feed.Functions.Count().Should().Be(1);

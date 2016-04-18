@@ -134,23 +134,23 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an entry in an expanded link to make sure the entity types match.
+        /// Validates a resource in an expanded link to make sure the entity types match.
         /// </summary>
-        /// <param name="entryEntityType">The <see cref="IEdmEntityType"/> of the entry.</param>
+        /// <param name="resourceType">The <see cref="IEdmEntityType"/> of the resource.</param>
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        internal static void ValidateEntryInExpandedLink(IEdmEntityType entryEntityType, IEdmEntityType parentNavigationPropertyType)
+        internal static void ValidateEntryInExpandedLink(IEdmEntityType resourceType, IEdmEntityType parentNavigationPropertyType)
         {
             if (parentNavigationPropertyType == null)
             {
                 return;
             }
 
-            Debug.Assert(entryEntityType != null, "If we have a parent navigation property type we should also have an entry type.");
+            Debug.Assert(resourceType != null, "If we have a parent navigation property type we should also have a resource type.");
 
             // Make sure the entity types are compatible
-            if (!parentNavigationPropertyType.IsAssignableFrom(entryEntityType))
+            if (!parentNavigationPropertyType.IsAssignableFrom(resourceType))
             {
-                throw new ODataException(Strings.WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType(entryEntityType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
+                throw new ODataException(Strings.WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
             }
         }
 
@@ -171,16 +171,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataFeed"/> to ensure all required information is specified and valid on the WriteEnd call.
+        /// Validates an <see cref="ODataResourceSet"/> to ensure all required information is specified and valid on the WriteEnd call.
         /// </summary>
-        /// <param name="feed">The feed to validate.</param>
+        /// <param name="resourceSet">The feed to validate.</param>
         /// <param name="writingRequest">Flag indicating whether the feed is written as part of a request or a response.</param>
-        internal static void ValidateFeedAtEnd(ODataFeed feed, bool writingRequest)
+        internal static void ValidateResourceSetAtEnd(ODataResourceSet resourceSet, bool writingRequest)
         {
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
 
             // Verify next link
-            if (feed.NextPageLink != null)
+            if (resourceSet.NextPageLink != null)
             {
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
@@ -191,30 +191,30 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataEntry"/> to ensure all required information is specified and valid on WriteStart call.
+        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteStart call.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        internal static void ValidateEntryAtStart(ODataEntry entry)
+        /// <param name="resource">The resource to validate.</param>
+        internal static void ValidateEntryAtStart(ODataResource resource)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
             // Id can be specified at the beginning (and might be written here), so we need to validate it here.
-            ValidateEntryId(entry.Id);
+            ValidateEntryId(resource.Id);
 
             // Type name is verified in the format readers/writers since it's shared with other non-entity types
             // and verifying it here would mean doing it twice.
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataEntry"/> to ensure all required information is specified and valid on WriteEnd call.
+        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteEnd call.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        internal static void ValidateEntryAtEnd(ODataEntry entry)
+        /// <param name="resource">The resource to validate.</param>
+        internal static void ValidateEntryAtEnd(ODataResource resource)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
             // If the Id was not specified in the beginning it might have been specified at the end, so validate it here as well.
-            ValidateEntryId(entry.Id);
+            ValidateEntryId(resource.Id);
         }
 
         /// <summary>
@@ -242,10 +242,10 @@ namespace Microsoft.OData.Core
             }
 
             // Default stream can be completely empty (no links or anything)
-            // that is used to effectively mark the entry as MLE without providing any MR information.
+            // that is used to effectively mark the resource as MLE without providing any MR information.
             // OData clients when creating new MLE/MR might not have the MR information (yet) when sending the first PUT, but they still
-            // need to mark the entry as MLE so that properties are written out-of-content. In such scenario the client can just set an empty
-            // default stream to mark the entry as MLE.
+            // need to mark the resource as MLE so that properties are written out-of-content. In such scenario the client can just set an empty
+            // default stream to mark the resource as MLE.
             // That will cause the ATOM writer to write the properties outside the content without producing any content element.
             if (streamReference.EditLink == null && streamReference.ReadLink == null && !isDefaultStream)
             {
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataNavigationLink"/> to ensure all required information is specified and valid.
+        /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="navigationLink">The navigation link to validate.</param>
         /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Core
         /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for navigation link multiplicity in one place.")]
         internal static IEdmNavigationProperty ValidateNavigationLink(
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             IEdmEntityType declaringEntityType,
             ODataPayloadKind? expandedPayloadKind)
         {
@@ -322,9 +322,9 @@ namespace Microsoft.OData.Core
             Debug.Assert(
                 !expandedPayloadKind.HasValue ||
                 expandedPayloadKind.Value == ODataPayloadKind.EntityReferenceLink ||
-                expandedPayloadKind.Value == ODataPayloadKind.Entry ||
-                expandedPayloadKind.Value == ODataPayloadKind.Feed,
-                "If an expanded payload kind is specified it must be entry, feed or entity reference link.");
+                expandedPayloadKind.Value == ODataPayloadKind.Resource ||
+                expandedPayloadKind.Value == ODataPayloadKind.ResourceSet,
+                "If an expanded payload kind is specified it must be resource, feed or entity reference link.");
 
             // Navigation link must have a non-empty name
             if (string.IsNullOrEmpty(navigationLink.Name))
@@ -339,16 +339,16 @@ namespace Microsoft.OData.Core
             bool isEntityReferenceLinkPayload = expandedPayloadKind == ODataPayloadKind.EntityReferenceLink;
 
             // true only if the expandedPayloadKind has a value and the value is 'Feed'
-            bool isFeedPayload = expandedPayloadKind == ODataPayloadKind.Feed;
+            bool isFeedPayload = expandedPayloadKind == ODataPayloadKind.ResourceSet;
 
-            // Make sure the IsCollection property agrees with the payload kind for entry and feed payloads
+            // Make sure the IsCollection property agrees with the payload kind for resource and feed payloads
             Func<object, string> errorTemplate = null;
             if (!isEntityReferenceLinkPayload && navigationLink.IsCollection.HasValue && expandedPayloadKind.HasValue)
             {
-                // For feed/entry make sure the IsCollection property is set correctly.
+                // For feed/resource make sure the IsCollection property is set correctly.
                 if (isFeedPayload != navigationLink.IsCollection.Value)
                 {
-                    errorTemplate = expandedPayloadKind.Value == ODataPayloadKind.Feed
+                    errorTemplate = expandedPayloadKind.Value == ODataPayloadKind.ResourceSet
                         ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent
                         : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent;
                 }
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Core
 
                 bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;
 
-                // Make sure the IsCollection property agrees with the metadata type for entry and feed payloads
+                // Make sure the IsCollection property agrees with the metadata type for resource and feed payloads
                 if (navigationLink.IsCollection.HasValue && isCollectionType != navigationLink.IsCollection)
                 {
                     // Ignore the case where IsCollection is 'false' and we are writing an entity reference link
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Core
         /// Validates that the specified navigation link has a Url.
         /// </summary>
         /// <param name="navigationLink">The navigation link to validate.</param>
-        internal static void ValidateNavigationLinkUrlPresent(ODataNavigationLink navigationLink)
+        internal static void ValidateNavigationLinkUrlPresent(ODataNestedResourceInfo navigationLink)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
 
@@ -415,7 +415,7 @@ namespace Microsoft.OData.Core
         /// Validates that the sepcified navigation link has cardinality, that is it has the IsCollection value set.
         /// </summary>
         /// <param name="navigationLink">The navigation link to validate.</param>
-        internal static void ValidateNavigationLinkHasCardinality(ODataNavigationLink navigationLink)
+        internal static void ValidateNavigationLinkHasCardinality(ODataNestedResourceInfo navigationLink)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
 
@@ -476,9 +476,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates the value of the Id property on an entry.
+        /// Validates the value of the Id property on a resource.
         /// </summary>
-        /// <param name="id">The id value for an entry to validate.</param>
+        /// <param name="id">The id value for a resource to validate.</param>
         private static void ValidateEntryId(Uri id)
         {
             // Verify non-empty ID (entries can have no (null) ID for insert scenarios; empty IDs are not allowed)

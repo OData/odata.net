@@ -19,11 +19,11 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <summary>
         /// The expanded item.
         /// This can be either:
-        /// - ODataFeed - for expanded feed
-        /// - ODataEntry - for expanded entry
+        /// - ODataResourceSet - for expanded feed
+        /// - ODataResource - for expanded entry
         /// - null - for null expanded entry
         /// - ODataEntityReferenceLink - for entity reference link in requests
-        /// - List of ODataItem - for deep bindings in request, the list may contain ODataEntityReferenceLink or ODataFeed instances.
+        /// - List of ODataItem - for deep bindings in request, the list may contain ODataEntityReferenceLink or ODataResourceSet instances.
         /// </summary>
         public object ExpandedItem { get; set; }
     }

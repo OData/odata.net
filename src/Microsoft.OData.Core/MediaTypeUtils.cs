@@ -22,8 +22,8 @@ namespace Microsoft.OData.Core
         /// <summary>An array of all the supported payload kinds.</summary>
         private static readonly ODataPayloadKind[] allSupportedPayloadKinds = new ODataPayloadKind[]
         {
-            ODataPayloadKind.Feed,
-            ODataPayloadKind.Entry,
+            ODataPayloadKind.ResourceSet,
+            ODataPayloadKind.Resource,
             ODataPayloadKind.Property,
             ODataPayloadKind.MetadataDocument,
             ODataPayloadKind.ServiceDocument,
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Core
             for (int i = 0; i < supportedMediaTypes.Count; ++i)
             {
                 // NOTE: the supportedMediaTypes are sorted (desc) by format and media type; so the 
-                //       default format and media type is the first entry in the list
+                //       default format and media type is the first resource in the list
                 ODataMediaTypeFormat supportedMediaType = supportedMediaTypes[i];
                 if (specifiedFormat == null || supportedMediaType.Format == specifiedFormat)
                 {

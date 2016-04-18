@@ -236,9 +236,9 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public virtual ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public virtual ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
 #if ODATALIB_ASYNC
@@ -248,33 +248,33 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read an entry.
+        /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public virtual ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public virtual ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Entry);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public virtual Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Entry);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 #endif
 
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="ODataDeltaReader"/>.</returns>
         internal virtual ODataDeltaReader CreateDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
 #if ODATALIB_ASYNC
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns the newly created <see cref="ODataDeltaReader"/>.</returns>
         internal virtual Task<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 #endif
 

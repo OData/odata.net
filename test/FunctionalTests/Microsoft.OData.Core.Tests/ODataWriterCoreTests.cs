@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core.Tests
             var objectType = (IEdmEntityType)model.FindDeclaredType("DefaultNamespace.Object");
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
-            var entry = new ODataEntry() { TypeName = "DefaultNamespace.Person" };
+            var entry = new ODataResource() { TypeName = "DefaultNamespace.Person" };
             var entityType = coreWriter.ValidateEntityType2(entry);
             entityType.Should().BeSameAs(model.FindDeclaredType("DefaultNamespace.Person"));
         }
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core.Tests
 
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var entityType = coreWriter.ValidateEntityType2(entry);
             entityType.Should().BeSameAs(objectType);
         }
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core.Tests
 
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, peopleSet, null, false);
 
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var entityType = coreWriter.ValidateEntityType2(entry);
             entityType.Should().BeSameAs(personType);
         }
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.Tests
             var model = CreateTestModel();
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, null, null, false);
 
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             Action test = () => coreWriter.ValidateEntityType2(entry);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
@@ -103,9 +103,9 @@ namespace Microsoft.OData.Core.Tests
             {
             }
 
-            public IEdmEntityType ValidateEntityType2(ODataEntry entry)
+            public IEdmEntityType ValidateEntityType2(ODataResource entry)
             {
-                return this.ValidateEntryType(entry);
+                return this.ValidateResourceType(entry);
             }
 
             #region Non-implemented abstract methods
@@ -129,17 +129,17 @@ namespace Microsoft.OData.Core.Tests
                 throw new NotImplementedException();
             }
 
-            protected override void StartEntry(ODataEntry entry)
+            protected override void StartEntry(ODataResource entry)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void EndEntry(ODataEntry entry)
+            protected override void EndEntry(ODataResource entry)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void StartFeed(ODataFeed feed)
+            protected override void StartFeed(ODataResourceSet resourceCollection)
             {
                 throw new NotImplementedException();
             }
@@ -149,37 +149,37 @@ namespace Microsoft.OData.Core.Tests
                 throw new NotImplementedException();
             }
 
-            protected override void EndFeed(ODataFeed feed)
+            protected override void EndFeed(ODataResourceSet resourceCollection)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void WriteDeferredNavigationLink(ODataNavigationLink navigationLink)
+            protected override void WriteDeferredNavigationLink(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void StartNavigationLinkWithContent(ODataNavigationLink navigationLink)
+            protected override void StartNavigationLinkWithContent(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void EndNavigationLinkWithContent(ODataNavigationLink navigationLink)
+            protected override void EndNavigationLinkWithContent(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void WriteEntityReferenceInNavigationLinkContent(ODataNavigationLink parentNavigationLink, ODataEntityReferenceLink entityReferenceLink)
+            protected override void WriteEntityReferenceInNavigationLinkContent(ODataNestedResourceInfo parentNavigationLink, ODataEntityReferenceLink entityReferenceLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.FeedScope CreateFeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceCollection, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.EntryScope CreateEntryScope(ODataEntry entry, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceScope CreateResourceScope(ODataResource entry, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 throw new NotImplementedException();
             }

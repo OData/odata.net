@@ -467,9 +467,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             writerSettings.SetServiceDocumentUri(new Uri("http://host/service"));
 
             var messageWriter = new ODataMessageWriter(message, writerSettings, model);
-            var entryWriter = messageWriter.CreateODataEntryWriter(peopleSet);
+            var entryWriter = messageWriter.CreateODataResourceWriter(peopleSet);
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 TypeName = "MyNS.Person",
                 Properties = new[]
@@ -529,9 +529,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             var readerSettings = new ODataMessageReaderSettings();
 
             var messageReader = new ODataMessageReader(message, readerSettings, model);
-            var entryReader = messageReader.CreateODataEntryReader(peopleSet, personType);
+            var entryReader = messageReader.CreateODataResourceReader(peopleSet, personType);
             Assert.True(entryReader.Read());
-            var entryReaded = entryReader.Item as ODataEntry;
+            var entryReaded = entryReader.Item as ODataResource;
 
             var propertiesReaded = entryReaded.Properties.ToList();
             var propertiesGiven = entry.Properties.ToList();

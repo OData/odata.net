@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// Initializes a new instance of the <see cref="ReadingNavigationLinkArgs" /> class.
         /// </summary>
         /// <param name="link">The link.</param>
-        public ReadingNavigationLinkArgs(ODataNavigationLink link)
+        public ReadingNavigationLinkArgs(ODataNestedResourceInfo link)
         {
             Util.CheckArgumentNull(link, "link");
             this.Link = link;
@@ -29,6 +29,6 @@ namespace Microsoft.OData.Client
         /// <value>
         /// The link.
         /// </value>
-        public ODataNavigationLink Link { get; private set; }
+        public ODataNestedResourceInfo Link { get; private set; }
     }
 }

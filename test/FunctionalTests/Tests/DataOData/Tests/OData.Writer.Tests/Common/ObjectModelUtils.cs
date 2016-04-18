@@ -90,7 +90,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         public static readonly GeometryMultiLineString GeometryMultiLineStringValue;
         public static readonly GeometryMultiPolygon GeometryMultiPolygonValue;
 
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
             NavigationSourceEntityTypeName = "Null",
             NavigationSourceName = "MySet",
@@ -473,14 +473,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates a an ODataFeed instance with default values for 'Id'
+        /// Creates a an ODataResourceSet instance with default values for 'Id'
         /// that can be used and modified in tests.
         /// </summary>
         /// <param name="entitySetName">The (optional) name of the entity set to create.</param>
         /// <param name="entityTypeName">The optional type name for the entries in this feed.</param>
         /// <param name="model">The product model to generate the type in (if not null).</param>
-        /// <returns>The created ODataFeed instance.</returns>
-        public static ODataFeed CreateDefaultFeed(string entitySetName = null, string entityTypeName = null, EdmModel model = null)
+        /// <returns>The created ODataResourceSet instance.</returns>
+        public static ODataResourceSet CreateDefaultFeed(string entitySetName = null, string entityTypeName = null, EdmModel model = null)
         {
             if (model != null && entityTypeName != null)
             {
@@ -497,7 +497,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 }
             }
 
-            return new ODataFeed()
+            return new ODataResourceSet()
             {
                 Id = DefaultFeedId,
                 SerializationInfo = MySerializationInfo
@@ -505,13 +505,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates a an ODataFeed instance with default values for 'Id' and 'Updated'
+        /// Creates a an ODataResourceSet instance with default values for 'Id' and 'Updated'
         /// that can be used and modified in tests.
         /// </summary>
-        /// <returns>The created ODataFeed instance.</returns>
-        public static ODataFeed CreateDefaultFeedWithAtomMetadata()
+        /// <returns>The created ODataResourceSet instance.</returns>
+        public static ODataResourceSet CreateDefaultFeedWithAtomMetadata()
         {
-            ODataFeed feed = new ODataFeed()
+            ODataResourceSet feed = new ODataResourceSet()
             {
                 Id = DefaultFeedId,
                 SerializationInfo = MySerializationInfo
@@ -520,12 +520,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates a default ODataNavigationLink instance for a collection with only the Name and Url properties set.
+        /// Creates a default ODataNestedResourceInfo instance for a collection with only the Name and Url properties set.
         /// </summary>
-        /// <returns>The newly created ODataNavigationLink instances.</returns>
-        public static ODataNavigationLink CreateDefaultCollectionLink(string name = DefaultLinkName, bool? isCollection = true)
+        /// <returns>The newly created ODataNestedResourceInfo instances.</returns>
+        public static ODataNestedResourceInfo CreateDefaultCollectionLink(string name = DefaultLinkName, bool? isCollection = true)
         {
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = name,
                 Url = DefaultLinkUrl,
@@ -535,25 +535,25 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates an ODataNavigationLink instance with the default Name and Url property values and
+        /// Creates an ODataNestedResourceInfo instance with the default Name and Url property values and
         /// 'IsCollection' being set to false that can be used and modified in tests.
         /// </summary>
-        /// <returns>The newly created ODataNavigationLink instance.</returns>
-        public static ODataNavigationLink CreateDefaultSingletonLink(string name = DefaultLinkName)
+        /// <returns>The newly created ODataNestedResourceInfo instance.</returns>
+        public static ODataNestedResourceInfo CreateDefaultSingletonLink(string name = DefaultLinkName)
         {
-            ODataNavigationLink navigationLink = CreateDefaultCollectionLink(name);
+            ODataNestedResourceInfo navigationLink = CreateDefaultCollectionLink(name);
             navigationLink.IsCollection = false;
             return navigationLink;
         }
 
         /// <summary>
-        /// Creates an ODataNavigationLink instance with the default Name and Url property values and
+        /// Creates an ODataNestedResourceInfo instance with the default Name and Url property values and
         /// 'IsCollection' being set to false that can be used and modified in tests.
         /// </summary>
-        /// <returns>The newly created ODataNavigationLink instance.</returns>
-        public static ODataNavigationLink CreateDefaultNavigationLink(string name = DefaultLinkName, Uri associationLinkUrl = null)
+        /// <returns>The newly created ODataNestedResourceInfo instance.</returns>
+        public static ODataNestedResourceInfo CreateDefaultNavigationLink(string name = DefaultLinkName, Uri associationLinkUrl = null)
         {
-            ODataNavigationLink navigationLink = CreateDefaultSingletonLink(name);
+            ODataNestedResourceInfo navigationLink = CreateDefaultSingletonLink(name);
             navigationLink.AssociationLinkUrl = associationLinkUrl;
             return navigationLink;
         }
@@ -606,11 +606,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             };
         }
 
-        /// <summary>Special ODataEntry instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
-        private static ODataEntry nullEntry = new ODataEntry();
+        /// <summary>Special ODataResource instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
+        private static ODataResource nullEntry = new ODataResource();
 
-        /// <summary>Special ODataEntry instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
-        public static ODataEntry ODataNullEntry
+        /// <summary>Special ODataResource instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
+        public static ODataResource ODataNullEntry
         {
             get
             {
@@ -619,20 +619,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>Compares entry with the special 'null' instance</summary>
-        public static bool IsNullEntry(this ODataEntry entry)
+        public static bool IsNullEntry(this ODataResource entry)
         {
             return entry == nullEntry;
         }
 
         /// <summary>
-        /// Creates an ODataEntry instance with the default value for 'Id' and 'ReadLink'
+        /// Creates an ODataResource instance with the default value for 'Id' and 'ReadLink'
         /// that can be used and modified in tests.
         /// </summary>
         /// <param name="typeName">The optional type name for the default entry.</param>
-        /// <returns>The newly created ODataEntry instance.</returns>
-        public static ODataEntry CreateDefaultEntry(string typeName = null)
+        /// <returns>The newly created ODataResource instance.</returns>
+        public static ODataResource CreateDefaultEntry(string typeName = null)
         {
-            return new ODataEntry()
+            return new ODataResource()
             {
                 Id = DefaultEntryId,
                 ReadLink = DefaultEntryReadLink,
@@ -642,13 +642,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates an ODataEntry instance with the default values for 'Id', 'ReadLink' and 'Updated'
+        /// Creates an ODataResource instance with the default values for 'Id', 'ReadLink' and 'Updated'
         /// that can be used and modified in tests.
         /// </summary>
         /// <param name="typeName">The optional type name for the default entry.</param>
         /// <param name="model">The product model to generate the type in (if not null).</param>
-        /// <returns>The newly created ODataEntry instance.</returns>
-        public static ODataEntry CreateDefaultEntryWithAtomMetadata(string entitySetName = null, string typeName = null, EdmModel model = null)
+        /// <returns>The newly created ODataResource instance.</returns>
+        public static ODataResource CreateDefaultEntryWithAtomMetadata(string entitySetName = null, string typeName = null, EdmModel model = null)
         {
             if (model != null && typeName != null)
             {
@@ -667,7 +667,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 }
             }
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 Id = DefaultEntryId,
                 ReadLink = DefaultEntryReadLink,

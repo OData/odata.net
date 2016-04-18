@@ -98,10 +98,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         return messageReader.ReadProperty(readerMetadata.ExpectedType);
                     }
 
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                     return reader.ReadTopLevelFeed(messageReader, readerMetadata.EntitySet, readerMetadata.ExpectedType);
 
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     return reader.ReadTopLevelEntry(messageReader, readerMetadata.EntitySet, readerMetadata.ExpectedType);
 
                 case ODataPayloadKind.Collection:
@@ -194,19 +194,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <param name="messageReader">The message reader to use for reading.</param>
             /// <param name="entitySet">The entity set to use for reading entry or feed payloads.</param>
             /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
-            /// <returns>An <see cref="ODataFeed"/>, possibly with annotations.</returns>
-            public ODataFeed ReadTopLevelFeed(ODataMessageReaderTestWrapper messageReader, IEdmEntitySet entitySet, IEdmTypeReference expectedBaseEntityType)
+            /// <returns>An <see cref="ODataResourceSet"/>, possibly with annotations.</returns>
+            public ODataResourceSet ReadTopLevelFeed(ODataMessageReaderTestWrapper messageReader, IEdmEntitySet entitySet, IEdmTypeReference expectedBaseEntityType)
             {
                 IEdmEntityType entityType = expectedBaseEntityType == null ? null : expectedBaseEntityType.Definition as IEdmEntityType;
-                ODataReader feedReader = messageReader.CreateODataFeedReader(entitySet, entityType);
+                ODataReader feedReader = messageReader.CreateODataResourceSetReader(entitySet, entityType);
                 try
                 {
                     // read the start of the feed
                     feedReader.Read();
-                    this.assert.AreEqual(ODataReaderState.FeedStart, feedReader.State, "Reader states don't match.");
+                    this.assert.AreEqual(ODataReaderState.ResourceSetStart, feedReader.State, "Reader states don't match.");
 
-                    ODataFeed feed = this.ReadFeed(feedReader);
-                    this.assert.AreEqual(ODataReaderState.FeedEnd, feedReader.State, "Reader states don't match.");
+                    ODataResourceSet feed = this.ReadFeed(feedReader);
+                    this.assert.AreEqual(ODataReaderState.ResourceSetEnd, feedReader.State, "Reader states don't match.");
 
                     // read once more to the end-of-input
                     bool moreToRead = feedReader.Read();
@@ -231,19 +231,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <param name="messageReader">The message reader to use for reading.</param>
             /// <param name="entitySet">The entity set to use for reading entry or feed payloads.</param>
             /// <param name="expectedEntityTypeReference">The expected entity type to pass to the reader.</param>
-            /// <returns>An <see cref="ODataEntry"/>, possibly with annotations.</returns>
-            public ODataEntry ReadTopLevelEntry(ODataMessageReaderTestWrapper messageReader, IEdmEntitySet entitySet, IEdmTypeReference expectedEntityTypeReference)
+            /// <returns>An <see cref="ODataResource"/>, possibly with annotations.</returns>
+            public ODataResource ReadTopLevelEntry(ODataMessageReaderTestWrapper messageReader, IEdmEntitySet entitySet, IEdmTypeReference expectedEntityTypeReference)
             {
                 IEdmEntityType entityType = expectedEntityTypeReference == null ? null : expectedEntityTypeReference.Definition as IEdmEntityType;
-                ODataReader entryReader = messageReader.CreateODataEntryReader(entitySet, entityType);
+                ODataReader entryReader = messageReader.CreateODataResourceReader(entitySet, entityType);
                 try
                 {
                     // read the start of the entry
                     entryReader.Read();
-                    this.assert.AreEqual(ODataReaderState.EntryStart, entryReader.State, "Reader states don't match.");
+                    this.assert.AreEqual(ODataReaderState.ResourceStart, entryReader.State, "Reader states don't match.");
 
-                    ODataEntry entry = this.ReadEntry(entryReader);
-                    this.assert.AreEqual(ODataReaderState.EntryEnd, entryReader.State, "Reader states don't match.");
+                    ODataResource entry = this.ReadEntry(entryReader);
+                    this.assert.AreEqual(ODataReaderState.ResourceEnd, entryReader.State, "Reader states don't match.");
 
                     // read once more to the end-of-input
                     bool moreToRead = entryReader.Read();
@@ -383,22 +383,22 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                                 odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, parameterReader.Value));
                                 break;
 
-                            case ODataParameterReaderState.Entry:
-                                ODataReader entryReader = parameterReader.CreateEntryReader();
+                            case ODataParameterReaderState.Resource:
+                                ODataReader entryReader = parameterReader.CreateResourceReader();
                                 entryReader.Read();
-                                this.assert.AreEqual(ODataReaderState.EntryStart, entryReader.State, "Reader states don't match.");
+                                this.assert.AreEqual(ODataReaderState.ResourceStart, entryReader.State, "Reader states don't match.");
                                 odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, this.ReadEntry(entryReader)));
-                                this.assert.AreEqual(ODataReaderState.EntryEnd, entryReader.State, "Reader states don't match.");
+                                this.assert.AreEqual(ODataReaderState.ResourceEnd, entryReader.State, "Reader states don't match.");
                                 this.assert.IsFalse(entryReader.Read(), "Read() should return false after EntryEnd.");
                                 this.assert.AreEqual(ODataReaderState.Completed, entryReader.State, "Reader states don't match.");
                                 break;
 
-                            case ODataParameterReaderState.Feed:
-                                ODataReader feedReader = parameterReader.CreateFeedReader();
+                            case ODataParameterReaderState.ResourceSet:
+                                ODataReader feedReader = parameterReader.CreateResourceSetReader();
                                 feedReader.Read();
-                                this.assert.AreEqual(ODataReaderState.FeedStart, feedReader.State, "Reader states don't match.");
+                                this.assert.AreEqual(ODataReaderState.ResourceSetStart, feedReader.State, "Reader states don't match.");
                                 odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, this.ReadFeed(feedReader)));
-                                this.assert.AreEqual(ODataReaderState.FeedEnd, feedReader.State, "Reader states don't match.");
+                                this.assert.AreEqual(ODataReaderState.ResourceSetEnd, feedReader.State, "Reader states don't match.");
                                 this.assert.IsFalse(feedReader.Read(), "Read() should return false after EntryEnd.");
                                 this.assert.AreEqual(ODataReaderState.Completed, feedReader.State, "Reader states don't match.");
                                 break;
@@ -688,16 +688,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Read a feed with an <see cref="ODataReader"/> positioned on the feed start.
             /// </summary>
             /// <param name="reader">The <see cref="ODataReader"/> to use for reading the feed.</param>
-            /// <returns>An <see cref="ODataFeed"/>, possibly with annotations.</returns>
-            private ODataFeed ReadFeed(ODataReader reader)
+            /// <returns>An <see cref="ODataResourceSet"/>, possibly with annotations.</returns>
+            private ODataResourceSet ReadFeed(ODataReader reader)
             {
-                this.assert.AreEqual(ODataReaderState.FeedStart, reader.State, "Reader states don't match.");
+                this.assert.AreEqual(ODataReaderState.ResourceSetStart, reader.State, "Reader states don't match.");
 
-                ODataFeed feed = (ODataFeed)reader.Item;
+                ODataResourceSet resourceCollection = (ODataResourceSet)reader.Item;
                 ODataFeedPayloadOrderObjectModelAnnotation payloadOrderItems = this.storePayloadOrder ? new ODataFeedPayloadOrderObjectModelAnnotation() : null;
                 ODataFeedEntriesObjectModelAnnotation feedEntries = new ODataFeedEntriesObjectModelAnnotation();
 
-                AddFeedPayloadOrderItems(feed, payloadOrderItems);
+                AddFeedPayloadOrderItems(resourceCollection, payloadOrderItems);
                 if (payloadOrderItems != null)
                 {
                     payloadOrderItems.AddStartFeed();
@@ -705,11 +705,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryStart)
+                    if (reader.State == ODataReaderState.ResourceStart)
                     {
-                        AddFeedPayloadOrderItems(feed, payloadOrderItems);
+                        AddFeedPayloadOrderItems(resourceCollection, payloadOrderItems);
 
-                        ODataEntry entry = this.ReadEntry(reader);
+                        ODataResource entry = this.ReadEntry(reader);
                         if (payloadOrderItems != null)
                         {
                             payloadOrderItems.AddEntry(entry);
@@ -717,42 +717,42 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
                         feedEntries.Add(entry);
                     }
-                    else if (reader.State == ODataReaderState.FeedEnd)
+                    else if (reader.State == ODataReaderState.ResourceSetEnd)
                     {
-                        // we are done reading the feed
+                        // we are done reading the resourceCollection
                         break;
                     }
                     else
                     {
-                        this.assert.Fail("Unexpected reader state '" + reader.State + "' for reading a feed.");
+                        this.assert.Fail("Unexpected reader state '" + reader.State + "' for reading a resourceCollection.");
                     }
                 }
 
-                this.assert.AreEqual(ODataReaderState.FeedEnd, reader.State, "Reader states don't match.");
-                ODataFeed feedAtEnd = (ODataFeed)reader.Item;
-                this.assert.AreSame(feed, feedAtEnd, "Expected the same feed instance.");
+                this.assert.AreEqual(ODataReaderState.ResourceSetEnd, reader.State, "Reader states don't match.");
+                ODataResourceSet feedAtEnd = (ODataResourceSet)reader.Item;
+                this.assert.AreSame(resourceCollection, feedAtEnd, "Expected the same resourceCollection instance.");
 
-                AddFeedPayloadOrderItems(feed, payloadOrderItems);
+                AddFeedPayloadOrderItems(resourceCollection, payloadOrderItems);
 
-                feed.SetAnnotation(feedEntries);
+                resourceCollection.SetAnnotation(feedEntries);
                 if (this.storePayloadOrder)
                 {
-                    feed.SetAnnotation(payloadOrderItems);
+                    resourceCollection.SetAnnotation(payloadOrderItems);
                 }
 
-                return feed;
+                return resourceCollection;
             }
 
             /// <summary>
             /// Read an entry with an <see cref="ODataReader"/> positioned on the entry start.
             /// </summary>
             /// <param name="reader">The <see cref="ODataReader"/> to use for reading the entry.</param>
-            /// <returns>An <see cref="ODataEntry"/>, possibly with annotations.</returns>
-            private ODataEntry ReadEntry(ODataReader reader)
+            /// <returns>An <see cref="ODataResource"/>, possibly with annotations.</returns>
+            private ODataResource ReadEntry(ODataReader reader)
             {
-                this.assert.AreEqual(ODataReaderState.EntryStart, reader.State, "Reader states don't match.");
+                this.assert.AreEqual(ODataReaderState.ResourceStart, reader.State, "Reader states don't match.");
 
-                ODataEntry entry = (ODataEntry)reader.Item;
+                ODataResource entry = (ODataResource)reader.Item;
                 ODataEntryPayloadOrderObjectModelAnnotation payloadOrderItems = this.storePayloadOrder ? new ODataEntryPayloadOrderObjectModelAnnotation() : null;
                 ODataEntryNavigationLinksObjectModelAnnotation navigationLinks = new ODataEntryNavigationLinksObjectModelAnnotation();
 
@@ -770,17 +770,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
                         AddEntryPayloadOrderItems(entry, payloadOrderItems);
 
-                        ODataNavigationLink navigationLinkAtStart = (ODataNavigationLink)reader.Item;
+                        ODataNestedResourceInfo navigationLinkAtStart = (ODataNestedResourceInfo)reader.Item;
                         if (payloadOrderItems != null)
                         {
                             payloadOrderItems.AddODataNavigationLink(navigationLinkAtStart);
                         }
 
-                        ODataNavigationLink navigationLink = this.ReadNavigationLink(reader);
+                        ODataNestedResourceInfo navigationLink = this.ReadNavigationLink(reader);
                         this.assert.AreSame(navigationLinkAtStart, navigationLink, "Expected the same navigation link instance.");
                         navigationLinks.Add(navigationLink, positionInProperties + navigationLinks.Count);
                     }
-                    else if (reader.State == ODataReaderState.EntryEnd)
+                    else if (reader.State == ODataReaderState.ResourceEnd)
                     {
                         // we are done reading this entry
                         break;
@@ -791,8 +791,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     }
                 }
 
-                this.assert.AreEqual(ODataReaderState.EntryEnd, reader.State, "Reader states don't match.");
-                ODataEntry entryAtEnd = (ODataEntry)reader.Item;
+                this.assert.AreEqual(ODataReaderState.ResourceEnd, reader.State, "Reader states don't match.");
+                ODataResource entryAtEnd = (ODataResource)reader.Item;
                 this.assert.AreSame(entry, entryAtEnd, "Expected the same entry instance.");
 
                 AddEntryPayloadOrderItems(entry, payloadOrderItems);
@@ -810,9 +810,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Read a navigation link with an <see cref="ODataReader"/> positioned on the navigation link start.
             /// </summary>
             /// <param name="reader">The <see cref="ODataReader"/> to use for reading the navigation link.</param>
-            /// <returns>An <see cref="ODataNavigationLink"/>, possibly with annotations.</returns>
+            /// <returns>An <see cref="ODataNestedResourceInfo"/>, possibly with annotations.</returns>
             /// <returns></returns>
-            private ODataNavigationLink ReadNavigationLink(ODataReader reader)
+            private ODataNestedResourceInfo ReadNavigationLink(ODataReader reader)
             {
                 this.assert.AreEqual(ODataReaderState.NavigationLinkStart, reader.State, "Reader states don't match.");
 
@@ -821,7 +821,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 List<ODataItem> expandedItems = new List<ODataItem>();
                 while (reader.State != ODataReaderState.NavigationLinkEnd)
                 {
-                    if (reader.State == ODataReaderState.EntryStart)
+                    if (reader.State == ODataReaderState.ResourceStart)
                     {
                         if (reader.Item == null)
                         {
@@ -835,12 +835,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             expandedItems.Add(this.ReadEntry(reader));
                         }
 
-                        this.assert.AreEqual(ODataReaderState.EntryEnd, reader.State, "Reader states don't match.");
+                        this.assert.AreEqual(ODataReaderState.ResourceEnd, reader.State, "Reader states don't match.");
                     }
-                    else if (reader.State == ODataReaderState.FeedStart)
+                    else if (reader.State == ODataReaderState.ResourceSetStart)
                     {
                         expandedItems.Add(this.ReadFeed(reader));
-                        this.assert.AreEqual(ODataReaderState.FeedEnd, reader.State, "Reader states don't match.");
+                        this.assert.AreEqual(ODataReaderState.ResourceSetEnd, reader.State, "Reader states don't match.");
                     }
                     else if (reader.State == ODataReaderState.EntityReferenceLink)
                     {
@@ -859,7 +859,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
                 this.assert.AreEqual(ODataReaderState.NavigationLinkEnd, reader.State, "Reader states don't match.");
 
-                ODataNavigationLink navigationLink = (ODataNavigationLink)reader.Item;
+                ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)reader.Item;
 
                 ODataNavigationLinkExpandedItemObjectModelAnnotation expandedLinkAnnotation = null;
                 if (this.testConfiguration.IsRequest)
@@ -891,7 +891,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// </summary>
             /// <param name="entry">The entry to inspect.</param>
             /// <param name="payloadOrderItems">The payload order items to add to, or null, if nothing should be done.</param>
-            private static void AddEntryPayloadOrderItems(ODataEntry entry, ODataEntryPayloadOrderObjectModelAnnotation payloadOrderItems)
+            private static void AddEntryPayloadOrderItems(ODataResource entry, ODataEntryPayloadOrderObjectModelAnnotation payloadOrderItems)
             {
                 if (payloadOrderItems == null) return;
 
@@ -941,7 +941,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// </summary>
             /// <param name="entry">The feed to inspect.</param>
             /// <param name="payloadOrderItems">The payload order items to add to, or null, if nothing should be done.</param>
-            private static void AddFeedPayloadOrderItems(ODataFeed feed, ODataFeedPayloadOrderObjectModelAnnotation payloadOrderItems)
+            private static void AddFeedPayloadOrderItems(ODataResourceSet feed, ODataFeedPayloadOrderObjectModelAnnotation payloadOrderItems)
             {
                 if (payloadOrderItems == null) return;
 

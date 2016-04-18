@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core.Tests
         public void PropertyGettersAndSettersTest()
         {
             Uri baseUri = new Uri("http://odata.org");
-            Func<ODataEntry, XmlReader, Uri, XmlReader> entryAtomXmlCustomizationCallback = (entry, reader, uri) => reader;
+            Func<ODataResource, XmlReader, Uri, XmlReader> entryAtomXmlCustomizationCallback = (entry, reader, uri) => reader;
 
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings
             {

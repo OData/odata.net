@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataFeedBase.cs" company="Microsoft">
+// <copyright file="ODataResourceSetBase.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Describes a collection of entities.
     /// </summary>
-    public abstract class ODataFeedBase : ODataItem
+    public abstract class ODataResourceSetBase : ODataItem
     {
         /// <summary>
         /// URI representing the next page link.

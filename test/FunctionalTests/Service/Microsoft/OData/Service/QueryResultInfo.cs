@@ -140,12 +140,12 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Forms an instance of DataServiceODataWriterFeedArgs that contains results.
         /// </summary>
-        /// <param name="feed">ODataFeed instance.</param>
+        /// <param name="feed">ODataResourceSet instance.</param>
         /// <param name="operationContext">DataServicesOperationContext instance.</param>
         /// <returns>DataServiceODataWriterFeedArgs instance</returns>
-        internal DataServiceODataWriterFeedArgs GetDataServiceODataWriterFeedArgs(ODataFeed feed, DataServiceOperationContext operationContext)
+        internal DataServiceODataWriterFeedArgs GetDataServiceODataWriterFeedArgs(ODataResourceSet resourceCollection, DataServiceOperationContext operationContext)
         {
-            return new DataServiceODataWriterFeedArgs(feed, this.results, operationContext);
+            return new DataServiceODataWriterFeedArgs(resourceCollection, this.results, operationContext);
         }
     }
 }

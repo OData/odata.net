@@ -214,7 +214,7 @@ namespace Microsoft.OData.Core
             // null action/function can not appear in the enumeration
             if (operation == null)
             {
-                string enumerableName = isAction ? "ODataEntry.Actions" : "ODataEntry.Functions";
+                string enumerableName = isAction ? "ODataResource.Actions" : "ODataResource.Functions";
                 throw new ODataException(Strings.ValidationUtils_EnumerableContainsANullItem(enumerableName));
             }
         }
@@ -250,36 +250,36 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates that the specified <paramref name="entry"/> is a valid entry as per the specified type.
+        /// Validates that the specified <paramref name="resource"/> is a valid resource as per the specified type.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        /// <param name="entityType">Optional entity type to validate the entry against.</param>
+        /// <param name="resource">The resource to validate.</param>
+        /// <param name="resourceType">Optional entity type to validate the resource against.</param>
         /// <param name="model">Model containing the entity type.</param>
         /// <param name="validateMediaResource">true if the validation of the default MediaResource should be done; false otherwise.</param>
-        /// <remarks>If the <paramref name="entityType"/> is available only entry-level tests are performed, properties and such are not validated.</remarks>
-        internal static void ValidateEntryMetadataResource(ODataEntry entry, IEdmEntityType entityType, IEdmModel model, bool validateMediaResource)
+        /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
+        internal static void ValidateEntryMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model, bool validateMediaResource)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
-            if (entityType != null)
+            if (resourceType != null)
             {
                 Debug.Assert(model != null, "model != null");
                 Debug.Assert(model.IsUserModel(), "model.IsUserModel()");
 
                 if (validateMediaResource)
                 {
-                    if (entry.MediaResource == null)
+                    if (resource.MediaResource == null)
                     {
-                        if (entityType.HasStream)
+                        if (resourceType.HasStream)
                         {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(entityType.FullTypeName()));
+                            throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
                         }
                     }
                     else
                     {
-                        if (!entityType.HasStream)
+                        if (!resourceType.HasStream)
                         {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(entityType.FullTypeName()));
+                            throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
                         }
                     }
                 }

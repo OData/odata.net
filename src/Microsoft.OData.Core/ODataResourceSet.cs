@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataFeed.cs" company="Microsoft">
+// <copyright file="ODataResourceSet.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Describes a collection of entities.
     /// </summary>
-    public sealed class ODataFeed : ODataFeedBase
+    public sealed class ODataResourceSet : ODataResourceSetBase
     {
         /// <summary>The feed actions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataAction> actions = new List<ODataAction>();
@@ -20,9 +20,9 @@ namespace Microsoft.OData.Core
         private List<ODataFunction> functions = new List<ODataFunction>();
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataFeed"/>.
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
         /// </summary>
-        private ODataFeedAndEntrySerializationInfo serializationInfo;
+        private ODataResourceSerializationInfo serializationInfo;
 
         /// <summary>Gets the feed actions.</summary>
         /// <returns>The feed actions.</returns>
@@ -39,9 +39,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataFeed"/>.
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
         /// </summary>
-        internal ODataFeedAndEntrySerializationInfo SerializationInfo
+        internal ODataResourceSerializationInfo SerializationInfo
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core
 
             set
             {
-                this.serializationInfo = ODataFeedAndEntrySerializationInfo.Validate(value);
+                this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
             }
         }
 

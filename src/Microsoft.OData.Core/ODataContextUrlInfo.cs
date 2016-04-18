@@ -198,7 +198,7 @@ namespace Microsoft.OData.Core
         /// <param name="isSingle">Whether target is single item.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(ODataFeedAndEntryTypeContext typeContext, bool isSingle, ODataUri odataUri = null)
+        internal static ODataContextUrlInfo Create(ODataResourceTypeContext typeContext, bool isSingle, ODataUri odataUri = null)
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Core
         /// <param name="kind">The delta kind.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(ODataFeedAndEntryTypeContext typeContext, ODataDeltaKind kind, ODataUri odataUri = null)
+        internal static ODataContextUrlInfo Create(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataUri odataUri = null)
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
@@ -232,12 +232,12 @@ namespace Microsoft.OData.Core
                 navigationSource = typeContext.NavigationSourceName,
                 TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
                 TypeName = typeContext.NavigationSourceEntityTypeName,
-                IncludeFragmentItemSelector = kind == ODataDeltaKind.Entry && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
+                IncludeFragmentItemSelector = kind == ODataDeltaKind.Resource && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 DeltaKind = kind,
             };
 
             // Only use odata uri in with model case.
-            if (typeContext is ODataFeedAndEntryTypeContext.ODataFeedAndEntryTypeContextWithModel)
+            if (typeContext is ODataResourceTypeContext.ODataFeedAndEntryTypeContextWithModel)
             {
                 contextUriInfo.odataUri = odataUri;
             }
@@ -258,8 +258,8 @@ namespace Microsoft.OData.Core
             }
 
             if (parentContextUrlInfo.NavigationPath == NavigationPath &&
-                parentContextUrlInfo.DeltaKind == ODataDeltaKind.Feed &&
-                this.DeltaKind == ODataDeltaKind.Entry)
+                parentContextUrlInfo.DeltaKind == ODataDeltaKind.ResourceSet &&
+                this.DeltaKind == ODataDeltaKind.Resource)
             {
                 return true;
             }

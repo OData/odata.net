@@ -55,12 +55,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 ""value"":[]";
                 var feedReader = GetFeedReader(feedText, isResponse);
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedStart);
-                feedReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                feedReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
 
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedEnd);
-                feedReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+                feedReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
             }
         }
 
@@ -72,12 +72,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             {
                 var feedReader = GetFeedReader(feedText, isResponse, odataSimplified);
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedStart);
-                feedReader.Item.As<ODataFeed>().NextPageLink.Should().Be(null);
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                feedReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(null);
 
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedEnd);
-                feedReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+                feedReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
             }
         }
 
@@ -122,12 +122,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 ""value"":[]";
                 var feedReader = GetFeedReader(feedText, isResponse);
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedStart);
-                feedReader.Item.As<ODataFeed>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                feedReader.Item.As<ODataResourceSet>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
 
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedEnd);
-                feedReader.Item.As<ODataFeed>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+                feedReader.Item.As<ODataResourceSet>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
             }
         }
 
@@ -141,12 +141,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 ""@odata.deltaLink"":""http://deltaLink""";
                 var feedReader = GetFeedReader(feedText, isResponse);
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedStart);
-                feedReader.Item.As<ODataFeed>().DeltaLink.Should().Be(null);
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                feedReader.Item.As<ODataResourceSet>().DeltaLink.Should().Be(null);
 
                 feedReader.Read();
-                feedReader.State.Should().Be(ODataReaderState.FeedEnd);
-                feedReader.Item.As<ODataFeed>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
+                feedReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+                feedReader.Item.As<ODataResourceSet>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
             }
         }
 
@@ -162,8 +162,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
                 var entryReader = this.GetFeedReader(feedText, isResponse);
                 entryReader.Read();
-                entryReader.State.Should().Be(ODataReaderState.FeedStart);
-                entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+                entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
                 Action read = () => entryReader.Read();
                 read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("odata.nextLink"));
             }
@@ -181,8 +181,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
                 var entryReader = this.GetFeedReader(feedText, isResponse);
                 entryReader.Read();
-                entryReader.State.Should().Be(ODataReaderState.FeedStart);
-                entryReader.Item.As<ODataFeed>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
+                entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                entryReader.Item.As<ODataResourceSet>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
                 Action read = () => entryReader.Read();
                 read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("odata.deltaLink"));
             }
@@ -201,12 +201,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(0);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(0);
         }
 
         [Fact]
@@ -218,15 +218,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(null);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(null);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedEnd);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(0);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(0);
         }
 
         [Fact]
@@ -239,12 +239,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(0);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(0);
             Action read = () => entryReader.Read();
             read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation("odata.count", "NavProp"));
         }
@@ -258,12 +258,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(2);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(2);
         }
 
         [Fact]
@@ -275,15 +275,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(null);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(null);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedEnd);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(2);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(2);
         }
 
         #region NonZeroCountAndNextLinkComesAfterInnerFeedOnResponse
@@ -292,16 +292,16 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         {
             var entryReader = GetEntryReader(entryText, isResponse: true, odataSimplified: odataSimplified);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(null);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(null);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedEnd);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(2);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(2);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
         }
 
         [Fact]
@@ -348,12 +348,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(2);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(2);
             Action read = () => entryReader.Read();
             read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation("odata.count", "NavProp"));
         }
@@ -369,15 +369,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedEnd);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
-            entryReader.Item.As<ODataFeed>().Count.Should().Be(null);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+            entryReader.Item.As<ODataResourceSet>().Count.Should().Be(null);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkEnd);
             Action read = () => entryReader.Read();
@@ -393,12 +393,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
         }
 
         [Fact]
@@ -439,12 +439,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
             Action read = () => entryReader.Read();
             read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation("odata.nextLink", "NavProp"));
         }
@@ -458,15 +458,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: true);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(null);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(null);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedEnd);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(new Uri("http://nextLink"));
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetEnd);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
         }
 
         [Fact]
@@ -478,12 +478,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: false);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
             entryReader.Read();
-            entryReader.State.Should().Be(ODataReaderState.FeedStart);
-            entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(null);
+            entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+            entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(null);
             Action test = () => entryReader.Read();
             test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("NavProp", "odata.nextLink"));
         }
@@ -499,12 +499,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
                 var entryReader = GetEntryReader(entryText, isResponse);
                 entryReader.Read();
-                entryReader.State.Should().Be(ODataReaderState.EntryStart);
+                entryReader.State.Should().Be(ODataReaderState.ResourceStart);
                 entryReader.Read();
                 entryReader.State.Should().Be(ODataReaderState.NavigationLinkStart);
                 entryReader.Read();
-                entryReader.State.Should().Be(ODataReaderState.FeedStart);
-                entryReader.Item.As<ODataFeed>().NextPageLink.Should().Be(null);
+                entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
+                entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(null);
                 Action test = () => entryReader.Read();
                 string expectedErrorMsg = isResponse ? ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed("odata.deltaLink", "NavProp") : ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("NavProp", "odata.deltaLink");
                 test.ShouldThrow<ODataException>().WithMessage(expectedErrorMsg);
@@ -516,12 +516,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         private ODataReader GetEntryReader(string entryText, bool isResponse, bool odataSimplified = false)
         {
             this.CreateMessageReader(entryText, /*forEntry*/ true, isResponse, odataSimplified);
-            return this.messageReader.CreateODataEntryReader(this.entitySet, this.type);
+            return this.messageReader.CreateODataResourceReader(this.entitySet, this.type);
         }
         private ODataReader GetFeedReader(string feedText, bool isResponse, bool odataSimplified = false)
         {
             this.CreateMessageReader(feedText, /*forEntry*/ false, isResponse, odataSimplified);
-            return this.messageReader.CreateODataFeedReader(this.entitySet, this.type);
+            return this.messageReader.CreateODataResourceSetReader(this.entitySet, this.type);
         }
 
         private void CreateMessageReader(string payloadBody, bool forEntry, bool isResponse, bool odataSimplified)

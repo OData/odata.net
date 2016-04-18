@@ -13,25 +13,25 @@ namespace Microsoft.OData.Core
     public static class ODataObjectModelExtensions
     {
         /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="feed"/>.
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="resourceSet"/>.
         /// </summary>
-        /// <param name="feed">The instance to set the serialization info.</param>
+        /// <param name="resourceSet">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataFeed feed, ODataFeedAndEntrySerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataResourceSet resourceSet, ODataResourceSerializationInfo serializationInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(feed, "feed");
-            feed.SerializationInfo = serializationInfo;
+            ExceptionUtils.CheckArgumentNotNull(resourceSet, "resourceSet");
+            resourceSet.SerializationInfo = serializationInfo;
         }
 
         /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="entry"/>.
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="resource"/>.
         /// </summary>
-        /// <param name="entry">The instance to set the serialization info.</param>
+        /// <param name="resource">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataResource resource, ODataResourceSerializationInfo serializationInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(entry, "entry");
-            entry.SerializationInfo = serializationInfo;
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
+            resource.SerializationInfo = serializationInfo;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="deltaFeed">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataDeltaFeed deltaFeed, ODataDeltaFeedSerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataDeltaResourceSet deltaFeed, ODataDeltaResourceSetSerializationInfo serializationInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaFeed, "deltaFeed");
             deltaFeed.SerializationInfo = serializationInfo;

@@ -254,13 +254,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
         }
 
-        private ODataEntry ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false)
+        private ODataResource ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false)
         {
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", contentType);
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            ODataEntry topLevelEntry = null;
+            ODataResource topLevelEntry = null;
 
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
 
@@ -268,13 +268,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 ? new ODataMessageReader((IODataResponseMessage)message, settings, Model)
                 : new ODataMessageReader((IODataRequestMessage)message, settings, Model))
             {
-                var reader = messageReader.CreateODataEntryReader(EntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceReader(EntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            topLevelEntry = (ODataEntry)reader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            topLevelEntry = (ODataResource)reader.Item;
                             break;
                     }
                 }
@@ -283,25 +283,25 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             return topLevelEntry;
         }
 
-        private IList<ODataEntry> ReadJsonLightFeed(string payload, string contentType, bool readingResponse)
+        private IList<ODataResource> ReadJsonLightFeed(string payload, string contentType, bool readingResponse)
         {
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", contentType);
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            IList<ODataEntry> entries = new List<ODataEntry>();
+            IList<ODataResource> entries = new List<ODataResource>();
 
             using (var messageReader = readingResponse
                 ? new ODataMessageReader((IODataResponseMessage)message, null, Model)
                 : new ODataMessageReader((IODataRequestMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataFeedReader(EntitySet, EntityType);
+                var reader = messageReader.CreateODataResourceSetReader(EntitySet, EntityType);
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            entries.Add((ODataEntry)reader.Item);
+                        case ODataReaderState.ResourceEnd:
+                            entries.Add((ODataResource)reader.Item);
                             break;
                     }
                 }

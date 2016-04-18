@@ -39,7 +39,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             foreach (var mimeType in mimeTypes)
             {
                 // $count collection of primitive type
-                List<ODataEntry> details = this.TestsHelper.QueryFeed("People?$filter=Emails/$count lt 2", mimeType);
+                List<ODataResource> details = this.TestsHelper.QueryFeed("People?$filter=Emails/$count lt 2", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(4, details.Count);

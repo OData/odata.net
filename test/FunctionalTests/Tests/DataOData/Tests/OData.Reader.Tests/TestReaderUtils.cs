@@ -36,8 +36,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         public static readonly ODataPayloadKind[] ODataPayloadKinds = new ODataPayloadKind[]
             {
-                ODataPayloadKind.Feed,
-                ODataPayloadKind.Entry,
+                ODataPayloadKind.ResourceSet,
+                ODataPayloadKind.Resource,
                 ODataPayloadKind.Property,
                 ODataPayloadKind.EntityReferenceLink,
                 ODataPayloadKind.EntityReferenceLinks,

@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataDeltaFeed.cs" company="Microsoft">
+// <copyright file="ODataDeltaResourceSet.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,17 +9,17 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Describes a delta response.
     /// </summary>
-    public sealed class ODataDeltaFeed : ODataFeedBase
+    public sealed class ODataDeltaResourceSet : ODataResourceSetBase
     {
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaFeed"/>.
+        /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaResourceSet"/>.
         /// </summary>
-        private ODataDeltaFeedSerializationInfo serializationInfo;
+        private ODataDeltaResourceSetSerializationInfo serializationInfo;
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaFeed"/>.
+        /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaResourceSet"/>.
         /// </summary>
-        internal ODataDeltaFeedSerializationInfo SerializationInfo
+        internal ODataDeltaResourceSetSerializationInfo SerializationInfo
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core
 
             set
             {
-                this.serializationInfo = ODataDeltaFeedSerializationInfo.Validate(value);
+                this.serializationInfo = ODataDeltaResourceSetSerializationInfo.Validate(value);
             }
         }
     }

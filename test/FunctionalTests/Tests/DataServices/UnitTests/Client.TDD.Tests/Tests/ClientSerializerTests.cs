@@ -75,12 +75,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.MediaResource.Should().NotBeNull();
         }
 
-        private static ODataEntry CreateODataEntry(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
+        private static ODataResource CreateODataEntry(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
         {
             return CreateODataEntry<object>(configureDescriptor, configureFormat, serverTypeName, clientTypeName);
         }
 
-        private static ODataEntry CreateODataEntry<T>(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
+        private static ODataResource CreateODataEntry<T>(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
         {
             ClientEdmModel model = new ClientEdmModel(ODataProtocolVersion.V4);
             var ctx = new DataServiceContext(new Uri("http://www.example.com/odata.svc"), ODataProtocolVersion.V4, model);

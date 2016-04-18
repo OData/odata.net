@@ -24,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Some helper methods to create various ODataFeed/Entry/values.
+    /// Some helper methods to create various ODataResourceSet/Entry/values.
     /// </summary>
     public static partial class WritePayloadHelper
     {
@@ -580,7 +580,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         #region OrderFeedTestHelper
 
-        public static ODataEntry CreateOrderEntry1(bool hasModel)
+        public static ODataResource CreateOrderEntry1(bool hasModel)
         {
             var orderEntry1 = CreateOrderEntry1NoMetadata(hasModel);
             orderEntry1.Id = new Uri(ServiceUri + "Order(-10)");
@@ -589,7 +589,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry1;
         }
 
-        public static ODataEntry CreateOrderEntry2(bool hasModel)
+        public static ODataResource CreateOrderEntry2(bool hasModel)
         {
             var orderEntry2 = CreateOrderEntry2NoMetadata(hasModel);
             orderEntry2.Id = new Uri(ServiceUri + "Order(-9)");
@@ -603,7 +603,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         #region ExpandedCustomerEntryTestHelper
 
-        public static ODataEntry CreateCustomerEntry(bool hasModel)
+        public static ODataResource CreateCustomerEntry(bool hasModel)
         {
             var customerEntry = CreateCustomerEntryNoMetadata(hasModel);
             customerEntry.Id = new Uri(ServiceUri + "Customer(-9)");
@@ -984,29 +984,29 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 };
         }
 
-        public static IEnumerable<ODataNavigationLink> CreateCustomerNavigationLinks()
+        public static IEnumerable<ODataNestedResourceInfo> CreateCustomerNavigationLinks()
         {
-            return new List<ODataNavigationLink>()
+            return new List<ODataNestedResourceInfo>()
                 {
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "Orders",
                             IsCollection = true,
                             Url = new Uri(ServiceUri + "Customer(-9)/Orders")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "Husband",
                             IsCollection = false,
                             Url = new Uri(ServiceUri + "Customer(-9)/Husband")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "Wife",
                             IsCollection = false,
                             Url = new Uri(ServiceUri + "Customer(-9)/Wife")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "Info",
                             IsCollection = false,
@@ -1015,7 +1015,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 };
         }
 
-        public static ODataEntry CreateLoginEntry(bool hasModel)
+        public static ODataResource CreateLoginEntry(bool hasModel)
         {
             var loginEntry = CreateLoginEntryNoMetadata(hasModel);
             loginEntry.Id = new Uri(ServiceUri + "Login('2')");
@@ -1024,35 +1024,35 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return loginEntry;
         }
 
-        public static IEnumerable<ODataNavigationLink> CreateLoginNavigationLinks()
+        public static IEnumerable<ODataNestedResourceInfo> CreateLoginNavigationLinks()
         {
-            return new List<ODataNavigationLink>()
+            return new List<ODataNestedResourceInfo>()
                 {
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "Customer",
                             IsCollection = false,
                             Url = new Uri(ServiceUri + "Login('2')/Customer")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "LastLogin",
                             IsCollection = false,
                             Url = new Uri(ServiceUri + "Login('2')/LastLogin")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "SentMessages",
                             IsCollection = true,
                             Url = new Uri(ServiceUri + "Login('2')/SentMessages")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "ReceivedMessages",
                             IsCollection = true,
                             Url = new Uri(ServiceUri + "Login('2')/ReceivedMessages")
                         },
-                    new ODataNavigationLink()
+                    new ODataNestedResourceInfo()
                         {
                             Name = "Orders",
                             IsCollection = true,
@@ -1065,7 +1065,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         #region PersonFeedTestHelper
 
-        public static ODataEntry CreatePersonEntry(bool hasModel)
+        public static ODataResource CreatePersonEntry(bool hasModel)
         {
             var personEntry = CreatePersonEntryNoMetadata(hasModel);
             personEntry.Id = new Uri(ServiceUri + "Person(-5)");
@@ -1074,7 +1074,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return personEntry;
         }
 
-        public static ODataEntry CreateEmployeeEntry(bool hasModel)
+        public static ODataResource CreateEmployeeEntry(bool hasModel)
         {
             var employeeEntry = CreateEmployeeEntryNoMetadata(hasModel);
             employeeEntry.Id = new Uri(ServiceUri + "Person(-3)");
@@ -1092,7 +1092,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return employeeEntry;
         }
 
-        public static ODataEntry CreateSpecialEmployeeEntry(bool hasModel)
+        public static ODataResource CreateSpecialEmployeeEntry(bool hasModel)
         {
             var employeeEntry = CreateSpecialEmployeeEntryNoMetadata(hasModel);
             employeeEntry.Id = new Uri(ServiceUri + "Person(-10)");
@@ -1112,7 +1112,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         #endregion PersonFeedTestHelper
 
-        public static ODataEntry CreateCarEntry(bool hasModel)
+        public static ODataResource CreateCarEntry(bool hasModel)
         {
             var carEntry = CreateCarEntryNoMetadata(hasModel);
             carEntry.Id = new Uri(ServiceUri + "Car(11)");
@@ -1151,9 +1151,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return carEntry;
         }
 
-        public static ODataEntry CreateOrderEntry1NoMetadata(bool hasModel)
+        public static ODataResource CreateOrderEntry1NoMetadata(bool hasModel)
         {
-            var orderEntry1 = new ODataEntry()
+            var orderEntry1 = new ODataResource()
             {
                 TypeName = NameSpace + "Order", 
             };
@@ -1173,9 +1173,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry1;
         }
 
-        public static ODataEntry CreateOrderEntry2NoMetadata(bool hasModel)
+        public static ODataResource CreateOrderEntry2NoMetadata(bool hasModel)
         {
-            var orderEntry2 = new ODataEntry()
+            var orderEntry2 = new ODataResource()
             {
                 TypeName = NameSpace + "Order"
             };
@@ -1215,7 +1215,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry2;
         }
 
-        public static ODataNavigationLink AddOrderEntryCustomNavigation(ODataEntry orderEntry, Dictionary<string, object> expectedOrderObject, bool hasModel)
+        public static ODataNestedResourceInfo AddOrderEntryCustomNavigation(ODataResource orderEntry, Dictionary<string, object> expectedOrderObject, bool hasModel)
         {
             string myServiceUri = "http://myservice.svc/";
             orderEntry.Id = new Uri(myServiceUri + "Order(-9)");
@@ -1230,7 +1230,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             expectedOrderObject[JsonLightConstants.ODataEditLinkAnnotationName] = orderEntry.EditLink.AbsoluteUri;
             expectedOrderObject[JsonLightConstants.ODataReadLinkAnnotationName] = orderEntry.ReadLink.OriginalString;
 
-            var orderEntry2Navigation = new ODataNavigationLink()
+            var orderEntry2Navigation = new ODataNestedResourceInfo()
             {
                 Name = "Customer",
                 IsCollection = false,
@@ -1250,9 +1250,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry2Navigation;
         }
 
-        public static ODataEntry CreateCustomerEntryNoMetadata(bool hasModel)
+        public static ODataResource CreateCustomerEntryNoMetadata(bool hasModel)
         {
-            var customerEntry = new ODataEntry()
+            var customerEntry = new ODataResource()
             {
                 TypeName = NameSpace + "Customer"
             };
@@ -1282,7 +1282,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                customerEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Customer", NavigationSourceEntityTypeName = NameSpace + "Customer" });
+                customerEntry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Customer", NavigationSourceEntityTypeName = NameSpace + "Customer" });
                 customerEntryP1.SetSerializationInfo(new ODataPropertySerializationInfo()
                 {
                     PropertyKind = ODataPropertyKind.Key
@@ -1292,9 +1292,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return customerEntry;
         }
 
-        public static ODataEntry CreateLoginEntryNoMetadata(bool hasModel)
+        public static ODataResource CreateLoginEntryNoMetadata(bool hasModel)
         {
-            var loginEntry = new ODataEntry()
+            var loginEntry = new ODataResource()
             {
                 TypeName = NameSpace + "Login"
             };
@@ -1315,7 +1315,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return loginEntry;
         }
 
-        internal static ODataProperty AddCustomerMediaProperty(ODataEntry customerEntry, Dictionary<string, object> expectedCustomerObject)
+        internal static ODataProperty AddCustomerMediaProperty(ODataResource customerEntry, Dictionary<string, object> expectedCustomerObject)
         {
             var thumbnailProperty = new ODataProperty()
             {
@@ -1336,20 +1336,20 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return thumbnailProperty;
         }
 
-        public static ODataNavigationLink CreateCustomerOrderNavigation(Dictionary<string, object> expectedCustomerObject)
+        public static ODataNestedResourceInfo CreateCustomerOrderNavigation(Dictionary<string, object> expectedCustomerObject)
         {
             // create navigation and add expected metadata for no-model verification, use non-trival navigation link to verify association link is calculated
-            var orderNavigation = new ODataNavigationLink() { Name = "Orders", IsCollection = true, Url = new Uri(ServiceUri + "Customerdf(-9)/MyOrders") };
+            var orderNavigation = new ODataNestedResourceInfo() { Name = "Orders", IsCollection = true, Url = new Uri(ServiceUri + "Customerdf(-9)/MyOrders") };
             expectedCustomerObject["Orders" + "@" + JsonLightConstants.ODataNavigationLinkUrlAnnotationName] = orderNavigation.Url.AbsoluteUri;
             expectedCustomerObject["Orders" + "@" + JsonLightConstants.ODataAssociationLinkUrlAnnotationName] = ServiceUri + "Customer(-9)/Orders/$ref";
             return orderNavigation;
         }
 
-        public static ODataNavigationLink CreateExpandedCustomerLoginsNavigation(Dictionary<string, object> expectedCustomerObject)
+        public static ODataNestedResourceInfo CreateExpandedCustomerLoginsNavigation(Dictionary<string, object> expectedCustomerObject)
         {
             // create expand navigation and add expected infor for no-model verification
             string myServiceUri = "http://myservice.svc/";
-            var expandedLoginsNavigation = new ODataNavigationLink()
+            var expandedLoginsNavigation = new ODataNestedResourceInfo()
             {
                 Name = "Logins",
                 IsCollection = true,
@@ -1361,9 +1361,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return expandedLoginsNavigation;
         }
 
-        public static ODataEntry CreatePersonEntryNoMetadata(bool hasModel)
+        public static ODataResource CreatePersonEntryNoMetadata(bool hasModel)
         {
-            var personEntry = new ODataEntry()
+            var personEntry = new ODataResource()
             {
                 TypeName = NameSpace + "Person"
             };
@@ -1387,9 +1387,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return personEntry;
         }
 
-        public static ODataEntry CreateEmployeeEntryNoMetadata(bool hasModel)
+        public static ODataResource CreateEmployeeEntryNoMetadata(bool hasModel)
         {
-            var employeeEntry = new ODataEntry()
+            var employeeEntry = new ODataResource()
             {
                 TypeName = NameSpace + "Employee"
             };
@@ -1419,9 +1419,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return employeeEntry;
         }
 
-        public static ODataEntry CreateSpecialEmployeeEntryNoMetadata(bool hasModel)
+        public static ODataResource CreateSpecialEmployeeEntryNoMetadata(bool hasModel)
         {
-            var employeeEntry = new ODataEntry()
+            var employeeEntry = new ODataResource()
             {
                 TypeName = NameSpace + "SpecialEmployee"
             };
@@ -1445,9 +1445,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return employeeEntry;
         }
 
-        public static ODataEntry CreateCarEntryNoMetadata(bool hasModel)
+        public static ODataResource CreateCarEntryNoMetadata(bool hasModel)
         {
-            var carEntry = new ODataEntry()
+            var carEntry = new ODataResource()
             {
                 TypeName = NameSpace + "Car",
             };
@@ -1468,7 +1468,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                carEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Car", NavigationSourceEntityTypeName = NameSpace + "Car" });
+                carEntry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Car", NavigationSourceEntityTypeName = NameSpace + "Car" });
                 carEntryP1.SetSerializationInfo(new ODataPropertySerializationInfo()
                 {
                     PropertyKind = ODataPropertyKind.Key

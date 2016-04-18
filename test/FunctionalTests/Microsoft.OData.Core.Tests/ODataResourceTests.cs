@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataEntryTests.cs" company="Microsoft">
+// <copyright file="ODataResourceTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -15,17 +15,17 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests
 {
-    public class ODataEntryTests
+    public class ODataResourceTests
     {
-        private ODataEntry odataEntry;
-        private ODataEntry odataEntryWithFullBuilder;
-        private ODataEntry odataEntryWithNullBuilder;
+        private ODataResource odataEntry;
+        private ODataResource odataEntryWithFullBuilder;
+        private ODataResource odataEntryWithNullBuilder;
 
-        public ODataEntryTests()
+        public ODataResourceTests()
         {
-            this.odataEntry = new ODataEntry();
+            this.odataEntry = new ODataResource();
 
-            this.odataEntryWithFullBuilder = new ODataEntry
+            this.odataEntryWithFullBuilder = new ODataResource
             {
                 TypeName = "ns.DerivedType",
                 Properties = new[]
@@ -34,13 +34,13 @@ namespace Microsoft.OData.Core.Tests
                     new ODataProperty{Name = "Name", Value = "Bob", SerializationInfo = new ODataPropertySerializationInfo{PropertyKind = ODataPropertyKind.ETag}}
                 }
             };
-            var serializationInfo = new ODataFeedAndEntrySerializationInfo {NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType"};
-            var typeContext = ODataFeedAndEntryTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var serializationInfo = new ODataResourceSerializationInfo {NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType"};
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
             var metadataContext = new TestMetadataContext();
-            var entryMetadataContext = ODataEntryMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            this.odataEntryWithFullBuilder.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(new Uri("http://service/", UriKind.Absolute), UrlConvention.CreateWithExplicitValue(false)));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
+            this.odataEntryWithFullBuilder.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(new Uri("http://service/", UriKind.Absolute), UrlConvention.CreateWithExplicitValue(false)));
 
-            this.odataEntryWithNullBuilder = new ODataEntry {MetadataBuilder = ODataEntityMetadataBuilder.Null};
+            this.odataEntryWithNullBuilder = new ODataResource {MetadataBuilder = ODataResourceMetadataBuilder.Null};
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void DefaultEntryShouldHasNoOpBuilder()
         {
-            this.odataEntry.MetadataBuilder.Should().BeOfType<NoOpEntityMetadataBuilder>();
+            this.odataEntry.MetadataBuilder.Should().BeOfType<NoOpResourceMetadataBuilder>();
         }
 
         [Fact]
@@ -196,14 +196,14 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void SerializationInfoShouldBeValidatedByTheSetter()
         {
-            Action action = () => this.odataEntry.SerializationInfo = new ODataFeedAndEntrySerializationInfo();
+            Action action = () => this.odataEntry.SerializationInfo = new ODataResourceSerializationInfo();
             action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
         }
 
         [Fact]
         public void ShouldBeAbleToSetSerializationInfo()
         {
-            this.odataEntry.SerializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            this.odataEntry.SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             this.odataEntry.SerializationInfo.NavigationSourceName.Should().Be("Set");
         }
 

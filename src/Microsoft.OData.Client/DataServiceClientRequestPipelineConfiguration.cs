@@ -187,7 +187,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void ExecuteOnEntryEndActions(ODataEntry entry, object entity)
+        internal void ExecuteOnEntryEndActions(ODataResource entry, object entity)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entity != null, "entity != entity");
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void ExecuteOnEntryStartActions(ODataEntry entry, object entity)
+        internal void ExecuteOnEntryStartActions(ODataResource entry, object entity)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entity != null, "entity != entity");
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Client
         /// <param name="link">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void ExecuteOnNavigationLinkEndActions(ODataNavigationLink link, object source, object target)
+        internal void ExecuteOnNavigationLinkEndActions(ODataNestedResourceInfo link, object source, object target)
         {
             Debug.Assert(link != null, "link != null");
 
@@ -248,7 +248,7 @@ namespace Microsoft.OData.Client
         /// <param name="link">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void ExecuteOnNavigationLinkStartActions(ODataNavigationLink link, object source, object target)
+        internal void ExecuteOnNavigationLinkStartActions(ODataNestedResourceInfo link, object source, object target)
         {
             Debug.Assert(link != null, "link != null");
 

@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 {
     /// <summary>
     /// Writer may modify entry (like entry.MetadataBuilder = builder, looks like a problem), 
-    /// so "Func&lt;ODataEntry&gt; entryClone" is used to ensure always creating new entry for multiple testings within one test case.
+    /// so "Func&lt;ODataResource&gt; entryClone" is used to ensure always creating new entry for multiple testings within one test case.
     /// </summary>
     public class ODataJsonLightWriterEnumIntegrationTests
     {
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsComplexProperty_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsComplexProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsDerivedComplexProperty_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsDerivedComplexProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsCollectionElement_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsCollectionElement_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -316,7 +316,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsOpenCollectionPropertyElement_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsOpenCollectionPropertyElement_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void NoFlagsEnumAsEntityProperty_StrAsValue_NullAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_StrAsValue_NullAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -458,7 +458,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_IntAsValue_NullAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_EmptyStrAsValue_NullAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -569,7 +569,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -609,7 +609,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_StrAsValue_StrAsTypeName_NoMetadata()
         {
-            Func<ODataEntry> entryClone = () => new ODataEntry
+            Func<ODataResource> entryClone = () => new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -649,7 +649,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_NullAsValue_NonNullable_WithModelMinimalMetadata_NullError()
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -674,7 +674,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsEntityProperty_NullAsValue_NonNullable_NoModelNoMetadata_NoError()
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -927,7 +927,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             // write request (JsonLightMetadataLevel.Create method will internally use MinimalMetadata for writing request)
             var stream = new MemoryStream();
             var outputContext = CreateJsonLightOutputContext(stream, mediaType, false, this.userModel, setMetadataDocumentUri ? this.serviceDocumentUri : null);
-            var writer = new ODataJsonLightWriter(outputContext, this.entitySet, this.entityType, nestedItemToWrite[0] is ODataFeed);
+            var writer = new ODataJsonLightWriter(outputContext, this.entitySet, this.entityType, nestedItemToWrite[0] is ODataResourceSet);
             WriteNestedItems(nestedItemToWrite, writer);
             ValidateWrittenPayload(stream, writer, expectedPayload);
         }
@@ -938,7 +938,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             // write response
             var stream = new MemoryStream();
             var outputContext = CreateJsonLightOutputContext(stream, mediaType, true, this.userModel, setMetadataDocumentUri ? this.serviceDocumentUri : null);
-            var writer = new ODataJsonLightWriter(outputContext, this.entitySet, this.entityType, nestedItemToWrite[0] is ODataFeed);
+            var writer = new ODataJsonLightWriter(outputContext, this.entitySet, this.entityType, nestedItemToWrite[0] is ODataResourceSet);
             WriteNestedItems(nestedItemToWrite, writer);
             ValidateWrittenPayload(stream, writer, expectedPayload);
         }
@@ -952,7 +952,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             // 2. but odata.type will be output because of no model. JsonMinimalMetadataTypeNameOracle.GetEntryTypeNameForWriting method: // We only write entity type names in Json Light if it's more derived (different) from the expected type name.
             var stream = new MemoryStream();
             var outputContext = CreateJsonLightOutputContext(stream, mediaType, false, null, setMetadataDocumentUri ? this.serviceDocumentUri : null);
-            var writer = new ODataJsonLightWriter(outputContext, null, null, nestedItemToWrite[0] is ODataFeed);
+            var writer = new ODataJsonLightWriter(outputContext, null, null, nestedItemToWrite[0] is ODataResourceSet);
             WriteNestedItems(nestedItemToWrite, writer);
             ValidateWrittenPayload(stream, writer, expectedPayload);
         }
@@ -961,12 +961,12 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             // without model, write response
             // (when entityType==null: nonemetadata or (serviceDocumentUri==null && writingResponse==false) -> avoid the below exception. pls refer to ODataContextUriBuilder method)
-            // "When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateEntryWriter method or the ODataFeedAndEntrySerializationInfo must be set on the ODataEntry or ODataFeed that is being writen."
+            // "When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateResourceWriter method or the ODataFeedAndResourceSerializationInfo must be set on the ODataResource or ODataFeed that is being writen."
             // so here use nonemetadata:
             ODataMediaType mediaType = new ODataMediaType("application", "json", new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueNone));
             var stream = new MemoryStream();
             var outputContext = CreateJsonLightOutputContext(stream, mediaType, true, null, setMetadataDocumentUri ? this.serviceDocumentUri : null);
-            var writer = new ODataJsonLightWriter(outputContext, null, null, nestedItemToWrite[0] is ODataFeed);
+            var writer = new ODataJsonLightWriter(outputContext, null, null, nestedItemToWrite[0] is ODataResourceSet);
             WriteNestedItems(nestedItemToWrite, writer);
             ValidateWrittenPayload(stream, writer, expectedPayload);
         }
@@ -975,21 +975,21 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             foreach (ODataItem itemToWrite in nestedItemsToWrite)
             {
-                ODataFeed feedToWrite = itemToWrite as ODataFeed;
+                ODataResourceSet feedToWrite = itemToWrite as ODataResourceSet;
                 if (feedToWrite != null)
                 {
                     writer.WriteStart(feedToWrite);
                 }
                 else
                 {
-                    ODataEntry entryToWrite = itemToWrite as ODataEntry;
+                    ODataResource entryToWrite = itemToWrite as ODataResource;
                     if (entryToWrite != null)
                     {
                         writer.WriteStart(entryToWrite);
                     }
                     else
                     {
-                        writer.WriteStart((ODataNavigationLink)itemToWrite);
+                        writer.WriteStart((ODataNestedResourceInfo)itemToWrite);
                     }
                 }
             }

@@ -23,7 +23,7 @@ namespace Microsoft.OData.Client.Materialization
     internal abstract class ODataMaterializer : IDisposable
     {
         /// <summary>Empty navigation links collection</summary>
-        internal static readonly ODataNavigationLink[] EmptyLinks = new ODataNavigationLink[0];
+        internal static readonly ODataNestedResourceInfo[] EmptyLinks = new ODataNestedResourceInfo[0];
 
         /// <summary>Empty property collection</summary>
         protected static readonly ODataProperty[] EmptyProperties = new ODataProperty[0];
@@ -84,10 +84,10 @@ namespace Microsoft.OData.Client.Materialization
         internal abstract object CurrentValue { get; }
 
         /// <summary>Feed being materialized; possibly null.</summary>
-        internal abstract ODataFeed CurrentFeed { get; }
+        internal abstract ODataResourceSet CurrentFeed { get; }
 
         /// <summary>Entry being materialized; possibly null.</summary>
-        internal abstract ODataEntry CurrentEntry { get; }
+        internal abstract ODataResource CurrentEntry { get; }
 
         /// <summary>Table storing the next links assoicated with the current payload</summary>
         internal Dictionary<IEnumerable, DataServiceQueryContinuation> NextLinkTable
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Client.Materialization
                     edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(materializerType);
                 }
 
-                if (payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed)
+                if (payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet)
                 {
                     // In V1/V2, we allowed System.Object type to be allowed to pass to ExecuteQuery.
                     // Hence we need to explicitly check for System.Object to allow this

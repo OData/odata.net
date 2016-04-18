@@ -63,9 +63,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action test = () => metadataLevelWithoutMetadataDocumentUri
                 .CreateEntityMetadataBuilder(
-                new ODataEntry(),
+                new ODataResource(),
                 new TestFeedAndEntryTypeContext(),
-                new ODataFeedAndEntrySerializationInfo(),
+                new ODataResourceSerializationInfo(),
                 /*actualEntityType*/null,
                 SelectedPropertiesNode.EntireSubtree,
                 /*isResponse*/ true,
@@ -79,18 +79,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         public void FullMetadataLevelShouldReturnODataConventionalEntityMetadataBuilder()
         {
             testSubject.CreateEntityMetadataBuilder(
-                new ODataEntry(),
-                new TestFeedAndEntryTypeContext { UrlConvention = UrlConvention.CreateWithExplicitValue(generateKeyAsSegment: false) }, new ODataFeedAndEntrySerializationInfo(), /*actualEntityType*/null,
+                new ODataResource(),
+                new TestFeedAndEntryTypeContext { UrlConvention = UrlConvention.CreateWithExplicitValue(generateKeyAsSegment: false) }, new ODataResourceSerializationInfo(), /*actualEntityType*/null,
                 SelectedPropertiesNode.EntireSubtree,
                 /*isResponse*/ true,
                 /*keyAsSegment*/ false,
-                /*requestUri*/ null).Should().BeAssignableTo<ODataConventionalEntityMetadataBuilder>();
+                /*requestUri*/ null).Should().BeAssignableTo<ODataConventionalResourceMetadataBuilder>();
         }
 
         [Fact]
         public void InjectMetadataBuilderShouldSetBuilderOnEntry()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             testSubject.InjectMetadataBuilder(entry, builder);
             entry.MetadataBuilder.Should().BeSameAs(builder);
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldSetBuilderOnEntryMediaResource()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             entry.MediaResource = new ODataStreamReferenceValue();
             testSubject.InjectMetadataBuilder(entry, builder);
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldSetBuilderOnEntryNamedStreamProperties()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             var stream1 = new ODataStreamReferenceValue();
             var stream2 = new ODataStreamReferenceValue();
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldSetBuilderOnEntryActions()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             var action1 = new ODataAction { Metadata = new Uri(MetadataDocumentUri, "#action1") };
             var action2 = new ODataAction { Metadata = new Uri(MetadataDocumentUri, "#action2") };
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldSetBuilderOnEntryFunctions()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             var function1 = new ODataFunction { Metadata = new Uri(MetadataDocumentUri, "#function1") };
             var function2 = new ODataFunction { Metadata = new Uri(MetadataDocumentUri, "#function2") };

@@ -62,11 +62,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                     }
 
                     this.state = readingFeed
-                        ? ODataReaderState.FeedStart
-                        : ODataReaderState.EntryStart;
+                        ? ODataReaderState.ResourceSetStart
+                        : ODataReaderState.ResourceStart;
                     break;
-                case ODataReaderState.FeedStart:
-                    this.item = new ODataFeed();
+                case ODataReaderState.ResourceSetStart:
+                    this.item = new ODataResourceSet();
                     var objs = this.currentObject as object[];
                     if (objs == null)
                     {
@@ -77,13 +77,13 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                     this.recordEnumerator = objs.GetEnumerator();
 
                     this.state = (this.recordEnumerator.MoveNext())
-                        ? ODataReaderState.EntryStart
-                        : ODataReaderState.FeedEnd;
+                        ? ODataReaderState.ResourceStart
+                        : ODataReaderState.ResourceSetEnd;
                     break;
-                case ODataReaderState.FeedEnd:
+                case ODataReaderState.ResourceSetEnd:
                     this.state = ODataReaderState.Completed;
                     return false;
-                case ODataReaderState.EntryStart:
+                case ODataReaderState.ResourceStart:
                     var record = (this.readingFeed ? this.recordEnumerator.Current : this.currentObject) as AvroRecord;
                     if (record == null)
                     {
@@ -92,9 +92,9 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                     }
 
                     this.item = ODataAvroConvert.ToODataEntry(record);
-                    this.state = ODataReaderState.EntryEnd;
+                    this.state = ODataReaderState.ResourceEnd;
                     return true;
-                case ODataReaderState.EntryEnd:
+                case ODataReaderState.ResourceEnd:
                     if (!readingFeed)
                     {
                         this.state = ODataReaderState.Completed;
@@ -102,8 +102,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                     }
 
                     this.state = this.recordEnumerator.MoveNext()
-                        ? ODataReaderState.EntryStart
-                        : ODataReaderState.FeedEnd;
+                        ? ODataReaderState.ResourceStart
+                        : ODataReaderState.ResourceSetEnd;
                     break;
                 default:
                     throw new ApplicationException("Invalid state");

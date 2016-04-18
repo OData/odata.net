@@ -55,13 +55,13 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             var responseMessage = GetResponseMessge(uri, contentType);
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, model))
             {
-                var reader = isFeed ? messageReader.CreateODataFeedReader() : messageReader.CreateODataEntryReader();
+                var reader = isFeed ? messageReader.CreateODataResourceSetReader() : messageReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.FeedStart:
-                        case ODataReaderState.EntryStart:
+                        case ODataReaderState.ResourceSetStart:
+                        case ODataReaderState.ResourceStart:
                             {
                                 var instanceAnnotations = GetItemInstanceAnnotations(reader);
                                 var parent = annotationsStack.Count == 0 ? null : annotationsStack.Peek();
@@ -71,8 +71,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
                                 break;
                             }
 
-                        case ODataReaderState.FeedEnd:
-                        case ODataReaderState.EntryEnd:
+                        case ODataReaderState.ResourceSetEnd:
+                        case ODataReaderState.ResourceEnd:
                             {
                                 var instanceAnnotations = GetItemInstanceAnnotations(reader);
                                 var current = annotationsStack.Pop();
@@ -88,8 +88,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         private static ICollection<ODataInstanceAnnotation> GetItemInstanceAnnotations(ODataReader reader)
         {
-            var feed = reader.Item as ODataFeed;
-            var entry = reader.Item as ODataEntry;
+            var feed = reader.Item as ODataResourceSet;
+            var entry = reader.Item as ODataResource;
             var annotations = (feed != null) ? feed.InstanceAnnotations : entry.InstanceAnnotations;
 
             return annotations.Clone();

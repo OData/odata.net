@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Annotation which stores a list of projected properties for an entry.
+    /// Annotation which stores a list of projected properties for a resource.
     /// </summary>
     public sealed class ProjectedPropertiesAnnotation
     {

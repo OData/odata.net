@@ -30,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         private ODataWriter writer;
         private List<ODataProperty> currentProperties = new List<ODataProperty>();
         private List<NavigationPropertyInstance> currentNavigationProperties = new List<NavigationPropertyInstance>();
-        private ODataNavigationLink currentLink;
+        private ODataNestedResourceInfo currentLink;
 
         /// <summary>
         /// Write the <paramref name="element"/> payload element to the <paramref name="writer"/> OData writer.
@@ -52,18 +52,18 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Visits an entity set instance: creates a new ODataFeed instance, calls ODataWriter.WriteStart()
+        /// Visits an entity set instance: creates a new ODataResourceSet instance, calls ODataWriter.WriteStart()
         /// before visiting the entries and then calls ODataWriter.WriteEnd()
         /// </summary>
         /// <param name="payloadElement">The entity set instance to write.</param>
         public override void Visit(EntitySetInstance payloadElement)
         {
-            // create an ODataFeed and write it
-            ODataFeed feed = new ODataFeed()
+            // create an ODataResourceSet and write it
+            ODataResourceSet feed = new ODataResourceSet()
             {
                 // NOTE: the required Id is set when processing the annotations in AddFeedMetadata()
                 Count = payloadElement.InlineCount,
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     NavigationSourceEntityTypeName = "Null",
                     NavigationSourceName = "MySet",
@@ -82,25 +82,25 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Visits an entity instance: creates a new ODataEntry instance, collects and sets all the properties,
+        /// Visits an entity instance: creates a new ODataResource instance, collects and sets all the properties,
         /// calls ODataWriter.WriteStart(), then visits the navigation properties and calls ODataWriter.WriteEnd()
         /// </summary>
         /// <param name="payloadElement">The entity instance to write.</param>
         public override void Visit(EntityInstance payloadElement)
         {
-            // create an ODataEntry and write it
+            // create an ODataResource and write it
             string editLinkString = payloadElement.GetEditLink();
             string selfLinkString = payloadElement.GetSelfLink();
             string entryId = payloadElement.Id;
 
-            var entry = new ODataEntry()
+            var entry = new ODataResource()
             {
                 Id = string.IsNullOrEmpty(entryId) ? null : new Uri(entryId),
                 ETag = payloadElement.ETag,
                 EditLink = string.IsNullOrEmpty(editLinkString) ? null : new Uri(editLinkString),
                 ReadLink = string.IsNullOrEmpty(selfLinkString) ? null : new Uri(selfLinkString),
                 TypeName = payloadElement.FullTypeName,
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     NavigationSourceEntityTypeName = payloadElement.FullTypeName,
                     NavigationSourceName = "MySet",
@@ -142,7 +142,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             for (int i = 0; i < navigationProperties.Count; ++i)
             {
                 NavigationPropertyInstance navigationProperty = navigationProperties[i];
-                this.currentLink = new ODataNavigationLink()
+                this.currentLink = new ODataNestedResourceInfo()
                 {
                     Name = navigationProperty.Name
                 };
@@ -359,13 +359,13 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Initializes an ODataNavigationLink instance for the deferred link payload.
+        /// Initializes an ODataNestedResourceInfo instance for the deferred link payload.
         /// </summary>
         /// <param name="payloadElement">The deferred link to process.</param>
         public override void Visit(DeferredLink payloadElement)
         {
             Debug.Assert(this.currentLink != null);
-            ODataNavigationLink navigationLink = this.currentLink;
+            ODataNestedResourceInfo navigationLink = this.currentLink;
             this.currentLink = null;
 
             // TODO, ckerer: where do I get the info whether this links is a singleton or collection?
@@ -377,13 +377,13 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
-        /// Initializes a new expanded ODataNavigationLink instance and visits the payload.
+        /// Initializes a new expanded ODataNestedResourceInfo instance and visits the payload.
         /// </summary>
         /// <param name="payloadElement">The expanded link to visit.</param>
         public override void Visit(ExpandedLink payloadElement)
         {
             Debug.Assert(this.currentLink != null);
-            ODataNavigationLink navigationLink = this.currentLink;
+            ODataNestedResourceInfo navigationLink = this.currentLink;
             this.currentLink = null;
 
             // TODO, ckerer: where do I get the info whether this links is a singleton or collection?

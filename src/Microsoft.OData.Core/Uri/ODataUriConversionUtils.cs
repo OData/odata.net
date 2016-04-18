@@ -211,33 +211,33 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Converts a <see cref="ODataEntry"/> to a string for use in a Url.
+        /// Converts a <see cref="ODataResource"/> to a string for use in a Url.
         /// </summary>
-        /// <param name="entry">Instance to convert.</param>
+        /// <param name="resource">Instance to convert.</param>
         /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
-        /// <returns>A string representation of <paramref name="entry"/> to be added to a Url.</returns>
-        internal static string ConvertToUriEntityLiteral(ODataEntry entry, IEdmModel model)
+        /// <returns>A string representation of <paramref name="resource"/> to be added to a Url.</returns>
+        internal static string ConvertToUriEntityLiteral(ODataResource resource, IEdmModel model)
         {
-            ExceptionUtils.CheckArgumentNotNull(entry, "entry");
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
                 model, 
                 context =>
             {
-                ODataWriter writer = context.CreateODataEntryWriter(null, null);
-                writer.WriteStart(entry);
+                ODataWriter writer = context.CreateODataResourceWriter(null, null);
+                writer.WriteStart(resource);
                 writer.WriteEnd();
             });
         }
 
         /// <summary>
-        /// Converts a list of <see cref="ODataEntry"/> to a string for use in a Url.
+        /// Converts a list of <see cref="ODataResource"/> to a string for use in a Url.
         /// </summary>
         /// <param name="entries">Instance to convert.</param>
         /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
         /// <returns>A string representation of <paramref name="entries"/> to be added to a Url.</returns>
-        internal static string ConvertToUriEntitiesLiteral(IEnumerable<ODataEntry> entries, IEdmModel model)
+        internal static string ConvertToUriEntitiesLiteral(IEnumerable<ODataResource> entries, IEdmModel model)
         {
             ExceptionUtils.CheckArgumentNotNull(entries, "entries");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
@@ -246,12 +246,12 @@ namespace Microsoft.OData.Core
                 model, 
                 context =>
             {
-                ODataWriter writer = context.CreateODataFeedWriter(null, null);
-                writer.WriteStart(new ODataFeed());
+                ODataWriter writer = context.CreateODataResourceSetWriter(null, null);
+                writer.WriteStart(new ODataResourceSet());
 
-                foreach (var entry in entries)
+                foreach (var resource in entries)
                 {
-                    writer.WriteStart(entry);
+                    writer.WriteStart(resource);
                     writer.WriteEnd();
                 }
 

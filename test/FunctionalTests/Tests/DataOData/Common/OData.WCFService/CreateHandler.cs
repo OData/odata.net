@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                 {
                     ODataVersion targetVersion = writerSettings.Version.GetValueOrDefault();
                     responseMessage.SetHeader("Location", ODataObjectModelConverter.BuildEntryUri(result, targetEntitySet, targetVersion).OriginalString);
-                    ResponseWriter.WriteEntry(writer.CreateODataEntryWriter(targetEntitySet), result, targetEntitySet, this.Model, targetVersion, Enumerable.Empty<string>());
+                    ResponseWriter.WriteEntry(writer.CreateODataResourceWriter(targetEntitySet), result, targetEntitySet, this.Model, targetVersion, Enumerable.Empty<string>());
                 });
         }
 
@@ -58,21 +58,21 @@ namespace Microsoft.Test.Taupo.OData.WCFService
             using (var messageReader = new ODataMessageReader(message, this.GetDefaultReaderSettings(), this.Model))
             {
                 var odataItemStack = new Stack<ODataItem>();
-                var entryReader = messageReader.CreateODataEntryReader(entitySet.EntityType());
+                var entryReader = messageReader.CreateODataResourceReader(entitySet.EntityType());
                 IEdmEntitySet currentTargetEntitySet = entitySet;
 
                 while (entryReader.Read())
                 {
                     switch (entryReader.State)
                     {
-                        case ODataReaderState.EntryStart:
+                        case ODataReaderState.ResourceStart:
                             entryReader.Item.SetAnnotation(new TargetEntitySetAnnotation { TargetEntitySet = currentTargetEntitySet });
                             odataItemStack.Push(entryReader.Item);
                             break;
 
-                        case ODataReaderState.EntryEnd:
+                        case ODataReaderState.ResourceEnd:
                             {
-                                var entry = (ODataEntry)entryReader.Item;
+                                var entry = (ODataResource)entryReader.Item;
 
                                 var targetEntitySet = entry.GetAnnotation<TargetEntitySetAnnotation>().TargetEntitySet;
                                 object newInstance = this.DataContext.CreateNewItem(targetEntitySet);
@@ -107,15 +107,15 @@ namespace Microsoft.Test.Taupo.OData.WCFService
 
                             break;
 
-                        case ODataReaderState.FeedStart:
+                        case ODataReaderState.ResourceSetStart:
                             odataItemStack.Push(entryReader.Item);
                             break;
 
-                        case ODataReaderState.FeedEnd:
+                        case ODataReaderState.ResourceSetEnd:
                             {
                                 var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
 
-                                var parentNavLink = odataItemStack.Count > 0 ? odataItemStack.Peek() as ODataNavigationLink : null;
+                                var parentNavLink = odataItemStack.Count > 0 ? odataItemStack.Peek() as ODataNestedResourceInfo : null;
                                 if (parentNavLink != null)
                                 {
                                     // This feed belongs to a navigation property -
@@ -129,7 +129,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                         case ODataReaderState.NavigationLinkStart:
                             {
                                 odataItemStack.Push(entryReader.Item);
-                                var navigationLink = (ODataNavigationLink)entryReader.Item;
+                                var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
                                 var navigationProperty = (IEdmNavigationProperty)currentTargetEntitySet.EntityType().FindProperty(navigationLink.Name);
 
                                 // Current model implementation doesn't expose associations otherwise this would be much cleaner.
@@ -140,7 +140,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
 
                         case ODataReaderState.NavigationLinkEnd:
                             {
-                                var navigationLink = (ODataNavigationLink)entryReader.Item;
+                                var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
                                 var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
                                 if (childAnnotation != null)
                                 {
@@ -157,16 +157,16 @@ namespace Microsoft.Test.Taupo.OData.WCFService
             return lastNewInstance;
         }
 
-        private void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNavigationLink navigationLink, object boundValue)
+        private void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNestedResourceInfo navigationLink, object boundValue)
         {
             var annotation = item.GetAnnotation<BoundNavigationPropertyAnnotation>();
             if (annotation == null)
             { 
-                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNavigationLink, object>>() };
+                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNestedResourceInfo, object>>() };
                 item.SetAnnotation(annotation);
             }
 
-            annotation.BoundProperties.Add(new Tuple<ODataNavigationLink, object>(navigationLink, boundValue));
+            annotation.BoundProperties.Add(new Tuple<ODataNestedResourceInfo, object>(navigationLink, boundValue));
         }
 
         private void AddChildInstanceAnnotation(ODataItem item, object childEntry)
@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// </summary>
         private class BoundNavigationPropertyAnnotation
         {
-            public IList<Tuple<ODataNavigationLink, object>> BoundProperties { get; set; } 
+            public IList<Tuple<ODataNestedResourceInfo, object>> BoundProperties { get; set; } 
         }
 
         /// <summary>

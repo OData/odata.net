@@ -222,10 +222,10 @@ namespace Microsoft.OData.Core.JsonLight
                 return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
-            ODataEntry entry = payloadItem as ODataEntry;
-            if (entry != null)
+            ODataResource resource = payloadItem as ODataResource;
+            if (resource != null)
             {
-                return entry.TypeName;
+                return resource.TypeName;
             }
 
             throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightReader_ReadEntryStart));

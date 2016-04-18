@@ -21,9 +21,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
         #region Entities
 
-        private static readonly ODataFeed feed = new ODataFeed();
+        private static readonly ODataResourceSet resourceCollection = new ODataResourceSet();
 
-        private static readonly ODataEntry entry = new ODataEntry
+        private static readonly ODataResource entry = new ODataResource
         {
             TypeName = "NS.DeriviedTypeA",
             Properties = new List<ODataProperty>
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             this.TestInit();
 
-            feed.SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+            resourceCollection.SerializationInfo = new ODataResourceSerializationInfo()
             {
                 IsFromCollection = true,
                 NavigationSourceEntityTypeName = "NS.BaseType",
@@ -49,8 +49,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(true))
             {
-                var writer = messageWriter.CreateODataFeedWriter(entitySet: null, entityType: this.GetBaseType());
-                writer.WriteStart(feed);
+                var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, entityType: this.GetBaseType());
+                writer.WriteStart(resourceCollection);
                 writer.WriteStart(entry);
                 writer.WriteEnd(); // entry
                 writer.WriteEnd(); // feed
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             this.TestInit();
 
-            feed.SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+            resourceCollection.SerializationInfo = new ODataResourceSerializationInfo()
             {
                 IsFromCollection = true,
                 NavigationSourceEntityTypeName = "NS.BaseType",
@@ -76,8 +76,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(false))
             {
-                var writer = messageWriter.CreateODataFeedWriter(entitySet: null, entityType: this.GetBaseType());
-                writer.WriteStart(feed);
+                var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, entityType: this.GetBaseType());
+                writer.WriteStart(resourceCollection);
                 writer.WriteStart(entry);
                 writer.WriteEnd(); // entry
                 writer.WriteEnd(); // feed

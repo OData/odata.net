@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 {
     public class ODataEntityMetadataBuilderTests
     {
-        private readonly ODataEntityMetadataBuilder builder = new TestBuilder();
+        private readonly ODataResourceMetadataBuilder builder = new TestBuilder();
 
         [Fact]
         public void GetStreamEditLinkShouldValidateArguments()
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             this.builder.GetStreamReadLink(null).Should().BeNull();
         }
 
-        private class TestBuilder : ODataEntityMetadataBuilder
+        private class TestBuilder : ODataResourceMetadataBuilder
         {
             internal override System.Uri GetEditLink()
             {

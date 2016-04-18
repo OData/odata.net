@@ -58,7 +58,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "{" + 
                             "\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Null\"" +
                             "}"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind", "http://odata.org/test/$metadata#Edm.Null", "Entry")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind", "http://odata.org/test/$metadata#Edm.Null", "Resource")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -69,7 +69,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "{" + 
                             "\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Null\"" +
                             "}"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind", "http://odata.org/test/$metadata#Edm.Null", "Feed")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind", "http://odata.org/test/$metadata#Edm.Null", "ResourceSet")
                 },
             };
 

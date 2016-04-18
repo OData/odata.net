@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client
         protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
             Debug.Assert(this.cachedResponse.Exception == null && this.cachedResponse.MaterializerEntry != null, "this.cachedResponse.Exception == null && this.cachedResponse.Entry != null");
-            ODataEntry entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
+            ODataResource entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
             return new MaterializeAtom(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format);
         }
 

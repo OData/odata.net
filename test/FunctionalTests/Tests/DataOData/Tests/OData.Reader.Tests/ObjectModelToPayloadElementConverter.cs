@@ -123,26 +123,26 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits a feed item.
             /// </summary>
             /// <param name="feed">The feed to visit.</param>
-            protected override ODataPayloadElement VisitFeed(ODataFeed feed)
+            protected override ODataPayloadElement VisitFeed(ODataResourceSet resourceCollection)
             {
-                ExceptionUtilities.CheckArgumentNotNull(feed, "feed");
+                ExceptionUtilities.CheckArgumentNotNull(resourceCollection, "feed");
 
                 EntitySetInstance entitySet = new EntitySetInstance()
                 {
-                    InlineCount = feed.Count,
-                    NextLink = feed.NextPageLink == null ? null : feed.NextPageLink.OriginalString
+                    InlineCount = resourceCollection.Count,
+                    NextLink = resourceCollection.NextPageLink == null ? null : resourceCollection.NextPageLink.OriginalString
                 };
 
-                if (feed.Id != null)
+                if (resourceCollection.Id != null)
                 {
-                    entitySet.AtomId(UriUtils.UriToString(feed.Id));
+                    entitySet.AtomId(UriUtils.UriToString(resourceCollection.Id));
                 }
 
                 // now check for the entries annotation on the feed
-                IEnumerable<ODataEntry> entries = feed.Entries();
+                IEnumerable<ODataResource> entries = resourceCollection.Entries();
                 if (entries != null)
                 {
-                    foreach (ODataEntry entry in entries)
+                    foreach (ODataResource entry in entries)
                     {
                         entitySet.Add(this.Visit(entry));
                     }
@@ -155,7 +155,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits an entry item.
             /// </summary>
             /// <param name="entry">The entry to visit.</param>
-            protected override ODataPayloadElement VisitEntry(ODataEntry entry)
+            protected override ODataPayloadElement VisitEntry(ODataResource entry)
             {
                 ExceptionUtilities.CheckArgumentNotNull(entry, "entry");
 
@@ -286,7 +286,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits a navigation link item.
             /// </summary>
             /// <param name="navigationLink">The navigation link to visit.</param>
-            protected override ODataPayloadElement VisitNavigationLink(ODataNavigationLink navigationLink)
+            protected override ODataPayloadElement VisitNavigationLink(ODataNestedResourceInfo navigationLink)
             {
                 ExceptionUtilities.CheckArgumentNotNull(navigationLink, "navigationLink");
 
@@ -298,13 +298,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     string navigationLinkUrlString = !this.payloadContainsIdentityMetadata || navigationLink.Url == null ? null : navigationLink.Url.OriginalString;
 
-                    if (expandedItemAnnotation.ExpandedItem is ODataEntry)
+                    if (expandedItemAnnotation.ExpandedItem is ODataResource)
                     {
-                        navigationPropertyContent = new ExpandedLink(this.Visit((ODataEntry)expandedItemAnnotation.ExpandedItem)) { UriString = navigationLinkUrlString };
+                        navigationPropertyContent = new ExpandedLink(this.Visit((ODataResource)expandedItemAnnotation.ExpandedItem)) { UriString = navigationLinkUrlString };
                     }
-                    else if (expandedItemAnnotation.ExpandedItem is ODataFeed)
+                    else if (expandedItemAnnotation.ExpandedItem is ODataResourceSet)
                     {
-                        navigationPropertyContent = new ExpandedLink(this.Visit((ODataFeed)expandedItemAnnotation.ExpandedItem)) { UriString = navigationLinkUrlString };
+                        navigationPropertyContent = new ExpandedLink(this.Visit((ODataResourceSet)expandedItemAnnotation.ExpandedItem)) { UriString = navigationLinkUrlString };
                     }
                     else if (expandedItemAnnotation.ExpandedItem is ODataEntityReferenceLink)
                     {
@@ -317,9 +317,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         LinkCollection linkCollection = new LinkCollection();
                         foreach (ODataItem item in (List<ODataItem>)expandedItemAnnotation.ExpandedItem)
                         {
-                            if (item is ODataFeed)
+                            if (item is ODataResourceSet)
                             {
-                                linkCollection.Add(new ExpandedLink(this.Visit((ODataFeed)item)));
+                                linkCollection.Add(new ExpandedLink(this.Visit((ODataResourceSet)item)));
                             }
                             else
                             {

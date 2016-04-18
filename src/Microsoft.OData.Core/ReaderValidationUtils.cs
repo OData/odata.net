@@ -115,13 +115,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataEntry"/> to ensure all required information is specified and valid.
+        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entry", Justification = "Used only in debug asserts.")]
-        internal static void ValidateEntry(ODataEntry entry)
+        /// <param name="resource">The resource to validate.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "resource", Justification = "Used only in debug asserts.")]
+        internal static void ValidateEntry(ODataResource resource)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
             // [Astoria-ODataLib-Integration] Validation of atom:id value differs between client and server
             // For now don't validate ID at all - relaxed readers rule.
@@ -706,7 +706,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Validates that the parsed context URI from the payload is consistent with the expected
-        /// entity set and entity type when reading a feed or entry payload.
+        /// entity set and entity type when reading a feed or resource payload.
         /// </summary>
         /// <param name="contextUriParseResult">The parse result of the context URI from the payload.</param>
         /// <param name="scope">The top-level scope representing the reader state.</param>

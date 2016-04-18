@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         private static IEdmEntityType TestEntityType;
         private static IEdmComplexType TestComplexType;
         private static ODataComplexValue complexValue0;
-        private static ODataEntry entry0;
+        private static ODataResource entry0;
         private static byte[] binary0;
         private static long[] longCollection0;
 
@@ -55,7 +55,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             longCollection0 = new[] {7L, 9L};
             var collectionValue0 = new ODataCollectionValue { Items = longCollection0 };
 
-            entry0 = new ODataEntry
+            entry0 = new ODataResource
             {
                 Properties = new[]
                 {
@@ -111,7 +111,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         [TestMethod]
         public void WriteFeedAsAvroTest()
         {
-            ODataEntry entry1 = new ODataEntry
+            ODataResource entry1 = new ODataResource
             {
                 Properties = new[]
                 {
@@ -121,7 +121,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 TypeName = "NS.SimpleEntry"
             };
 
-            ODataEntry entry2 = new ODataEntry
+            ODataResource entry2 = new ODataResource
             {
                 Properties = new[]
                 {
@@ -134,7 +134,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             MemoryStream ms = new MemoryStream();
             var ctx = this.CreateOutputContext(ms);
             ODataAvroWriter aw = new ODataAvroWriter(ctx, value => ctx.AvroWriter.Write(value), null, true);
-            aw.WriteStart(new ODataFeed());
+            aw.WriteStart(new ODataResourceSet());
             aw.WriteStart(entry1);
             aw.WriteEnd();
             aw.WriteStart(entry2);
@@ -298,7 +298,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 opw.WriteStart();
                 opw.WriteValue("p1", "dat");
                 {
-                    var ew = opw.CreateEntryWriter("p2");
+                    var ew = opw.CreateResourceWriter("p2");
                     ew.WriteStart(entry0);
                     ew.WriteEnd();
                     ew.Flush();

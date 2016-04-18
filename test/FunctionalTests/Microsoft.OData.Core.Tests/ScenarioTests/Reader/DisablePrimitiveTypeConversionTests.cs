@@ -93,15 +93,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             var message = new InMemoryMessage { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
             var reader = new ODataMessageReader((IODataResponseMessage)message, settings, this.model);
-            var entryReader = reader.CreateODataEntryReader(this.entityType);
+            var entryReader = reader.CreateODataResourceReader(this.entityType);
             entryReader.Read().Should().BeTrue();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read().Should().BeTrue();
-            entryReader.State.Should().Be(ODataReaderState.EntryEnd);
-            entryReader.Item.Should().BeAssignableTo<ODataEntry>();
+            entryReader.State.Should().Be(ODataReaderState.ResourceEnd);
+            entryReader.Item.Should().BeAssignableTo<ODataResource>();
 
-            entryReader.Item.As<ODataEntry>().Properties.Should().Contain(p => p.Name == propertyName);
-            var property = entryReader.Item.As<ODataEntry>().Properties.Single(p => p.Name == propertyName);
+            entryReader.Item.As<ODataResource>().Properties.Should().Contain(p => p.Name == propertyName);
+            var property = entryReader.Item.As<ODataResource>().Properties.Single(p => p.Name == propertyName);
             return property;
         }
     }

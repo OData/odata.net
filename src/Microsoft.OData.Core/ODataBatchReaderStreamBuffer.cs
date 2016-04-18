@@ -454,14 +454,14 @@ namespace Microsoft.OData.Core
                     // (and the optional trailing '--') we now have to continue reading until the next
                     // line feed that terminates the boundary. Only whitespace characters may exist 
                     // after the boundary and before the line feed.
-                    int terminatingLineFeedStartPosition, terminatingLineFeedEndPosition;
+                    int terminatingLineResourceSetStartPosition, terminatingLineFeedEndPosition;
                     bool endOfBufferReached;
                     ODataBatchReaderStreamScanResult terminatingLineFeedScanResult =
                         this.ScanForLineEnd(
                         boundaryEndPosition + 1,
                         int.MaxValue,
                         /*allowLeadingWhitespaceOnly*/true,
-                        out terminatingLineFeedStartPosition,
+                        out terminatingLineResourceSetStartPosition,
                         out terminatingLineFeedEndPosition,
                         out endOfBufferReached);
 

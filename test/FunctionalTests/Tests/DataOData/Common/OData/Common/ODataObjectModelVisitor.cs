@@ -25,14 +25,14 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="objectModelItem">The item to visit.</param>
         public virtual void Visit(object objectModelItem)
         {
-            ODataFeed feed = objectModelItem as ODataFeed;
-            if (feed != null)
+            ODataResourceSet resourceCollection = objectModelItem as ODataResourceSet;
+            if (resourceCollection != null)
             {
-                this.VisitFeed(feed);
+                this.VisitFeed(resourceCollection);
                 return;
             }
 
-            ODataEntry entry = objectModelItem as ODataEntry;
+            ODataResource entry = objectModelItem as ODataResource;
             if (entry != null)
             {
                 this.VisitEntry(entry);
@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
-            ODataNavigationLink navigationLink = objectModelItem as ODataNavigationLink;
+            ODataNestedResourceInfo navigationLink = objectModelItem as ODataNestedResourceInfo;
             if (navigationLink != null)
             {
                 this.VisitNavigationLink(navigationLink);
@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a feed item.
         /// </summary>
         /// <param name="feed">The feed to visit.</param>
-        protected virtual void VisitFeed(ODataFeed feed)
+        protected virtual void VisitFeed(ODataResourceSet feed)
         {
             var entries = feed.Entries();
             if (entries != null)
@@ -202,7 +202,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits an entry item.
         /// </summary>
         /// <param name="entry">The entry to visit.</param>
-        protected virtual void VisitEntry(ODataEntry entry)
+        protected virtual void VisitEntry(ODataResource entry)
         {
             if (entry.MediaResource != null)
             {
@@ -243,7 +243,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a navigation link item.
         /// </summary>
         /// <param name="navigationLink">The navigation link to visit.</param>
-        protected virtual void VisitNavigationLink(ODataNavigationLink navigationLink)
+        protected virtual void VisitNavigationLink(ODataNestedResourceInfo navigationLink)
         {
             object expandedContent;
             if (navigationLink.TryGetExpandedContent(out expandedContent) && expandedContent != null)

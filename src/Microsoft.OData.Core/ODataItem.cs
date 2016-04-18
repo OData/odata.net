@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core
 {
     /// <summary>
-    /// Base class for Feed and Entry.
+    /// Base class for Feed and Resource.
     /// </summary>
     public abstract class ODataItem : ODataAnnotatable
     {

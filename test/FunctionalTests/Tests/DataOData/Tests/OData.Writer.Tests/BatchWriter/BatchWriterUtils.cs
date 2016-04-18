@@ -744,7 +744,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 object firstItem = odataPayload.Items[0];
                 if (!(firstItem is ODataAnnotatedError))
                 {
-                    writer = messageWriterWrapper.CreateODataWriter(/*isFeed*/ firstItem is ODataFeed);
+                    writer = messageWriterWrapper.CreateODataWriter(/*isFeed*/ firstItem is ODataResourceSet);
                 }
 
                 TestWriterUtils.WritePayload(messageWriterWrapper, writer, true, odataPayload.Items);

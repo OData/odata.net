@@ -2190,7 +2190,7 @@ namespace Microsoft.OData.Client
                 EntitySetName = entitySetName,
             };
 
-            ODataEntityMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilderInternal(descriptor);
+            ODataResourceMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilderInternal(descriptor);
 
             descriptor.EditLink = entityMetadataBuilder.GetEditLink();
             descriptor.Identity = entityMetadataBuilder.GetId();
@@ -2706,7 +2706,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// This is used for example to determine the edit link for an entity if the payload didn't have one, or to determine the URL for a navigation when building a query through LINQ.
         /// </remarks>
-        internal virtual ODataEntityMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
+        internal virtual ODataResourceMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
         {
             return new ConventionalODataEntityMetadataBuilder(this.baseUriResolver, entitySetName, entityInstance, this.UrlConventions);
         }
@@ -3293,13 +3293,13 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="descriptor">The entity descriptor tracking the entity.</param>
         /// <returns>A metadata builder for the entity tracked by the given descriptor.</returns>
-        private ODataEntityMetadataBuilder GetEntityMetadataBuilderInternal(EntityDescriptor descriptor)
+        private ODataResourceMetadataBuilder GetEntityMetadataBuilderInternal(EntityDescriptor descriptor)
         {
             Debug.Assert(descriptor != null, "descriptor != null");
 
             // TODO: Should things with slashes still be passed down? We will need to make a decision one way or the other.
             // For now we will pass them down.
-            ODataEntityMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilder(descriptor.EntitySetName, descriptor.EdmValue);
+            ODataResourceMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilder(descriptor.EntitySetName, descriptor.EdmValue);
             if (entityMetadataBuilder == null)
             {
                 throw new InvalidOperationException(Strings.Context_EntityMetadataBuilderIsRequired);

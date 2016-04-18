@@ -102,7 +102,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void OnEntryStartShouldBeFired()
         {
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             var customer = new Customer();
             var wrappedWriter = this.SetupTestActionExecuted((context, requestPipeline) =>
             {
@@ -120,7 +120,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void OnEntryEndShouldBeFired()
         {
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             var customer = new Customer();
             var wrappedWriter = this.SetupTestActionExecuted((context, requestPipeline) =>
             {
@@ -140,7 +140,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             Person p = new Person();
             Address a = new Address();
-            ODataNavigationLink link = new ODataNavigationLink();
+            ODataNestedResourceInfo link = new ODataNestedResourceInfo();
             var wrappedWriter = this.SetupTestActionExecuted((context, requestPipeline) =>
             {
                 requestPipeline.OnNavigationLinkStarting((args) =>
@@ -160,7 +160,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             Person p = new Person();
             Address a = new Address();
-            ODataNavigationLink link = new ODataNavigationLink();
+            ODataNestedResourceInfo link = new ODataNestedResourceInfo();
             var wrappedWriter = this.SetupTestActionExecuted((context, requestPipeline) =>
             {
                 requestPipeline.OnNavigationLinkEnding((args) =>
@@ -305,29 +305,29 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         internal class TestODataWriter : ODataWriter
         {
-            public override void WriteStart(ODataFeed feed)
+            public override void WriteStart(ODataResourceSet feed)
             {
             }
 
-            public override Task WriteStartAsync(ODataFeed feed)
-            {
-                throw new InternalTestFailureException("Should not hit this code");
-            }
-
-            public override void WriteStart(ODataEntry entry)
-            {
-            }
-
-            public override Task WriteStartAsync(ODataEntry entry)
+            public override Task WriteStartAsync(ODataResourceSet feed)
             {
                 throw new InternalTestFailureException("Should not hit this code");
             }
 
-            public override void WriteStart(ODataNavigationLink navigationLink)
+            public override void WriteStart(ODataResource entry)
             {
             }
 
-            public override Task WriteStartAsync(ODataNavigationLink navigationLink)
+            public override Task WriteStartAsync(ODataResource entry)
+            {
+                throw new InternalTestFailureException("Should not hit this code");
+            }
+
+            public override void WriteStart(ODataNestedResourceInfo navigationLink)
+            {
+            }
+
+            public override Task WriteStartAsync(ODataNestedResourceInfo navigationLink)
             {
                 throw new InternalTestFailureException("Should not hit this code");
             }

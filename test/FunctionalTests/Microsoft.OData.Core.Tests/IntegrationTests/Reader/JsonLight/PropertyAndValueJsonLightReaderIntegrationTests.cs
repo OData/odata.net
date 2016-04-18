@@ -66,8 +66,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
             entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
             entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(34.98f, "value should be in correct type.");
@@ -128,8 +128,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
             entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
 
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             entry = null;
-            this.ReadEntryPayload(mainModel, payload2, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(mainModel, payload2, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
             entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
 
@@ -189,8 +189,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             var intCollection = entry.Properties.FirstOrDefault(
@@ -234,8 +234,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             var intCollection = entry.Properties.FirstOrDefault(
@@ -282,8 +282,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             var intCollection = entry.Properties.FirstOrDefault(
@@ -342,8 +342,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; }, false);
+            ODataResource entry = null;
+            Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, false);
             test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
         }
 
@@ -368,8 +368,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
-            Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Decimal"));
         }
 
@@ -403,9 +403,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             var address = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.OrdinalIgnoreCase)).Value as ODataComplexValue;
@@ -452,9 +452,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -508,9 +508,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion@odata.type\":\"#NS.Address\",\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -570,9 +570,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion@odata.type\":\"#NS.City\",\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -626,9 +626,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion@odata.type\":\"#Edm.String\",\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -826,9 +826,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                     "\"Address\":{\"CountryRegion\":\"China\",\"Test1@odata.type\":\"#Collection(Edm.Int32)\",\"Test1\":null}" +
                 "}";
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
         }
 
         [Fact]
@@ -855,8 +855,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
 
-            ODataEntry entry = null;
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -875,7 +875,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
-                var reader = msgReader.CreateODataEntryReader(entitySet, entityType);
+                var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())
                 {
                     action(reader);

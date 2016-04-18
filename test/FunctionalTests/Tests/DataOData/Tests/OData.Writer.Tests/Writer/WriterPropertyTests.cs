@@ -45,7 +45,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     public class WriterPropertyTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
             NavigationSourceEntityTypeName = "TestModel.EntityType",
             NavigationSourceName = "MySet",
@@ -1736,7 +1736,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var td = new PayloadWriterTestDescriptor<ODataItem>(
                 this.Settings,
-                new ODataEntry
+                new ODataResource
                 {
                     TypeName = "TestModel.EntityType",
                     Properties = new[] { new ODataProperty {
@@ -1793,7 +1793,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var td = new PayloadWriterTestDescriptor<ODataItem>(
                 this.Settings,
-                new ODataEntry
+                new ODataResource
                 {
                     TypeName = "TestModel.EntityType",
                     Properties = new[] { new ODataProperty {

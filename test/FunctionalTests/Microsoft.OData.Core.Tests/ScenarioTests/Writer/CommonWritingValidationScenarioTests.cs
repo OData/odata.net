@@ -25,10 +25,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter();
+                var odataWriter = messageWriter.CreateODataResourceWriter();
                 Action test = () =>
                 {
-                    var entry = new ODataEntry() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
+                    var entry = new ODataResource() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
                     entry.TypeName = "DefaultNamespace.FakeType";
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
@@ -47,10 +47,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter(null, entitySet.EntityType());
+                var odataWriter = messageWriter.CreateODataResourceWriter(null, entitySet.EntityType());
                 Action test = () =>
                 {
-                    var entry = new ODataEntry();
+                    var entry = new ODataResource();
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 };
@@ -68,10 +68,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter();
+                var odataWriter = messageWriter.CreateODataResourceWriter();
                 Action test = () =>
                 {
-                    var entry = new ODataEntry() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
+                    var entry = new ODataResource() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 };
@@ -92,8 +92,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                     Action test = () =>
                     {
                         var messageWriter = CreateODataMessageWriter(currentModel, currentContentType);
-                        var odataWriter = messageWriter.CreateODataEntryWriter();
-                        var entry = new ODataEntry() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
+                        var odataWriter = messageWriter.CreateODataResourceWriter();
+                        var entry = new ODataResource() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
                         odataWriter.WriteStart(entry);
                         odataWriter.WriteEnd();
                     };
@@ -112,10 +112,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter(null, entitySet.EntityType());
+                var odataWriter = messageWriter.CreateODataResourceWriter(null, entitySet.EntityType());
                 Action test = () =>
                 {
-                    var entry = new ODataEntry()
+                    var entry = new ODataResource()
                     {
                         Properties = new[]
                         {

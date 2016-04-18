@@ -529,7 +529,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "An implementation of ODataEntityMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder."
+        /// A string like "An implementation of ODataResourceMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder."
         /// </summary>
         internal static string Context_EntityMetadataBuilderIsRequired {
             get {
@@ -593,6 +593,15 @@ namespace Microsoft.OData.Client {
         internal static string DataServiceClientFormat_LoadServiceModelRequired {
             get {
                 return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceClientFormat_LoadServiceModelRequired);
+            }
+        }
+
+        /// <summary>
+        /// A string like "To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model."
+        /// </summary>
+        internal static string DataServiceClientFormat_ValidServiceModelRequiredForJson {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceClientFormat_ValidServiceModelRequiredForJson);
             }
         }
 

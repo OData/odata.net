@@ -38,11 +38,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             // Write payload
             using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings))
             {
-                var odataWriter = messageWriter.CreateODataFeedWriter();
+                var odataWriter = messageWriter.CreateODataResourceSetWriter();
 
                 // Create customers feed with serializtion info to write odata.metadata.
-                var customersFeed = new ODataFeed();
-                customersFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Customers", NavigationSourceEntityTypeName = "NS.Customer", ExpectedTypeName = "NS.VIPCustomer" });
+                var customersFeed = new ODataResourceSet();
+                customersFeed.SetSerializationInfo(new ODataResourceSerializationInfo { NavigationSourceName = "Customers", NavigationSourceEntityTypeName = "NS.Customer", ExpectedTypeName = "NS.VIPCustomer" });
 
                 // Write customers feed.
                 odataWriter.WriteStart(customersFeed);
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 // Write VIP customer
                 {
                     // Create VIP customer, don't need to pass in serialization info since the writer knows the context from the feed scope.
-                    var vipCustomer = new ODataEntry { TypeName = "NS.VIPCustomer" };
+                    var vipCustomer = new ODataResource { TypeName = "NS.VIPCustomer" };
 
                     var customerKey = new ODataProperty { Name = "Name", Value = "Bob" };
 
@@ -63,16 +63,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
                     // Write expanded most recent order
                     {
-                        // No API to set serialization info on ODataNavigationLink since what we are adding on ODataFeed and ODataEntry should be sufficient for the 5.5 release.
-                        var navigationLink = new ODataNavigationLink { Name = "MostRecentOrder", IsCollection = false, Url = new Uri("MostRecentOrder", UriKind.Relative) };
+                        // No API to set serialization info on ODataNavigationLink since what we are adding on ODataFeed and ODataResource should be sufficient for the 5.5 release.
+                        var navigationLink = new ODataNestedResourceInfo { Name = "MostRecentOrder", IsCollection = false, Url = new Uri("MostRecentOrder", UriKind.Relative) };
                         odataWriter.WriteStart(navigationLink);
 
                         // Write the most recent customer.
                         {
-                            var mostRecentOrder = new ODataEntry { TypeName = "NS.Order" };
+                            var mostRecentOrder = new ODataResource { TypeName = "NS.Order" };
 
                             // Add serialization info so we can computer links.
-                            mostRecentOrder.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Orders", NavigationSourceEntityTypeName = "NS.Order", ExpectedTypeName = "NS.Order" });
+                            mostRecentOrder.SetSerializationInfo(new ODataResourceSerializationInfo { NavigationSourceName = "Orders", NavigationSourceEntityTypeName = "NS.Order", ExpectedTypeName = "NS.Order" });
 
                             var orderKey = new ODataProperty { Name = "OrderId", Value = 101 };
 

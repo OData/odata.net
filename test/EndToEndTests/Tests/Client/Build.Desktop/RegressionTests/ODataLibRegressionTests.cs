@@ -38,9 +38,9 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
             var message = new InMemoryMessage { Stream = new MemoryStream() };
             using (ODataMessageWriter odataMessageWriter = new ODataMessageWriter((IODataRequestMessage)message, writerSettings, model))
             {
-                ODataWriter odataWriter = odataMessageWriter.CreateODataEntryWriter();
+                ODataWriter odataWriter = odataMessageWriter.CreateODataResourceWriter();
                 odataWriter.WriteStart(
-                    new ODataEntry
+                    new ODataResource
                     {
                         TypeName = "Var1.Type",
                         Properties = new[] 

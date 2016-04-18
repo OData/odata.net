@@ -40,8 +40,8 @@ namespace Microsoft.OData.Core.Tests
 
             using (var innerMessageWriter = new ODataMessageWriter(innerMessage, settings, this.userModel))
             {
-                var entryWriter = innerMessageWriter.CreateODataEntryWriter(singleton, testType);
-                var entry = new ODataEntry() {TypeName = "NS.Test", Properties = new[] {new ODataProperty() {Name = "Id", Value = 1}}};
+                var entryWriter = innerMessageWriter.CreateODataResourceWriter(singleton, testType);
+                var entry = new ODataResource() {TypeName = "NS.Test", Properties = new[] {new ODataProperty() {Name = "Id", Value = 1}}};
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
             }

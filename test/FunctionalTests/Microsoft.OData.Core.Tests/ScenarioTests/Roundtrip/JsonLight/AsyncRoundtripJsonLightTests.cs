@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         private static readonly EdmEntityContainer defaultContainer;
         private static readonly EdmSingleton singleton;
 
-        private ODataEntry entry;
+        private ODataResource entry;
         private Stream responseStream;
 
         static AsyncRoundtripJsonLightTests()
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 
         public AsyncRoundtripJsonLightTests()
         {
-            entry = new ODataEntry
+            entry = new ODataResource
             {
                 TypeName = "NS.Test",
                 Properties = new[]
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 
             responseStream.Position = 0;
 
-            ODataEntry entryRead = this.ReadEntry();
+            ODataResource entryRead = this.ReadEntry();
 
             Assert.True(entry.TypeName == entryRead.TypeName, "TypeName should be equal");
             Assert.True(this.PropertiesEqual(entry.Properties, entryRead.Properties), "Properties should be equal");
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 
             using (var innerMessageWriter = new ODataMessageWriter(innerMessage, settings, userModel))
             {
-                var entryWriter = innerMessageWriter.CreateODataEntryWriter(singleton, testType);
+                var entryWriter = innerMessageWriter.CreateODataResourceWriter(singleton, testType);
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
             }
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             asyncWriter.Flush();
         }
 
-        private ODataEntry ReadEntry()
+        private ODataResource ReadEntry()
         {
             var asyncReader = this.CreateAsyncReader();
 
@@ -100,13 +100,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 
             using (var innerMessageReader = new ODataMessageReader(asyncResponse, new ODataMessageReaderSettings(), userModel))
             {
-                var reader = innerMessageReader.CreateODataEntryReader();
+                var reader = innerMessageReader.CreateODataResourceReader();
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        return reader.Item as ODataEntry;
+                        return reader.Item as ODataResource;
                     }
                 }
             }

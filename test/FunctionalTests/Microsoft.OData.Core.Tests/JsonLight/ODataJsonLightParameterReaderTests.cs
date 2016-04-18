@@ -658,43 +658,43 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 }
                                 break;
                             }
-                        case ODataParameterReaderState.Entry:
+                        case ODataParameterReaderState.Resource:
                             {
-                                var entryReader = parameterReader.CreateEntryReader();
+                                var entryReader = parameterReader.CreateResourceReader();
 
-                                var entryList = new List<ODataEntry>();
-                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
+                                var entryList = new List<ODataResource>();
+                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataResource>>(parameterReader.Name, entryList));
                                 while (entryReader.Read())
                                 {
                                     switch (entryReader.State)
                                     {
-                                        case ODataReaderState.EntryEnd:
-                                            entryList.Add((ODataEntry)entryReader.Item);
+                                        case ODataReaderState.ResourceEnd:
+                                            entryList.Add((ODataResource)entryReader.Item);
                                             break;
 
                                     }
                                 }
                                 break;
                             }
-                        case ODataParameterReaderState.Feed:
+                        case ODataParameterReaderState.ResourceSet:
                             {
-                                var entryReader = parameterReader.CreateFeedReader();
+                                var entryReader = parameterReader.CreateResourceSetReader();
 
-                                var entryList = new List<ODataEntry>();
-                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
+                                var entryList = new List<ODataResource>();
+                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataResource>>(parameterReader.Name, entryList));
 
-                                var feedList = new List<ODataFeed>();
-                                parameterReaderResult.Feeds.Add(new KeyValuePair<string, IList<ODataFeed>>(parameterReader.Name, feedList));
+                                var feedList = new List<ODataResourceSet>();
+                                parameterReaderResult.Feeds.Add(new KeyValuePair<string, IList<ODataResourceSet>>(parameterReader.Name, feedList));
 
                                 while (entryReader.Read())
                                 {
                                     switch (entryReader.State)
                                     {
-                                        case ODataReaderState.EntryEnd:
-                                            entryList.Add((ODataEntry)entryReader.Item);
+                                        case ODataReaderState.ResourceEnd:
+                                            entryList.Add((ODataResource)entryReader.Item);
                                             break;
-                                        case ODataReaderState.FeedEnd:
-                                            feedList.Add((ODataFeed)entryReader.Item);
+                                        case ODataReaderState.ResourceSetEnd:
+                                            feedList.Add((ODataResourceSet)entryReader.Item);
                                             break;
                                     }
                                 }
@@ -711,15 +711,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             public IList<KeyValuePair<string, object>> Values { get; set; }
             public IList<KeyValuePair<string, ParameterReaderCollection>> Collections { get; set; }
-            public IList<KeyValuePair<string, IList<ODataEntry>>> Entries { get; set; }
-            public IList<KeyValuePair<string, IList<ODataFeed>>> Feeds { get; set; }
+            public IList<KeyValuePair<string, IList<ODataResource>>> Entries { get; set; }
+            public IList<KeyValuePair<string, IList<ODataResourceSet>>> Feeds { get; set; }
 
             public ParameterReaderResult()
             {
                 Values = new List<KeyValuePair<string, object>>();
                 Collections = new List<KeyValuePair<string, ParameterReaderCollection>>();
-                Entries = new List<KeyValuePair<string, IList<ODataEntry>>>();
-                Feeds = new List<KeyValuePair<string, IList<ODataFeed>>>();
+                Entries = new List<KeyValuePair<string, IList<ODataResource>>>();
+                Feeds = new List<KeyValuePair<string, IList<ODataResourceSet>>>();
             }
         }
 

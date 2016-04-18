@@ -38,14 +38,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             return (ODataFormat)ReflectionUtils.GetProperty(settings, "Format");
         }
 
-        public static Func<ODataEntry, XmlWriter, XmlWriter> GetAtomStartEntryXmlCustomizationCallback(this ODataMessageWriterSettings settings)
+        public static Func<ODataResource, XmlWriter, XmlWriter> GetAtomStartEntryXmlCustomizationCallback(this ODataMessageWriterSettings settings)
         {
-            return (Func<ODataEntry, XmlWriter, XmlWriter>)ReflectionUtils.GetProperty(settings, "AtomStartEntryXmlCustomizationCallback");
+            return (Func<ODataResource, XmlWriter, XmlWriter>)ReflectionUtils.GetProperty(settings, "AtomStartEntryXmlCustomizationCallback");
         }
 
-        public static Action<ODataEntry, XmlWriter, XmlWriter> GetAtomEndEntryXmlCustomizationCallback(this ODataMessageWriterSettings settings)
+        public static Action<ODataResource, XmlWriter, XmlWriter> GetAtomEndEntryXmlCustomizationCallback(this ODataMessageWriterSettings settings)
         {
-            return (Action<ODataEntry, XmlWriter, XmlWriter>)ReflectionUtils.GetProperty(settings, "AtomEndEntryXmlCustomizationCallback");
+            return (Action<ODataResource, XmlWriter, XmlWriter>)ReflectionUtils.GetProperty(settings, "AtomEndEntryXmlCustomizationCallback");
         }
     }
 #endif

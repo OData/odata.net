@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core
         /// An enumeration to represent the duplication kind of a given property name.
         /// </summary>
         /// <remarks>
-        /// This enumeration is used to determine what should happen if two properties with the same name are detected on an entry or complex value.
+        /// This enumeration is used to determine what should happen if two properties with the same name are detected on a resource or complex value.
         /// When the first property is found, the initial value is set based on the kind of property found and the general setting to allow or disallow duplicate properties.
         /// When a second property with the same name is found, the duplication kind can be 'upgraded' (e.g., from association link to navigation property), 'ignored' (e.g.
         /// when finding the association link for an existing navigation property or when duplicate properties are allowed by the settings) or 'fail' 
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Check the <paramref name="property"/> for duplicate property names in an entry or complex value.
+        /// Check the <paramref name="property"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
         /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames 
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
@@ -139,11 +139,11 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Checks the <paramref name="navigationLink"/> for duplicate property names in an entry when the navigation link
+        /// Checks the <paramref name="navigationLink"/> for duplicate property names in a resource when the navigation link
         /// has started but we don't know yet if it's expanded or not.
         /// </summary>
         /// <param name="navigationLink">The navigation link to be checked.</param>
-        internal void CheckForDuplicatePropertyNamesOnNavigationLinkStart(ODataNavigationLink navigationLink)
+        internal void CheckForDuplicatePropertyNamesOnNavigationLinkStart(ODataNestedResourceInfo navigationLink)
         {
             if (this.disabled)
             {
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Core
 #endif
 
             // Just check for duplication without modifying anything in the caches - this is to allow callers to choose whether they want to call this method first
-            // or just call the CheckForDuplicatePropertyNames(ODataNavigationLink) directly.
+            // or just call the CheckForDuplicatePropertyNames(ODataNestedResourceInfo) directly.
             string propertyName = navigationLink.Name;
             DuplicationRecord existingDuplicationRecord;
             if (this.propertyNameCache != null && this.propertyNameCache.TryGetValue(propertyName, out existingDuplicationRecord))
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Check the <paramref name="navigationLink"/> for duplicate property names in an entry or complex value.
+        /// Check the <paramref name="navigationLink"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
         /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames 
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core
         /// <param name="isExpanded">true if the link is expanded, false otherwise.</param>
         /// <param name="isCollection">true if the navigation link is a collection, false if it's a singleton or null if we don't know.</param>
         /// <returns>The association link uri with the same name if there already was one.</returns>
-        internal Uri CheckForDuplicatePropertyNames(ODataNavigationLink navigationLink, bool isExpanded, bool? isCollection)
+        internal Uri CheckForDuplicatePropertyNames(ODataNestedResourceInfo navigationLink, bool isExpanded, bool? isCollection)
         {
             if (this.disabled)
             {
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Check the <paramref name="associationLinkName"/> for duplicate property names in an entry or complex value.
+        /// Check the <paramref name="associationLinkName"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
         /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames  
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
@@ -254,7 +254,7 @@ namespace Microsoft.OData.Core
         /// <param name="associationLinkName">The name of association link to be checked.</param>
         /// <param name="associationLinkUrl">The url of association link to be checked.</param>
         /// <returns>The navigation link with the same name as the association link if there's one.</returns>
-        internal ODataNavigationLink CheckForDuplicateAssociationLinkNames(string associationLinkName, Uri associationLinkUrl)
+        internal ODataNestedResourceInfo CheckForDuplicateAssociationLinkNames(string associationLinkName, Uri associationLinkUrl)
         {
             if (this.disabled)
             {
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link found for this property.</param>
         /// <param name="isExpanded">true if the navigation link is expanded, false otherwise.</param>
         /// <param name="isCollection">true if the navigation link is marked as collection, false if it's marked as singletong or null if we don't know.</param>
-        private static void ApplyNavigationLinkToDuplicationRecord(DuplicationRecord duplicationRecord, ODataNavigationLink navigationLink, bool isExpanded, bool? isCollection)
+        private static void ApplyNavigationLinkToDuplicationRecord(DuplicationRecord duplicationRecord, ODataNestedResourceInfo navigationLink, bool isExpanded, bool? isCollection)
         {
             duplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
             duplicationRecord.NavigationLink = navigationLink;
@@ -599,7 +599,7 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// The navigation link if it was already found for this property.
             /// </summary>
-            public ODataNavigationLink NavigationLink { get; set; }
+            public ODataNestedResourceInfo NavigationLink { get; set; }
 
             /// <summary>
             /// The association link name if it was already found for this property.

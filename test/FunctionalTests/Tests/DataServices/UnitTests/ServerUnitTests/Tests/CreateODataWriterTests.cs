@@ -396,7 +396,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         if (args.Feed.Id.OriginalString.Contains("Customers"))
                         {
-                            testODataWriter.CallBaseWriteStart(new ODataFeed() { Id = args.Feed.Id, Count = 88 });
+                            testODataWriter.CallBaseWriteStart(new ODataResourceSet() { Id = args.Feed.Id, Count = 88 });
                             return true;
                         }
 
@@ -676,11 +676,11 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        private ODataEntry CreateEntry(Customer customer, DataServiceOperationContext operationContext)
+        private ODataResource CreateEntry(Customer customer, DataServiceOperationContext operationContext)
         {
             if (customer == null) return null;
 
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             entry.EditLink = new Uri(operationContext.AbsoluteServiceUri, "Customers(" + customer.ID + ")");
             entry.Id = entry.EditLink;
 
@@ -827,17 +827,17 @@ namespace AstoriaUnitTests.Tests
                 base.WriteEnd(args);
             }
 
-            public void CallBaseWriteStart(ODataFeed feed)
+            public void CallBaseWriteStart(ODataResourceSet feed)
             {
                 this.odataWriter.WriteStart(feed);
             }
 
-            public void CallBaseWriteStart(ODataEntry entry)
+            public void CallBaseWriteStart(ODataResource entry)
             {
                 this.odataWriter.WriteStart(entry);
             }
 
-            public void CallBaseWriteStart(ODataNavigationLink navigationLink)
+            public void CallBaseWriteStart(ODataNestedResourceInfo navigationLink)
             {
                 this.odataWriter.WriteStart(navigationLink);
             }

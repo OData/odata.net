@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core
     /// Annotation which stores the EDM type information of a value.
     /// </summary>
     /// <remarks>
-    /// This annotation will be used on ODataEntry, ODataComplexValue and ODataCollectionValue.
+    /// This annotation will be used on ODataResource, ODataComplexValue and ODataCollectionValue.
     /// </remarks>
     internal sealed class ODataTypeAnnotation
     {

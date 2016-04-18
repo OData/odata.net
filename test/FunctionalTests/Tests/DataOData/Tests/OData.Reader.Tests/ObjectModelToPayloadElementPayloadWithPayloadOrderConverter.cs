@@ -55,10 +55,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits a feed item.
             /// </summary>
             /// <param name="feed">The feed to visit.</param>
-            protected override ODataPayloadElement VisitFeed(ODataFeed feed)
+            protected override ODataPayloadElement VisitFeed(ODataResourceSet resourceCollection)
             {
-                ODataPayloadElement payloadElement = base.VisitFeed(feed);
-                ODataFeedPayloadOrderObjectModelAnnotation payloadOrderFeedAnnotation = feed.GetAnnotation<ODataFeedPayloadOrderObjectModelAnnotation>();
+                ODataPayloadElement payloadElement = base.VisitFeed(resourceCollection);
+                ODataFeedPayloadOrderObjectModelAnnotation payloadOrderFeedAnnotation = resourceCollection.GetAnnotation<ODataFeedPayloadOrderObjectModelAnnotation>();
                 if (payloadOrderFeedAnnotation != null)
                 {
                     PayloadOrderODataPayloadElementAnnotation payloadOrderElementAnnotation = new PayloadOrderODataPayloadElementAnnotation();
@@ -73,7 +73,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits an entry item.
             /// </summary>
             /// <param name="entry">The entry to visit.</param>
-            protected override ODataPayloadElement VisitEntry(ODataEntry entry)
+            protected override ODataPayloadElement VisitEntry(ODataResource entry)
             {
                 ODataPayloadElement payloadElement = base.VisitEntry(entry);
                 ODataEntryPayloadOrderObjectModelAnnotation payloadOrderEntryAnnotation = entry.GetAnnotation<ODataEntryPayloadOrderObjectModelAnnotation>();

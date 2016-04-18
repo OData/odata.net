@@ -65,20 +65,20 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                         Assert.AreEqual(200, innerMessage.StatusCode);
                         using (var innerMessageReader = new ODataMessageReader(innerMessage, readerSettings, Model))
                         {
-                            List<ODataEntry> entries = new List<ODataEntry>();
-                            var feedReader = innerMessageReader.CreateODataFeedReader();
+                            List<ODataResource> entries = new List<ODataResource>();
+                            var feedReader = innerMessageReader.CreateODataResourceSetReader();
 
                             while (feedReader.Read())
                             {
-                                if (feedReader.State == ODataReaderState.EntryEnd)
+                                if (feedReader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    ODataEntry entry = feedReader.Item as ODataEntry;
+                                    ODataResource entry = feedReader.Item as ODataResource;
                                     Assert.IsNotNull(entry);
                                     entries.Add(entry);
                                 }
-                                else if (feedReader.State == ODataReaderState.FeedEnd)
+                                else if (feedReader.State == ODataReaderState.ResourceSetEnd)
                                 {
-                                    Assert.IsNotNull(feedReader.Item as ODataFeed);
+                                    Assert.IsNotNull(feedReader.Item as ODataResourceSet);
                                 }
                             }
 
@@ -103,7 +103,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
             {
                 #region send the Create request with respond-async preference
 
-                var accountEntry = new ODataEntry() { TypeName = NameSpacePrefix + "Account" };
+                var accountEntry = new ODataResource() { TypeName = NameSpacePrefix + "Account" };
                 var accountP1 = new ODataProperty { Name = "AccountID", Value = 110 };
                 var accountP2 = new ODataProperty { Name = "CountryRegion", Value = "CN" };
                 var accountP3 = new ODataProperty
@@ -142,7 +142,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                 requestMessage.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(accountSet, accountType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                     odataWriter.WriteStart(accountEntry);
                     odataWriter.WriteEnd();
                 }
@@ -177,14 +177,14 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                         Assert.AreEqual(201, innerMessage.StatusCode);
                         using (var innerMessageReader = new ODataMessageReader(innerMessage, readerSettings, Model))
                         {
-                            List<ODataEntry> entries = new List<ODataEntry>();
-                            var entryReader = innerMessageReader.CreateODataEntryReader();
+                            List<ODataResource> entries = new List<ODataResource>();
+                            var entryReader = innerMessageReader.CreateODataResourceReader();
 
                             while (entryReader.Read())
                             {
-                                if (entryReader.State == ODataReaderState.EntryEnd)
+                                if (entryReader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    ODataEntry entry = entryReader.Item as ODataEntry;
+                                    ODataResource entry = entryReader.Item as ODataResource;
                                     Assert.IsNotNull(entry);
                                     entries.Add(entry);
                                 }
@@ -242,7 +242,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                 ODataBatchOperationRequestMessage batchChangesetOperation1 = batchWriter.CreateOperationRequestMessage("POST", new Uri(ServiceBaseUri + "Accounts(102)/MyPaymentInstruments"), "1");
                 batchChangesetOperation1.SetHeader("Content-Type", "application/json;odata.metadata=full");
                 batchChangesetOperation1.SetHeader("Accept", "application/json;odata.metadata=full");
-                var paymentInstrumentEntry = new ODataEntry() {TypeName = NameSpacePrefix + "PaymentInstrument"};
+                var paymentInstrumentEntry = new ODataResource() {TypeName = NameSpacePrefix + "PaymentInstrument"};
                 var paymentInstrumentEntryP1 = new ODataProperty {Name = "PaymentInstrumentID", Value = 102910};
                 var paymentInstrumentEntryP2 = new ODataProperty {Name = "FriendlyName", Value = "102 batch new PI"};
                 var paymentInstrumentEntryP3 = new ODataProperty {Name = "CreatedDate", Value = new DateTimeOffset(new DateTime(2013, 12, 29, 11, 11, 57))};
@@ -250,7 +250,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
 
                 using (var entryMessageWriter = new ODataMessageWriter(batchChangesetOperation1, writerSettings, Model))
                 {
-                    var odataEntryWriter = entryMessageWriter.CreateODataEntryWriter(myPaymentInstrumentSet, paymentInstrumentType);
+                    var odataEntryWriter = entryMessageWriter.CreateODataResourceWriter(myPaymentInstrumentSet, paymentInstrumentType);
                     odataEntryWriter.WriteStart(paymentInstrumentEntry);
                     odataEntryWriter.WriteEnd();
                 }
@@ -322,16 +322,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                     if (batchOperationId == 0)
                                     {
                                         // the first response message is a feed
-                                        var feedReader = operationResponseReader.CreateODataFeedReader();
+                                        var feedReader = operationResponseReader.CreateODataResourceSetReader();
 
                                         Assert.AreEqual(200, operationResponse.StatusCode);
-                                        List<ODataEntry> pis = new List<ODataEntry>();
+                                        List<ODataResource> pis = new List<ODataResource>();
                                         while (feedReader.Read())
                                         {
                                             switch (feedReader.State)
                                             {
-                                                case ODataReaderState.EntryEnd:
-                                                    ODataEntry entry = feedReader.Item as ODataEntry;
+                                                case ODataReaderState.ResourceEnd:
+                                                    ODataResource entry = feedReader.Item as ODataResource;
                                                     Assert.IsNotNull(entry);
                                                     pis.Add(entry);
                                                     break;
@@ -343,16 +343,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                     else if (batchOperationId == 1)
                                     {
                                         // the second response message is a creation response
-                                        var entryReader = operationResponseReader.CreateODataEntryReader();
+                                        var entryReader = operationResponseReader.CreateODataResourceReader();
 
                                         Assert.AreEqual(201, operationResponse.StatusCode);
-                                        List<ODataEntry> pis = new List<ODataEntry>();
+                                        List<ODataResource> pis = new List<ODataResource>();
                                         while (entryReader.Read())
                                         {
                                             switch (entryReader.State)
                                             {
-                                                case ODataReaderState.EntryEnd:
-                                                    ODataEntry entry = entryReader.Item as ODataEntry;
+                                                case ODataReaderState.ResourceEnd:
+                                                    ODataResource entry = entryReader.Item as ODataResource;
                                                     Assert.IsNotNull(entry);
                                                     pis.Add(entry);
                                                     break;
@@ -365,16 +365,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                     else if (batchOperationId == 2)
                                     {
                                         // the third response message is an entry
-                                        var entryReader = operationResponseReader.CreateODataEntryReader();
+                                        var entryReader = operationResponseReader.CreateODataResourceReader();
 
                                         Assert.AreEqual(200, operationResponse.StatusCode);
-                                        List<ODataEntry> statements = new List<ODataEntry>();
+                                        List<ODataResource> statements = new List<ODataResource>();
                                         while (entryReader.Read())
                                         {
                                             switch (entryReader.State)
                                             {
-                                                case ODataReaderState.EntryEnd:
-                                                    ODataEntry entry = entryReader.Item as ODataEntry;
+                                                case ODataReaderState.ResourceEnd:
+                                                    ODataResource entry = entryReader.Item as ODataResource;
                                                     Assert.IsNotNull(entry);
                                                     statements.Add(entry);
                                                     break;

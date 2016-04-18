@@ -315,14 +315,14 @@ namespace Microsoft.OData.Core
         /// <summary>Enables the default behavior.</summary>
         public void EnableDefaultBehavior()
         {
-            // We have to reset the ATOM entry XML customization since in the default behavior no atom entry customization is used.
+            // We have to reset the ATOM resource XML customization since in the default behavior no atom resource customization is used.
             this.readerBehavior = ODataReaderBehavior.DefaultBehavior;
         }
 
         /// <summary>Specifies whether the OData server behavior is enabled.</summary>
         public void EnableODataServerBehavior()
         {
-            // We have to reset the ATOM entry XML customization since in the server behavior no atom entry customization is used.
+            // We have to reset the ATOM resource XML customization since in the server behavior no atom resource customization is used.
             this.readerBehavior = ODataReaderBehavior.CreateWcfDataServicesServerBehavior();
         }
 

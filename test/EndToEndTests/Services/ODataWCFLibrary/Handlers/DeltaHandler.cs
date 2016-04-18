@@ -108,7 +108,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             if (lastestUpdated > DeltaSnapshot.TimeStamp)
             {
                 var lastSegmentOfDeltaEntry = new ODataUriParser(this.DataSource.Model, ServiceConstants.ServiceBaseUri, deltaEntry.Id).ParsePath().LastSegment as KeySegment;
-                deltaEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                deltaEntry.SetSerializationInfo(new ODataResourceSerializationInfo
                 {
                     NavigationSourceEntityTypeName = lastSegmentOfDeltaEntry.EdmType.ToString(),
                     NavigationSourceKind = lastSegmentOfDeltaEntry.NavigationSource.NavigationSourceKind(),

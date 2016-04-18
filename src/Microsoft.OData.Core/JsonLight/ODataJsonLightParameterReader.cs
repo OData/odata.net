@@ -56,7 +56,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Entry, the reader is positioned at the starting '{' of the entry payload.
+        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Feed or Collection, the reader is positioned at the starting '[' of the feed or collection payload.
         /// </remarks>
         protected override bool ReadAtStartImplementation()
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Entry, the reader is positioned at the starting '{' of the entry payload.
+        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Feed or Collection, the reader is positioned at the starting '[' of the feed or collection payload.
         /// </remarks>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Entry, the reader is positioned at the starting '{' of the entry payload.
+        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Feed or Collection, the reader is positioned at the starting '[' of the feed or collection payload.
         /// </remarks>
         protected override bool ReadNextParameterImplementation()
@@ -128,13 +128,13 @@ namespace Microsoft.OData.Core.JsonLight
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Implementation of the reader logic when in state Value, Entry, Feed or Collection state.
+        /// Implementation of the reader logic when in state Value, Resource, Feed or Collection state.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Entry, the reader is positioned at the starting '{' of the entry payload.
+        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Feed or Collection, the reader is positioned at the starting '[' of the feed or collection payload.
         /// </remarks>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -145,25 +145,25 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
         /// </summary>
         /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.</returns>
-        protected override ODataReader CreateEntryReader(IEdmEntityType expectedEntityType)
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
+        protected override ODataReader CreateResourceReader(IEdmEntityType expectedEntityType)
         {
-            return this.CreateEntryReaderSynchronously(expectedEntityType);
+            return this.CreateResourceReaderSynchronously(expectedEntityType);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
         /// </summary>
         /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.</returns>
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected override Task<ODataReader> CreateEntryReaderAsync(IEdmEntityType expectedEntityType)
+        protected override Task<ODataReader> CreateResourceReaderAsync(IEdmEntityType expectedEntityType)
         {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateEntryReaderSynchronously(expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceReaderSynchronously(expectedEntityType));
         }
 #endif
 
@@ -172,9 +172,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="expectedEntityType">Expected feed element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
-        protected override ODataReader CreateFeedReader(IEdmEntityType expectedEntityType)
+        protected override ODataReader CreateResourceSetReader(IEdmEntityType expectedEntityType)
         {
-            return this.CreateFeedReaderSynchronously(expectedEntityType);
+            return this.CreateResourceSetReaderSynchronously(expectedEntityType);
         }
 
 #if ODATALIB_ASYNC
@@ -184,9 +184,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="expectedEntityType">Expected feed element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected override Task<ODataReader> CreateFeedReaderAsync(IEdmEntityType expectedEntityType)
+        protected override Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntityType expectedEntityType)
         {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateFeedReaderSynchronously(expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceSetReaderSynchronously(expectedEntityType));
         }
 #endif
 
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Entry, the reader is positioned at the starting '{' of the entry payload.
+        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Feed or Collection, the reader is positioned at the starting '[' of the feed or collection payload.
         /// </remarks>
         private bool ReadAtStartImplementationSynchronously()
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
-        ///                 When the new state is Entry, the reader is positioned at the starting '{' of the entry payload.
+        ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Feed or Collection, the reader is positioned at the starting '[' of the feed or collection payload.
         /// </remarks>
         private bool ReadNextParameterImplementationSynchronously()
@@ -268,11 +268,11 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
         /// </summary>
         /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.</returns>
-        private ODataReader CreateEntryReaderSynchronously(IEdmEntityType expectedEntityType)
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
+        private ODataReader CreateResourceReaderSynchronously(IEdmEntityType expectedEntityType)
         {
             Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
             return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedEntityType, false /*readingFeed*/, true /*readingParameter*/, false /*readingDelta*/, this /*IODataReaderListener*/);
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="expectedEntityType">Expected feed element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
-        private ODataReader CreateFeedReaderSynchronously(IEdmEntityType expectedEntityType)
+        private ODataReader CreateResourceSetReaderSynchronously(IEdmEntityType expectedEntityType)
         {
             Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
             return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedEntityType, true /*readingFeed*/, true /*readingParameter*/, false /*readingDelta*/, this /*IODataReaderListener*/);

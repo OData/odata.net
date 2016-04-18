@@ -26,7 +26,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ShortIntegrationTestToValidateEntryShouldBeRead()
         {
-            var odataEntry = new ODataEntry() { Id = new Uri("http://services.odata.org/OData/OData.svc/Customers(0)") };
+            var odataEntry = new ODataResource() { Id = new Uri("http://services.odata.org/OData/OData.svc/Customers(0)") };
             odataEntry.Properties = new ODataProperty[] { new ODataProperty() { Name = "ID", Value = 0 }, new ODataProperty() { Name = "Description", Value = "Simple Stuff" } };
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -36,7 +36,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(Customer), null, new Dictionary<Expression, Expression>());
 
-            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(Customer), null, ODataFormat.Json);
+            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(Customer), null, ODataFormat.Json);
 
             var customersRead = new List<Customer>();
 

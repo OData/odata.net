@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core.Tests
         {
             this.testSubject = new ODataStreamReferenceValue();
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 TypeName = "ns.DerivedType",
                 Properties = new[]
@@ -36,11 +36,11 @@ namespace Microsoft.OData.Core.Tests
                 }
             };
 
-            var serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
-            var typeContext = ODataFeedAndEntryTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
             var metadataContext = new TestMetadataContext();
-            var entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            var fullMetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
+            var entryMetadataContext = ODataResourceMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
+            var fullMetadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
             this.streamWithFullBuilder = new ODataStreamReferenceValue();
             this.streamWithFullBuilder.SetMetadataBuilder(fullMetadataBuilder, "Stream");
         }
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Core.Tests
         public void MetadataBuilderShouldNotAffectUserAssignedEditLink()
         {
             this.testSubject.EditLink = EditLink;
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
             this.testSubject.EditLink.Should().BeSameAs(EditLink);
         }
 
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Core.Tests
         public void MetadataBuilderShouldNotAffectUserAssignedReadLink()
         {
             this.testSubject.ReadLink = ReadLink;
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
             this.testSubject.ReadLink.Should().BeSameAs(ReadLink);
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Core.Tests
         public void MetadataBuilderShouldNotAffectUserAssignedETag()
         {
             this.testSubject.ETag = "ETag";
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
             this.testSubject.ETag.Should().Be("ETag");
         }
 
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Core.Tests
         public void MetadataBuilderShouldNotAffectUserAssignedContentType()
         {
             this.testSubject.ContentType = "ContentType";
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
             this.testSubject.ContentType.Should().Be("ContentType");
         }
 
@@ -133,25 +133,25 @@ namespace Microsoft.OData.Core.Tests
         public void GetMetadataBuilderShouldReturnCurrentBuilder()
         {
             this.testSubject.GetMetadataBuilder().Should().BeNull();
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
-            this.testSubject.GetMetadataBuilder().Should().BeSameAs(ODataEntityMetadataBuilder.Null);
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
+            this.testSubject.GetMetadataBuilder().Should().BeSameAs(ODataResourceMetadataBuilder.Null);
         }
         
         [Fact]
         public void ChangingMetadataBuilderShouldUpdateCalculatedEditLink()
         {
-            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataEntry()), "propertyName");
+            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataResource()), "propertyName");
             this.testSubject.EditLink.OriginalString.Should().Be("http://service/ComputedStreamEditLink/propertyName");
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
             this.testSubject.EditLink.Should().BeNull();
         }
 
         [Fact]
         public void ChangingMetadataBuilderShouldUpdateCalculatedReadLink()
         {
-            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataEntry()), "propertyName");
+            this.testSubject.SetMetadataBuilder(new TestEntityMetadataBuilder(new ODataResource()), "propertyName");
             this.testSubject.ReadLink.OriginalString.Should().Be("http://service/ComputedStreamReadLink/propertyName");
-            this.testSubject.SetMetadataBuilder(ODataEntityMetadataBuilder.Null, "propertyName");
+            this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, "propertyName");
             this.testSubject.ReadLink.Should().BeNull();
         }
 

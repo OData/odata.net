@@ -56,9 +56,9 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        private ODataEntry CreateEntry(int dataSizeKb)
+        private ODataResource CreateEntry(int dataSizeKb)
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Id = new Uri("http://www.odata.org/Perf.svc/Item(1)"),
                 EditLink = new Uri("Item(1)", UriKind.Relative),

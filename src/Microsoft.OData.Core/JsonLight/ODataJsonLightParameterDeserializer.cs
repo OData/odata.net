@@ -158,7 +158,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                                     case EdmTypeKind.Entity:
                                         parameterValue = null;
-                                        state = ODataParameterReaderState.Entry;
+                                        state = ODataParameterReaderState.Resource;
                                         break;
 
                                     case EdmTypeKind.Collection:
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Core.JsonLight
                                         }
                                         else if (((IEdmCollectionType)parameterTypeReference.Definition).ElementType.TypeKind() == EdmTypeKind.Entity)
                                         {
-                                            state = ODataParameterReaderState.Feed;
+                                            state = ODataParameterReaderState.ResourceSet;
                                         }
                                         else
                                         {
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Core.JsonLight
                                 parameterRead = true;
                                 this.parameterReader.EnterScope(state, parameterName, parameterValue);
                                 Debug.Assert(
-                                    state == ODataParameterReaderState.Collection || state == ODataParameterReaderState.Entry || state == ODataParameterReaderState.Feed || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
+                                    state == ODataParameterReaderState.Collection || state == ODataParameterReaderState.Resource || state == ODataParameterReaderState.ResourceSet || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                                     "Expected any node for a collection; 'Property' or 'EndObject' if it is a primitive or complex value.");
                                 break;
 

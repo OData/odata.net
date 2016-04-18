@@ -326,7 +326,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="namespaceName">The namespace name for the new type(s).</param>
         /// <param name="entry">The entry to create the metadata for.</param>
         /// <returns>The entity type of the created entity.</returns>
-        public static EntityType CreateEntityMetadata(out EntityModelSchema model, string namespaceName, ODataEntry entry)
+        public static EntityType CreateEntityMetadata(out EntityModelSchema model, string namespaceName, ODataResource entry)
         {
             model = new EntityModelSchema();
 

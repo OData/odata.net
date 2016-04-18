@@ -75,10 +75,10 @@ namespace Microsoft.Test.Taupo.OData.Common
                     return ODataPayloadKind.Property;
 
                 case ODataPayloadElementType.EntitySetInstance:
-                    return ODataPayloadKind.Feed;
+                    return ODataPayloadKind.ResourceSet;
 
                 case ODataPayloadElementType.EntityInstance:
-                    return ODataPayloadKind.Entry;
+                    return ODataPayloadKind.Resource;
 
                 case ODataPayloadElementType.PrimitiveCollection:
                 case ODataPayloadElementType.ComplexInstanceCollection:
@@ -164,8 +164,8 @@ namespace Microsoft.Test.Taupo.OData.Common
             ODataPayloadKind payloadKind = GetPayloadKindFromPayloadElement(payloadElement);
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed: return MimeTypes.ApplicationAtomXml;
-                case ODataPayloadKind.Entry: return MimeTypes.ApplicationAtomXml;
+                case ODataPayloadKind.ResourceSet: return MimeTypes.ApplicationAtomXml;
+                case ODataPayloadKind.Resource: return MimeTypes.ApplicationAtomXml;
                 case ODataPayloadKind.Property: return MimeTypes.ApplicationXml;
                 case ODataPayloadKind.EntityReferenceLink: return MimeTypes.ApplicationXml;
                 case ODataPayloadKind.EntityReferenceLinks: return MimeTypes.ApplicationXml;

@@ -32,7 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public void DisposeAfterExceptionTest()
         {
             // create a default entry and then set both read and edit links to null to provoke an exception during writing
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
             this.Assert.IsNull(entry.EditLink, "entry.EditLink == null");
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -102,7 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test that a writer behaves as expected in the presence of fatal exceptions.")]
         public void FatalExceptionTest()
         {
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
 
             this.CombinatorialEngineProvider.RunCombinations(
                 new ODataItem[] { entry },
@@ -156,11 +156,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public void WriteAfterExceptionTest()
         {
             // create a default entry and then set both read and edit links to null to provoke an exception during writing
-            ODataEntry faultyEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource faultyEntry = ObjectModelUtils.CreateDefaultEntry();
             this.Assert.IsNull(faultyEntry.EditLink, "entry.EditLink == null");
 
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
 
             this.CombinatorialEngineProvider.RunCombinations(
                 new ODataItem[] { faultyEntry },

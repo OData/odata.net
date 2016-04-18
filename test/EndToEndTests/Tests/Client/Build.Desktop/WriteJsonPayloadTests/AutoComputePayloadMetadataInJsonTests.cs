@@ -75,7 +75,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyOrderFeed(ODataMessageWriterSettings settings, string mimeType, bool hasModel)
         {
             // create a feed with two entries
-            var orderFeed = new ODataFeed()
+            var orderFeed = new ODataResourceSet()
             {
                 NextPageLink = new Uri(this.ServiceUri + "Order?$skiptoken=-9"),
                 Count = 9999
@@ -88,7 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                orderFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
+                orderFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
             }
 
             var orderEntry1 = WritePayloadHelper.CreateOrderEntry1NoMetadata(hasModel);
@@ -104,7 +104,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             string result = string.Empty;
             using (var messageWriter = this.CreateODataMessageWriter(responseMessage, settings, hasModel))
             {
-                var odataWriter = this.CreateODataFeedWriter(messageWriter, WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType, hasModel);
+                var odataWriter = this.CreateODataResourceSetWriter(messageWriter, WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType, hasModel);
 
                 odataWriter.WriteStart(orderFeed);
 
@@ -134,8 +134,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Order", resultObject, mimeType);
 
-                VerifyEntry(expectedOrderObject1, orderEntry1, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedOrderObject2, orderEntry2, new ODataNavigationLink[] { orderEntry2Navigation }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedOrderObject1, orderEntry1, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedOrderObject2, orderEntry2, new ODataNestedResourceInfo[] { orderEntry2Navigation }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
             }
 
             return result;
@@ -178,7 +178,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         private string WriteAndVerifyExpandedCustomerEntry(ODataMessageWriterSettings settings, string mimeType, string expectedProjectionClause, bool hasModel)
         {
-            ODataEntry customerEntry = WritePayloadHelper.CreateCustomerEntryNoMetadata(hasModel);
+            ODataResource customerEntry = WritePayloadHelper.CreateCustomerEntryNoMetadata(hasModel);
             Dictionary<string, object> expectedCustomerObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.CustomerType, "Customer(-9)", customerEntry, hasModel);
             var thumbnailProperty = WritePayloadHelper.AddCustomerMediaProperty(customerEntry, expectedCustomerObject);
 
@@ -187,7 +187,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             // expanded logins navigation containing a Login instance
             var expandedLoginsNavigation = WritePayloadHelper.CreateExpandedCustomerLoginsNavigation(expectedCustomerObject);
-            var loginFeed = new ODataFeed();
+            var loginFeed = new ODataResourceSet();
             if (mimeType == MimeTypes.ApplicationAtomXml)
             {
                 loginFeed.Id = new Uri(this.ServiceUri + "Customer(-9)/Logins");
@@ -195,7 +195,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                loginFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login" });
+                loginFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login" });
             }
 
             var loginEntry = WritePayloadHelper.CreateLoginEntryNoMetadata(hasModel);
@@ -241,8 +241,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Customer(" + expectedProjectionClause + ")/$entity", resultObject, mimeType);
 
-                VerifyEntry(expectedCustomerObject, customerEntry, new ODataNavigationLink[] { orderNavigation, expandedLoginsNavigation }, new ODataProperty[] { thumbnailProperty }, resultObject, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedLoginObject, loginEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject["Logins"] as object[]).Single() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedCustomerObject, customerEntry, new ODataNestedResourceInfo[] { orderNavigation, expandedLoginsNavigation }, new ODataProperty[] { thumbnailProperty }, resultObject, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedLoginObject, loginEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject["Logins"] as object[]).Single() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
             }
 
             return result;
@@ -310,7 +310,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyPersonFeed(ODataMessageWriterSettings settings, string mimeType, bool hasModel)
         {
             // create a Person feed containing a person, an employee, a special employee
-            var personFeed = new ODataFeed();
+            var personFeed = new ODataResourceSet();
             if (mimeType == MimeTypes.ApplicationAtomXml)
             {
                 personFeed.Id = new Uri(this.ServiceUri + "Person");
@@ -318,16 +318,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                personFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                personFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
             }
 
-            ODataEntry personEntry = WritePayloadHelper.CreatePersonEntryNoMetadata(hasModel);
+            ODataResource personEntry = WritePayloadHelper.CreatePersonEntryNoMetadata(hasModel);
             Dictionary<string, object> expectedPersonObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.PersonType, "Person(-5)", personEntry, hasModel);
 
-            ODataEntry employeeEntry = WritePayloadHelper.CreateEmployeeEntryNoMetadata(hasModel);
+            ODataResource employeeEntry = WritePayloadHelper.CreateEmployeeEntryNoMetadata(hasModel);
             Dictionary<string, object> expectedEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.EmployeeType, "Person(-3)", employeeEntry, hasModel, true);
 
-            ODataEntry specialEmployeeEntry = WritePayloadHelper.CreateSpecialEmployeeEntryNoMetadata(hasModel);
+            ODataResource specialEmployeeEntry = WritePayloadHelper.CreateSpecialEmployeeEntryNoMetadata(hasModel);
             Dictionary<string, object> expectedSpecialEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.SpecialEmployeeType, "Person(-10)", specialEmployeeEntry, hasModel, true);
 
             // write the response message and read using ODL reader
@@ -336,7 +336,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             string result = string.Empty;
             using (var messageWriter = this.CreateODataMessageWriter(responseMessage, settings, hasModel))
             {
-                var odataWriter = this.CreateODataFeedWriter(messageWriter, WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType, hasModel);
+                var odataWriter = this.CreateODataResourceSetWriter(messageWriter, WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType, hasModel);
                 odataWriter.WriteStart(personFeed);
 
                 odataWriter.WriteStart(personEntry);
@@ -362,9 +362,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Person", resultObject, mimeType);
 
-                VerifyEntry(expectedPersonObject, personEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(0) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(1) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(2) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedPersonObject, personEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(0) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(1) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(2) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
             }
 
             return result;
@@ -430,7 +430,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Car/$entity", resultObject, mimeType);
 
-                VerifyEntry(expectedCarObject, carEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, resultObject, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedCarObject, carEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, resultObject, mimeType, settings.AutoComputePayloadMetadataInJson);
             }
 
             return result;
@@ -468,7 +468,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyRequestMessage(ODataMessageWriterSettings settings, string mimeType, bool hasModel)
         {
             // create an order entry to POST
-            var order = new ODataEntry()
+            var order = new ODataResource()
             {
                 TypeName = NameSpace + "Order"
             };
@@ -479,7 +479,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             order.Properties = new[] { orderP1, orderp2, orderp3 };
             if (!hasModel)
             {
-                order.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
+                order.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
                 orderP1.SetSerializationInfo(new ODataPropertySerializationInfo() { PropertyKind = ODataPropertyKind.Key });
             }
 
@@ -502,13 +502,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     stream.Seek(0, SeekOrigin.Begin);
                     var readerSetting = new ODataMessageReaderSettings() { BaseUri = this.ServiceUri };
                     ODataMessageReader messageReader = new ODataMessageReader(requestMessage, readerSetting, WritePayloadHelper.Model);
-                    ODataReader reader = messageReader.CreateODataEntryReader(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
+                    ODataReader reader = messageReader.CreateODataResourceReader(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
                     bool verifyEntryCalled = false;
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            ODataEntry entry = reader.Item as ODataEntry;
+                            ODataResource entry = reader.Item as ODataResource;
                             Assert.AreEqual(3, entry.Properties.Count(), "entry.Properties.Count");
                             verifyEntryCalled = true;
                         }
@@ -572,7 +572,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyEmployeeFeed(ODataMessageWriterSettings settings, string mimeType, bool hasModel)
         {
             // create a feed with two entries
-            var employeeFeed = new ODataFeed();
+            var employeeFeed = new ODataResourceSet();
 
             if (mimeType == MimeTypes.ApplicationAtomXml)
             {
@@ -581,11 +581,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                employeeFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person", ExpectedTypeName = NameSpace + "Employee" });
+                employeeFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person", ExpectedTypeName = NameSpace + "Employee" });
             }
 
-            ODataEntry employeeEntry = WritePayloadHelper.CreateEmployeeEntryNoMetadata(false);
-            ODataEntry specialEmployeeEntry = WritePayloadHelper.CreateSpecialEmployeeEntryNoMetadata(false);
+            ODataResource employeeEntry = WritePayloadHelper.CreateEmployeeEntryNoMetadata(false);
+            ODataResource specialEmployeeEntry = WritePayloadHelper.CreateSpecialEmployeeEntryNoMetadata(false);
 
             // expected result with AutoGeneratedUrlsShouldPutKeyValueInDedicatedSegment
             Dictionary<string, object> expectedEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.EmployeeType, "Person/-3", employeeEntry, hasModel, true);
@@ -597,7 +597,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             string result = string.Empty;
             using (var messageWriter = this.CreateODataMessageWriter(responseMessage, settings, hasModel))
             {
-                var odataWriter = this.CreateODataFeedWriter(messageWriter, WritePayloadHelper.PersonSet, WritePayloadHelper.EmployeeType, hasModel);
+                var odataWriter = this.CreateODataResourceSetWriter(messageWriter, WritePayloadHelper.PersonSet, WritePayloadHelper.EmployeeType, hasModel);
                 odataWriter.WriteStart(employeeFeed);
 
                 odataWriter.WriteStart(employeeEntry);
@@ -623,8 +623,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Person/" + NameSpace + "Employee", resultObject, mimeType);
 
                 settings.AutoComputePayloadMetadataInJson = !settings.AutoComputePayloadMetadataInJson;
-                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNavigationLink[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
             }
 
             return result;
@@ -654,15 +654,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
         }
 
-        private ODataWriter CreateODataFeedWriter(ODataMessageWriter messageWriter, IEdmEntitySet entitySet, IEdmEntityType entityType, bool hasModel)
+        private ODataWriter CreateODataResourceSetWriter(ODataMessageWriter messageWriter, IEdmEntitySet entitySet, IEdmEntityType entityType, bool hasModel)
         {
             if (hasModel)
             {
-                return messageWriter.CreateODataFeedWriter(entitySet, entityType);
+                return messageWriter.CreateODataResourceSetWriter(entitySet, entityType);
             }
             else
             {
-                return messageWriter.CreateODataFeedWriter();
+                return messageWriter.CreateODataResourceSetWriter();
             }
         }
 
@@ -670,11 +670,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             if (hasModel)
             {
-                return messageWriter.CreateODataEntryWriter(entitySet, entityType);
+                return messageWriter.CreateODataResourceWriter(entitySet, entityType);
             }
             else
             {
-                return messageWriter.CreateODataEntryWriter();
+                return messageWriter.CreateODataResourceWriter();
             }
         }
 
@@ -693,8 +693,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         private static void VerifyEntry(
             Dictionary<string, object> expectedFullMetadataObject,
-            ODataEntry entry,
-            ODataNavigationLink[] userSpecifiedNavigationLinks,
+            ODataResource entry,
+            ODataNestedResourceInfo[] userSpecifiedNavigationLinks,
             ODataProperty[] userSpecifiedMediaProperties,
             Dictionary<string, object> metadataNotYetVerified,
             string mimeType,
@@ -770,7 +770,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
         }
 
-        private static void VerifyAgainstODataEntry(ODataEntry entry, ODataNavigationLink[] userSpecifiedNavigationLinks, ODataProperty[] userSpecifiedMediaProperties, Dictionary<string, object> metadataNotYetVerified)
+        private static void VerifyAgainstODataEntry(ODataResource entry, ODataNestedResourceInfo[] userSpecifiedNavigationLinks, ODataProperty[] userSpecifiedMediaProperties, Dictionary<string, object> metadataNotYetVerified)
         {
             // for non-autoComputePayloadMetadataInJson case (and minimal metatadata), writer should include user specified metadata
             object value = null;

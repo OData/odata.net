@@ -239,11 +239,11 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             switch (kind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
                     if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
                 case ODataPayloadKind.Value:
@@ -287,8 +287,8 @@ namespace Microsoft.Test.Taupo.OData.Common
             // Add the JSON media types to the supported payload kinds
             switch (kind)
             {
-                case ODataPayloadKind.Feed:
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.ResourceSet:
+                case ODataPayloadKind.Resource:
                 case ODataPayloadKind.Property:
                 case ODataPayloadKind.Collection:
                 case ODataPayloadKind.EntityReferenceLink:
@@ -348,10 +348,10 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             switch (kind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
                     break;
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     break;
                 case ODataPayloadKind.Property:
                     break;

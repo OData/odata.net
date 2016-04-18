@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
         const string JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations =
         "{" +
             "\"@odata.context\":\"http://www.example.com/service.svc/$metadata#TestEntitySet\"," +
-            "\"@Custom.FeedStartAnnotation\":1," +
+            "\"@Custom.ResourceSetStartAnnotation\":1," +
             "\"value\":[" +
                 "{" +
                     "\"@Custom.EntryStartAnnotation\":2," +
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
         const string AtomFeedAndEntryPayloadWithCustomInstanceAnnotations =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
 <feed xml:base=""http://localhost:34402/WcfDataService1.svc/"" xmlns=""http://www.w3.org/2005/Atom"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-  <m:annotation term=""Custom.FeedStartAnnotation"" int=""1"" />
+  <m:annotation term=""Custom.ResourceSetStartAnnotation"" int=""1"" />
   <id>http://localhost:34402/WcfDataService1.svc/Folders</id>
   <title type=""text"">Folders</title>
   <updated>2013-03-12T00:24:18Z</updated>
@@ -189,21 +189,21 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
 
             using (var messageReader = new ODataMessageReader(messageToRead, readerSettings, Model))
             {
-                var odataReader = messageReader.CreateODataFeedReader(EntitySet, EntityType);
+                var odataReader = messageReader.CreateODataResourceSetReader(EntitySet, EntityType);
                 while (odataReader.Read())
                 {
                     switch (odataReader.State)
                     {
-                        case ODataReaderState.FeedStart:
-                        case ODataReaderState.FeedEnd:
-                            odataReader.Item.As<ODataFeed>().InstanceAnnotations.Should().BeEmpty();
+                        case ODataReaderState.ResourceSetStart:
+                        case ODataReaderState.ResourceSetEnd:
+                            odataReader.Item.As<ODataResourceSet>().InstanceAnnotations.Should().BeEmpty();
                             break;
                         case ODataReaderState.NavigationLinkStart:
                         case ODataReaderState.NavigationLinkEnd:
                             break;
-                        case ODataReaderState.EntryStart:
-                        case ODataReaderState.EntryEnd:
-                            odataReader.Item.As<ODataEntry>().InstanceAnnotations.Should().BeEmpty();
+                        case ODataReaderState.ResourceStart:
+                        case ODataReaderState.ResourceEnd:
+                            odataReader.Item.As<ODataResource>().InstanceAnnotations.Should().BeEmpty();
                             break;
                     }
                 }
@@ -230,15 +230,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             Stack<ODataItem> odataItems = new Stack<ODataItem>(4);
             using (var messageReader = new ODataMessageReader(messageToRead, readerSettings, Model))
             {
-                var odataReader = messageReader.CreateODataFeedReader(EntitySet, EntityType);
+                var odataReader = messageReader.CreateODataResourceSetReader(EntitySet, EntityType);
                 ICollection<ODataInstanceAnnotation> instanceAnnotations = null;
                 while (odataReader.Read())
                 {
                     switch (odataReader.State)
                     {
-                        case ODataReaderState.FeedStart:
+                        case ODataReaderState.ResourceSetStart:
                             odataItems.Push(odataReader.Item);
-                            instanceAnnotations = odataItems.Peek().As<ODataFeed>().InstanceAnnotations;
+                            instanceAnnotations = odataItems.Peek().As<ODataResourceSet>().InstanceAnnotations;
 
                             // TODO: We only support instance annotation at the top level feed at the moment. Will remove the if statement when support on inline feed is added.
                             if (odataItems.Count == 1)
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                                 // We are currently in non-streaming mode. The reader will buffer the payload and read ahead till the
                                 // end of the feed to read all instance annotations.
                                 instanceAnnotations.Should().HaveCount(1);
-                                TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedStartAnnotation").Value);
+                                TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.ResourceSetStartAnnotation").Value);
                             }
                             else
                             {
@@ -255,14 +255,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                             }
 
                             break;
-                        case ODataReaderState.FeedEnd:
-                            instanceAnnotations = odataItems.Peek().As<ODataFeed>().InstanceAnnotations;
+                        case ODataReaderState.ResourceSetEnd:
+                            instanceAnnotations = odataItems.Peek().As<ODataResourceSet>().InstanceAnnotations;
 
                             // TODO: We only support instance annotation at the top level feed at the moment. Will remove the if statement when support on inline feed is added.
                             if (odataItems.Count == 1)
                             {
                                 instanceAnnotations.Should().HaveCount(2);
-                                TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedStartAnnotation").Value);
+                                TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.ResourceSetStartAnnotation").Value);
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedEndAnnotation").Value);
                             }
                             else
@@ -273,11 +273,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                             odataItems.Pop();
                             break;
                         case ODataReaderState.NavigationLinkStart:
-                            ODataNavigationLink navigationLink = (ODataNavigationLink)odataReader.Item;
+                            ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)odataReader.Item;
                             if (navigationLink.Name == "ResourceSetNavigationProperty")
                             {
                                 // The collection should be populated with instance annotations read so far before the "ResourceSetNavigationProperty".
-                                instanceAnnotations = odataItems.Peek().As<ODataEntry>().InstanceAnnotations;
+                                instanceAnnotations = odataItems.Peek().As<ODataResource>().InstanceAnnotations;
                                 instanceAnnotations.Should().HaveCount(2);
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryStartAnnotation").Value);
                                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryMiddleAnnotation").Value);
@@ -286,17 +286,17 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                             break;
                         case ODataReaderState.NavigationLinkEnd:
                             break;
-                        case ODataReaderState.EntryStart:
+                        case ODataReaderState.ResourceStart:
                             odataItems.Push(odataReader.Item);
 
                             // The collection should be populated with instance annotations read so far before the first navigation/association link or before the end of the entry.
-                            instanceAnnotations = odataItems.Peek().As<ODataEntry>().InstanceAnnotations;
+                            instanceAnnotations = odataItems.Peek().As<ODataResource>().InstanceAnnotations;
                             instanceAnnotations.Should().HaveCount(1);
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryStartAnnotation").Value);
                             break;
 
-                        case ODataReaderState.EntryEnd:
-                            instanceAnnotations = odataItems.Peek().As<ODataEntry>().InstanceAnnotations;
+                        case ODataReaderState.ResourceEnd:
+                            instanceAnnotations = odataItems.Peek().As<ODataResource>().InstanceAnnotations;
                             instanceAnnotations.Should().HaveCount(3);
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryStartAnnotation").Value);
                             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(odataItems.Count), instanceAnnotations.Single(ia => ia.Name == "Custom.EntryMiddleAnnotation").Value);
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                 }
 
                 instanceAnnotations.Should().HaveCount(2);
-                TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedStartAnnotation").Value);
+                TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.ResourceSetStartAnnotation").Value);
                 TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(1), instanceAnnotations.Single(ia => ia.Name == "Custom.FeedEndAnnotation").Value);
             }
         }
@@ -349,10 +349,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             // Write payload
             using (var messageWriter = new ODataMessageWriter(messageToWrite, writerSettings, Model))
             {
-                var odataWriter = messageWriter.CreateODataFeedWriter(EntitySet, EntityType);
+                var odataWriter = messageWriter.CreateODataResourceSetWriter(EntitySet, EntityType);
 
                 // Add instance annotations to the feed.
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.Int32Annotation", PrimitiveValue1));
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.GuidAnnotation", PrimitiveValue2));
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("ShouldSkip.Int32Annotation", PrimitiveValue1));
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                 odataWriter.WriteStart(feedToWrite);
 
                 // Add instance annotations to the entry.
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.ComplexAnnotation", ComplexValue1));
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("ShouldSkip.ComplexAnnotation", ComplexValue1));
 

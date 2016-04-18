@@ -21,13 +21,13 @@ namespace Microsoft.OData.Core
     internal static class ReaderUtils
     {
         /// <summary>
-        /// Creates a new <see cref="ODataEntry"/> instance to return to the user.
+        /// Creates a new <see cref="ODataResource"/> instance to return to the user.
         /// </summary>
-        /// <returns>The newly created entry.</returns>
+        /// <returns>The newly created resource.</returns>
         /// <remarks>The method populates the Properties property with an empty read only enumeration.</remarks>
-        internal static ODataEntry CreateNewEntry()
+        internal static ODataResource CreateNewEntry()
         {
-            return new ODataEntry
+            return new ODataResource
             {
                 Properties = new ReadOnlyEnumerable<ODataProperty>()
             };
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core
         /// <param name="isCollection">true if the navigation link is a collection, false if it's a singleton or null if we don't know.</param>
         internal static void CheckForDuplicateNavigationLinkNameAndSetAssociationLink(
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            ODataNavigationLink navigationLink,
+            ODataNestedResourceInfo navigationLink,
             bool isExpanded,
             bool? isCollection)
         {
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(associationLinkName != null, "associationLinkName != null");
 
-            ODataNavigationLink navigationLink = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLinkName, associationLinkUrl);
+            ODataNestedResourceInfo navigationLink = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLinkName, associationLinkUrl);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
             if (navigationLink != null && navigationLink.AssociationLinkUrl == null && associationLinkUrl != null)

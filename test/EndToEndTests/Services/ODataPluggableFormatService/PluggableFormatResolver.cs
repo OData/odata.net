@@ -36,8 +36,8 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
             }
 
 #if ENABLE_AVRO
-            if (payloadKind == ODataPayloadKind.Feed
-                || payloadKind == ODataPayloadKind.Entry
+            if (payloadKind == ODataPayloadKind.ResourceSet
+                || payloadKind == ODataPayloadKind.Resource
                 || payloadKind == ODataPayloadKind.Property
                 || payloadKind == ODataPayloadKind.Collection
                 || payloadKind == ODataPayloadKind.Parameter

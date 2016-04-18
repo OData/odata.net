@@ -57,7 +57,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Start writing a feed.
         /// </summary>
         /// <param name="feed">Feed/collection to write.</param>
-        public override void WriteStart(ODataFeed feed)
+        public override void WriteStart(ODataResourceSet feed)
         {
             if (this.testConfiguration.Synchronous)
             {
@@ -79,7 +79,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// </summary>
         /// <param name="feed">Feed/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataFeed feed)
+        public override Task WriteStartAsync(ODataResourceSet resourceCollection)
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Start writing an entry.
         /// </summary>
         /// <param name="entry">Entry/item to write.</param>
-        public override void WriteStart(ODataEntry entry)
+        public override void WriteStart(ODataResource entry)
         {
             if (this.testConfiguration.Synchronous)
             {
@@ -111,7 +111,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// </summary>
         /// <param name="entry">Entry/item to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataEntry entry)
+        public override Task WriteStartAsync(ODataResource entry)
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
@@ -121,7 +121,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// Start writing a navigation link.
         /// </summary>
         /// <param name="navigationLink">Navigation link to write.</param>
-        public override void WriteStart(ODataNavigationLink navigationLink)
+        public override void WriteStart(ODataNestedResourceInfo navigationLink)
         {
             if (this.testConfiguration.Synchronous)
             {
@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// </summary>
         /// <param name="navigationLink">Navigation link to writer.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataNavigationLink navigationLink)
+        public override Task WriteStartAsync(ODataNestedResourceInfo navigationLink)
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <remarks>
         /// This method can only be called for writing request messages. The entity reference link must be surrounded
         /// by a navigation link written through WriteStart/WriteEnd.
-        /// The <see cref="ODataNavigationLink.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
         public override void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
@@ -214,7 +214,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <remarks>
         /// This method can only be called for writing request messages. The entity reference link must be surrounded
         /// by a navigation link written through WriteStart/WriteEnd.
-        /// The <see cref="ODataNavigationLink.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
         public override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)

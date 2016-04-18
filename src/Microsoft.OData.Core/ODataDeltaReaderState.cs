@@ -18,32 +18,32 @@ namespace Microsoft.OData.Core
         /// <summary>The start of a delta feed has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
-        /// an <see cref="ODataDeltaFeed"/> but no properties may be filled in until the DeltaFeedEnd state is reached.
+        /// an <see cref="ODataDeltaResourceSet"/> but no properties may be filled in until the DeltaFeedEnd state is reached.
         /// </remarks>
-        DeltaFeedStart,
+        DeltaResourceSetStart,
 
         /// <summary>The end of a delta feed has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
-        /// an <see cref="ODataDeltaFeed"/> with all properties filled in.
+        /// an <see cref="ODataDeltaResourceSet"/> with all properties filled in.
         /// </remarks>
-        FeedEnd,
+        DeltaResourceSetEnd,
 
-        /// <summary>The start of a delta entry has been read.</summary>
+        /// <summary>The start of a delta resource has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
-        /// an <see cref="ODataEntry"/> but no properties may be filled in until the EntryEnd state is reached.
+        /// an <see cref="ODataResource"/> but no properties may be filled in until the EntryEnd state is reached.
         /// </remarks>
-        DeltaEntryStart,
+        DeltaResourceStart,
 
-        /// <summary>The end of a delta entry has been read.</summary>
+        /// <summary>The end of a delta resource has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
-        /// an <see cref="ODataEntry"/> with all properties filled in.
+        /// an <see cref="ODataResource"/> with all properties filled in.
         /// </remarks>
-        DeltaEntryEnd,
+        DeltaResourceEnd,
 
-        /// <summary>An delta deleted entry was read.</summary>
+        /// <summary>An delta deleted resource was read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
         /// an <see cref="ODataDeltaDeletedEntry"/> which is fully populated.

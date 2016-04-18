@@ -144,8 +144,8 @@ namespace Microsoft.OData.Service
 
         /// <summary>
         /// Method to wrap the current DataServiceODataWriter with custom one to intercept 
-        /// WCF Data Services calls to ODataWriter. This enables seeing the ODataFeed/ODataEntry/
-        /// ODataNavigationLink instances that gets passed to underlying instance.
+        /// WCF Data Services calls to ODataWriter. This enables seeing the ODataResourceSet/ODataResource/
+        /// ODataNestedResourceInfo instances that gets passed to underlying instance.
         /// </summary>
         /// <param name="odataWriter">DataServiceODataWriter instance to wrap.</param>
         /// <returns>an instance of DataServiceODataWriter.</returns>

@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     public abstract class ODataOperation : ODataAnnotatable
     {
         /// <summary>the metadata builder for this operation.</summary>
-        private ODataEntityMetadataBuilder metadataBuilder;
+        private ODataResourceMetadataBuilder metadataBuilder;
 
         /// <summary>A human-readable description of the <see cref="ODataAction"/> or the <see cref="ODataFunction"/>.</summary>
         private string title;
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="builder">The metadata builder used to compute values from model annotations.</param>
         /// <param name="metadataDocumentUri">The metadata document Uri.</param>
-        internal void SetMetadataBuilder(ODataEntityMetadataBuilder builder, Uri metadataDocumentUri)
+        internal void SetMetadataBuilder(ODataResourceMetadataBuilder builder, Uri metadataDocumentUri)
         {
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri.IsAbsoluteUri");
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core
         /// Gets the metadata builder for this operation.
         /// </summary>
         /// <returns>The metadata builder used to compute values.</returns>
-        internal ODataEntityMetadataBuilder GetMetadataBuilder()
+        internal ODataResourceMetadataBuilder GetMetadataBuilder()
         {
             return this.metadataBuilder;
         }

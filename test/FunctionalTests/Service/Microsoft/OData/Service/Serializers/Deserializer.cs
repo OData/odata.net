@@ -865,7 +865,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Returns the target/child resource to bind to an resource, which might be getting inserted or modified.
+        /// Returns the target/child resource to bind to a resource, which might be getting inserted or modified.
         /// Since this is a target resource, null is a valid value here (for e.g. /Customers(1)/BestFriend value
         /// can be null)
         /// </summary>
@@ -880,7 +880,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Returns the target/child resource to bind to an resource, which might be getting inserted or modified.
+        /// Returns the target/child resource to bind to a resource, which might be getting inserted or modified.
         /// Since this is a target resource, null is a valid value here (for e.g. /Customers(1)/BestFriend value
         /// can be null)
         /// </summary>

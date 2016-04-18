@@ -77,7 +77,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, nothing else",
-                    Entry = new ODataEntry() { TypeName = "TestModel.NonMLEType" },
+                    Entry = new ODataResource() { TypeName = "TestModel.NonMLEType" },
                     Model = model,
                     EntitySet = nonMLESet,
                     Json = string.Join("$(NL)",
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, changes at the end - the one from the beginning is used (also for validation).",
-                    Entry = new ODataEntry() {
+                    Entry = new ODataResource() {
                             MediaResource = new ODataStreamReferenceValue(),
                             Properties = new []
                             {
@@ -113,7 +113,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName, ID and ETag at the beginning, nothing else",
-                    Entry = new ODataEntry() { TypeName = "TestModel.NonMLEType", Id = new Uri("urn:id"), ETag="etag" },
+                    Entry = new ODataResource() { TypeName = "TestModel.NonMLEType", Id = new Uri("urn:id"), ETag="etag" },
                     Model = model,
                     EntitySet = nonMLESet,
                     Json = string.Join("$(NL)",
@@ -127,7 +127,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, ID and ETag at the end, ID and ETag are not written and are ignored at the end",
-                    Entry = new ODataEntry() { TypeName = "TestModel.NonMLEType" }
+                    Entry = new ODataResource() { TypeName = "TestModel.NonMLEType" }
                         .WithAnnotation(new WriteEntryCallbacksAnnotation 
                             {
                                 BeforeWriteStartCallback = (entry) => { entry.Id = null; entry.ETag = null; },
@@ -144,7 +144,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Everything at the beginning",
-                    Entry = new ODataEntry() { 
+                    Entry = new ODataResource() { 
                         TypeName = "TestModel.MLEType",
                         Id = new Uri("urn:id"),
                         ETag = "etag",
@@ -184,7 +184,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName, Id, ETag and ReadLinks at the beginning, the rest at the end",
-                    Entry = new ODataEntry() { 
+                    Entry = new ODataResource() { 
                         TypeName = "TestModel.MLEType",
                         Id = new Uri("urn:id"),
                         ETag = "etag",
@@ -257,7 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             testDescriptors = testDescriptors.Concat(testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry, new ODataNavigationLink
+                    new ODataItem[] { testCase.Entry, new ODataNestedResourceInfo
                     {
                         Name = "NavProp",
                         IsCollection = true,
@@ -282,7 +282,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 .Concat(testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry, new ODataNavigationLink
+                    new ODataItem[] { testCase.Entry, new ODataNestedResourceInfo
                     {
                         Name = "NavProp",
                         IsCollection = true,
@@ -363,7 +363,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 "}}",
                 "}}");
 
-            var entryWithActionAndFunction = new ODataEntry() {TypeName = "TestModel.NonMLEType",};
+            var entryWithActionAndFunction = new ODataResource() {TypeName = "TestModel.NonMLEType",};
             entryWithActionAndFunction.AddAction(action);
             entryWithActionAndFunction.AddFunction(function);
             IEnumerable<EntryPayloadTestCase> testCases = new[]
@@ -400,7 +400,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             testDescriptors = testDescriptors.Concat(testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry, new ODataNavigationLink
+                    new ODataItem[] { testCase.Entry, new ODataNestedResourceInfo
                     {
                         Name = "NavProp",
                         IsCollection = true,
@@ -456,7 +456,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open primitive property.",
-                    Entry = new ODataEntry() 
+                    Entry = new ODataResource() 
                     { 
                         TypeName = "TestModel.OpenCustomerType", 
                         Properties = new ODataProperty[]
@@ -474,7 +474,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open spatial property.",
-                    Entry = new ODataEntry() 
+                    Entry = new ODataResource() 
                     { 
                         TypeName = "TestModel.OpenCustomerType", 
                         Properties = new ODataProperty[]
@@ -502,7 +502,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open complex property.",
-                    Entry = new ODataEntry() 
+                    Entry = new ODataResource() 
                     { 
                         TypeName = "TestModel.OpenCustomerType", 
                         Properties = new ODataProperty[]
@@ -572,7 +572,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with spatial property (expected and payload type don't match).",
-                    Entry = new ODataEntry() 
+                    Entry = new ODataResource() 
                     { 
                         TypeName = "TestModel.CustomerType", 
                         Properties = new ODataProperty[]
@@ -600,7 +600,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with spatial property (expected and payload type match).",
-                    Entry = new ODataEntry() 
+                    Entry = new ODataResource() 
                     { 
                         TypeName = "TestModel.CustomerType", 
                         Properties = new ODataProperty[]
@@ -658,7 +658,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
         private sealed class EntryPayloadTestCase
         {
             public string DebugDescription { get; set; }
-            public ODataEntry Entry { get; set; }
+            public ODataResource Entry { get; set; }
             public string Json { get; set; }
             public EdmModel Model { get; set; }
             public EdmEntitySet EntitySet { get; set; }

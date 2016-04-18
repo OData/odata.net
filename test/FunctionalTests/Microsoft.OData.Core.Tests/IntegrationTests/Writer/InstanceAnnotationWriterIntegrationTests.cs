@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 feedToWrite.Count = count;
                 feedToWrite.NextPageLink = nextLink;
                 feedToWrite.DeltaLink = deltaLink;
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 odataWriter.WriteStart(feedToWrite);
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.EndAnnotation", PrimitiveValue1));
                 feedToWrite.Count = count;
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 odataWriter.WriteStart(entryToWrite);
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.PrimitiveCollectionAnnotation", PrimitiveCollectionValue));
                 var editLinkUri = tempUri;
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.PrimitiveCollectionAnnotation", PrimitiveCollectionValue));
                 odataWriter.WriteStart(entryToWrite);
                 var editLinkUri = tempUri;
@@ -300,17 +300,18 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceSetNavigationProperty", IsCollection = true };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", IsCollection = true };
 
                 odataWriter.WriteStart(navLink);
 
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 odataWriter.WriteStart(feedToWrite);
 
-                entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+
+                entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", PrimitiveValue1));
                 entryToWrite.ETag = "ETag";
                 odataWriter.WriteStart(entryToWrite);
@@ -383,24 +384,24 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceSetNavigationProperty", IsCollection = true };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", IsCollection = true };
 
                 odataWriter.WriteStart(navLink);
 
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 odataWriter.WriteStart(feedToWrite);
 
-                entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", PrimitiveValue1));
                 odataWriter.WriteStart(entryToWrite);
                 entryToWrite.EditLink = tempUri;
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.EndAnnotation", PrimitiveValue1));
                 odataWriter.WriteEnd();
 
-                entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation2", PrimitiveValue1));
                 odataWriter.WriteStart(entryToWrite);
                 entryToWrite.ReadLink = tempUri;
@@ -461,13 +462,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceNavigationProperty", IsCollection = false };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceNavigationProperty", IsCollection = false };
                 odataWriter.WriteStart(navLink);
 
-                entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", PrimitiveValue1));
                 odataWriter.WriteStart(entryToWrite);
                 entryToWrite.EditLink = tempUri;
@@ -496,14 +497,14 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceSetNavigationProperty", IsCollection = true };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", IsCollection = true };
 
                 odataWriter.WriteStart(navLink);
 
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.StartFeedAnnotation", PrimitiveValue1));
 
                 odataWriter.WriteStart(feedToWrite);
@@ -526,13 +527,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceSetNavigationProperty", Url = new Uri("http://service/navLink", UriKind.RelativeOrAbsolute), IsCollection = true };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", Url = new Uri("http://service/navLink", UriKind.RelativeOrAbsolute), IsCollection = true };
                 odataWriter.WriteStart(navLink);
 
-                var feedToWrite = new ODataFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
                 odataWriter.WriteStart(feedToWrite);
 
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.StartFeedAnnotation", PrimitiveValue1));
@@ -666,7 +667,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
                 IODataRequestMessage requestMessageToWrite = new InMemoryMessage { Method = "GET", Stream = stream };
                 using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton)) ? messageWriter.CreateODataFeedWriter(navigationSource as EdmEntitySet, EntityType) : messageWriter.CreateODataEntryWriter(navigationSource, EntityType); ;
+                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton)) ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType) : messageWriter.CreateODataResourceWriter(navigationSource, EntityType); ;
                     action(odataWriter);
                 }
             }
@@ -676,7 +677,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
                 responseMessageToWrite.PreferenceAppliedHeader().AnnotationFilter = "*";
                 using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton)) ? messageWriter.CreateODataFeedWriter(navigationSource as EdmEntitySet, EntityType) : messageWriter.CreateODataEntryWriter(navigationSource, EntityType); ;
+                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton)) ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType) : messageWriter.CreateODataResourceWriter(navigationSource, EntityType); ;
                     action(odataWriter);
                 }
             }
@@ -691,7 +692,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataDeltaWriter> action = (odataWriter) =>
             {
-                var feedToWrite = new ODataDeltaFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataDeltaResourceSet { Id = new Uri("urn:feedId") };
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", PrimitiveValue1));
                 feedToWrite.Count = count;
                 feedToWrite.NextPageLink = nextLink;
@@ -707,7 +708,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
         {
             Action<ODataDeltaWriter> action = (odataWriter) =>
             {
-                var feedToWrite = new ODataDeltaFeed { Id = new Uri("urn:feedId") };
+                var feedToWrite = new ODataDeltaResourceSet { Id = new Uri("urn:feedId") };
                 odataWriter.WriteStart(feedToWrite);
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.EndAnnotation", PrimitiveValue1));
                 feedToWrite.Count = count;

@@ -46,13 +46,13 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
                             }
                         }
@@ -77,13 +77,13 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.AreEqual(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
                             }
                         }
@@ -138,13 +138,13 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.AreEqual(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
                             }
                         }

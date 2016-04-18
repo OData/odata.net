@@ -23,10 +23,10 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ShouldRaiseEntryStart()
         {
-            this.TestConfigureAction<ODataEntry>((config) =>
+            this.TestConfigureAction<ODataResource>((config) =>
             {
                 config.OnEntryStarted((ReadingEntryArgs args) => args.Entry.Id = new Uri("http://foo.org"));
-                return ODataReaderState.EntryStart;
+                return ODataReaderState.ResourceStart;
             },
             (entry) => entry.Id.Should().Be(new Uri("http://foo.org")));
         }
@@ -34,10 +34,10 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ShouldRaiseEntryEnd()
         {
-            this.TestConfigureAction<ODataEntry>((config) =>
+            this.TestConfigureAction<ODataResource>((config) =>
             {
                 config.OnEntryEnded((ReadingEntryArgs args) => args.Entry.Id = new Uri("http://foo.org"));
-                return ODataReaderState.EntryEnd;
+                return ODataReaderState.ResourceEnd;
             },
             (entry) => entry.Id.Should().Be(new Uri("http://foo.org")));
         }
@@ -45,10 +45,10 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ShouldRaiseFeedStart()
         {
-            this.TestConfigureAction<ODataFeed>((config) =>
+            this.TestConfigureAction<ODataResourceSet>((config) =>
             {
                 config.OnFeedStarted((ReadingFeedArgs args) => args.Feed.Id = new Uri("urn:foo"));
-                return ODataReaderState.FeedStart;
+                return ODataReaderState.ResourceSetStart;
             },
             (feed) => feed.Id.Should().Be(new Uri("urn:foo")));
         }
@@ -56,10 +56,10 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ShouldRaiseFeedEnd()
         {
-            this.TestConfigureAction<ODataFeed>((config) =>
+            this.TestConfigureAction<ODataResourceSet>((config) =>
             {
                 config.OnFeedEnded((ReadingFeedArgs args) => args.Feed.Id = new Uri("urn:foo"));
-                return ODataReaderState.FeedEnd;
+                return ODataReaderState.ResourceSetEnd;
             },
             (feed) => feed.Id.Should().Be(new Uri("urn:foo")));
         }
@@ -67,7 +67,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ShouldRaiseNavigationLinkStart()
         {
-            this.TestConfigureAction<ODataNavigationLink>((config) =>
+            this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
             {
                 config.OnNavigationLinkStarted((ReadingNavigationLinkArgs args) => args.Link.Name = "foo");
                 return ODataReaderState.NavigationLinkStart;
@@ -78,7 +78,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void ShouldRaiseNavigationLinkEnd()
         {
-            this.TestConfigureAction<ODataNavigationLink>((config) =>
+            this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
             {
                 config.OnNavigationLinkEnded((ReadingNavigationLinkArgs args) => args.Link.Name = "foo");
                 return ODataReaderState.NavigationLinkEnd;
@@ -90,7 +90,7 @@ namespace AstoriaUnitTests.Tests
         public void NoEventShouldBeFiredWhenReadIsFalse()
         {
             bool eventFiredIncorrectly = false;
-            TestODataReader reader = new TestODataReader() { new TestODataReaderItem(ODataReaderState.EntryStart, new ODataEntry()) };
+            TestODataReader reader = new TestODataReader() { new TestODataReaderItem(ODataReaderState.ResourceStart, new ODataResource()) };
             reader.ReadFunc = () => false;
             var responsePipeline = new DataServiceClientResponsePipelineConfiguration(new DataServiceContext(new Uri("http://www.foo.com")));
             responsePipeline.OnEntryStarted((ReadingEntryArgs args) => eventFiredIncorrectly = true);

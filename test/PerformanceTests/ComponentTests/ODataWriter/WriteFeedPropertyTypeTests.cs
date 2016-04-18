@@ -77,8 +77,8 @@ namespace Microsoft.OData.Performance
                 {
                     using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, isFullValidation: true))
                     {
-                        ODataWriter writer = messageWriter.CreateODataFeedWriter(entitySet, entitySet.EntityType());
-                        writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc") });
+                        ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
+                        writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
                         for (int i = 0; i < NumberOfEntries; ++i)
                         {
                             writer.WriteStart(entry);
@@ -92,11 +92,11 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        private ODataEntry GenerateEntry(string name)
+        private ODataResource GenerateEntry(string name)
         {
             var entitySet = Model.EntityContainer.FindEntitySet(name);
 
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
 
             List<ODataProperty> properties = new List<ODataProperty>();
 

@@ -32,16 +32,16 @@ namespace Microsoft.OData.Core
         /// <remarks>In this state the Name and Value properties of the <see cref="ODataParameterReader"/> return null.</remarks>
         Completed,
 
-        /// <summary>The reader is reading an entry parameter.</summary>
+        /// <summary>The reader is reading a resource parameter.</summary>
         /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
-        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateEntryReader() method on the <see cref="ODataParameterReader"/>
-        /// must be called to get the reader to read the entry value.</remarks>
-        Entry,
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateResourceReader() method on the <see cref="ODataParameterReader"/>
+        /// must be called to get the reader to read the resource value.</remarks>
+        Resource,
 
         /// <summary>The reader is reading a feed parameter.</summary>
         /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
-        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateFeedReader() method on the <see cref="ODataParameterReader"/>
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateResourceSetReader() method on the <see cref="ODataParameterReader"/>
         /// must be called to get the reader to read the feed value.</remarks>
-        Feed,
+        ResourceSet,
     }
 }

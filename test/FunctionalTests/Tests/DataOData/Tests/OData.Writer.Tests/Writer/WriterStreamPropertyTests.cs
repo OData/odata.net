@@ -127,7 +127,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     EdmEntitySet edmEntitySet = new EdmEntitySet(edmEntityContainer, "StreamPropertyEntitySet", edmEntityType);
                     edmEntityContainer.AddElement(edmEntitySet);
 
-                    ODataEntry entry = new ODataEntry()
+                    ODataResource entry = new ODataResource()
                     {
                         Id = ObjectModelUtils.DefaultEntryId,
                         ReadLink = ObjectModelUtils.DefaultEntryReadLink,
@@ -206,7 +206,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     if (testConfiguration.IsRequest)
                     {
-                        ODataEntry payloadEntry = (ODataEntry)testDescriptor.PayloadItems[0];
+                        ODataResource payloadEntry = (ODataResource)testDescriptor.PayloadItems[0];
                         ODataProperty firstStreamProperty = payloadEntry.Properties.Where(p => p.Value is ODataStreamReferenceValue).FirstOrDefault();
                         this.Assert.IsNotNull(firstStreamProperty, "firstStreamProperty != null");
 
@@ -357,11 +357,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.SelectMany(testCase =>
             {
-                ODataEntry entry = new ODataEntry()
+                ODataResource entry = new ODataResource()
                 {
                     TypeName = "TestModel.EntityTypeForStreams",
                     Properties = new ODataProperty[] { testCase.NamedStreamProperty },
-                    SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                    SerializationInfo = new ODataResourceSerializationInfo()
                     {
                         NavigationSourceEntityTypeName = "TestModel.EntityTypeForStreams",
                         ExpectedTypeName = "TestModel.EntityTypeForStreams",

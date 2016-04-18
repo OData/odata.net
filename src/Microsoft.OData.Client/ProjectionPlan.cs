@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client
         /// <param name="entry">Root entry to materialize.</param>
         /// <param name="expectedType">Expected type for the <paramref name="entry"/>.</param>
         /// <returns>The materialized object.</returns>
-        internal object Run(ODataEntityMaterializer materializer, ODataEntry entry, Type expectedType)
+        internal object Run(ODataEntityMaterializer materializer, ODataResource entry, Type expectedType)
         {
             Debug.Assert(materializer != null, "materializer != null");
             Debug.Assert(entry != null, "entry != null");

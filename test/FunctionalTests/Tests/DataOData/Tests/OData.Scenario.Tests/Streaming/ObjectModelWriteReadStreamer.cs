@@ -57,11 +57,11 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
-                    this.WriteTopLevelFeed(messageWriter, messageReader, (ODataFeed)payload);
+                case ODataPayloadKind.ResourceSet:
+                    this.WriteTopLevelFeed(messageWriter, messageReader, (ODataResourceSet)payload);
                     break;
-                case ODataPayloadKind.Entry:
-                    this.WriteTopLevelEntry(messageWriter, messageReader, (ODataEntry)payload);
+                case ODataPayloadKind.Resource:
+                    this.WriteTopLevelEntry(messageWriter, messageReader, (ODataResource)payload);
                     break;
                 default:
                     ExceptionUtilities.Assert(false, "The payload kind '{0}' is not yet supported by ObjectModelWriteReadStreamer.", payloadKind);
@@ -71,21 +71,21 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             return readItems.SingleOrDefault();
         }
 
-        private void WriteTopLevelFeed(ODataMessageWriterTestWrapper messageWriter, ODataMessageReaderTestWrapper messageReader, ODataFeed feed)
+        private void WriteTopLevelFeed(ODataMessageWriterTestWrapper messageWriter, ODataMessageReaderTestWrapper messageReader, ODataResourceSet feed)
         {
-            var feedWriter = messageWriter.CreateODataFeedWriter();
-            Lazy<ODataReader> lazyReader = new Lazy<ODataReader>(() => messageReader.CreateODataFeedReader());
+            var feedWriter = messageWriter.CreateODataResourceSetWriter();
+            Lazy<ODataReader> lazyReader = new Lazy<ODataReader>(() => messageReader.CreateODataResourceSetReader());
             this.WriteFeed(feedWriter, lazyReader, feed);
         }
 
-        private void WriteTopLevelEntry(ODataMessageWriterTestWrapper messageWriter, ODataMessageReaderTestWrapper messageReader, ODataEntry entry)
+        private void WriteTopLevelEntry(ODataMessageWriterTestWrapper messageWriter, ODataMessageReaderTestWrapper messageReader, ODataResource entry)
         {
-            ODataWriter entryWriter = messageWriter.CreateODataEntryWriter();
-            Lazy<ODataReader> lazyEntryReader = new Lazy<ODataReader>(() => messageReader.CreateODataEntryReader());
+            ODataWriter entryWriter = messageWriter.CreateODataResourceWriter();
+            Lazy<ODataReader> lazyEntryReader = new Lazy<ODataReader>(() => messageReader.CreateODataResourceReader());
             this.WriteEntry(entryWriter, lazyEntryReader, entry);
         }
 
-        private void WriteFeed(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataFeed feed)
+        private void WriteFeed(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataResourceSet feed)
         {
             this.WriteStart(writer, feed);
             var annotation = feed.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>();
@@ -98,15 +98,15 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                 }
             }
 
-            this.WriteEnd(writer, ODataReaderState.FeedEnd);
+            this.WriteEnd(writer, ODataReaderState.ResourceSetEnd);
             this.Read(lazyReader);
         }
         
-        private void WriteEntry(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataEntry entry)
+        private void WriteEntry(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataResource entry)
         {
             this.WriteStart(writer, entry);
             var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
-            ODataNavigationLink navLink = null;
+            ODataNestedResourceInfo navLink = null;
             if (annotation != null)
             {
                 for (int i = 0; i < annotation.Count; ++i)
@@ -117,24 +117,24 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                 }
             }
             
-            this.WriteEnd(writer, ODataReaderState.EntryEnd);
+            this.WriteEnd(writer, ODataReaderState.ResourceEnd);
             this.Read(lazyReader);
         }
 
-        private void WriteNavigationLink(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataNavigationLink link)
+        private void WriteNavigationLink(ODataWriter writer, Lazy<ODataReader> lazyReader, ODataNestedResourceInfo link)
         {
             this.WriteStart(writer, link);
             var expanded = link.GetAnnotation<ODataNavigationLinkExpandedItemObjectModelAnnotation>();
             if (expanded != null)
             {
-                var feed = expanded.ExpandedItem as ODataFeed;
+                var feed = expanded.ExpandedItem as ODataResourceSet;
                 if (feed != null)
                 {
                     this.WriteFeed(writer, lazyReader, feed);
                 }
                 else
                 {
-                    ODataEntry entry = expanded.ExpandedItem as ODataEntry;
+                    ODataResource entry = expanded.ExpandedItem as ODataResource;
                     if (entry != null || expanded.ExpandedItem == null)
                     {
                         this.WriteEntry(writer, lazyReader, entry);
@@ -166,10 +166,10 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                 ExceptionUtilities.Assert(lazyReader.Value.State == state, "Expected %1, Found %2", state, lazyReader.Value.State);
                 switch (state)
                 {
-                    case ODataReaderState.FeedStart:
+                    case ODataReaderState.ResourceSetStart:
                         if (readItems.Count > 0)
                         {
-                            ODataNavigationLink navLink = (ODataNavigationLink)readItems.Peek();
+                            ODataNestedResourceInfo navLink = (ODataNestedResourceInfo)readItems.Peek();
                             var annotation = navLink.GetAnnotation<ODataNavigationLinkExpandedItemObjectModelAnnotation>();
                             if (annotation == null)
                             {
@@ -182,11 +182,11 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 
                         readItems.Push(lazyReader.Value.Item);
                         break;
-                    case ODataReaderState.EntryStart:
-                        var currentEntry = (ODataEntry)lazyReader.Value.Item;
+                    case ODataReaderState.ResourceStart:
+                        var currentEntry = (ODataResource)lazyReader.Value.Item;
                         if (readItems.Count > 0)
                         {
-                            ODataFeed feed = readItems.Peek() as ODataFeed;
+                            ODataResourceSet feed = readItems.Peek() as ODataResourceSet;
                             if (feed != null)
                             {
                                 var annotation = feed.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>();
@@ -195,11 +195,11 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                                     annotation = new ODataFeedEntriesObjectModelAnnotation();
                                     feed.SetAnnotation(annotation);
                                 }
-                                annotation.Add((ODataEntry)lazyReader.Value.Item);
+                                annotation.Add((ODataResource)lazyReader.Value.Item);
                             }
                             else
                             {
-                                ODataNavigationLink navLink = (ODataNavigationLink)readItems.Peek();
+                                ODataNestedResourceInfo navLink = (ODataNestedResourceInfo)readItems.Peek();
                                 var annotation = navLink.GetAnnotation<ODataNavigationLinkExpandedItemObjectModelAnnotation>();
                                 if (annotation == null)
                                 {
@@ -214,7 +214,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                         readItems.Push(currentEntry);
                         break;
                     case ODataReaderState.NavigationLinkStart:
-                        ODataEntry entry = (ODataEntry)readItems.Peek();
+                        ODataResource entry = (ODataResource)readItems.Peek();
                         var navLinksAnnotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
                         if (navLinksAnnotation == null)
                         {
@@ -222,12 +222,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                             entry.SetAnnotation(navLinksAnnotation);
                         }
 
-                        navLinksAnnotation.Add((ODataNavigationLink)lazyReader.Value.Item, entry.Properties.Count() + navLinksAnnotation.Count);
+                        navLinksAnnotation.Add((ODataNestedResourceInfo)lazyReader.Value.Item, entry.Properties.Count() + navLinksAnnotation.Count);
                         readItems.Push(lazyReader.Value.Item);
                         break;
 
-                    case ODataReaderState.EntryEnd:
-                    case ODataReaderState.FeedEnd:
+                    case ODataReaderState.ResourceEnd:
+                    case ODataReaderState.ResourceSetEnd:
                     case ODataReaderState.NavigationLinkEnd:
                         if (readItems.Count() > 1)
                             readItems.Pop();
@@ -240,23 +240,23 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 
         private void WriteStart(ODataWriter writer, ODataItem item)
         {
-            var feed = item as ODataFeed;
+            var feed = item as ODataResourceSet;
             if (feed != null)
             {
-                this.expectedStates.Add(ODataReaderState.FeedStart);
+                this.expectedStates.Add(ODataReaderState.ResourceSetStart);
                 writer.WriteStart(feed);
                 return;
             }
 
-            var entry = item as ODataEntry;
+            var entry = item as ODataResource;
             if (entry != null)
             {
-                this.expectedStates.Add(ODataReaderState.EntryStart);
+                this.expectedStates.Add(ODataReaderState.ResourceStart);
                 writer.WriteStart(entry);
                 return;
             }
 
-            var navLink = item as ODataNavigationLink;
+            var navLink = item as ODataNestedResourceInfo;
             if (navLink != null)
             {
                 this.expectedStates.Add(ODataReaderState.NavigationLinkStart);

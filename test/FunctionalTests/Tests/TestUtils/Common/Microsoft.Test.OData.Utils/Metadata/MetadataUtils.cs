@@ -205,7 +205,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="namespaceName">The namespace name for the new type(s).</param>
         /// <param name="entry">The entry to create the metadata for.</param>
         /// <returns>The entity type of the created entity.</returns>
-        public static IEdmEntityType CreateEntityMetadata(string namespaceName, ODataEntry entry, out IEdmModel model)
+        public static IEdmEntityType CreateEntityMetadata(string namespaceName, ODataResource entry, out IEdmModel model)
         {
             var metadata = new ConstructableMetadata("DefaultContainer", namespaceName);
             
@@ -1171,7 +1171,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="entry">Entry whose typename to get.</param>
         /// <param name="namespaceName">Namespace prefix to remove.</param>
         /// <returns>The unqualified type name.</returns>
-        private static string GetUnqualifiedTypeName(this ODataEntry entry, string namespaceName)
+        private static string GetUnqualifiedTypeName(this ODataResource entry, string namespaceName)
         {
             return entry.TypeName.Substring(namespaceName.Length + 1);
         }

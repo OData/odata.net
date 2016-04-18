@@ -21,7 +21,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void NoContentMaterializeTestForEntry()
         {
-            this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Entry);
+            this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Resource);
         }
 
         [TestMethod]

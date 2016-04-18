@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         /// <remarks>
         /// This property returns a primitive value, an ODataComplexValue or null when State is ODataParameterReaderState.Value.
-        /// This property returns null when State is ODataParameterReaderState.Entry, ODataParameterReaderState.Feed or ODataParameterReaderState.Collection.
+        /// This property returns null when State is ODataParameterReaderState.Entry, ODataParameterReaderState.ResourceSet or ODataParameterReaderState.Collection.
         /// </remarks>
         public override object Value
         {
@@ -91,22 +91,22 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
         /// <returns>Returns an <see cref="ODataReader"/> to read the entry value when the state is ODataParameterReaderState.Entry.</returns>
-        public override ODataReader CreateEntryReader()
+        public override ODataReader CreateResourceReader()
         {
-            return new ODataReaderTestWrapper(this.parameterReader.CreateEntryReader(), this.testConfiguration);
+            return new ODataReaderTestWrapper(this.parameterReader.CreateResourceReader(), this.testConfiguration);
         }
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.
+        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.
         /// </summary>
         /// <remarks>
-        /// When the state is ODataParameterReaderState.Feed, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.</returns>
-        public override ODataReader CreateFeedReader()
+        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.</returns>
+        public override ODataReader CreateResourceSetReader()
         {
-            return new ODataReaderTestWrapper(this.parameterReader.CreateFeedReader(), this.testConfiguration);
+            return new ODataReaderTestWrapper(this.parameterReader.CreateResourceSetReader(), this.testConfiguration);
         }
 
         /// <summary>

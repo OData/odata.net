@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataEntry.cs" company="Microsoft">
+// <copyright file="ODataResource.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -19,54 +19,54 @@ namespace Microsoft.OData.Core
     /// Represents a single entity.
     /// </summary>
     [DebuggerDisplay("Id: {Id} TypeName: {TypeName}")]
-    public sealed class ODataEntry : ODataItem
+    public sealed class ODataResource : ODataItem
     {
-        /// <summary>the metadata builder for this OData entry.</summary>
-        private ODataEntityMetadataBuilder metadataBuilder;
+        /// <summary>the metadata builder for this OData resource.</summary>
+        private ODataResourceMetadataBuilder metadataBuilder;
 
-        /// <summary>The entry ETag, as provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The resource ETag, as provided by the user or seen on the wire (never computed).</summary>
         private string etag;
 
         /// <summary>true if an etag was provided by the user or seen on the wire, false otherwise.</summary>
         private bool hasNonComputedETag;
 
-        /// <summary>The Entry ID, as provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The Resource ID, as provided by the user or seen on the wire (never computed).</summary>
         private Uri id;
 
         /// <summary>true if an id was provided by the user or seen on the wire, false otherwise.</summary>
         private bool hasNonComputedId;
 
-        /// <summary>Link used to edit the entry, as provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>Link used to edit the resource, as provided by the user or seen on the wire (never computed).</summary>
         private Uri editLink;
 
         /// <summary>true if an edit link was provided by the user or seen on the wire, false otherwise.</summary>
         private bool hasNonComputedEditLink;
 
-        /// <summary>A link that can be used to read the entry, as provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>A link that can be used to read the resource, as provided by the user or seen on the wire (never computed).</summary>
         private Uri readLink;
 
         /// <summary>true if a read link was provided by the user or seen on the wire, false otherwise.</summary>
         private bool hasNonComputedReadLink;
 
-        /// <summary>The default media resource of the media link entry, as provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The default media resource of the media link resource, as provided by the user or seen on the wire (never computed).</summary>
         private ODataStreamReferenceValue mediaResource;
 
-        /// <summary>The entry properties provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The resource properties provided by the user or seen on the wire (never computed).</summary>
         private IEnumerable<ODataProperty> properties;
         
-        /// <summary>The entry actions provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The resource actions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataAction> actions = new List<ODataAction>();
 
-        /// <summary>The entry functions provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The resource functions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataFunction> functions = new List<ODataFunction>();
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataEntry"/>.
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResource"/>.
         /// </summary>
-        private ODataFeedAndEntrySerializationInfo serializationInfo;
+        private ODataResourceSerializationInfo serializationInfo;
 
-        /// <summary>Gets or sets the entry ETag.</summary>
-        /// <returns>The entry ETag.</returns>
+        /// <summary>Gets or sets the resource ETag.</summary>
+        /// <returns>The resource ETag.</returns>
         public string ETag
         {
             get
@@ -81,8 +81,8 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>Gets or sets the Entry identifier.</summary>
-        /// <returns>The Entry identifier.</returns>
+        /// <summary>Gets or sets the Resource identifier.</summary>
+        /// <returns>The Resource identifier.</returns>
         public Uri Id
         {
             get
@@ -97,8 +97,8 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>Gets or sets the link used to edit the entry.</summary>
-        /// <returns>The link used to edit the entry.</returns>
+        /// <summary>Gets or sets the link used to edit the resource.</summary>
+        /// <returns>The link used to edit the resource.</returns>
         public Uri EditLink
         {
             get
@@ -113,16 +113,16 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>Gets or sets the value that shows if the entry is a transient entry or not</summary>
-        /// <returns>true if the entry is a transient entity, false otherwise.</returns>
+        /// <summary>Gets or sets the value that shows if the resource is a transient resource or not</summary>
+        /// <returns>true if the resource is a transient entity, false otherwise.</returns>
         public bool IsTransient
         {
             get;
             set;
         }
 
-        /// <summary>Gets or sets a link that can be used to read the entry.</summary>
-        /// <returns>The link that can be used to read the entry.</returns>
+        /// <summary>Gets or sets a link that can be used to read the resource.</summary>
+        /// <returns>The link that can be used to read the resource.</returns>
         public Uri ReadLink
         {
             get
@@ -137,8 +137,8 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>Gets or sets the default media resource of the media link entry.</summary>
-        /// <returns>The default media resource of the media link entry.</returns>
+        /// <summary>Gets or sets the default media resource of the media link resource.</summary>
+        /// <returns>The default media resource of the media link resource.</returns>
         public ODataStreamReferenceValue MediaResource
         {
             get { return this.MetadataBuilder.GetMediaResource(); }
@@ -159,8 +159,8 @@ namespace Microsoft.OData.Core
             get { return this.MetadataBuilder.GetFunctions(); }
         }
 
-        /// <summary>Gets or sets the entry properties.</summary>
-        /// <returns>The entry properties.</returns>
+        /// <summary>Gets or sets the resource properties.</summary>
+        /// <returns>The resource properties.</returns>
         /// <remarks>
         /// Non-property content goes to annotations.
         /// </remarks>
@@ -170,8 +170,8 @@ namespace Microsoft.OData.Core
             set { this.properties = value; }
         }
 
-        /// <summary>Gets or sets the type name of the entry.</summary>
-        /// <returns>The type name of the entry.</returns>
+        /// <summary>Gets or sets the type name of the resource.</summary>
+        /// <returns>The type name of the resource.</returns>
         public string TypeName
         {
             get;
@@ -189,15 +189,15 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The metadata builder for this OData entry.
+        /// The metadata builder for this OData resource.
         /// </summary>
-        internal ODataEntityMetadataBuilder MetadataBuilder
+        internal ODataResourceMetadataBuilder MetadataBuilder
         {
             get
             {
                 if (this.metadataBuilder == null)
                 {
-                    this.metadataBuilder = new NoOpEntityMetadataBuilder(this);
+                    this.metadataBuilder = new NoOpResourceMetadataBuilder(this);
                 }
 
                 return this.metadataBuilder;
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entry's Id property that has been set directly, and was not computed using the metadata builder.
+        /// Returns the resource's Id property that has been set directly, and was not computed using the metadata builder.
         /// </summary>
         internal Uri NonComputedId
         {
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entry's EditLink property that has been set directly, and was not computed using the metadata builder.
+        /// Returns the resource's EditLink property that has been set directly, and was not computed using the metadata builder.
         /// </summary>
         internal Uri NonComputedEditLink
         {
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entry's ReadLink property that has been set directly, and was not computed using the metadata builder.
+        /// Returns the resource's ReadLink property that has been set directly, and was not computed using the metadata builder.
         /// </summary>
         internal Uri NonComputedReadLink
         {
@@ -277,7 +277,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entry's ETag property that has been set directly, and was not computed using the metadata builder.
+        /// Returns the resource's ETag property that has been set directly, and was not computed using the metadata builder.
         /// </summary>
         internal string NonComputedETag
         {
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>Returns the default media resource of the media link entry that has been set directly and was not computed using the metadata builder.</summary>
+        /// <summary>Returns the default media resource of the media link resource that has been set directly and was not computed using the metadata builder.</summary>
         internal ODataStreamReferenceValue NonComputedMediaResource
         {
             get
@@ -336,9 +336,9 @@ namespace Microsoft.OData.Core
 
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataEntry"/>.
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResource"/>.
         /// </summary>
-        internal ODataFeedAndEntrySerializationInfo SerializationInfo
+        internal ODataResourceSerializationInfo SerializationInfo
         {
             get
             {
@@ -347,12 +347,12 @@ namespace Microsoft.OData.Core
 
             set
             {
-                this.serializationInfo = ODataFeedAndEntrySerializationInfo.Validate(value);
+                this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
             }
         }
 
         /// <summary>
-        /// Add action to entry.
+        /// Add action to resource.
         /// </summary>
         /// <param name="action">The action to add.</param>
         public void AddAction(ODataAction action)
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Add function to entry.
+        /// Add function to resource.
         /// </summary>
         /// <param name="function">The function to add.</param>
         public void AddFunction(ODataFunction function)

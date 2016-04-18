@@ -109,7 +109,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     {
                         responseMessage.SetStatusCode(HttpStatusCode.Created);
                         var edmEntitySet = (IEdmEntitySetBase)this.QueryContext.Target.NavigationSource;
-                        ResponseWriter.WriteEntry(messageWriter.CreateODataEntryWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
+                        ResponseWriter.WriteEntry(messageWriter.CreateODataResourceWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 responseMessage.SetStatusCode(HttpStatusCode.OK);
                 var edmEntitySet = (IEdmEntitySetBase)parentContext.Target.NavigationSource;
-                ResponseWriter.WriteEntry(messageWriter.CreateODataEntryWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
+                ResponseWriter.WriteEntry(messageWriter.CreateODataResourceWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
             }
         }
 

@@ -765,14 +765,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             //testCases.Add(
             //    new ConvertToUriLiteralTestCase()
             //    {
-            //        Parameter = new ODataEntry(),
-            //        ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.Core.ODataEntry"),
+            //        Parameter = new ODataResource(),
+            //        ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.Core.ODataResource"),
             //    });
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
                 {
-                    Parameter = new ODataFeed(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.Core.ODataFeed"),
+                    Parameter = new ODataResourceSet(),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.Core.ODataResourceSet"),
                 });
             testCases.Add(
                 new ConvertToUriLiteralTestCase()

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IODataEntryMetadataContext.cs" company="Microsoft">
+// <copyright file="IODataResourceMetadataContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,35 +10,35 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Interface used for substitutability of the metadata-centric responsibilities of an entry.
-    /// Metadata may come from a user-provided model or from the SetSerializationInfo() method on a feed or entry. The latter is considered the "no-model" case since only strings
-    /// are provided, and there is no interconnectedness. The goal of this interface is to provide a way to query the metadata information available on an entry without
+    /// Interface used for substitutability of the metadata-centric responsibilities of a resource.
+    /// Metadata may come from a user-provided model or from the SetSerializationInfo() method on a feed or resource. The latter is considered the "no-model" case since only strings
+    /// are provided, and there is no interconnectedness. The goal of this interface is to provide a way to query the metadata information available on a resource without
     /// needing to know where the metadata originated from.
     /// </summary>
-    internal interface IODataEntryMetadataContext
+    internal interface IODataResourceMetadataContext
     {
         /// <summary>
-        /// The entry instance.
+        /// The resource instance.
         /// </summary>
-        ODataEntry Entry { get; }
+        ODataResource Resource { get; }
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the entry.
+        /// The context object to answer basic questions regarding the type of the resource.
         /// </summary>
-        IODataFeedAndEntryTypeContext TypeContext { get; }
+        IODataResourceTypeContext TypeContext { get; }
 
         /// <summary>
-        /// The actual entity type of the entry, i.e. ODataEntry.TypeName.
+        /// The actual entity type of the resource, i.e. ODataResource.TypeName.
         /// </summary>
         string ActualEntityTypeName { get; }
 
         /// <summary>
-        /// The key property name and value pairs of the entry.
+        /// The key property name and value pairs of the resource.
         /// </summary>
         ICollection<KeyValuePair<string, object>> KeyProperties { get; }
 
         /// <summary>
-        /// The ETag property name and value pairs of the entry.
+        /// The ETag property name and value pairs of the resource.
         /// </summary>
         IEnumerable<KeyValuePair<string, object>> ETagProperties { get; }
 

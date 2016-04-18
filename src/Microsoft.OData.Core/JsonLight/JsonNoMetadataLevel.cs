@@ -47,31 +47,31 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates the metadata builder for the given entry. If such a builder is set, asking for payload
-        /// metadata properties (like EditLink) of the entry may return a value computed by convention, 
+        /// Creates the metadata builder for the given resource. If such a builder is set, asking for payload
+        /// metadata properties (like EditLink) of the resource may return a value computed by convention, 
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
-        /// <param name="entry">The entry to create the metadata builder for.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry or feed.</param>
-        /// <param name="serializationInfo">The serialization info for the entry.</param>
-        /// <param name="actualEntityType">The entity type of the entry.</param>
+        /// <param name="resource">The resource to create the metadata builder for.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or feed.</param>
+        /// <param name="serializationInfo">The serialization info for the resource.</param>
+        /// <param name="actualEntityType">The entity type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="isResponse">true if the entity metadata builder to create should be for a response payload; false for a request.</param>
         /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
-        internal override ODataEntityMetadataBuilder CreateEntityMetadataBuilder(
-            ODataEntry entry, 
-            IODataFeedAndEntryTypeContext typeContext, 
-            ODataFeedAndEntrySerializationInfo serializationInfo, 
+        internal override ODataResourceMetadataBuilder CreateEntityMetadataBuilder(
+            ODataResource resource, 
+            IODataResourceTypeContext typeContext, 
+            ODataResourceSerializationInfo serializationInfo,
             IEdmEntityType actualEntityType, 
             SelectedPropertiesNode selectedProperties, 
             bool isResponse, 
             bool? keyAsSegment,
             ODataUri odataUri)
         {
-            return ODataEntityMetadataBuilder.Null;
+            return ODataResourceMetadataBuilder.Null;
         }
     }
 }

@@ -105,36 +105,36 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
         // These tests use private reflection and thus cannot run on Silverlight or the phone.
-        [TestMethod, Variation(Description = "Test the IEdmValue implementation for an ODataEntry.")]
+        [TestMethod, Variation(Description = "Test the IEdmValue implementation for an ODataResource.")]
         public void ODataEntryEdmValueTest()
         {
             IEdmModel model = Test.OData.Utils.Metadata.TestModels.BuildEdmValueModel();
 
-            ODataEntry[] entries = new ODataEntry[]
+            ODataResource[] entries = new ODataResource[]
             {
                 // Entry with a single primitive property
-                new ODataEntry { TypeName = "TestModel.SinglePrimitivePropertyEntityType", Properties = singlePrimitiveProperty },
+                new ODataResource { TypeName = "TestModel.SinglePrimitivePropertyEntityType", Properties = singlePrimitiveProperty },
 
                 // Entry with a single null property
-                new ODataEntry { TypeName = "TestModel.SinglePrimitivePropertyEntityType", Properties = singleNullProperty },
+                new ODataResource { TypeName = "TestModel.SinglePrimitivePropertyEntityType", Properties = singleNullProperty },
 
                 // Entry with all primitive typed properties
-                new ODataEntry { TypeName = "TestModel.AllPrimitivePropertiesEntityType", Properties = allPrimitiveProperties },
+                new ODataResource { TypeName = "TestModel.AllPrimitivePropertiesEntityType", Properties = allPrimitiveProperties },
 
                 // Entry with complex property
-                new ODataEntry { TypeName = "TestModel.SingleComplexPropertyEntityType", Properties = complexProperty },
+                new ODataResource { TypeName = "TestModel.SingleComplexPropertyEntityType", Properties = complexProperty },
 
                 // Entry with nested complex property
-                new ODataEntry { TypeName = "TestModel.SingleComplexPropertyEntityType", Properties = nestedComplexProperty },
+                new ODataResource { TypeName = "TestModel.SingleComplexPropertyEntityType", Properties = nestedComplexProperty },
 
                 // Entry with primitive collection property
-                new ODataEntry { TypeName = "TestModel.SinglePrimitiveCollectionPropertyEntityType", Properties = primitiveCollectionProperty },
+                new ODataResource { TypeName = "TestModel.SinglePrimitiveCollectionPropertyEntityType", Properties = primitiveCollectionProperty },
 
                 // Entry with complex collection property
-                new ODataEntry { TypeName = "TestModel.SingleComplexCollectionPropertyEntityType", Properties = complexCollectionProperty },
+                new ODataResource { TypeName = "TestModel.SingleComplexCollectionPropertyEntityType", Properties = complexCollectionProperty },
 
                 // Entry with different kinds of properties
-                new ODataEntry { TypeName = "TestModel.DifferentPropertyKindsEntityType", Properties = differentPropertyKinds },
+                new ODataResource { TypeName = "TestModel.DifferentPropertyKindsEntityType", Properties = differentPropertyKinds },
             };
 
             this.CombinatorialEngineProvider.RunCombinations(

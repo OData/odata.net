@@ -224,7 +224,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The value of the property annotation.</returns>
         /// <remarks>
         /// This method should read the property annotation value and return a representation of the value which will be later
-        /// consumed by the entry reading code, or throw if ther is something unexpected.
+        /// consumed by the resource reading code, or throw if ther is something unexpected.
         /// 
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property annotation property
         ///                 JsonNodeType.StartObject

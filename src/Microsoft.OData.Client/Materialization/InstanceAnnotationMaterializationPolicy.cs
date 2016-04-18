@@ -106,7 +106,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="entry">Odata entry</param>
         /// <param name="entity">Client clr object for the OData entry</param>
-        internal void SetInstanceAnnotations(ODataEntry entry, object entity)
+        internal void SetInstanceAnnotations(ODataResource entry, object entity)
         {
             if (entry != null)
             {
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="navigationProperty">OData single navigation property</param>
         /// <param name="type">The type of the declaringInstance</param>
         /// <param name="declaringInstance">the client object that the navigation property belongs to</param>
-        internal void SetInstanceAnnotations(string navigationPropertyName, ODataEntry navigationProperty, Type type, object declaringInstance)
+        internal void SetInstanceAnnotations(string navigationPropertyName, ODataResource navigationProperty, Type type, object declaringInstance)
         {
             if (navigationProperty != null)
             {

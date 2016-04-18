@@ -98,21 +98,21 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
             using (var messageReader = new ODataMessageReader(responseMessage, GetAvroReaderSettings(), Model))
             {
-                var reader = messageReader.CreateODataEntryReader();
+                var reader = messageReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = reader.Item as ODataEntry;
+                        entry = reader.Item as ODataResource;
                     }
                 }
             }
 
             Assert.IsNotNull(entry);
-            ODataEntry expected = new ODataEntry
+            ODataResource expected = new ODataResource
             {
                 Properties = new[]
                 {
@@ -146,21 +146,21 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
 
-            IList<ODataEntry> entries = new List<ODataEntry>();
+            IList<ODataResource> entries = new List<ODataResource>();
             using (var messageReader = new ODataMessageReader(responseMessage, GetAvroReaderSettings(), Model))
             {
-                var reader = messageReader.CreateODataFeedReader();
+                var reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entries.Add((ODataEntry)reader.Item);
+                        entries.Add((ODataResource)reader.Item);
                     }
                 }
             }
 
             Assert.AreEqual(3, entries.Count);
-            ODataEntry product2 = new ODataEntry
+            ODataResource product2 = new ODataResource
             {
                 Properties = new[]
                 {
@@ -198,7 +198,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void InvokeAvroAction()
         {
-            ODataEntry product1 = new ODataEntry
+            ODataResource product1 = new ODataResource
             {
                 TypeName = "Microsoft.Test.OData.Services.PluggableFormat.Product",
                 Properties = new[]
@@ -230,7 +230,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var pw = mw.CreateODataParameterWriter(action);
                 pw.WriteStart();
-                var ew = pw.CreateEntryWriter("Value");
+                var ew = pw.CreateResourceWriter("Value");
                 {
                     ew.WriteStart(product1);
                     ew.WriteEnd();
@@ -248,15 +248,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(1)", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "avro/binary");
             responseMessage = requestMessage.GetResponse();
-            ODataEntry entry = null;
+            ODataResource entry = null;
             using (var messageReader = new ODataMessageReader(responseMessage, GetAvroReaderSettings(), Model))
             {
-                var reader = messageReader.CreateODataEntryReader();
+                var reader = messageReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = reader.Item as ODataEntry;
+                        entry = reader.Item as ODataResource;
                     }
                 }
             }

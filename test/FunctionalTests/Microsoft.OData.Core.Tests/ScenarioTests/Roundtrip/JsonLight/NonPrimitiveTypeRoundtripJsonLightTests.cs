@@ -178,7 +178,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         private void VerifyNonPrimitiveTypeRoundtrip(object value, string propertyName)
         {
             var properties = new[] { new ODataProperty { Name = propertyName, Value = value } };
-            var entry = new ODataEntry() { TypeName = "NS.Student", Properties = properties };
+            var entry = new ODataResource() { TypeName = "NS.Student", Properties = properties };
 
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             MemoryStream stream = new MemoryStream();
@@ -216,9 +216,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 var jsonLightReader = new ODataJsonLightReader(inputContext, this.studentSet, this.studentInfo, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
                 {
-                    if (jsonLightReader.State == ODataReaderState.EntryEnd)
+                    if (jsonLightReader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataEntry entryOut = jsonLightReader.Item as ODataEntry;
+                        ODataResource entryOut = jsonLightReader.Item as ODataResource;
                         actualValue = entryOut.Properties.Single(p => p.Name == propertyName).ODataValue;
                     }
                 }

@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core
         /// <returns> The value of the current parameter that is being read. </returns>
         /// <remarks>
         /// This property returns a primitive value, an ODataComplexValue or null when State is ODataParameterReaderState.Value.
-        /// This property returns null when State is ODataParameterReaderState.Entry, ODataParameterReaderState.Feed or ODataParameterReaderState.Collection.
+        /// This property returns null when State is ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet or ODataParameterReaderState.Collection.
         /// </remarks>
         public abstract object Value
         {
@@ -42,24 +42,24 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the entry value when the state is ODataParameterReaderState.Entry.
+        /// This method creates an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
         /// </summary>
         /// <remarks>
-        /// When the state is ODataParameterReaderState.Entry, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the entry value when the state is ODataParameterReaderState.Entry.</returns>
-        public abstract ODataReader CreateEntryReader();
+        /// <returns>Returns an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.</returns>
+        public abstract ODataReader CreateResourceReader();
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.
+        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.
         /// </summary>
         /// <remarks>
-        /// When the state is ODataParameterReaderState.Feed, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.</returns>
-        public abstract ODataReader CreateFeedReader();
+        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.</returns>
+        public abstract ODataReader CreateResourceSetReader();
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection. </summary>
         /// <returns>An <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection.</returns>

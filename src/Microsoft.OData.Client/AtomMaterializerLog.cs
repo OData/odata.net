@@ -35,10 +35,10 @@ namespace Microsoft.OData.Client
         private readonly EntityTrackerBase entityTracker;
 
         /// <summary>Dictionary of identity URI to instances created during previous AppendOnly moves.</summary>
-        private readonly Dictionary<Uri, ODataEntry> appendOnlyEntries;
+        private readonly Dictionary<Uri, ODataResource> appendOnlyEntries;
 
         /// <summary>Dictionary of identity URI to tracked entities.</summary>
-        private readonly Dictionary<Uri, ODataEntry> identityStack;
+        private readonly Dictionary<Uri, ODataResource> identityStack;
 
         /// <summary>List of link descriptors (data for links and state).</summary>
         private readonly List<LinkDescriptor> links;
@@ -64,11 +64,11 @@ namespace Microsoft.OData.Client
             Debug.Assert(model != null, "model != null");
             Debug.Assert(entityTracker != null, "entityTracker != null");
 
-            this.appendOnlyEntries = new Dictionary<Uri, ODataEntry>(EqualityComparer<Uri>.Default);
+            this.appendOnlyEntries = new Dictionary<Uri, ODataResource>(EqualityComparer<Uri>.Default);
             this.mergeOption = mergeOption;
             this.clientEdmModel = model;
             this.entityTracker = entityTracker;
-            this.identityStack = new Dictionary<Uri, ODataEntry>(EqualityComparer<Uri>.Default);
+            this.identityStack = new Dictionary<Uri, ODataResource>(EqualityComparer<Uri>.Default);
             this.links = new List<LinkDescriptor>();
         }
 
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Client
                 return;
             }
 
-            foreach (KeyValuePair<Uri, ODataEntry> entity in this.identityStack)
+            foreach (KeyValuePair<Uri, ODataResource> entity in this.identityStack)
             {
                 // Try to attach the entity descriptor got from materializer, if one already exists, get the existing reference instead.
                 MaterializerEntry entry = MaterializerEntry.GetEntry(entity.Value);
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(entry.Id != null, "entry.Id != null");
             Debug.Assert(entry.IsTracking, "Should not be trying to resolve the entry if entry.isTracking is false.");
 
-            ODataEntry existingODataEntry;
+            ODataResource existingODataEntry;
 
             if (this.identityStack.TryGetValue(entry.Id, out existingODataEntry))
             {

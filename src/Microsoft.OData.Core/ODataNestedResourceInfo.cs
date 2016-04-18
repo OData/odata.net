@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataNavigationLink.cs" company="Microsoft">
+// <copyright file="ODataNestedResourceInfo.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,10 +16,10 @@ namespace Microsoft.OData.Core
     /// Represents a single link.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Name}")]
-    public sealed class ODataNavigationLink : ODataItem
-    {
+    public sealed class ODataNestedResourceInfo : ODataItem
+    {   
         /// <summary>the metadata builder for this navigation link.</summary>
-        private ODataEntityMetadataBuilder metadataBuilder;
+        private ODataResourceMetadataBuilder metadataBuilder;
 
         /// <summary>URI representing the Unified Resource Locator (Url) of the link as provided by the user or seen on the wire (never computed).</summary>
         private Uri url;
@@ -33,8 +33,8 @@ namespace Microsoft.OData.Core
         /// <summary>true if the association link has been set by the user or seen on the wire or computed by the metadata builder, false otherwise.</summary>
         private bool hasAssociationUrl;
 
-        /// <summary>Gets or sets a value that indicates whether the navigation link represents a collection or an entry.</summary>
-        /// <returns>true if the navigation link represents a collection; false if the navigation represents an entry.</returns>
+        /// <summary>Gets or sets a value that indicates whether the navigation link represents a collection or a resource.</summary>
+        /// <returns>true if the navigation link represents a collection; false if the navigation represents a resource.</returns>
         /// <remarks>This property is required to have a value for ATOM payloads and is optional for JSON payloads.</remarks>
         public bool? IsCollection
         {
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets metadata builder for this navigation link.</summary>
         /// <returns>The metadata builder used to compute values from model annotations.</returns>
-        internal ODataEntityMetadataBuilder MetadataBuilder
+        internal ODataResourceMetadataBuilder MetadataBuilder
         {
             get
             {

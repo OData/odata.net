@@ -13,9 +13,9 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm.Values;
 
     /// <summary>
-    /// Implementation of <see cref="ODataEntityMetadataBuilder"/> which uses OData conventions.
+    /// Implementation of <see cref="ODataResourceMetadataBuilder"/> which uses OData conventions.
     /// </summary>
-    internal sealed class ConventionalODataEntityMetadataBuilder : ODataEntityMetadataBuilder
+    internal sealed class ConventionalODataEntityMetadataBuilder : ODataResourceMetadataBuilder
     {
         /// <summary>The entity instance to build metadata for.</summary>
         private readonly IEdmStructuredValue entityInstance;

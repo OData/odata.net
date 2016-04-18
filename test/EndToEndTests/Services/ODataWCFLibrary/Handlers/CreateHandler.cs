@@ -90,7 +90,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         responseMessage.SetHeader(ServiceConstants.HttpHeaders.ETag, currentETag);
                     }
 
-                    ResponseWriter.WriteEntry(messageWriter.CreateODataEntryWriter(targetEntitySet), bodyObject, targetEntitySet, ODataVersion.V4, null);
+                    ResponseWriter.WriteEntry(messageWriter.CreateODataResourceWriter(targetEntitySet), bodyObject, targetEntitySet, ODataVersion.V4, null);
                 }
             }
             catch
@@ -130,20 +130,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings(), this.DataSource.Model))
             {
                 var odataItemStack = new Stack<ODataItem>();
-                var entryReader = messageReader.CreateODataEntryReader(entitySet, entitySet.EntityType());
+                var entryReader = messageReader.CreateODataResourceReader(entitySet, entitySet.EntityType());
                 var currentTargetEntitySet = entitySet;
 
                 while (entryReader.Read())
                 {
                     switch (entryReader.State)
                     {
-                        case ODataReaderState.EntryStart:
+                        case ODataReaderState.ResourceStart:
                             odataItemStack.Push(entryReader.Item);
                             break;
 
-                        case ODataReaderState.EntryEnd:
+                        case ODataReaderState.ResourceEnd:
                             {
-                                var entry = (ODataEntry)entryReader.Item;
+                                var entry = (ODataResource)entryReader.Item;
 
                                 // TODO: the code here will be changed to handle following scenarios
                                 //       1: non-contained navigation, e.g. People(1)/Friends
@@ -182,15 +182,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                             break;
 
-                        case ODataReaderState.FeedStart:
+                        case ODataReaderState.ResourceSetStart:
                             odataItemStack.Push(entryReader.Item);
                             break;
 
-                        case ODataReaderState.FeedEnd:
+                        case ODataReaderState.ResourceSetEnd:
                             {
                                 var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
 
-                                var parentNavLink = odataItemStack.Count > 0 ? odataItemStack.Peek() as ODataNavigationLink : null;
+                                var parentNavLink = odataItemStack.Count > 0 ? odataItemStack.Peek() as ODataNestedResourceInfo : null;
                                 if (parentNavLink != null)
                                 {
                                     // This feed belongs to a navigation property -
@@ -204,7 +204,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         case ODataReaderState.NavigationLinkStart:
                             {
                                 odataItemStack.Push(entryReader.Item);
-                                var navigationLink = (ODataNavigationLink)entryReader.Item;
+                                var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
                                 var navigationProperty = (IEdmNavigationProperty)currentTargetEntitySet.EntityType().FindProperty(navigationLink.Name);
 
                                 // Current model implementation doesn't expose associations otherwise this would be much cleaner.
@@ -215,7 +215,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                         case ODataReaderState.NavigationLinkEnd:
                             {
-                                var navigationLink = (ODataNavigationLink)entryReader.Item;
+                                var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
                                 var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
                                 if (childAnnotation != null)
                                 {
@@ -232,16 +232,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             return lastNewInstance;
         }
 
-        private static void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNavigationLink navigationLink, object boundValue)
+        private static void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNestedResourceInfo navigationLink, object boundValue)
         {
             var annotation = item.GetAnnotation<BoundNavigationPropertyAnnotation>();
             if (annotation == null)
             {
-                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNavigationLink, object>>() };
+                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNestedResourceInfo, object>>() };
                 item.SetAnnotation(annotation);
             }
 
-            annotation.BoundProperties.Add(new Tuple<ODataNavigationLink, object>(navigationLink, boundValue));
+            annotation.BoundProperties.Add(new Tuple<ODataNestedResourceInfo, object>(navigationLink, boundValue));
         }
 
         private static void AddChildInstanceAnnotation(ODataItem item, object childEntry)
@@ -274,7 +274,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         /// </summary>
         private class BoundNavigationPropertyAnnotation
         {
-            public IList<Tuple<ODataNavigationLink, object>> BoundProperties { get; set; }
+            public IList<Tuple<ODataNestedResourceInfo, object>> BoundProperties { get; set; }
         }
 
         /// <summary>

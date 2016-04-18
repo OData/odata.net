@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     /// Annotation which stores the type name to serialize.
     /// </summary>
     /// <remarks>
-    /// This annotation will be recognized on ODataEntry, ODataComplexValue, ODataCollectionValue and ODataPrimitiveValue.
+    /// This annotation will be recognized on ODataResource, ODataComplexValue, ODataCollectionValue and ODataPrimitiveValue.
     /// </remarks>
     public sealed class SerializationTypeNameAnnotation
     {
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
         /// If this property is null, no type name will be written.
         /// If this property is non-null, the property value will be used as the type name written to the payload.
         /// If this annotation is present, it always overrides the type name specified on the annotated item.
-        /// If this annotation is not present, the value of the TypeName property on the ODataEntry, ODataComplexValue or ODataCollectionValue
+        /// If this annotation is not present, the value of the TypeName property on the ODataResource, ODataComplexValue or ODataCollectionValue
         /// is used as the type name in the payload.
         /// </remarks>
         public string TypeName { get; set; }

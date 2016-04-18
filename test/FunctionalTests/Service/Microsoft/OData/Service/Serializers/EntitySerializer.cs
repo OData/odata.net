@@ -197,10 +197,10 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType, "expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType");
             this.IncrementSegmentResultCount();
 
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             if (!resourceInstanceInFeed)
             {
-                entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
+                entry.SetSerializationInfo(new ODataResourceSerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
             }
 
             string title = expectedType.Name;
@@ -386,8 +386,8 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType, "expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType");
             Debug.Assert(!string.IsNullOrEmpty(title), "!string.IsNullOrEmpty(title)");
 
-            ODataFeed feed = new ODataFeed();
-            feed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
+            ODataResourceSet feed = new ODataResourceSet();
+            feed.SetSerializationInfo(new ODataResourceSerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
 
             // Write the other elements for the feed
             this.PayloadMetadataPropertyManager.SetId(feed, () => getAbsoluteUri());
@@ -575,7 +575,7 @@ namespace Microsoft.OData.Service.Serializers
             foreach (ResourceProperty property in navProperties)
             {
                 ResourcePropertyInfo navProperty = this.GetNavigationPropertyInfo(expanded, entityToSerialize.Entity, entityToSerialize.ResourceType, property);
-                ODataNavigationLink navLink = this.GetNavigationLink(entityToSerialize, navProperty.Property);
+                ODataNestedResourceInfo navLink = this.GetNavigationLink(entityToSerialize, navProperty.Property);
 
                 // WCF Data Services show performance degradation with JsonLight when entities have > 25 Navgations on writing entries
                 // DEVNOTE: for performance reasons, if the link has no content due to the metadata level, and is not expanded
@@ -648,13 +648,13 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
         /// <param name="navigationProperty">The metadata for the navigation property.</param>
         /// <returns>The navigation link for the given property.</returns>
-        private ODataNavigationLink GetNavigationLink(EntityToSerialize entityToSerialize, ResourceProperty navigationProperty)
+        private ODataNestedResourceInfo GetNavigationLink(EntityToSerialize entityToSerialize, ResourceProperty navigationProperty)
         {
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
             string navLinkName = navigationProperty.Name;
-            ODataNavigationLink navLink = new ODataNavigationLink
+            ODataNestedResourceInfo navLink = new ODataNestedResourceInfo
             {
                 Name = navLinkName,
                 IsCollection = navigationProperty.Kind == ResourcePropertyKind.ResourceSetReference
@@ -810,8 +810,8 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             ODataWriter odataWriter = forFeed
-                ? this.messageWriter.CreateODataFeedWriter(entitySet, entityType)
-                : this.messageWriter.CreateODataEntryWriter(entitySet, entityType);
+                ? this.messageWriter.CreateODataResourceSetWriter(entitySet, entityType)
+                : this.messageWriter.CreateODataResourceWriter(entitySet, entityType);
 
             return this.Service.CreateODataWriterWrapper(odataWriter);
         }

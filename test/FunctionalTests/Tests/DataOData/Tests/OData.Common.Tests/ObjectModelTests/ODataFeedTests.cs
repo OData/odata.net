@@ -15,46 +15,46 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     #endregion Namespaces
 
     /// <summary>
-    /// Tests for the ODataFeed object model class.
+    /// Tests for the ODataResourceSet object model class.
     /// </summary>
     [TestClass, TestCase]
     public class ODataFeedTests : ODataTestCase
     {
 
-        [TestMethod, Variation(Description = "Test the default values of a feed.")]
+        [TestMethod, Variation(Description = "Test the default values of a resourceCollection.")]
         public void DefaultValuesTest()
         {
-            ODataFeed feed = new ODataFeed();
-            this.Assert.IsNull(feed.Count, "Expected null default value for property 'Count'.");
-            this.Assert.IsNull(feed.NextPageLink, "Expected null default value for property 'NextPageLink'.");
+            ODataResourceSet resourceCollection = new ODataResourceSet();
+            this.Assert.IsNull(resourceCollection.Count, "Expected null default value for property 'Count'.");
+            this.Assert.IsNull(resourceCollection.NextPageLink, "Expected null default value for property 'NextPageLink'.");
         }
 
-        [TestMethod, Variation(Description = "Test the property setters and getters of a feed.")]
+        [TestMethod, Variation(Description = "Test the property setters and getters of a resourceCollection.")]
         public void PropertyGettersAndSettersTest()
         {
             int count = -2;
             Uri nextPageLink = new Uri("http://odatatest.org/page?id=2");
 
-            ODataFeed feed = new ODataFeed()
+            ODataResourceSet resourceCollection = new ODataResourceSet()
             {
                 Count = count,
                 NextPageLink = nextPageLink
             };
 
 
-            this.Assert.AreEqual(count, feed.Count, EqualityComparer<long?>.Default, "Expected equal Count values.");
-            this.Assert.AreSame(nextPageLink, feed.NextPageLink, "Expected reference equal values for property 'NextPageLink'.");
+            this.Assert.AreEqual(count, resourceCollection.Count, EqualityComparer<long?>.Default, "Expected equal Count values.");
+            this.Assert.AreSame(nextPageLink, resourceCollection.NextPageLink, "Expected reference equal values for property 'NextPageLink'.");
         }
 
-        [TestMethod, Variation(Description = "Test the property setters and getters of a feed.")]
+        [TestMethod, Variation(Description = "Test the property setters and getters of a resourceCollection.")]
         public void PropertySettersNullTest()
         {
-            ODataFeed feed = new ODataFeed();
-            feed.Count = null;
-            feed.NextPageLink = null;
+            ODataResourceSet resourceCollection = new ODataResourceSet();
+            resourceCollection.Count = null;
+            resourceCollection.NextPageLink = null;
 
-            this.Assert.IsNull(feed.Count, "Expected null value for property 'Count'.");
-            this.Assert.IsNull(feed.NextPageLink, "Expected null value for property 'NextPageLink'.");
+            this.Assert.IsNull(resourceCollection.Count, "Expected null value for property 'Count'.");
+            this.Assert.IsNull(resourceCollection.NextPageLink, "Expected null value for property 'NextPageLink'.");
         }
     }
 }

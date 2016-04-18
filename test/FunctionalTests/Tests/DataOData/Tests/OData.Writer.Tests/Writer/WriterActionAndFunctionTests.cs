@@ -207,7 +207,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = queryResults.Select(testCase =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry("TestModel.Customer");
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry("TestModel.Customer");
 
                 if (testCase.ODataActions != null)
                 {
@@ -230,7 +230,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     entry,
                     (testConfiguration) =>
                     {
-                         if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
@@ -241,13 +241,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                     "}"),
                                 ExpectedException2 =
                                     entry.Actions != null && entry.Actions.Contains(null)
-                                        ? ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataEntry.Actions")
+                                        ? ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataResource.Actions")
                                         : testConfiguration.IsRequest && entry.Actions != null && entry.Actions.Any()
                                             ? ODataExpectedExceptions.ODataException("WriterValidationUtils_OperationInRequest", GetFirstOperationMetadata(entry))
                                             : entry.Actions != null && entry.Actions.Any(a => !a.Metadata.IsAbsoluteUri && !a.Metadata.OriginalString.StartsWith("#"))
                                                 ? ODataExpectedExceptions.ODataException("ValidationUtils_InvalidMetadataReferenceProperty", entry.Actions.First(a => a.Metadata.OriginalString.Contains(" ")).Metadata.OriginalString)
                                             : entry.Functions != null && entry.Functions.Contains(null)
-                                                ? ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataEntry.Functions")
+                                                ? ODataExpectedExceptions.ODataException("ValidationUtils_EnumerableContainsANullItem", "ODataResource.Functions")
                                                 : testConfiguration.IsRequest && entry.Functions != null && entry.Functions.Any()
                                                     ? ODataExpectedExceptions.ODataException("WriterValidationUtils_OperationInRequest", GetFirstOperationMetadata(entry))
                                                         : entry.Functions != null && entry.Functions.Any(f => !f.Metadata.IsAbsoluteUri && !f.Metadata.OriginalString.StartsWith("#"))
@@ -305,7 +305,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        private string GetFirstOperationMetadata(ODataEntry entry)
+        private string GetFirstOperationMetadata(ODataResource entry)
         {
             this.Assert.IsNotNull(entry, "entry != null");
 

@@ -41,19 +41,19 @@ namespace Microsoft.OData.Core
         protected abstract Task<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state Value, Entry, Feed or Collection state.
+        /// Implementation of the reader logic when in state Value, Resource, Feed or Collection state.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadNextParameterImplementationAsync();
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
         /// </summary>
         /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.</returns>
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<ODataReader> CreateEntryReaderAsync(IEdmEntityType expectedEntityType);
+        protected abstract Task<ODataReader> CreateResourceReaderAsync(IEdmEntityType expectedEntityType);
 
         /// <summary>
         /// Cretes an <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core
         /// <param name="expectedEntityType">Expected feed element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<ODataReader> CreateFeedReaderAsync(IEdmEntityType expectedEntityType);
+        protected abstract Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntityType expectedEntityType);
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
@@ -89,11 +89,11 @@ namespace Microsoft.OData.Core
                             {
                                 Debug.Assert(
                                     this.State == ODataParameterReaderState.Value ||
-                                    this.State == ODataParameterReaderState.Entry ||
-                                    this.State == ODataParameterReaderState.Feed ||
+                                    this.State == ODataParameterReaderState.Resource ||
+                                    this.State == ODataParameterReaderState.ResourceSet ||
                                     this.State == ODataParameterReaderState.Collection ||
                                     this.State == ODataParameterReaderState.Completed,
-                                    "ReadAtStartImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
+                                    "ReadAtStartImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
                                 return t.Result;
                             });
 #else
@@ -101,8 +101,8 @@ namespace Microsoft.OData.Core
 #endif
 
                 case ODataParameterReaderState.Value:   // fall through
-                case ODataParameterReaderState.Entry:
-                case ODataParameterReaderState.Feed:
+                case ODataParameterReaderState.Resource:
+                case ODataParameterReaderState.ResourceSet:
                 case ODataParameterReaderState.Collection:
                     this.OnParameterCompleted();
 #if DEBUG
@@ -111,11 +111,11 @@ namespace Microsoft.OData.Core
                             {
                                 Debug.Assert(
                                     this.State == ODataParameterReaderState.Value ||
-                                    this.State == ODataParameterReaderState.Entry ||
-                                    this.State == ODataParameterReaderState.Feed ||
+                                    this.State == ODataParameterReaderState.Resource ||
+                                    this.State == ODataParameterReaderState.ResourceSet ||
                                     this.State == ODataParameterReaderState.Collection ||
                                     this.State == ODataParameterReaderState.Completed,
-                                    "ReadNextParameterImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
+                                    "ReadNextParameterImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
                                 return t.Result;
                             });
 #else

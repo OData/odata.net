@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core
 
             if (typeName == null)
             {
-                // if we have metadata, the type name of an entry must not be null
+                // if we have metadata, the type name of a resource must not be null
                 if (model.IsUserModel())
                 {
                     throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);

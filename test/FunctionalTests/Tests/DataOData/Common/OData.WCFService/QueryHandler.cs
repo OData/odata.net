@@ -44,13 +44,13 @@ namespace Microsoft.Test.Taupo.OData.WCFService
 
                 if (lastSegment is EntitySetSegment)
                 {
-                    ODataWriter resultWriter = messageWriter.CreateODataFeedWriter(entitySet);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet);
                     ResponseWriter.WriteFeed(resultWriter, queryResults as IQueryable, entitySet, this.Model, writerSettings.Version.GetValueOrDefault(), expandedProperties);
                     resultWriter.Flush();
                 }
                 else if (lastSegment is KeySegment)
                 {
-                    ODataWriter resultWriter = messageWriter.CreateODataEntryWriter(entitySet);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceWriter(entitySet);
                     ResponseWriter.WriteEntry(resultWriter, queryResults, entitySet, this.Model, writerSettings.Version.GetValueOrDefault(), expandedProperties);
                     resultWriter.Flush();
                 }

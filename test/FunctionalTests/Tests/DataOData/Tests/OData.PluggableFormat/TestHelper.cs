@@ -180,7 +180,7 @@ namespace Microsoft.Test.OData.PluggableFormat
             return Math.Abs((a - b) / a) < e;
         }
 
-        public static bool EntryEqual(ODataEntry a, ODataEntry b)
+        public static bool EntryEqual(ODataResource a, ODataResource b)
         {
             if (a == null || b == null)
             {

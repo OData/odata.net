@@ -99,7 +99,7 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(
                 !ClientTypeUtil.TypeIsEntity(ClientTypeUtil.GetImplementationType(userCollectionType, typeof(ICollection<>)).GetGenericArguments()[0], this.materializerContext.Model),
                 "Not a Collection - Collections cannot contain entities");
-            Debug.Assert(!(collectionProperty.Value is ODataFeed) && !(collectionProperty.Value is ODataEntry), "Collection properties should never materialized from entry or feed payload");
+            Debug.Assert(!(collectionProperty.Value is ODataResourceSet) && !(collectionProperty.Value is ODataResource), "Collection properties should never materialized from entry or feed payload");
 
             ODataCollectionValue collectionValue = collectionProperty.Value as ODataCollectionValue;
 

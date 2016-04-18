@@ -193,14 +193,14 @@ http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar
             {
             }
 
-            public Func<string, IEdmStructuredValue, Microsoft.OData.Client.ODataEntityMetadataBuilder> GetMetadataBuilderFunc { get; set; }
+            public Func<string, IEdmStructuredValue, Microsoft.OData.Client.ODataResourceMetadataBuilder> GetMetadataBuilderFunc { get; set; }
 
-            public Microsoft.OData.Client.ODataEntityMetadataBuilder GetMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
+            public Microsoft.OData.Client.ODataResourceMetadataBuilder GetMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
             {
                 return base.GetEntityMetadataBuilder(entitySetName, entityInstance);
             }
 
-            internal override Microsoft.OData.Client.ODataEntityMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
+            internal override Microsoft.OData.Client.ODataResourceMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
             {
                 if (this.GetMetadataBuilderFunc == null)
                 {
@@ -224,7 +224,7 @@ http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar
             public string Property { get; set; }
         }
 
-        private class EntityMetadataBuilderSimulator : Microsoft.OData.Client.ODataEntityMetadataBuilder
+        private class EntityMetadataBuilderSimulator : Microsoft.OData.Client.ODataResourceMetadataBuilder
         {
             public Func<Uri> GetEditLinkFunc { get; set; }
             public Func<Uri> GetIdFunc { get; set; }

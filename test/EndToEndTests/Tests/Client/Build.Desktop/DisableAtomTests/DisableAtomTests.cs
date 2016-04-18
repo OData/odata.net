@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
         [TestMethod]
         public void UpdateUsingAtomShouldBeFailed()
         {
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+            var entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
             entry.Properties = new[] 
             {
                 new ODataProperty
@@ -122,7 +122,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             {
                 try
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(personSet, personType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
@@ -137,7 +137,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
         [TestMethod]
         public void PostUsingAtomShouldBeFailed()
         {
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+            var entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
             entry.Properties = new[]
             {
                 new ODataProperty { Name = "PersonID", Value = 101 },
@@ -213,7 +213,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             {
                 try
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(peopleSet, personType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(peopleSet, personType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }

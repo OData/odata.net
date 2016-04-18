@@ -59,7 +59,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings, WritePayloadHelper.Model))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
                     outputWithModel = this.WriteAndVerifyOrderFeed(responseMessageWithModel, odataWriter, true, mimeType);
                 }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter();
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
                     outputWithoutModel = this.WriteAndVerifyOrderFeed(responseMessageWithoutModel, odataWriter, false,
                                                                       mimeType);
                 }
@@ -93,7 +93,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings, WritePayloadHelper.Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType);
                     outputWithModel = this.WriteAndVerifyExpandedCustomerEntry(responseMessageWithModel, odataWriter,
                                                                                true, mimeType);
                 }
@@ -102,7 +102,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     outputWithoutModel = this.WriteAndVerifyExpandedCustomerEntry(responseMessageWithoutModel,
                                                                                   odataWriter, false, mimeType);
                 }
@@ -132,7 +132,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithModel.PreferenceAppliedHeader().AnnotationFilter = "*";
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings, WritePayloadHelper.Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(WritePayloadHelper.CarSet, WritePayloadHelper.CarType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(WritePayloadHelper.CarSet, WritePayloadHelper.CarType);
                     outputWithModel = this.WriteAndVerifyCarEntry(responseMessageWithModel, odataWriter, true, mimeType);
                 }
 
@@ -141,7 +141,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.PreferenceAppliedHeader().AnnotationFilter = "*";
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     outputWithoutModel = this.WriteAndVerifyCarEntry(responseMessageWithoutModel, odataWriter, false,
                                                                      mimeType);
                 }
@@ -168,7 +168,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings, WritePayloadHelper.Model))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter(WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType);
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter(WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType);
                     outputWithModel = this.WriteAndVerifyPersonFeed(responseMessageWithModel, odataWriter, true,
                                                                    mimeType);
                 }
@@ -177,7 +177,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter();
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
                     outputWithoutModel = this.WriteAndVerifyPersonFeed(responseMessageWithoutModel, odataWriter, false,
                                                                        mimeType);
                 }
@@ -217,7 +217,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutTypeCast.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutTypeCast, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     outputWithoutTypeCast = this.WriteAndVerifyEmployeeEntry(responseMessageWithoutTypeCast, odataWriter,
                                                                              false, mimeType);
                 }
@@ -227,7 +227,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithTypeCast.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithTypeCast, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     outputWithTypeCast = this.WriteAndVerifyEmployeeEntry(responseMessageWithTypeCast, odataWriter, true,
                                                                           mimeType);
                 }
@@ -349,7 +349,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 requestMessageWithModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(requestMessageWithModel, settings, WritePayloadHelper.Model))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
                     outputWithModel = this.WriteAndVerifyRequestMessage(requestMessageWithModel, odataWriter,
                                                                         true, mimeType);
                 }
@@ -359,7 +359,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 requestMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(requestMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     outputWithoutModel = this.WriteAndVerifyRequestMessage(requestMessageWithoutModel,
                                                                            odataWriter, false, mimeType);
                 }
@@ -372,14 +372,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyOrderFeed(StreamResponseMessage responseMessage, ODataWriter odataWriter,
                                                bool hasModel, string mimeType)
         {
-            var orderFeed = new ODataFeed()
+            var orderFeed = new ODataResourceSet()
             {
                 Id = new Uri(this.ServiceUri + "Order"),
                 NextPageLink = new Uri(this.ServiceUri + "Order?$skiptoken=-9"),
             };
             if (!hasModel)
             {
-                orderFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
+                orderFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
             }
 
             odataWriter.WriteStart(orderFeed);
@@ -387,7 +387,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var orderEntry1 = WritePayloadHelper.CreateOrderEntry1(hasModel);
             odataWriter.WriteStart(orderEntry1);
 
-            var orderEntry1Navigation1 = new ODataNavigationLink()
+            var orderEntry1Navigation1 = new ODataNestedResourceInfo()
             {
                 Name = "Customer",
                 IsCollection = false,
@@ -396,7 +396,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteStart(orderEntry1Navigation1);
             odataWriter.WriteEnd();
 
-            var orderEntry1Navigation2 = new ODataNavigationLink()
+            var orderEntry1Navigation2 = new ODataNestedResourceInfo()
             {
                 Name = "Login",
                 IsCollection = false,
@@ -411,7 +411,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var orderEntry2 = WritePayloadHelper.CreateOrderEntry2(hasModel);
             odataWriter.WriteStart(orderEntry2);
 
-            var orderEntry2Navigation1 = new ODataNavigationLink()
+            var orderEntry2Navigation1 = new ODataNestedResourceInfo()
             {
                 Name = "Customer",
                 IsCollection = false,
@@ -420,7 +420,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteStart(orderEntry2Navigation1);
             odataWriter.WriteEnd();
 
-            var orderEntry2Navigation2 = new ODataNavigationLink()
+            var orderEntry2Navigation2 = new ODataNestedResourceInfo()
             {
                 Name = "Login",
                 IsCollection = false,
@@ -439,17 +439,17 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             bool verifyFeedCalled = false;
             bool verifyEntryCalled = false;
             bool verifyNavigationCalled = false;
-            Action<ODataFeed> verifyFeed = (feed) =>
+            Action<ODataResourceSet> verifyFeed = (feed) =>
             {
                 Assert.IsNotNull(feed.NextPageLink, "feed.NextPageLink");
                 verifyFeedCalled = true;
             };
-            Action<ODataEntry> verifyEntry = (entry) =>
+            Action<ODataResource> verifyEntry = (entry) =>
             {
                 Assert.AreEqual(3, entry.Properties.Count(), "entry.Properties.Count");
                 verifyEntryCalled = true;
             };
-            Action<ODataNavigationLink> verifyNavigation = (navigation) =>
+            Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
                 Assert.IsTrue(navigation.Name == "Customer" || navigation.Name == "Login", "navigation.Name");
                 verifyNavigationCalled = true;
@@ -471,7 +471,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyExpandedCustomerEntry(StreamResponseMessage responseMessage,
                                                            ODataWriter odataWriter, bool hasModel, string mimeType)
         {
-            ODataEntry customerEntry = WritePayloadHelper.CreateCustomerEntry(hasModel);
+            ODataResource customerEntry = WritePayloadHelper.CreateCustomerEntry(hasModel);
             odataWriter.WriteStart(customerEntry);
 
             // write non-expanded navigations
@@ -482,7 +482,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
 
             // write expanded navigation
-            var expandedNavigation = new ODataNavigationLink()
+            var expandedNavigation = new ODataNestedResourceInfo()
             {
                 Name = "Logins",
                 IsCollection = true,
@@ -490,10 +490,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
             odataWriter.WriteStart(expandedNavigation);
 
-            var loginFeed = new ODataFeed() { Id = new Uri(this.ServiceUri + "Customer(-9)/Logins") };
+            var loginFeed = new ODataResourceSet() { Id = new Uri(this.ServiceUri + "Customer(-9)/Logins") };
             if (!hasModel)
             {
-                loginFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login" });
+                loginFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login" });
             }
 
             odataWriter.WriteStart(loginFeed);
@@ -523,12 +523,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             bool verifyFeedCalled = false;
             int verifyEntryCalled = 0;
             bool verifyNavigationCalled = false;
-            Action<ODataFeed> verifyFeed = (feed) =>
+            Action<ODataResourceSet> verifyFeed = (feed) =>
             {
                 verifyFeedCalled = true;
             };
 
-            Action<ODataEntry> verifyEntry = (entry) =>
+            Action<ODataResource> verifyEntry = (entry) =>
             {
                 if (entry.TypeName.Contains("Customer"))
                 {
@@ -543,7 +543,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 verifyEntryCalled++;
             };
 
-            Action<ODataNavigationLink> verifyNavigation = (navigation) =>
+            Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
                 Assert.IsNotNull(navigation.Name);
                 verifyNavigationCalled = true;
@@ -574,7 +574,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             // Some very basic verification for the payload.
             bool verifyEntryCalled = false;
-            Action<ODataEntry> verifyEntry = (entry) =>
+            Action<ODataResource> verifyEntry = (entry) =>
             {
                 Assert.AreEqual(4, entry.Properties.Count(), "entry.Properties.Count");
                 Assert.IsNotNull(entry.MediaResource, "entry.MediaResource");
@@ -600,22 +600,22 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyPersonFeed(StreamResponseMessage responseMessage, ODataWriter odataWriter,
                                                 bool hasModel, string mimeType)
         {
-            var personFeed = new ODataFeed()
+            var personFeed = new ODataResourceSet()
             {
                 Id = new Uri(this.ServiceUri + "Person"),
                 DeltaLink = new Uri(this.ServiceUri + "Person")
             };
             if (!hasModel)
             {
-                personFeed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                personFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
             }
 
             odataWriter.WriteStart(personFeed);
 
-            ODataEntry personEntry = WritePayloadHelper.CreatePersonEntry(hasModel);
+            ODataResource personEntry = WritePayloadHelper.CreatePersonEntry(hasModel);
             odataWriter.WriteStart(personEntry);
 
-            var personNavigation = new ODataNavigationLink()
+            var personNavigation = new ODataNestedResourceInfo()
             {
                 Name = "PersonMetadata",
                 IsCollection = true,
@@ -627,10 +627,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             // Finish writing personEntry.
             odataWriter.WriteEnd();
 
-            ODataEntry employeeEntry = WritePayloadHelper.CreateEmployeeEntry(hasModel);
+            ODataResource employeeEntry = WritePayloadHelper.CreateEmployeeEntry(hasModel);
             odataWriter.WriteStart(employeeEntry);
 
-            var employeeNavigation1 = new ODataNavigationLink()
+            var employeeNavigation1 = new ODataNestedResourceInfo()
             {
                 Name = "PersonMetadata",
                 IsCollection = true,
@@ -639,7 +639,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteStart(employeeNavigation1);
             odataWriter.WriteEnd();
 
-            var employeeNavigation2 = new ODataNavigationLink()
+            var employeeNavigation2 = new ODataNestedResourceInfo()
             {
                 Name = "Manager",
                 IsCollection = false,
@@ -651,10 +651,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             // Finish writing employeeEntry.
             odataWriter.WriteEnd();
 
-            ODataEntry specialEmployeeEntry = WritePayloadHelper.CreateSpecialEmployeeEntry(hasModel);
+            ODataResource specialEmployeeEntry = WritePayloadHelper.CreateSpecialEmployeeEntry(hasModel);
             odataWriter.WriteStart(specialEmployeeEntry);
 
-            var specialEmployeeNavigation1 = new ODataNavigationLink()
+            var specialEmployeeNavigation1 = new ODataNestedResourceInfo()
             {
                 Name = "PersonMetadata",
                 IsCollection = true,
@@ -663,7 +663,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteStart(specialEmployeeNavigation1);
             odataWriter.WriteEnd();
 
-            var specialEmployeeNavigation2 = new ODataNavigationLink()
+            var specialEmployeeNavigation2 = new ODataNestedResourceInfo()
             {
                 Name = "Manager",
                 IsCollection = false,
@@ -672,7 +672,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteStart(specialEmployeeNavigation2);
             odataWriter.WriteEnd();
 
-            var specialEmployeeNavigation3 = new ODataNavigationLink()
+            var specialEmployeeNavigation3 = new ODataNestedResourceInfo()
             {
                 Name = "Car",
                 IsCollection = false,
@@ -691,7 +691,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             bool verifyFeedCalled = false;
             bool verifyEntryCalled = false;
             bool verifyNavigationCalled = false;
-            Action<ODataFeed> verifyFeed = (feed) =>
+            Action<ODataResourceSet> verifyFeed = (feed) =>
             {
                 if (mimeType != MimeTypes.ApplicationAtomXml)
                 {
@@ -699,14 +699,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 verifyFeedCalled = true;
             };
-            Action<ODataEntry> verifyEntry = (entry) =>
+            Action<ODataResource> verifyEntry = (entry) =>
                 {
                     Assert.IsTrue(entry.EditLink.AbsoluteUri.EndsWith("Person(-5)") ||
                                   entry.EditLink.AbsoluteUri.EndsWith("Person(-3)/" + NameSpace + "Employee") ||
                                   entry.EditLink.AbsoluteUri.EndsWith("Person(-10)/" + NameSpace + "SpecialEmployee"));
                     verifyEntryCalled = true;
                 };
-            Action<ODataNavigationLink> verifyNavigation = (navigation) =>
+            Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
                 Assert.IsTrue(navigation.Name == "PersonMetadata" || navigation.Name == "Manager" || navigation.Name == "Car");
                 verifyNavigationCalled = true;
@@ -729,8 +729,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                                 bool hasExpectedType, string mimeType)
         {
 
-            ODataEntry employeeEntry = WritePayloadHelper.CreateEmployeeEntry(false);
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo()
+            ODataResource employeeEntry = WritePayloadHelper.CreateEmployeeEntry(false);
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo()
                 {
                     NavigationSourceName = "Person",
                     NavigationSourceEntityTypeName = NameSpace + "Person",
@@ -744,7 +744,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             employeeEntry.SetSerializationInfo(serializationInfo);
             odataWriter.WriteStart(employeeEntry);
 
-            var employeeNavigation1 = new ODataNavigationLink()
+            var employeeNavigation1 = new ODataNestedResourceInfo()
             {
                 Name = "PersonMetadata",
                 IsCollection = true,
@@ -753,7 +753,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteStart(employeeNavigation1);
             odataWriter.WriteEnd();
 
-            var employeeNavigation2 = new ODataNavigationLink()
+            var employeeNavigation2 = new ODataNestedResourceInfo()
             {
                 Name = "Manager",
                 IsCollection = false,
@@ -769,12 +769,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             bool verifyEntryCalled = false;
             bool verifyNavigationCalled = false;
 
-            Action<ODataEntry> verifyEntry = (entry) =>
+            Action<ODataResource> verifyEntry = (entry) =>
             {
                 Assert.IsTrue(entry.EditLink.AbsoluteUri.Contains("Person"), "entry.EditLink");
                 verifyEntryCalled = true;
             };
-            Action<ODataNavigationLink> verifyNavigation = (navigation) =>
+            Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
                 Assert.IsTrue(navigation.Name == "PersonMetadata" || navigation.Name == "Manager", "navigation.Name");
                 verifyNavigationCalled = true;
@@ -886,7 +886,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyRequestMessage(StreamRequestMessage requestMessageWithoutModel,
                                                     ODataWriter odataWriter, bool hasModel, string mimeType)
         {
-            var order = new ODataEntry()
+            var order = new ODataResource()
                 {
                     Id = new Uri(this.ServiceUri + "Order(-10)"),
                     TypeName = NameSpace + "Order"
@@ -898,7 +898,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             order.Properties = new[] { orderP1, orderp2, orderp3 };
             if (!hasModel)
             {
-                order.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
+                order.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
                 orderP1.SetSerializationInfo(new ODataPropertySerializationInfo() { PropertyKind = ODataPropertyKind.Key });
             }
 
@@ -912,13 +912,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 var settings = new ODataMessageReaderSettings() { BaseUri = this.ServiceUri };
                 ODataMessageReader messageReader = new ODataMessageReader(requestMessageWithoutModel, settings,
                                                                           WritePayloadHelper.Model);
-                ODataReader reader = messageReader.CreateODataEntryReader(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
+                ODataReader reader = messageReader.CreateODataResourceReader(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
                 bool verifyEntryCalled = false;
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataEntry entry = reader.Item as ODataEntry;
+                        ODataResource entry = reader.Item as ODataResource;
                         Assert.IsTrue(entry.Id.ToString().Contains("Order(-10)"), "entry.Id");
                         Assert.AreEqual(3, entry.Properties.Count(), "entry.Properties.Count");
                         verifyEntryCalled = true;

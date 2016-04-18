@@ -50,7 +50,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // next page link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         feed.NextPageLink = relativeUri;
                         return new [] { feed };
                     }),
@@ -60,7 +60,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // entry read link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.ReadLink = relativeUri;
                         return new [] { entry };
                     }),
@@ -70,7 +70,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // entry edit link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.EditLink = relativeUri;
                         return new [] { entry };
                     }),
@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ODataStreamReferenceValue mediaResource = new ODataStreamReferenceValue();
                         mediaResource.ContentType = "image/jpg";
                         mediaResource.ReadLink = relativeUri;
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.MediaResource = mediaResource;
                         return new [] { entry };
                     }),
@@ -97,7 +97,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         mediaResource.ContentType = "image/jpg";    // required
                         mediaResource.ReadLink = testUri;           // required
                         mediaResource.EditLink = relativeUri;
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.MediaResource = mediaResource;
                         return new [] { entry };
                     }),
@@ -107,10 +107,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // link Url
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataNavigationLink link = ObjectModelUtils.CreateDefaultCollectionLink();
+                        ODataNestedResourceInfo link = ObjectModelUtils.CreateDefaultCollectionLink();
                         link.Url = relativeUri;
 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         return new ODataItem[] { entry, link };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -119,10 +119,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // association link Url
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataNavigationLink link = ObjectModelUtils.CreateDefaultSingletonLink();
+                        ODataNestedResourceInfo link = ObjectModelUtils.CreateDefaultSingletonLink();
                         link.AssociationLinkUrl = relativeUri;
 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         return new ODataItem[] { entry, link };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -136,7 +136,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             ContentType = "image/jpg",
                             ReadLink = relativeUri,
                         };
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         ODataProperty property = new ODataProperty()
                         {
                             Name = "NamedStream",
@@ -158,7 +158,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             ReadLink = testUri,
                             EditLink = relativeUri
                         };
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         ODataProperty property = new ODataProperty()
                         {
                             Name = "NamedStream",
@@ -174,7 +174,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: feed generator Uri
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -183,7 +183,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: feed logo
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -192,7 +192,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: feed icon
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -201,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: feed author
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -210,7 +210,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: feed contributor
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -219,7 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: feed link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                        ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                         return new [] { feed };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -228,7 +228,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: entry author
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         return new [] { entry };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -237,7 +237,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: entry contributor
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         return new [] { entry };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -246,7 +246,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {   // Atom metadata: entry link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         return new [] { entry };
                     }),
                     Formats = new [] { ODataFormat.Json }
@@ -306,7 +306,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // next page link
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     feed.NextPageLink = url;
                     return new [] { feed };
                 },
@@ -317,7 +317,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // entry read link
                 ItemFunc = (url) =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.ReadLink = url;
                     return new [] { entry };
                 },
@@ -327,7 +327,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // entry edit link
                 ItemFunc = (url) =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.EditLink = url;
                     return new [] { entry };
                 },
@@ -340,7 +340,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataStreamReferenceValue mediaResource = new ODataStreamReferenceValue();
                     mediaResource.ContentType = "image/jpg";
                     mediaResource.ReadLink = url;
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.MediaResource = mediaResource;
                     return new [] { entry };
                 },
@@ -354,7 +354,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     mediaResource.ContentType = "image/jpg";    // required
                     mediaResource.ReadLink = url;           // required
                     mediaResource.EditLink = url;
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.MediaResource = mediaResource;
                     return new [] { entry };
                 },
@@ -364,10 +364,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // navigation link Url
                 ItemFunc = (url) =>
                 {
-                    ODataNavigationLink link = ObjectModelUtils.CreateDefaultSingletonLink();
+                    ODataNestedResourceInfo link = ObjectModelUtils.CreateDefaultSingletonLink();
                     link.Url = url;
 
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     return new ODataItem[] { entry, link };
                 },
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("SampleLinkName").PropertyObject(tc.IsRequest ? "__metadata" : "__deferred").PropertyValue("uri"),
@@ -376,9 +376,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // association link Url
                 ItemFunc = (url) =>
                 {
-                    ODataNavigationLink link = ObjectModelUtils.CreateDefaultSingletonLink();
+                    ODataNestedResourceInfo link = ObjectModelUtils.CreateDefaultSingletonLink();
                     link.AssociationLinkUrl = url;
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     return new ODataItem[] { entry, link };
                 },
                 JsonExtractor = (tc, json) => JsonUtils.UnwrapTopLevelValue(tc, json).Object().PropertyObject("__metadata").PropertyObject("properties").PropertyObject("SampleLinkName").PropertyValue("associationuri"),
@@ -394,7 +394,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ContentType = "image/jpg",
                         ReadLink = url,
                     };
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     ODataProperty property = new ODataProperty()
                     {
                         Name = "NamedStream",
@@ -422,7 +422,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ReadLink = url,
                         EditLink = url
                     };
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     ODataProperty property = new ODataProperty()
                     {
                         Name = "NamedStream",
@@ -443,7 +443,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed generator Uri
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     return new [] { feed };
                 },
                 JsonExtractor = null,
@@ -452,7 +452,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed logo
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     return new [] { feed };
                 },
                 JsonExtractor = null,
@@ -461,7 +461,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed icon
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     return new [] { feed };
                 },
                 JsonExtractor = null,
@@ -470,7 +470,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed author
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     return new [] { feed };
                 },
                 JsonExtractor = null,
@@ -479,7 +479,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed contributor
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
 
                     return new [] { feed };
                 },
@@ -490,7 +490,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed self link
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     return new [] { feed };
                 },
                 JsonExtractor = null,
@@ -499,7 +499,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed next page link
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     feed.NextPageLink = url;
                     return new [] { feed };
                 },
@@ -510,7 +510,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: feed link
                 ItemFunc = (url) =>
                 {
-                    ODataFeed feed = ObjectModelUtils.CreateDefaultFeed();
+                    ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
                     return new [] { feed };
                 },
                 JsonExtractor = null,
@@ -519,7 +519,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: entry author
                 ItemFunc = (url) =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     return new [] { entry };
                 },
 
@@ -529,7 +529,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: entry contributor
                 ItemFunc = (url) =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     return new [] { entry };
                 },
 
@@ -539,7 +539,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {   // Atom metadata: entry link
                 ItemFunc = (url) =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     return new [] { entry };
                 },
                 JsonExtractor = null,

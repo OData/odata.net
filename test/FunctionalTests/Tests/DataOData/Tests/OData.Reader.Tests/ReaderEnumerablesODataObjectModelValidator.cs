@@ -63,11 +63,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// Visits an entry item.
             /// </summary>
             /// <param name="entry">The entry to visit.</param>
-            protected override void VisitEntry(ODataEntry entry)
+            protected override void VisitEntry(ODataResource entry)
             {
-                this.ValidateEnumerable<ODataProperty>(entry.Properties, "ODataEntry.Properties");
-                this.ValidateEnumerable<ODataAction>(entry.Actions, "ODataEntry.Actions");
-                this.ValidateEnumerable<ODataFunction>(entry.Functions, "ODataEntry.Functions");
+                this.ValidateEnumerable<ODataProperty>(entry.Properties, "ODataResource.Properties");
+                this.ValidateEnumerable<ODataAction>(entry.Actions, "ODataResource.Actions");
+                this.ValidateEnumerable<ODataFunction>(entry.Functions, "ODataResource.Functions");
                 base.VisitEntry(entry);
             }
 

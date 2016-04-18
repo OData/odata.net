@@ -529,7 +529,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "An implementation of ODataEntityMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder."
+        /// A string like "An implementation of ODataResourceMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder."
         /// </summary>
         internal static string Context_EntityMetadataBuilderIsRequired {
             get {

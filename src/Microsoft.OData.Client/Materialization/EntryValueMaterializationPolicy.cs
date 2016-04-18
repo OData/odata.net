@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Materialization
     using DSClient = Microsoft.OData.Client;
     
     /// <summary>
-    /// Used to materialize entities from an <see cref="ODataEntry"/> to an object.
+    /// Used to materialize entities from an <see cref="ODataResource"/> to an object.
     /// </summary>
     internal class EntryValueMaterializationPolicy : StructuralValueMaterializationPolicy
     {
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="property">Property as understood by the type system.</param>
         /// <param name="link">Property as parsed.</param>
-        internal static void ValidatePropertyMatch(ClientPropertyAnnotation property, ODataNavigationLink link)
+        internal static void ValidatePropertyMatch(ClientPropertyAnnotation property, ODataNestedResourceInfo link)
         {
             ValidatePropertyMatch(property, link, null, false /*performEntityCheck*/);
         }
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="model">Client Model.</param>
         /// <param name="performEntityCheck">whether to do the entity check or not.</param>
         /// <returns>The type</returns>
-        internal static Type ValidatePropertyMatch(ClientPropertyAnnotation property, ODataNavigationLink link, ClientEdmModel model, bool performEntityCheck)
+        internal static Type ValidatePropertyMatch(ClientPropertyAnnotation property, ODataNestedResourceInfo link, ClientEdmModel model, bool performEntityCheck)
         {
             Debug.Assert(property != null, "property != null");
             Debug.Assert(link != null, "link != null");
@@ -134,8 +134,8 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(atomProperty != null, "atomProperty != null");
 
-            ODataFeed feed = atomProperty.Value as ODataFeed;
-            ODataEntry entry = atomProperty.Value as ODataEntry;
+            ODataResourceSet feed = atomProperty.Value as ODataResourceSet;
+            ODataResource entry = atomProperty.Value as ODataResource;
 
             if (property.IsKnownType && (feed != null || entry != null))
             {
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client.Materialization
             ProjectionPlan continuationPlan,
             bool isContinuation)
         {
-            Debug.Assert(entry.Entry != null || entry.ForLoadProperty, "ODataEntry should be non-null except for LoadProperty");
+            Debug.Assert(entry.Entry != null || entry.ForLoadProperty, "ODataResource should be non-null except for LoadProperty");
             Debug.Assert(property != null, "property != null");
             Debug.Assert(items != null, "items != null");
 
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Client.Materialization
             Uri nextLink,
             ProjectionPlan continuationPlan)
         {
-            Debug.Assert(entry.Entry != null || entry.ForLoadProperty, "ODataEntry should be non-null except for LoadProperty");
+            Debug.Assert(entry.Entry != null || entry.ForLoadProperty, "ODataResource should be non-null except for LoadProperty");
             Debug.Assert(property != null, "property != null");
             Debug.Assert(items != null, "items != null");
 
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Client.Materialization
         private void ApplyFeedToCollection(
             MaterializerEntry entry,
             ClientPropertyAnnotation property,
-            ODataFeed feed,
+            ODataResourceSet feed,
             bool includeLinks)
         {
             Debug.Assert(entry.Entry != null, "entry != null");
@@ -529,9 +529,9 @@ namespace Microsoft.OData.Client.Materialization
             ClientEdmModel edmModel = this.MaterializerContext.Model;
             ClientTypeAnnotation collectionType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.EntityCollectionItemType));
 
-            IEnumerable<ODataEntry> entries = MaterializerFeed.GetFeed(feed).Entries;
+            IEnumerable<ODataResource> entries = MaterializerFeed.GetFeed(feed).Entries;
 
-            foreach (ODataEntry feedEntry in entries)
+            foreach (ODataResource feedEntry in entries)
             {
                 this.Materialize(MaterializerEntry.GetEntry(feedEntry), collectionType.ElementType, includeLinks);
             }
@@ -575,7 +575,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (entry.NavigationLinks != null)
             {
-                foreach (ODataNavigationLink link in entry.NavigationLinks)
+                foreach (ODataNestedResourceInfo link in entry.NavigationLinks)
                 {
                     var prop = actualType.GetProperty(link.Name, true);
                     if (prop != null)
@@ -586,7 +586,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (includeLinks)
                 {
-                    foreach (ODataNavigationLink link in entry.NavigationLinks)
+                    foreach (ODataNestedResourceInfo link in entry.NavigationLinks)
                     {
                         MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
 

@@ -43,13 +43,13 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 // Verify Date Property
                                 Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
                                 Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
@@ -141,13 +141,13 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 // Verify Date Property
                                 Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
                                 Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
@@ -175,13 +175,13 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 // Verify Date Property
                                 Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
                                 Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
@@ -207,17 +207,17 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var list = new List<ODataEntry>();
+                    var list = new List<ODataResource>();
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                foreach (ODataEntry pre in list)
+                                ODataResource entry = reader.Item as ODataResource;
+                                foreach (ODataResource pre in list)
                                 {
                                     Date entryDate = (Date)entry.Properties.Single(p => p.Name == "ShipDate").Value;
                                     Date preDate = (Date)pre.Properties.Single(p => p.Name == "ShipDate").Value;
@@ -247,17 +247,17 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var list = new List<ODataEntry>();
+                    var list = new List<ODataResource>();
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                foreach (ODataEntry pre in list)
+                                ODataResource entry = reader.Item as ODataResource;
+                                foreach (ODataResource pre in list)
                                 {
                                     TimeOfDay entryTimeOfDay = (TimeOfDay)entry.Properties.Single(p => p.Name == "ShipTime").Value;
                                     TimeOfDay preTimeOfDay = (TimeOfDay)pre.Properties.Single(p => p.Name == "ShipTime").Value;
@@ -357,13 +357,13 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 // Verify Date Property
                                 Assert.AreEqual(new Date(2015, 11, 11), entry.Properties.Single(p => p.Name == "Day").Value);
                             }
@@ -408,13 +408,13 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.AreEqual(Date.MinValue, entry.Properties.Single(p => p.Name == "ShipDate").Value);
                                 Assert.AreEqual(TimeOfDay.MinValue, entry.Properties.Single(p => p.Name == "ShipTime").Value);
                             }

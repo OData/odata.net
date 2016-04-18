@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                     this.settings,
                     model));
 
-            var entryWriter = new Lazy<ODataWriter>(() => this.messageWriter.Value.CreateODataEntryWriter(set, type));
+            var entryWriter = new Lazy<ODataWriter>(() => this.messageWriter.Value.CreateODataResourceWriter(set, type));
 
             var valueWithAnnotation = new ODataPrimitiveValue(45);
             valueWithAnnotation.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
 
             this.writerOutput = new Lazy<string>(() =>
             {
-                entryWriter.Value.WriteStart(new ODataEntry { Properties = propertiesToWrite });
+                entryWriter.Value.WriteStart(new ODataResource { Properties = propertiesToWrite });
                 entryWriter.Value.WriteEnd();
                 entryWriter.Value.Flush();
                 writerStream.Seek(0, SeekOrigin.Begin);

@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 {
     public class NullEntityMetadataBuilderTests
     {
-        private readonly ODataEntityMetadataBuilder testSubject = ODataEntityMetadataBuilder.Null;
+        private readonly ODataResourceMetadataBuilder testSubject = ODataResourceMetadataBuilder.Null;
 
         [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullEditLink()

@@ -77,7 +77,7 @@ namespace Microsoft.OData.Performance
                     {
                         using (var messageReader = ODataMessageHelper.CreateMessageReader(stream, Model, ODataMessageKind.Response, isFullValidation))
                         {
-                            ODataReader feedReader = messageReader.CreateODataFeedReader(TestEntitySet, TestEntityType);
+                            ODataReader feedReader = messageReader.CreateODataResourceSetReader(TestEntitySet, TestEntityType);
                             while (feedReader.Read()) { }
                         }
                     }

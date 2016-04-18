@@ -163,7 +163,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         [TestMethod]
         public void CreateEntityWithDefinedTypeProperties()
         {
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+            var entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
             entry.Properties = new[]
                 {
                     new ODataProperty { Name = "PersonId", Value = 101 },
@@ -213,7 +213,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             requestMessage.Method = "POST";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(peopleSet, personType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(peopleSet, personType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }
@@ -330,7 +330,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         [TestMethod]
         public void CreateEntityWithUIntProperties()
         {
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Product" };
+            var entry = new ODataResource() { TypeName = NameSpacePrefix + "Product" };
             entry.Properties = new[]
                 {
                     new ODataProperty { Name = "ProductId", Value = (UInt16)101 },
@@ -387,7 +387,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             requestMessage.Method = "POST";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(productsSet, productType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(productsSet, productType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }
@@ -506,7 +506,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
         #region Helper
 
-        private ODataEntry QueryEntry(string uri, string mimeType)
+        private ODataResource QueryEntry(string uri, string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
@@ -515,18 +515,18 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var queryResponseMessage = queryRequestMessage.GetResponse();
             Assert.AreEqual(200, queryResponseMessage.StatusCode);
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            entry = reader.Item as ODataEntry;
+                            entry = reader.Item as ODataResource;
                         }
                     }
 
@@ -537,9 +537,9 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             return entry;
         }
 
-        private List<ODataEntry> QueryFeed(string uri, string mimeType)
+        private List<ODataResource> QueryFeed(string uri, string mimeType)
         {
-            List<ODataEntry> entries = new List<ODataEntry>();
+            List<ODataResource> entries = new List<ODataResource>();
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
@@ -551,20 +551,20 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataFeedReader();
+                    var reader = messageReader.CreateODataResourceSetReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            ODataEntry entry = reader.Item as ODataEntry;
+                            ODataResource entry = reader.Item as ODataResource;
                             Assert.IsNotNull(entry);
                             
                             entries.Add(entry);
                         }
-                        else if (reader.State == ODataReaderState.FeedEnd)
+                        else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataFeed);
+                            Assert.IsNotNull(reader.Item as ODataResourceSet);
                         }
                     }
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);

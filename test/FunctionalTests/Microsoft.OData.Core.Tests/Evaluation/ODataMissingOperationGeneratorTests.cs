@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         private readonly ODataAction odataAction;
         private readonly ODataFunction odataFunction;
 
-        private ODataEntry entry;
+        private ODataResource entry;
         private EdmEntityType entityType;
 
         public ODataMissingOperationGeneratorTests()
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void SelectedFunctionWithoutContainerQualifierShouldNotBeGeneratedForOpenType()
         {
-            AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.Create(this.functionEdmMetadata.Name), this.model, type => this.allOperations, entry => new NoOpEntityMetadataBuilder(entry), e => true);
+            AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.Create(this.functionEdmMetadata.Name), this.model, type => this.allOperations, entry => new NoOpResourceMetadataBuilder(entry), e => true);
 
             this.entry.Actions.Should().BeEmpty();
             this.entry.Functions.Should().BeEmpty();
@@ -109,10 +109,10 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
         private void AddMissingOperationsForAll(SelectedPropertiesNode selectedProperties)
         {
-            AddMissingOperations(this.entry, this.entityType, selectedProperties, this.model, type => this.allOperations, entry => new NoOpEntityMetadataBuilder(entry), e => false);
+            AddMissingOperations(this.entry, this.entityType, selectedProperties, this.model, type => this.allOperations, entry => new NoOpResourceMetadataBuilder(entry), e => false);
         }
 
-        private static void AddMissingOperations(ODataEntry entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataEntry, ODataEntityMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmEntityType, bool> typeIsOpen = null)
+        private static void AddMissingOperations(ODataResource entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataResource, ODataResourceMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmEntityType, bool> typeIsOpen = null)
         {
             var metadataContext = new TestMetadataContext 
             {
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = typeIsOpen,
             };
 
-            var entryContext = ODataEntryMetadataContext.Create(entry, new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, entityType, metadataContext, selectedProperties);
+            var entryContext = ODataResourceMetadataContext.Create(entry, new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, entityType, metadataContext, selectedProperties);
             var generator = new ODataMissingOperationGenerator(entryContext, metadataContext);
             List<ODataAction> actions = generator.GetComputedActions().ToList();
             List<ODataFunction> functions = generator.GetComputedFunctions().ToList();
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public Func<Uri> GetMetadataDocumentUriFunc { get; set; }
         public Func<Uri> GetServiceBaseUriFunc { get; set; }
         public Func<IEdmType, IEdmOperation[]> GetBindableOperationsForTypeFunc { get; set; }
-        public Func<ODataEntry, ODataEntityMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
+        public Func<ODataResource, ODataResourceMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
         public Func<IEdmEntityType, bool> OperationsBoundToEntityTypeMustBeContainerQualifiedFunc { get; set; }
 
         public IEdmModel Model
@@ -181,11 +181,11 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             }
         }
 
-        public ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState, bool? useKeyAsSegment)
+        public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState entryState, bool? useKeyAsSegment)
         {
             if (this.GetEntityMetadataBuilderFunc != null)
             {
-                return this.GetEntityMetadataBuilderFunc(entryState.Entry);
+                return this.GetEntityMetadataBuilderFunc(entryState.Resource);
             }
 
             throw new NotImplementedException();

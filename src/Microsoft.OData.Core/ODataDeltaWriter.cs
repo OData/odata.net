@@ -20,16 +20,16 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Start writing a delta feed.
         /// </summary>
-        /// <param name="deltaFeed">Delta feed/collection to write.</param>
-        public abstract void WriteStart(ODataDeltaFeed deltaFeed);
+        /// <param name="deltaResourceSet">Delta feed/collection to write.</param>
+        public abstract void WriteStart(ODataDeltaResourceSet deltaResourceSet);
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously start writing a delta feed.
         /// </summary>
-        /// <param name="deltaFeed">Delta feed/collection to write.</param>
+        /// <param name="deltaResourceSet">Delta feed/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataDeltaFeed deltaFeed);
+        public abstract Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet);
 #endif
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core
         /// Start writing a navigation link.
         /// </summary>
         /// <param name="navigationLink">The navigation link to write.</param>
-        public abstract void WriteStart(ODataNavigationLink navigationLink);
+        public abstract void WriteStart(ODataNestedResourceInfo navigationLink);
 
 #if ODATALIB_ASYNC
         /// <summary>
@@ -57,14 +57,14 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="navigationLink">The navigation link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataNavigationLink navigationLink);
+        public abstract Task WriteStartAsync(ODataNestedResourceInfo navigationLink);
 #endif
 
         /// <summary>
         /// Start writing an expanded feed.
         /// </summary>
         /// <param name="expandedFeed">The expanded feed to write.</param>
-        public abstract void WriteStart(ODataFeed expandedFeed);
+        public abstract void WriteStart(ODataResourceSet expandedFeed);
 
 #if ODATALIB_ASYNC
         /// <summary>
@@ -72,35 +72,35 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="expandedFeed">The expanded feed to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataFeed expandedFeed);
+        public abstract Task WriteStartAsync(ODataResourceSet expandedFeed);
 #endif
 
         /// <summary>
-        /// Start writing a delta entry.
+        /// Start writing a delta resource.
         /// </summary>
-        /// <param name="deltaEntry">The delta entry to write.</param>
-        public abstract void WriteStart(ODataEntry deltaEntry);
+        /// <param name="deltaResource">The delta resource to write.</param>
+        public abstract void WriteStart(ODataResource deltaResource);
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously start writing a delta entry.
+        /// Asynchronously start writing a delta resource.
         /// </summary>
-        /// <param name="deltaEntry">The delta entry to write.</param>
+        /// <param name="deltaResource">The delta resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataEntry deltaEntry);
+        public abstract Task WriteStartAsync(ODataResource deltaResource);
 #endif
 
         /// <summary>
-        /// Writing a delta deleted entry.
+        /// Writing a delta deleted resource.
         /// </summary>
-        /// <param name="deltaDeletedEntry">The delta deleted entry to write.</param>
+        /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         public abstract void WriteDeltaDeletedEntry(ODataDeltaDeletedEntry deltaDeletedEntry);
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writing a delta deleted entry.
+        /// Asynchronously writing a delta deleted resource.
         /// </summary>
-        /// <param name="deltaDeletedEntry">The delta deleted entry to write.</param>
+        /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry);
 #endif

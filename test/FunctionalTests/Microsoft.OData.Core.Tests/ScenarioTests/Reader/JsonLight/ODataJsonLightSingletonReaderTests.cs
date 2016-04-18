@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
             const string payload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"}";
 
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.Id.Should().Be("http://odata.org/test/MySingleton");
             entry.TypeName.Should().Be("NS.Web");
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 "\"WebId\":10," +
                 "\"Name\":\"SingletonWeb\"}";
 
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.Properties.Count().Should().Be(2);
             entry.Properties.Single(p => p.Name == "WebId").Value.Should().Be(10);
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 "\"@odata.editLink\":\"BlaBla\"," +
                 "\"@odata.readLink\":\"BlaBlaBla\"}";
 
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.Id.Should().Be("http://odata.org/test/Bla");
             entry.EditLink.Should().Be("http://odata.org/test/BlaBla");
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"WebId\":10}";
 
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.Properties.Count().Should().Be(1);
             entry.Properties.Single().Value.Should().Be(10);
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
         private void ReadAndVerifySingletonNavigationLink(string payload)
         {
             this.NavigationLinkTestSetting();
-            ODataNavigationLink navigationLink = this.ReadSingletonNavigationLink(payload);
+            ODataNestedResourceInfo navigationLink = this.ReadSingletonNavigationLink(payload);
 
             navigationLink.Name.Should().Be("Pages");
             navigationLink.AssociationLinkUrl.Should().Be("http://odata.org/test/MySingleton/Pages/$ref");
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 "\"Pages@odata.navigationLink\":\"Bla\"," +
                 "\"Pages@odata.associationLink\":\"BlaBlaBla\"}";
 
-            ODataNavigationLink navigationLink = this.ReadSingletonNavigationLink(payload);
+            ODataNestedResourceInfo navigationLink = this.ReadSingletonNavigationLink(payload);
 
             navigationLink.Name.Should().Be("Pages");
             navigationLink.AssociationLinkUrl.Should().Be("http://odata.org/test/BlaBlaBla");
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 "\"@odata.mediaContentType\":\"image/jpeg\"," +
                 "\"@odata.mediaReadLink\":\"Bla\"}";
 
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.MediaResource.ReadLink.Should().Be("http://odata.org/test/Bla");
             entry.MediaResource.ContentType.Should().Be("image/jpeg");
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
 
         private void ReadSingletonWhichHasEtagImplementation(string payload, bool odataSimplified)
         {
-            ODataEntry entry = this.ReadSingleton(payload, odataSimplified);
+            ODataResource entry = this.ReadSingleton(payload, odataSimplified);
 
             entry.ETag.Should().Be("Bla");
         }
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
         private void ReadSingletonWhichHasStreamPropertyTestImplementation(string payload, bool odataSimplified)
         {
             this.StreamTestSetting();
-            ODataEntry entry = this.ReadSingleton(payload, odataSimplified);
+            ODataResource entry = this.ReadSingleton(payload, odataSimplified);
 
             ODataStreamReferenceValue logo = (ODataStreamReferenceValue)entry.Properties.Single().Value;
             logo.ContentType.Should().Be("image/jpeg");
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 "\"OpenType1\":\"Bla\"," +
                 "\"OpenType2\":\"BlaBla\"}";
 
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.Properties.Count().Should().Be(3);
             entry.Properties.Single(p => p.Name == "OpenType2").Value.Should().Be("BlaBla");
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                     "\"target\":\"MySingleton/NS.SingletonFunction\"" +
                     "}" +
                 "}";
-            ODataEntry entry = this.ReadSingleton(payload);
+            ODataResource entry = this.ReadSingleton(payload);
 
             entry.Functions.Count().Should().Be(1);
             entry.Functions.Single().Title.Should().Be("NS.SingletonFunction");
@@ -394,7 +394,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
             this.referencedModel.AddElement(function);
         }
 
-        private ODataEntry ReadSingleton(string payload, bool odataSimplified = false)
+        private ODataResource ReadSingleton(string payload, bool odataSimplified = false)
         {
             MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
@@ -414,9 +414,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
                 {
-                    if (jsonLightReader.State == ODataReaderState.EntryEnd)
+                    if (jsonLightReader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataEntry entry = jsonLightReader.Item as ODataEntry;
+                        ODataResource entry = jsonLightReader.Item as ODataResource;
                         return entry;
                     }
                 }
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
             return null;
         }
 
-        private ODataNavigationLink ReadSingletonNavigationLink(string payload)
+        private ODataNestedResourceInfo ReadSingletonNavigationLink(string payload)
         {
             MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 {
                     if (jsonLightReader.State == ODataReaderState.NavigationLinkEnd)
                     {
-                        ODataNavigationLink navigationLink = jsonLightReader.Item as ODataNavigationLink;
+                        ODataNestedResourceInfo navigationLink = jsonLightReader.Item as ODataNestedResourceInfo;
                         return navigationLink;
                     }
                 }

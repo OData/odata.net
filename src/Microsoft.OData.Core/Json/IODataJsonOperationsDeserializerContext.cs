@@ -28,13 +28,13 @@ namespace Microsoft.OData.Core.Json
         Uri ProcessUriFromPayload(string uriFromPayload);
 
         /// <summary>
-        /// Adds the specified action to the current entry.
+        /// Adds the specified action to the current resource.
         /// </summary>
         /// <param name="action">The action which is fully populated with the data from the payload.</param>
         void AddActionToEntry(ODataAction action);
 
         /// <summary>
-        /// Adds the specified function to the current entry.
+        /// Adds the specified function to the current resource.
         /// </summary>
         /// <param name="function">The function which is fully populated with the data from the payload.</param>
         void AddFunctionToEntry(ODataFunction function);

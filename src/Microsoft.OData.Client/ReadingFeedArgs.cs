@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// Initializes a new instance of the <see cref="ReadingFeedArgs" /> class.
         /// </summary>
         /// <param name="feed">The feed.</param>
-        public ReadingFeedArgs(ODataFeed feed)
+        public ReadingFeedArgs(ODataResourceSet feed)
         {
             Util.CheckArgumentNull(feed, "feed");
             this.Feed = feed;
@@ -29,6 +29,6 @@ namespace Microsoft.OData.Client
         /// <value>
         /// The feed.
         /// </value>
-        public ODataFeed Feed { get; private set; }
+        public ODataResourceSet Feed { get; private set; }
     }
 }

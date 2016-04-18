@@ -14,12 +14,12 @@ namespace Microsoft.OData.Client.Materialization
     using DSClient = Microsoft.OData.Client;
 
     /// <summary>
-    /// Materializer state for a given ODataEntry
+    /// Materializer state for a given ODataResource
     /// </summary>
     internal class MaterializerEntry
     {
         /// <summary>The entry.</summary>
-        private readonly ODataEntry entry;
+        private readonly ODataResource entry;
 
         /// <summary>entity descriptor object which keeps track of the entity state and other entity specific information.</summary>
         private readonly EntityDescriptor entityDescriptor;
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client.Materialization
         private EntryFlags flags;
 
         /// <summary>List of navigation links for this entry.</summary>
-        private ICollection<ODataNavigationLink> navigationLinks = ODataMaterializer.EmptyLinks;
+        private ICollection<ODataNestedResourceInfo> navigationLinks = ODataMaterializer.EmptyLinks;
 
         /// <summary>
         /// Creates a new instance of MaterializerEntry.
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="format">The format the entry was read in.</param>
         /// <param name="isTracking">True if the contents of the entry will be tracked in the context, otherwise False.</param>
         /// <param name="model">The client model.</param>
-        private MaterializerEntry(ODataEntry entry, ODataFormat format, bool isTracking, ClientEdmModel model)
+        private MaterializerEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model)
         {
             Debug.Assert(entry != null, "entry != null");
 
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the entry.
         /// </summary>
-        public ODataEntry Entry
+        public ODataResource Entry
         {
             get { return this.entry; }
         }
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>The navigation links.</summary>
-        public ICollection<ODataNavigationLink> NavigationLinks
+        public ICollection<ODataNestedResourceInfo> NavigationLinks
         {
             get { return this.navigationLinks; }
         }
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="isTracking">True if the contents of the entry will be tracked in the context, otherwise False.</param>
         /// <param name="model">The client model.</param>
         /// <returns>A new materializer entry.</returns>
-        public static MaterializerEntry CreateEntry(ODataEntry entry, ODataFormat format, bool isTracking, ClientEdmModel model)
+        public static MaterializerEntry CreateEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model)
         {
             Debug.Assert(entry.GetAnnotation<MaterializerEntry>() == null, "MaterializerEntry has already been created.");
 
@@ -249,11 +249,11 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets an entry for a given ODataEntry.
+        /// Gets an entry for a given ODataResource.
         /// </summary>
-        /// <param name="entry">The ODataEntry.</param>
+        /// <param name="entry">The ODataResource.</param>
         /// <returns>The materializer entry</returns>
-        public static MaterializerEntry GetEntry(ODataEntry entry)
+        public static MaterializerEntry GetEntry(ODataResource entry)
         {
             return entry.GetAnnotation<MaterializerEntry>();
         }
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Adds a navigation link.
         /// </summary>
         /// <param name="link">The link.</param>
-        public void AddNavigationLink(ODataNavigationLink link)
+        public void AddNavigationLink(ODataNestedResourceInfo link)
         {
             if (this.IsTracking)
             {
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (this.navigationLinks == ODataMaterializer.EmptyLinks)
             {
-                this.navigationLinks = new List<ODataNavigationLink>();
+                this.navigationLinks = new List<ODataNestedResourceInfo>();
             }
 
             this.navigationLinks.Add(link);

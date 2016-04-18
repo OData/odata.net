@@ -282,7 +282,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 return Expression.Constant(ParseEntity(nodeIn));
             }
             // the value is complex or collection.
-            if (nodeIn.Value is ODataComplexValue || nodeIn.Value is ODataCollectionValue || nodeIn.Value is ODataEntry)
+            if (nodeIn.Value is ODataComplexValue || nodeIn.Value is ODataCollectionValue || nodeIn.Value is ODataResource)
             {
 
                 object value = ODataObjectModelConverter.ConvertPropertyValue(nodeIn.Value);
@@ -954,15 +954,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     return target;
                 }
 
-                var entryReader = reader.CreateODataEntryReader(
+                var entryReader = reader.CreateODataResourceReader(
                     new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
                     entityType);
-                ODataEntry entry = null;
+                ODataResource entry = null;
                 while (entryReader.Read())
                 {
-                    if (entryReader.State == ODataReaderState.EntryEnd)
+                    if (entryReader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = entryReader.Item as ODataEntry;
+                        entry = entryReader.Item as ODataResource;
 
                     }
                 }
@@ -1015,15 +1015,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     return list;
                 }
 
-                var feedReader = reader.CreateODataFeedReader(
+                var feedReader = reader.CreateODataResourceSetReader(
                     new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
                     entityType);
-                ODataEntry entry = null;
+                ODataResource entry = null;
                 while (feedReader.Read())
                 {
-                    if (feedReader.State == ODataReaderState.EntryEnd)
+                    if (feedReader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = feedReader.Item as ODataEntry;
+                        entry = feedReader.Item as ODataResource;
                         object item = ODataObjectModelConverter.ConvertPropertyValue(entry);
 
 

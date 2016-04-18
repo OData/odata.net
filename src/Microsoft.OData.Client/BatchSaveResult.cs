@@ -248,7 +248,7 @@ namespace Microsoft.OData.Client
                 queryComponents,
                 /*projectionPlan*/ null,
                 this.currentOperationResponse.CreateResponseMessage(),
-                ODataPayloadKind.Entry);
+                ODataPayloadKind.Resource);
         }
 
         /// <summary>

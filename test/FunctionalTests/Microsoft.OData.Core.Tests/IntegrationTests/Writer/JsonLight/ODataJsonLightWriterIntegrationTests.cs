@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             const string expected = "{\"@odata.id\":\"http://test.org/EntitySet('1')\"}";
-            var actual = WriteJsonLightEntry(true, null, false, new ODataEntry() {Id = new Uri("http://test.org/EntitySet('1')")}, entitySet, entityType);
+            var actual = WriteJsonLightEntry(true, null, false, new ODataResource() {Id = new Uri("http://test.org/EntitySet('1')")}, entitySet, entityType);
             actual.Should().Be(expected);
         }
 
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             const string expected = "{}";
-            var actual = WriteJsonLightEntry(true, null, false, new ODataEntry(), entitySet, entityType);
+            var actual = WriteJsonLightEntry(true, null, false, new ODataResource(), entitySet, entityType);
             actual.Should().Be(expected);
         }
 
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
-            Action writeEmptyEntry = () => WriteJsonLightEntry(false, new Uri("http://temp.org/"), false, new ODataEntry(), entitySet, entityType);
+            Action writeEmptyEntry = () => WriteJsonLightEntry(false, new Uri("http://temp.org/"), false, new ODataResource(), entitySet, entityType);
             writeEmptyEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
         }
 
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
-            Action writeEmptyEntry = () => WriteJsonLightEntry(false, null, true, new ODataEntry(), entitySet, entityType);
+            Action writeEmptyEntry = () => WriteJsonLightEntry(false, null, true, new ODataResource(), entitySet, entityType);
             writeEmptyEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
-            ODataEntry transientEntry = new ODataEntry() { IsTransient = true };
+            ODataResource transientEntry = new ODataResource() { IsTransient = true };
             var actual = WriteJsonLightEntry(true, null, false, transientEntry, entitySet, entityType);
             actual.Should().Contain("\"@odata.id\":null");
         }
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             var odataUri = new ODataUri { RequestUri = requestUri };
             odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
 
-            ODataEntry entry = new ODataEntry() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, } };
+            ODataResource entry = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, } };
             var actual = WriteJsonLightEntry(
                 isRequest: false,
                 serviceDocumentUri: new Uri("http://temp.org/"),
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             model.AddElement(entityType);
             IEdmNavigationSource containedEntitySet = GetContainedEntitySet(model, entityType);
 
-            ODataEntry entry = new ODataEntry() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, } };
+            ODataResource entry = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, } };
             Action writeContainedEntry = () => WriteJsonLightEntry(
                 isRequest: false,
                 serviceDocumentUri: new Uri("http://temp.org/"),
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Id = new Uri("http://test.org/EntitySet('1')"),
                 ReadLink = new Uri("http://test.org/EntitySet('1')/read")
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Id = new Uri("http://test.org/EntitySet('1')"),
                 EditLink = new Uri("http://test.org/EntitySet('1')/edit"),
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Id = new Uri("http://test.org/EntitySet('1')"),
                 EditLink = new Uri("http://test.org/EntitySet('1')"),
@@ -186,13 +186,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             actual.Should().NotContain("\"@odata.readLink\"");
         }
 
-        private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet, ODataEntry odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType)
+        private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet, ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType)
         {
             return WriteJsonLightEntry(isRequest, serviceDocumentUri, specifySet, odataEntry, entitySet, entityType, odataUri: null);
         }
 
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet,
-            ODataEntry odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType, ODataUri odataUri)
+            ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType, ODataUri odataUri)
         {
             var model = new EdmModel();
             model.AddElement(new EdmEntityContainer("Fake", "Container_sub"));
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
                 messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, TestUtils.WrapReferencedModelsToMainModel("Fake", "Container", model));
             }
 
-            var entryWriter = messageWriter.CreateODataEntryWriter(specifySet ? entitySet : null, entityType);
+            var entryWriter = messageWriter.CreateODataResourceWriter(specifySet ? entitySet : null, entityType);
             entryWriter.WriteStart(odataEntry);
             entryWriter.WriteEnd();
             entryWriter.Flush();

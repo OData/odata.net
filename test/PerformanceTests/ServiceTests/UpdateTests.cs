@@ -47,7 +47,7 @@ namespace Microsoft.OData.Performance
                                 new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet", UriKind.Absolute));
                         requestMessage.Method = "POST";
 
-                        var peopleEntry = new ODataEntry()
+                        var peopleEntry = new ODataResource()
                         {
                             EditLink = new Uri("/SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Relative),
                             Id = new Uri("/SimplePeopleSet(" + PersonIdBase + ")", UriKind.Relative),
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Performance
 
                         using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
                         {
-                            var odataWriter = messageWriter.CreateODataEntryWriter();
+                            var odataWriter = messageWriter.CreateODataResourceWriter();
                             odataWriter.WriteStart(peopleEntry);
                             odataWriter.WriteEnd();
                         }
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Performance
                         var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + PersonIdBase + ")", UriKind.Absolute));
                         requestMessage.Method = "PUT";
 
-                        var peopleEntry = new ODataEntry()
+                        var peopleEntry = new ODataResource()
                         {
                             Properties = new[] 
                         {
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Performance
 
                         using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
                         {
-                            var odataWriter = messageWriter.CreateODataEntryWriter();
+                            var odataWriter = messageWriter.CreateODataResourceWriter();
                             odataWriter.WriteStart(peopleEntry);
                             odataWriter.WriteEnd();
                         }
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Performance
                         var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
                         requestMessage.Method = "PATCH";
 
-                        var peopleEntry = new ODataEntry()
+                        var peopleEntry = new ODataResource()
                         {
                             Properties = new[] 
                         {
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Performance
 
                         using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
                         {
-                            var odataWriter = messageWriter.CreateODataEntryWriter();
+                            var odataWriter = messageWriter.CreateODataResourceWriter();
                             odataWriter.WriteStart(peopleEntry);
                             odataWriter.WriteEnd();
                         }

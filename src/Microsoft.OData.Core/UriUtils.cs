@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Create a Uri as entry or feed id
+        /// Create a Uri as resource or feed id
         /// </summary>
         /// <param name="value">Uri value</param>
         /// <param name="kind">UriKind</param>

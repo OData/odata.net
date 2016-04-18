@@ -45,45 +45,45 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void SetFeedSerializationInfoShouldThrowOnNullFeed()
         {
-            ODataFeed feed = null;
-            Action action = () => feed.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("feed", ComparisonMode.Substring);
+            ODataResourceSet resourceCollection = null;
+            Action action = () => resourceCollection.SetSerializationInfo(null);
+            action.ShouldThrow<ArgumentNullException>().WithMessage("resourceSet", ComparisonMode.Substring);
         }
 
         [Fact]
         public void ShouldBeAbleToSetTheFeedSerializationInfo()
         {
-            ODataFeed feed = new ODataFeed();
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
-            feed.SetSerializationInfo(serializationInfo);
-            feed.SerializationInfo.Should().BeSameAs(serializationInfo);
+            ODataResourceSet resourceCollection = new ODataResourceSet();
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            resourceCollection.SetSerializationInfo(serializationInfo);
+            resourceCollection.SerializationInfo.Should().BeSameAs(serializationInfo);
         }
 
         [Fact]
         public void ShouldBeAbleToClearTheFeedSerializationInfo()
         {
-            ODataFeed feed = new ODataFeed();
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
-            feed.SerializationInfo = serializationInfo;
-            feed.SetSerializationInfo(null);
-            feed.SerializationInfo.Should().BeNull();
+            ODataResourceSet resourceCollection = new ODataResourceSet();
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            resourceCollection.SerializationInfo = serializationInfo;
+            resourceCollection.SetSerializationInfo(null);
+            resourceCollection.SerializationInfo.Should().BeNull();
         }
         #endregion ODataFeed
 
-        #region ODataEntry
+        #region ODataResource
         [Fact]
         public void SetEntrySerializationInfoShouldThrowOnNullEntry()
         {
-            ODataEntry entry = null;
+            ODataResource entry = null;
             Action action = () => entry.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("entry", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().WithMessage("resource", ComparisonMode.Substring);
         }
 
         [Fact]
         public void ShouldBeAbleToSetTheEntrySerializationInfo()
         {
-            ODataEntry entry = new ODataEntry();
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            ODataResource entry = new ODataResource();
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             entry.SetSerializationInfo(serializationInfo);
             entry.SerializationInfo.Should().BeSameAs(serializationInfo);
         }
@@ -91,13 +91,13 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ShouldBeAbleToClearTheEntrySerializationInfo()
         {
-            ODataEntry entry = new ODataEntry();
-            ODataFeedAndEntrySerializationInfo serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            ODataResource entry = new ODataResource();
+            ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             entry.SerializationInfo = serializationInfo;
             entry.SetSerializationInfo(null);
             entry.SerializationInfo.Should().BeNull();
         }
-        #endregion ODataEntry
+        #endregion ODataResource
 
         #region ODataCollectionStart
         [Fact]

@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
         private static bool IsTopLevelEntryOrEntryOfTopLevelFeed(this CustomInstanceAnnotationsDescriptor annotatedItem)
         {
             // Not an entry
-            if (annotatedItem.TypeOfAnnotatedItem != typeof(ODataEntry))
+            if (annotatedItem.TypeOfAnnotatedItem != typeof(ODataResource))
             {
                 return false;
             }
@@ -119,7 +119,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             // An entry of a top level feed
             if (annotatedItem.Parent.Parent == null)
             {
-                Assert.IsTrue(annotatedItem.Parent.TypeOfAnnotatedItem == typeof(ODataFeed), "Found an entry whose parent is not a feed! Revisit assumptions of top level feed.");
+                Assert.IsTrue(annotatedItem.Parent.TypeOfAnnotatedItem == typeof(ODataResourceSet), "Found an entry whose parent is not a feed! Revisit assumptions of top level feed.");
                 return true;
             }
 
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         private static bool IsFeedWithStreaming(this CustomInstanceAnnotationsDescriptor item, string contentType)
         {
-            return item.TypeOfAnnotatedItem == typeof(ODataFeed) && contentType.Contains(MimeTypes.StreamingParameterTrue);
+            return item.TypeOfAnnotatedItem == typeof(ODataResourceSet) && contentType.Contains(MimeTypes.StreamingParameterTrue);
         }
 
         private static void ApplyFilter(this IEnumerable<CustomInstanceAnnotationsDescriptor> descriptors, Func<string, bool> shouldIncludeAnnotation)

@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataEntry entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
+                    ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
 
                     Assert.IsNotNull(entry);
                     Assert.AreEqual("Russell", entry.Properties.Single(p => p.Name == "FirstName").Value);
@@ -113,7 +113,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataEntry entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
+                    ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.IsNotNull(entry);
                     Assert.AreEqual("AA", entry.Properties.Single(p => p.Name == "AirlineCode").Value);
                 }
@@ -143,7 +143,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             string[] userNames = { "scottketchum", "russellwhyte", "ronaldmundy" };
             for (int i = 0; i < mimeTypes.Length; i++)
             {
-                ODataEntry entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+                ODataResource entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
                 entry.Properties = new[] 
                 {
                     new ODataProperty
@@ -168,7 +168,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(personSet, personType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
@@ -238,7 +238,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             var mimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
 
-            var personEntry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
+            var personEntry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
             var personUserName = new ODataProperty { Name = "UserName", Value = "VincentZhao" };
             var personFirstName = new ODataProperty { Name = "FirstName", Value = "Zhao" };
             var personLastName = new ODataProperty { Name = "LastName", Value = "Vincent" };
@@ -285,7 +285,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.Method = "POST";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(personSet, personType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
                 odataWriter.WriteStart(personEntry);
                 odataWriter.WriteEnd();
             }
@@ -442,7 +442,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataEntry entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
+                    ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.IsNotNull(entry);
                     Assert.AreEqual("AA", entry.Properties.Single(p => p.Name == "AirlineCode").Value);
                 }
@@ -492,7 +492,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataEntry entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
+                    ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.IsNotNull(entry);
                     Assert.AreEqual("KLAX", entry.Properties.Single(p => p.Name == "IcaoCode").Value);
                 }
@@ -501,7 +501,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataEntry entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
+                    ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.IsNotNull(entry);
                     Assert.AreEqual("KSFO", entry.Properties.Single(p => p.Name == "IcaoCode").Value);
                 }
@@ -515,7 +515,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void BasicSearchTest()
         {
-            var predicate = new Func<IEnumerable<ODataEntry>, string, bool>((entries, icaoCode) =>
+            var predicate = new Func<IEnumerable<ODataResource>, string, bool>((entries, icaoCode) =>
             {
                 return entries.Count(entry => entry.Properties.Count(p => p.Name == "IcaoCode" && object.Equals(p.Value, icaoCode)) == 1) == 1;
             });
@@ -539,7 +539,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void GroupSearchTest()
         {
-            var predicate = new Func<IEnumerable<ODataEntry>, string, bool>((entries, userName) =>
+            var predicate = new Func<IEnumerable<ODataResource>, string, bool>((entries, userName) =>
             {
                 return entries.Count(entry => entry.Properties.Count(p => p.Name == "UserName" && object.Equals(p.Value, userName)) == 1) == 1;
             });
@@ -560,7 +560,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             const string PersonTypeName = NameSpacePrefix + "Person";
             const string TripTypeName = NameSpacePrefix + "Trip";
 
-            var predicate = new Func<IEnumerable<ODataEntry>, string, int, bool>((entries, typeName, count) =>
+            var predicate = new Func<IEnumerable<ODataResource>, string, int, bool>((entries, typeName, count) =>
             {
                 return entries.Count(entry => entry.TypeName == typeName) == count;
             });
@@ -1395,7 +1395,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void MediaEntity_Query()
         {
-            var verification = new Action<ODataEntry, bool, int[]>((entry, isFullMetadata, photoIds) =>
+            var verification = new Action<ODataResource, bool, int[]>((entry, isFullMetadata, photoIds) =>
             {
                 Assert.IsNotNull(entry);
                 Assert.IsNotNull(entry.MediaResource);
@@ -1414,8 +1414,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var isFullMetadata = mimeType.Contains(MimeTypes.ODataParameterFullMetadata);
-                    var entry = default(ODataEntry);
-                    var entries = default(IList<ODataEntry>);
+                    var entry = default(ODataResource);
+                    var entries = default(IList<ODataResource>);
 
                     entry = new QueryEntryHelper(this) { RequestUri = "People('russellwhyte')/Photo", MimeType = mimeType }.Execute();
                     verification(entry, isFullMetadata, new[] { 2 });
@@ -1483,7 +1483,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             var bytes = new byte[] { 1, 2, 3, 4, 5 };
             var createHelper = default(CreateStreamHelper);
-            var entry = default(ODataEntry);
+            var entry = default(ODataResource);
 
             // return status code 201
             createHelper = new CreateStreamHelper(this)
@@ -1556,7 +1556,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "Photos(1)",
                 EntitySetName = "Photos",
-                EntryToUpdate = new ODataEntry()
+                EntryToUpdate = new ODataResource()
                 {
                     TypeName = NameSpacePrefix + "Photo",
                     Properties = new[]
@@ -1656,7 +1656,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "Airports",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
-                EntryToCreate = new ODataEntry()
+                EntryToCreate = new ODataResource()
                 {
                     TypeName = NameSpacePrefix + "Airport",
                     Properties = new[]
@@ -1729,7 +1729,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 RequestUri = uri,
                 MimeType = MimeTypes.ApplicationJsonLight,
                 EntitySetName = "People",
-                EntryToUpdate = new ODataEntry()
+                EntryToUpdate = new ODataResource()
                 {
                     TypeName = NameSpacePrefix + "Person",
                     Properties = new[] { new ODataProperty { Name = "UserName", Value = "NewUserName" } }
@@ -1762,7 +1762,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 RequestUri = uri,
                 MimeType = MimeTypes.ApplicationJsonLight,
                 EntitySetName = "Airports",
-                EntryToUpdate = new ODataEntry()
+                EntryToUpdate = new ODataResource()
                 {
                     TypeName = NameSpacePrefix + "Airport",
                     Properties = new[] { new ODataProperty { Name = "IataCode", Value = "NewCode" } }
@@ -1794,7 +1794,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 RequestUri = uri,
                 MimeType = MimeTypes.ApplicationJsonLight,
                 EntitySetName = "People",
-                EntryToUpdate = new ODataEntry()
+                EntryToUpdate = new ODataResource()
                 {
                     TypeName = NameSpacePrefix + "Person",
                     Properties = new[] { new ODataProperty { Name = "Concurrency", Value = long.MinValue } }
@@ -1991,9 +1991,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 this.ExpectedStatusCode = 200;
             }
 
-            public virtual ODataEntry Execute()
+            public virtual ODataResource Execute()
             {
-                ODataEntry result = null;
+                ODataResource result = null;
 
                 var request = new HttpWebRequestMessage(new Uri(this.Host.ServiceBaseUri.AbsoluteUri + this.RequestUri, UriKind.Absolute));
                 request.SetHeader("Accept", this.MimeType);
@@ -2016,12 +2016,12 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var settings = new ODataMessageReaderSettings() { BaseUri = this.Host.ServiceBaseUri };
                     using (var messageReader = new ODataMessageReader(response, settings, this.Host.Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                result = reader.Item as ODataEntry;
+                                result = reader.Item as ODataResource;
                             }
                         }
 
@@ -2055,9 +2055,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             public Action<ReadEntryArgument> ReadEntryEnd { get; set; }
             public Action<ReadFeedArgument> ReadFeedEnd { get; set; }
 
-            public virtual IList<ODataEntry> Execute()
+            public virtual IList<ODataResource> Execute()
             {
-                var result = new List<ODataEntry>();
+                var result = new List<ODataResource>();
 
                 // For supporting server-driven paging,
                 // the initial URI is the original request URI,
@@ -2091,20 +2091,20 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         var settings = new ODataMessageReaderSettings() { BaseUri = this.Host.ServiceBaseUri };
                         using (var messageReader = new ODataMessageReader(response, settings, this.Host.Model))
                         {
-                            var reader = messageReader.CreateODataFeedReader();
+                            var reader = messageReader.CreateODataResourceSetReader();
 
                             while (reader.Read())
                             {
                                 switch (reader.State)
                                 {
-                                    case ODataReaderState.FeedStart:
+                                    case ODataReaderState.ResourceSetStart:
                                         {
-                                            OnReadFeedStart(new ReadFeedArgument() { Feed = (ODataFeed)reader.Item });
+                                            OnReadFeedStart(new ReadFeedArgument() { Feed = (ODataResourceSet)reader.Item });
                                             break;
                                         }
-                                    case ODataReaderState.FeedEnd:
+                                    case ODataReaderState.ResourceSetEnd:
                                         {
-                                            var feed = (ODataFeed)reader.Item;
+                                            var feed = (ODataResourceSet)reader.Item;
                                             Assert.IsNotNull(feed);
                                             OnReadFeedEnd(new ReadFeedArgument() { Feed = feed });
                                             // next link
@@ -2112,14 +2112,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                                             break;
                                         }
-                                    case ODataReaderState.EntryStart:
+                                    case ODataReaderState.ResourceStart:
                                         {
-                                            OnReadEntryStart(new ReadEntryArgument() { Entry = (ODataEntry)reader.Item });
+                                            OnReadEntryStart(new ReadEntryArgument() { Entry = (ODataResource)reader.Item });
                                             break;
                                         }
-                                    case ODataReaderState.EntryEnd:
+                                    case ODataReaderState.ResourceEnd:
                                         {
-                                            var entry = (ODataEntry)reader.Item;
+                                            var entry = (ODataResource)reader.Item;
                                             OnReadEntryEnd(new ReadEntryArgument() { Entry = entry });
                                             result.Add(entry);
 
@@ -2287,13 +2287,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 this.ExpectedStatusCode = 201;
             }
 
-            public ODataEntry EntryToCreate { get; set; }
+            public ODataResource EntryToCreate { get; set; }
             public string EntitySetName { get; set; }
             public string ValidationUri { get; set; }
 
-            public virtual ODataEntry Execute()
+            public virtual ODataResource Execute()
             {
-                ODataEntry result = null;
+                ODataResource result = null;
 
                 var request = new HttpWebRequestMessage(new Uri(this.Host.ServiceBaseUri + this.RequestUri));
                 request.SetHeader("Content-Type", this.MimeType);
@@ -2301,7 +2301,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 request.Method = "POST";
                 using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { PayloadBaseUri = this.Host.ServiceBaseUri }))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
+                    var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
                     odataWriter.WriteStart(this.EntryToCreate);
                     odataWriter.WriteEnd();
                 }
@@ -2316,12 +2316,12 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var settings = new ODataMessageReaderSettings() { BaseUri = this.Host.ServiceBaseUri };
                     using (var messageReader = new ODataMessageReader(response, settings, this.Host.Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                result = reader.Item as ODataEntry;
+                                result = reader.Item as ODataResource;
                             }
                         }
 
@@ -2422,7 +2422,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 this.Method = "PUT";
             }
 
-            public ODataEntry EntryToUpdate { get; set; }
+            public ODataResource EntryToUpdate { get; set; }
             public string EntitySetName { get; set; }
             public string Method { get; set; }
 
@@ -2445,7 +2445,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { PayloadBaseUri = this.Host.ServiceBaseUri, AutoComputePayloadMetadataInJson = true }))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
+                    var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
                     odataWriter.WriteStart(this.EntryToUpdate);
                     odataWriter.WriteEnd();
                 }
@@ -2526,9 +2526,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             public string ContentType { get; set; }
             public string Preference { get; set; }
 
-            public virtual ODataEntry Execute()
+            public virtual ODataResource Execute()
             {
-                ODataEntry result = null;
+                ODataResource result = null;
 
                 var request = new HttpWebRequestMessage(new Uri(this.Host.ServiceBaseUri + this.RequestUri));
                 request.SetHeader("Content-Type", this.ContentType);
@@ -2559,12 +2559,12 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         var settings = new ODataMessageReaderSettings() { BaseUri = this.Host.ServiceBaseUri };
                         using (var messageReader = new ODataMessageReader(response, settings, this.Host.Model))
                         {
-                            var reader = messageReader.CreateODataEntryReader();
+                            var reader = messageReader.CreateODataResourceReader();
                             while (reader.Read())
                             {
-                                if (reader.State == ODataReaderState.EntryEnd)
+                                if (reader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    result = reader.Item as ODataEntry;
+                                    result = reader.Item as ODataResource;
                                 }
                             }
 
@@ -2592,9 +2592,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             public byte[] BytesToUpdate { get; set; }
             public string ContentType { get; set; }
 
-            public virtual ODataEntry Execute()
+            public virtual ODataResource Execute()
             {
-                ODataEntry result = null;
+                ODataResource result = null;
 
                 var request = new HttpWebRequestMessage(new Uri(this.Host.ServiceBaseUri + this.RequestUri));
                 request.SetHeader("Content-Type", ContentType);
@@ -2621,12 +2621,12 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var settings = new ODataMessageReaderSettings() { BaseUri = this.Host.ServiceBaseUri };
                     using (var messageReader = new ODataMessageReader(response, settings, this.Host.Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                result = reader.Item as ODataEntry;
+                                result = reader.Item as ODataResource;
                             }
                         }
 
@@ -2655,17 +2655,17 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         public class ReadEntryArgument
         {
-            public ODataEntry Entry { get; set; }
+            public ODataResource Entry { get; set; }
         }
 
         public class ReadFeedArgument
         {
-            public ODataFeed Feed { get; set; }
+            public ODataResourceSet Feed { get; set; }
         }
 
-        private ODataEntry CreateEntry(string userName)
+        private ODataResource CreateEntry(string userName)
         {
-            return new ODataEntry()
+            return new ODataResource()
             {
                 TypeName = NameSpacePrefix + "Person",
                 Properties = new[]

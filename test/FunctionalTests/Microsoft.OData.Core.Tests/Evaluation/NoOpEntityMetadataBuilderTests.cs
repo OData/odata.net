@@ -19,40 +19,40 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public void NoOpMetadataBuilderShouldReturnEditLinkSetByUser()
         {
             var editLink = new Uri("http://example.com");
-            new NoOpEntityMetadataBuilder(new ODataEntry {EditLink = editLink}).GetEditLink().Should().Be(editLink);
+            new NoOpResourceMetadataBuilder(new ODataResource {EditLink = editLink}).GetEditLink().Should().Be(editLink);
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnReadLinkSetByUser()
         {
             var readLink = new Uri("http://example.com");
-            new NoOpEntityMetadataBuilder(new ODataEntry {ReadLink = readLink}).GetReadLink().Should().Be(readLink);
+            new NoOpResourceMetadataBuilder(new ODataResource {ReadLink = readLink}).GetReadLink().Should().Be(readLink);
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnIdSetByUser()
         {
             var id = new Uri("http://example.com");
-            new NoOpEntityMetadataBuilder(new ODataEntry {Id = id}).GetId().Should().Be(id);
+            new NoOpResourceMetadataBuilder(new ODataResource {Id = id}).GetId().Should().Be(id);
         }
 
         [Fact]
         public void GetIdShouldBeNullWhenEntryIsTransient()
         {
             Uri id = new Uri("http://example.com");
-            ODataEntry odataEntry = new ODataEntry()
+            ODataResource odataEntry = new ODataResource()
             {
                 IsTransient = true,
                 Id = id
             };
-            new NoOpEntityMetadataBuilder(odataEntry).GetId().Should().BeNull();
+            new NoOpResourceMetadataBuilder(odataEntry).GetId().Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnETagSetByUser()
         {
             const string etag = "etag value";
-            new NoOpEntityMetadataBuilder(new ODataEntry {ETag = etag}).GetETag().Should().Be(etag);
+            new NoOpResourceMetadataBuilder(new ODataResource {ETag = etag}).GetETag().Should().Be(etag);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                     ETag = "stream etag"
                 };
 
-            new NoOpEntityMetadataBuilder(new ODataEntry { MediaResource = mediaResource }).GetMediaResource()
+            new NoOpResourceMetadataBuilder(new ODataResource { MediaResource = mediaResource }).GetMediaResource()
                 .Should().Be(mediaResource);
         }
 
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                     new ODataProperty {Name = "CollectionProperty", Value = new ODataCollectionValue()}
                 };
 
-            new NoOpEntityMetadataBuilder(new ODataEntry {Properties = properties}).GetProperties(properties)
+            new NoOpResourceMetadataBuilder(new ODataResource {Properties = properties}).GetProperties(properties)
                 .Should().HaveCount(4);
         }
 
@@ -95,9 +95,9 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 Title = "ActionTitle"
             };
 
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             entry.AddAction(action);
-            new NoOpEntityMetadataBuilder(entry).GetActions()
+            new NoOpResourceMetadataBuilder(entry).GetActions()
                 .Should().ContainSingle(a => a == action);
             
             // Verify that the action information wasn't removed or changed.
@@ -116,10 +116,10 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 Title = "FunctionTitle"
             };
 
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             entry.AddFunction(function);
 
-            new NoOpEntityMetadataBuilder(entry).GetFunctions()
+            new NoOpResourceMetadataBuilder(entry).GetFunctions()
                 .Should().ContainSingle(f => f == function);
             
             // Verify that the Function information wasn't removed or changed.
@@ -131,105 +131,105 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void NoOpMetadataBuilderShouldReturnNavigationLinkSetByUser()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), false)
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), false)
                 .Should().Be(new Uri("http://example.com/navLink"));
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), true)
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", new Uri("http://example.com/navLink"), true)
                 .Should().Be(new Uri("http://example.com/navLink"));
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldReturnAssociationLinkSetByUser()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), false)
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), false)
                 .Should().Be(new Uri("http://example.com/associationLink"));
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), true)
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", new Uri("http://example.com/associationLink"), true)
                 .Should().Be(new Uri("http://example.com/associationLink"));
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructEditLink()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetEditLink().Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetEditLink().Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructReadLink()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetReadLink().Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetReadLink().Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructId()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetId().Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetId().Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructETag()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetETag().Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetETag().Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructMediaResource()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetMediaResource().Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetMediaResource().Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructProperties()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetProperties(new ODataProperty[]{})
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetProperties(new ODataProperty[]{})
                 .Should().BeEmpty();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructActions()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetActions().Count().Should().Be(0);
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetActions().Count().Should().Be(0);
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructFunctions()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetFunctions().Count().Should().Be(0);
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetFunctions().Count().Should().Be(0);
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructNavigationLink()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetNavigationLinkUri("navProp", null, false).Should().BeNull();
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetNavigationLinkUri("navProp", null, true).Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", null, false).Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetNavigationLinkUri("navProp", null, true).Should().BeNull();
         }
 
         [Fact]
         public void NoOpMetadataBuilderShouldNotConstructAssociationLink()
         {
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetAssociationLinkUri("navProp", null, false).Should().BeNull();
-            new NoOpEntityMetadataBuilder(new ODataEntry()).GetAssociationLinkUri("navProp", null, true).Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", null, false).Should().BeNull();
+            new NoOpResourceMetadataBuilder(new ODataResource()).GetAssociationLinkUri("navProp", null, true).Should().BeNull();
         }
 
         [Fact]
         public void TryGetIdForSerializationShouldBeNullWhenEntryIsTransient()
         {
-            ODataEntry odataEntry = new ODataEntry()
+            ODataResource odataEntry = new ODataResource()
             {
                 IsTransient =  true
             };
             Uri id;
-            new NoOpEntityMetadataBuilder(odataEntry).TryGetIdForSerialization(out id).Should().BeTrue();
+            new NoOpResourceMetadataBuilder(odataEntry).TryGetIdForSerialization(out id).Should().BeTrue();
             id.Should().BeNull();
         }
 
         [Fact]
         public void TryGetIdForSerializationShouldBeNullWhenEntryIsNotTransient()
         {
-            ODataEntry odataEntry = new ODataEntry()
+            ODataResource odataEntry = new ODataResource()
             {
                 IsTransient = false
             };
             Uri id;
-            new NoOpEntityMetadataBuilder(odataEntry).TryGetIdForSerialization(out id).Should().BeFalse();
+            new NoOpResourceMetadataBuilder(odataEntry).TryGetIdForSerialization(out id).Should().BeFalse();
             id.Should().BeNull();
         }
     }

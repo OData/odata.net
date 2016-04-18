@@ -182,7 +182,7 @@ namespace Microsoft.OData.Core
         /// <summary>The $delta token indicates delta feed.</summary>
         internal const string ContextUriDeltaFeed = "/$delta";
 
-        /// <summary>The $deletedEntity token indicates delta entry.</summary>
+        /// <summary>The $deletedEntity token indicates delta resource.</summary>
         internal const string ContextUriDeletedEntry = "/$deletedEntity";
 
         /// <summary>The $delta token indicates delta link.</summary>

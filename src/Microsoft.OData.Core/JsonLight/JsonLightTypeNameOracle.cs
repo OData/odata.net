@@ -19,9 +19,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// Determines the entity type name to write to the payload.
         /// </summary>
         /// <param name="expectedTypeName">The expected type name, e.g. the base type of the set or the nav prop.</param>
-        /// <param name="entry">The ODataEntry whose type is to be written.</param>
+        /// <param name="resource">The ODataResource whose type is to be written.</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal abstract string GetEntryTypeNameForWriting(string expectedTypeName, ODataEntry entry);
+        internal abstract string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource);
 
         /// <summary>
         /// Determines the type name to write to the payload.  Json Light type names are only written into the payload for open properties

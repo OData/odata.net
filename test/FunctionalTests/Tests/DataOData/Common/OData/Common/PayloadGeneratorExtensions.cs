@@ -43,7 +43,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ODataPayloadKind payloadKind = payload.PayloadElement.GetPayloadKindFromPayloadElement();
             Debug.Assert(
-                payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed,
+                payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet,
                 "Expanded links can only contain entries and feeds.");
 
             if (payload.PayloadEdmModel != null)
@@ -92,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ODataPayloadKind payloadKind = payload.PayloadElement.GetPayloadKindFromPayloadElement();
             Debug.Assert(
-                payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed,
+                payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet,
                 "Expanded links can only contain entries and feeds.");
 
             EdmEntityType entityType = null;
@@ -182,7 +182,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             int elementsBefore = 0,
             int elementsAfter = 0) where T : PayloadTestDescriptor
         {
-            Debug.Assert(payload.PayloadElement.GetPayloadKindFromPayloadElement() == ODataPayloadKind.Entry, "only entries are supported.");
+            Debug.Assert(payload.PayloadElement.GetPayloadKindFromPayloadElement() == ODataPayloadKind.Resource, "only entries are supported.");
             EntityInstance payloadEntity = (EntityInstance)payload.PayloadElement;
 
             EntitySetInstance entitySetInstance = PayloadBuilder.EntitySet();

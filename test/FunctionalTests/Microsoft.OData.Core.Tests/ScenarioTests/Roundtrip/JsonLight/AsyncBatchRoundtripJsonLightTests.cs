@@ -70,8 +70,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 // Use a new message writer to write the body of this operation.
                 using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
-                    var entryWriter = operationMessageWriter.CreateODataEntryWriter();
-                    var entry = new ODataEntry() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "AFKIL" }, new ODataProperty() { Name = "Name", Value = "Bob" } } };
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "AFKIL" }, new ODataProperty() { Name = "Name", Value = "Bob" } } };
                     entryWriter.WriteStart(entry);
                     entryWriter.WriteEnd();
                 }
@@ -80,8 +80,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 
                 using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
-                    var entryWriter = operationMessageWriter.CreateODataEntryWriter();
-                    var entry = new ODataEntry() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Jack" } } };
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Jack" } } };
                     entryWriter.WriteStart(entry);
                     entryWriter.WriteEnd();
                 }
@@ -130,8 +130,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                                 settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
                                 using (var operationMessageWriter = new ODataMessageWriter(response, settings, this.userModel))
                                 {
-                                    var entryWriter = operationMessageWriter.CreateODataEntryWriter(this.customers, this.customerType);
-                                    var entry = new ODataEntry() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "ALFKI" }, new ODataProperty() { Name = "Name", Value = "John" } } };
+                                    var entryWriter = operationMessageWriter.CreateODataResourceWriter(this.customers, this.customerType);
+                                    var entry = new ODataResource() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "ALFKI" }, new ODataProperty() { Name = "Name", Value = "John" } } };
                                     entryWriter.WriteStart(entry);
                                     entryWriter.WriteEnd();
                                 }
@@ -170,13 +170,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                             {
                                 using (ODataMessageReader innerMessageReader = new ODataMessageReader(operationMessage, new ODataMessageReaderSettings(), this.userModel))
                                 {
-                                    var reader = innerMessageReader.CreateODataEntryReader();
+                                    var reader = innerMessageReader.CreateODataResourceReader();
 
                                     while (reader.Read())
                                     {
-                                        if (reader.State == ODataReaderState.EntryEnd)
+                                        if (reader.State == ODataReaderState.ResourceEnd)
                                         {
-                                            ODataEntry entry = reader.Item as ODataEntry;
+                                            ODataResource entry = reader.Item as ODataResource;
                                             Assert.Equal("ALFKI", entry.Properties.Single(p => p.Name == "Id").Value);
                                             Assert.Equal("John", entry.Properties.Single(p => p.Name == "Name").Value);
                                         }

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataFeedAndEntrySerializationInfoTests.cs" company="Microsoft">
+// <copyright file="ODataResourceSerializationInfoTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,13 +11,13 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests
 {
-    public class ODataFeedAndEntrySerializationInfoTests
+    public class ODataResourceSerializationInfoTests
     {
-        private ODataFeedAndEntrySerializationInfo testSubject;
+        private ODataResourceSerializationInfo testSubject;
 
-        public ODataFeedAndEntrySerializationInfoTests()
+        public ODataResourceSerializationInfoTests()
         {
-            this.testSubject = new ODataFeedAndEntrySerializationInfo();
+            this.testSubject = new ODataResourceSerializationInfo();
         }
 
         [Fact]
@@ -101,33 +101,33 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ValidateNullSerializationInfoShouldReturnNull()
         {
-            ODataFeedAndEntrySerializationInfo.Validate(null).Should().BeNull();
+            ODataResourceSerializationInfo.Validate(null).Should().BeNull();
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfEntitySetNameNotSet()
         {
-            Action action = () => ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo());
+            Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo());
             action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfBaseTypeNameNotSet()
         {
-            Action action = () => ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set" });
+            Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set" });
             action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceEntityTypeName", ComparisonMode.Substring);
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldAllowExpectedTypeNameNotSet()
         {
-            ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "EntitySetElementTypeName" }).Should().NotBeNull();
+            ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "EntitySetElementTypeName" }).Should().NotBeNull();
         }
 
         [Fact]
         public void ValdatingSerializationInfoShouldAllowIfEntitySetNameNotSetWithEdmUnknownEntitySet()
         {
-            ODataFeedAndEntrySerializationInfo.Validate(new ODataFeedAndEntrySerializationInfo()
+            ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo()
             {
                 ExpectedTypeName = "NS.Type",
                 IsFromCollection = true,

@@ -249,7 +249,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void MaterializeEntityShouldWork()
         {
-            var odataEntry = new ODataEntry() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
+            var odataEntry = new ODataResource() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
             odataEntry.Properties = new ODataProperty[]
             {
                 new ODataProperty { Name = "keyProp", Value = 1 },
@@ -319,7 +319,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());
 
-            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Json);
+            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Json);
 
             var customersRead = new List<EntityType>();
             while (entriesMaterializer.Read())

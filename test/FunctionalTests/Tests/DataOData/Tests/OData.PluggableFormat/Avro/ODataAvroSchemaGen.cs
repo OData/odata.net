@@ -30,7 +30,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             Schema.SetFields(ErrorSchema, fields);
         }
 
-        public static RecordSchema GetSchema(ODataEntry entry)
+        public static RecordSchema GetSchema(ODataResource entry)
         {
             RecordSchema rs = Schema.CreateRecord(entry.TypeName, null);
             Schema.SetFields(rs, entry.Properties.Select(property => Schema.CreateField(property.Name, GetSchema(property.Value))));
@@ -59,7 +59,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 return Schema.CreateNull();
             }
 
-            ODataEntry entry = value as ODataEntry;
+            ODataResource entry = value as ODataResource;
             if (entry != null)
             {
                 return GetSchema(entry);

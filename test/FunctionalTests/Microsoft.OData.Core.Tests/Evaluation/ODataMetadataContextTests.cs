@@ -36,8 +36,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
-            ODataEntry entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree }, null);
+            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree }, null);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
         }
 
@@ -52,8 +52,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 new Uri("http://myservice.svc/$metadata", UriKind.Absolute),
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
-            ODataEntry entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = entry, SelectedProperties = new SelectedPropertiesNode("*")}, null);
+            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*")}, null);
             action.ShouldNotThrow();
         }
 

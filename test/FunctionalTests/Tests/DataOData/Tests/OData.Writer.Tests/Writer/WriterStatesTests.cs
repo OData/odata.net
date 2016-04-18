@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Setup = (mw, w, s) => { 
                         if (feedWriter) { w.WriteStart(ObjectModelUtils.CreateDefaultFeed()); }
                         w.WriteStart(ObjectModelUtils.CreateDefaultEntry()); 
-                        w.WriteStart(new ODataNavigationLink { Name = ObjectModelUtils.DefaultLinkName, Url = ObjectModelUtils.DefaultLinkUrl, IsCollection = false });
+                        w.WriteStart(new ODataNestedResourceInfo { Name = ObjectModelUtils.DefaultLinkName, Url = ObjectModelUtils.DefaultLinkUrl, IsCollection = false });
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
                         { WriterAction.StartEntry, null },

@@ -23,8 +23,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         private static readonly ODataPayloadKind[] supportedPayloadKinds =
             {
-                ODataPayloadKind.Entry,
-                ODataPayloadKind.Feed,
+                ODataPayloadKind.Resource,
+                ODataPayloadKind.ResourceSet,
                 ODataPayloadKind.Property, 
                 ODataPayloadKind.Collection, 
                 ODataPayloadKind.Parameter, 

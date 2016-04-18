@@ -273,7 +273,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(account.AccountInfoPlus.IsActivePlus);
 
             //Update entity with open complex type
-            var entry = new ODataEntry() { TypeName = ServerSideNameSpacePrefix + "Account" };
+            var entry = new ODataResource() { TypeName = ServerSideNameSpacePrefix + "Account" };
             entry.Properties = new[]
             {
                 new ODataProperty { Name = "AccountID", Value = 1000000 },
@@ -329,7 +329,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             requestMessage.Method = "PATCH";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(accountSet, accountType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }
@@ -348,7 +348,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         public void OpenEntityType()
         {
             //UpdateOpenTypeSingleton
-            var entry = new ODataEntry() { TypeName = ServerSideNameSpacePrefix + "PublicCompany" };
+            var entry = new ODataResource() { TypeName = ServerSideNameSpacePrefix + "PublicCompany" };
             entry.Properties = new[] 
             {
                 new ODataProperty
@@ -381,7 +381,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             requestMessage.Method = "PATCH";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(companySingleton, companyType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(companySingleton, companyType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }

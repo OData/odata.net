@@ -19,7 +19,7 @@ namespace Microsoft.OData.Client
         /// <param name="link">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        public WritingNavigationLinkArgs(ODataNavigationLink link, object source, object target)
+        public WritingNavigationLinkArgs(ODataNestedResourceInfo link, object source, object target)
         {
             Util.CheckArgumentNull(link, "link");
             Util.CheckArgumentNull(source, "source");
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client
         /// <value>
         /// The link.
         /// </value>
-        public ODataNavigationLink Link { get; private set; }
+        public ODataNestedResourceInfo Link { get; private set; }
 
         /// <summary>
         /// Gets the source.

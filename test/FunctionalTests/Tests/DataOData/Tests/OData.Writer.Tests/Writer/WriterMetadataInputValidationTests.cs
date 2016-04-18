@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = tc.TypeName;
                 var descriptor = new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
@@ -217,7 +217,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         return;
                     }
 
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.TypeName = "TestNS.EntityType";
                     ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
                     entry.Properties = new ODataProperty[] { idProperty, testCase.PropertyCreate() };
@@ -414,7 +414,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.TypeName = "TestNS.EntityType";
                     ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
                     entry.Properties = new ODataProperty[] { idProperty, testCase.PropertyCreate() };
@@ -498,7 +498,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestNS.EntityType";
                 ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
                 entry.Properties = new ODataProperty[] { idProperty, tc.PropertyCreate() };
@@ -632,7 +632,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestNS.EntityType";
 
                 ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
@@ -765,11 +765,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             return new PayloadWriterTestDescriptor<ODataItem>(
                 this.Settings,
-                new ODataEntry()
+                new ODataResource()
                 {
                     TypeName = typeName,
                     MediaResource = mediaResourceValue,
-                    SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                    SerializationInfo = new ODataResourceSerializationInfo()
                     {
                         NavigationSourceEntityTypeName = typeName,
                         NavigationSourceName = "MySet",
@@ -1140,7 +1140,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestNS.EntityType";
 
                 ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };

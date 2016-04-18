@@ -88,11 +88,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Writes property names and value pairs.
         /// </summary>
-        /// <param name="owningType">The <see cref="IEdmStructuredType"/> of the entry (or null if not metadata is available).</param>
+        /// <param name="owningType">The <see cref="IEdmStructuredType"/> of the resource (or null if not metadata is available).</param>
         /// <param name="properties">The enumeration of properties to write out.</param>
         /// <param name="isComplexValue">
         /// Whether the properties are being written for complex value. Also used for detecting whether stream properties
-        /// are allowed as named stream properties should only be defined on ODataEntry instances
+        /// are allowed as named stream properties should only be defined on ODataResource instances
         /// </param>
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
         /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
@@ -157,8 +157,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="property">The property to write out.</param>
         /// <param name="owningType">The owning type for the <paramref name="property"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
-        /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataEntry instance, false otherwise.
-        /// Named stream properties should only be defined on ODataEntry instances.</param>
+        /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
+        /// Named stream properties should only be defined on ODataResource instances.</param>
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
         /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]

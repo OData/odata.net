@@ -140,10 +140,10 @@
     <Compile Include="ODataContextUriBuilderTests.cs" />
     <Compile Include="ODataEntityReferenceLinksTests.cs" />
     <Compile Include="ODataEntityReferenceLinkTests.cs" />
-    <Compile Include="ODataEntryTests.cs" />
+    <Compile Include="ODataResourceTests.cs" />
     <Compile Include="ODataErrorTests.cs" />
-    <Compile Include="ODataFeedAndEntrySerializationInfoTests.cs" />
-    <Compile Include="ODataFeedAndEntryTypeContextTests.cs" />
+    <Compile Include="ODataResourceSerializationInfoTests.cs" />
+    <Compile Include="ODataResourceTypeContextTests.cs" />
     <Compile Include="ODataFeedTests.cs" />
     <Compile Include="ODataFormatTests.cs" />
     <Compile Include="ODataInstanceAnnotationTests.cs" />

@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// </summary>
         /// <param name="incomingHeaders">The headers in the request.</param>
         /// <param name="entry">The entry that need to customize.</param>
-        private static void CustomizeEntry(Dictionary<string, string> incomingHeaders, ODataEntry entry)
+        private static void CustomizeEntry(Dictionary<string, string> incomingHeaders, ODataResource entry)
         {
             if (null != incomingHeaders)
             {
@@ -108,7 +108,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="selectExpandClause">The SelectExpandClause.</param>
         public static void WriteFeed(ODataWriter writer, IEdmEntityType entityType, IEnumerable entries, IEdmEntitySetBase entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, long? count, Uri deltaLink, Uri nextPageLink, Dictionary<string, string> incomingHeaders = null)
         {
-            var feed = new ODataFeed
+            var feed = new ODataResourceSet
             {
                 Id = entitySet == null ? null : new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name),
                 DeltaLink = deltaLink,
@@ -117,7 +117,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             if (entitySet == null)
             {
-                feed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+                feed.SetSerializationInfo(new ODataResourceSerializationInfo()
                 {
                     NavigationSourceEntityTypeName = entityType.FullTypeName(),
                     NavigationSourceName = null,
@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 {
                     bool isCollection = navigationProperty.Type.IsCollection();
 
-                    var navigationLink = new ODataNavigationLink
+                    var navigationLink = new ODataNestedResourceInfo
                     {
                         IsCollection = isCollection,
                         Name = navigationProperty.Name,
@@ -223,9 +223,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// Writes a ReferenceLink
         /// </summary>
         /// <param name="writer">The ODataWriter that will write the ReferenceLink.</param>
-        public static void WriteReferenceLink(ODataWriter writer, object element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
+        public static void WriteReferenceLink(ODataWriter writer, object element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNestedResourceInfo navigationLink)
         {
-            ODataEntry entry = ODataObjectModelConverter.ConvertToODataEntityReferenceLink(element, entitySource, targetVersion);
+            ODataResource entry = ODataObjectModelConverter.ConvertToODataEntityReferenceLink(element, entitySource, targetVersion);
             entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationByEntry", new ODataPrimitiveValue(true)));
             writer.WriteStart(entry);
             writer.WriteEnd();
@@ -235,10 +235,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// Writes a ReferenceLinks
         /// </summary>
         /// <param name="writer">The ODataWriter that will write the ReferenceLinks.</param>
-        public static void WriteReferenceLinks(ODataWriter writer, IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
+        public static void WriteReferenceLinks(ODataWriter writer, IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNestedResourceInfo navigationLink)
         {
-            IEnumerable<ODataEntry> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks(element, entitySource, targetVersion);
-            var feed = new ODataFeed { };
+            IEnumerable<ODataResource> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks(element, entitySource, targetVersion);
+            var feed = new ODataResourceSet { };
             writer.WriteStart(feed);
             foreach (var entry in links)
             {
@@ -319,7 +319,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
         public static void WriteDeltaFeed(ODataDeltaWriter deltaWriter, List<ODataItem> items, bool? countOption, Uri newDeltaLink)
         {
-            var deltaFeed = new ODataDeltaFeed
+            var deltaFeed = new ODataDeltaResourceSet
             {
                 DeltaLink = newDeltaLink
             };
@@ -332,7 +332,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             foreach (ODataItem item in items)
             {
-                var entry = item as ODataEntry;
+                var entry = item as ODataResource;
                 var deletedEntry = item as ODataDeltaDeletedEntry;
                 var deltaLink = item as ODataDeltaLink;
                 var deltaDeletedLink = item as ODataDeltaDeletedLink;

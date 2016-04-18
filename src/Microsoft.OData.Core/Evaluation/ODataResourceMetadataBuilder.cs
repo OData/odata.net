@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataEntityMetadataBuilder.cs" company="Microsoft">
+// <copyright file="ODataResourceMetadataBuilder.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -21,29 +21,29 @@ namespace Microsoft.OData.Core.Evaluation
     /// <summary>
     /// Extensibility point for customizing how OData entity metadata (edit-links, IDs, ETags, etc) is built.
     /// </summary>
-    internal abstract class ODataEntityMetadataBuilder
+    internal abstract class ODataResourceMetadataBuilder
     {
 #if !ASTORIA_CLIENT
         /// <summary>
         /// Gets an instance of the metadata builder which never returns anything other than nulls.
         /// </summary>
-        internal static ODataEntityMetadataBuilder Null
+        internal static ODataResourceMetadataBuilder Null
         {
             get
             {
-                return NullEntityMetadataBuilder.Instance;
+                return NullResourceMetadataBuilder.Instance;
             }
         }
 #endif
 
         /// <summary>
-        /// Gets instance of the metadata builder which belongs to the parent odata entry
+        /// Gets instance of the metadata builder which belongs to the parent odata resource
         /// </summary>
         /// <returns>
-        /// The metadata builder of the parent odata entry
-        /// Or null if there is no parent odata entry
+        /// The metadata builder of the parent odata resource
+        /// Or null if there is no parent odata resource
         /// </returns>
-        internal ODataEntityMetadataBuilder ParentMetadataBuilder { get; set; }
+        internal ODataResourceMetadataBuilder ParentMetadataBuilder { get; set; }
 
         /// <summary>
         /// Gets the edit link of the entity.
@@ -280,17 +280,17 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Implementation of the metadata builder which only returns nulls.
         /// </summary>
-        private sealed class NullEntityMetadataBuilder : ODataEntityMetadataBuilder
+        private sealed class NullResourceMetadataBuilder : ODataResourceMetadataBuilder
         {
             /// <summary>
             /// Singleton instance of the null metadata builder.
             /// </summary>
-            internal static readonly NullEntityMetadataBuilder Instance = new NullEntityMetadataBuilder();
+            internal static readonly NullResourceMetadataBuilder Instance = new NullResourceMetadataBuilder();
 
             /// <summary>
-            /// Prevents a default instance of the <see cref="NullEntityMetadataBuilder"/> class from being created.
+            /// Prevents a default instance of the <see cref="NullResourceMetadataBuilder"/> class from being created.
             /// </summary>
-            private NullEntityMetadataBuilder()
+            private NullResourceMetadataBuilder()
             {
             }
 

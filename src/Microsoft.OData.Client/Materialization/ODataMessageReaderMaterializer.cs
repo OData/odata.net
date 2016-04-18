@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Feed being materialized; possibly null.
         /// </summary>
-        internal sealed override ODataFeed CurrentFeed
+        internal sealed override ODataResourceSet CurrentFeed
         {
             get { return null; }
         }
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Entry being materialized; possibly null.
         /// </summary>
-        internal sealed override ODataEntry CurrentEntry
+        internal sealed override ODataResource CurrentEntry
         {
             get { return null; }
         }

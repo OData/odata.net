@@ -56,9 +56,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }
 
-        private MaterializerEntry CreateMaterializerEntry(ODataFormat format, Action<ODataEntry> modifyEntry = null)
+        private MaterializerEntry CreateMaterializerEntry(ODataFormat format, Action<ODataResource> modifyEntry = null)
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             if (modifyEntry != null)
             {
                 modifyEntry(entry);

@@ -39,8 +39,8 @@ namespace Microsoft.OData.Core
             { ODataPayloadKind.IndividualProperty,      ValidateResourcePath },
             { ODataPayloadKind.Collection,              ValidateCollectionType },
             { ODataPayloadKind.Property,                ValidateType },
-            { ODataPayloadKind.Entry,                   ValidateNavigationSource },
-            { ODataPayloadKind.Feed,                    ValidateNavigationSource },
+            { ODataPayloadKind.Resource,                   ValidateNavigationSource },
+            { ODataPayloadKind.ResourceSet,                    ValidateNavigationSource },
             { ODataPayloadKind.Delta,                   ValidateDelta },
         };
 
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Core
                 // #ContainerName.NavigationSourceName
                 builder.Append(info.NavigationPath);
 
-                if (info.DeltaKind == ODataDeltaKind.None || info.DeltaKind == ODataDeltaKind.Feed || info.DeltaKind == ODataDeltaKind.Entry)
+                if (info.DeltaKind == ODataDeltaKind.None || info.DeltaKind == ODataDeltaKind.ResourceSet || info.DeltaKind == ODataDeltaKind.Resource)
                 {
                     // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
                     if (!string.IsNullOrEmpty(info.TypeCast))
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core
                 switch (info.DeltaKind)
                 {
                     case ODataDeltaKind.None:
-                    case ODataDeltaKind.Entry:
+                    case ODataDeltaKind.Resource:
                         if (info.IncludeFragmentItemSelector)
                         {
                             // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/$entity
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Core
                         }
 
                         break;
-                    case ODataDeltaKind.Feed:
+                    case ODataDeltaKind.ResourceSet:
                         builder.Append(ODataConstants.ContextUriDeltaFeed);
                         break;
                     case ODataDeltaKind.DeletedEntry:
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validate NavigationSource for given ODataContextUrlInfo for entry or feed.
+        /// Validate NavigationSource for given ODataContextUrlInfo for resource or resource set.
         /// </summary>
         /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
         private static void ValidateNavigationSource(ODataContextUrlInfo contextUrlInfo)

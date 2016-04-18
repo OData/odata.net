@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataFeedAndEntryTypeContextTests.cs" company="Microsoft">
+// <copyright file="ODataResourceTypeContextTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,22 +13,22 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests
 {
-    public class ODataFeedAndEntryTypeContextTests
+    public class ODataResourceTypeContextTests
     {
-        private static readonly ODataFeedAndEntryTypeContext TypeContextWithoutModel;
-        private static readonly ODataFeedAndEntryTypeContext TypeContextWithModel;
-        private static readonly ODataFeedAndEntryTypeContext BaseTypeContextThatThrows;
-        private static readonly ODataFeedAndEntryTypeContext BaseTypeContextThatWillNotThrow;
-        private static readonly ODataFeedAndEntryTypeContext TypeContextWithEdmUnknowEntitySet;
-        private static readonly ODataFeedAndEntrySerializationInfo SerializationInfo;
-        private static readonly ODataFeedAndEntrySerializationInfo SerializationInfoWithEdmUnknowEntitySet;
+        private static readonly ODataResourceTypeContext TypeContextWithoutModel;
+        private static readonly ODataResourceTypeContext TypeContextWithModel;
+        private static readonly ODataResourceTypeContext BaseTypeContextThatThrows;
+        private static readonly ODataResourceTypeContext BaseTypeContextThatWillNotThrow;
+        private static readonly ODataResourceTypeContext TypeContextWithEdmUnknowEntitySet;
+        private static readonly ODataResourceSerializationInfo SerializationInfo;
+        private static readonly ODataResourceSerializationInfo SerializationInfoWithEdmUnknowEntitySet;
         private static readonly EdmEntitySet EntitySet;
         private static readonly EdmEntityType EntitySetElementType;
         private static readonly EdmEntityType ExpectedEntityType;
         private static readonly EdmEntityType ActualEntityType;
         private static readonly EdmModel Model;
 
-        static ODataFeedAndEntryTypeContextTests()
+        static ODataResourceTypeContextTests()
         {
             Model = new EdmModel();
             EntitySetElementType = new EdmEntityType("ns", "Customer");
@@ -45,19 +45,19 @@ namespace Microsoft.OData.Core.Tests
             Model.AddElement(ActualEntityType);
             defaultContainer.AddElement(EntitySet);
 
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "MyCustomers", NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer" };
-            SerializationInfoWithEdmUnknowEntitySet = new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = null, NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer", NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet };
-            TypeContextWithoutModel = ODataFeedAndEntryTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
-            TypeContextWithModel = ODataFeedAndEntryTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
-            TypeContextWithEdmUnknowEntitySet = ODataFeedAndEntryTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
-            BaseTypeContextThatThrows = ODataFeedAndEntryTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
-            BaseTypeContextThatWillNotThrow = ODataFeedAndEntryTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: false);
+            SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "MyCustomers", NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer" };
+            SerializationInfoWithEdmUnknowEntitySet = new ODataResourceSerializationInfo() { NavigationSourceName = null, NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer", NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet };
+            TypeContextWithoutModel = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
+            TypeContextWithModel = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
+            TypeContextWithEdmUnknowEntitySet = ODataResourceTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
+            BaseTypeContextThatThrows = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
+            BaseTypeContextThatWillNotThrow = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: false);
         }
 
         [Fact]
         public void ShouldCreateSubclassWithoutModelWhenSerializationInfoIsGiven()
         {
-            var typeContext = ODataFeedAndEntryTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
             typeContext.Should().NotBeNull();
             typeContext.GetType().Name.EndsWith("WithoutModel").Should().BeTrue();
         }
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ShouldCreateSubclassWithModelWhenMetadataIsGiven()
         {
-            var typeContext = ODataFeedAndEntryTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
             typeContext.Should().NotBeNull();
             typeContext.GetType().Name.EndsWith("WithModel").Should().BeTrue();
         }
@@ -73,14 +73,14 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ShouldCreateBaseClassWhenEntitySetIsGivenButModelIsNotUserModel()
         {
-            var typeContext = ODataFeedAndEntryTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
-            typeContext.Should().BeOfType<ODataFeedAndEntryTypeContext>();
+            var typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
+            typeContext.Should().BeOfType<ODataResourceTypeContext>();
         }
 
         [Fact]
         public void ShouldCreateSubclassWithoutModelWhenBothSerializationInfoAndMetadataAreGiven()
         {
-            var typeContext = ODataFeedAndEntryTypeContext.Create(SerializationInfo, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
             typeContext.Should().NotBeNull();
             typeContext.GetType().Name.EndsWith("WithoutModel").Should().BeTrue();
         }
@@ -88,15 +88,15 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsTrue()
         {
-            var typeContext = ODataFeedAndEntryTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
-            typeContext.Should().BeOfType<ODataFeedAndEntryTypeContext>();
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
+            typeContext.Should().BeOfType<ODataResourceTypeContext>();
         }
 
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsFalse()
         {
-            var typeContext = ODataFeedAndEntryTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
-            typeContext.Should().BeOfType<ODataFeedAndEntryTypeContext>();
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
+            typeContext.Should().BeOfType<ODataResourceTypeContext>();
         }
 
         #region TypeContextWithoutModel

@@ -218,14 +218,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings(), this.DataSource.Model))
                 {
-                    var entryReader = messageReader.CreateODataEntryReader(this.QueryContext.Target.NavigationSource, (IEdmEntityType)this.QueryContext.Target.Type);
+                    var entryReader = messageReader.CreateODataResourceReader(this.QueryContext.Target.NavigationSource, (IEdmEntityType)this.QueryContext.Target.Type);
 
                     while (entryReader.Read())
                     {
                         switch (entryReader.State)
                         {
-                            case ODataReaderState.EntryEnd:
-                                var entry = (ODataEntry)entryReader.Item;
+                            case ODataReaderState.ResourceEnd:
+                                var entry = (ODataResource)entryReader.Item;
                                 foreach (var property in entry.Properties)
                                 {
                                     if (Utility.IsETagProperty(targetObject, property.Name)) continue;

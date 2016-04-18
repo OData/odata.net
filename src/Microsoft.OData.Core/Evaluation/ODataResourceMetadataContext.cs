@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataEntryMetadataContext.cs" company="Microsoft">
+// <copyright file="ODataResourceMetadataContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,9 +16,9 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm.Vocabularies.V1;
 
     /// <summary>
-    /// Default implementation of <see cref="IODataEntryMetadataContext"/>
+    /// Default implementation of <see cref="IODataResourceMetadataContext"/>
     /// </summary>
-    internal abstract class ODataEntryMetadataContext : IODataEntryMetadataContext
+    internal abstract class ODataResourceMetadataContext : IODataResourceMetadataContext
     {
         /// <summary>
         /// Empty array of properties.
@@ -26,22 +26,22 @@ namespace Microsoft.OData.Core.Evaluation
         private static readonly KeyValuePair<string, object>[] EmptyProperties = new KeyValuePair<string, object>[0];
 
         /// <summary>
-        /// The entry instance.
+        /// The resource instance.
         /// </summary>
-        private readonly ODataEntry entry;
+        private readonly ODataResource resource;
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the entry.
+        /// The context object to answer basic questions regarding the type of the resource.
         /// </summary>
-        private readonly IODataFeedAndEntryTypeContext typeContext;
+        private readonly IODataResourceTypeContext typeContext;
 
         /// <summary>
-        /// The key property name and value pairs of the entry.
+        /// The key property name and value pairs of the resource.
         /// </summary>
         private KeyValuePair<string, object>[] keyProperties;
 
         /// <summary>
-        /// The ETag property name and value pairs of the entry.
+        /// The ETag property name and value pairs of the resource.
         /// </summary>
         private IEnumerable<KeyValuePair<string, object>> etagProperties;
 
@@ -61,47 +61,47 @@ namespace Microsoft.OData.Core.Evaluation
         private IEnumerable<IEdmOperation> selectedBindableOperations;
 
         /// <summary>
-        /// Constructs an instance of <see cref="ODataEntryMetadataContext"/>.
+        /// Constructs an instance of <see cref="ODataResourceMetadataContext"/>.
         /// </summary>
-        /// <param name="entry">The entry instance.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
-        protected ODataEntryMetadataContext(ODataEntry entry, IODataFeedAndEntryTypeContext typeContext)
+        /// <param name="resource">The resource instance.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
+        protected ODataResourceMetadataContext(ODataResource resource, IODataResourceTypeContext typeContext)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
             Debug.Assert(typeContext != null, "typeContext != null");
 
-            this.entry = entry;
+            this.resource = resource;
             this.typeContext = typeContext;
         }
 
         /// <summary>
-        /// The entry instance.
+        /// The resource instance.
         /// </summary>
-        public ODataEntry Entry
+        public ODataResource Resource
         {
-            get { return this.entry; }
+            get { return this.resource; }
         }
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the entry.
+        /// The context object to answer basic questions regarding the type of the resource.
         /// </summary>
-        public IODataFeedAndEntryTypeContext TypeContext
+        public IODataResourceTypeContext TypeContext
         {
             get { return this.typeContext; }
         }
 
         /// <summary>
-        /// The actual entity type of the entry, i.e. ODataEntry.TypeName.
+        /// The actual entity type of the resource, i.e. ODataResource.TypeName.
         /// </summary>
         public abstract string ActualEntityTypeName { get; }
 
         /// <summary>
-        /// The key property name and value pairs of the entry.
+        /// The key property name and value pairs of the resource.
         /// </summary>
         public abstract ICollection<KeyValuePair<string, object>> KeyProperties { get; }
 
         /// <summary>
-        /// The ETag property name and value pairs of the entry.
+        /// The ETag property name and value pairs of the resource.
         /// </summary>
         public abstract IEnumerable<KeyValuePair<string, object>> ETagProperties { get; }
 
@@ -121,41 +121,41 @@ namespace Microsoft.OData.Core.Evaluation
         public abstract IEnumerable<IEdmOperation> SelectedBindableOperations { get; }
 
         /// <summary>
-        /// Creates an instance of <see cref="ODataEntryMetadataContext"/>.
+        /// Creates an instance of <see cref="ODataResourceMetadataContext"/>.
         /// </summary>
-        /// <param name="entry">The entry instance.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
-        /// <param name="serializationInfo">The serialization info of the entry for writing without model.</param>
-        /// <param name="actualEntityType">The entity type of the entry.</param>
+        /// <param name="resource">The resource instance.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
+        /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
+        /// <param name="actualEntityType">The entity type of the resource.</param>
         /// <param name="metadataContext">The metadata context to use.</param>
         /// <param name="selectedProperties">The selected properties.</param>
-        /// <returns>A new instance of <see cref="ODataEntryMetadataContext"/>.</returns>
-        internal static ODataEntryMetadataContext Create(
-            ODataEntry entry,
-            IODataFeedAndEntryTypeContext typeContext,
-            ODataFeedAndEntrySerializationInfo serializationInfo,
+        /// <returns>A new instance of <see cref="ODataResourceMetadataContext"/>.</returns>
+        internal static ODataResourceMetadataContext Create(
+            ODataResource resource,
+            IODataResourceTypeContext typeContext,
+            ODataResourceSerializationInfo serializationInfo,
             IEdmEntityType actualEntityType,
             IODataMetadataContext metadataContext,
             SelectedPropertiesNode selectedProperties)
         {
             if (serializationInfo != null)
             {
-                return new ODataEntryMetadataContextWithoutModel(entry, typeContext, serializationInfo);
+                return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo);
             }
 
-            return new ODataEntryMetadataContextWithModel(entry, typeContext, actualEntityType, metadataContext, selectedProperties);
+            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualEntityType, metadataContext, selectedProperties);
         }
 
         /// <summary>
-        /// Get key value pair array for specifc odata entry using specifc entity type
+        /// Get key value pair array for specifc odata resource using specifc entity type
         /// </summary>
-        /// <param name="entry">The entry instance.</param>
-        /// <param name="serializationInfo">The serialization info of the entry for writing without model.</param>
-        /// <param name="actualEntityType">The edm entity type of the entry</param>
+        /// <param name="resource">The resource instance.</param>
+        /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
+        /// <param name="actualEntityType">The edm entity type of the resource</param>
         /// <returns>Key value pair array</returns>
         internal static KeyValuePair<string, object>[] GetKeyProperties(
-            ODataEntry entry,
-            ODataFeedAndEntrySerializationInfo serializationInfo,
+            ODataResource resource,
+            ODataResourceSerializationInfo serializationInfo,
             IEdmEntityType actualEntityType)
         {
             KeyValuePair<string, object>[] keyProperties = null;
@@ -163,13 +163,13 @@ namespace Microsoft.OData.Core.Evaluation
 
             if (serializationInfo != null)
             {
-                if (String.IsNullOrEmpty(entry.TypeName))
+                if (String.IsNullOrEmpty(resource.TypeName))
                 {
                     throw new ODataException(OData.Core.Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
                 }
 
-                actualEntityTypeName = entry.TypeName;
-                keyProperties = ODataEntryMetadataContextWithoutModel.GetPropertiesBySerializationInfoPropertyKind(entry, ODataPropertyKind.Key, actualEntityTypeName);
+                actualEntityTypeName = resource.TypeName;
+                keyProperties = ODataResourceMetadataContextWithoutModel.GetPropertiesBySerializationInfoPropertyKind(resource, ODataPropertyKind.Key, actualEntityTypeName);
             }
             else
             {
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Core.Evaluation
                 IEnumerable<IEdmStructuralProperty> edmKeyProperties = actualEntityType.Key();
                 if (edmKeyProperties != null)
                 {
-                    keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(entry, p.Name, actualEntityTypeName, /*isKeyProperty*/false))).ToArray();
+                    keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(resource, p.Name, actualEntityTypeName, /*isKeyProperty*/false))).ToArray();
                 }
             }
 
@@ -189,16 +189,16 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Gets the the CLR value for a primitive property.
         /// </summary>
-        /// <param name="entry">The entry to get the property value.</param>
+        /// <param name="resource">The resource to get the property value.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
         /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
         /// <returns>The clr value of the property.</returns>
-        private static object GetPrimitivePropertyClrValue(ODataEntry entry, string propertyName, string entityTypeName, bool isKeyProperty)
+        private static object GetPrimitivePropertyClrValue(ODataResource resource, string propertyName, string entityTypeName, bool isKeyProperty)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
-            ODataProperty property = entry.NonComputedProperties == null ? null : entry.NonComputedProperties.SingleOrDefault(p => p.Name == propertyName);
+            ODataProperty property = resource.NonComputedProperties == null ? null : resource.NonComputedProperties.SingleOrDefault(p => p.Name == propertyName);
             if (property == null)
             {
                 throw new ODataException(OData.Core.Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
@@ -231,10 +231,10 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Validates that the entry has key properties.
+        /// Validates that the resource has key properties.
         /// </summary>
-        /// <param name="keyProperties">Key properties of the entry.</param>
-        /// <param name="actualEntityTypeName">The entity type name of the entry.</param>
+        /// <param name="keyProperties">Key properties of the resource.</param>
+        /// <param name="actualEntityTypeName">The entity type name of the resource.</param>
         private static void ValidateEntityTypeHasKeyProperties(KeyValuePair<string, object>[] keyProperties, string actualEntityTypeName)
         {
             Debug.Assert(keyProperties != null, "keyProperties != null");
@@ -247,28 +247,28 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Gets the property name value pairs filtered by serialization property kind.
         /// </summary>
-        /// <param name="entry">The entry to get the properties from.</param>
+        /// <param name="resource">The resource to get the properties from.</param>
         /// <param name="propertyKind">The serialization info property kind.</param>
-        /// <param name="actualEntityTypeName">The entity type name of the entry.</param>
+        /// <param name="actualEntityTypeName">The entity type name of the resource.</param>
         /// <returns>The property name value pairs filtered by serialization property kind.</returns>
-        private static KeyValuePair<string, object>[] GetPropertiesBySerializationInfoPropertyKind(ODataEntry entry, ODataPropertyKind propertyKind, string actualEntityTypeName)
+        private static KeyValuePair<string, object>[] GetPropertiesBySerializationInfoPropertyKind(ODataResource resource, ODataPropertyKind propertyKind, string actualEntityTypeName)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
             Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
 
             KeyValuePair<string, object>[] properties = EmptyProperties;
-            if (entry.NonComputedProperties != null)
+            if (resource.NonComputedProperties != null)
             {
-                properties = entry.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
+                properties = resource.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
             }
 
             return properties;
         }
 
         /// <summary>
-        /// Implementation of <see cref="IODataEntryMetadataContext"/> based on serialization info.
+        /// Implementation of <see cref="IODataResourceMetadataContext"/> based on serialization info.
         /// </summary>
-        private sealed class ODataEntryMetadataContextWithoutModel : ODataEntryMetadataContext
+        private sealed class ODataResourceMetadataContextWithoutModel : ODataResourceMetadataContext
         {
             /// <summary>
             /// Empty array of navigation properties.
@@ -286,25 +286,25 @@ namespace Microsoft.OData.Core.Evaluation
             private static readonly IEdmOperation[] EmptyOperations = new IEdmOperation[0];
 
             /// <summary>
-            /// The serialization info of the entry for writing without model.
+            /// The serialization info of the resource for writing without model.
             /// </summary>
-            private readonly ODataFeedAndEntrySerializationInfo serializationInfo;
+            private readonly ODataResourceSerializationInfo serializationInfo;
 
             /// <summary>
-            /// Constructs an instance of <see cref="ODataEntryMetadataContextWithoutModel"/>.
+            /// Constructs an instance of <see cref="ODataResourceMetadataContextWithoutModel"/>.
             /// </summary>
-            /// <param name="entry">The entry instance.</param>
-            /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
-            /// <param name="serializationInfo">The serialization info of the entry for writing without model.</param>
-            internal ODataEntryMetadataContextWithoutModel(ODataEntry entry, IODataFeedAndEntryTypeContext typeContext, ODataFeedAndEntrySerializationInfo serializationInfo)
-                : base(entry, typeContext)
+            /// <param name="resource">The resource instance.</param>
+            /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
+            /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
+            internal ODataResourceMetadataContextWithoutModel(ODataResource resource, IODataResourceTypeContext typeContext, ODataResourceSerializationInfo serializationInfo)
+                : base(resource, typeContext)
             {
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
                 this.serializationInfo = serializationInfo;
             }
 
             /// <summary>
-            /// The key property name and value pairs of the entry.
+            /// The key property name and value pairs of the resource.
             /// </summary>
             public override ICollection<KeyValuePair<string, object>> KeyProperties
             {
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Core.Evaluation
                 {
                     if (this.keyProperties == null)
                     {
-                        this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.entry, ODataPropertyKind.Key, this.ActualEntityTypeName);
+                        this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.Key, this.ActualEntityTypeName);
                         ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualEntityTypeName);
                     }
 
@@ -321,26 +321,26 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// The ETag property name and value pairs of the entry.
+            /// The ETag property name and value pairs of the resource.
             /// </summary>
             public override IEnumerable<KeyValuePair<string, object>> ETagProperties
             {
-                get { return this.etagProperties ?? (this.etagProperties = GetPropertiesBySerializationInfoPropertyKind(this.entry, ODataPropertyKind.ETag, this.ActualEntityTypeName)); }
+                get { return this.etagProperties ?? (this.etagProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.ETag, this.ActualEntityTypeName)); }
             }
 
             /// <summary>
-            /// The actual entity type of the entry, i.e. ODataEntry.TypeName.
+            /// The actual entity type of the resource, i.e. ODataResource.TypeName.
             /// </summary>
             public override string ActualEntityTypeName
             {
                 get
                 {
-                    if (String.IsNullOrEmpty(this.Entry.TypeName))
+                    if (String.IsNullOrEmpty(this.Resource.TypeName))
                     {
                         throw new ODataException(OData.Core.Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
                     }
 
-                    return this.Entry.TypeName;
+                    return this.Resource.TypeName;
                 }
             }
 
@@ -370,12 +370,12 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Implementation of <see cref="IODataEntryMetadataContext"/> based on the given model.
+        /// Implementation of <see cref="IODataResourceMetadataContext"/> based on the given model.
         /// </summary>
-        private sealed class ODataEntryMetadataContextWithModel : ODataEntryMetadataContext
+        private sealed class ODataResourceMetadataContextWithModel : ODataResourceMetadataContext
         {
             /// <summary>
-            /// The entity type of the entry.
+            /// The entity type of the resource.
             /// </summary>
             private readonly IEdmEntityType actualEntityType;
 
@@ -390,15 +390,15 @@ namespace Microsoft.OData.Core.Evaluation
             private readonly SelectedPropertiesNode selectedProperties;
 
             /// <summary>
-            /// Constructs an instance of <see cref="ODataEntryMetadataContextWithModel"/>.
+            /// Constructs an instance of <see cref="ODataResourceMetadataContextWithModel"/>.
             /// </summary>
-            /// <param name="entry">The entry instance.</param>
-            /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
-            /// <param name="actualEntityType">The entity type of the entry.</param>
+            /// <param name="resource">The resource instance.</param>
+            /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
+            /// <param name="actualEntityType">The entity type of the resource.</param>
             /// <param name="metadataContext">The metadata context to use.</param>
             /// <param name="selectedProperties">The selected properties.</param>
-            internal ODataEntryMetadataContextWithModel(ODataEntry entry, IODataFeedAndEntryTypeContext typeContext, IEdmEntityType actualEntityType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
-                : base(entry, typeContext)
+            internal ODataResourceMetadataContextWithModel(ODataResource resource, IODataResourceTypeContext typeContext, IEdmEntityType actualEntityType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
+                : base(resource, typeContext)
             {
                 Debug.Assert(actualEntityType != null, "actualEntityType != null");
                 Debug.Assert(metadataContext != null, "metadataContext != null");
@@ -410,7 +410,7 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// The key property name and value pairs of the entry.
+            /// The key property name and value pairs of the resource.
             /// </summary>
             public override ICollection<KeyValuePair<string, object>> KeyProperties
             {
@@ -421,7 +421,7 @@ namespace Microsoft.OData.Core.Evaluation
                         IEnumerable<IEdmStructuralProperty> edmKeyProperties = this.actualEntityType.Key();
                         if (edmKeyProperties != null)
                         {
-                            this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.entry, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/true))).ToArray();
+                            this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/true))).ToArray();
                         }
 
                         ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualEntityTypeName);
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// The ETag property name and value pairs of the entry.
+            /// The ETag property name and value pairs of the resource.
             /// </summary>
             public override IEnumerable<KeyValuePair<string, object>> ETagProperties
             {
@@ -444,7 +444,7 @@ namespace Microsoft.OData.Core.Evaluation
                         if (properties.Any())
                         {
                             this.etagProperties = properties
-                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.entry, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray();
+                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray();
                         }
                         else
                         {
@@ -452,7 +452,7 @@ namespace Microsoft.OData.Core.Evaluation
                             this.etagProperties = properties != null 
                                 ? properties
                                     .Where(p => p.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.entry, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray() 
+                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray() 
                                 : EmptyProperties;
                         }
                     }
@@ -462,11 +462,11 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// The actual entity type name of the entry.
+            /// The actual entity type name of the resource.
             /// </summary>
             public override string ActualEntityTypeName
             {
-                // Note that entry.TypeName can be null. When that happens, we use the expected entity type as the actual entity type.
+                // Note that resource.TypeName can be null. When that happens, we use the expected entity type as the actual entity type.
                 get { return this.actualEntityType.FullName(); }
             }
 

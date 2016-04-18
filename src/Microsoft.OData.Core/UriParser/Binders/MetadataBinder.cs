@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core.UriParser.Binders
 
         /// <summary>
         /// Constructs a MetadataBinder with the given <paramref name="initialState"/>.
-        /// This constructor gets used if you are not calling the top level entry point ParseQuery.
+        /// This constructor gets used if you are not calling the top level resource point ParseQuery.
         /// This is an at-your-own-risk constructor, since you must provide valid initial state.
         /// </summary>
         /// <param name="initialState">The initialState to use for binding.</param>
