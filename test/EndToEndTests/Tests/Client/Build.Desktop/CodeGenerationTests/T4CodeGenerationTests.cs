@@ -4,18 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.ComponentModel;
+using System.Xml;
+
 namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 {
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text;
-    using System.Xml;
     using Microsoft.CSharp;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Design.T4;
@@ -41,6 +42,9 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
         private const string NameSpacePrefixCodeGenerationTests = "CodeGenerationTests.";
         private const string T4Version = "2.4.0";
+        private const string SystemIO = "System.IO.dll";
+        private const string SystemRuntime = "System.Runtime.dll";
+        private const string SystemXmlReaderWriter = "System.Xml.ReaderWriter.dll";
 
         private static readonly Dictionary<string, ServiceDescriptor> TestServiceDescriptors = new Dictionary<string, ServiceDescriptor>()
         {
@@ -198,6 +202,9 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                     typeof(IQueryable).Assembly.Location, 
                     typeof(INotifyPropertyChanged).Assembly.Location, 
                     typeof(XmlReader).Assembly.Location,
+                    SystemIO,
+                    SystemRuntime,
+                    SystemXmlReaderWriter
                 }
             };
 

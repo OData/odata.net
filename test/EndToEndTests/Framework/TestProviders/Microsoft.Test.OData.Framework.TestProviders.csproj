@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.OData.Framework.TestProviders</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Framework.TestProviders</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <EnableStyleCop>true</EnableStyleCop>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
   </PropertyGroup>

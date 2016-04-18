@@ -7,11 +7,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ODataSamples.Services.Core</RootNamespace>
     <AssemblyName>ODataSamples.Services.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>

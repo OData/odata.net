@@ -9,7 +9,7 @@
     <RootNamespace>Microsoft.Test.OData.Services.Astoria</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.Astoria</AssemblyName>
     <DefineConstants>$(DefineConstants);TEST_ODATA_SERVICES_ASTORIA</DefineConstants>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <IISExpressSSLPort />
