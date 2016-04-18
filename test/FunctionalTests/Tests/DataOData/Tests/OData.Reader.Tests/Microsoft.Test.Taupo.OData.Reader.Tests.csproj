@@ -3,6 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{70CCA883-E9EC-41C8-9A42-F910C4A6FCB6}</ProjectGuid>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.Taupo.OData.Reader.Tests</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData.Reader.Tests</AssemblyName>

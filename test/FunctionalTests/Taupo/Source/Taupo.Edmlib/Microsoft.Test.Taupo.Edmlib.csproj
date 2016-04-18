@@ -6,12 +6,11 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Test.Taupo.Edmlib</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.Edmlib</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TransparentAssembly>true</TransparentAssembly>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <EnableStyleCop>true</EnableStyleCop>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>

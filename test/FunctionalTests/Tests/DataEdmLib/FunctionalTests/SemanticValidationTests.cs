@@ -30,6 +30,7 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.Silverlight.Testing;
 #endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     [TestClass]
     public class SemanticValidationTests : EdmLibTestCaseBase

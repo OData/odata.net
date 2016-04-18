@@ -6,14 +6,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.Taupo.Astoria</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.Astoria</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NoWarn>3005,3016</NoWarn>
     <EnableStyleCop>true</EnableStyleCop>
     <DefineConstants>TAUPO_ASTORIA</DefineConstants>
     <AssemblyAttributeClsCompliant>true</AssemblyAttributeClsCompliant>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>

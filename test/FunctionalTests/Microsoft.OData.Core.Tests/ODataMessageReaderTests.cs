@@ -14,6 +14,8 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests
 {
+    using TypeCode = System.TypeCode;
+
     public class ODataMessageReaderTests
     {
         [Fact]

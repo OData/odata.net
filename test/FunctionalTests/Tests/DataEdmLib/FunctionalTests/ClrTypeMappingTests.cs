@@ -6,14 +6,10 @@
 
 namespace EdmLibTests.FunctionalTests
 {
-    #if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
@@ -25,6 +21,7 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     [TestClass]
     public class ClrTypeMappingTests : EdmLibTestCaseBase

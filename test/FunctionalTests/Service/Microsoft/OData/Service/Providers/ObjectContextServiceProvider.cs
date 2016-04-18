@@ -740,11 +740,7 @@ namespace Microsoft.OData.Service.Providers
             // we need to make sure we call this API on a workspace which has information about the CS Mapping.
             // Hence getting workspace from the underlying Entity connection.
             MetadataWorkspace workspace = ((EntityConnection)this.ObjectContext.Connection).GetMetadataWorkspace();
-#if EF6Provider
             foreach (EdmMember member in workspace.GetRelevantMembersForUpdate(entitySet, entityType, true /*partialUpdateSupported*/))
-#else
-            foreach (EdmMember member in workspace.GetRequiredOriginalValueMembers(entitySet, entityType))
-#endif
             {
                 ResourceProperty property = resourceType.TryResolvePropertyName(member.Name, exceptKind: ResourcePropertyKind.Stream);
                 Debug.Assert(property != null, "property != null");

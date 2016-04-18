@@ -6,15 +6,17 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using Microsoft.OData.Core.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.JsonLight
 {
+    using BindingFlags = System.Reflection.BindingFlags;
+
     public class ODataAnnotationNamesTests
     {
+        
         private static readonly string[] ReservedODataAnnotationNames =
             typeof(ODataAnnotationNames)
             .GetFields(BindingFlags.NonPublic | BindingFlags.Static)

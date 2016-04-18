@@ -893,7 +893,7 @@ namespace Microsoft.OData.Edm
         internal static IEnumerable<Type> GetNonPublicNestedTypes(this Type type)
         {
 #if DNXCORE50
-            return type.GetTypeInfo().DeclaredNestedTypes.Where(t => t.IsNotPublic).Select(t => t.AsType());
+            return type.GetTypeInfo().DeclaredNestedTypes.Where(t => !t.IsNestedPublic).Select(t => t.AsType());
 #else
             return type.GetNestedTypes(BindingFlags.NonPublic);
 #endif
@@ -1253,7 +1253,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Manages the type code mapping used to provide the GetTypeCode functionality.
         /// </summary>
-        private class TypeCodeMap
+        private sealed class TypeCodeMap
         {
             /// <summary>
             /// Dictionary of types and their type codes.

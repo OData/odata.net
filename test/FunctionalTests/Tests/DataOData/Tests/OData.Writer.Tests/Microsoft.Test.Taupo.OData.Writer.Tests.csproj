@@ -3,6 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{DB742DF2-9873-44CF-8439-DA5ACFF69A46}</ProjectGuid>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.Taupo.OData.Writer.Tests</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData.Writer.Tests</AssemblyName>

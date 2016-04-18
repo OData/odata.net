@@ -5,6 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.OData.Service.Test.Common</RootNamespace>
     <AssemblyName>Microsoft.OData.Service.Test.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <TransparentAssembly>true</TransparentAssembly>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
