@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser.Binders
 {
     using System.Collections.Generic;
     using System.Linq;

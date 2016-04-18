@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.Spatial;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>

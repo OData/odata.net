@@ -4,16 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
+namespace Microsoft.OData.Core.UriParser.Binders
+{
     /// <summary>
     /// Translate a select tree into the right format to be used with an expand tree.
     /// </summary>

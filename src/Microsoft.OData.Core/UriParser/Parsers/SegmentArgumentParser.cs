@@ -4,19 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Core.UriParser.Binders;
+using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-
     /// <summary>Provides a class used to represent a key for a resource.</summary>
     /// <remarks>
     /// Internally, every key instance has a collection of values. These values

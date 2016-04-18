@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Core.UriParser.Binders
 {
     using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
 
     /// <summary>
     /// Base class for binders

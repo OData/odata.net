@@ -6,8 +6,8 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Core.UriParser.Binders;
 using Microsoft.OData.Core.UriParser.Metadata;
-using Microsoft.OData.Core.UriParser.Parsers;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Edm;

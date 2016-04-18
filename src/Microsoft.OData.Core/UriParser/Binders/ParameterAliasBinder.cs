@@ -4,14 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.Core.UriParser.Binders
+{
     /// <summary>
     /// This class binds parameter alias by :
     /// (1) parse and bind the alias value's expression into SingleValueNode, then get its type. 

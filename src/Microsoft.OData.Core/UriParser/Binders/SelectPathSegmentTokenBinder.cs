@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser.Binders
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;

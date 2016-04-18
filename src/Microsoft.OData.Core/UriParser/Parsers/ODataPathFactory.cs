@@ -6,10 +6,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>Translates from an IPathSegment into an ODataPath</summary>

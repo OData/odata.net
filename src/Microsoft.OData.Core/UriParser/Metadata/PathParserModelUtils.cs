@@ -19,35 +19,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     internal static class PathParserModelUtils
     {
         /// <summary>
-        /// Returns whether the given type is a structural type that is open.
-        /// </summary>
-        /// <param name="edmType">The type to check.</param>
-        /// <returns>Whether the type is both structural and open.</returns>
-        internal static bool IsOpenType(this IEdmType edmType)
-        {
-            Debug.Assert(edmType != null, "edmType != null");
-
-            var structuredType = edmType as IEdmStructuredType;
-            if (structuredType != null)
-            {
-                return structuredType.IsOpen;
-            }
-
-            // If its a collection, return whether its element type is open. 
-            // This is because when processing a navigation property, the target type
-            // may be a collection type even though a key expression has been applied.
-            // This will be cleaned up in a subsequent change.
-            // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
-            var collectionType = edmType as IEdmCollectionType;
-            if (collectionType == null)
-            {
-                return false;
-            }
-
-            return collectionType.ElementType.Definition.IsOpenType();
-        }
-
-        /// <summary>
         /// Returns whether or not the type is an entity or entity collection type.
         /// </summary>
         /// <param name="edmType">The type to check.</param>

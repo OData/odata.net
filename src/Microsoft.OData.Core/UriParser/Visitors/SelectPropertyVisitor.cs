@@ -4,19 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Microsoft.OData.Core.UriParser.Binders;
+using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
 namespace Microsoft.OData.Core.UriParser.Visitors
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
     /// <summary>
     /// Visit a Select property and use it to decorate a SelectExpand Tree
     /// </summary>

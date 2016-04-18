@@ -4,15 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Core.UriParser.Binders;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-
     /// <summary>
     /// Factory class to build IParameterQueryNodes.
     /// </summary>

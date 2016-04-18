@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
         // Only sealed types can be easily serviced with targetted patching.
         private static string[] UnsealedNonPublicTypeNames = new string[]
         {
-            "Microsoft.OData.Core.UriParser.Parsers.MetadataBinder",
+            "Microsoft.OData.Core.UriParser.Binders.MetadataBinder",
         };
 
         [TestMethod, Variation(Description = "Verifies that all OData public types are sealed as appropriate.")]

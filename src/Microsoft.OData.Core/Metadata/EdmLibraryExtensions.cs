@@ -1663,7 +1663,18 @@ namespace Microsoft.OData.Core.Metadata
                 return structuredType.IsOpen;
             }
 
-            return false;
+            // If its a collection, return whether its element type is open. 
+            // This is because when processing a navigation property, the target type
+            // may be a collection type even though a key expression has been applied.
+            // This will be cleaned up in a subsequent change.
+            // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
+            var collectionType = type as IEdmCollectionType;
+            if (collectionType == null)
+            {
+                return false;
+            }
+
+            return collectionType.ElementType.Definition.IsOpenType();
         }
 
         /// <summary>

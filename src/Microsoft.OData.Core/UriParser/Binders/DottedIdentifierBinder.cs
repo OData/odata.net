@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Diagnostics;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Diagnostics;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
+namespace Microsoft.OData.Core.UriParser.Binders
+{
     /// <summary>
     /// Class that knows how to bind CastTokens.
     /// </summary>

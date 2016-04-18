@@ -4,28 +4,24 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using FluentAssertions;
+using Microsoft.OData.Core;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Core.UriParser.Binders;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
+using Microsoft.Test.Taupo.Common;
+using Microsoft.Test.Taupo.Execution;
+using Microsoft.Test.Taupo.OData.Common;
+using Microsoft.Test.Taupo.OData.Contracts;
+using Microsoft.Test.Taupo.OData.Query.Tests.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
 namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 {
-    #region Namespaces
-    using System;
-    using FluentAssertions;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Execution;
-    using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.OData.Query.Tests.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    #endregion Namespaces
-
     /// <summary>
     /// Various error tests for the MetadataBinder.
     /// </summary>
@@ -90,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                 });
         }
 
-        internal sealed class ErrorMetadataBinder : MetadataBinder
+        internal sealed class ErrorMetadataBinder : Microsoft.OData.Core.UriParser.Binders.MetadataBinder
         {
             public ErrorMetadataBinder(IEdmModel model)
                 : base(new BindingState(new ODataUriParserConfiguration(model)))

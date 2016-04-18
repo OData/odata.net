@@ -4,19 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using Parsers = Microsoft.OData.Core.UriParser.Parsers;
 
+namespace Microsoft.OData.Core.UriParser.Binders
+{
     /// <summary>
     /// Class responsible for binding a InnerPathToken into:
     /// 1. SingleNavigationNode

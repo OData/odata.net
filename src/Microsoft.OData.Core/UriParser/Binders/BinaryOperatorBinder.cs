@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser.Binders
 {
     using System;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Semantic;

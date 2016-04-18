@@ -4,18 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Microsoft.OData.Core.UriParser.Binders;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Core.UriParser.Metadata
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-
     /// <summary>
     /// Class for resolving different kinds of Uri parsing context.
     /// </summary>

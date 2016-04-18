@@ -4,21 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Core.UriParser.Aggregation;
+using Microsoft.OData.Core.UriParser.Binders;
+using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Core.UriParser
 {
-    #region namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    #endregion namespaces
-
     /// <summary>
     /// Parser for query options
     /// </summary>

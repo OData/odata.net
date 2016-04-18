@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser.Binders
 {
     using System.Diagnostics;
-    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.Metadata;

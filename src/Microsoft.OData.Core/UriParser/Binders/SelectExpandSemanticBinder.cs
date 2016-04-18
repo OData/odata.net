@@ -4,12 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.Core.UriParser.Binders
+{
     /// <summary>
     /// Add semantic meaning to a Select or Expand token.
     /// </summary>
