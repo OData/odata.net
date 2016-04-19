@@ -273,8 +273,19 @@ namespace Microsoft.OData
         /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId)
         {
+            return CreateOperationRequestMessage(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
+        }
+
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for writing an operation of a batch request.</summary>
+        /// <returns>The message that can be used to write the request operation.</returns>
+        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
+        {
             this.VerifyCanCreateOperationRequestMessage(true, method, uri, contentId);
-            return this.CreateOperationRequestMessageImplementation(method, uri, contentId);
+            return this.CreateOperationRequestMessageImplementation(method, uri, contentId, payloadUriOption);
         }
 
 #if PORTABLELIB
@@ -285,9 +296,20 @@ namespace Microsoft.OData
         /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId)
         {
+            return CreateOperationRequestMessageAsync(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
+        }
+
+        /// <summary>Creates a message for asynchronously writing an operation of a batch request.</summary>
+        /// <returns>The message that can be used to asynchronously write the request operation.</returns>
+        /// <param name="method">The HTTP method to be used for this request operation.</param>
+        /// <param name="uri">The URI to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
+        {
             this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
             return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(
-                () => this.CreateOperationRequestMessageImplementation(method, uri, contentId));
+                () => this.CreateOperationRequestMessageImplementation(method, uri, contentId, payloadUriOption));
         }
 #endif
 
@@ -580,8 +602,9 @@ namespace Microsoft.OData
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
-        private ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri, string contentId)
+        private ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
         {
             if (this.changeSetBoundary == null)
             {
@@ -626,7 +649,9 @@ namespace Microsoft.OData
             this.WriteStartBoundaryForOperation();
 
             // write the headers and request line
-            ODataBatchWriterUtils.WriteRequestPreamble(this.rawOutputContext.TextWriter, method, uri, changeSetBoundary != null, contentId);
+            ODataBatchWriterUtils.WriteRequestPreamble(this.rawOutputContext.TextWriter, method, uri,
+                this.rawOutputContext.MessageWriterSettings.PayloadBaseUri, changeSetBoundary != null, contentId,
+                payloadUriOption);
 
             return this.CurrentOperationRequestMessage;
         }

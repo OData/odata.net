@@ -1572,6 +1572,9 @@
     <Compile Include="..\Json\IJsonWriterFactory.cs">
       <Link>Microsoft\OData\Core\Json\IJsonWriterFactory.cs</Link>
     </Compile>
+    <Compile Include="..\ODataBatchPayloadUriOptions.cs">
+      <Link>Microsoft\OData\Core\ODataBatchPayloadUriOptions.cs</Link>
+    </Compile>
     <Compile Include="..\ODataEdmPropertyAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataEdmPropertyAnnotation.cs</Link>
     </Compile>

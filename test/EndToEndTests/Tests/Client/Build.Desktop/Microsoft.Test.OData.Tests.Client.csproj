@@ -106,6 +106,7 @@
     <Compile Include="ActionOverloadingTests\ActionOverloadingQueryTests.cs" />
     <Compile Include="AnnotationTests\InstanceAnnotationTests.cs" />
     <Compile Include="AsyncRequestTests\AsyncRequestTests.cs" />
+    <Compile Include="BatchRequestTests\BatchRequestWithRelativeUriTests.cs" />
     <Compile Include="ClientTests\ClientEntityDescripterTests.cs" />
     <Compile Include="ClientTests\ClientOpenTypeUpdateTests.cs" />
     <Compile Include="ClientTests\ClientQueryTests.cs" />

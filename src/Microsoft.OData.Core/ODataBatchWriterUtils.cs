@@ -101,31 +101,36 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Writes the headers, (optional) Content-ID and the request line
+        /// Writes the headers, (optional) Content-ID and the request line.
         /// </summary>
         /// <param name="writer">Writer to write to.</param>
         /// <param name="httpMethod">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="baseUri">The service root Uri to be used for this request operation.</param>
         /// <param name="inChangeSetBound">Whether we are in ChangeSetBound.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        internal static void WriteRequestPreamble(TextWriter writer, string httpMethod, Uri uri, bool inChangeSetBound, string contentId)
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        internal static void WriteRequestPreamble(
+            TextWriter writer,
+            string httpMethod,
+            Uri uri,
+            Uri baseUri,
+            bool inChangeSetBound,
+            string contentId,
+            BatchPayloadUriOption payloadUriOption)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(uri != null, "uri != null");
             Debug.Assert(uri.IsAbsoluteUri || UriUtils.UriToString(uri).StartsWith("$", StringComparison.Ordinal), "uri.IsAbsoluteUri || uri.OriginalString.StartsWith(\"$\")");
 
             // write the headers
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
-            if (inChangeSetBound && contentId != null)
-            {
-                writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
-            }
+            WriteHeaders(writer, inChangeSetBound, contentId);
 
             // write separator line between headers and the request line
             writer.WriteLine();
 
-            writer.WriteLine("{0} {1} {2}", httpMethod, UriUtils.UriToString(uri), ODataConstants.HttpVersionInBatching);
+            // write request line
+            WriteRequestUri(writer, httpMethod, uri, baseUri, payloadUriOption);
         }
 
         /// <summary>
@@ -139,12 +144,7 @@ namespace Microsoft.OData
             Debug.Assert(writer != null, "writer != null");
 
             // write the headers
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
-            if (inChangeSetBound && contentId != null)
-            {
-                writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
-            }
+            WriteHeaders(writer, inChangeSetBound, contentId);
 
             // write separator line between headers and the response line
             writer.WriteLine();
@@ -164,6 +164,63 @@ namespace Microsoft.OData
 
             // write separator line between headers and first change set operation
             writer.WriteLine();
+        }
+
+        /// <summary>
+        /// Writes the headers.
+        /// </summary>
+        /// <param name="writer">Writer to write headers.</param>
+        /// <param name="inChangeSetBound">Whether we are in ChangeSetBound.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        private static void WriteHeaders(TextWriter writer, bool inChangeSetBound, string contentId)
+        {
+            writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
+            writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
+            if (inChangeSetBound && contentId != null)
+            {
+                writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
+            }
+        }
+
+        /// <summary>
+        /// Writes the request line.
+        /// </summary>
+        /// <param name="writer">Writer to write request uri.</param>
+        /// <param name="httpMethod">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="baseUri">The service root Uri to be used for this request operation.</param>
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        private static void WriteRequestUri(TextWriter writer, string httpMethod, Uri uri, Uri baseUri, BatchPayloadUriOption payloadUriOption)
+        {
+            if (uri.IsAbsoluteUri)
+            {
+                string absoluteUriString = uri.AbsoluteUri;
+
+                switch (payloadUriOption)
+                {
+                    case BatchPayloadUriOption.AbsoluteUri:
+                        writer.WriteLine("{0} {1} {2}", httpMethod, UriUtils.UriToString(uri), ODataConstants.HttpVersionInBatching);
+                        break;
+
+                    case BatchPayloadUriOption.AbsoluteResourcePathAndHost:
+                        string absoluteResourcePath = absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
+                        writer.WriteLine("{0} {1} {2}", httpMethod, absoluteResourcePath, ODataConstants.HttpVersionInBatching);
+                        writer.WriteLine("Host: {0}:{1}", uri.Host, uri.Port);
+                        break;
+
+                    case BatchPayloadUriOption.RelativeResourcePath:
+                        Debug.Assert(baseUri != null, "baseUri != null");
+                        string baseUriString = UriUtils.UriToString(baseUri);
+                        Debug.Assert(absoluteUriString.StartsWith(baseUriString), "absoluteUriString.StartsWith(baseUriString)");
+                        string relativeResourcePath = absoluteUriString.Substring(baseUriString.Length);
+                        writer.WriteLine("{0} {1} {2}", httpMethod, relativeResourcePath, ODataConstants.HttpVersionInBatching);
+                        break;
+                }
+            }
+            else
+            {
+                writer.WriteLine("{0} {1} {2}", httpMethod, UriUtils.UriToString(uri), ODataConstants.HttpVersionInBatching);
+            }
         }
     }
 }

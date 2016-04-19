@@ -55,6 +55,7 @@
     <Compile Include="IContainerBuilder.cs" />
     <Compile Include="Metadata\ODataAtomErrorDeserializer.cs" />
     <Compile Include="Metadata\ODataMetadataConstants.cs" />
+    <Compile Include="ODataBatchPayloadUriOptions.cs" />
     <Compile Include="ODataEdmPropertyAnnotation.cs" />
     <Compile Include="ODataNullValueBehaviorKind.cs" />
     <Compile Include="ODataRawValueUtils.cs" />
