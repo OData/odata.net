@@ -6,7 +6,8 @@
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT;DNXCORE50;</DefineConstants>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT;DNXCORE50;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
     <RootNamespace>System</RootNamespace>
