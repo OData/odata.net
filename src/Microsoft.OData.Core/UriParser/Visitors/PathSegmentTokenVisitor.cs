@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.Core.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Syntactic;
 
     /// <summary>
     /// Visitor interface for walking the Syntactic Tree.

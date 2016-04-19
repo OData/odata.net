@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+using System;
+
+namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
 
-    using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces

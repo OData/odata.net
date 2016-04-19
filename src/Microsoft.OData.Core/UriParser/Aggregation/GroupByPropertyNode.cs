@@ -8,7 +8,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
 
     /// <summary>
     /// A node representing a grouping property.

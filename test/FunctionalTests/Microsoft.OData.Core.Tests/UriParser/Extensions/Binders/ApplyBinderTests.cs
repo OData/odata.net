@@ -10,10 +10,6 @@ using FluentAssertions;
 using Microsoft.OData.Core.Tests.UriParser.Binders;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.Binders;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders

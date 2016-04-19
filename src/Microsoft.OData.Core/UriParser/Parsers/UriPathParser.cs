@@ -4,15 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+namespace Microsoft.OData.Core.UriParser
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Parser which consumes the URI path and produces the lexical object model.
     /// </summary>

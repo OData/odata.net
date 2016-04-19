@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core
     using System.Text;
     using System.Xml;
 #if ODATALIB_ASYNC
-    using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;

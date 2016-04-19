@@ -8,9 +8,7 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.JsonLight;

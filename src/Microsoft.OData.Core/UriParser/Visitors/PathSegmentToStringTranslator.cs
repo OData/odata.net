@@ -6,12 +6,11 @@
 
 #if !INTERNAL_DROP || ODATALIB
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Diagnostics;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
 
     /// <summary>

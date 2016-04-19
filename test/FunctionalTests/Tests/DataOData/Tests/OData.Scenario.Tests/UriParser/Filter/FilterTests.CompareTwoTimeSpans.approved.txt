@@ -17,7 +17,7 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 	LessThan
 		SingleValuePropertyAccessNode
 			Property = TimeBetweenLastTwoOrders
@@ -27,4 +27,4 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable

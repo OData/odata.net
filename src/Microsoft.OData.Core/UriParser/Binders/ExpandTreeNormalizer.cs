@@ -7,12 +7,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.Visitors;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.UriParser.Binders
+namespace Microsoft.OData.Core.UriParser
 {
     /// <summary>
     /// Translator from the old expand syntax tree to the new Expand Option syntax tree

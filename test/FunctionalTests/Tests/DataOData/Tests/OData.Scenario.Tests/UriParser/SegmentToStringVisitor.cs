@@ -6,12 +6,9 @@
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
-    using System.Globalization;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using System;
     using System.Linq;
     using Microsoft.Spatial;

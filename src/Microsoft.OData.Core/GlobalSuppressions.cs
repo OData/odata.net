@@ -46,7 +46,6 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.OData.Core.Metadata")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.OData.Core.Evaluation")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.OData.Core.JsonLight")]
-[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.OData.Core.UriParser.Metadata")]
 
 // Types forwarded from Astoria client to be shared with ODataLib.
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.OData.Service.Common", Justification = "Types are shared with Astoria client.")]
@@ -61,9 +60,9 @@ using System.Diagnostics.CodeAnalysis;
 
 // Normalize strings to uppercase
 [module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.ODataPreferenceHeader.#ReturnContent")]
-[module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.ExpandOptionParser.#BuildExpandTermToken(Microsoft.OData.Core.UriParser.Syntactic.PathSegmentToken,System.String)")]
-[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.FunctionCallBinder.#BindAsUriFunction(Microsoft.OData.Core.UriParser.Syntactic.FunctionCallToken,System.Collections.Generic.List`1<Microsoft.OData.Core.UriParser.Semantic.QueryNode>)")]
-[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.ExpandOptionParser.#BuildStarExpandTermToken(Microsoft.OData.Core.UriParser.Syntactic.PathSegmentToken)")]
+[module: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.ExpandOptionParser.#BuildExpandTermToken(Microsoft.OData.Core.UriParser.PathSegmentToken,System.String)")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.FunctionCallBinder.#BindAsUriFunction(Microsoft.OData.Core.UriParser.FunctionCallToken,System.Collections.Generic.List`1<Microsoft.OData.Core.UriParser.QueryNode>)")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Core.UriParser.ExpandOptionParser.#BuildStarExpandTermToken(Microsoft.OData.Core.UriParser.PathSegmentToken)")]
 
 [module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", MessageId = "NonEntity", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
 
@@ -77,7 +76,7 @@ using System.Diagnostics.CodeAnalysis;
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength", Scope = "member", Target = "Microsoft.OData.Core.UriUtils.#CreateUriAsEntryOrFeedId(System.String,System.UriKind,System.Boolean)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.EnumBinder.#bindMethod")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.UriParser.EnumBinder.#bindMethod")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.Evaluation.ODataResourceMetadataContext+ODataResourceMetadataContextWithoutModel.#serializationInfo")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.Evaluation.ODataMetadataContext.#metadataLevel")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightReader.#readingParameter")]
@@ -88,21 +87,21 @@ using System.Diagnostics.CodeAnalysis;
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Scope = "member", Target = "Microsoft.OData.Core.ODataMediaType.#Type")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Semantic.ODataUnresolvedFunctionParameterAlias.#Type")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Scope = "member", Target = "Microsoft.OData.Core.UriParser.ODataUnresolvedFunctionParameterAlias.#Type")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Core.Json.JsonValueUtils.#.cctor()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaWriter.#CreateDeltaResourceSetScope(Microsoft.OData.Core.ODataItem,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.OData.Edm.IEdmEntityType,Microsoft.OData.Core.SelectedPropertiesNode,Microsoft.OData.Core.ODataUri)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.ODataPathParser.#ThrowIfMustBeLeafSegment(Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.SelectExpandBinder.#BuildDefaultSubExpand()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.SelectExpandBinder.#ParseLevels(System.Nullable`1<System.Int64>,Microsoft.OData.Edm.IEdmType,Microsoft.OData.Edm.IEdmNavigationProperty)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.SelectExpandSemanticBinder.#Bind(Microsoft.OData.Edm.IEdmStructuredType,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.OData.Core.UriParser.Syntactic.ExpandToken,Microsoft.OData.Core.UriParser.Syntactic.SelectToken,Microsoft.OData.Core.UriParser.ODataUriParserConfiguration)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.SelectTreeNormalizer.#NormalizeSelectTree(Microsoft.OData.Core.UriParser.Syntactic.SelectToken)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.ODataPathParser.#ThrowIfMustBeLeafSegment(Microsoft.OData.Core.UriParser.ODataPathSegment)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.SelectExpandBinder.#BuildDefaultSubExpand()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.SelectExpandBinder.#ParseLevels(System.Nullable`1<System.Int64>,Microsoft.OData.Edm.IEdmType,Microsoft.OData.Edm.IEdmNavigationProperty)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.SelectExpandSemanticBinder.#Bind(Microsoft.OData.Edm.IEdmStructuredType,Microsoft.OData.Edm.IEdmNavigationSource,Microsoft.OData.Core.UriParser.ExpandToken,Microsoft.OData.Core.UriParser.SelectToken,Microsoft.OData.Core.UriParser.ODataUriParserConfiguration)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.UriParser.SelectTreeNormalizer.#NormalizeSelectTree(Microsoft.OData.Core.UriParser.SelectToken)")]
 
 // Current design actually can save cast effort.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.DottedIdentifierBinder.#BindDottedIdentifier(Microsoft.OData.Core.UriParser.Syntactic.DottedIdentifierToken)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Binders.FunctionCallBinder.#TryBindIdentifier(System.String,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Core.UriParser.Syntactic.FunctionParameterToken>,Microsoft.OData.Core.UriParser.Semantic.QueryNode,Microsoft.OData.Core.UriParser.Binders.BindingState,Microsoft.OData.Core.UriParser.Semantic.QueryNode&)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.UriParser.DottedIdentifierBinder.#BindDottedIdentifier(Microsoft.OData.Core.UriParser.DottedIdentifierToken)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.UriParser.FunctionCallBinder.#TryBindIdentifier(System.String,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Core.UriParser.FunctionParameterToken>,Microsoft.OData.Core.UriParser.QueryNode,Microsoft.OData.Core.UriParser.BindingState,Microsoft.OData.Core.UriParser.QueryNode&)")]
 
 // In lambda expression.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Visitors.SelectPropertyVisitor.#ProcessTokenAsPath(Microsoft.OData.Core.UriParser.Syntactic.NonSystemToken)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.UriParser.SelectPropertyVisitor.#ProcessTokenAsPath(Microsoft.OData.Core.UriParser.NonSystemToken)")]
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaWriter.#StartDeltaLink(Microsoft.OData.Core.ODataDeltaLinkBase)")]
@@ -110,4 +109,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaReader.#IsTopLevel")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaWriter.#IsTopLevel")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType.#ArgumentTypes")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.UriPrimitiveTypeParser.#TryUriStringToPrimitive(System.String,Microsoft.OData.Edm.IEdmTypeReference,System.Object&,Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException&)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.OData.Core.UriParser.UriPrimitiveTypeParser.#TryUriStringToPrimitive(System.String,Microsoft.OData.Edm.IEdmTypeReference,System.Object&,Microsoft.OData.Core.UriParser.UriLiteralParsingException&)")]

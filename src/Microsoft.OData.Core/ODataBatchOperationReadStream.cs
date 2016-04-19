@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using System.IO;
+
     #endregion Namespaces
 
     /// <summary>

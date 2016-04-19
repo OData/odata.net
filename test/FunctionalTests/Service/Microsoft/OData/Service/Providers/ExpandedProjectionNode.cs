@@ -12,7 +12,7 @@ namespace Microsoft.OData.Service.Providers
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     #endregion
 
     /// <summary>This class represents an expanded navigation property in the tree

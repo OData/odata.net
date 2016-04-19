@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
 
     /// <summary>

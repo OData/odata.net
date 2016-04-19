@@ -18,7 +18,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using System.Diagnostics;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.Fixups;
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
 
     public class StreamingPayloadWriterTestDescriptor<T> : PayloadWriterTestDescriptor<T>

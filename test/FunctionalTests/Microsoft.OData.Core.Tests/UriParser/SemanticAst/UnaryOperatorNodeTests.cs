@@ -5,8 +5,7 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Core.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst

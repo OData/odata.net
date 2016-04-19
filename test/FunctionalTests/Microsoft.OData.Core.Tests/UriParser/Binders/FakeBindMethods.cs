@@ -4,8 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Binders
 {

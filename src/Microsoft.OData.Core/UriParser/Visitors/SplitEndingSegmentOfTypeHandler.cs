@@ -6,11 +6,10 @@
 
 #if !INTERNAL_DROP || ODATALIB
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.Core.UriParser
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Split Last Segment Of Certain Kind, the result of this handler is two part of ODataPath,

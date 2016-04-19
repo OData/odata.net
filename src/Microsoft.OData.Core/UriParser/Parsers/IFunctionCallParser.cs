@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     /// <summary>
     /// Interface for a class that can parse an identifier as a function and return a representitive QueryToken.
     /// </summary>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Metadata
+namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Collections.Generic;

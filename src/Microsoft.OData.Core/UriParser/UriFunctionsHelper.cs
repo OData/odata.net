@@ -7,11 +7,9 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region NameSpaces
-    
-    using System;
+
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Text;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;

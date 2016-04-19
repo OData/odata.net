@@ -9,13 +9,10 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>

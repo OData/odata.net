@@ -10,9 +10,6 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Core.Tests.UriParser;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
@@ -345,7 +342,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             // run 2 test passes:
             // 1. low level api - ODataUriParser instance methods
             {
-                List<CustomQueryOptionToken> queries = Microsoft.OData.Core.UriParser.UriUtils.ParseQueryOptions(uri);
+                List<CustomQueryOptionToken> queries = Microsoft.OData.Core.UriParser.QueryOptionUtils.ParseQueryOptions(uri);
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbledygook/"), uri);
 
                 ODataPath path = parser.ParsePath();

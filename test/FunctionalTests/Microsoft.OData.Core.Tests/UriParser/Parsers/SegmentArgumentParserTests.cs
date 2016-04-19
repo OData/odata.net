@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Parsers

@@ -7,14 +7,10 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
-    using System.Web;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm;
 
     public static class QueryOptionExtensions
     {

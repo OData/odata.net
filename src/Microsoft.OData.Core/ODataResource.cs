@@ -11,7 +11,6 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
     #endregion Namespaces
 

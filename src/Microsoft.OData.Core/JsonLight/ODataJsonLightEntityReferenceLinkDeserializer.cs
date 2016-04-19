@@ -13,9 +13,7 @@ namespace Microsoft.OData.Core.JsonLight
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     #endregion Namespaces
 

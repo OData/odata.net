@@ -10,7 +10,7 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Core.Evaluation;
 using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight

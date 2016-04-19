@@ -9,24 +9,22 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using FluentAssertions;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;
-    using System.Linq;
-    using System.Linq.Expressions;
     using Microsoft.Spatial;
-    using FluentAssertions;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DataServiceProviderMethods = Microsoft.OData.Service.Providers.DataServiceProviderMethods;
     using ErrorStrings = Microsoft.OData.Service.Strings;
     using OpenTypeMethods = Microsoft.OData.Service.Providers.OpenTypeMethods;
-    
+
     [TestClass]
     public class NodeToExpressionTranslatorTests
     {

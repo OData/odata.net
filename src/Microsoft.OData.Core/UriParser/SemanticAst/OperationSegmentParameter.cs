@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.Core.UriParser
 {
     /// <summary>
     /// Represents a named parameter value for invoking an operation in an OData path.

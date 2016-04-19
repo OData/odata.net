@@ -11,8 +11,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text.RegularExpressions;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    #endregion Namespaces
+        #endregion Namespaces
 
     /// <summary>
     /// Lexer used for search query, note this is a little different ExpressionLexer, that it use double quote as string indicator.

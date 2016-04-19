@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.Core.UriParser
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>

@@ -11,7 +11,6 @@ namespace Microsoft.OData.Core.UriParser
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Syntactic;
 
     #endregion Namespaces
 
@@ -111,6 +110,91 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             return option == null ? null : option.Value;
+        }
+
+        /// <summary>
+        /// Parses query options from a specified URI into a dictionary.
+        /// </summary>
+        /// <param name="uri">The uri to get the query options from.</param>
+        /// <returns>The parsed query options.</returns>
+        /// <remarks>This method returns <see cref="List&lt;CustomQueryOptionToken&gt;"/> with all the query options.
+        /// Note that it is valid to include multiple query options with the same name.</remarks>
+        internal static List<CustomQueryOptionToken> ParseQueryOptions(Uri uri)
+        {
+            Debug.Assert(uri != null, "uri != null");
+
+            List<CustomQueryOptionToken> queryOptions = new List<CustomQueryOptionToken>();
+
+            // COMPAT 31: Query options parsing
+            // This method is a copy of System.Web.HttpValueCollection.FillFromString which is effectively the implementation
+            // behind the System.Web.HttpUtility.ParseQueryString.
+            // TODO: The System.Uri class does not replace/unescape URIs that use the '+' character to escape spaces;
+            //      this however is common on the Web (also ASP.Net) and we have to figure out how we want to support it.
+            string queryString = uri.Query.Replace('+', ' ');
+            int length;
+            if (queryString != null)
+            {
+                if (queryString.Length > 0 && queryString[0] == '?')
+                {
+                    queryString = queryString.Substring(1);
+                }
+
+                length = queryString.Length;
+            }
+            else
+            {
+                length = 0;
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                int startIndex = i;
+                int equalSignIndex = -1;
+                while (i < length)
+                {
+                    char ch = queryString[i];
+                    if (ch == '=')
+                    {
+                        if (equalSignIndex < 0)
+                        {
+                            equalSignIndex = i;
+                        }
+                    }
+                    else if (ch == '&')
+                    {
+                        break;
+                    }
+
+                    i++;
+                }
+
+                string queryOptionsName = null;
+                string queryOptionValue = null;
+                if (equalSignIndex >= 0)
+                {
+                    queryOptionsName = queryString.Substring(startIndex, equalSignIndex - startIndex);
+                    queryOptionValue = queryString.Substring(equalSignIndex + 1, (i - equalSignIndex) - 1);
+                }
+                else
+                {
+                    queryOptionValue = queryString.Substring(startIndex, i - startIndex);
+                }
+
+                // COMPAT 31: Query options parsing
+                // The System.Web version of the code uses HttpUtility.UrlDecode here, which calls into System.Web's own implementation
+                // of the decoder. It's unclear if it's OK to use Uri.UnescapeDataString instead.
+                queryOptionsName = queryOptionsName == null ? null : Uri.UnescapeDataString(queryOptionsName).Trim();
+                queryOptionValue = queryOptionValue == null ? null : Uri.UnescapeDataString(queryOptionValue).Trim();
+
+                queryOptions.Add(new CustomQueryOptionToken(queryOptionsName, queryOptionValue));
+
+                if ((i == (length - 1)) && (queryString[i] == '&'))
+                {
+                    queryOptions.Add(new CustomQueryOptionToken(null, string.Empty));
+                }
+            }
+
+            return queryOptions;
         }
     }
 }

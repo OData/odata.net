@@ -12,7 +12,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
     using System.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

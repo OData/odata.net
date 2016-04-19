@@ -4,11 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.Core.UriParser
 {
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
     /// <summary>
     /// Node representing a semantically parsed parameter to a function.
     /// </summary>

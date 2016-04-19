@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Linq;
     using System.Net;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

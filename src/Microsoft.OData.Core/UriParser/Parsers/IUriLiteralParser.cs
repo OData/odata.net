@@ -4,14 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers.Common
+using Microsoft.OData.Edm;
+
+namespace Microsoft.OData.Core.UriParser
 {
-    #region Namespaces
-
-    using Microsoft.OData.Edm;
-
-    #endregion
-
     /// <summary>
     /// Interface for Uri literal parser.
     /// To parse the uri of an OData request into objects, the ODataUriParser uses UriLiteralParses.

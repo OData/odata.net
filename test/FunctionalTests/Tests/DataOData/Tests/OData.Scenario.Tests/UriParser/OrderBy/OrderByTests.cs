@@ -8,7 +8,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.OrderBy
 {
     using System;
     using System.Runtime.CompilerServices;
-    using ApprovalTests;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.Test.Taupo.OData.Common;

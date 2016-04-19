@@ -7,11 +7,9 @@
 namespace Microsoft.OData.Core.Evaluation
 {
     #region Namespaces
-    using System;
+
     using System.Diagnostics;
-    using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;

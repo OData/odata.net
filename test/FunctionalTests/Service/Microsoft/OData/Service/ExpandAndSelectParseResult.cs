@@ -4,19 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Core;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Service.Providers;
+
 namespace Microsoft.OData.Service
 {
-    #region Namespaces
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Service.Providers;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Component for performing simple syntactic parsing of the $expand and $select query options.
     /// </summary>

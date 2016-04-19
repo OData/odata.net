@@ -5,8 +5,7 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Core.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 

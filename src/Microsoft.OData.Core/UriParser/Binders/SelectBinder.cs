@@ -4,14 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Binders
+namespace Microsoft.OData.Core.UriParser
 {
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Use a Select syntactic tree to populate the correct values for Selection in an already parsed

@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+using System.Linq;
+
 namespace Microsoft.OData.Core
 {
-    using System.Diagnostics;
-    using System.Linq;
-
     /// <summary>
     /// Filter class to determine whether or not to read an annotation.
     /// </summary>

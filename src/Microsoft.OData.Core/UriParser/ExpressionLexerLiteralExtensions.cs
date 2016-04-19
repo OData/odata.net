@@ -10,9 +10,6 @@ namespace Microsoft.OData.Core.UriParser
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 

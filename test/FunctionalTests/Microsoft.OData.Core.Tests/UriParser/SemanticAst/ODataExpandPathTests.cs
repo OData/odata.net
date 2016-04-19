@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 

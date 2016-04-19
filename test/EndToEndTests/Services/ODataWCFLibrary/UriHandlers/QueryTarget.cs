@@ -4,16 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-
     public class QueryTarget : PathSegmentHandler
     {
         bool resolved = false;

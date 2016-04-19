@@ -12,8 +12,6 @@ namespace Microsoft.OData.Service.Parsing
     using System.Globalization;
     using System.Linq.Expressions;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using ServiceStrings = Microsoft.OData.Service.Strings;

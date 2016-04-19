@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.Core.UriParser
 {
     /// <summary>Enumeration values for token kinds.</summary>
     internal enum ExpressionTokenKind

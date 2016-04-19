@@ -11,12 +11,9 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
+
     #endregion Namespaces
 
     /// <summary>

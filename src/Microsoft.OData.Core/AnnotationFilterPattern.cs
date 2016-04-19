@@ -8,7 +8,6 @@ namespace Microsoft.OData.Core
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
 
     /// <summary>
     /// Filter pattern class to determine whether an annotation name matches the pattern.

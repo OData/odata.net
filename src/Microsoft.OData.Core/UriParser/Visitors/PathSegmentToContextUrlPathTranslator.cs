@@ -6,7 +6,7 @@
 
 #if !INTERNAL_DROP || ODATALIB
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
     using System;
@@ -17,7 +17,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     using System.Text;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 

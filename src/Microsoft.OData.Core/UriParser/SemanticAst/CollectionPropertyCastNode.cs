@@ -4,15 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
-{
-    #region Namespaces
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm;
-    #endregion Namespaces
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
 
+namespace Microsoft.OData.Core.UriParser
+{
     /// <summary>
     /// Node representing a type segment that casts an collection property node.
     /// </summary>

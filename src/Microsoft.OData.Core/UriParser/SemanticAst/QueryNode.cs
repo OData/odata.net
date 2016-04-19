@@ -4,13 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
+    
     /// <summary>
     /// Base class for all semantic metadata bound nodes.
     /// </summary>

@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 

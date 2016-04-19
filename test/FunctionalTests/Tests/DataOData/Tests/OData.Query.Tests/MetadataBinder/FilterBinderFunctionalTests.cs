@@ -10,7 +10,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core;
@@ -21,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Query.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Semantic;
+
     #endregion Namespaces
 
     /// <summary>

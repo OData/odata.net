@@ -7,8 +7,6 @@
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
 namespace Microsoft.OData.Core.Tests.UriParser
 {

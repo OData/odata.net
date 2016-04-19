@@ -32,7 +32,7 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = Employees
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 		Parameters = 
 		NonentityRangeVariable
 			Name = a

@@ -13,9 +13,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Metadata;
+
     #endregion
 
     /// <summary>

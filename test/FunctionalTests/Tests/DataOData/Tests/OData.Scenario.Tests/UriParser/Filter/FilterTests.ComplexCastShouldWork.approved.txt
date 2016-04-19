@@ -24,6 +24,6 @@ FilterQueryOption
 						Name = $it
 						NavigationSource = People
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 	NotEqual
 		999(Type: [Edm.String Nullable=True Unicode=True])

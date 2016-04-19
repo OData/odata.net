@@ -10,8 +10,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
     using System.Runtime.CompilerServices;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -4,14 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
+using System.Linq;
+
 namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Linq;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
@@ -20,7 +21,6 @@ namespace Microsoft.OData.Core.JsonLight
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
-    using UriUtils = Microsoft.OData.Core.UriUtils;
     #endregion Namespaces
 
     /// <summary>

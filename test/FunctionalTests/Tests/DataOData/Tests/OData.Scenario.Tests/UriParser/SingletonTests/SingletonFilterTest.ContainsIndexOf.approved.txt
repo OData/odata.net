@@ -27,7 +27,7 @@ FilterQueryOption
 									Name = $it
 									NavigationSource = SpecialProduct
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 				)
 			And
 					SingleValueFunctionCallNode
@@ -43,7 +43,7 @@ FilterQueryOption
 									Name = $it
 									NavigationSource = SpecialProduct
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 							a(Type: [Edm.String Nullable=True Unicode=True])
 				LessThan
 					3(Type: [Edm.Int32 Nullable=False])
@@ -61,7 +61,7 @@ FilterQueryOption
 							Name = $it
 							NavigationSource = SpecialProduct
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 					SingleValuePropertyAccessNode
 						Property = QuantityPerUnit
 						TypeReference = [Edm.String Nullable=True Unicode=True]
@@ -70,6 +70,6 @@ FilterQueryOption
 							Name = $it
 							NavigationSource = SpecialProduct
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 		Equal
 			bubbles(Type: [Edm.String Nullable=True Unicode=True])

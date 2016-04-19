@@ -16,7 +16,6 @@ namespace Microsoft.OData.Service
     using System.Reflection;
     using System.Text;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Internal;
     using Microsoft.OData.Service.Parsing;

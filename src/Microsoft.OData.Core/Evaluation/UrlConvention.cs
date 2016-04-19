@@ -4,6 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+#if ASTORIA_DESIGN
+    using System.Xml.Linq;
+#endif
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Library.Annotations;
+using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
+
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
@@ -18,21 +32,6 @@ namespace Microsoft.OData.Service.Design
 #endif
 #endif
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Linq;
-#if ASTORIA_DESIGN
-    using System.Xml.Linq;
-#endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Vocabularies;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
-
     /// <summary>
     /// Component for representing the url convention in use by the server, client, or codegen.
     /// </summary>

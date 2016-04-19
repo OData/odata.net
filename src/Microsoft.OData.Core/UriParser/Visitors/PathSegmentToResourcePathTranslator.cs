@@ -12,12 +12,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.OData.Core.Evaluation;
 using Microsoft.OData.Core.Metadata;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
 
 #if !INTERNAL_DROP || ODATALIB
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.Core.UriParser
 {
     /// <summary>
     /// Translator to translate query url path segments to strings.

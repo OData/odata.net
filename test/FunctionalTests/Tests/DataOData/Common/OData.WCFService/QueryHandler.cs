@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     /// <summary>
     /// Class for handling incoming client query requests.
     /// </summary>

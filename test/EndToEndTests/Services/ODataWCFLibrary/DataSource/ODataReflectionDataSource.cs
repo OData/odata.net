@@ -7,12 +7,7 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
     using System.Threading;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
 
     [Serializable]

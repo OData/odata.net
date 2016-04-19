@@ -4,19 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.OData.Edm.Values;
+
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Core.Evaluation
 #endif
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    #endregion
-
     /// <summary>
     /// Extensibility point for customizing how OData uri's are built.
     /// </summary>

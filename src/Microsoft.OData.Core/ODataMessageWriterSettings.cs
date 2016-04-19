@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+
     #endregion Namespaces
 
     /// <summary>

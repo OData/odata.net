@@ -10,10 +10,6 @@ namespace Microsoft.OData.Core.UriParser
     using System.Linq;
     using System.Collections.Generic;
     using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
@@ -76,9 +72,9 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             this.configuration = new ODataUriParserConfiguration(model);
-            this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(serviceRoot);
-            this.fullUri = fullUri.IsAbsoluteUri ? fullUri : Core.UriUtils.UriToAbsoluteUri(this.ServiceRoot, fullUri);
-            this.queryOptions = UriUtils.ParseQueryOptions(this.fullUri);
+            this.serviceRoot = UriUtils.EnsureTaillingSlash(serviceRoot);
+            this.fullUri = fullUri.IsAbsoluteUri ? fullUri : UriUtils.UriToAbsoluteUri(this.ServiceRoot, fullUri);
+            this.queryOptions = QueryOptionUtils.ParseQueryOptions(this.fullUri);
         }
 
         /// <summary>
@@ -97,7 +93,7 @@ namespace Microsoft.OData.Core.UriParser
 
             this.configuration = new ODataUriParserConfiguration(model);
             this.fullUri = fullUri;
-            this.queryOptions = UriUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.fullUri));
+            this.queryOptions = QueryOptionUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.fullUri));
         }
 
         /// <summary>

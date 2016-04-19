@@ -387,7 +387,6 @@
     <Compile Include="UriParser\ODataUriParserTests.cs" />
     <Compile Include="UriParser\ODataUrlConventionsTests.cs" />
     <Compile Include="UriParser\SegmentAssertions.cs" />
-    <Compile Include="UriParser\UriUtilsTests.cs" />
     <Compile Include="UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
     <Compile Include="UrlConventionsConstants.cs" />

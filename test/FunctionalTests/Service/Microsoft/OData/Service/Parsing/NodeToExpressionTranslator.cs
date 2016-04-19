@@ -15,9 +15,6 @@ namespace Microsoft.OData.Service.Parsing
     using System.Reflection;
     using Microsoft.OData.Client;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using Microsoft.Spatial;

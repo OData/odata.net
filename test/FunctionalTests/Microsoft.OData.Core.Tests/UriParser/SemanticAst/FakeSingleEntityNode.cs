@@ -4,8 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst

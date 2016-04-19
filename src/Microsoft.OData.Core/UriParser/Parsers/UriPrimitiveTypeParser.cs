@@ -4,26 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Text;
+using System.Xml;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Microsoft.Spatial;
+using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
+namespace Microsoft.OData.Core.UriParser
 {
-    #region Namespaces
-
-    using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Text;
-    using System.Xml;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.Spatial;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Parser which consumes the URI format of primitive types and converts it to primitive types.
     /// </summary>
@@ -121,7 +115,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 else if (binaryResult)
                 {
                     string keyValue = Encoding.UTF8.GetString(byteArrayValue, 0, byteArrayValue.Length);
-                    return TryUriStringToPrimitive(keyValue, targetType, out targetValue);
+                    return this.TryUriStringToPrimitive(keyValue, targetType, out targetValue);
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.Guid)
                 {
@@ -278,7 +272,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue)
         {
             UriLiteralParsingException exception;
-            return TryUriStringToPrimitive(text, targetType, out targetValue, out exception);
+            return this.TryUriStringToPrimitive(text, targetType, out targetValue, out exception);
         }
 
         /// <summary>

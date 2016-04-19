@@ -8,9 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
     using Microsoft.Test.Taupo.Common;

@@ -22,7 +22,7 @@ FilterQueryOption
 						Name = $it
 						NavigationSource = Customers
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 				d(Type: [Edm.String Nullable=True Unicode=True])
 				n(Type: [Edm.String Nullable=True Unicode=True])
 	Equal

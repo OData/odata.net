@@ -13,8 +13,7 @@ namespace Microsoft.OData.Service.Parsing
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-
+    
     #endregion Namespaces
 
     /// <summary>

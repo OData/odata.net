@@ -327,6 +327,13 @@
     <Compile Include="TaskUtils.cs" />
     <Compile Include="TypeNameOracle.cs" />
     <Compile Include="TypeUtils.cs" />
+    <Compile Include="UriParser\Parsers\CustomUriLiteralParsers.cs" />
+    <Compile Include="UriParser\Parsers\DefaultUriLiteralParser.cs" />
+    <Compile Include="UriParser\Parsers\IUriLiteralParser.cs" />
+    <Compile Include="UriParser\Parsers\PathParserModelUtils.cs" />
+    <Compile Include="UriParser\Parsers\UriLiteralParsingException.cs" />
+    <Compile Include="UriParser\Parsers\UriPrimitiveTypeParser.cs" />
+    <Compile Include="UriParser\UriEdmHelpers.cs" />
     <Compile Include="Uri\ExpressionConstants.cs" />
     <Compile Include="Uri\NodeToStringBuilder.cs" />
     <Compile Include="Uri\ODataUri.cs" />
@@ -376,11 +383,10 @@
     <Compile Include="UriParser\InternalErrorCodes.cs" />
     <Compile Include="UriParser\KeyPropertyValue.cs" />
     <Compile Include="UriParser\LiteralUtils.cs" />
-    <Compile Include="UriParser\Metadata\AlternateKeysODataUriResolver.cs" />
-    <Compile Include="UriParser\Metadata\StringAsEnumResolver.cs" />
-    <Compile Include="UriParser\Metadata\ODataUriResolver.cs" />
-    <Compile Include="UriParser\Metadata\UnqualifiedODataUriResolver.cs" />
-    <Compile Include="UriParser\Metadata\UriEdmHelpers.cs" />
+    <Compile Include="UriParser\Resolver\AlternateKeysODataUriResolver.cs" />
+    <Compile Include="UriParser\Resolver\StringAsEnumResolver.cs" />
+    <Compile Include="UriParser\Resolver\ODataUriResolver.cs" />
+    <Compile Include="UriParser\Resolver\UnqualifiedODataUriResolver.cs" />
     <Compile Include="UriParser\NamedValue.cs" />
     <Compile Include="UriParser\ODataQueryOptionParser.cs" />
     <Compile Include="UriParser\ODataUnrecognizedPathException.cs" />
@@ -401,7 +407,6 @@
     <Compile Include="UriParser\Parsers\ODataPathFactory.cs" />
     <Compile Include="UriParser\Parsers\ODataPathParser.cs" />
     <Compile Include="UriParser\Parsers\OpenTypeMethods.cs" />
-    <Compile Include="UriParser\Metadata\PathParserModelUtils.cs" />
     <Compile Include="UriParser\Parsers\PathReverser.cs" />
     <Compile Include="UriParser\Parsers\SearchParser.cs" />
     <Compile Include="UriParser\Parsers\SegmentArgumentParser.cs" />
@@ -409,11 +414,6 @@
     <Compile Include="UriParser\Parsers\SelectExpandParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandSyntacticParser.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandTermParser.cs" />
-    <Compile Include="UriParser\Parsers\LiteralParsers\Common\IUriLiteralParser.cs" />
-    <Compile Include="UriParser\Parsers\LiteralParsers\Common\UriLiteralParsingException.cs" />
-    <Compile Include="UriParser\Parsers\LiteralParsers\DefaultUriLiteralParser.cs" />
-    <Compile Include="UriParser\Parsers\LiteralParsers\CustomUriLiteralParsers.cs" />
-    <Compile Include="UriParser\Parsers\LiteralParsers\UriPrimitiveTypeParser.cs" />
     <Compile Include="UriParser\Parsers\UriParserHelper.cs" />
     <Compile Include="UriParser\Parsers\UriPathParser.cs" />
     <Compile Include="UriParser\Parsers\UriQueryExpressionParser.cs" />
@@ -534,7 +534,6 @@
     <Compile Include="UriParser\TypePromotionUtils.cs" />
     <Compile Include="UriParser\UriFunctionsHelper.cs" />
     <Compile Include="UriParser\UriQueryConstants.cs" />
-    <Compile Include="UriParser\UriUtils.cs" />
     <Compile Include="UriParser\Visitors\IPathSegmentTokenVisitor.cs" />
     <Compile Include="UriParser\Visitors\ISyntacticTreeVisitor.cs" />
     <Compile Include="UriParser\Visitors\IsCollectionTranslator.cs" />

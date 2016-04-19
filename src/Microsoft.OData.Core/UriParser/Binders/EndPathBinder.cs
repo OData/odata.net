@@ -5,13 +5,10 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Core.Metadata;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
-namespace Microsoft.OData.Core.UriParser.Binders
+namespace Microsoft.OData.Core.UriParser
 {
     /// <summary>
     /// Class that knows how to bind an end path token, which could be several things.

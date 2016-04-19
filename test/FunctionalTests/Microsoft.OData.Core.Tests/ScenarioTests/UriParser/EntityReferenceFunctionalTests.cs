@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Core.Tests.UriParser;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 

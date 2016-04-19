@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Linq;
+using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Microsoft.Test.OData.Utils.Common;
+using Microsoft.Test.OData.Utils.Metadata;
+using Microsoft.Test.OData.Utils.ODataLibOM;
+
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
-    using System;
-    using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.Test.OData.Utils.Common;
-    using Microsoft.Test.OData.Utils.Metadata;
-    using Microsoft.Test.OData.Utils.ODataLibOM;
-
     /// <summary>
     /// A helper class to dynamically build models.
     /// </summary>

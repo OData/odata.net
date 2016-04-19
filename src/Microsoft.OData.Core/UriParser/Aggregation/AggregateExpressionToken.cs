@@ -12,9 +12,7 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.Core.UriParser.Aggregation
 {
 #endif
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser;
 
     internal sealed class AggregateExpressionToken : QueryToken
     {

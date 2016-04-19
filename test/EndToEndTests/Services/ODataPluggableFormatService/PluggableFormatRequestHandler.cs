@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
     using System.IO;
     using System.Text;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.Test.OData.Services.ODataWCFService;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Handlers;

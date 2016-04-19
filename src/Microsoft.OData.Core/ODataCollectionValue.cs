@@ -8,8 +8,6 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
 
     #endregion Namespaces
 

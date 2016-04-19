@@ -10,8 +10,6 @@ namespace Microsoft.OData.Service.Parsing
     using System.Diagnostics;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
 
     #endregion Namespaces

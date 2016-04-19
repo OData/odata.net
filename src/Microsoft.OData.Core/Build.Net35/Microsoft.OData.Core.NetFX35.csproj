@@ -1015,21 +1015,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\LiteralUtils.cs">
       <Link>Microsoft\OData\Core\UriParser\LiteralUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\AlternateKeysODataUriResolver.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\AlternateKeysODataUriResolver.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\StringAsEnumResolver.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\StringAsEnumResolver.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\ODataUriResolver.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\ODataUriResolver.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\UnqualifiedODataUriResolver.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\UnqualifiedODataUriResolver.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\UriEdmHelpers.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\UriEdmHelpers.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\NamedValue.cs">
       <Link>Microsoft\OData\Core\UriParser\NamedValue.cs</Link>
     </Compile>
@@ -1089,9 +1074,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\OpenTypeMethods.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\OpenTypeMethods.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\PathParserModelUtils.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\PathParserModelUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\PathReverser.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\PathReverser.cs</Link>
@@ -1468,9 +1450,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\UriQueryConstants.cs">
       <Link>Microsoft\OData\Core\UriParser\UriQueryConstants.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\UriUtils.cs">
-      <Link>Microsoft\OData\Core\UriParser\UriUtils.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Visitors\IPathSegmentTokenVisitor.cs">
       <Link>Microsoft\OData\Core\UriParser\Visitors\IPathSegmentTokenVisitor.cs</Link>
     </Compile>
@@ -1599,6 +1578,39 @@
     <Compile Include="..\UriParser\FunctionSignatureWithReturnType.cs">
       <Link>Microsoft\OData\Core\UriParser\FunctionSignatureWithReturnType.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Parsers\CustomUriLiteralParsers.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\CustomUriLiteralParsers.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\DefaultUriLiteralParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\DefaultUriLiteralParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\IUriLiteralParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\IUriLiteralParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\PathParserModelUtils.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\PathParserModelUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriLiteralParsingException.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\UriLiteralParsingException.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriPrimitiveTypeParser.cs">
+      <Link>Microsoft\OData\Core\UriParser\Parsers\UriPrimitiveTypeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\AlternateKeysODataUriResolver.cs">
+      <Link>Microsoft\OData\Core\UriParser\Resolver\AlternateKeysODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\ODataUriResolver.cs">
+      <Link>Microsoft\OData\Core\UriParser\Resolver\ODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\StringAsEnumResolver.cs">
+      <Link>Microsoft\OData\Core\UriParser\Resolver\StringAsEnumResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\UnqualifiedODataUriResolver.cs">
+      <Link>Microsoft\OData\Core\UriParser\Resolver\UnqualifiedODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\UriEdmHelpers.cs">
+      <Link>Microsoft\OData\Core\UriParser\UriEdmHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs">
       <Link>Microsoft\OData\Core\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs</Link>
     </Compile>
@@ -1637,21 +1649,6 @@
     </Compile>
     <Compile Include="..\UriParser\CustomUriLiteralPrefixes.cs">
       <Link>Microsoft\OData\Core\UriParser\CustomUriLiteralPrefixes.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Parsers\LiteralParsers\Common\IUriLiteralParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\Common\IUriLiteralParser.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Parsers\LiteralParsers\Common\UriLiteralParsingException.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\Common\UriLiteralParsingException.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Parsers\LiteralParsers\DefaultUriLiteralParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\DefaultUriLiteralParser.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Parsers\LiteralParsers\CustomUriLiteralParsers.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\CustomUriLiteralParsers.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Parsers\LiteralParsers\UriPrimitiveTypeParser.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\LiteralParsers\UriPrimitiveTypeParser.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Parsers\UriParserHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\UriParserHelper.cs</Link>

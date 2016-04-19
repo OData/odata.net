@@ -4,15 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers.Common
+using System;
+using System.Diagnostics;
+
+namespace Microsoft.OData.Core.UriParser
 {
-    #region Namespaces
-
-    using System;
-    using System.Diagnostics;
-
-    #endregion
-
     ////#if ORCAS // Not working in .Net3.5 solution, why ??
     ////    [Serializable]
     ////#endif

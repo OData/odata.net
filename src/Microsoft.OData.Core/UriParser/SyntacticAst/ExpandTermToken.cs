@@ -7,16 +7,12 @@
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.Core.UriParser
 #endif
 {
     #region Namespaces
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
+        
     #endregion Namespaces
 
     /// <summary>

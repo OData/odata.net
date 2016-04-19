@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core.UriParser
     using System.Runtime.Serialization;
     using System.Security.Permissions;
 #endif
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// The exception that is thrown when path parsing detects an unrecognized or unresolvable token in a path (which servers should treat as a 404).

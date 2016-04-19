@@ -1,19 +1,15 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="UriEdmHelpers.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Metadata
-{
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.Core.UriParser
+{
     /// <summary>
     /// Class to provide methods that wrap EdmLib calls that are normally not allows in ODataLib, but
     /// are OK in the Uri Parser. These are OK to suppress because the Uri Parser

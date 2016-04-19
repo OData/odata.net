@@ -7,7 +7,7 @@
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.Core.UriParser
 #endif
 {
     /// <summary>

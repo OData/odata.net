@@ -4879,16 +4879,16 @@ public sealed class Microsoft.OData.Core.ODataUri {
 	public ODataUri ()
 
 	Microsoft.OData.Core.UriParser.Aggregation.ApplyClause Apply  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] CustomQueryOptions  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] CustomQueryOptions  { public get; public set; }
 	string DeltaToken  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.FilterClause Filter  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderBy  { public get; public set; }
-	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ParameterAliasNodes  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataPath Path  { public get; public set; }
+	Microsoft.OData.Core.UriParser.FilterClause Filter  { public get; public set; }
+	Microsoft.OData.Core.UriParser.OrderByClause OrderBy  { public get; public set; }
+	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }
+	Microsoft.OData.Core.UriParser.ODataPath Path  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] QueryCount  { public get; public set; }
 	System.Uri RequestUri  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SearchClause Search  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { public get; public set; }
+	Microsoft.OData.Core.UriParser.SearchClause Search  { public get; public set; }
+	Microsoft.OData.Core.UriParser.SelectExpandClause SelectAndExpand  { public get; public set; }
 	System.Uri ServiceRoot  { public get; public set; }
 	System.Nullable`1[[System.Int64]] Skip  { public get; public set; }
 	string SkipToken  { public get; public set; }
@@ -4925,912 +4925,7 @@ public sealed class Microsoft.OData.Core.Metadata.ODataEdmPropertyAnnotation {
 	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { public get; public set; }
 }
 
-public enum Microsoft.OData.Core.UriParser.OrderByDirection : int {
-	Ascending = 0
-	Descending = 1
-}
-
-public sealed class Microsoft.OData.Core.UriParser.CustomUriFunctions {
-	public static void AddCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
-	public static bool RemoveCustomUriFunction (string functionName)
-	public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.CustomUriLiteralPrefixes {
-	public static void AddCustomLiteralPrefix (string literalPrefix, Microsoft.OData.Edm.IEdmTypeReference literalEdmTypeReference)
-	public static bool RemoveCustomLiteralPrefix (string literalPrefix)
-}
-
-public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
-	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions)
-
-	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ParameterAliasNodes  { public get; }
-	Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver Resolver  { public get; public set; }
-	Microsoft.OData.Core.UriParser.ODataUriParserSettings Settings  { public get; }
-
-	public Microsoft.OData.Core.UriParser.Aggregation.ApplyClause ParseApply ()
-	public System.Nullable`1[[System.Boolean]] ParseCount ()
-	public string ParseDeltaToken ()
-	public Microsoft.OData.Core.UriParser.Semantic.FilterClause ParseFilter ()
-	public Microsoft.OData.Core.UriParser.Semantic.OrderByClause ParseOrderBy ()
-	public Microsoft.OData.Core.UriParser.Semantic.SearchClause ParseSearch ()
-	public Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause ParseSelectAndExpand ()
-	public System.Nullable`1[[System.Int64]] ParseSkip ()
-	public string ParseSkipToken ()
-	public System.Nullable`1[[System.Int64]] ParseTop ()
-}
-
-public sealed class Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType {
-	public FunctionSignatureWithReturnType (Microsoft.OData.Edm.IEdmTypeReference returnType, Microsoft.OData.Edm.IEdmTypeReference[] argumentTypes)
-
-	Microsoft.OData.Edm.IEdmTypeReference[] ArgumentTypes  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.KeyPropertyValue {
-	public KeyPropertyValue ()
-
-	Microsoft.OData.Edm.IEdmProperty KeyProperty  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode KeyValue  { public get; public set; }
-}
-
-[
-DebuggerDisplayAttribute(),
-]
-public sealed class Microsoft.OData.Core.UriParser.ODataUnrecognizedPathException : Microsoft.OData.Core.ODataException, _Exception, ISerializable {
-	public ODataUnrecognizedPathException ()
-	public ODataUnrecognizedPathException (string message)
-	public ODataUnrecognizedPathException (string message, System.Exception innerException)
-
-	string CurrentSegment  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] ParsedSegments  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[System.String]] UnparsedSegments  { public get; public set; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.ODataUriParser {
-	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri fullUri)
-	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri)
-
-	System.Func`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.BatchReferenceSegment]] BatchReferenceCallback  { public get; public set; }
-	bool EnableUriTemplateParsing  { public get; public set; }
-	Microsoft.OData.Edm.IEdmModel Model  { public get; }
-	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ParameterAliasNodes  { public get; }
-	Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver Resolver  { public get; public set; }
-	System.Uri ServiceRoot  { public get; }
-	Microsoft.OData.Core.UriParser.ODataUriParserSettings Settings  { public get; }
-	Microsoft.OData.Core.ODataUrlConventions UrlConventions  { public get; public set; }
-
-	public Microsoft.OData.Core.UriParser.Aggregation.ApplyClause ParseApply ()
-	public System.Nullable`1[[System.Boolean]] ParseCount ()
-	public string ParseDeltaToken ()
-	public Microsoft.OData.Core.UriParser.Semantic.EntityIdSegment ParseEntityId ()
-	public Microsoft.OData.Core.UriParser.Semantic.FilterClause ParseFilter ()
-	public Microsoft.OData.Core.UriParser.Semantic.OrderByClause ParseOrderBy ()
-	public Microsoft.OData.Core.UriParser.Semantic.ODataPath ParsePath ()
-	public Microsoft.OData.Core.UriParser.Semantic.SearchClause ParseSearch ()
-	public Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause ParseSelectAndExpand ()
-	public System.Nullable`1[[System.Int64]] ParseSkip ()
-	public string ParseSkipToken ()
-	public System.Nullable`1[[System.Int64]] ParseTop ()
-	public Microsoft.OData.Core.ODataUri ParseUri ()
-}
-
-public sealed class Microsoft.OData.Core.UriParser.ODataUriParserSettings {
-	public ODataUriParserSettings ()
-
-	int MaximumExpansionCount  { public get; public set; }
-	int MaximumExpansionDepth  { public get; public set; }
-}
-
-public enum Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod : int {
-	Average = 3
-	CountDistinct = 4
-	Max = 2
-	Min = 1
-	Sum = 0
-}
-
-public enum Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind : int {
-	Aggregate = 0
-	Filter = 2
-	GroupBy = 1
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
-	protected TransformationNode ()
-
-	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public abstract get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Aggregation.AggregateExpression {
-	public AggregateExpression (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod method, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
-
-	string Alias  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
-	Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod Method  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Aggregation.AggregateTransformationNode : Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
-	public AggregateTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.AggregateExpression]] expressions)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.AggregateExpression]] Expressions  { public get; }
-	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Aggregation.ApplyClause {
-	public ApplyClause (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Aggregation.TransformationNode]] transformations)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.TransformationNode]] Transformations  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
-	public FilterTransformationNode (Microsoft.OData.Core.UriParser.Semantic.FilterClause filterClause)
-
-	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterClause  { public get; }
-	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode {
-	public GroupByPropertyNode (string name, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression)
-	public GroupByPropertyNode (string name, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Edm.IEdmTypeReference type)
-
-	System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode]] ChildTransformations  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
-	string Name  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Aggregation.GroupByTransformationNode : Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
-	public GroupByTransformationNode (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode]] groupingProperties, Microsoft.OData.Core.UriParser.Aggregation.TransformationNode childTransformations, Microsoft.OData.Core.UriParser.Semantic.CollectionNode source)
-
-	Microsoft.OData.Core.UriParser.Aggregation.TransformationNode ChildTransformations  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode]] GroupingProperties  { public get; }
-	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; }
-}
-
-public class Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
-	public ODataUriResolver ()
-
-	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
-
-	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& leftNode, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
-	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
-	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IList`1[[System.String]] positionalValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
-	public virtual Microsoft.OData.Edm.IEdmNavigationSource ResolveNavigationSource (Microsoft.OData.Edm.IEdmModel model, string identifier)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] ResolveOperationImports (Microsoft.OData.Edm.IEdmModel model, string identifier)
-	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] input)
-	public virtual Microsoft.OData.Edm.IEdmProperty ResolveProperty (Microsoft.OData.Edm.IEdmStructuredType type, string propertyName)
-	public virtual Microsoft.OData.Edm.IEdmSchemaType ResolveType (Microsoft.OData.Edm.IEdmModel model, string typeName)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveUnboundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier)
-}
-
-public class Microsoft.OData.Core.UriParser.Metadata.UnqualifiedODataUriResolver : Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
-	public UnqualifiedODataUriResolver ()
-
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveUnboundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Metadata.AlternateKeysODataUriResolver : Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
-	public AlternateKeysODataUriResolver (Microsoft.OData.Edm.IEdmModel model)
-
-	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Metadata.StringAsEnumResolver : Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
-	public StringAsEnumResolver ()
-
-	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& leftNode, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
-	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
-	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IList`1[[System.String]] positionalValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
-	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] input)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Parsers.CustomUriLiteralParsers : IUriLiteralParser {
-	public static void AddCustomUriLiteralParser (Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser customUriLiteralParser)
-	public static void AddCustomUriLiteralParser (Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser customUriLiteralParser)
-	public virtual object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException& parsingException)
-	public static bool RemoveCustomUriLiteralParser (Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser customUriLiteralParser)
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.CollectionNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	protected CollectionNode ()
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public abstract get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public abstract get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode : Microsoft.OData.Core.UriParser.Semantic.CollectionNode {
-	protected EntityCollectionNode ()
-
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public abstract get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public abstract get; }
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.LambdaNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	protected LambdaNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] rangeVariables)
-	protected LambdaNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] rangeVariables, Microsoft.OData.Core.UriParser.Semantic.RangeVariable currentRangeVariable)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Body  { public get; public set; }
-	Microsoft.OData.Core.UriParser.Semantic.RangeVariable CurrentRangeVariable  { public get; }
-	System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] RangeVariables  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; public set; }
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment : Microsoft.OData.Core.ODataAnnotatable {
-	protected ODataPathSegment ()
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public abstract get; }
-
-	internal virtual bool Equals (Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment other)
-	public abstract void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public abstract T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.QueryNode : Microsoft.OData.Core.ODataAnnotatable {
-	protected QueryNode ()
-
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public abstract get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.RangeVariable : Microsoft.OData.Core.ODataAnnotatable {
-	protected RangeVariable ()
-
-	int Kind  { public abstract get; }
-	string Name  { public abstract get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public abstract get; }
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.SelectItem : Microsoft.OData.Core.ODataAnnotatable {
-	protected SelectItem ()
-
-	public abstract void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
-	public abstract T TranslateWith (SelectItemTranslator`1 translator)
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	protected SingleEntityNode ()
-
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public abstract get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public abstract get; }
-}
-
-public abstract class Microsoft.OData.Core.UriParser.Semantic.SingleValueNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	protected SingleValueNode ()
-
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public abstract get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.RangeVariableKind {
-	public static int Entity = 0
-	public static int Nonentity = 1
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
-	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption)
-
-	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterOption  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderByOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath PathToNavigationProperty  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SearchClause SearchOption  { public get; }
-	System.Nullable`1[[System.Int64]] SkipOption  { public get; }
-	System.Nullable`1[[System.Int64]] TopOption  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
-	public virtual T TranslateWith (SelectItemTranslator`1 translator)
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.NamedFunctionParameterNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
-	public NamedFunctionParameterNode (string name, Microsoft.OData.Core.UriParser.Semantic.QueryNode value)
-
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind Kind  { public virtual get; }
-	string Name  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.QueryNode Value  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath : Microsoft.OData.Core.UriParser.Semantic.ODataPath, IEnumerable, IEnumerable`1 {
-	public ODataExpandPath (Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment[] segments)
-	public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] segments)
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.ODataPath : Microsoft.OData.Core.ODataAnnotatable, IEnumerable, IEnumerable`1 {
-	public ODataPath (Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment[] segments)
-	public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] segments)
-
-	int Count  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment FirstSegment  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment LastSegment  { public get; }
-
-	public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] GetEnumerator ()
-	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-	public IEnumerable`1 WalkWith (PathSegmentTranslator`1 translator)
-	public void WalkWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.ODataSelectPath : Microsoft.OData.Core.UriParser.Semantic.ODataPath, IEnumerable, IEnumerable`1 {
-	public ODataSelectPath (Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment[] segments)
-	public ODataSelectPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment]] segments)
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.ODataUnresolvedFunctionParameterAlias : Microsoft.OData.Core.ODataValue {
-	public ODataUnresolvedFunctionParameterAlias (string alias, Microsoft.OData.Edm.IEdmTypeReference type)
-
-	string Alias  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference Type  { public get; }
-}
-
-public class Microsoft.OData.Core.UriParser.Semantic.ParameterAliasNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public ParameterAliasNode (string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
-
-	string Alias  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.AllNode : Microsoft.OData.Core.UriParser.Semantic.LambdaNode {
-	public AllNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] rangeVariables)
-	public AllNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] rangeVariables, Microsoft.OData.Core.UriParser.Semantic.RangeVariable currentRangeVariable)
-
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.AnyNode : Microsoft.OData.Core.UriParser.Semantic.LambdaNode {
-	public AnyNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] parameters)
-	public AnyNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.Semantic.RangeVariable]] parameters, Microsoft.OData.Core.UriParser.Semantic.RangeVariable currentRangeVariable)
-
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.BatchReferenceSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public BatchReferenceSegment (string contentId, Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-
-	string ContentId  { public get; }
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntitySetBase EntitySet  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.BatchSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public static readonly Microsoft.OData.Core.UriParser.Semantic.BatchSegment Instance = Microsoft.OData.Core.UriParser.Semantic.BatchSegment
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.BinaryOperatorNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public BinaryOperatorNode (Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind operatorKind, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode left, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode right)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Left  { public get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind OperatorKind  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Right  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionFunctionCallNode : Microsoft.OData.Core.UriParser.Semantic.CollectionNode {
-	public CollectionFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionType, Microsoft.OData.Core.UriParser.Semantic.QueryNode source)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	string Name  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] Parameters  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.QueryNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionNavigationNode : Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode {
-	public CollectionNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode source)
-	public CollectionNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource source)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionOpenPropertyAccessNode : Microsoft.OData.Core.UriParser.Semantic.CollectionNode {
-	public CollectionOpenPropertyAccessNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode source, string openPropertyName)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	string Name  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionPropertyAccessNode : Microsoft.OData.Core.UriParser.Semantic.CollectionNode {
-	public CollectionPropertyAccessNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode source, Microsoft.OData.Edm.IEdmProperty property)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CollectionPropertyCastNode : Microsoft.OData.Core.UriParser.Semantic.CollectionNode {
-	public CollectionPropertyCastNode (Microsoft.OData.Core.UriParser.Semantic.CollectionPropertyAccessNode source, Microsoft.OData.Edm.IEdmComplexType complexType)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.CollectionPropertyAccessNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.ConstantNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public ConstantNode (object constantValue)
-	public ConstantNode (object constantValue, string literalText)
-	public ConstantNode (object constantValue, string literalText, Microsoft.OData.Edm.IEdmTypeReference typeReference)
-
-	string LiteralText  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-	object Value  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.ConvertNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public ConvertNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode source, Microsoft.OData.Edm.IEdmTypeReference typeReference)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CountNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public CountNode (Microsoft.OData.Core.UriParser.Semantic.CollectionNode source)
-
-	Microsoft.OData.Core.UriParser.Semantic.CollectionNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.CountSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public static readonly Microsoft.OData.Core.UriParser.Semantic.CountSegment Instance = Microsoft.OData.Core.UriParser.Semantic.CountSegment
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityCollectionCastNode : Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode {
-	public EntityCollectionCastNode (Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode source, Microsoft.OData.Edm.IEdmEntityType entityType)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityCollectionFunctionCallNode : Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode {
-	public EntityCollectionFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionTypeReference, Microsoft.OData.Edm.IEdmEntitySetBase navigationSource, Microsoft.OData.Core.UriParser.Semantic.QueryNode source)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	string Name  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] Parameters  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.QueryNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityIdSegment {
-	System.Uri Id  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable : Microsoft.OData.Core.UriParser.Semantic.RangeVariable {
-	public EntityRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode entityCollectionNode)
-	public EntityRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-
-	Microsoft.OData.Core.UriParser.Semantic.EntityCollectionNode EntityCollectionNode  { public get; }
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public get; }
-	int Kind  { public virtual get; }
-	string Name  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariableReferenceNode : Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode {
-	public EntityRangeVariableReferenceNode (string name, Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable rangeVariable)
-
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
-	string Name  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable RangeVariable  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.EntitySetSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public EntitySetSegment (Microsoft.OData.Edm.IEdmEntitySet entitySet)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntitySet EntitySet  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem : Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem {
-	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectExpandOption)
-	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectAndExpand, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption, Microsoft.OData.Core.UriParser.Semantic.LevelsClause levelsOption)
-
-	Microsoft.OData.Core.UriParser.Semantic.LevelsClause LevelsOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
-	public virtual T TranslateWith (SelectItemTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.FilterClause {
-	public FilterClause (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.Semantic.RangeVariable rangeVariable)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.RangeVariable RangeVariable  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.KeySegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public KeySegment (System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] keys, Microsoft.OData.Edm.IEdmEntityType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] Keys  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.LevelsClause {
-	public LevelsClause (bool isMaxLevel, long level)
-
-	bool IsMaxLevel  { public get; }
-	long Level  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.MetadataSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public static readonly Microsoft.OData.Core.UriParser.Semantic.MetadataSegment Instance = Microsoft.OData.Core.UriParser.Semantic.MetadataSegment
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.NamespaceQualifiedWildcardSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
-	public NamespaceQualifiedWildcardSelectItem (string namespaceName)
-
-	string Namespace  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
-	public virtual T TranslateWith (SelectItemTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.NavigationPropertyLinkSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public NavigationPropertyLinkSegment (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.NavigationPropertySegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public NavigationPropertySegment (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.NonentityRangeVariable : Microsoft.OData.Core.UriParser.Semantic.RangeVariable {
-	public NonentityRangeVariable (string name, Microsoft.OData.Edm.IEdmTypeReference typeReference, Microsoft.OData.Core.UriParser.Semantic.CollectionNode collectionNode)
-
-	Microsoft.OData.Core.UriParser.Semantic.CollectionNode CollectionNode  { public get; }
-	int Kind  { public virtual get; }
-	string Name  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.NonentityRangeVariableReferenceNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public NonentityRangeVariableReferenceNode (string name, Microsoft.OData.Core.UriParser.Semantic.NonentityRangeVariable rangeVariable)
-
-	string Name  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.NonentityRangeVariable RangeVariable  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.OpenPropertySegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public OpenPropertySegment (string propertyName)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	string PropertyName  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.OperationImportSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public OperationImportSegment (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-	public OperationImportSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] operationImports, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-	public OperationImportSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] operationImports, Microsoft.OData.Edm.IEdmEntitySetBase entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.OperationSegmentParameter]] parameters)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntitySetBase EntitySet  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImports  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.OperationSegmentParameter]] Parameters  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.OperationSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public OperationSegment (Microsoft.OData.Edm.IEdmOperation operation, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-	public OperationSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] operations, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-	public OperationSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] operations, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.OperationSegmentParameter]] parameters, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntitySetBase EntitySet  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] Operations  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.OperationSegmentParameter]] Parameters  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.OperationSegmentParameter : Microsoft.OData.Core.ODataAnnotatable {
-	public OperationSegmentParameter (string name, object value)
-
-	string Name  { public get; }
-	object Value  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.OrderByClause {
-	public OrderByClause (Microsoft.OData.Core.UriParser.Semantic.OrderByClause thenBy, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression, Microsoft.OData.Core.UriParser.OrderByDirection direction, Microsoft.OData.Core.UriParser.Semantic.RangeVariable rangeVariable)
-
-	Microsoft.OData.Core.UriParser.OrderByDirection Direction  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.RangeVariable RangeVariable  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.OrderByClause ThenBy  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.PathSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
-	public PathSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataSelectPath selectedPath)
-
-	Microsoft.OData.Core.UriParser.Semantic.ODataSelectPath SelectedPath  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
-	public virtual T TranslateWith (SelectItemTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public PathTemplateSegment (string literalText)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	string LiteralText  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.PropertySegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public PropertySegment (Microsoft.OData.Edm.IEdmStructuralProperty property)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmStructuralProperty Property  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SearchClause {
-	public SearchClause (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode expression)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Expression  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SearchTermNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public SearchTermNode (string text)
-
-	string Text  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause {
-	public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.SelectItem]] selectedItems, bool allSelected)
-
-	bool AllSelected  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.SelectItem]] SelectedItems  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleEntityCastNode : Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode {
-	public SingleEntityCastNode (Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode source, Microsoft.OData.Edm.IEdmEntityType entityType)
-
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleEntityFunctionCallNode : Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode {
-	public SingleEntityFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmEntityTypeReference returnedEntityTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-	public SingleEntityFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmEntityTypeReference returnedEntityTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.QueryNode source)
-
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
-	string Name  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] Parameters  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.QueryNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleNavigationNode : Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode {
-	public SingleNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode source)
-	public SingleNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource sourceNavigationSource)
-
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleEntityNode Source  { public get; }
-	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingletonSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public SingletonSegment (Microsoft.OData.Edm.IEdmSingleton singleton)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmSingleton Singleton  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleValueCastNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public SingleValueCastNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode source, Microsoft.OData.Edm.IEdmComplexType complexType)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleValueFunctionCallNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public SingleValueFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmTypeReference returnedTypeReference)
-	public SingleValueFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] parameters, Microsoft.OData.Edm.IEdmTypeReference returnedTypeReference, Microsoft.OData.Core.UriParser.Semantic.QueryNode source)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
-	string Name  { public get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Semantic.QueryNode]] Parameters  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.QueryNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleValueOpenPropertyAccessNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public SingleValueOpenPropertyAccessNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode source, string openPropertyName)
-
-	string Name  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public SingleValuePropertyAccessNode (Microsoft.OData.Core.UriParser.Semantic.SingleValueNode source, Microsoft.OData.Edm.IEdmProperty property)
-
-	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.TypeSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public TypeSegment (Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.UnaryOperatorNode : Microsoft.OData.Core.UriParser.Semantic.SingleValueNode {
-	public UnaryOperatorNode (Microsoft.OData.Core.UriParser.TreeNodeKinds.UnaryOperatorKind operatorKind, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode operand)
-
-	Microsoft.OData.Core.UriParser.Semantic.SingleValueNode Operand  { public get; }
-	Microsoft.OData.Core.UriParser.TreeNodeKinds.UnaryOperatorKind OperatorKind  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.UriTemplateExpression {
-	public UriTemplateExpression ()
-
-	Microsoft.OData.Edm.IEdmTypeReference ExpectedType  { public get; }
-	string LiteralText  { public get; }
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.ValueSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
-	public ValueSegment (Microsoft.OData.Edm.IEdmType previousType)
-
-	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
-	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.Core.UriParser.Semantic.WildcardSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
-	public WildcardSelectItem ()
-
-	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
-	public virtual T TranslateWith (SelectItemTranslator`1 translator)
-}
-
-public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind : int {
+public enum Microsoft.OData.Core.UriParser.BinaryOperatorKind : int {
 	Add = 8
 	And = 1
 	Divide = 11
@@ -5847,7 +4942,12 @@ public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind : in
 	Subtract = 9
 }
 
-public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind : int {
+public enum Microsoft.OData.Core.UriParser.OrderByDirection : int {
+	Ascending = 0
+	Descending = 1
+}
+
+public enum Microsoft.OData.Core.UriParser.QueryNodeKind : int {
 	All = 14
 	Any = 9
 	BinaryOperator = 4
@@ -5878,115 +4978,1008 @@ public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind : int {
 	UnaryOperator = 5
 }
 
-public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.UnaryOperatorKind : int {
+public enum Microsoft.OData.Core.UriParser.UnaryOperatorKind : int {
 	Negate = 0
 	Not = 1
 }
 
-public abstract class Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler {
+public interface Microsoft.OData.Core.UriParser.IUriLiteralParser {
+	object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.UriLiteralParsingException& parsingException)
+}
+
+public abstract class Microsoft.OData.Core.UriParser.CollectionNode : Microsoft.OData.Core.UriParser.QueryNode {
+	protected CollectionNode ()
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public abstract get; }
+	Microsoft.OData.Core.UriParser.QueryNodeKind Kind  { public virtual get; }
+}
+
+public abstract class Microsoft.OData.Core.UriParser.EntityCollectionNode : Microsoft.OData.Core.UriParser.CollectionNode {
+	protected EntityCollectionNode ()
+
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public abstract get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public abstract get; }
+}
+
+public abstract class Microsoft.OData.Core.UriParser.LambdaNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	protected LambdaNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] rangeVariables)
+	protected LambdaNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] rangeVariables, Microsoft.OData.Core.UriParser.RangeVariable currentRangeVariable)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Body  { public get; public set; }
+	Microsoft.OData.Core.UriParser.RangeVariable CurrentRangeVariable  { public get; }
+	System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] RangeVariables  { public get; }
+	Microsoft.OData.Core.UriParser.CollectionNode Source  { public get; public set; }
+}
+
+public abstract class Microsoft.OData.Core.UriParser.ODataPathSegment : Microsoft.OData.Core.ODataAnnotatable {
+	protected ODataPathSegment ()
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public abstract get; }
+
+	internal virtual bool Equals (Microsoft.OData.Core.UriParser.ODataPathSegment other)
+	public abstract void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public abstract T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public abstract class Microsoft.OData.Core.UriParser.PathSegmentHandler {
 	protected PathSegmentHandler ()
 
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.BatchReferenceSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.BatchSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.CountSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.EntitySetSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.KeySegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.MetadataSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.NavigationPropertyLinkSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.NavigationPropertySegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.OpenPropertySegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.OperationImportSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.OperationSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.PropertySegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.SingletonSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.TypeSegment segment)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.ValueSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.BatchReferenceSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.BatchSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.CountSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.EntitySetSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.KeySegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.MetadataSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.NavigationPropertyLinkSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.NavigationPropertySegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.OpenPropertySegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.OperationImportSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.OperationSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.PathTemplateSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.PropertySegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.SingletonSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.TypeSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.ValueSegment segment)
 }
 
-public abstract class Microsoft.OData.Core.UriParser.Visitors.PathSegmentTranslator`1 {
+public abstract class Microsoft.OData.Core.UriParser.PathSegmentTranslator`1 {
 	protected PathSegmentTranslator`1 ()
 
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.BatchReferenceSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.BatchSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.CountSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.EntitySetSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.KeySegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.MetadataSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.NavigationPropertyLinkSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.NavigationPropertySegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.OpenPropertySegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.OperationImportSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.OperationSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.PropertySegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.SingletonSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.TypeSegment segment)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.ValueSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.BatchReferenceSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.BatchSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.CountSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.EntitySetSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.KeySegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.MetadataSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.NavigationPropertyLinkSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.NavigationPropertySegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.OpenPropertySegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.OperationImportSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.OperationSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.PathTemplateSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.PropertySegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.SingletonSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.TypeSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.ValueSegment segment)
 }
 
-public abstract class Microsoft.OData.Core.UriParser.Visitors.QueryNodeVisitor`1 {
+public abstract class Microsoft.OData.Core.UriParser.QueryNode : Microsoft.OData.Core.ODataAnnotatable {
+	protected QueryNode ()
+
+	Microsoft.OData.Core.UriParser.QueryNodeKind Kind  { public abstract get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public abstract class Microsoft.OData.Core.UriParser.QueryNodeVisitor`1 {
 	protected QueryNodeVisitor`1 ()
 
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.AllNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.AnyNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.BinaryOperatorNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionFunctionCallNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionNavigationNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionOpenPropertyAccessNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionPropertyAccessNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CollectionPropertyCastNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.ConstantNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.ConvertNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.CountNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.EntityCollectionCastNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.EntityCollectionFunctionCallNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariableReferenceNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.NamedFunctionParameterNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.NonentityRangeVariableReferenceNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.ParameterAliasNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SearchTermNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleEntityCastNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleEntityFunctionCallNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleNavigationNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleValueCastNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleValueFunctionCallNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleValueOpenPropertyAccessNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.SingleValuePropertyAccessNode nodeIn)
-	public virtual T Visit (Microsoft.OData.Core.UriParser.Semantic.UnaryOperatorNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.AllNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.AnyNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.BinaryOperatorNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.CollectionFunctionCallNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.CollectionNavigationNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.CollectionOpenPropertyAccessNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.CollectionPropertyAccessNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.CollectionPropertyCastNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.ConstantNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.ConvertNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.CountNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.EntityCollectionCastNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.EntityCollectionFunctionCallNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.EntityRangeVariableReferenceNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.NamedFunctionParameterNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.NonentityRangeVariableReferenceNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.ParameterAliasNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SearchTermNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleEntityCastNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleEntityFunctionCallNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleNavigationNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleValueCastNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleValueFunctionCallNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleValueOpenPropertyAccessNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.SingleValuePropertyAccessNode nodeIn)
+	public virtual T Visit (Microsoft.OData.Core.UriParser.UnaryOperatorNode nodeIn)
 }
 
-public abstract class Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler {
+public abstract class Microsoft.OData.Core.UriParser.RangeVariable : Microsoft.OData.Core.ODataAnnotatable {
+	protected RangeVariable ()
+
+	int Kind  { public abstract get; }
+	string Name  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public abstract get; }
+}
+
+public abstract class Microsoft.OData.Core.UriParser.SelectItem : Microsoft.OData.Core.ODataAnnotatable {
+	protected SelectItem ()
+
+	public abstract void HandleWith (Microsoft.OData.Core.UriParser.SelectItemHandler handler)
+	public abstract T TranslateWith (SelectItemTranslator`1 translator)
+}
+
+public abstract class Microsoft.OData.Core.UriParser.SelectItemHandler {
 	protected SelectItemHandler ()
 
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem item)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem item)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.NamespaceQualifiedWildcardSelectItem item)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.PathSelectItem item)
-	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.WildcardSelectItem item)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.ExpandedNavigationSelectItem item)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.ExpandedReferenceSelectItem item)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.NamespaceQualifiedWildcardSelectItem item)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.PathSelectItem item)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.WildcardSelectItem item)
 }
 
-public abstract class Microsoft.OData.Core.UriParser.Visitors.SelectItemTranslator`1 {
+public abstract class Microsoft.OData.Core.UriParser.SelectItemTranslator`1 {
 	protected SelectItemTranslator`1 ()
 
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem item)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem item)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.NamespaceQualifiedWildcardSelectItem item)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.PathSelectItem item)
-	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.WildcardSelectItem item)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.ExpandedNavigationSelectItem item)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.ExpandedReferenceSelectItem item)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.NamespaceQualifiedWildcardSelectItem item)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.PathSelectItem item)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.WildcardSelectItem item)
 }
 
-public interface Microsoft.OData.Core.UriParser.Parsers.Common.IUriLiteralParser {
-	object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException& parsingException)
+public abstract class Microsoft.OData.Core.UriParser.SingleEntityNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	protected SingleEntityNode ()
+
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public abstract get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public abstract get; }
+}
+
+public abstract class Microsoft.OData.Core.UriParser.SingleValueNode : Microsoft.OData.Core.UriParser.QueryNode {
+	protected SingleValueNode ()
+
+	Microsoft.OData.Core.UriParser.QueryNodeKind Kind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public abstract get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CustomUriFunctions {
+	public static void AddCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
+	public static bool RemoveCustomUriFunction (string functionName)
+	public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType functionSignature)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CustomUriLiteralPrefixes {
+	public static void AddCustomLiteralPrefix (string literalPrefix, Microsoft.OData.Edm.IEdmTypeReference literalEdmTypeReference)
+	public static bool RemoveCustomLiteralPrefix (string literalPrefix)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.RangeVariableKind {
+	public static int Entity = 0
+	public static int Nonentity = 1
+}
+
+public class Microsoft.OData.Core.UriParser.ExpandedReferenceSelectItem : Microsoft.OData.Core.UriParser.SelectItem {
+	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.FilterClause filterOption, Microsoft.OData.Core.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.SearchClause searchOption)
+
+	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
+	Microsoft.OData.Core.UriParser.FilterClause FilterOption  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.Core.UriParser.OrderByClause OrderByOption  { public get; }
+	Microsoft.OData.Core.UriParser.ODataExpandPath PathToNavigationProperty  { public get; }
+	Microsoft.OData.Core.UriParser.SearchClause SearchOption  { public get; }
+	System.Nullable`1[[System.Int64]] SkipOption  { public get; }
+	System.Nullable`1[[System.Int64]] TopOption  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
+}
+
+public class Microsoft.OData.Core.UriParser.NamedFunctionParameterNode : Microsoft.OData.Core.UriParser.QueryNode {
+	public NamedFunctionParameterNode (string name, Microsoft.OData.Core.UriParser.QueryNode value)
+
+	Microsoft.OData.Core.UriParser.QueryNodeKind Kind  { public virtual get; }
+	string Name  { public get; }
+	Microsoft.OData.Core.UriParser.QueryNode Value  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public class Microsoft.OData.Core.UriParser.ODataExpandPath : Microsoft.OData.Core.UriParser.ODataPath, IEnumerable, IEnumerable`1 {
+	public ODataExpandPath (Microsoft.OData.Core.UriParser.ODataPathSegment[] segments)
+	public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.ODataPathSegment]] segments)
+}
+
+public class Microsoft.OData.Core.UriParser.ODataPath : Microsoft.OData.Core.ODataAnnotatable, IEnumerable, IEnumerable`1 {
+	public ODataPath (Microsoft.OData.Core.UriParser.ODataPathSegment[] segments)
+	public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.ODataPathSegment]] segments)
+
+	int Count  { public get; }
+	Microsoft.OData.Core.UriParser.ODataPathSegment FirstSegment  { public get; }
+	Microsoft.OData.Core.UriParser.ODataPathSegment LastSegment  { public get; }
+
+	public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.Core.UriParser.ODataPathSegment]] GetEnumerator ()
+	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+	public IEnumerable`1 WalkWith (PathSegmentTranslator`1 translator)
+	public void WalkWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+}
+
+public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
+	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions)
+
+	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }
+	Microsoft.OData.Core.UriParser.ODataUriResolver Resolver  { public get; public set; }
+	Microsoft.OData.Core.UriParser.ODataUriParserSettings Settings  { public get; }
+
+	public Microsoft.OData.Core.UriParser.Aggregation.ApplyClause ParseApply ()
+	public System.Nullable`1[[System.Boolean]] ParseCount ()
+	public string ParseDeltaToken ()
+	public Microsoft.OData.Core.UriParser.FilterClause ParseFilter ()
+	public Microsoft.OData.Core.UriParser.OrderByClause ParseOrderBy ()
+	public Microsoft.OData.Core.UriParser.SearchClause ParseSearch ()
+	public Microsoft.OData.Core.UriParser.SelectExpandClause ParseSelectAndExpand ()
+	public System.Nullable`1[[System.Int64]] ParseSkip ()
+	public string ParseSkipToken ()
+	public System.Nullable`1[[System.Int64]] ParseTop ()
+}
+
+public class Microsoft.OData.Core.UriParser.ODataSelectPath : Microsoft.OData.Core.UriParser.ODataPath, IEnumerable, IEnumerable`1 {
+	public ODataSelectPath (Microsoft.OData.Core.UriParser.ODataPathSegment[] segments)
+	public ODataSelectPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.ODataPathSegment]] segments)
+}
+
+public class Microsoft.OData.Core.UriParser.ODataUnresolvedFunctionParameterAlias : Microsoft.OData.Core.ODataValue {
+	public ODataUnresolvedFunctionParameterAlias (string alias, Microsoft.OData.Edm.IEdmTypeReference type)
+
+	string Alias  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public get; }
+}
+
+public class Microsoft.OData.Core.UriParser.ODataUriResolver {
+	public ODataUriResolver ()
+
+	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
+
+	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.Core.UriParser.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.Core.UriParser.SingleValueNode& leftNode, Microsoft.OData.Core.UriParser.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IList`1[[System.String]] positionalValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+	public virtual Microsoft.OData.Edm.IEdmNavigationSource ResolveNavigationSource (Microsoft.OData.Edm.IEdmModel model, string identifier)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] ResolveOperationImports (Microsoft.OData.Edm.IEdmModel model, string identifier)
+	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.Core.UriParser.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.SingleValueNode]] input)
+	public virtual Microsoft.OData.Edm.IEdmProperty ResolveProperty (Microsoft.OData.Edm.IEdmStructuredType type, string propertyName)
+	public virtual Microsoft.OData.Edm.IEdmSchemaType ResolveType (Microsoft.OData.Edm.IEdmModel model, string typeName)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveUnboundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier)
+}
+
+public class Microsoft.OData.Core.UriParser.ParameterAliasNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public ParameterAliasNode (string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+
+	string Alias  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public class Microsoft.OData.Core.UriParser.UnqualifiedODataUriResolver : Microsoft.OData.Core.UriParser.ODataUriResolver {
+	public UnqualifiedODataUriResolver ()
+
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveUnboundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.AllNode : Microsoft.OData.Core.UriParser.LambdaNode {
+	public AllNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] rangeVariables)
+	public AllNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] rangeVariables, Microsoft.OData.Core.UriParser.RangeVariable currentRangeVariable)
+
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.AlternateKeysODataUriResolver : Microsoft.OData.Core.UriParser.ODataUriResolver {
+	public AlternateKeysODataUriResolver (Microsoft.OData.Edm.IEdmModel model)
+
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.AnyNode : Microsoft.OData.Core.UriParser.LambdaNode {
+	public AnyNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] parameters)
+	public AnyNode (System.Collections.ObjectModel.Collection`1[[Microsoft.OData.Core.UriParser.RangeVariable]] parameters, Microsoft.OData.Core.UriParser.RangeVariable currentRangeVariable)
+
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.BatchReferenceSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public BatchReferenceSegment (string contentId, Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+
+	string ContentId  { public get; }
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntitySetBase EntitySet  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.BatchSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public static readonly Microsoft.OData.Core.UriParser.BatchSegment Instance = Microsoft.OData.Core.UriParser.BatchSegment
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.BinaryOperatorNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public BinaryOperatorNode (Microsoft.OData.Core.UriParser.BinaryOperatorKind operatorKind, Microsoft.OData.Core.UriParser.SingleValueNode left, Microsoft.OData.Core.UriParser.SingleValueNode right)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Left  { public get; }
+	Microsoft.OData.Core.UriParser.BinaryOperatorKind OperatorKind  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Right  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CollectionFunctionCallNode : Microsoft.OData.Core.UriParser.CollectionNode {
+	public CollectionFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionType, Microsoft.OData.Core.UriParser.QueryNode source)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	string Name  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] Parameters  { public get; }
+	Microsoft.OData.Core.UriParser.QueryNode Source  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CollectionNavigationNode : Microsoft.OData.Core.UriParser.EntityCollectionNode {
+	public CollectionNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Core.UriParser.SingleEntityNode source)
+	public CollectionNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource source)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CollectionOpenPropertyAccessNode : Microsoft.OData.Core.UriParser.CollectionNode {
+	public CollectionOpenPropertyAccessNode (Microsoft.OData.Core.UriParser.SingleValueNode source, string openPropertyName)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	string Name  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CollectionPropertyAccessNode : Microsoft.OData.Core.UriParser.CollectionNode {
+	public CollectionPropertyAccessNode (Microsoft.OData.Core.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmProperty property)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CollectionPropertyCastNode : Microsoft.OData.Core.UriParser.CollectionNode {
+	public CollectionPropertyCastNode (Microsoft.OData.Core.UriParser.CollectionPropertyAccessNode source, Microsoft.OData.Edm.IEdmComplexType complexType)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Core.UriParser.CollectionPropertyAccessNode Source  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.ConstantNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public ConstantNode (object constantValue)
+	public ConstantNode (object constantValue, string literalText)
+	public ConstantNode (object constantValue, string literalText, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+
+	string LiteralText  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+	object Value  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.ConvertNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public ConvertNode (Microsoft.OData.Core.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CountNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public CountNode (Microsoft.OData.Core.UriParser.CollectionNode source)
+
+	Microsoft.OData.Core.UriParser.CollectionNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CountSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public static readonly Microsoft.OData.Core.UriParser.CountSegment Instance = Microsoft.OData.Core.UriParser.CountSegment
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.CustomUriLiteralParsers : IUriLiteralParser {
+	public static void AddCustomUriLiteralParser (Microsoft.OData.Core.UriParser.IUriLiteralParser customUriLiteralParser)
+	public static void AddCustomUriLiteralParser (Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.UriParser.IUriLiteralParser customUriLiteralParser)
+	public virtual object ParseUriStringToType (string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.Core.UriParser.UriLiteralParsingException& parsingException)
+	public static bool RemoveCustomUriLiteralParser (Microsoft.OData.Core.UriParser.IUriLiteralParser customUriLiteralParser)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.EntityCollectionCastNode : Microsoft.OData.Core.UriParser.EntityCollectionNode {
+	public EntityCollectionCastNode (Microsoft.OData.Core.UriParser.EntityCollectionNode source, Microsoft.OData.Edm.IEdmEntityType entityType)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	Microsoft.OData.Core.UriParser.EntityCollectionNode Source  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.EntityCollectionFunctionCallNode : Microsoft.OData.Core.UriParser.EntityCollectionNode {
+	public EntityCollectionFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionTypeReference, Microsoft.OData.Edm.IEdmEntitySetBase navigationSource, Microsoft.OData.Core.UriParser.QueryNode source)
+
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	string Name  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] Parameters  { public get; }
+	Microsoft.OData.Core.UriParser.QueryNode Source  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.EntityIdSegment {
+	System.Uri Id  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.EntityRangeVariable : Microsoft.OData.Core.UriParser.RangeVariable {
+	public EntityRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Core.UriParser.EntityCollectionNode entityCollectionNode)
+	public EntityRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	Microsoft.OData.Core.UriParser.EntityCollectionNode EntityCollectionNode  { public get; }
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public get; }
+	int Kind  { public virtual get; }
+	string Name  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.EntityRangeVariableReferenceNode : Microsoft.OData.Core.UriParser.SingleEntityNode {
+	public EntityRangeVariableReferenceNode (string name, Microsoft.OData.Core.UriParser.EntityRangeVariable rangeVariable)
+
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
+	string Name  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	Microsoft.OData.Core.UriParser.EntityRangeVariable RangeVariable  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.EntitySetSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public EntitySetSegment (Microsoft.OData.Edm.IEdmEntitySet entitySet)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntitySet EntitySet  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.ExpandedNavigationSelectItem : Microsoft.OData.Core.UriParser.ExpandedReferenceSelectItem {
+	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.SelectExpandClause selectExpandOption)
+	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.SelectExpandClause selectAndExpand, Microsoft.OData.Core.UriParser.FilterClause filterOption, Microsoft.OData.Core.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.SearchClause searchOption, Microsoft.OData.Core.UriParser.LevelsClause levelsOption)
+
+	Microsoft.OData.Core.UriParser.LevelsClause LevelsOption  { public get; }
+	Microsoft.OData.Core.UriParser.SelectExpandClause SelectAndExpand  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.FilterClause {
+	public FilterClause (Microsoft.OData.Core.UriParser.SingleValueNode expression, Microsoft.OData.Core.UriParser.RangeVariable rangeVariable)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Expression  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
+	Microsoft.OData.Core.UriParser.RangeVariable RangeVariable  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType {
+	public FunctionSignatureWithReturnType (Microsoft.OData.Edm.IEdmTypeReference returnType, Microsoft.OData.Edm.IEdmTypeReference[] argumentTypes)
+
+	Microsoft.OData.Edm.IEdmTypeReference[] ArgumentTypes  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.KeySegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public KeySegment (System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] keys, Microsoft.OData.Edm.IEdmEntityType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] Keys  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.LevelsClause {
+	public LevelsClause (bool isMaxLevel, long level)
+
+	bool IsMaxLevel  { public get; }
+	long Level  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.MetadataSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public static readonly Microsoft.OData.Core.UriParser.MetadataSegment Instance = Microsoft.OData.Core.UriParser.MetadataSegment
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.NamespaceQualifiedWildcardSelectItem : Microsoft.OData.Core.UriParser.SelectItem {
+	public NamespaceQualifiedWildcardSelectItem (string namespaceName)
+
+	string Namespace  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.NavigationPropertyLinkSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public NavigationPropertyLinkSegment (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.NavigationPropertySegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public NavigationPropertySegment (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.NonentityRangeVariable : Microsoft.OData.Core.UriParser.RangeVariable {
+	public NonentityRangeVariable (string name, Microsoft.OData.Edm.IEdmTypeReference typeReference, Microsoft.OData.Core.UriParser.CollectionNode collectionNode)
+
+	Microsoft.OData.Core.UriParser.CollectionNode CollectionNode  { public get; }
+	int Kind  { public virtual get; }
+	string Name  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.NonentityRangeVariableReferenceNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public NonentityRangeVariableReferenceNode (string name, Microsoft.OData.Core.UriParser.NonentityRangeVariable rangeVariable)
+
+	string Name  { public get; }
+	Microsoft.OData.Core.UriParser.NonentityRangeVariable RangeVariable  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
 [
 DebuggerDisplayAttribute(),
 ]
-public sealed class Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException : Microsoft.OData.Core.ODataException, _Exception, ISerializable {
+public sealed class Microsoft.OData.Core.UriParser.ODataUnrecognizedPathException : Microsoft.OData.Core.ODataException, _Exception, ISerializable {
+	public ODataUnrecognizedPathException ()
+	public ODataUnrecognizedPathException (string message)
+	public ODataUnrecognizedPathException (string message, System.Exception innerException)
+
+	string CurrentSegment  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.ODataPathSegment]] ParsedSegments  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] UnparsedSegments  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.ODataUriParser {
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri fullUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri)
+
+	System.Func`2[[System.String],[Microsoft.OData.Core.UriParser.BatchReferenceSegment]] BatchReferenceCallback  { public get; public set; }
+	bool EnableUriTemplateParsing  { public get; public set; }
+	Microsoft.OData.Edm.IEdmModel Model  { public get; }
+	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }
+	Microsoft.OData.Core.UriParser.ODataUriResolver Resolver  { public get; public set; }
+	System.Uri ServiceRoot  { public get; }
+	Microsoft.OData.Core.UriParser.ODataUriParserSettings Settings  { public get; }
+	Microsoft.OData.Core.ODataUrlConventions UrlConventions  { public get; public set; }
+
+	public Microsoft.OData.Core.UriParser.Aggregation.ApplyClause ParseApply ()
+	public System.Nullable`1[[System.Boolean]] ParseCount ()
+	public string ParseDeltaToken ()
+	public Microsoft.OData.Core.UriParser.EntityIdSegment ParseEntityId ()
+	public Microsoft.OData.Core.UriParser.FilterClause ParseFilter ()
+	public Microsoft.OData.Core.UriParser.OrderByClause ParseOrderBy ()
+	public Microsoft.OData.Core.UriParser.ODataPath ParsePath ()
+	public Microsoft.OData.Core.UriParser.SearchClause ParseSearch ()
+	public Microsoft.OData.Core.UriParser.SelectExpandClause ParseSelectAndExpand ()
+	public System.Nullable`1[[System.Int64]] ParseSkip ()
+	public string ParseSkipToken ()
+	public System.Nullable`1[[System.Int64]] ParseTop ()
+	public Microsoft.OData.Core.ODataUri ParseUri ()
+}
+
+public sealed class Microsoft.OData.Core.UriParser.ODataUriParserSettings {
+	public ODataUriParserSettings ()
+
+	int MaximumExpansionCount  { public get; public set; }
+	int MaximumExpansionDepth  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.OpenPropertySegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public OpenPropertySegment (string propertyName)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	string PropertyName  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.OperationImportSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public OperationImportSegment (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public OperationImportSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] operationImports, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public OperationImportSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] operationImports, Microsoft.OData.Edm.IEdmEntitySetBase entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.OperationSegmentParameter]] parameters)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntitySetBase EntitySet  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImports  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.OperationSegmentParameter]] Parameters  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.OperationSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public OperationSegment (Microsoft.OData.Edm.IEdmOperation operation, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public OperationSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] operations, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public OperationSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] operations, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.OperationSegmentParameter]] parameters, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntitySetBase EntitySet  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] Operations  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.OperationSegmentParameter]] Parameters  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.OperationSegmentParameter : Microsoft.OData.Core.ODataAnnotatable {
+	public OperationSegmentParameter (string name, object value)
+
+	string Name  { public get; }
+	object Value  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.OrderByClause {
+	public OrderByClause (Microsoft.OData.Core.UriParser.OrderByClause thenBy, Microsoft.OData.Core.UriParser.SingleValueNode expression, Microsoft.OData.Core.UriParser.OrderByDirection direction, Microsoft.OData.Core.UriParser.RangeVariable rangeVariable)
+
+	Microsoft.OData.Core.UriParser.OrderByDirection Direction  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Expression  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
+	Microsoft.OData.Core.UriParser.RangeVariable RangeVariable  { public get; }
+	Microsoft.OData.Core.UriParser.OrderByClause ThenBy  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.PathSelectItem : Microsoft.OData.Core.UriParser.SelectItem {
+	public PathSelectItem (Microsoft.OData.Core.UriParser.ODataSelectPath selectedPath)
+
+	Microsoft.OData.Core.UriParser.ODataSelectPath SelectedPath  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.PathTemplateSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public PathTemplateSegment (string literalText)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	string LiteralText  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.PropertySegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public PropertySegment (Microsoft.OData.Edm.IEdmStructuralProperty property)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmStructuralProperty Property  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SearchClause {
+	public SearchClause (Microsoft.OData.Core.UriParser.SingleValueNode expression)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Expression  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SearchTermNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public SearchTermNode (string text)
+
+	string Text  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SelectExpandClause {
+	public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.SelectItem]] selectedItems, bool allSelected)
+
+	bool AllSelected  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.SelectItem]] SelectedItems  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleEntityCastNode : Microsoft.OData.Core.UriParser.SingleEntityNode {
+	public SingleEntityCastNode (Microsoft.OData.Core.UriParser.SingleEntityNode source, Microsoft.OData.Edm.IEdmEntityType entityType)
+
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	Microsoft.OData.Core.UriParser.SingleEntityNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleEntityFunctionCallNode : Microsoft.OData.Core.UriParser.SingleEntityNode {
+	public SingleEntityFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmEntityTypeReference returnedEntityTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public SingleEntityFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmEntityTypeReference returnedEntityTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.QueryNode source)
+
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
+	string Name  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] Parameters  { public get; }
+	Microsoft.OData.Core.UriParser.QueryNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleNavigationNode : Microsoft.OData.Core.UriParser.SingleEntityNode {
+	public SingleNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Core.UriParser.SingleEntityNode source)
+	public SingleNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource sourceNavigationSource)
+
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	Microsoft.OData.Core.UriParser.SingleEntityNode Source  { public get; }
+	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingletonSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public SingletonSegment (Microsoft.OData.Edm.IEdmSingleton singleton)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmSingleton Singleton  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleValueCastNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public SingleValueCastNode (Microsoft.OData.Core.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmComplexType complexType)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleValueFunctionCallNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public SingleValueFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmTypeReference returnedTypeReference)
+	public SingleValueFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmTypeReference returnedTypeReference, Microsoft.OData.Core.UriParser.QueryNode source)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
+	string Name  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.QueryNode]] Parameters  { public get; }
+	Microsoft.OData.Core.UriParser.QueryNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleValueOpenPropertyAccessNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public SingleValueOpenPropertyAccessNode (Microsoft.OData.Core.UriParser.SingleValueNode source, string openPropertyName)
+
+	string Name  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.SingleValuePropertyAccessNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public SingleValuePropertyAccessNode (Microsoft.OData.Core.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmProperty property)
+
+	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.StringAsEnumResolver : Microsoft.OData.Core.UriParser.ODataUriResolver {
+	public StringAsEnumResolver ()
+
+	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.Core.UriParser.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.Core.UriParser.SingleValueNode& leftNode, Microsoft.OData.Core.UriParser.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IList`1[[System.String]] positionalValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.Core.UriParser.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.SingleValueNode]] input)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.TypeSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public TypeSegment (Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.UnaryOperatorNode : Microsoft.OData.Core.UriParser.SingleValueNode {
+	public UnaryOperatorNode (Microsoft.OData.Core.UriParser.UnaryOperatorKind operatorKind, Microsoft.OData.Core.UriParser.SingleValueNode operand)
+
+	Microsoft.OData.Core.UriParser.SingleValueNode Operand  { public get; }
+	Microsoft.OData.Core.UriParser.UnaryOperatorKind OperatorKind  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public sealed class Microsoft.OData.Core.UriParser.UriLiteralParsingException : Microsoft.OData.Core.ODataException, _Exception, ISerializable {
 	public UriLiteralParsingException ()
 	public UriLiteralParsingException (string message)
 	public UriLiteralParsingException (string message, System.Exception innerException)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.UriTemplateExpression {
+	public UriTemplateExpression ()
+
+	Microsoft.OData.Edm.IEdmTypeReference ExpectedType  { public get; }
+	string LiteralText  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.ValueSegment : Microsoft.OData.Core.UriParser.ODataPathSegment {
+	public ValueSegment (Microsoft.OData.Edm.IEdmType previousType)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.WildcardSelectItem : Microsoft.OData.Core.UriParser.SelectItem {
+	public WildcardSelectItem ()
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
+}
+
+public enum Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod : int {
+	Average = 3
+	CountDistinct = 4
+	Max = 2
+	Min = 1
+	Sum = 0
+}
+
+public enum Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind : int {
+	Aggregate = 0
+	Filter = 2
+	GroupBy = 1
+}
+
+public abstract class Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
+	protected TransformationNode ()
+
+	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public abstract get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Aggregation.AggregateExpression {
+	public AggregateExpression (Microsoft.OData.Core.UriParser.SingleValueNode expression, Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod method, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+
+	string Alias  { public get; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Expression  { public get; }
+	Microsoft.OData.Core.UriParser.Aggregation.AggregationMethod Method  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Aggregation.AggregateTransformationNode : Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
+	public AggregateTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.AggregateExpression]] expressions)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.AggregateExpression]] Expressions  { public get; }
+	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Aggregation.ApplyClause {
+	public ApplyClause (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Aggregation.TransformationNode]] transformations)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.TransformationNode]] Transformations  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
+	public FilterTransformationNode (Microsoft.OData.Core.UriParser.FilterClause filterClause)
+
+	Microsoft.OData.Core.UriParser.FilterClause FilterClause  { public get; }
+	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode {
+	public GroupByPropertyNode (string name, Microsoft.OData.Core.UriParser.SingleValueNode expression)
+	public GroupByPropertyNode (string name, Microsoft.OData.Core.UriParser.SingleValueNode expression, Microsoft.OData.Edm.IEdmTypeReference type)
+
+	System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode]] ChildTransformations  { public get; public set; }
+	Microsoft.OData.Core.UriParser.SingleValueNode Expression  { public get; }
+	string Name  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Aggregation.GroupByTransformationNode : Microsoft.OData.Core.UriParser.Aggregation.TransformationNode {
+	public GroupByTransformationNode (System.Collections.Generic.IList`1[[Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode]] groupingProperties, Microsoft.OData.Core.UriParser.Aggregation.TransformationNode childTransformations, Microsoft.OData.Core.UriParser.CollectionNode source)
+
+	Microsoft.OData.Core.UriParser.Aggregation.TransformationNode ChildTransformations  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.UriParser.Aggregation.GroupByPropertyNode]] GroupingProperties  { public get; }
+	Microsoft.OData.Core.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
+	Microsoft.OData.Core.UriParser.CollectionNode Source  { public get; }
 }
 
 public enum Microsoft.OData.Client.DataServiceResponsePreference : int {

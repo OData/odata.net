@@ -7,10 +7,9 @@
 namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
-    using System;
+
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
 
     #endregion Namespaces
 

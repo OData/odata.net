@@ -9,15 +9,13 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     #region Namespaces
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Query.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using FluentAssertions;
+
     #endregion Namespaces
 
     /// <summary>

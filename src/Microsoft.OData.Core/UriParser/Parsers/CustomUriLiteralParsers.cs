@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Edm;
+
+namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
 
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion
@@ -205,7 +205,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private static bool IsEdmTypeAlreadyRegistered(IEdmTypeReference edmTypeReference)
         {
             return customUriLiteralParserPerEdmType.Any(uriParserOfEdmType =>
-                uriParserOfEdmType.EdmTypeOfUriParser.IsEquivalentTo(edmTypeReference));
+                EdmElementComparer.IsEquivalentTo(uriParserOfEdmType.EdmTypeOfUriParser, edmTypeReference));
         }
 
         private static IUriLiteralParser GetUriLiteralParserByEdmType(IEdmTypeReference edmTypeReference)

@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
@@ -19,14 +19,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public void SelectPathShouldNotAllowCountSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(CountSegment.Instance);
-            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.Core.UriParser.Semantic.CountSegment"));
+            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.Core.UriParser.CountSegment"));
         }
 
         [Fact]
         public void SelectPathShouldNotAllowValueSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(new ValueSegment(ModelBuildingHelpers.BuildValidEntityType()));
-            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.Core.UriParser.Semantic.ValueSegment"));
+            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.Core.UriParser.ValueSegment"));
         }
 
         [Fact]

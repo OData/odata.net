@@ -7,11 +7,9 @@
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.Core.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     /// <summary>
     /// Visitor interface for walking the Path Tree.
     /// </summary>

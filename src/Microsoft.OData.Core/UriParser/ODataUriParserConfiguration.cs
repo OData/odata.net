@@ -7,8 +7,6 @@
 namespace Microsoft.OData.Core.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
 
     /// <summary>

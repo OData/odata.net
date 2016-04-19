@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
-    using System.Diagnostics;
+
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces

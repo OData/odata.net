@@ -9,12 +9,11 @@ namespace Microsoft.OData.Core.Json
     #region Namespaces
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>

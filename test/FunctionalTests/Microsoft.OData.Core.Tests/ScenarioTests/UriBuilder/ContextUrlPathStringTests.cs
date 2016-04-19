@@ -7,7 +7,6 @@
 using System;
 using Microsoft.OData.Core.Tests.UriParser;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder

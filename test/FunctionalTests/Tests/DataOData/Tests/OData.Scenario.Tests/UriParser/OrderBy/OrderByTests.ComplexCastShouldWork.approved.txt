@@ -25,5 +25,5 @@ OrderByClause
 					Name = $it
 					NavigationSource = People
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 	Then By = 

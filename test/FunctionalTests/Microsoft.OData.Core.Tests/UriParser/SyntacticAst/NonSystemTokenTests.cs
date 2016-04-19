@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Syntactic;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.SyntacticAst

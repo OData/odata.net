@@ -7,10 +7,10 @@
 namespace Microsoft.OData.Core.Json
 {
     #region Namespaces
-    using System;
+
     using System.Diagnostics;
     using System.IO;
-    using System.Text;
+
     #endregion Namespaces
 
     /// <summary>

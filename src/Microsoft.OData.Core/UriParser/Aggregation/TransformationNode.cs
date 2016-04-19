@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Core.UriParser.Aggregation
 {
-    using TreeNodeKinds;
-
     /// <summary>
     /// Base class for all transformation nodes.
     /// </summary>

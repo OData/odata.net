@@ -9,8 +9,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.ObjectModel
     #region Namespaces
     using System.Linq;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces

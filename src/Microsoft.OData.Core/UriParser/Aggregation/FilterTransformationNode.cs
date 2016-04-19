@@ -6,8 +6,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Aggregation
 {
-    using TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
 
     /// <summary>
     /// Node representing a filter transformation.

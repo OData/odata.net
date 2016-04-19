@@ -4,16 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+
+namespace Microsoft.OData.Core.UriParser
 {
-    #region Namespaces
-
-    using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Edm;
-
-    #endregion
-
     internal sealed class DefaultUriLiteralParser : IUriLiteralParser
     {
         #region Fields
@@ -30,7 +25,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private DefaultUriLiteralParser()
         {
             // It is important that UriCustomTypeParsers will be added first, so it will be called before the others built-in parsers
-            uriTypeParsers = new List<IUriLiteralParser> 
+            this.uriTypeParsers = new List<IUriLiteralParser> 
             {
                 { CustomUriLiteralParsers.Instance },
                 { UriPrimitiveTypeParser.Instance }
@@ -62,7 +57,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             object targetValue;
 
             // Try to parse the uri text with each parser
-            foreach (IUriLiteralParser uriTypeParser in uriTypeParsers)
+            foreach (IUriLiteralParser uriTypeParser in this.uriTypeParsers)
             {
                 targetValue = uriTypeParser.ParseUriStringToType(text, targetType, out parsingException);
 

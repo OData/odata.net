@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core
 #endif
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+
     #endregion Namespaces
 
     /// <summary>

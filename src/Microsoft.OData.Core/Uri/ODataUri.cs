@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     #endregion Namespaces
 
     /// <summary>
@@ -106,10 +106,10 @@ namespace Microsoft.OData.Core
 
                 if (!value.IsAbsoluteUri)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute(Core.UriUtils.UriToString(value)));
+                    throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute(UriUtils.UriToString(value)));
                 }
 
-                this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(value);
+                this.serviceRoot = UriUtils.EnsureTaillingSlash(value);
                 this.MetadataDocumentUri = new Uri(this.serviceRoot, MetadataSegment);
             }
         }

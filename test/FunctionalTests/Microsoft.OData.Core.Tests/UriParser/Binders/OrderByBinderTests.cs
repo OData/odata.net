@@ -7,9 +7,6 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Binders;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Binders

@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.Core
 {
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
 
     internal interface IWriterValidator

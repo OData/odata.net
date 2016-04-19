@@ -8,11 +8,9 @@ namespace Microsoft.OData.Core.Metadata
 {
     #region Namespaces
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     #endregion Namespaces
 
     /// <summary>
@@ -454,7 +452,7 @@ namespace Microsoft.OData.Core.Metadata
                     {
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                             Date result;
-                            if (UriParser.UriUtils.TryUriStringToDate(constantNode.LiteralText, out result))
+                            if (UriUtils.TryUriStringToDate(constantNode.LiteralText, out result))
                             {
                                 primitiveValue = constantNode.LiteralText;
                                 return true;

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Binders
+namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.UriParser.Binders
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>

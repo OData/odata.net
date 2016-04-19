@@ -7,8 +7,9 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
-    using System;
-    using System.Xml;
+
+    
+
     #endregion Namespaces
 
     /// <summary>

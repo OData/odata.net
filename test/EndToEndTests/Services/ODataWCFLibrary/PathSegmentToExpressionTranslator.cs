@@ -4,21 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Reflection;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
+using Microsoft.Test.OData.Services.ODataWCFService.UriHandlers;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Net;
-    using System.Reflection;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
-    using Microsoft.Test.OData.Services.ODataWCFService.UriHandlers;
-
     internal class PathSegmentToExpressionTranslator : PathSegmentTranslator<Expression>
     {
         private readonly IEdmModel model;

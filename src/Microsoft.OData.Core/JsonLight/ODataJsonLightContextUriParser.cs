@@ -12,11 +12,9 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics.CodeAnalysis;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using UriUtils = Microsoft.OData.Core.UriUtils;
 
     #endregion Namespaces
 

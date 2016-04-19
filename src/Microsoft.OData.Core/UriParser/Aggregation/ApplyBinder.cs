@@ -7,10 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Core.UriParser.Binders;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;

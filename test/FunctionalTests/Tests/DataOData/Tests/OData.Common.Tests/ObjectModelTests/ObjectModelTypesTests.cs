@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
         // Only sealed types can be easily serviced with targetted patching.
         private static string[] UnsealedNonPublicTypeNames = new string[]
         {
-            "Microsoft.OData.Core.UriParser.Binders.MetadataBinder",
+            "Microsoft.OData.Core.UriParser.MetadataBinder",
         };
 
         [TestMethod, Variation(Description = "Verifies that all OData public types are sealed as appropriate.")]
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
             // TODO: Enable this once we're done with Query OM.
             // Exclude all Query types for now.
             allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser"));
-            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser.Semantic"));
+            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser"));
             allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser.Metadata"));
 
             var allowedUnsealeadTypesList = allowedUnsealedTypes.ToList();

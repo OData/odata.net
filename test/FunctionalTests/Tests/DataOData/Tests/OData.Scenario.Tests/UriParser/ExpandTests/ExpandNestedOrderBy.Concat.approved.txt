@@ -44,7 +44,7 @@ SelectExpandQueryOption
 															Name = $it
 															NavigationSource = CustomerForOrder
 															TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-															Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+															Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 													SingleValuePropertyAccessNode
 														Property = LastName
 														TypeReference = [Edm.String Nullable=True Unicode=True]
@@ -53,7 +53,7 @@ SelectExpandQueryOption
 															Name = $it
 															NavigationSource = CustomerForOrder
 															TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-															Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+															Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 									7(Type: [Edm.Int32 Nullable=False])
 							r(Type: [Edm.String Nullable=True Unicode=True])
 				And

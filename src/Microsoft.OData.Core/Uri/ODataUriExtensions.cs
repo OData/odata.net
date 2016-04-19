@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
 
     /// <summary>
     /// Extension methods to ODataUri

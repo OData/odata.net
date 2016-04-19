@@ -4,19 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
+using Microsoft.OData.Core.UriParser;
+
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
 {
-    #region namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    #endregion namespaces
-
     static class SearchTestHelper
     {
         public static Func<string, bool> GetMatchFunc(this SearchClause search)

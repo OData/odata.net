@@ -19,7 +19,7 @@ OrderByClause
 					Name = $it
 					NavigationSource = People
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 				Microsoft.Test.Taupo.OData.WCFService.Customer(Type: [Edm.String Nullable=True Unicode=True])
 	And
 		ConvertNode
@@ -35,7 +35,7 @@ OrderByClause
 							Name = $it
 							NavigationSource = People
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 						Microsoft.Test.Taupo.OData.WCFService.Customer(Type: [Edm.String Nullable=True Unicode=True])
 			NotEqual
 				ConvertNode

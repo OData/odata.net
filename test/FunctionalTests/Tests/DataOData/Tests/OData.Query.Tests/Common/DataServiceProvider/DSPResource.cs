@@ -7,13 +7,12 @@
 namespace Microsoft.Test.Taupo.OData.DataServiceProvider
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core.UriParser;
+
     #endregion Namespaces
 
     /// <summary>

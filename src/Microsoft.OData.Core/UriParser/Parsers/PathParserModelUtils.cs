@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Validation;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Validation;
 
+namespace Microsoft.OData.Core.UriParser
+{
     /// <summary>
     /// Set of helpers and extensions to make it easier to convert the semantic path parser
     /// to using <see cref="IEdmType"/> and the related classes.

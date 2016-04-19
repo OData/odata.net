@@ -18,7 +18,7 @@ OrderByClause
 			Name = $it
 			NavigationSource = Customers
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-			Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+			Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 	Then By = 
 	OrderByClause
 		Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -37,7 +37,7 @@ OrderByClause
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 		Then By = 
 		OrderByClause
 			Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -56,7 +56,7 @@ OrderByClause
 					Name = $it
 					NavigationSource = Customers
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 			Then By = 
 			OrderByClause
 				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -75,5 +75,5 @@ OrderByClause
 						Name = $it
 						NavigationSource = Customers
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 				Then By = 

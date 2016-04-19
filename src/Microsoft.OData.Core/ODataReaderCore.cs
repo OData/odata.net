@@ -16,8 +16,6 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 

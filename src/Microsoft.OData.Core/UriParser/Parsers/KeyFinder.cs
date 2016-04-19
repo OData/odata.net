@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
 
     /// <summary>

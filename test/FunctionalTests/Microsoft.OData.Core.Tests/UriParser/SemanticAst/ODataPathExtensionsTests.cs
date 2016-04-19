@@ -7,7 +7,6 @@
 using System;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Xunit;
 using mbh = Microsoft.OData.Core.Tests.UriParser.ModelBuildingHelpers;
 

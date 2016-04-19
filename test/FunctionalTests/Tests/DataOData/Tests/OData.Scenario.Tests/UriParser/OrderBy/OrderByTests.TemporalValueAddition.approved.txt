@@ -24,7 +24,7 @@ OrderByClause
 					Name = $it
 					NavigationSource = DurationInKeys
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 		Add
 			00:02:10(Type: [Edm.Duration Nullable=False Precision=0])
 	Then By = 

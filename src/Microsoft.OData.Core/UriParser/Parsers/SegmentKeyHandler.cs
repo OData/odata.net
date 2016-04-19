@@ -4,16 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using ErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces

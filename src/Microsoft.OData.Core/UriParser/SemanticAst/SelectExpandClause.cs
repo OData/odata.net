@@ -4,14 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.Core.UriParser
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Class representing the combined semantic meaning of any select or expand clauses in the uri.

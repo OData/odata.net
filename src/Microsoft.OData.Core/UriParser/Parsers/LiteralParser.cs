@@ -4,7 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using Microsoft.Spatial;
+
+namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Collections.Generic;
@@ -13,8 +15,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Text;
     using System.Xml;
     using Edm.Library;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.Spatial;
 
     /// <summary>Use this class to parse literals from keys, etags, skiptokens, and filter/orderby expression constants.</summary>
     internal abstract class LiteralParser

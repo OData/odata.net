@@ -9,8 +9,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.Core.UriParser;
 
     /// <summary>
     /// Build SelectExpandQueryNode to String Representation 

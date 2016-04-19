@@ -4,24 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using AstoriaUnitTests.TDD.Tests.Server.Simulators;
+using AstoriaUnitTests.Tests.Server.Simulators;
+using FluentAssertions;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Service;
+using Microsoft.OData.Service.Caching;
+using Microsoft.OData.Service.Providers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ErrorStrings = Microsoft.OData.Service.Strings;
+
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Caching;
-    using Microsoft.OData.Service.Providers;
-    using System.Reflection;
-    using AstoriaUnitTests.TDD.Tests.Server.Simulators;
-    using AstoriaUnitTests.Tests.Server.Simulators;
-    using FluentAssertions;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ErrorStrings = Microsoft.OData.Service.Strings;
-
     [TestClass]
     public class ExpandAndSelectParsingTests
     {
@@ -31,7 +26,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
         public ExpandAndSelectParsingTests()
         {
-            this.requestDescription = new RequestDescription(RequestTargetKind.Resource, RequestTargetSource.EntitySet, new Uri("http://fake.org/"));
+            this.requestDescription = new RequestDescription(Microsoft.OData.Service.RequestTargetKind.Resource, RequestTargetSource.EntitySet, new Uri("http://fake.org/"));
             var resourceType = new ResourceType(typeof(object), ResourceTypeKind.EntityType, null, "Fake", "Type", false) { CanReflectOnInstanceType = false, IsOpenType = true };
             resourceType.AddProperty(new ResourceProperty("Id", ResourcePropertyKind.Key | ResourcePropertyKind.Primitive, ResourceType.GetPrimitiveResourceType(typeof(int))) { CanReflectOnInstanceTypeProperty = false });
             var resourceSet = new ResourceSet("FakeSet", resourceType);

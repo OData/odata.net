@@ -4,6 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.Xml;
+using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Values;
+
 #if ASTORIA_SERVER
 namespace Microsoft.OData.Service
 #else
@@ -18,12 +24,6 @@ namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 {
-    using System;
-    using System.Diagnostics;
-    using System.Xml;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Values;
-
     /// <summary>
     /// Contains methods to convert primitive values to their string representation.
     /// </summary>

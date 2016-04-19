@@ -7,7 +7,7 @@
 using System;
 using System.Linq;
 using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;

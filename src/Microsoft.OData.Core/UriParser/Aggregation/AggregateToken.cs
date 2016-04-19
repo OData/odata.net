@@ -11,9 +11,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
 #endif
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser;
 
     internal sealed class AggregateToken : ApplyTransformationToken
     {

@@ -10,8 +10,6 @@ namespace Microsoft.OData.Core.UriParser
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces

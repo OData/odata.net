@@ -8,9 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
 {
     #region Namespaces
     using System.Collections;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using System.Linq;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.Test.Taupo.Contracts;

@@ -10,8 +10,6 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;

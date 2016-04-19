@@ -6,9 +6,7 @@
 
 namespace Microsoft.OData.Core.JsonLight
 {
-    using System;
     using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
 
     /// <summary>

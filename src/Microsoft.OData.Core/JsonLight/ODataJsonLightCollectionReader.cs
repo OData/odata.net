@@ -8,7 +8,6 @@ namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
 
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 #if ODATALIB_ASYNC
@@ -16,7 +15,6 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
 
     #endregion Namespaces
 

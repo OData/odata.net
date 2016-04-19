@@ -21,7 +21,6 @@ namespace Microsoft.OData.Edm.Csdl
     using System;
     using System.Text.RegularExpressions;
     using System.Xml;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
 
     /// <summary>

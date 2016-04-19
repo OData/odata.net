@@ -12,9 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     #endregion Namespaces

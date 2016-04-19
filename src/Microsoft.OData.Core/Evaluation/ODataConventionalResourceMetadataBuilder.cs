@@ -16,7 +16,6 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     #endregion
 
@@ -574,7 +573,7 @@ namespace Microsoft.OData.Core.Evaluation
                     ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
                     if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.resourceMetadataContext.TypeContext.NavigationSourceName) == null)
                     {
-                        uri = new Uri(Core.UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualEntityTypeName);    
+                        uri = new Uri(UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualEntityTypeName);    
                     }
                 }
             }

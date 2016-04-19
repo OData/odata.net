@@ -4,12 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core.UriParser;
+
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Caching;
     using Microsoft.OData.Service.Providers;

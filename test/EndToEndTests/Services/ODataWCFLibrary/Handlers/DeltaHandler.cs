@@ -13,7 +13,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Net;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
 
     public class DeltaHandler : RequestHandler

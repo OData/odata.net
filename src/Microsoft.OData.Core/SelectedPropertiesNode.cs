@@ -12,8 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 

@@ -11,12 +11,11 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces

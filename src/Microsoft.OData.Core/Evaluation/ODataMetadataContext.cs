@@ -11,7 +11,6 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics;
     using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
 
     /// <summary>

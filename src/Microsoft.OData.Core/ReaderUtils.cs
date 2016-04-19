@@ -10,7 +10,6 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     #endregion Namespaces

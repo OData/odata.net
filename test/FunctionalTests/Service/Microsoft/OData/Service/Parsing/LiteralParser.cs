@@ -21,7 +21,6 @@ namespace Microsoft.OData.Service.Parsing
     using System.Globalization;
 #if !ODATALIB
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
 
 #else
     using WebConvert = UriPrimitiveTypeParser;

@@ -10,7 +10,6 @@ using System.Globalization;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;

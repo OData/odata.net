@@ -10,8 +10,6 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.Core.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     /// <summary>
     /// Class representing a single named value (name and value pair).
     /// </summary>

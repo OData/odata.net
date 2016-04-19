@@ -12,10 +12,7 @@ namespace Microsoft.OData.Core
     using System.Globalization;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
     /// <summary>
     /// Build QueryNode to String Representation 

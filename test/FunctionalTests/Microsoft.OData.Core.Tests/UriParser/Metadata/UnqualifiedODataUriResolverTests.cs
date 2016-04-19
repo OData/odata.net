@@ -6,7 +6,6 @@
 
 using System;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Metadata

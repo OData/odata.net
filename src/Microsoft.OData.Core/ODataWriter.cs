@@ -7,15 +7,11 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-#if ODATALIB_ASYNC
+
+    #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+
     #endregion Namespaces
 
     /// <summary>

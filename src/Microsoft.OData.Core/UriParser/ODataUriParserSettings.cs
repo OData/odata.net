@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.Core.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>

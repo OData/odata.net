@@ -4,15 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.IO;
+
 namespace Microsoft.OData.Core.Json
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    #endregion Namespaces
-
     /// <summary>
     /// Writes text indented as per the indentation level setting
     /// </summary>

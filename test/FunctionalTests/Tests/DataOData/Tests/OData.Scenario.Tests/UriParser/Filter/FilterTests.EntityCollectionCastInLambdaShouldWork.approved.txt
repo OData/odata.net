@@ -25,7 +25,7 @@ FilterQueryOption
 						Name = d
 						NavigationSource = Brother
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 		NotEqual
 			Shanghai(Type: [Edm.String Nullable=True Unicode=True])
 		Source = 
@@ -40,7 +40,7 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = People
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
 		Parameters = 
 		EntityRangeVariable
 			Name = d

@@ -4,9 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using ApprovalTests;
 using Microsoft.OData.Core;
-using Microsoft.OData.Core.UriParser;
 using Microsoft.Test.Taupo.OData.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,7 +12,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
     using System;
     using System.Runtime.CompilerServices;
-    using Microsoft.Test.Taupo.Common;
 
     /// <summary>
     /// End user tests for ParseSelectExpand method on the UriParser

@@ -8,16 +8,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

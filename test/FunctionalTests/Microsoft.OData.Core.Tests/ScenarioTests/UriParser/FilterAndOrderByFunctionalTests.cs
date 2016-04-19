@@ -11,9 +11,6 @@ using FluentAssertions;
 using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Core.Tests.UriParser;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Binders;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
@@ -535,7 +532,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         public void ParseEnumConstantOrderBy()
         {
             var orderByQueryNode = ParseOrderBy("Fully.Qualified.Namespace.ColorPattern'SolidYellow' asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type());
-            var enumtypeRef = new EdmEnumTypeReference(Microsoft.OData.Core.UriParser.Metadata.UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
+            var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
             orderByQueryNode.Expression.ShouldBeEnumNode(new ODataEnumValue(12L + "", enumtypeRef.FullName()));
             orderByQueryNode.Direction.Should().Be(OrderByDirection.Ascending);
         }

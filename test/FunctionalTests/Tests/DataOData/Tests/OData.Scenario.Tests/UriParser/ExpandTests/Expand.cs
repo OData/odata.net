@@ -8,8 +8,6 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
 {
-    using System;
-    using System.Linq;
     using System.Runtime.CompilerServices;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;

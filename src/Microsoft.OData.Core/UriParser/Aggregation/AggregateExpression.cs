@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core.UriParser.Aggregation
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser;
 
     /// <summary>
     /// A aggregate expression representing a aggregation transformation.

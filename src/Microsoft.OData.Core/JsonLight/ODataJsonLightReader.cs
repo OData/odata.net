@@ -13,11 +13,11 @@ namespace Microsoft.OData.Core.JsonLight
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     #endregion Namespaces
 

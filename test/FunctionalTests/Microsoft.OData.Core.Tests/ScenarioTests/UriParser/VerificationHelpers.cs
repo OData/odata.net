@@ -7,7 +7,7 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 {

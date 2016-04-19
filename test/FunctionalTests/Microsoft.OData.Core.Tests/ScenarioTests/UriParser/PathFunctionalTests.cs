@@ -11,7 +11,6 @@ using FluentAssertions;
 using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Core.Tests.UriParser;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
@@ -1352,7 +1351,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("Pet2Set(1)/PetColorPattern");
             path.Count.Should().Be(3);
             List<ODataPathSegment> segments = path.ToList();
-            segments[2].TargetKind.Should().Be(Microsoft.OData.Core.UriParser.TreeNodeKinds.RequestTargetKind.Enum);
+            segments[2].TargetKind.Should().Be(RequestTargetKind.Enum);
             segments[2].EdmType.Should().Be(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"));
         }
 
@@ -1362,9 +1361,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             ODataPath path = PathFunctionalTestsUtil.RunParsePath("Pet2Set(1)/PetColorPattern/$value");
             path.Count.Should().Be(4);
             List<ODataPathSegment> segments = path.ToList();
-            segments[2].TargetKind.Should().Be(Microsoft.OData.Core.UriParser.TreeNodeKinds.RequestTargetKind.Enum);
+            segments[2].TargetKind.Should().Be(RequestTargetKind.Enum);
             segments[2].EdmType.Should().Be(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"));
-            segments[3].TargetKind.Should().Be(Microsoft.OData.Core.UriParser.TreeNodeKinds.RequestTargetKind.EnumValue);
+            segments[3].TargetKind.Should().Be(RequestTargetKind.EnumValue);
             segments[3].EdmType.Should().Be(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern"));
         }
         #endregion

@@ -10,13 +10,11 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming;

@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OData.Core.Tests.UriParser;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
