@@ -18,7 +18,7 @@
     <ProjectGuid>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</ProjectGuid>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <Import Project="..\Build.props" />

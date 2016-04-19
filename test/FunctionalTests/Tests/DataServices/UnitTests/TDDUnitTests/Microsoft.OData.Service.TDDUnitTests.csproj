@@ -4,6 +4,7 @@
     <ProjectGuid>{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}</ProjectGuid>
     <RootNamespace>AstoriaUnitTests.TDD</RootNamespace>
     <AssemblyName>AstoriaUnitTests.TDDUnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <TransparentAssembly>true</TransparentAssembly>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>

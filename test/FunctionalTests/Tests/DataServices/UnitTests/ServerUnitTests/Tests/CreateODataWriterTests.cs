@@ -15,8 +15,8 @@ namespace AstoriaUnitTests.Tests
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Service.Providers;
-    using System.Reflection;
     using test = System.Data.Test.Astoria;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     [TestClass]
     public class CreateODataWriterTests

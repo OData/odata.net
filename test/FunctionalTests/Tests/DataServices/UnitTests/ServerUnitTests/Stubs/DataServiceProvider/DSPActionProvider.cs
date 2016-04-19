@@ -17,6 +17,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
     using System.Diagnostics;
     using System.Collections;
     using System.Threading;
+    using BindingFlags = System.Reflection.BindingFlags;
     #endregion Namespaces
 
     /// <summary>

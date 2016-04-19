@@ -24,8 +24,8 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Data;
     using AstoriaUnitTests.Stubs;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     #endregion Namespaces
 
