@@ -12,7 +12,7 @@ using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
 using Xunit;
 
-namespace Microsoft.OData.Profile111.Tests.AsynchronousTests
+namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
 {
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class AsynchronousSingletonClientTest : EndToEndTestBase

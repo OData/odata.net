@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Microsoft.OData.Profile111.Tests.AsynchronousTests
+namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
 {
     /// <summary>
     /// Extension methods for running asynchronous API tests using the desktop client

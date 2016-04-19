@@ -8,12 +8,12 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OData.Client;
-using Microsoft.OData.Profile111.Tests.AsynchronousTests;
+using Microsoft.OData.E2E.Profile111.AsynchronousTests;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
 using Xunit;
 
-namespace Microsoft.OData.Profile111.Tests
+namespace Microsoft.OData.E2E.Profile111
 {
     [SuppressMessage("ReSharper", "ArrangeThisQualifier")]
     public class BindingTests : EndToEndTestBase

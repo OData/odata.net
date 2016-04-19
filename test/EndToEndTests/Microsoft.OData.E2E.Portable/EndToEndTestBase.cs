@@ -12,7 +12,7 @@ using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference;
 using Xunit;
 
-namespace Microsoft.OData.Profile111.Tests
+namespace Microsoft.OData.E2E.Profile111
 {
     /// <summary>
     /// Base class for OData End to End Tests.

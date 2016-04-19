@@ -6,7 +6,7 @@
 
 using Microsoft.Test.OData.Services.TestServices;
 
-namespace Microsoft.OData.Profile111.Tests
+namespace Microsoft.OData.E2E.Profile111
 {
     public static class ServiceGeneratorFactory
     {

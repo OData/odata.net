@@ -14,7 +14,7 @@ using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
 using Microsoft.Test.OData.Services.TestServices;
 using Xunit;
 
-namespace Microsoft.OData.Profile111.Tests.AsynchronousTests
+namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
 {
     public class AsynchronousDelayQueryTests : EndToEndTestBase
     {

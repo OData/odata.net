@@ -14,7 +14,7 @@ using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
 using Xunit;
 
-namespace Microsoft.OData.Profile111.Tests.AsynchronousTests
+namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
 {
     /// <summary>
     /// Client update tests using asynchronous APIs
