@@ -46,12 +46,10 @@ using System.Security;
 [assembly: CLSCompliant(false)]
 #endif
 
-#if !SUPPRESS_COM_VISIBLE_ATTRIBUTE
 #if ASSEMBLY_ATTRIBUTE_COM_VISIBLE
 [assembly: ComVisible(true)]
 #else
 [assembly: ComVisible(false)]
-#endif
 #endif
 
 #if ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE
