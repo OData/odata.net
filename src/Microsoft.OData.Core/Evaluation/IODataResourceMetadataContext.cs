@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core.Evaluation
 
     /// <summary>
     /// Interface used for substitutability of the metadata-centric responsibilities of a resource.
-    /// Metadata may come from a user-provided model or from the SetSerializationInfo() method on a feed or resource. The latter is considered the "no-model" case since only strings
+    /// Metadata may come from a user-provided model or from the SetSerializationInfo() method on a resource set or resource. The latter is considered the "no-model" case since only strings
     /// are provided, and there is no interconnectedness. The goal of this interface is to provide a way to query the metadata information available on a resource without
     /// needing to know where the metadata originated from.
     /// </summary>

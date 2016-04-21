@@ -573,9 +573,9 @@ namespace Microsoft.OData.Client.Materialization
             // entries. This keeps this code compatible with V1 behavior.
             this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.IgnoreMissingProperties);
 
-            if (entry.NavigationLinks != null)
+            if (entry.NestedResourceInfos != null)
             {
-                foreach (ODataNestedResourceInfo link in entry.NavigationLinks)
+                foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
                     var prop = actualType.GetProperty(link.Name, true);
                     if (prop != null)
@@ -586,7 +586,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (includeLinks)
                 {
-                    foreach (ODataNestedResourceInfo link in entry.NavigationLinks)
+                    foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                     {
                         MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
 

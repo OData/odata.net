@@ -624,7 +624,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="propertyName">name of the navigation property via which this entity is related to the other end.</param>
         /// <param name="navigationUri">uri that can be used to navigate from this entity to the other end.</param>
-        internal void AddNavigationLink(string propertyName, Uri navigationUri)
+        internal void AddNestedResourceInfo(string propertyName, Uri navigationUri)
         {
             LinkInfo linkInfo = this.GetLinkInfo(propertyName);
 
@@ -684,7 +684,7 @@ namespace Microsoft.OData.Client
         /// <param name="baseUriResolver">retrieves the appropriate baseUri for a given entitySet.</param>
         /// <param name="property">ClientProperty instance representing the navigation property.</param>
         /// <returns>returns the uri for the given link. If the link is not present, its uses the self link of the current entity and appends the navigation property name.</returns>
-        internal Uri GetNavigationLink(UriResolver baseUriResolver, ClientPropertyAnnotation property)
+        internal Uri GetNestedResourceInfo(UriResolver baseUriResolver, ClientPropertyAnnotation property)
         {
             LinkInfo linkInfo = null;
             Uri uri = null;

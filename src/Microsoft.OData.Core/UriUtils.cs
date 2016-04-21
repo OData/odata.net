@@ -36,33 +36,6 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Create a Uri as resource or feed id
-        /// </summary>
-        /// <param name="value">Uri value</param>
-        /// <param name="kind">UriKind</param>
-        /// <param name="swallowEmpty">if swallowEmpty is true, an empty value will be parsed as null Uri, otherwise invalid Uri format exception will throw. </param>
-        /// <returns>Created Uri from value</returns>
-        internal static Uri CreateUriAsEntryOrFeedId(string value, UriKind kind, bool swallowEmpty = true)
-        {
-            if (swallowEmpty && value == string.Empty || value == null)
-            {
-                return null;
-            }
-
-            Uri uri;
-            try
-            {
-                uri = new Uri(value, kind);
-            }
-            catch (FormatException)
-            {
-                throw new ODataException(Strings.ODataUriUtils_InvalidUriFormatForEntryIdOrFeedId(value));
-            }
-
-            return uri;
-        }
-
-        /// <summary>
         /// A method to ensure that the original string of a relative URI is escaped.
         /// </summary>
         /// <param name="uri">The relative <see cref="System.Uri"/> to escape.</param>

@@ -70,7 +70,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                             break;
                         }
-                    case ODataReaderState.NavigationLinkEnd:
+                    case ODataReaderState.NestedResourceInfoEnd:
                         {
                             if (verifyNavigation != null)
                             {

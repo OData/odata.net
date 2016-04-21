@@ -220,7 +220,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public sealed override ODataWriter CreateResourceSetWriter(string parameterName)
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Core
         }
 
 #if ODATALIB_ASYNC
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a feed.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
         public sealed override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
@@ -358,13 +358,13 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected abstract ODataWriter CreateFormatEntryWriter(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ODataWriter CreateFormatResourceWriter(string parameterName, IEdmTypeReference expectedItemType);
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a feed.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected abstract ODataWriter CreateFormatFeedWriter(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ODataWriter CreateFormatResourceSetWriter(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
         /// Finish writing an OData payload.
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="parameterName">The name of the parameter to be written.</param>
-        /// <returns>The expected item type of the item in feed or null.</returns>
+        /// <returns>The expected item type of the item in resource set or null.</returns>
         private IEdmTypeReference VerifyCanCreateResourceSetWriter(bool synchronousCall, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -556,13 +556,13 @@ namespace Microsoft.OData.Core
         private ODataWriter CreateResourceWriterImplementation(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
-            ODataWriter entryWriter = this.CreateFormatEntryWriter(parameterName, expectedItemType);
+            ODataWriter resourceWriter = this.CreateFormatResourceWriter(parameterName, expectedItemType);
             this.ReplaceScope(ParameterWriterState.ActiveSubWriter);
-            return entryWriter;
+            return resourceWriter;
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter"/> to write a feed parameter.
+        /// Creates an <see cref="ODataWriter"/> to write a resource set parameter.
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
@@ -570,9 +570,9 @@ namespace Microsoft.OData.Core
         private ODataWriter CreateResourceSetWriterImplementation(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
-            ODataWriter feedWriter = this.CreateFormatFeedWriter(parameterName, expectedItemType);
+            ODataWriter resourceSetWriter = this.CreateFormatResourceSetWriter(parameterName, expectedItemType);
             this.ReplaceScope(ParameterWriterState.ActiveSubWriter);
-            return feedWriter;
+            return resourceSetWriter;
         }
 
         /// <summary>

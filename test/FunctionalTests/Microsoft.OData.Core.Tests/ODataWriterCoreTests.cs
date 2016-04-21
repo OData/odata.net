@@ -129,17 +129,17 @@ namespace Microsoft.OData.Core.Tests
                 throw new NotImplementedException();
             }
 
-            protected override void StartEntry(ODataResource entry)
+            protected override void StartResource(ODataResource entry)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void EndEntry(ODataResource entry)
+            protected override void EndResource(ODataResource entry)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void StartFeed(ODataResourceSet resourceCollection)
+            protected override void StartResourceSet(ODataResourceSet resourceCollection)
             {
                 throw new NotImplementedException();
             }
@@ -149,22 +149,22 @@ namespace Microsoft.OData.Core.Tests
                 throw new NotImplementedException();
             }
 
-            protected override void EndFeed(ODataResourceSet resourceCollection)
+            protected override void EndResourceSet(ODataResourceSet resourceCollection)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void WriteDeferredNavigationLink(ODataNestedResourceInfo navigationLink)
+            protected override void WriteDeferredNestedResourceInfo(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void StartNavigationLinkWithContent(ODataNestedResourceInfo navigationLink)
+            protected override void StartNestedResourceInfoWithContent(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void EndNavigationLinkWithContent(ODataNestedResourceInfo navigationLink)
+            protected override void EndNestedResourceInfoWithContent(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }

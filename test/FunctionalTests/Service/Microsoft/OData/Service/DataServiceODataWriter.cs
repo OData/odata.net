@@ -53,8 +53,8 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing a navigation link.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNestedResourceInfo to serialize.</param>
-        public virtual void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
+        /// <param name="args">DataServiceODataWriterNestedResourceInfoArgs which contains the ODataNestedResourceInfo to serialize.</param>
+        public virtual void WriteStart(DataServiceODataWriterNestedResourceInfoArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
             this.innerWriter.WriteStart(args.NavigationLink);
@@ -97,11 +97,11 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing a navigation link.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNestedResourceInfo that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterNestedResourceInfoArgs which contains the ODataNestedResourceInfo that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for Link.
         /// </remarks>
-        public virtual void WriteEnd(DataServiceODataWriterNavigationLinkArgs args)
+        public virtual void WriteEnd(DataServiceODataWriterNestedResourceInfoArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
             this.WriteEnd();

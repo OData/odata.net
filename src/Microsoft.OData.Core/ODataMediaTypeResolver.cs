@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core
         private static readonly ODataMediaTypeFormat[][] defaultMediaTypes =
             new ODataMediaTypeFormat[][]
                 {
-                // feed
+                // resource set
                 new ODataMediaTypeFormat[]
                 {
                 },

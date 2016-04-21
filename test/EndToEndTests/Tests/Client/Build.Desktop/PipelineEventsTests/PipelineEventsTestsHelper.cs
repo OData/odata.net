@@ -212,7 +212,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Modify association link name 
         /// </summary>
-        public static Action<ReadingNavigationLinkArgs> ModifyLinkName_ReadingNavigationLink
+        public static Action<ReadingNestedResourceInfoArgs> ModifyLinkName_ReadingNavigationLink
         {
             get { return args => args.Link.Name += "ModifyLinkName"; }
         }
@@ -220,7 +220,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// modify association link value
         /// </summary>
-        public static Action<ReadingNavigationLinkArgs> ModifyAssociationLinkUrl_ReadingNavigationLink
+        public static Action<ReadingNestedResourceInfoArgs> ModifyAssociationLinkUrl_ReadingNavigationLink
         {
             get { return args => args.Link.AssociationLinkUrl = new Uri("http://ModifyAssociationLinkUrl", UriKind.Absolute); }
         }
@@ -390,7 +390,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// In AddObject-SetLink scenario, modify the new entity property and association link in the payload
         /// </summary>
-        public static Action<WritingNavigationLinkArgs> ModifyNavigationLink_WritingStart
+        public static Action<WritingNestedResourceInfoArgs> ModifyNavigationLink_WritingStart
         {
             get
             {
@@ -408,7 +408,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// In AddObject-SetLink scenario, modify the new entity property and association link in the payload
         /// </summary>
-        public static Action<WritingNavigationLinkArgs> ModifyNavigationLink_WritingEnd
+        public static Action<WritingNestedResourceInfoArgs> ModifyNavigationLink_WritingEnd
         {
             get
             {

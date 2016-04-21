@@ -184,7 +184,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case ODataReaderState.ResourceEnd:
                                         Assert.IsNotNull(deltaReader.Item as ODataResource);
                                         break;
-                                    case ODataReaderState.NavigationLinkEnd:
+                                    case ODataReaderState.NestedResourceInfoEnd:
                                         Assert.IsNotNull(deltaReader.Item as ODataNestedResourceInfo);
                                         break;
                                 }

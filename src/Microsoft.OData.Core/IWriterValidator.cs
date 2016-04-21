@@ -56,9 +56,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates a resource in an expanded link to make sure the entity types match.
         /// </summary>
-        /// <param name="entryEntityType">The <see cref="IEdmEntityType"/> of the resource.</param>
+        /// <param name="resourceEntityType">The <see cref="IEdmEntityType"/> of the resource.</param>
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        void ValidateResourceInExpandedLink(IEdmEntityType entryEntityType,
+        void ValidateResourceInExpandedLink(IEdmEntityType resourceEntityType,
             IEdmEntityType parentNavigationPropertyType);
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates an <see cref="ODataResourceSet"/> to ensure all required information is specified and valid on the WriteEnd call.
         /// </summary>
-        /// <param name="resourceSet">The feed to validate.</param>
-        /// <param name="writingRequest">Flag indicating whether the feed is written as part of a request or a response.</param>
+        /// <param name="resourceSet">The resource set to validate.</param>
+        /// <param name="writingRequest">Flag indicating whether the resource set is written as part of a request or a response.</param>
         void ValidateResourceSetAtEnd(ODataResourceSet resourceSet, bool writingRequest);
 
         /// <summary>
@@ -119,26 +119,20 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
-        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this navigation link or null for deferred links.</param>
-        /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
-        IEdmNavigationProperty ValidateNavigationLink(
-            ODataNestedResourceInfo navigationLink,
+        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
+        IEdmNavigationProperty ValidateNestedResourceInfo(
+            ODataNestedResourceInfo nestedResourceInfo,
             IEdmEntityType declaringEntityType,
             ODataPayloadKind? expandedPayloadKind);
 
         /// <summary>
-        /// Validates that the specified navigation link has a Url.
+        /// Validates that the sepcified nested resource info has cardinality, that is it has the IsCollection value set.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
-        void ValidateNavigationLinkUrlPresent(ODataNestedResourceInfo navigationLink);
-
-        /// <summary>
-        /// Validates that the sepcified navigation link has cardinality, that is it has the IsCollection value set.
-        /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
-        void ValidateNavigationLinkHasCardinality(ODataNestedResourceInfo navigationLink);
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
+        void ValidateNestedResourceInfoHasCardinality(ODataNestedResourceInfo nestedResourceInfo);
 
         /// <summary>
         /// Validates that the expected property allows null value.

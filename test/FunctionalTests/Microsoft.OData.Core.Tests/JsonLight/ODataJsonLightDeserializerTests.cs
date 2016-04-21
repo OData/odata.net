@@ -726,7 +726,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 ODataJsonLightResourceDeserializer deserializer = new ODataJsonLightResourceDeserializer(inputContext);
                 deserializer.ReadPayloadStart(ODataPayloadKind.Unsupported, duplicatePropertyNamesChecker, false, false);
 
-                Action readEntryContentAction = () => deserializer.ReadEntryContent(new TestJsonLightReaderEntryState());
+                Action readEntryContentAction = () => deserializer.ReadResourceContent(new TestJsonLightReaderEntryState());
 
                 readEntryContentAction
                     .ShouldThrow<ODataException>("the property name \"{0}\" contains a hash but is not a valid URI or URI fragment", propertyName)

@@ -90,7 +90,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             }
         }
 
-        public override void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
+        public override void WriteStart(DataServiceODataWriterNestedResourceInfoArgs args)
         {
             var current = new CustomInstanceAnnotationsDescriptor { TypeOfAnnotatedItem = typeof(ODataNestedResourceInfo) };
             writtenItemsStack.Push(current);

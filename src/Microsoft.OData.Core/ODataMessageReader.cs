@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Reader class used to read all OData payloads (entries, feeds, metadata documents, service documents, etc.).
+    /// Reader class used to read all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Main resource point for reader functionality")]
     public sealed class ODataMessageReader : IDisposable
@@ -315,7 +315,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a feed.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource set.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceSetReader()
         {
@@ -323,9 +323,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read a feed.
+        /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
+        /// <param name="expectedBaseEntityType">The expected base type for the entities in the resource set.</param>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceSetReader(IEdmEntityType expectedBaseEntityType)
         {
@@ -333,10 +333,10 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read a feed.
+        /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
+        /// <param name="expectedBaseEntityType">The expected base type for the entities in the resource set.</param>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Core
         }
 
 #if ODATALIB_ASYNC
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a feed.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceSetReaderAsync()
         {
@@ -356,9 +356,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
+        /// <param name="expectedBaseEntityType">The expected base type for the entities in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceSetReaderAsync(IEdmEntityType expectedBaseEntityType)
         {
@@ -366,10 +366,10 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base type for the entities in the feed.</param>
+        /// <param name="expectedBaseEntityType">The expected base type for the entities in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Core
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
@@ -870,10 +870,10 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verify arguments for creation of an <see cref="ODataReader" /> to read a feed.
+        /// Verify arguments for creation of an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the resource set.</param>
         private void VerifyCanCreateODataResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.VerifyReaderNotDisposedAndNotUsed();
@@ -893,7 +893,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verify arguments for creation of an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Verify arguments for creation of an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the delta response.</param>

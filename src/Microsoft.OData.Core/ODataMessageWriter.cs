@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Writer class used to write all OData payloads (entries, feeds, metadata documents, service documents, etc.).
+    /// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
     /// </summary>
     public sealed class ODataMessageWriter : IDisposable
     {
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Core
                 context => context.CreateODataAsynchronousWriter());
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceSetWriter()
         {
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write a feed.
+        /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
@@ -192,11 +192,11 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write a feed.
+        /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataAsynchronousWriterAsync());
         }
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceSetWriterAsync()
         {
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write a feed.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
@@ -236,10 +236,10 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write a feed.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
@@ -256,7 +256,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         public ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataDeltaWriter();
@@ -271,7 +271,7 @@ namespace Microsoft.OData.Core
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
@@ -304,11 +304,11 @@ namespace Microsoft.OData.Core
         /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="resourceType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
         {
-            this.VerifyCanCreateODataEntryWriter();
+            this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Resource,
                 null /* verifyHeaders */,
@@ -318,9 +318,9 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataEntryWriterAsync()
+        public Task<ODataWriter> CreateODataResourceWriterAsync()
         {
-            return CreateODataEntryWriterAsync(/*entitySet*/null, /*entityType*/null);
+            return CreateODataResourceWriterAsync(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
@@ -328,20 +328,20 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource)
+        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource)
         {
-            return CreateODataEntryWriterAsync(navigationSource, /*entityType*/null);
+            return CreateODataResourceWriterAsync(navigationSource, /*entityType*/null);
         }
 
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataEntryWriter();
+            this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Resource,
                 null /* verifyHeaders */,
@@ -831,7 +831,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verifies that feed writer can be created.
+        /// Verifies that resource set writer can be created.
         /// </summary>
         private void VerifyCanCreateODataResourceSetWriter()
         {
@@ -856,7 +856,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Verifies that resource writer can be created.
         /// </summary>
-        private void VerifyCanCreateODataEntryWriter()
+        private void VerifyCanCreateODataResourceWriter()
         {
             this.VerifyWriterNotDisposedAndNotUsed();
         }

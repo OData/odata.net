@@ -52,13 +52,13 @@ namespace Microsoft.OData.Core
         public abstract ODataReader CreateResourceReader();
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.
+        /// This method creates an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.
         /// </summary>
         /// <remarks>
         /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.</returns>
+        /// <returns>Returns an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.</returns>
         public abstract ODataReader CreateResourceSetReader();
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection. </summary>

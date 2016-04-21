@@ -592,11 +592,11 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
                 {
                     switch (odataReader.State)
                     {
-                        case ODataReaderState.NavigationLinkStart:
+                        case ODataReaderState.NestedResourceInfoStart:
                             depth++;
                             break;
 
-                        case ODataReaderState.NavigationLinkEnd:
+                        case ODataReaderState.NestedResourceInfoEnd:
                             depth--;
                             break;
 

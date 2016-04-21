@@ -139,19 +139,19 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Marks the given navigation link as processed.
+        /// Marks the given nested resource info as processed.
         /// </summary>
-        /// <param name="navigationPropertyName">The navigation link we've already processed.</param>
-        internal virtual void MarkNavigationLinkProcessed(string navigationPropertyName)
+        /// <param name="navigationPropertyName">The nested resource info we've already processed.</param>
+        internal virtual void MarkNestedResourceInfoProcessed(string navigationPropertyName)
         {
         }
 
         /// <summary>
-        /// Returns the next unprocessed navigation link or null if there's no more navigation links to process.
+        /// Returns the next unprocessed nested resource info or null if there's no more navigation links to process.
         /// </summary>
-        /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
+        /// <returns>Returns the next unprocessed nested resource info or null if there's no more navigation links to process.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal virtual ODataJsonLightReaderNavigationLinkInfo GetNextUnprocessedNavigationLink()
+        internal virtual ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
         {
             return null;
         }
@@ -201,13 +201,13 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="navigationPropertyName">The name of the navigation property to get the navigation link URI for.</param>
         /// <param name="navigationLinkUrl">The value of the link URI as seen on the wire or provided explicitly by the user or previously returned by the metadata builder, which may be null.</param>
-        /// <param name="hasNavigationLinkUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
+        /// <param name="hasNestedResourceInfoUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
         /// the metadata builder, false otherwise. This flag allows the metadata builder to determine whether a null navigation link url is an uninitialized value or a value that was set explicitly.</param>
         /// <returns>
         /// The navigation link URI for the navigation property.
         /// null if its not possible to determine the navigation link for the specified navigation property.
         /// </returns>
-        internal virtual Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNavigationLinkUrl)
+        internal virtual Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNestedResourceInfoUrl)
         {
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");

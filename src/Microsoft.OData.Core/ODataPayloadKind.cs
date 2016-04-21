@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     /// </summary>
     public enum ODataPayloadKind
     {
-        /// <summary>Payload kind for a feed.</summary>
+        /// <summary>Payload kind for a resource set.</summary>
         ResourceSet = 0,
 
         /// <summary>Payload kind for a resource.</summary>

@@ -298,8 +298,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightReader.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightReader.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightReaderNavigationLinkInfo.cs">
-      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightReaderNavigationLinkInfo.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightReaderNestedResourceInfo.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightReaderNestedResourceInfo.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightReaderUtils.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightReaderUtils.cs</Link>

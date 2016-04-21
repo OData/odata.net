@@ -119,7 +119,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "resource", Justification = "Used only in debug asserts.")]
-        internal static void ValidateEntry(ODataResource resource)
+        internal static void ValidateResource(ODataResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -706,16 +706,16 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Validates that the parsed context URI from the payload is consistent with the expected
-        /// entity set and entity type when reading a feed or resource payload.
+        /// entity set and entity type when reading a resource set or resource payload.
         /// </summary>
         /// <param name="contextUriParseResult">The parse result of the context URI from the payload.</param>
         /// <param name="scope">The top-level scope representing the reader state.</param>
         /// <param name="updateScope">Whether to update scope when validating.</param>
-        internal static void ValidateFeedOrEntryContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
+        internal static void ValidateResourceSetOrResourceContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
         {
             if (contextUriParseResult.EdmType is IEdmCollectionType)
             {
-                ValidateFeedContextUri(contextUriParseResult, scope, updateScope);
+                ValidateResourceSetContextUri(contextUriParseResult, scope, updateScope);
                 return;
             }
 
@@ -1289,7 +1289,7 @@ namespace Microsoft.OData.Core
 
 
         /// <summary>
-        /// The validate feed context uri.
+        /// The validate resource set context uri.
         /// </summary>
         /// <param name="contextUriParseResult">
         /// The context uri parse result.
@@ -1300,9 +1300,9 @@ namespace Microsoft.OData.Core
         /// <param name="updateScope">
         /// The update scope.
         /// </param>
-        private static void ValidateFeedContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
+        private static void ValidateResourceSetContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
         {
-            // TODO: add validation logic for a feed context uri
+            // TODO: add validation logic for a resource set context uri
         }
     }
 }

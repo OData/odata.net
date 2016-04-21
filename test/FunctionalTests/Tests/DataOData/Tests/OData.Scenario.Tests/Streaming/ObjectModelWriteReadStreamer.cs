@@ -147,7 +147,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                 }
             }
 
-            this.WriteEnd(writer, ODataReaderState.NavigationLinkEnd);
+            this.WriteEnd(writer, ODataReaderState.NestedResourceInfoEnd);
             this.Read(lazyReader);
         }
 
@@ -213,7 +213,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 
                         readItems.Push(currentEntry);
                         break;
-                    case ODataReaderState.NavigationLinkStart:
+                    case ODataReaderState.NestedResourceInfoStart:
                         ODataResource entry = (ODataResource)readItems.Peek();
                         var navLinksAnnotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
                         if (navLinksAnnotation == null)
@@ -228,7 +228,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 
                     case ODataReaderState.ResourceEnd:
                     case ODataReaderState.ResourceSetEnd:
-                    case ODataReaderState.NavigationLinkEnd:
+                    case ODataReaderState.NestedResourceInfoEnd:
                         if (readItems.Count() > 1)
                             readItems.Pop();
                         break;
@@ -259,7 +259,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             var navLink = item as ODataNestedResourceInfo;
             if (navLink != null)
             {
-                this.expectedStates.Add(ODataReaderState.NavigationLinkStart);
+                this.expectedStates.Add(ODataReaderState.NestedResourceInfoStart);
                 writer.WriteStart(navLink);
             }
         }

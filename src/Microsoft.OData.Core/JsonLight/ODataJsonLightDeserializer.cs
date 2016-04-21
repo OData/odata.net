@@ -219,7 +219,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the context URI.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a feed or a collection within a parameters payload.</param>
+        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.</param>
         /// <param name="allowEmptyPayload">true if we allow a completely empty payload; otherwise false.</param>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the context URI.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a feed or a collection within a parameters payload.</param>
+        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.</param>
         /// <param name="allowEmptyPayload">true if we allow a completely empty payload; otherwise false.</param>
         /// <returns>The parsed context URI.</returns>
         /// <remarks>
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads the end of the top-level data wrapper in JSON responses.
         /// </summary>
-        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a feed or a collection within a parameters payload.</param>
+        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.</param>
         /// <remarks>
         /// Pre-Condition:  any node:                when reading response or a nested payload, will fail if find anything else then EndObject.
         ///                 JsonNodeType.EndOfInput: otherwise
@@ -619,7 +619,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// annotation name and value then return true; return false otherwise.
         /// </summary>
         /// <remarks>
-        /// The unknown odata annotation is skipped so that when this version of the reader reads a feed produced by a future version of ODataLib
+        /// The unknown odata annotation is skipped so that when this version of the reader reads a resource set produced by a future version of ODataLib
         /// that contains an odata annotation that is not recognized on this version, we would simply ignore the annotation rather than failing.
         /// Note that when we add new odata annotations that cannot be skipped, we would bump the protocol version.
         /// </remarks>
@@ -806,7 +806,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the context URI.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a feed or a collection within a parameters payload.</param>
+        /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.</param>
         /// <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
         /// <returns>The value of the context URI annotation (or null if it was not found).</returns>
         /// <remarks>

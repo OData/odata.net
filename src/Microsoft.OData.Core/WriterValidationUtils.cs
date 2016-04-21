@@ -138,7 +138,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="resourceType">The <see cref="IEdmEntityType"/> of the resource.</param>
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        internal static void ValidateEntryInExpandedLink(IEdmEntityType resourceType, IEdmEntityType parentNavigationPropertyType)
+        internal static void ValidateResourceInExpandedLink(IEdmEntityType resourceType, IEdmEntityType parentNavigationPropertyType)
         {
             if (parentNavigationPropertyType == null)
             {
@@ -173,8 +173,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates an <see cref="ODataResourceSet"/> to ensure all required information is specified and valid on the WriteEnd call.
         /// </summary>
-        /// <param name="resourceSet">The feed to validate.</param>
-        /// <param name="writingRequest">Flag indicating whether the feed is written as part of a request or a response.</param>
+        /// <param name="resourceSet">The resource set to validate.</param>
+        /// <param name="writingRequest">Flag indicating whether the resource set is written as part of a request or a response.</param>
         internal static void ValidateResourceSetAtEnd(ODataResourceSet resourceSet, bool writingRequest)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
@@ -194,12 +194,12 @@ namespace Microsoft.OData.Core
         /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteStart call.
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
-        internal static void ValidateEntryAtStart(ODataResource resource)
+        internal static void ValidateResourceAtStart(ODataResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
             // Id can be specified at the beginning (and might be written here), so we need to validate it here.
-            ValidateEntryId(resource.Id);
+            ValidateResourceId(resource.Id);
 
             // Type name is verified in the format readers/writers since it's shared with other non-entity types
             // and verifying it here would mean doing it twice.
@@ -209,12 +209,12 @@ namespace Microsoft.OData.Core
         /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteEnd call.
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
-        internal static void ValidateEntryAtEnd(ODataResource resource)
+        internal static void ValidateResourceAtEnd(ODataResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
             // If the Id was not specified in the beginning it might have been specified at the end, so validate it here as well.
-            ValidateEntryId(resource.Id);
+            ValidateResourceId(resource.Id);
         }
 
         /// <summary>
@@ -308,26 +308,26 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
-        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this navigation link or null for deferred links.</param>
-        /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for navigation link multiplicity in one place.")]
-        internal static IEdmNavigationProperty ValidateNavigationLink(
-            ODataNestedResourceInfo navigationLink,
+        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for nested resource info multiplicity in one place.")]
+        internal static IEdmNavigationProperty ValidateNestedResourceInfo(
+            ODataNestedResourceInfo nestedResourceInfo,
             IEdmEntityType declaringEntityType,
             ODataPayloadKind? expandedPayloadKind)
         {
-            Debug.Assert(navigationLink != null, "navigationLink != null");
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(
                 !expandedPayloadKind.HasValue ||
                 expandedPayloadKind.Value == ODataPayloadKind.EntityReferenceLink ||
                 expandedPayloadKind.Value == ODataPayloadKind.Resource ||
                 expandedPayloadKind.Value == ODataPayloadKind.ResourceSet,
-                "If an expanded payload kind is specified it must be resource, feed or entity reference link.");
+                "If an expanded payload kind is specified it must be resource, resource set or entity reference link.");
 
             // Navigation link must have a non-empty name
-            if (string.IsNullOrEmpty(navigationLink.Name))
+            if (string.IsNullOrEmpty(nestedResourceInfo.Name))
             {
                 throw new ODataException(Strings.ValidationUtils_LinkMustSpecifyName);
             }
@@ -335,18 +335,18 @@ namespace Microsoft.OData.Core
             // If we write an entity reference link, don't validate the multiplicity of the IsCollection
             // property if it is 'false' (since we allow writing a singleton navigation link for
             // a collection navigation property in requests) nor the consistency of payload kind and metadata
-            // (which is done separately in ODataWriterCore.CheckForNavigationLinkWithContent).
+            // (which is done separately in ODataWriterCore.CheckForNestedResourceInfoWithContent).
             bool isEntityReferenceLinkPayload = expandedPayloadKind == ODataPayloadKind.EntityReferenceLink;
 
-            // true only if the expandedPayloadKind has a value and the value is 'Feed'
-            bool isFeedPayload = expandedPayloadKind == ODataPayloadKind.ResourceSet;
+            // true only if the expandedPayloadKind has a value and the value is 'Resource Set'
+            bool isResourceSetPayload = expandedPayloadKind == ODataPayloadKind.ResourceSet;
 
-            // Make sure the IsCollection property agrees with the payload kind for resource and feed payloads
+            // Make sure the IsCollection property agrees with the payload kind for resource and resource set payloads
             Func<object, string> errorTemplate = null;
-            if (!isEntityReferenceLinkPayload && navigationLink.IsCollection.HasValue && expandedPayloadKind.HasValue)
+            if (!isEntityReferenceLinkPayload && nestedResourceInfo.IsCollection.HasValue && expandedPayloadKind.HasValue)
             {
-                // For feed/resource make sure the IsCollection property is set correctly.
-                if (isFeedPayload != navigationLink.IsCollection.Value)
+                // For resource set/resource make sure the IsCollection property is set correctly.
+                if (isResourceSetPayload != nestedResourceInfo.IsCollection.Value)
                 {
                     errorTemplate = expandedPayloadKind.Value == ODataPayloadKind.ResourceSet
                         ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent
@@ -357,17 +357,17 @@ namespace Microsoft.OData.Core
             IEdmNavigationProperty navigationProperty = null;
             if (errorTemplate == null && declaringEntityType != null)
             {
-                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(navigationLink.Name, declaringEntityType);
+                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringEntityType);
                 Debug.Assert(navigationProperty != null, "If we have a declaring type we expect a non-null navigation property since open nav props are not allowed.");
 
                 bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;
 
-                // Make sure the IsCollection property agrees with the metadata type for resource and feed payloads
-                if (navigationLink.IsCollection.HasValue && isCollectionType != navigationLink.IsCollection)
+                // Make sure the IsCollection property agrees with the metadata type for resource and resource set payloads
+                if (nestedResourceInfo.IsCollection.HasValue && isCollectionType != nestedResourceInfo.IsCollection)
                 {
                     // Ignore the case where IsCollection is 'false' and we are writing an entity reference link
                     // (see comment above)
-                    if (!(navigationLink.IsCollection == false && isEntityReferenceLinkPayload))
+                    if (!(nestedResourceInfo.IsCollection == false && isEntityReferenceLinkPayload))
                     {
                         errorTemplate = isCollectionType
                             ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata
@@ -376,8 +376,8 @@ namespace Microsoft.OData.Core
                 }
 
                 // Make sure that the payload kind agrees with the metadata.
-                // For entity reference links we check separately in ODataWriterCore.CheckForNavigationLinkWithContent.
-                if (!isEntityReferenceLinkPayload && expandedPayloadKind.HasValue && isCollectionType != isFeedPayload)
+                // For entity reference links we check separately in ODataWriterCore.CheckForNestedResourceInfoWithContent.
+                if (!isEntityReferenceLinkPayload && expandedPayloadKind.HasValue && isCollectionType != isResourceSetPayload)
                 {
                     errorTemplate = isCollectionType
                         ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Core
 
             if (errorTemplate != null)
             {
-                string uri = navigationLink.Url == null ? "null" : UriUtils.UriToString(navigationLink.Url);
+                string uri = nestedResourceInfo.Url == null ? "null" : UriUtils.UriToString(nestedResourceInfo.Url);
                 throw new ODataException(errorTemplate(uri));
             }
 
@@ -395,33 +395,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates that the specified navigation link has a Url.
+        /// Validates that the sepcified nested resource info has cardinality, that is it has the IsCollection value set.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
-        internal static void ValidateNavigationLinkUrlPresent(ODataNestedResourceInfo navigationLink)
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
+        internal static void ValidateNestedResourceInfoHasCardinality(ODataNestedResourceInfo nestedResourceInfo)
         {
-            Debug.Assert(navigationLink != null, "navigationLink != null");
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
-            // Navigation link must specify the Url
-            // NOTE: we currently only require a non-null Url for ATOM payloads and non-expanded navigation links in JSON.
-            //       There is no place in JSON to write a Url if the navigation link is expanded.
-            if (navigationLink.Url == null)
+            if (!nestedResourceInfo.IsCollection.HasValue)
             {
-                throw new ODataException(Strings.WriterValidationUtils_NavigationLinkMustSpecifyUrl(navigationLink.Name));
-            }
-        }
-
-        /// <summary>
-        /// Validates that the sepcified navigation link has cardinality, that is it has the IsCollection value set.
-        /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
-        internal static void ValidateNavigationLinkHasCardinality(ODataNestedResourceInfo navigationLink)
-        {
-            Debug.Assert(navigationLink != null, "navigationLink != null");
-
-            if (!navigationLink.IsCollection.HasValue)
-            {
-                throw new ODataException(Strings.WriterValidationUtils_NavigationLinkMustSpecifyIsCollection(navigationLink.Name));
+                throw new ODataException(Strings.WriterValidationUtils_NavigationLinkMustSpecifyIsCollection(nestedResourceInfo.Name));
             }
         }
 
@@ -479,7 +462,7 @@ namespace Microsoft.OData.Core
         /// Validates the value of the Id property on a resource.
         /// </summary>
         /// <param name="id">The id value for a resource to validate.</param>
-        private static void ValidateEntryId(Uri id)
+        private static void ValidateResourceId(Uri id)
         {
             // Verify non-empty ID (entries can have no (null) ID for insert scenarios; empty IDs are not allowed)
             // TODO: it always passes. Will add more validation or remove the validation after supporting relative Uri.

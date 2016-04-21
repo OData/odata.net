@@ -883,45 +883,45 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         }
         #endregion Tests for GetAssociationLinkUri()
 
-        #region Tests for MarkNavigationLinkAsProcessed() and GetNextUnprocessedNavigationLink()
+        #region Tests for MarkNestedResourceInfoAsProcessed() and GetNextUnprocessedNestedResourceInfo()
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldBeNullIfTypeHasNoNavProps()
+        public void GetNextUnprocessedNestedResourceInfoShouldBeNullIfTypeHasNoNavProps()
         {
             this.productConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink()
                 .Should().BeNull();
         }
 
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldReturnNavProps()
+        public void GetNextUnprocessedNestedResourceInfoShouldReturnNavProps()
         {
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Name.Should().Be("RelatedProducts");
+            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedProducts");
 
             nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Name.Should().Be("RelatedDerivedProduct");
+            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedDerivedProduct");
         }
 
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldNotReturnNavPropsThatWerePreviouslyMarkedAsProcessed()
+        public void GetNextUnprocessedNestedResourceInfoShouldNotReturnNavPropsThatWerePreviouslyMarkedAsProcessed()
         {
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.MarkNavigationLinkProcessed("RelatedDerivedProduct");
+            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.MarkNestedResourceInfoProcessed("RelatedDerivedProduct");
 
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Name.Should().Be("RelatedProducts");
+            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedProducts");
 
             nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
             nextNavProp.Should().BeNull();
         }
 
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldReturnANavPropWithoutUrls()
+        public void GetNextUnprocessedNestedResourceInfoShouldReturnANavPropWithoutUrls()
         {
             // Note: it is up to the reader and writer to later add a metadata builder to navigation links generated this way.
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Url.Should().BeNull();
-            nextNavProp.NavigationLink.AssociationLinkUrl.Should().BeNull();
+            nextNavProp.NestedResourceInfo.Url.Should().BeNull();
+            nextNavProp.NestedResourceInfo.AssociationLinkUrl.Should().BeNull();
         }
-        #endregion Tests for MarkNavigationLinkAsProcessed() and GetNextUnprocessedNavigationLink()
+        #endregion Tests for MarkNestedResourceInfoAsProcessed() and GetNextUnprocessedNestedResourceInfo()
 
         #region Tests for GetOperationTargetUri()
         [Fact]

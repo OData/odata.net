@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.Evaluation;
 
     /// <summary>
-    /// The context object to answer basic questions regarding the type of the resource or feed.
+    /// The context object to answer basic questions regarding the type of the resource or resource set.
     /// </summary>
     internal class ODataResourceTypeContext : IODataResourceTypeContext
     {
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The navigation source name of the feed or resource.
+        /// The navigation source name of the resource set or resource.
         /// </summary>
         public virtual string NavigationSourceName
         {
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The entity type name of the navigation source of the feed or resource.
+        /// The entity type name of the navigation source of the resource set or resource.
         /// </summary>
         public virtual string NavigationSourceEntityTypeName
         {
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The full type name of the navigation source of the feed or resource.
+        /// The full type name of the navigation source of the resource set or resource.
         /// </summary>
         public virtual string NavigationSourceFullTypeName
         {
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The kind of the navigation source of the feed or resource.
+        /// The kind of the navigation source of the resource set or resource.
         /// </summary>
         public virtual EdmNavigationSourceKind NavigationSourceKind
         {
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The type kind of the entity type of the feed or resource.
+        /// The type kind of the entity type of the resource set or resource.
         /// </summary>
         public virtual bool IsFromCollection
         {
@@ -104,10 +104,10 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates an instance of <see cref="ODataResourceTypeContext"/>.
         /// </summary>
-        /// <param name="serializationInfo">The serialization info from the feed or resource instance.</param>
-        /// <param name="navigationSource">The navigation source of the feed or resource.</param>
+        /// <param name="serializationInfo">The serialization info from the resource set or resource instance.</param>
+        /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
         /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
-        /// <param name="expectedEntityType">The expected entity type of the feed or resource.</param>
+        /// <param name="expectedEntityType">The expected entity type of the resource set or resource.</param>
         /// <param name="model">The Edm model instance to use.</param>
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
         /// <returns>A new instance of <see cref="ODataResourceTypeContext"/>.</returns>
@@ -116,14 +116,14 @@ namespace Microsoft.OData.Core
             Debug.Assert(model != null, "model != null");
             if (serializationInfo != null)
             {
-                return new ODataFeedAndEntryTypeContextWithoutModel(serializationInfo);
+                return new ODataResourceTypeContextWithoutModel(serializationInfo);
             }
 
             if (navigationSource != null && model.IsUserModel())
             {
                 Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
                 Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-                return new ODataFeedAndEntryTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedEntityType, model);
+                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedEntityType, model);
             }
 
             return new ODataResourceTypeContext(throwIfMissingTypeInfo);
@@ -146,9 +146,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the resource or feed based on the serialization info.
+        /// The context object to answer basic questions regarding the type of the resource or resource set based on the serialization info.
         /// </summary>
-        internal sealed class ODataFeedAndEntryTypeContextWithoutModel : ODataResourceTypeContext
+        internal sealed class ODataResourceTypeContextWithoutModel : ODataResourceTypeContext
         {
             /// <summary>
             /// The serialization info of the resource for writing without model.
@@ -158,8 +158,8 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
             /// </summary>
-            /// <param name="serializationInfo">The serialization info from the feed or resource instance.</param>
-            internal ODataFeedAndEntryTypeContextWithoutModel(ODataResourceSerializationInfo serializationInfo)
+            /// <param name="serializationInfo">The serialization info from the resource set or resource instance.</param>
+            internal ODataResourceTypeContextWithoutModel(ODataResourceSerializationInfo serializationInfo)
                 : base(/*throwIfMissingTypeInfo*/false)
             {
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The navigation source name of the feed or resource.
+            /// The navigation source name of the resource set or resource.
             /// </summary>
             public override string NavigationSourceName
             {
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity type name of the navigation source of the feed or resource.
+            /// The entity type name of the navigation source of the resource set or resource.
             /// </summary>
             public override string NavigationSourceEntityTypeName
             {
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The full type name of the navigation source of the feed or resource.
+            /// The full type name of the navigation source of the resource set or resource.
             /// </summary>
             public override string NavigationSourceFullTypeName
             {
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The kind of the navigation source of the feed or resource.
+            /// The kind of the navigation source of the resource set or resource.
             /// </summary>
             public override EdmNavigationSourceKind NavigationSourceKind
             {
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The type kind of the entity type of the feed or resource.
+            /// The type kind of the entity type of the resource set or resource.
             /// </summary>
             public override bool IsFromCollection
             {
@@ -251,9 +251,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The context object to answer basic questions regarding the type of the resource or feed based on the metadata.
+        /// The context object to answer basic questions regarding the type of the resource or resource set based on the metadata.
         /// </summary>
-        internal sealed class ODataFeedAndEntryTypeContextWithModel : ODataResourceTypeContext
+        internal sealed class ODataResourceTypeContextWithModel : ODataResourceTypeContext
         {
             /// <summary>
             /// The Edm model instance to use.
@@ -261,29 +261,29 @@ namespace Microsoft.OData.Core
             private readonly IEdmModel model;
 
             /// <summary>
-            /// The navigation source of the feed or resource.
+            /// The navigation source of the resource set or resource.
             /// </summary>
             private readonly IEdmNavigationSource navigationSource;
 
             /// <summary>
-            /// The entity type of the navigation source of the feed or resource.
+            /// The entity type of the navigation source of the resource set or resource.
             /// </summary>
             private readonly IEdmEntityType navigationSourceEntityType;
 
             /// <summary>
-            /// The expected entity type of the feed or resource.
+            /// The expected entity type of the resource set or resource.
             /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
             /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
             /// </summary>
             private readonly IEdmEntityType expectedEntityType;
 
             /// <summary>
-            /// The navigation source name of the feed or resource.
+            /// The navigation source name of the resource set or resource.
             /// </summary>
             private readonly string navigationSourceName;
 
             /// <summary>
-            /// true if the resource is an media link resource or if the feed contains media link entries, false otherwise.
+            /// true if the resource is an media link resource or if the resource set contains media link entries, false otherwise.
             /// </summary>
             private readonly bool isMediaLinkEntry;
 
@@ -300,11 +300,11 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
             /// </summary>
-            /// <param name="navigationSource">The navigation source of the feed or resource.</param>
+            /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
             /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
-            /// <param name="expectedEntityType">The expected entity type of the feed or resource.</param>
+            /// <param name="expectedEntityType">The expected entity type of the resource set or resource.</param>
             /// <param name="model">The Edm model instance to use.</param>
-            internal ODataFeedAndEntryTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model)
+            internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model)
                 : base(/*throwIfMissingTypeInfo*/false)
             {
                 Debug.Assert(model != null, "model != null");
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The navigation source name of the feed or resource.
+            /// The navigation source name of the resource set or resource.
             /// </summary>
             public override string NavigationSourceName
             {
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity type name of the navigation source of the feed or resource.
+            /// The entity type name of the navigation source of the resource set or resource.
             /// </summary>
             public override string NavigationSourceEntityTypeName
             {
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The full type name of the navigation source of the feed or resource.
+            /// The full type name of the navigation source of the resource set or resource.
             /// </summary>
             public override string NavigationSourceFullTypeName
             {
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The kind of the navigation source of the feed or resource.
+            /// The kind of the navigation source of the resource set or resource.
             /// </summary>
             public override EdmNavigationSourceKind NavigationSourceKind
             {
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The type kind of the entity type of the feed or resource.
+            /// The type kind of the entity type of the resource set or resource.
             /// </summary>
             public override bool IsFromCollection
             {
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity type of the navigation source of the feed or resource.
+            /// The entity type of the navigation source of the resource set or resource.
             /// </summary>
             internal IEdmEntityType NavigationSourceEntityType
             {

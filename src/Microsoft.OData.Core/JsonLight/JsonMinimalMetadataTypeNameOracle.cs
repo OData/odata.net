@@ -36,10 +36,10 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // We only write entity type names in Json Light if it's more derived (different) from the expected type name.
-            string entryTypeName = resource.TypeName;
-            if (expectedTypeName != entryTypeName)
+            string resourceTypeName = resource.TypeName;
+            if (expectedTypeName != resourceTypeName)
             {
-                return entryTypeName;
+                return resourceTypeName;
             }
 
             return null;

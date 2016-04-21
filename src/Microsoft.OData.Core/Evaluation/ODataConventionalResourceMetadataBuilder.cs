@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.Evaluation
         private readonly IODataMetadataContext metadataContext;
 
         /// <summary>The list of navigation links that have been processed.</summary>
-        private readonly HashSet<string> processedNavigationLinks;
+        private readonly HashSet<string> processedNestedResourceInfos;
 
         /// <summary>The edit link.</summary>
         /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.Evaluation
         private List<ODataProperty> computedStreamProperties;
 
         /// <summary>The enumerator for unprocessed navigation links.</summary>
-        private IEnumerator<ODataJsonLightReaderNavigationLinkInfo> unprocessedNavigationLinks;
+        private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNestedResourceInfos;
 
         /// <summary>The missing operation generator for the current resource.</summary>
         private ODataMissingOperationGenerator missingOperationGenerator;
@@ -75,19 +75,19 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="entryMetadataContext">The context to answer basic metadata questions about the resource.</param>
+        /// <param name="resourceMetadataContext">The context to answer basic metadata questions about the resource.</param>
         /// <param name="metadataContext">The metadata context.</param>
         /// <param name="uriBuilder">The uri builder to use.</param>
-        internal ODataConventionalResourceMetadataBuilder(IODataResourceMetadataContext entryMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
+        internal ODataConventionalResourceMetadataBuilder(IODataResourceMetadataContext resourceMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
         {
-            Debug.Assert(entryMetadataContext != null, "entryMetadataContext != null");
+            Debug.Assert(resourceMetadataContext != null, "resourceMetadataContext != null");
             Debug.Assert(metadataContext != null, "metadataContext != null");
             Debug.Assert(uriBuilder != null, "uriBuilder != null");
 
-            this.resourceMetadataContext = entryMetadataContext;
+            this.resourceMetadataContext = resourceMetadataContext;
             this.uriBuilder = uriBuilder;
             this.metadataContext = metadataContext;
-            this.processedNavigationLinks = new HashSet<string>(StringComparer.Ordinal);
+            this.processedNestedResourceInfos = new HashSet<string>(StringComparer.Ordinal);
         }
 
         /// <summary>
@@ -325,14 +325,14 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Marks the given navigation link as processed.
+        /// Marks the given nested resource info as processed.
         /// </summary>
-        /// <param name="navigationPropertyName">The navigation link we've already processed.</param>
-        internal override void MarkNavigationLinkProcessed(string navigationPropertyName)
+        /// <param name="navigationPropertyName">The nested resource info we've already processed.</param>
+        internal override void MarkNestedResourceInfoProcessed(string navigationPropertyName)
         {
             Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
-            Debug.Assert(this.processedNavigationLinks != null, "this.processedNavigationLinks != null");
-            this.processedNavigationLinks.Add(navigationPropertyName);
+            Debug.Assert(this.processedNestedResourceInfos != null, "this.processedNestedResourceInfos != null");
+            this.processedNestedResourceInfos.Add(navigationPropertyName);
         }
 
         /// <summary>
@@ -340,20 +340,20 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal override ODataJsonLightReaderNavigationLinkInfo GetNextUnprocessedNavigationLink()
+        internal override ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
         {
-            if (this.unprocessedNavigationLinks == null)
+            if (this.unprocessedNestedResourceInfos == null)
             {
-                Debug.Assert(this.resourceMetadataContext != null, "this.entryMetadataContext != null");
-                this.unprocessedNavigationLinks = this.resourceMetadataContext.SelectedNavigationProperties
-                    .Where(p => !this.processedNavigationLinks.Contains(p.Name))
-                    .Select(ODataJsonLightReaderNavigationLinkInfo.CreateProjectedNavigationLinkInfo)
+                Debug.Assert(this.resourceMetadataContext != null, "this.resourceMetadataContext != null");
+                this.unprocessedNestedResourceInfos = this.resourceMetadataContext.SelectedNavigationProperties
+                    .Where(p => !this.processedNestedResourceInfos.Contains(p.Name))
+                    .Select(ODataJsonLightReaderNestedResourceInfo.CreateProjectedNestedResourceInfo)
                     .GetEnumerator();
             }
 
-            if (this.unprocessedNavigationLinks.MoveNext())
+            if (this.unprocessedNestedResourceInfos.MoveNext())
             {
-                return this.unprocessedNavigationLinks.Current;
+                return this.unprocessedNestedResourceInfos.Current;
             }
 
             return null;
@@ -398,17 +398,17 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="navigationPropertyName">The name of the navigation property to get the navigation link URI for.</param>
         /// <param name="navigationLinkUrl">The value of the link URI as seen on the wire or provided explicitly by the user or previously returned by the metadata builder, which may be null.</param>
-        /// <param name="hasNavigationLinkUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
+        /// <param name="hasNestedResourceInfoUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
         /// the metadata builder, false otherwise. This flag allows the metadata builder to determine whether a null navigation link url is an uninitialized value or a value that was set explicitly.</param>
         /// <returns>
         /// The navigation link URI for the navigation property.
         /// null if its not possible to determine the navigation link for the specified navigation property.
         /// </returns>
-        internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNavigationLinkUrl)
+        internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNestedResourceInfoUrl)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            return hasNavigationLinkUrl ? navigationLinkUrl : this.uriBuilder.BuildNavigationLinkUri(this.GetReadLink(), navigationPropertyName);
+            return hasNestedResourceInfoUrl ? navigationLinkUrl : this.uriBuilder.BuildNavigationLinkUri(this.GetReadLink(), navigationPropertyName);
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             Uri uri = this.resourceMetadataContext.Resource.HasNonComputedId ? this.resourceMetadataContext.Resource.NonComputedId : this.ComputedId;
 
-            Debug.Assert(this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null, "this.entryMetadataContext != null && this.entryMetadataContext.TypeContext != null");
+            Debug.Assert(this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null, "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
             if (this.resourceMetadataContext.ActualEntityTypeName != this.resourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
             {
                 uri = this.uriBuilder.AppendTypeSegment(uri, this.resourceMetadataContext.ActualEntityTypeName);
@@ -571,7 +571,7 @@ namespace Microsoft.OData.Core.Evaluation
                 if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedEntityTypeName)
                 {
                     // Do not append type cast if we know that the navigation property is in base type, not in derived type.
-                    ODataResourceTypeContext.ODataFeedAndEntryTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataFeedAndEntryTypeContextWithModel;
+                    ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
                     if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.resourceMetadataContext.TypeContext.NavigationSourceName) == null)
                     {
                         uri = new Uri(Core.UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualEntityTypeName);    

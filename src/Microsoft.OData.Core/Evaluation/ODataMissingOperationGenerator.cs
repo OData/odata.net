@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="metadataContext">The current resource metadata context.</param>
         internal ODataMissingOperationGenerator(IODataResourceMetadataContext resourceMetadataContext, IODataMetadataContext metadataContext)
         {
-            Debug.Assert(resourceMetadataContext != null, "entryMetadataCotext != null");
+            Debug.Assert(resourceMetadataContext != null, "resourceMetadataCotext != null");
             Debug.Assert(metadataContext != null, "metadataContext != null");
 
             this.resourceMetadataContext = resourceMetadataContext;
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The computed missing Actions.</returns>
         internal IEnumerable<ODataAction> GetComputedActions()
         {
-            this.ComputeMissingOperationsToEntry();
+            this.ComputeMissingOperationsToResource();
             return this.computedActions;
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The computed missing Functions.</returns>
         internal IEnumerable<ODataFunction> GetComputedFunctions()
         {
-            this.ComputeMissingOperationsToEntry();
+            this.ComputeMissingOperationsToResource();
             return this.computedFunctions;
         }
 
@@ -113,9 +113,9 @@ namespace Microsoft.OData.Core.Evaluation
         /// Computes the operations that are missing from the payload but should be added by conventions onto the resource.
         /// </summary>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Parameter type is needed to get binding type.")]
-        private void ComputeMissingOperationsToEntry()
+        private void ComputeMissingOperationsToResource()
         {
-            Debug.Assert(this.resourceMetadataContext != null, "this.entryMetadataContext != null");
+            Debug.Assert(this.resourceMetadataContext != null, "this.resourceMetadataContext != null");
             Debug.Assert(this.metadataContext != null, "this.metadataContext != null");
 
             if (this.computedActions == null)

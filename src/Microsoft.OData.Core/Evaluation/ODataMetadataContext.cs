@@ -42,11 +42,11 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Gets an entity metadata builder for the given resource.
         /// </summary>
-        /// <param name="entryState">Resource state to use as reference for information needed by the builder.</param>
+        /// <param name="resourceState">Resource state to use as reference for information needed by the builder.</param>
         /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <returns>An entity metadata builder.</returns>
-        ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState entryState, bool? useKeyAsSegment);
+        ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool? useKeyAsSegment);
 
         /// <summary>
         /// Gets the list of operations that are bindable to a type.
@@ -254,12 +254,12 @@ namespace Microsoft.OData.Core.Evaluation
 
                     IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
                     IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.EntityType, this.model, /*throwIfMissingTypeInfo*/ true);
-                    IODataResourceMetadataContext entryMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmEntityType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
+                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmEntityType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
 
                     UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(useKeyAsSegment, typeContext);
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri, urlConvention);
 
-                    resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, this, uriBuilder);
+                    resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                 }
                 else
                 {

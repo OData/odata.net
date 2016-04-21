@@ -23,15 +23,15 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input to read the payload from.</param>
-        /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading a resource.</param>
+        /// <param name="readingResourceSet">true if the reader is created for reading a resource set; false when it is created for reading a resource.</param>
         /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCoreAsync(
             ODataInputContext inputContext, 
-            bool readingFeed,
+            bool readingResourceSet,
             bool readingDelta,
             IODataReaderWriterListener listener)
-            : base(inputContext, readingFeed, readingDelta, listener)
+            : base(inputContext, readingResourceSet, readingDelta, listener)
         {
         }
 
@@ -72,18 +72,18 @@ namespace Microsoft.OData.Core
         protected abstract Task<bool> ReadAtResourceEndImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'NavigationLinkStart'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtNavigationLinkStartImplementationAsync();
+        protected abstract Task<bool> ReadAtNestedResourceInfoStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'NavigationLinkEnd'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtNavigationLinkEndImplementationAsync();
+        protected abstract Task<bool> ReadAtNestedResourceInfoEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
@@ -117,21 +117,21 @@ namespace Microsoft.OData.Core
                     break;
 
                 case ODataReaderState.ResourceStart:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseEntryDepth())
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseResourceDepth())
                         .FollowOnSuccessWithTask(t => this.ReadAtResourceStartImplementationAsync());
                     break;
 
                 case ODataReaderState.ResourceEnd:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseEntryDepth())
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseResourceDepth())
                         .FollowOnSuccessWithTask(t => this.ReadAtResourceEndImplementationAsync());
                     break;
 
-                case ODataReaderState.NavigationLinkStart:
-                    result = this.ReadAtNavigationLinkStartImplementationAsync();
+                case ODataReaderState.NestedResourceInfoStart:
+                    result = this.ReadAtNestedResourceInfoStartImplementationAsync();
                     break;
 
-                case ODataReaderState.NavigationLinkEnd:
-                    result = this.ReadAtNavigationLinkEndImplementationAsync();
+                case ODataReaderState.NestedResourceInfoEnd:
+                    result = this.ReadAtNestedResourceInfoEndImplementationAsync();
                     break;
 
                 case ODataReaderState.EntityReferenceLink:
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core
                 {
                     if ((this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd) && this.Item != null)
                     {
-                        ReaderValidationUtils.ValidateEntry(this.CurrentEntry);
+                        ReaderValidationUtils.ValidateResource(this.CurrentResource);
                     }
 
                     return t.Result;

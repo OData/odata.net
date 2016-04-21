@@ -444,7 +444,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
                 {
-                    if (jsonLightReader.State == ODataReaderState.NavigationLinkEnd)
+                    if (jsonLightReader.State == ODataReaderState.NestedResourceInfoEnd)
                     {
                         ODataNestedResourceInfo navigationLink = jsonLightReader.Item as ODataNestedResourceInfo;
                         return navigationLink;

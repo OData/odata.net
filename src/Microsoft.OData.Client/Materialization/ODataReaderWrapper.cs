@@ -82,10 +82,10 @@ namespace Microsoft.OData.Client.Materialization
                     case ODataReaderState.ResourceSetEnd:
                         this.responsePipeline.ExecuteOnFeedEndActions((ODataResourceSet)this.reader.Item);
                         break;
-                    case ODataReaderState.NavigationLinkStart:
+                    case ODataReaderState.NestedResourceInfoStart:
                         this.responsePipeline.ExecuteOnNavigationStartActions((ODataNestedResourceInfo)this.reader.Item);
                         break;
-                    case ODataReaderState.NavigationLinkEnd:
+                    case ODataReaderState.NestedResourceInfoEnd:
                         this.responsePipeline.ExecuteOnNavigationEndActions((ODataNestedResourceInfo)this.reader.Item);
                         break;
                 }

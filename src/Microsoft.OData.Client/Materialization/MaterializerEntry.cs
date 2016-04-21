@@ -194,7 +194,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>The navigation links.</summary>
-        public ICollection<ODataNestedResourceInfo> NavigationLinks
+        public ICollection<ODataNestedResourceInfo> NestedResourceInfos
         {
             get { return this.navigationLinks; }
         }
@@ -262,11 +262,11 @@ namespace Microsoft.OData.Client.Materialization
         /// Adds a navigation link.
         /// </summary>
         /// <param name="link">The link.</param>
-        public void AddNavigationLink(ODataNestedResourceInfo link)
+        public void AddNestedResourceInfo(ODataNestedResourceInfo link)
         {
             if (this.IsTracking)
             {
-                this.EntityDescriptor.AddNavigationLink(link.Name, link.Url);
+                this.EntityDescriptor.AddNestedResourceInfo(link.Name, link.Url);
                 Uri associationLinkUrl = link.AssociationLinkUrl;
                 if (associationLinkUrl != null)
                 {

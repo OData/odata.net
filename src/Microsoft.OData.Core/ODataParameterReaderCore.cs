@@ -142,13 +142,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// This method creates an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.
+        /// This method creates an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.
         /// </summary>
         /// <remarks>
         /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.ResourceSet.</returns>
+        /// <returns>Returns an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.</returns>
         public override ODataReader CreateResourceSetReader()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.ResourceSet);
@@ -386,7 +386,7 @@ this.State == ODataParameterReaderState.Collection,
         protected abstract bool ReadAtStartImplementation();
 
         /// <summary>
-        /// Implementation of the reader logic when in state Value, Resource, Feed or Collection state.
+        /// Implementation of the reader logic when in state Value, Resource, Resource Set or Collection state.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         protected abstract bool ReadNextParameterImplementation();
@@ -399,10 +399,10 @@ this.State == ODataParameterReaderState.Collection,
         protected abstract ODataReader CreateResourceReader(IEdmEntityType expectedEntityType);
 
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.
+        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected feed element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
+        /// <param name="expectedEntityType">Expected resource set element type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.</returns>
         protected abstract ODataReader CreateResourceSetReader(IEdmEntityType expectedEntityType);
 
         /// <summary>

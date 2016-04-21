@@ -736,7 +736,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             Debug.Assert(identifier != null, "identifier != null");
 
-            // Look for well-known system entry points.
+            // Look for well-known system resource points.
             if (this.IdentifierIs(UriQueryConstants.MetadataSegment, identifier))
             {
                 if (parenthesisExpression != null)

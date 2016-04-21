@@ -18,61 +18,61 @@ namespace Microsoft.OData.Core
     public abstract class ODataDeltaWriter
     {
         /// <summary>
-        /// Start writing a delta feed.
+        /// Start writing a delta resource set.
         /// </summary>
-        /// <param name="deltaResourceSet">Delta feed/collection to write.</param>
+        /// <param name="deltaResourceSet">Delta resource set/collection to write.</param>
         public abstract void WriteStart(ODataDeltaResourceSet deltaResourceSet);
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously start writing a delta feed.
+        /// Asynchronously start writing a delta resource set.
         /// </summary>
-        /// <param name="deltaResourceSet">Delta feed/collection to write.</param>
+        /// <param name="deltaResourceSet">Delta resource set/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet);
 #endif
 
         /// <summary>
-        /// Finish writing a delta feed.
+        /// Finish writing a delta resource set.
         /// </summary>
         public abstract void WriteEnd();
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously finish writing a delta feed.
+        /// Asynchronously finish writing a delta resource set.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteEndAsync();
 #endif
 
         /// <summary>
-        /// Start writing a navigation link.
+        /// Start writing a nested resource info.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write.</param>
-        public abstract void WriteStart(ODataNestedResourceInfo navigationLink);
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        public abstract void WriteStart(ODataNestedResourceInfo nestedResourceInfo);
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously start writing a navigation link.
+        /// Asynchronously start writing a nested resource info.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataNestedResourceInfo navigationLink);
+        public abstract Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
 #endif
 
         /// <summary>
-        /// Start writing an expanded feed.
+        /// Start writing an expanded resource set.
         /// </summary>
-        /// <param name="expandedFeed">The expanded feed to write.</param>
-        public abstract void WriteStart(ODataResourceSet expandedFeed);
+        /// <param name="expandedResourceSet">The expanded resource set to write.</param>
+        public abstract void WriteStart(ODataResourceSet expandedResourceSet);
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously start writing an expanded feed.
+        /// Asynchronously start writing an expanded resource set.
         /// </summary>
-        /// <param name="expandedFeed">The expanded feed to write.</param>
+        /// <param name="expandedResourceSet">The expanded resource set to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataResourceSet expandedFeed);
+        public abstract Task WriteStartAsync(ODataResourceSet expandedResourceSet);
 #endif
 
         /// <summary>

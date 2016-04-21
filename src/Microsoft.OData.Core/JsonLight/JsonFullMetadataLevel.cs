@@ -98,7 +98,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
         /// <param name="resource">The resource to create the metadata builder for.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or feed.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
         /// <param name="serializationInfo">The serialization info for the resource.</param>
         /// <param name="actualEntityType">The entity type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
@@ -130,8 +130,8 @@ namespace Microsoft.OData.Core.JsonLight
             UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(keyAsSegment, typeContext);
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri, urlConvention);
 
-            IODataResourceMetadataContext entryMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualEntityType, metadataContext, selectedProperties);
-            return new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext, uriBuilder);
+            IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualEntityType, metadataContext, selectedProperties);
+            return new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
         }
 
         /// <summary>

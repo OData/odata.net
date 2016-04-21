@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
         /// <param name="resource">The resource to create the metadata builder for.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or feed.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
         /// <param name="serializationInfo">The serialization info for the resource.</param>
         /// <param name="actualEntityType">The entity type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>

@@ -583,10 +583,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                             case ODataReaderState.ResourceSetStart:
                                 Assert.NotNull(tuple.Item1 as ODataResourceSet);
                                 break;
-                            case ODataReaderState.NavigationLinkEnd:
+                            case ODataReaderState.NestedResourceInfoEnd:
                                 Assert.NotNull(tuple.Item1 as ODataNestedResourceInfo);
                                 break;
-                            case ODataReaderState.NavigationLinkStart:
+                            case ODataReaderState.NestedResourceInfoStart:
                                 ODataNestedResourceInfo navigationLink = tuple.Item1 as ODataNestedResourceInfo;
                                 Assert.NotNull(navigationLink);
                                 Assert.Equal("Details", navigationLink.Name);

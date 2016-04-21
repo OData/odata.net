@@ -251,7 +251,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Scans the current buffer for a boundary start, which is either a line feed or two dashes (since we don't require the leading line feed).
+        /// Scans the current buffer for a boundary start, which is either a line resource set or two dashes (since we don't require the leading line resource set).
         /// </summary>
         /// <param name="scanStartIx">The index at which to start scanning for the boundary start.</param>
         /// <param name="maxDataBytesToScan">Stop if no boundary start was found after this number of non end-of-line bytes.</param>
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Core
             {
                 char ch = (char)this.bytes[i];
 
-                // Note the following common line feed chars:
+                // Note the following common line resource set chars:
                 // \n - UNIX   \r\n - DOS   \r - Mac
                 if (ch == '\r' || ch == '\n')
                 {
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Core
             {
                 char ch = (char)this.bytes[i];
 
-                // Note the following common line feed chars:
+                // Note the following common line resource set chars:
                 // \n - UNIX   \r\n - DOS   \r - Mac
                 if (ch == '\r' || ch == '\n')
                 {
@@ -391,11 +391,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Check whether the bytes in the buffer at the specified start index match the expected boundary string.
         /// </summary>
-        /// <param name="lineEndStartPosition">The start of the line feed preceding the boundary (if present).</param>
+        /// <param name="lineEndStartPosition">The start of the line resource set preceding the boundary (if present).</param>
         /// <param name="boundaryDelimiterStartPosition">The start position of the boundary delimiter.</param>
         /// <param name="boundary">The boundary string to check for.</param>
         /// <param name="boundaryStartPosition">If a match is detected, the start of the boundary delimiter, 
-        /// i.e., either the start of the leading line feed or of the leading dashes.</param>
+        /// i.e., either the start of the leading line resource set or of the leading dashes.</param>
         /// <param name="boundaryEndPosition">If a match is detected, the position of the boundary end; otherwise -1.</param>
         /// <param name="isEndBoundary">true if the detected boundary is an end boundary; otherwise false.</param>
         /// <returns>An <see cref="ODataBatchReaderStreamScanResult"/> indicating whether a match, a partial match or no match was found.</returns>
@@ -452,8 +452,8 @@ namespace Microsoft.OData.Core
 
                     // Once we could match all the characters and delimiters of the boundary string
                     // (and the optional trailing '--') we now have to continue reading until the next
-                    // line feed that terminates the boundary. Only whitespace characters may exist 
-                    // after the boundary and before the line feed.
+                    // line resource set that terminates the boundary. Only whitespace characters may exist 
+                    // after the boundary and before the line resource set.
                     int terminatingLineResourceSetStartPosition, terminatingLineFeedEndPosition;
                     bool endOfBufferReached;
                     ODataBatchReaderStreamScanResult terminatingLineFeedScanResult =
@@ -475,7 +475,7 @@ namespace Microsoft.OData.Core
                                 {
                                     // If the boundary starts at the first position in the buffer
                                     // and we still could not find the end of it because there are
-                                    // so many whitespaces before the terminating line feed - fail
+                                    // so many whitespaces before the terminating line resource set - fail
                                     // (security limit on the whitespaces)
                                     throw new ODataException(Strings.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(BufferLength));
                                 }
@@ -497,7 +497,7 @@ namespace Microsoft.OData.Core
                             {
                                 // If the boundary starts at the first position in the buffer
                                 // and we still could not find the end of it because there are
-                                // so many whitespaces before the terminating line feed - fail
+                                // so many whitespaces before the terminating line resource set - fail
                                 // (security limit on the whitespaces)
                                 throw new ODataException(Strings.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(BufferLength));
                             }
@@ -507,7 +507,7 @@ namespace Microsoft.OData.Core
                             return ODataBatchReaderStreamScanResult.PartialMatch;
 
                         case ODataBatchReaderStreamScanResult.Match:
-                            // At this point we only found whitespace characters and then the terminating line feed;
+                            // At this point we only found whitespace characters and then the terminating line resource set;
                             // adjust the boundary end position
                             boundaryEndPosition = terminatingLineFeedEndPosition;
                             return ODataBatchReaderStreamScanResult.Match;

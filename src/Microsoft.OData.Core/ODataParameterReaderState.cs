@@ -38,10 +38,10 @@ namespace Microsoft.OData.Core
         /// must be called to get the reader to read the resource value.</remarks>
         Resource,
 
-        /// <summary>The reader is reading a feed parameter.</summary>
+        /// <summary>The reader is reading a resource set parameter.</summary>
         /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateResourceSetReader() method on the <see cref="ODataParameterReader"/>
-        /// must be called to get the reader to read the feed value.</remarks>
+        /// must be called to get the reader to read the resource set value.</remarks>
         ResourceSet,
     }
 }

@@ -65,23 +65,23 @@ namespace AstoriaUnitTests.Tests
         }
 
         [TestMethod]
-        public void ShouldRaiseNavigationLinkStart()
+        public void ShouldRaiseNestedResourceInfoStart()
         {
             this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
             {
-                config.OnNavigationLinkStarted((ReadingNavigationLinkArgs args) => args.Link.Name = "foo");
-                return ODataReaderState.NavigationLinkStart;
+                config.OnNestedResourceInfoStarted((ReadingNestedResourceInfoArgs args) => args.Link.Name = "foo");
+                return ODataReaderState.NestedResourceInfoStart;
             },
             (link) => link.Name.Should().Be("foo"));
         }
 
         [TestMethod]
-        public void ShouldRaiseNavigationLinkEnd()
+        public void ShouldRaiseNestedResourceInfoEnd()
         {
             this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
             {
-                config.OnNavigationLinkEnded((ReadingNavigationLinkArgs args) => args.Link.Name = "foo");
-                return ODataReaderState.NavigationLinkEnd;
+                config.OnNestedResourceInfoEnded((ReadingNestedResourceInfoArgs args) => args.Link.Name = "foo");
+                return ODataReaderState.NestedResourceInfoEnd;
             },
             (link) => link.Name.Should().Be("foo"));
         }
@@ -138,8 +138,8 @@ namespace AstoriaUnitTests.Tests
             responsePipeline.OnEntryStarted(args => results.Add(new KeyValuePair<string, object>("OnEntryStarted", args)));
             responsePipeline.OnFeedStarted(args => results.Add(new KeyValuePair<string, object>("OnFeedStarted", args)));
             responsePipeline.OnFeedEnded(args => results.Add(new KeyValuePair<string, object>("OnFeedEnded", args)));
-            responsePipeline.OnNavigationLinkEnded(args => results.Add(new KeyValuePair<string, object>("OnNavigationLinkEnded", args)));
-            responsePipeline.OnNavigationLinkStarted(args => results.Add(new KeyValuePair<string, object>("OnNavigationLinkStarted", args)));
+            responsePipeline.OnNestedResourceInfoEnded(args => results.Add(new KeyValuePair<string, object>("OnNestedResourceInfoEnded", args)));
+            responsePipeline.OnNestedResourceInfoStarted(args => results.Add(new KeyValuePair<string, object>("OnNestedResourceInfoStarted", args)));
             var odataReaderTracker = ODataReaderWrapper.CreateForTest(odataReader, responsePipeline);
             while (odataReaderTracker.Read()) { }
 
@@ -166,8 +166,8 @@ namespace AstoriaUnitTests.Tests
                     var feedArgs = (ReadingFeedArgs)returnedValue.Value;
                     feedArgs.Feed.Id.Should().Be(expectedValue);
                     break;
-                case "ReadingNavigationLinkArgs":
-                    var navArgs = (ReadingNavigationLinkArgs)returnedValue.Value;
+                case "ReadingNestedResourceInfoArgs":
+                    var navArgs = (ReadingNestedResourceInfoArgs)returnedValue.Value;
                     navArgs.Link.Name.Should().Be(expectedValue);
                     break;
                 default:

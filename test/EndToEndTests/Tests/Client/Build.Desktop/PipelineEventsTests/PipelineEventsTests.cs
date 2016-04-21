@@ -44,7 +44,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 .OnEntryStarted(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingStart)
                 .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryEditLink_ReadingEnd)
                 .OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryAction_Reading)
-                .OnNavigationLinkEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
+                .OnNestedResourceInfoEnded(PipelineEventsTestsHelper.ModifyAssociationLinkUrl_ReadingNavigationLink)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.ModifyPropertyValueCustomer_Materialized);
 
             var entryResultsLinq = contextWrapper.CreateQuery<Customer>("Customer").ToArray();
@@ -505,8 +505,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         {
             // These delegates are invoked when the client sends a single request for AddObject+SetLink
             contextWrapper.Configurations.RequestPipeline
-                .OnNavigationLinkStarting(PipelineEventsTestsHelper.ModifyNavigationLink_WritingStart)
-                .OnNavigationLinkEnding(PipelineEventsTestsHelper.ModifyNavigationLink_WritingEnd)
+                .OnNestedResourceInfoStarting(PipelineEventsTestsHelper.ModifyNavigationLink_WritingStart)
+                .OnNestedResourceInfoEnding(PipelineEventsTestsHelper.ModifyNavigationLink_WritingEnd)
                 .OnEntityReferenceLink(PipelineEventsTestsHelper.ModifyReferenceLink);
 
             Customer customer = PipelineEventsTestsHelper.CreateNewCustomer(400);

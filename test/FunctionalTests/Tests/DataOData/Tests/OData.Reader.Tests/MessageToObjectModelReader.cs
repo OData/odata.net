@@ -759,12 +759,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 AddEntryPayloadOrderItems(entry, payloadOrderItems);
                 if (payloadOrderItems != null)
                 {
-                    payloadOrderItems.AddStartEntry();
+                    payloadOrderItems.AddStartResource();
                 }
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.NavigationLinkStart)
+                    if (reader.State == ODataReaderState.NestedResourceInfoStart)
                     {
                         int positionInProperties = entry.Properties.Count();
 
@@ -814,12 +814,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <returns></returns>
             private ODataNestedResourceInfo ReadNavigationLink(ODataReader reader)
             {
-                this.assert.AreEqual(ODataReaderState.NavigationLinkStart, reader.State, "Reader states don't match.");
+                this.assert.AreEqual(ODataReaderState.NestedResourceInfoStart, reader.State, "Reader states don't match.");
 
                 reader.Read();
 
                 List<ODataItem> expandedItems = new List<ODataItem>();
-                while (reader.State != ODataReaderState.NavigationLinkEnd)
+                while (reader.State != ODataReaderState.NestedResourceInfoEnd)
                 {
                     if (reader.State == ODataReaderState.ResourceStart)
                     {
@@ -857,7 +857,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     reader.Read();
                 }
 
-                this.assert.AreEqual(ODataReaderState.NavigationLinkEnd, reader.State, "Reader states don't match.");
+                this.assert.AreEqual(ODataReaderState.NestedResourceInfoEnd, reader.State, "Reader states don't match.");
 
                 ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)reader.Item;
 

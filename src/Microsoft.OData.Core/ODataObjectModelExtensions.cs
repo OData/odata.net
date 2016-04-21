@@ -57,14 +57,14 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataDeltaWriter"/> for <paramref name="deltaFeed"/>.
+        /// Provide additional serialization information to the <see cref="ODataDeltaWriter"/> for <paramref name="deltaResourceSet"/>.
         /// </summary>
-        /// <param name="deltaFeed">The instance to set the serialization info.</param>
+        /// <param name="deltaResourceSet">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataDeltaResourceSet deltaFeed, ODataDeltaResourceSetSerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataDeltaResourceSet deltaResourceSet, ODataDeltaResourceSetSerializationInfo serializationInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(deltaFeed, "deltaFeed");
-            deltaFeed.SerializationInfo = serializationInfo;
+            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
+            deltaResourceSet.SerializationInfo = serializationInfo;
         }
 
         /// <summary>

@@ -123,14 +123,14 @@ namespace Microsoft.OData.Core
         ///
         /// ODataUndeclaredPropertyBehaviorKind.ReportUndeclaredLinkProperty
         ///   ATOM
-        ///     - Undeclared deferred navigation link will be read and reported.
-        ///     - Undeclared expanded navigation link will fail.
+        ///     - Undeclared deferred nested resource info will be read and reported.
+        ///     - Undeclared expanded nested resource info will fail.
         ///     - Undeclared stream property link (both read and edit) will be read and reported.
         ///     - Undeclared association link will be read and reported.
         ///     - Undeclared properties inside m:properties fail.
         ///   Verbose JSON
         ///     - If an undeclared property is found a detection logic will run:
-        ///       - __deferred value is found - the link will be read and reported as a deferred navigation link.
+        ///       - __deferred value is found - the link will be read and reported as a deferred nested resource info.
         ///       - __mediaresource value is found - the link will be read and reported as a stream property
         ///       - If nothing from the above matches the reading fails.
         ///     - Undeclared association links inside __metadata/properties will be read and reported.
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Core
         /// ODataUndeclaredPropertyBehaviorKind.IgnoreUndeclaredValueProperty
         ///   ATOM
         ///     - Undeclared property inside m:properties is ignored (not even read).
-        ///     - Undeclared navigation link, stream property link or association link fail.
+        ///     - Undeclared nested resource info, stream property link or association link fail.
         ///   Verbose JSON
         ///     - If an undeclared property is found a detection logic will run:
         ///       - __deferred value is found - fail as undeclared deferred nav. link.
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core
         ///     - Undeclared association links inside __metadata/properties fail.
         ///   JSON Light
         ///     - If an undeclared property is found a detection logic will run:
-        ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it (deferred or expanded navigation link)
+        ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it (deferred or expanded nested resource info)
         ///             - fail as undeclared navigation property
         ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' on it and no value
         ///             - fail as undeclared stream property.
@@ -161,23 +161,23 @@ namespace Microsoft.OData.Core
         ///
         /// ODataUndeclaredPropertyBehaviorKind.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKind.IgnoreUndeclaredValueProperty
         ///   ATOM
-        ///     - Undeclared deferred navigation link will be read and reported.
-        ///     - Undeclared expanded navigation link will be read and the navigation link part will be reported,
+        ///     - Undeclared deferred nested resource info will be read and reported.
+        ///     - Undeclared expanded nested resource info will be read and the nested resource info part will be reported,
         ///       the expanded content will be ignored and not read or reported.
         ///     - Undeclared stream property link (both read and edit) will be read and reported.
         ///     - Undeclared association link will be read and reported.
         ///     - Undeclared properties inside m:properties will be ignored and not read.
         ///   Verbose JSON
         ///     - If an undeclared property is found a detection logic will run:
-        ///       - __deferred value is found - read and report a deferred navigation link.
+        ///       - __deferred value is found - read and report a deferred nested resource info.
         ///       - __mediaresource value is found - read and report stream property.
         ///       - All other properties are ignore and not read.
         ///     - Undeclared association links inside __metadata/properties are read and reported.
         ///   JSON Light
         ///     - If an undeclared property is found a detection logic will run:
-        ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it and no value (deferred navigation link)
+        ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it and no value (deferred nested resource info)
         ///             - it will be read as navigation/association link
-        ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it and with value (expanded navigation link)
+        ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it and with value (expanded nested resource info)
         ///             - it will be read, the navigation and association link will be reported and the content will be ignored.
         ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' on it and no value
         ///             - it will be read as a stream property.

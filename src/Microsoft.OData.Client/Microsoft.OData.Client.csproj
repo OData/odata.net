@@ -248,9 +248,9 @@
     <Compile Include="WeakDictionary.cs" />
     <Compile Include="WritingEntityReferenceLinkArgs.cs" />
     <Compile Include="WritingEntryArgs.cs" />
-    <Compile Include="WritingNavigationLinkArgs.cs" />
+    <Compile Include="WritingNestedResourceInfoArgs.cs" />
     <Compile Include="DataServiceClientRequestPipelineConfiguration.cs" />
-    <Compile Include="ReadingNavigationLinkArgs.cs" />
+    <Compile Include="ReadingNestedResourceInfoArgs.cs" />
     <Compile Include="ReadingFeedArgs.cs" />
     <Compile Include="EntityTrackerBase.cs" />
     <Compile Include="Materialization\ODataMaterializerContext.cs" />

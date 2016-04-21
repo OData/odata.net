@@ -89,7 +89,7 @@ namespace Microsoft.OData.Client
         /// <param name="target">The target.</param>
         internal void WriteEnd(ODataNestedResourceInfo navlink, object source, object target)
         {
-            this.requestPipeline.ExecuteOnNavigationLinkEndActions(navlink, source, target);
+            this.requestPipeline.ExecuteOnNestedResourceInfoEndActions(navlink, source, target);
             this.odataWriter.WriteEnd();
         }
 
@@ -99,15 +99,15 @@ namespace Microsoft.OData.Client
         /// <param name="navlink">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void WriteNavigationLinkEnd(ODataNestedResourceInfo navlink, object source, object target)
+        internal void WriteNestedResourceInfoEnd(ODataNestedResourceInfo navlink, object source, object target)
         {
-            this.requestPipeline.ExecuteOnNavigationLinkEndActions(navlink, source, target);
+            this.requestPipeline.ExecuteOnNestedResourceInfoEndActions(navlink, source, target);
         }
 
         /// <summary>
         /// Writes the navigation link end.
         /// </summary>
-        internal void WriteNavigationLinksEnd()
+        internal void WriteNestedResourceInfosEnd()
         {
             this.odataWriter.WriteEnd();
         }
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client
         /// <param name="target">The target.</param>
         internal void WriteStart(ODataNestedResourceInfo navigationLink, object source, object target)
         {
-            this.requestPipeline.ExecuteOnNavigationLinkStartActions(navigationLink, source, target);
+            this.requestPipeline.ExecuteOnNestedResourceInfoStartActions(navigationLink, source, target);
             this.odataWriter.WriteStart(navigationLink);
         }
 
@@ -130,16 +130,16 @@ namespace Microsoft.OData.Client
         /// <param name="navigationLink">The navigation link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void WriteNavigationLinkStart(ODataNestedResourceInfo navigationLink, object source, object target)
+        internal void WriteNestedResourceInfoStart(ODataNestedResourceInfo navigationLink, object source, object target)
         {
-            this.requestPipeline.ExecuteOnNavigationLinkStartActions(navigationLink, source, target);
+            this.requestPipeline.ExecuteOnNestedResourceInfoStartActions(navigationLink, source, target);
         }
 
         /// <summary>
         /// Writes the start for a collection of navigation links.
         /// </summary>
         /// <param name="navigationLink">The navigation link.</param>
-        internal void WriteNavigationLinksStart(ODataNestedResourceInfo navigationLink)
+        internal void WriteNestedResourceInfosStart(ODataNestedResourceInfo navigationLink)
         {
             this.odataWriter.WriteStart(navigationLink);
         }

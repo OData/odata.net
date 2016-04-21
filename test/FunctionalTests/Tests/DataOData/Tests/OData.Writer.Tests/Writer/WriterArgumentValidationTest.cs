@@ -33,7 +33,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataEntry) method")]
-        public void WriteStartEntryTest()
+        public void WriteStartResourceTest()
         {
             ForWriters(false, (writer) =>
             {

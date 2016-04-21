@@ -36,9 +36,9 @@ namespace Microsoft.OData.Core
         private readonly bool disabled;
 
 #if DEBUG
-        /// <summary>Name of the navigation link for which we were asked to check duplication on its start.</summary>
-        /// <remarks>If this is set, the next call must be a real check for the same navigation link.</remarks>
-        private string startNavigationLinkName;
+        /// <summary>Name of the nested resource info for which we were asked to check duplication on its start.</summary>
+        /// <remarks>If this is set, the next call must be a real check for the same nested resource info.</remarks>
+        private string startNestedResourceInfoName;
 #endif
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core
 
             Debug.Assert(property != null, "property != null");
 #if DEBUG
-            Debug.Assert(this.startNavigationLinkName == null, "CheckForDuplicatePropertyNamesOnNavigationLinkStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
+            Debug.Assert(this.startNestedResourceInfoName == null, "CheckForDuplicatePropertyNamesOnNestedResourceInfoStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
 #endif
 
             string propertyName = property.Name;
@@ -139,73 +139,73 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Checks the <paramref name="navigationLink"/> for duplicate property names in a resource when the navigation link
+        /// Checks the <paramref name="nestedResourceInfo"/> for duplicate property names in a resource when the nested resource info
         /// has started but we don't know yet if it's expanded or not.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to be checked.</param>
-        internal void CheckForDuplicatePropertyNamesOnNavigationLinkStart(ODataNestedResourceInfo navigationLink)
+        /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
+        internal void CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(ODataNestedResourceInfo nestedResourceInfo)
         {
             if (this.disabled)
             {
                 return;
             }
 
-            Debug.Assert(navigationLink != null, "navigationLink != null");
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 #if DEBUG
-            this.startNavigationLinkName = navigationLink.Name;
+            this.startNestedResourceInfoName = nestedResourceInfo.Name;
 #endif
 
             // Just check for duplication without modifying anything in the caches - this is to allow callers to choose whether they want to call this method first
             // or just call the CheckForDuplicatePropertyNames(ODataNestedResourceInfo) directly.
-            string propertyName = navigationLink.Name;
+            string propertyName = nestedResourceInfo.Name;
             DuplicationRecord existingDuplicationRecord;
             if (this.propertyNameCache != null && this.propertyNameCache.TryGetValue(propertyName, out existingDuplicationRecord))
             {
-                this.CheckNavigationLinkDuplicateNameForExistingDuplicationRecord(propertyName, existingDuplicationRecord);
+                this.CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(propertyName, existingDuplicationRecord);
             }
         }
 
         /// <summary>
-        /// Check the <paramref name="navigationLink"/> for duplicate property names in a resource or complex value.
+        /// Check the <paramref name="nestedResourceInfo"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
         /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames 
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to be checked.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
         /// <param name="isExpanded">true if the link is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the navigation link is a collection, false if it's a singleton or null if we don't know.</param>
+        /// <param name="isCollection">true if the nested resource info is a collection, false if it's a singleton or null if we don't know.</param>
         /// <returns>The association link uri with the same name if there already was one.</returns>
-        internal Uri CheckForDuplicatePropertyNames(ODataNestedResourceInfo navigationLink, bool isExpanded, bool? isCollection)
+        internal Uri CheckForDuplicatePropertyNames(ODataNestedResourceInfo nestedResourceInfo, bool isExpanded, bool? isCollection)
         {
             if (this.disabled)
             {
                 return null;
             }
 #if DEBUG
-            this.startNavigationLinkName = null;
+            this.startNestedResourceInfoName = null;
 #endif
 
-            string propertyName = navigationLink.Name;
+            string propertyName = nestedResourceInfo.Name;
             DuplicationRecord existingDuplicationRecord;
             if (!this.TryGetDuplicationRecord(propertyName, out existingDuplicationRecord))
             {
                 DuplicationRecord duplicationRecord = new DuplicationRecord(DuplicationKind.NavigationProperty);
-                ApplyNavigationLinkToDuplicationRecord(duplicationRecord, navigationLink, isExpanded, isCollection);
+                ApplyNestedResourceInfoToDuplicationRecord(duplicationRecord, nestedResourceInfo, isExpanded, isCollection);
                 this.propertyNameCache.Add(propertyName, duplicationRecord);
                 return null;
             }
             else
             {
                 // First check for duplication without expansion knowledge.
-                this.CheckNavigationLinkDuplicateNameForExistingDuplicationRecord(propertyName, existingDuplicationRecord);
+                this.CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(propertyName, existingDuplicationRecord);
 
                 if (existingDuplicationRecord.DuplicationKind == DuplicationKind.PropertyAnnotationSeen ||
                     (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty &&
                     existingDuplicationRecord.AssociationLinkName != null &&
-                    existingDuplicationRecord.NavigationLink == null))
+                    existingDuplicationRecord.NestedResourceInfo == null))
                 {
-                    // If the existing one is just an association link, update it to include the navigation link portion as well
-                    ApplyNavigationLinkToDuplicationRecord(existingDuplicationRecord, navigationLink, isExpanded, isCollection);
+                    // If the existing one is just an association link, update it to include the nested resource info portion as well
+                    ApplyNestedResourceInfoToDuplicationRecord(existingDuplicationRecord, nestedResourceInfo, isExpanded, isCollection);
                 }
                 else if (this.allowDuplicateProperties)
                 {
@@ -215,13 +215,13 @@ namespace Microsoft.OData.Core
 
                     // If the configuration explicitly allows duplication, then just turn the existing property into a nav link with all the information we have
                     existingDuplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
-                    ApplyNavigationLinkToDuplicationRecord(existingDuplicationRecord, navigationLink, isExpanded, isCollection);
+                    ApplyNestedResourceInfoToDuplicationRecord(existingDuplicationRecord, nestedResourceInfo, isExpanded, isCollection);
                 }
                 else
                 {
                     // We've found two navigation links in a request
                     Debug.Assert(
-                        existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.NavigationLink != null && !this.isResponse,
+                        existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.NestedResourceInfo != null && !this.isResponse,
                         "We can only get here if we've found two navigation links in a request.");
 
                     bool? isCollectionEffectiveValue = GetIsCollectionEffectiveValue(isExpanded, isCollection);
@@ -263,7 +263,7 @@ namespace Microsoft.OData.Core
 
             Debug.Assert(associationLinkName != null, "associationLinkName != null");
 #if DEBUG
-            Debug.Assert(this.startNavigationLinkName == null, "CheckForDuplicatePropertyNamesOnNavigationLinkStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
+            Debug.Assert(this.startNestedResourceInfoName == null, "CheckForDuplicatePropertyNamesOnNestedResourceInfoStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
 #endif
 
             DuplicationRecord existingDuplicationRecord;
@@ -297,7 +297,7 @@ namespace Microsoft.OData.Core
                     throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(associationLinkName));
                 }
 
-                return existingDuplicationRecord.NavigationLink;
+                return existingDuplicationRecord.NestedResourceInfo;
             }
         }
 
@@ -478,8 +478,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Determines the effective value for the isCollection flag.
         /// </summary>
-        /// <param name="isExpanded">true if the navigation link is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the navigation link is marked as collection, false if it's marked as singletong or null if we don't know.</param>
+        /// <param name="isExpanded">true if the nested resource info is expanded, false otherwise.</param>
+        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singletong or null if we don't know.</param>
         /// <returns>The effective value of the isCollection flag. Note that we can't rely on singleton links which are not expanded since
         /// those can appear even in cases where the actual navigation property is a collection.
         /// We allow singleton deferred links for collection properties in requests, as that is one way of expressing a bind operation.</returns>
@@ -489,16 +489,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Sets the properties on a duplication record for a navigation link.
+        /// Sets the properties on a duplication record for a nested resource info.
         /// </summary>
         /// <param name="duplicationRecord">The duplication record to modify.</param>
-        /// <param name="navigationLink">The navigation link found for this property.</param>
-        /// <param name="isExpanded">true if the navigation link is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the navigation link is marked as collection, false if it's marked as singletong or null if we don't know.</param>
-        private static void ApplyNavigationLinkToDuplicationRecord(DuplicationRecord duplicationRecord, ODataNestedResourceInfo navigationLink, bool isExpanded, bool? isCollection)
+        /// <param name="nestedResourceInfo">The nested resource info found for this property.</param>
+        /// <param name="isExpanded">true if the nested resource info is expanded, false otherwise.</param>
+        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singletong or null if we don't know.</param>
+        private static void ApplyNestedResourceInfoToDuplicationRecord(DuplicationRecord duplicationRecord, ODataNestedResourceInfo nestedResourceInfo, bool isExpanded, bool? isCollection)
         {
             duplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
-            duplicationRecord.NavigationLink = navigationLink;
+            duplicationRecord.NestedResourceInfo = nestedResourceInfo;
 
             // We only take the cardinality of the link for granted if it was expanded or if it is a collection.
             // We can't rely on singleton deferred links to know the cardinality since they can be used for binding even if the actual link is a collection.
@@ -525,16 +525,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Checks for duplication of a navigation link against an existing duplication record.
+        /// Checks for duplication of a nested resource info against an existing duplication record.
         /// </summary>
-        /// <param name="propertyName">The name of the navigation link.</param>
+        /// <param name="propertyName">The name of the nested resource info.</param>
         /// <param name="existingDuplicationRecord">The existing duplication record.</param>
         /// <remarks>This only performs checks possible without the knowledge of whether the link was expanded or not.</remarks>
-        private void CheckNavigationLinkDuplicateNameForExistingDuplicationRecord(string propertyName, DuplicationRecord existingDuplicationRecord)
+        private void CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(string propertyName, DuplicationRecord existingDuplicationRecord)
         {
             if (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty &&
                 existingDuplicationRecord.AssociationLinkUrl != null &&
-                existingDuplicationRecord.NavigationLink == null)
+                existingDuplicationRecord.NestedResourceInfo == null)
             {
                 // Existing one is just an association link, so the new one is a navigation link portion which is OK always.
             }
@@ -597,9 +597,9 @@ namespace Microsoft.OData.Core
             public DuplicationKind DuplicationKind { get; set; }
 
             /// <summary>
-            /// The navigation link if it was already found for this property.
+            /// The nested resource info if it was already found for this property.
             /// </summary>
-            public ODataNestedResourceInfo NavigationLink { get; set; }
+            public ODataNestedResourceInfo NestedResourceInfo { get; set; }
 
             /// <summary>
             /// The association link name if it was already found for this property.

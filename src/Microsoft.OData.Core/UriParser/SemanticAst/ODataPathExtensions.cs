@@ -48,7 +48,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Computes whether or not the resource identified by this <see cref="ODataPath"/> is a collection.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
-        /// <returns>True if the resource if a feed or collection of primitive or complex types. False otherwise.</returns>
+        /// <returns>True if the resource if a resource set or collection of primitive or complex types. False otherwise.</returns>
         public static bool IsCollection(this ODataPath path)
         {
             return path.LastSegment.TranslateWith(new IsCollectionTranslator());

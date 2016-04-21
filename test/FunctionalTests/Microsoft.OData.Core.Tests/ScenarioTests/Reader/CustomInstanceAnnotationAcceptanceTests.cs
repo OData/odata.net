@@ -198,8 +198,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                         case ODataReaderState.ResourceSetEnd:
                             odataReader.Item.As<ODataResourceSet>().InstanceAnnotations.Should().BeEmpty();
                             break;
-                        case ODataReaderState.NavigationLinkStart:
-                        case ODataReaderState.NavigationLinkEnd:
+                        case ODataReaderState.NestedResourceInfoStart:
+                        case ODataReaderState.NestedResourceInfoEnd:
                             break;
                         case ODataReaderState.ResourceStart:
                         case ODataReaderState.ResourceEnd:
@@ -272,7 +272,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
 
                             odataItems.Pop();
                             break;
-                        case ODataReaderState.NavigationLinkStart:
+                        case ODataReaderState.NestedResourceInfoStart:
                             ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)odataReader.Item;
                             if (navigationLink.Name == "ResourceSetNavigationProperty")
                             {
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                             }
 
                             break;
-                        case ODataReaderState.NavigationLinkEnd:
+                        case ODataReaderState.NestedResourceInfoEnd:
                             break;
                         case ODataReaderState.ResourceStart:
                             odataItems.Push(odataReader.Item);

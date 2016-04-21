@@ -777,7 +777,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteStart(ordersNavigationLink);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty("DeltaFeed", "ExpandedNavigationProperty"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty("DeltaResourceSet", "ExpandedNavigationProperty"));
         }
 
         [Fact]
@@ -811,7 +811,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaEntry"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaResource"));
         }
 
         [Fact]
@@ -826,7 +826,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaFeed"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaResourceSet"));
         }
 
         [Fact]

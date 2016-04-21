@@ -30,8 +30,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             dataServiceContext.Configurations.RequestPipeline.OnEntityReferenceLink((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntityReferenceLink", args)));
             dataServiceContext.Configurations.RequestPipeline.OnEntryEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryEnded", args)));
             dataServiceContext.Configurations.RequestPipeline.OnEntryStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnEntryStarted", args)));
-            dataServiceContext.Configurations.RequestPipeline.OnNavigationLinkEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNavigationLinkEnded", args)));
-            dataServiceContext.Configurations.RequestPipeline.OnNavigationLinkStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNavigationLinkStarted", args)));
+            dataServiceContext.Configurations.RequestPipeline.OnNestedResourceInfoEnding((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNestedResourceInfoEnded", args)));
+            dataServiceContext.Configurations.RequestPipeline.OnNestedResourceInfoStarting((args) => eventArgsCalled.Add(new KeyValuePair<string, object>("OnNestedResourceInfoStarted", args)));
 
             Person person = SetupSerializerAndCallWriteEntry(dataServiceContext);
 
@@ -39,18 +39,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             eventArgsCalled[0].Key.Should().Be("OnEntryStarted");
             eventArgsCalled[0].Value.Should().BeOfType<WritingEntryArgs>();
             eventArgsCalled[0].Value.As<WritingEntryArgs>().Entity.Should().BeSameAs(person);
-            eventArgsCalled[1].Key.Should().Be("OnNavigationLinkStarted");
-            eventArgsCalled[1].Value.Should().BeOfType<WritingNavigationLinkArgs>();
+            eventArgsCalled[1].Key.Should().Be("OnNestedResourceInfoStarted");
+            eventArgsCalled[1].Value.Should().BeOfType<WritingNestedResourceInfoArgs>();
             eventArgsCalled[2].Key.Should().Be("OnEntityReferenceLink");
             eventArgsCalled[2].Value.Should().BeOfType<WritingEntityReferenceLinkArgs>();
-            eventArgsCalled[3].Key.Should().Be("OnNavigationLinkEnded");
-            eventArgsCalled[3].Value.Should().BeOfType<WritingNavigationLinkArgs>();
-            eventArgsCalled[4].Key.Should().Be("OnNavigationLinkStarted");
-            eventArgsCalled[4].Value.Should().BeOfType<WritingNavigationLinkArgs>();
+            eventArgsCalled[3].Key.Should().Be("OnNestedResourceInfoEnded");
+            eventArgsCalled[3].Value.Should().BeOfType<WritingNestedResourceInfoArgs>();
+            eventArgsCalled[4].Key.Should().Be("OnNestedResourceInfoStarted");
+            eventArgsCalled[4].Value.Should().BeOfType<WritingNestedResourceInfoArgs>();
             eventArgsCalled[5].Key.Should().Be("OnEntityReferenceLink");
             eventArgsCalled[5].Value.Should().BeOfType<WritingEntityReferenceLinkArgs>();
-            eventArgsCalled[6].Key.Should().Be("OnNavigationLinkEnded");
-            eventArgsCalled[6].Value.Should().BeOfType<WritingNavigationLinkArgs>();
+            eventArgsCalled[6].Key.Should().Be("OnNestedResourceInfoEnded");
+            eventArgsCalled[6].Value.Should().BeOfType<WritingNestedResourceInfoArgs>();
             eventArgsCalled[7].Key.Should().Be("OnEntryEnded");
             eventArgsCalled[7].Value.Should().BeOfType<WritingEntryArgs>();
             eventArgsCalled[7].Value.As<WritingEntryArgs>().Entity.Should().BeSameAs(person);
@@ -143,7 +143,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             ODataNestedResourceInfo link = new ODataNestedResourceInfo();
             var wrappedWriter = this.SetupTestActionExecuted((context, requestPipeline) =>
             {
-                requestPipeline.OnNavigationLinkStarting((args) =>
+                requestPipeline.OnNestedResourceInfoStarting((args) =>
                 {
                     args.Source.Should().BeSameAs(p);
                     args.Target.Should().BeSameAs(a);
@@ -163,7 +163,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             ODataNestedResourceInfo link = new ODataNestedResourceInfo();
             var wrappedWriter = this.SetupTestActionExecuted((context, requestPipeline) =>
             {
-                requestPipeline.OnNavigationLinkEnding((args) =>
+                requestPipeline.OnNestedResourceInfoEnding((args) =>
                 {
                     args.Source.Should().BeSameAs(p);
                     args.Target.Should().BeSameAs(a);

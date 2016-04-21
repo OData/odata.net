@@ -192,9 +192,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Create ODataContextUrlInfo from ODataFeedAndEntryTypeContext
+        /// Create ODataContextUrlInfo from ODataResourceTypeContext
         /// </summary>
-        /// <param name="typeContext">The ODataFeedAndEntryTypeContext to be used.</param>
+        /// <param name="typeContext">The ODataResourceTypeContext to be used.</param>
         /// <param name="isSingle">Whether target is single item.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Create contextUrlInfo for delta
         /// </summary>
-        /// <param name="typeContext">The ODataFeedAndEntryTypeContext to be used.</param>
+        /// <param name="typeContext">The ODataResourceTypeContext to be used.</param>
         /// <param name="kind">The delta kind.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
@@ -237,7 +237,7 @@ namespace Microsoft.OData.Core
             };
 
             // Only use odata uri in with model case.
-            if (typeContext is ODataResourceTypeContext.ODataFeedAndEntryTypeContextWithModel)
+            if (typeContext is ODataResourceTypeContext.ODataResourceTypeContextWithModel)
             {
                 contextUriInfo.odataUri = odataUri;
             }

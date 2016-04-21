@@ -121,13 +121,13 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="navigationPropertyName">The name of the navigation property to get the navigation link URI for.</param>
         /// <param name="navigationLinkUrl">The value of the link URI as seen on the wire or provided explicitly by the user or previously returned by the metadata builder, which may be null.</param>
-        /// <param name="hasNavigationLinkUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
+        /// <param name="hasNestedResourceInfoUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
         /// the metadata builder, false otherwise. This flag allows the metadata builder to determine whether a null navigation link url is an uninitialized value or a value that was set explicitly.</param>
         /// <returns>
         /// The navigation link URI for the navigation property.
         /// null if its not possible to determine the navigation link for the specified navigation property.
         /// </returns>
-        internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNavigationLinkUrl)
+        internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNestedResourceInfoUrl)
         {
             return navigationLinkUrl;
         }

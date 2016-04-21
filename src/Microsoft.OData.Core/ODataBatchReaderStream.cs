@@ -502,9 +502,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Reads a line (all bytes until a line feed) from the underlying stream.
+        /// Reads a line (all bytes until a line resource set) from the underlying stream.
         /// </summary>
-        /// <returns>Returns the string that was read from the underyling stream (not including a terminating line feed), or null if the end of input was reached.</returns>
+        /// <returns>Returns the string that was read from the underyling stream (not including a terminating line resource set), or null if the end of input was reached.</returns>
         private string ReadLine()
         {
             Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");

@@ -735,8 +735,8 @@ namespace AstoriaUnitTests.Tests
             private static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> writeEntryStart = new test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>>();
             public static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> WriteEntryStart { get { return writeEntryStart; } }
 
-            private static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> writeLinkStart = new test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>>();
-            public static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> WriteLinkStart { get { return writeLinkStart; } }
+            private static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> writeLinkStart = new test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>>();
+            public static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> WriteLinkStart { get { return writeLinkStart; } }
 
             private static test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>> writeFeedEnd = new test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>>();
             public static test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>> WriteFeedEnd { get { return writeFeedEnd; } }
@@ -744,8 +744,8 @@ namespace AstoriaUnitTests.Tests
             private static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> writeEntryEnd = new test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>>();
             public static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> WriteEntryEnd { get { return writeEntryEnd; } }
 
-            private static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> writeLinkEnd = new test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>>();
-            public static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> WriteLinkEnd { get { return writeLinkEnd; } }
+            private static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> writeLinkEnd = new test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>>();
+            public static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> WriteLinkEnd { get { return writeLinkEnd; } }
 
             private static test.Restorable<Func<bool>> writeEnd = new test.Restorable<Func<bool>>();
             public static test.Restorable<Func<bool>> WriteEndDelegate { get { return writeEnd; } }
@@ -777,7 +777,7 @@ namespace AstoriaUnitTests.Tests
                 base.WriteStart(args);
             }
 
-            public override void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
+            public override void WriteStart(DataServiceODataWriterNestedResourceInfoArgs args)
             {
                 if (WriteLinkStart.Value != null)
                 {
@@ -817,7 +817,7 @@ namespace AstoriaUnitTests.Tests
                 base.WriteEnd(args);
             }
 
-            public override void WriteEnd(DataServiceODataWriterNavigationLinkArgs args)
+            public override void WriteEnd(DataServiceODataWriterNestedResourceInfoArgs args)
             {
                 if (WriteLinkEnd.Value != null)
                 {

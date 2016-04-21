@@ -23,8 +23,8 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataWriterCore.DuplicatePropertyNamesChecker.</summary>
         ODataWriterCore_DuplicatePropertyNamesChecker,
 
-        /// <summary>Unreachable codepath in ODataWriterCore.ParentNavigationLinkScope.</summary>
-        ODataWriterCore_ParentNavigationLinkScope,
+        /// <summary>Unreachable codepath in ODataWriterCore.ParentNestedResourceInfoScope.</summary>
+        ODataWriterCore_ParentNestedResourceInfoScope,
 
         /// <summary>Unreachable codepath in ODataUtils.VersionString</summary>
         ODataUtils_VersionString_UnreachableCodePath,

@@ -335,9 +335,9 @@ namespace Microsoft.OData.Client.Materialization
 
                     switch (this.reader.State)
                     {
-                        case ODataReaderState.NavigationLinkStart:
+                        case ODataReaderState.NestedResourceInfoStart:
                             // Cache the list of navigation links here but don't add them to the entry because all of the key properties may not be available yet.
-                            navigationLinks.Add(this.ReadNavigationLink());
+                            navigationLinks.Add(this.ReadNestedResourceInfo());
                             break;
                         case ODataReaderState.ResourceEnd:
                             break;
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client.Materialization
             // Add the navigation links here now that all of the property values have been read and are available to build the links.
             foreach (ODataNestedResourceInfo navigationLink in navigationLinks)
             {
-                entry.AddNavigationLink(navigationLink);
+                entry.AddNestedResourceInfo(navigationLink);
             }
 
             return entry;
@@ -371,9 +371,9 @@ namespace Microsoft.OData.Client.Materialization
         /// Reads a navigation link.
         /// </summary>
         /// <returns>A navigation link.</returns>
-        private ODataNestedResourceInfo ReadNavigationLink()
+        private ODataNestedResourceInfo ReadNestedResourceInfo()
         {
-            Debug.Assert(this.reader.State == ODataReaderState.NavigationLinkStart, "this.reader.State == ODataReaderState.NavigationLinkStart");
+            Debug.Assert(this.reader.State == ODataReaderState.NestedResourceInfoStart, "this.reader.State == ODataReaderState.NestedResourceInfoStart");
 
             ODataNestedResourceInfo link = (ODataNestedResourceInfo)this.reader.Item;
 
@@ -391,10 +391,10 @@ namespace Microsoft.OData.Client.Materialization
                     MaterializerNavigationLink.CreateLink(link, entry);
                 }
 
-                this.ReadAndExpectState(ODataReaderState.NavigationLinkEnd);
+                this.ReadAndExpectState(ODataReaderState.NestedResourceInfoEnd);
             }
 
-            this.ExpectState(ODataReaderState.NavigationLinkEnd);
+            this.ExpectState(ODataReaderState.NestedResourceInfoEnd);
 
             return link;
         }

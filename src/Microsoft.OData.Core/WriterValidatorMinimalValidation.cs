@@ -93,8 +93,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates an <see cref="ODataResourceSet"/> to ensure all required information is specified and valid on the WriteEnd call.
         /// </summary>
-        /// <param name="resourceSet">The feed to validate.</param>
-        /// <param name="writingRequest">Flag indicating whether the feed is written as part of a request or a response.</param>
+        /// <param name="resourceSet">The resource set to validate.</param>
+        /// <param name="writingRequest">Flag indicating whether the resource set is written as part of a request or a response.</param>
         public void ValidateResourceSetAtEnd(ODataResourceSet resourceSet, bool writingRequest)
         {
         }
@@ -155,31 +155,23 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
-        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this navigation link or null for deferred links.</param>
-        /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
-        public IEdmNavigationProperty ValidateNavigationLink(
-            ODataNestedResourceInfo navigationLink,
+        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
+        public IEdmNavigationProperty ValidateNestedResourceInfo(
+            ODataNestedResourceInfo nestedResourceInfo,
             IEdmEntityType declaringEntityType,
             ODataPayloadKind? expandedPayloadKind)
         {
-            return declaringEntityType == null ? null : declaringEntityType.FindProperty(navigationLink.Name) as IEdmNavigationProperty;
+            return declaringEntityType == null ? null : declaringEntityType.FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
         }
 
         /// <summary>
-        /// Validates that the specified navigation link has a Url.
+        /// Validates that the sepcified nested resource info has cardinality, that is it has the IsCollection value set.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
-        public void ValidateNavigationLinkUrlPresent(ODataNestedResourceInfo navigationLink)
-        {
-        }
-
-        /// <summary>
-        /// Validates that the sepcified navigation link has cardinality, that is it has the IsCollection value set.
-        /// </summary>
-        /// <param name="navigationLink">The navigation link to validate.</param>
-        public void ValidateNavigationLinkHasCardinality(ODataNestedResourceInfo navigationLink)
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
+        public void ValidateNestedResourceInfoHasCardinality(ODataNestedResourceInfo nestedResourceInfo)
         {
         }
 

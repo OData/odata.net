@@ -726,7 +726,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 {
                                     entries.Add(reader.Item as ODataResource);
                                 }
-                                else if (reader.State == ODataReaderState.NavigationLinkEnd)
+                                else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
                                 {
                                     navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
                                 }
@@ -775,7 +775,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 {
                                     entries.Add(reader.Item as ODataResource);
                                 }
-                                else if (reader.State == ODataReaderState.NavigationLinkEnd)
+                                else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
                                 {
                                     navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
                                 }

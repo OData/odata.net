@@ -75,11 +75,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Adds an item representing the end of the StartEntry state.
+        /// Adds an item representing the end of the StartResource state.
         /// </summary>
-        public void AddStartEntry()
+        public void AddStartResource()
         {
-            this.AddItem("__StartEntry__");
+            this.AddItem("__StartResource__");
         }
 
         /// <summary>

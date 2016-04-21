@@ -235,7 +235,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 var entryWriter = this.messageWriter.CreateODataResourceWriter();
                 return new ODataWriterTestWrapper(entryWriter, testConfiguration);
 #else
-                return this.messageWriter.CreateODataEntryWriterAsync().ContinueWith(
+                return this.messageWriter.CreateODataResourceWriterAsync().ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -260,7 +260,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 var entryWriter = this.messageWriter.CreateODataResourceWriter(entitySet);
                 return new ODataWriterTestWrapper(entryWriter, testConfiguration);
 #else
-                return this.messageWriter.CreateODataEntryWriterAsync(entitySet).ContinueWith(
+                return this.messageWriter.CreateODataResourceWriterAsync(entitySet).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -286,7 +286,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 var entryWriter = this.messageWriter.CreateODataResourceWriter(entitySet, entityType);
                 return new ODataWriterTestWrapper(entryWriter, testConfiguration);
 #else
-                return this.messageWriter.CreateODataEntryWriterAsync(entitySet, entityType).ContinueWith(
+                return this.messageWriter.CreateODataResourceWriterAsync(entitySet, entityType).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();

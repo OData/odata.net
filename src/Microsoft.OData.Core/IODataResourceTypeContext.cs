@@ -10,30 +10,30 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Interface used for substitutability, to answer basic questions regarding the type of the resource or feed.
-    /// Metadata may come from a user-provided model or from the SetSerializationInfo() method on a feed or resource. The latter is considered the "no-model" case since only strings
-    /// are provided, and there is no interconnectedness.  The goal of this interface is to provide a way to query the metadata information available on a resource or feed without
+    /// Interface used for substitutability, to answer basic questions regarding the type of the resource or resource set.
+    /// Metadata may come from a user-provided model or from the SetSerializationInfo() method on a resource set or resource. The latter is considered the "no-model" case since only strings
+    /// are provided, and there is no interconnectedness.  The goal of this interface is to provide a way to query the metadata information available on a resource or resource set without
     /// needing to know where the metadata originated from.
     /// </summary>
     internal interface IODataResourceTypeContext
     {
         /// <summary>
-        /// The navigation source name of the feed or resource.
+        /// The navigation source name of the resource set or resource.
         /// </summary>
         string NavigationSourceName { get; }
 
         /// <summary>
-        /// The entity type name of the navigation source of the feed or resource.
+        /// The entity type name of the navigation source of the resource set or resource.
         /// </summary>
         string NavigationSourceEntityTypeName { get; }
 
         /// <summary>
-        /// The full type name of the navigation source of the feed or resource.
+        /// The full type name of the navigation source of the resource set or resource.
         /// </summary>
         string NavigationSourceFullTypeName { get; }
 
         /// <summary>
-        /// The kind of the navigation source of the feed or resource.
+        /// The kind of the navigation source of the resource set or resource.
         /// </summary>
         EdmNavigationSourceKind NavigationSourceKind { get; }
 

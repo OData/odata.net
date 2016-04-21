@@ -126,7 +126,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
 
                             break;
 
-                        case ODataReaderState.NavigationLinkStart:
+                        case ODataReaderState.NestedResourceInfoStart:
                             {
                                 odataItemStack.Push(entryReader.Item);
                                 var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
@@ -138,7 +138,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
 
                             break;
 
-                        case ODataReaderState.NavigationLinkEnd:
+                        case ODataReaderState.NestedResourceInfoEnd:
                             {
                                 var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
                                 var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();

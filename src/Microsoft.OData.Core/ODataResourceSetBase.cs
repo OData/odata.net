@@ -28,16 +28,16 @@ namespace Microsoft.OData.Core
         /// </summary>
         private Uri deltaLink;
 
-        /// <summary>Gets or sets the number of items in the feed.</summary>
-        /// <returns>The number of items in the feed.</returns>
+        /// <summary>Gets or sets the number of items in the resource set.</summary>
+        /// <returns>The number of items in the resource set.</returns>
         public long? Count 
         { 
             get; 
             set; 
         }
 
-        /// <summary>Gets or sets the URI that identifies the entity set represented by the feed.</summary>
-        /// <returns>The URI that identifies the entity set represented by the feed.</returns>
+        /// <summary>Gets or sets the URI that identifies the entity set represented by the resource set.</summary>
+        /// <returns>The URI that identifies the entity set represented by the resource set.</returns>
         public Uri Id
         {
             get;

@@ -156,22 +156,22 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected override ODataWriter CreateFormatEntryWriter(string parameterName, IEdmTypeReference expectedItemType)
+        protected override ODataWriter CreateFormatResourceWriter(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
-            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a feed.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected override ODataWriter CreateFormatFeedWriter(string parameterName, IEdmTypeReference expectedItemType)
+        protected override ODataWriter CreateFormatResourceSetWriter(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
-            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
     }
 }

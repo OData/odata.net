@@ -327,7 +327,7 @@ namespace Microsoft.OData.Client
 
                 if (EntityStates.Added == entityDescriptor.State)
                 {
-                    this.WriteNavigationLink(entityDescriptor, relatedLinks, entryWriter);
+                    this.WriteNestedResourceInfo(entityDescriptor, relatedLinks, entryWriter);
                 }
 
                 entryWriter.WriteEnd(entry, entityDescriptor.Entity);
@@ -340,7 +340,7 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">The entity</param>
         /// <param name="relatedLinks">The links related to the entity</param>
         /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
-        internal void WriteNavigationLink(EntityDescriptor entityDescriptor, IEnumerable<LinkDescriptor> relatedLinks, ODataWriterWrapper odataWriter)
+        internal void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, IEnumerable<LinkDescriptor> relatedLinks, ODataWriterWrapper odataWriter)
         {
             // TODO: create instance of odatawriter.
             // TODO: send clientType once, so that we dont need entity descriptor
@@ -386,16 +386,16 @@ namespace Microsoft.OData.Client
 
                     if (!started)
                     {
-                        odataWriter.WriteNavigationLinksStart(navigationLink);
+                        odataWriter.WriteNestedResourceInfosStart(navigationLink);
                         started = true;
                     }
 
-                    odataWriter.WriteNavigationLinkStart(navigationLink, end.Source, end.Target);
+                    odataWriter.WriteNestedResourceInfoStart(navigationLink, end.Source, end.Target);
                     odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink() { Url = navigationLink.Url }, end.Source, end.Target);
-                    odataWriter.WriteNavigationLinkEnd(navigationLink, end.Source, end.Target);
+                    odataWriter.WriteNestedResourceInfoEnd(navigationLink, end.Source, end.Target);
                 }
 
-                odataWriter.WriteNavigationLinksEnd();
+                odataWriter.WriteNestedResourceInfosEnd();
             }
         }
 

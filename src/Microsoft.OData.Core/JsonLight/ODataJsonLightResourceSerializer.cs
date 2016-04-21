@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// OData JsonLight serializer for entries and feeds.
+    /// OData JsonLight serializer for entries and resource sets.
     /// </summary>
     internal sealed class ODataJsonLightResourceSerializer : ODataJsonLightPropertySerializer
     {
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// This method will only write properties which were not written yet.
         /// </remarks>
-        internal void WriteEntryMetadataProperties(IODataJsonLightWriterResourceState resourceState)
+        internal void WriteResourceMetadataProperties(IODataJsonLightWriterResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate names checker for properties of this resource.</param>
-        internal void WriteEntryEndMetadataProperties(IODataJsonLightWriterResourceState resourceState, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal void WriteResourceEndMetadataProperties(IODataJsonLightWriterResourceState resourceState, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
@@ -185,9 +185,9 @@ namespace Microsoft.OData.Core.JsonLight
             while (navigationLinkInfo != null)
             {
                 Debug.Assert(resource.MetadataBuilder != null, "resource.MetadataBuilder != null");
-                navigationLinkInfo.NavigationLink.MetadataBuilder = resource.MetadataBuilder;
+                navigationLinkInfo.NestedResourceInfo.MetadataBuilder = resource.MetadataBuilder;
 
-                this.WriteNavigationLinkMetadata(navigationLinkInfo.NavigationLink, duplicatePropertyNamesChecker);
+                this.WriteNavigationLinkMetadata(navigationLinkInfo.NestedResourceInfo, duplicatePropertyNamesChecker);
                 navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             }
 
@@ -209,26 +209,26 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Writes the navigation link metadata.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write the metadata for.</param>
+        /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
-        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo navigationLink, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo nestedResourceInfo, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            Debug.Assert(navigationLink != null, "navigationLink != null");
-            Debug.Assert(!string.IsNullOrEmpty(navigationLink.Name), "The navigation link Name should have been validated by now.");
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
+            Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "The nested resource info Name should have been validated by now.");
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
-            Uri navigationLinkUrl = navigationLink.Url;
-            string navigationLinkName = navigationLink.Name;
-            Uri associationLinkUrl = navigationLink.AssociationLinkUrl;
+            Uri navigationLinkUrl = nestedResourceInfo.Url;
+            string navigationLinkName = nestedResourceInfo.Name;
+            Uri associationLinkUrl = nestedResourceInfo.AssociationLinkUrl;
             if (associationLinkUrl != null)
             {
                 duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(navigationLinkName, null);
-                this.WriteAssociationLink(navigationLink.Name, associationLinkUrl);
+                this.WriteAssociationLink(nestedResourceInfo.Name, associationLinkUrl);
             }
 
             if (navigationLinkUrl != null)
             {
-                // The navigation link URL is a property annotation "NavigationLinkName@odata.navigationLinkUrl: 'url'"
+                // The navigation link URL is a property annotation "NestedResourceInfoName@odata.navigationLinkUrl: 'url'"
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl);
                 this.JsonWriter.WriteValue(this.UriToString(navigationLinkUrl));
             }
@@ -237,11 +237,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Writes the navigation link metadata.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write the metadata for.</param>
+        /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="contextUrlInfo">The contextUrl information for current element.</param>
-        internal void WriteNavigationLinkContextUrl(ODataNestedResourceInfo navigationLink, ODataContextUrlInfo contextUrlInfo)
+        internal void WriteNestedResourceInfoContextUrl(ODataNestedResourceInfo nestedResourceInfo, ODataContextUrlInfo contextUrlInfo)
         {
-            this.WriteContextUriProperty(ODataPayloadKind.Resource, () => contextUrlInfo, /* parentContextUrlInfo*/ null, navigationLink.Name);
+            this.WriteContextUriProperty(ODataPayloadKind.Resource, () => contextUrlInfo, /* parentContextUrlInfo*/ null, nestedResourceInfo.Name);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Tries to writes the context URI property for delta resource/feed/link into the payload if one is available.
+        /// Tries to writes the context URI property for delta resource/resource set/link into the payload if one is available.
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
         /// <param name="kind">The delta kind to write.</param>
@@ -287,18 +287,18 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        internal void WriteEntryContextUri(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
+        internal void WriteResourceContextUri(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
             this.WriteContextUriProperty(ODataPayloadKind.Resource, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>
-        /// Tries to writes the context URI property for a feed into the payload if one is available.
+        /// Tries to writes the context URI property for a resource set into the payload if one is available.
         /// </summary>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the feed.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource set.</param>
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
-        internal ODataContextUrlInfo WriteFeedContextUri(ODataResourceTypeContext typeContext)
+        internal ODataContextUrlInfo WriteResourceSetContextUri(ODataResourceTypeContext typeContext)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
             return this.WriteContextUriProperty(ODataPayloadKind.ResourceSet, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri));
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(associationLinkUrl != null, "associationLinkUrl != null");
 
-            // The association link URL is a property annotation "NavigationLinkName@odata.associationLinkUrl: 'url'"
+            // The association link URL is a property annotation "NestedResourceInfoName@odata.associationLinkUrl: 'url'"
             this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataAssociationLinkUrl);
             this.JsonWriter.WriteValue(this.UriToString(associationLinkUrl));
         }

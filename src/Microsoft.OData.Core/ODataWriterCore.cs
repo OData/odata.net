@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core
         private readonly ODataOutputContext outputContext;
 
         /// <summary>True if the writer was created for writing a resourceSet; false when it was created for writing a resource.</summary>
-        private readonly bool writingFeed;
+        private readonly bool writingResourceSet;
 
         /// <summary>True if the writer was created for writing a delta response; false otherwise.</summary>
         private readonly bool writingDelta;
@@ -48,10 +48,10 @@ namespace Microsoft.OData.Core
         /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resourceSet.
         /// Only applies when writing a top-level resourceSet; otherwise null.
         /// </summary>
-        private readonly ResourceSetWithoutExpectedTypeValidator feedValidator;
+        private readonly ResourceSetWithoutExpectedTypeValidator resourceSetValidator;
 
         /// <summary>The number of entries which have been started but not yet ended.</summary>
-        private int currentEntryDepth;
+        private int currentResourceDepth;
 
         /// <summary>
         /// Constructor.
@@ -59,14 +59,14 @@ namespace Microsoft.OData.Core
         /// <param name="outputContext">The output context to write to.</param>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resourceSet to be written (or null if the entity set base type should be used).</param>
-        /// <param name="writingFeed">True if the writer is created for writing a resourceSet; false when it is created for writing a resource.</param>
+        /// <param name="writingResourceSet">True if the writer is created for writing a resourceSet; false when it is created for writing a resource.</param>
         /// <param name="writingDelta">True if the writer is created for writing a delta response; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         protected ODataWriterCore(
             ODataOutputContext outputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
-            bool writingFeed,
+            bool writingResourceSet,
             bool writingDelta = false,
             IODataReaderWriterListener listener = null)
         {
@@ -74,14 +74,14 @@ namespace Microsoft.OData.Core
             Debug.Assert(!writingDelta || outputContext.WritingResponse, "writingResponse must be true when writingDelta is true");
 
             this.outputContext = outputContext;
-            this.writingFeed = writingFeed;
+            this.writingResourceSet = writingResourceSet;
             this.writingDelta = writingDelta;
             this.WriterValidator = outputContext.WriterValidator;
 
             // create a collection validator when writing a top-level resourceSet and a user model is present
-            if (this.writingFeed && this.outputContext.Model.IsUserModel())
+            if (this.writingResourceSet && this.outputContext.Model.IsUserModel())
             {
-                this.feedValidator = new ResourceSetWithoutExpectedTypeValidator();
+                this.resourceSetValidator = new ResourceSetWithoutExpectedTypeValidator();
             }
 
             if (navigationSource != null && entityType == null)
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core
             ODataUri odataUri = outputContext.MessageWriterSettings.ODataUri.Clone();
 
             // Remove key for top level resource
-            if (!writingFeed && odataUri != null && odataUri.Path != null)
+            if (!writingResourceSet && odataUri != null && odataUri.Path != null)
             {
                 odataUri.Path = odataUri.Path.TrimEndingKeySegment();
             }
@@ -116,17 +116,17 @@ namespace Microsoft.OData.Core
             /// <summary>The writer is currently writing a resourceSet.</summary>
             ResourceSet,
 
-            /// <summary>The writer is currently writing a navigation link (possibly an expanded link but we don't know yet).</summary>
+            /// <summary>The writer is currently writing a nested resource info (possibly an expanded link but we don't know yet).</summary>
             /// <remarks>
-            /// This state is used when a navigation link was started but we didn't see any children for it yet.
+            /// This state is used when a nested resource info was started but we didn't see any children for it yet.
             /// </remarks>
-            NavigationLink,
+            NestedResourceInfo,
 
-            /// <summary>The writer is currently writing a navigation link with content.</summary>
+            /// <summary>The writer is currently writing a nested resource info with content.</summary>
             /// <remarks>
-            /// This state is used when a navigation link with either an entity reference link or expanded resourceSet/resource was written.
+            /// This state is used when a nested resource info with either an entity reference link or expanded resourceSet/resource was written.
             /// </remarks>
-            NavigationLinkWithContent,
+            NestedResourceInfoWithContent,
 
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
@@ -187,11 +187,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Returns the immediate parent link which is being expanded, or null if no such link exists
         /// </summary>
-        protected ODataNestedResourceInfo ParentNavigationLink
+        protected ODataNestedResourceInfo ParentNestedResourceInfo
         {
             get
             {
-                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "ParentNavigationLink should only be called while writing a resource or a resourceSet.");
+                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "ParentNestedResourceInfo should only be called while writing a resource or a resourceSet.");
 
                 Scope linkScope = this.scopes.ParentOrNull;
                 return linkScope == null ? null : (linkScope.Item as ODataNestedResourceInfo);
@@ -199,32 +199,32 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entity type of the immediate parent resource for which a navigation link is being written.
+        /// Returns the entity type of the immediate parent resource for which a nested resource info is being written.
         /// </summary>
         protected IEdmEntityType ParentResourceType
         {
             get
             {
                 Debug.Assert(
-                    this.State == WriterState.NavigationLink || this.State == WriterState.NavigationLinkWithContent,
-                    "ParentEntryEntityType should only be called while writing a navigation link (with or without content).");
-                Scope entryScope = this.scopes.Parent;
-                return entryScope.ResourceType;
+                    this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
+                    "ParentResourceEntityType should only be called while writing a nested resource info (with or without content).");
+                Scope resourceScope = this.scopes.Parent;
+                return resourceScope.ResourceType;
             }
         }
 
         /// <summary>
-        /// Returns the navigation source of the immediate parent resource for which a navigation link is being written.
+        /// Returns the navigation source of the immediate parent resource for which a nested resource info is being written.
         /// </summary>
-        protected IEdmNavigationSource ParentEntryNavigationSource
+        protected IEdmNavigationSource ParentResourceNavigationSource
         {
             get
             {
                 Debug.Assert(
-                    this.State == WriterState.NavigationLink || this.State == WriterState.NavigationLinkWithContent,
-                    "ParentEntryEntityType should only be called while writing a navigation link (with or without content).");
-                Scope entryScope = this.scopes.Parent;
-                return entryScope.NavigationSource;
+                    this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
+                    "ParentResourceEntityType should only be called while writing a nested resource info (with or without content).");
+                Scope resourceScope = this.scopes.Parent;
+                return resourceScope.NavigationSource;
             }
         }
 
@@ -232,12 +232,12 @@ namespace Microsoft.OData.Core
         /// Returns the number of entries seen so far on the current resourceSet scope.
         /// </summary>
         /// <remarks>Can only be accessed on a resourceSet scope.</remarks>
-        protected int ResourceSetScopeEntryCount
+        protected int ResourceSetScopeResourceCount
         {
             get
             {
-                Debug.Assert(this.State == WriterState.ResourceSet, "ResourceSetScopeEntryCount should only be called while writing a resourceSet.");
-                return ((ResourceSetScope)this.CurrentScope).EntryCount;
+                Debug.Assert(this.State == WriterState.ResourceSet, "ResourceSetScopeResourceCount should only be called while writing a resourceSet.");
+                return ((ResourceSetScope)this.CurrentScope).ResourceCount;
             }
         }
 
@@ -249,24 +249,24 @@ namespace Microsoft.OData.Core
             get
             {
                 Debug.Assert(
-                    this.State == WriterState.Resource || this.State == WriterState.NavigationLink || this.State == WriterState.NavigationLinkWithContent,
-                    "DuplicatePropertyNamesChecker should only be called while writing a resource or an (expanded or deferred) navigation link.");
+                    this.State == WriterState.Resource || this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
+                    "DuplicatePropertyNamesChecker should only be called while writing a resource or an (expanded or deferred) nested resource info.");
 
-                ResourceScope entryScope;
+                ResourceScope resourceScope;
                 switch (this.State)
                 {
                     case WriterState.Resource:
-                        entryScope = (ResourceScope)this.CurrentScope;
+                        resourceScope = (ResourceScope)this.CurrentScope;
                         break;
-                    case WriterState.NavigationLink:
-                    case WriterState.NavigationLinkWithContent:
-                        entryScope = (ResourceScope)this.scopes.Parent;
+                    case WriterState.NestedResourceInfo:
+                    case WriterState.NestedResourceInfoWithContent:
+                        resourceScope = (ResourceScope)this.scopes.Parent;
                         break;
                     default:
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_DuplicatePropertyNamesChecker));
                 }
 
-                return entryScope.DuplicatePropertyNamesChecker;
+                return resourceScope.DuplicatePropertyNamesChecker;
             }
         }
 
@@ -282,15 +282,15 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the parent navigation link scope of a resource in an expanded link (if it exists).
+        /// Returns the parent nested resource info scope of a resource in an expanded link (if it exists).
         /// The resource can either be the content of the expanded link directly or nested inside a resourceSet.
         /// </summary>
         /// <returns>The parent navigation scope of a resource in an expanded link (if it exists).</returns>
-        protected NavigationLinkScope ParentNavigationLinkScope
+        protected NestedResourceInfoScope ParentNestedResourceInfoScope
         {
             get
             {
-                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "ParentNavigationLinkScope should only be called while writing a resource or a resourceSet.");
+                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "ParentNestedResourceInfoScope should only be called while writing a resource or a resourceSet.");
                 Debug.Assert(this.scopes.Count >= 2, "We should have at least the resource scope and the start scope on the stack.");
 
                 Scope parentScope = this.scopes.Parent;
@@ -313,28 +313,28 @@ namespace Microsoft.OData.Core
                     }
                 }
 
-                if (parentScope.State == WriterState.NavigationLinkWithContent)
+                if (parentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
-                    // Get the scope of the navigation link
-                    return (NavigationLinkScope)parentScope;
+                    // Get the scope of the nested resource info
+                    return (NestedResourceInfoScope)parentScope;
                 }
 
                 // The parent scope of a resource can only be a resourceSet or an expanded nav link
-                throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_ParentNavigationLinkScope));
+                throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_ParentNestedResourceInfoScope));
             }
         }
 
         /// <summary>
         /// Validator to validate consistency of collection items (or null if no such validator applies to the current scope).
         /// </summary>
-        private ResourceSetWithoutExpectedTypeValidator CurrentFeedValidator
+        private ResourceSetWithoutExpectedTypeValidator CurrentResourceSetValidator
         {
             get
             {
                 Debug.Assert(this.State == WriterState.Resource, "CurrentCollectionValidator should only be called while writing a resource.");
 
-                // Only return the collection validator for entries in top-level feeds
-                return this.scopes.Count == 3 ? this.feedValidator : null;
+                // Only return the collection validator for entries in top-level resource sets
+                return this.scopes.Count == 3 ? this.resourceSetValidator : null;
             }
         }
 
@@ -374,23 +374,23 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Start writing a resourceSet.
         /// </summary>
-        /// <param name="resourceSet">Feed/collection to write.</param>
+        /// <param name="resourceSet">Resource Set/collection to write.</param>
         public sealed override void WriteStart(ODataResourceSet resourceSet)
         {
-            this.VerifyCanWriteStartFeed(true, resourceSet);
-            this.WriteStartFeedImplementation(resourceSet);
+            this.VerifyCanWriteStartResourceSet(true, resourceSet);
+            this.WriteStartResourceSetImplementation(resourceSet);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously start writing a resourceSet.
         /// </summary>
-        /// <param name="resourceSet">Feed/collection to write.</param>
+        /// <param name="resourceSet">Resource Set/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WriteStartAsync(ODataResourceSet resourceSet)
         {
-            this.VerifyCanWriteStartFeed(false, resourceSet);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartFeedImplementation(resourceSet));
+            this.VerifyCanWriteStartResourceSet(false, resourceSet);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceSetImplementation(resourceSet));
         }
 #endif
 
@@ -400,7 +400,7 @@ namespace Microsoft.OData.Core
         /// <param name="resource">Resource/item to write.</param>
         public sealed override void WriteStart(ODataResource resource)
         {
-            this.VerifyCanWriteStartEntry(true, resource);
+            this.VerifyCanWriteStartResource(true, resource);
             this.WriteStartResourceImplementation(resource);
         }
 
@@ -412,36 +412,36 @@ namespace Microsoft.OData.Core
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WriteStartAsync(ODataResource resource)
         {
-            this.VerifyCanWriteStartEntry(false, resource);
+            this.VerifyCanWriteStartResource(false, resource);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceImplementation(resource));
         }
 #endif
 
         /// <summary>
-        /// Start writing a navigation link.
+        /// Start writing a nested resource info.
         /// </summary>
-        /// <param name="navigationLink">Navigation link to write.</param>
-        public sealed override void WriteStart(ODataNestedResourceInfo navigationLink)
+        /// <param name="nestedResourceInfo">Navigation link to write.</param>
+        public sealed override void WriteStart(ODataNestedResourceInfo nestedResourceInfo)
         {
-            this.VerifyCanWriteStartNavigationLink(true, navigationLink);
-            this.WriteStartNavigationLinkImplementation(navigationLink);
+            this.VerifyCanWriteStartNestedResourceInfo(true, nestedResourceInfo);
+            this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously start writing a navigation link.
+        /// Asynchronously start writing a nested resource info.
         /// </summary>
-        /// <param name="navigationLink">Navigation link to writer.</param>
+        /// <param name="nestedResourceInfo">Navigation link to writer.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataNestedResourceInfo navigationLink)
+        public sealed override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
-            this.VerifyCanWriteStartNavigationLink(false, navigationLink);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartNavigationLinkImplementation(navigationLink));
+            this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo));
         }
 #endif
 
         /// <summary>
-        /// Finish writing a resourceSet/resource/navigation link.
+        /// Finish writing a resourceSet/resource/nested resource info.
         /// </summary>
         public sealed override void WriteEnd()
         {
@@ -456,7 +456,7 @@ namespace Microsoft.OData.Core
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously finish writing a resourceSet/resource/navigation link.
+        /// Asynchronously finish writing a resourceSet/resource/nested resource info.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WriteEndAsync()
@@ -627,19 +627,19 @@ namespace Microsoft.OData.Core
         /// Start writing a resource.
         /// </summary>
         /// <param name="resource">The resource to write.</param>
-        protected abstract void StartEntry(ODataResource resource);
+        protected abstract void StartResource(ODataResource resource);
 
         /// <summary>
         /// Finish writing a resource.
         /// </summary>
         /// <param name="resource">The resource to write.</param>
-        protected abstract void EndEntry(ODataResource resource);
+        protected abstract void EndResource(ODataResource resource);
 
         /// <summary>
         /// Start writing a resourceSet.
         /// </summary>
         /// <param name="resourceSet">The resourceSet to write.</param>
-        protected abstract void StartFeed(ODataResourceSet resourceSet);
+        protected abstract void StartResourceSet(ODataResourceSet resourceSet);
 
         /// <summary>
         /// Finish writing an OData payload.
@@ -650,32 +650,32 @@ namespace Microsoft.OData.Core
         /// Finish writing a resourceSet.
         /// </summary>
         /// <param name="resourceSet">The resourceSet to write.</param>
-        protected abstract void EndFeed(ODataResourceSet resourceSet);
+        protected abstract void EndResourceSet(ODataResourceSet resourceSet);
 
         /// <summary>
-        /// Write a deferred (non-expanded) navigation link.
+        /// Write a deferred (non-expanded) nested resource info.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write.</param>
-        protected abstract void WriteDeferredNavigationLink(ODataNestedResourceInfo navigationLink);
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        protected abstract void WriteDeferredNestedResourceInfo(ODataNestedResourceInfo nestedResourceInfo);
 
         /// <summary>
-        /// Start writing a navigation link with content.
+        /// Start writing a nested resource info with content.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write.</param>
-        protected abstract void StartNavigationLinkWithContent(ODataNestedResourceInfo navigationLink);
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        protected abstract void StartNestedResourceInfoWithContent(ODataNestedResourceInfo nestedResourceInfo);
 
         /// <summary>
-        /// Finish writing a navigation link with content.
+        /// Finish writing a nested resource info with content.
         /// </summary>
-        /// <param name="navigationLink">The navigation link to write.</param>
-        protected abstract void EndNavigationLinkWithContent(ODataNestedResourceInfo navigationLink);
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        protected abstract void EndNestedResourceInfoWithContent(ODataNestedResourceInfo nestedResourceInfo);
 
         /// <summary>
         /// Write an entity reference link into a navigation link content.
         /// </summary>
-        /// <param name="parentNavigationLink">The parent navigation link which is being written around the entity reference link.</param>
+        /// <param name="parentNestedResourceInfo">The parent navigation link which is being written around the entity reference link.</param>
         /// <param name="entityReferenceLink">The entity reference link to write.</param>
-        protected abstract void WriteEntityReferenceInNavigationLinkContent(ODataNestedResourceInfo parentNavigationLink, ODataEntityReferenceLink entityReferenceLink);
+        protected abstract void WriteEntityReferenceInNavigationLinkContent(ODataNestedResourceInfo parentNestedResourceInfo, ODataEntityReferenceLink entityReferenceLink);
 
         /// <summary>
         /// Create a new resourceSet scope.
@@ -706,7 +706,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="resource">The resource to get the serialization info for.</param>
         /// <returns>The serialization info for the given resource.</returns>
-        protected ODataResourceSerializationInfo GetEntrySerializationInfo(ODataResource resource)
+        protected ODataResourceSerializationInfo GetResourceSerializationInfo(ODataResource resource)
         {
             // Need to check for null for the resource since we can be writing a null reference to a navigation property.
             ODataResourceSerializationInfo serializationInfo = resource == null ? null : resource.SerializationInfo;
@@ -731,19 +731,19 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates a new navigation link scope.
+        /// Creates a new nested resource info scope.
         /// </summary>
         /// <param name="writerState">The writer state for the new scope.</param>
-        /// <param name="navLink">The navigation link for the new scope.</param>
+        /// <param name="navLink">The nested resource info for the new scope.</param>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resourceSet to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
-        /// <returns>The newly created navigation link scope.</returns>
-        protected virtual NavigationLinkScope CreateNavigationLinkScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        /// <returns>The newly created nested resource info scope.</returns>
+        protected virtual NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new NavigationLinkScope(writerState, navLink, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
+            return new NestedResourceInfoScope(writerState, navLink, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -752,7 +752,7 @@ namespace Microsoft.OData.Core
         /// <param name="resource">Resource to write.</param>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resourceSet.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        protected virtual void PrepareEntryForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
+        protected virtual void PrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
         {
             // No-op Atom and Verbose JSON. The JSON Light writer will override this method and inject the appropriate metadata builder
             // into the resource before writing.
@@ -797,11 +797,11 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="resourceSet">The expanded resourceSet in question.</param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "An instance field is used in a debug assert.")]
-        protected void ValidateNoDeltaLinkForExpandedFeed(ODataResourceSet resourceSet)
+        protected void ValidateNoDeltaLinkForExpandedResourceSet(ODataResourceSet resourceSet)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(
-                this.ParentNavigationLink != null && this.ParentNavigationLink.IsCollection.HasValue && this.ParentNavigationLink.IsCollection.Value == true,
+                this.ParentNestedResourceInfo != null && this.ParentNestedResourceInfo.IsCollection.HasValue && this.ParentNestedResourceInfo.IsCollection.Value == true,
                 "This should only be called when writing an expanded resourceSet.");
 
             if (resourceSet.DeltaLink != null)
@@ -814,8 +814,8 @@ namespace Microsoft.OData.Core
         /// Verifies that calling WriteStart resourceSet is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        /// <param name="resourceSet">Feed/collection to write.</param>
-        private void VerifyCanWriteStartFeed(bool synchronousCall, ODataResourceSet resourceSet)
+        /// <param name="resourceSet">Resource Set/collection to write.</param>
+        private void VerifyCanWriteStartResourceSet(bool synchronousCall, ODataResourceSet resourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(resourceSet, "resourceSet");
 
@@ -828,9 +828,9 @@ namespace Microsoft.OData.Core
         /// Start writing a resourceSet - implementation of the actual functionality.
         /// </summary>
         /// <param name="resourceSet">The resourceSet to write.</param>
-        private void WriteStartFeedImplementation(ODataResourceSet resourceSet)
+        private void WriteStartResourceSetImplementation(ODataResourceSet resourceSet)
         {
-            this.CheckForNavigationLinkWithContent(ODataPayloadKind.ResourceSet);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet);
             this.EnterScope(WriterState.ResourceSet, resourceSet);
 
             if (!this.SkipWriting)
@@ -849,7 +849,7 @@ namespace Microsoft.OData.Core
                         // Verify version requirements
                     }
 
-                    this.StartFeed(resourceSet);
+                    this.StartResourceSet(resourceSet);
                 });
             }
         }
@@ -859,12 +859,12 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="resource">Resource/item to write.</param>
-        private void VerifyCanWriteStartEntry(bool synchronousCall, ODataResource resource)
+        private void VerifyCanWriteStartResource(bool synchronousCall, ODataResource resource)
         {
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
 
-            if (this.State != WriterState.NavigationLink)
+            if (this.State != WriterState.NestedResourceInfo)
             {
                 ExceptionUtils.CheckArgumentNotNull(resource, "resource");
             }
@@ -877,71 +877,71 @@ namespace Microsoft.OData.Core
         private void WriteStartResourceImplementation(ODataResource resource)
         {
             this.StartPayloadInStartState();
-            this.CheckForNavigationLinkWithContent(ODataPayloadKind.Resource);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.Resource);
             this.EnterScope(WriterState.Resource, resource);
             if (!this.SkipWriting)
             {
-                this.IncreaseEntryDepth();
+                this.IncreaseResourceDepth();
                 this.InterceptException(() =>
                 {
                     if (resource != null)
                     {
-                        ResourceScope entryScope = (ResourceScope)this.CurrentScope;
+                        ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
                         IEdmEntityType entityType = this.ValidateResourceType(resource);
-                        entryScope.ResourceTypeFromMetadata = entryScope.ResourceType;
+                        resourceScope.ResourceTypeFromMetadata = resourceScope.ResourceType;
 
-                        NavigationLinkScope parentNavigationLinkScope = this.ParentNavigationLinkScope;
-                        if (parentNavigationLinkScope != null)
+                        NestedResourceInfoScope parentNestedResourceInfoScope = this.ParentNestedResourceInfoScope;
+                        if (parentNestedResourceInfoScope != null)
                         {
                             // Validate the consistency of entity types in the expanded resourceSet/resource
-                            this.WriterValidator.ValidateResourceInExpandedLink(entityType, parentNavigationLinkScope.ResourceType);
-                            entryScope.ResourceTypeFromMetadata = parentNavigationLinkScope.ResourceType;
+                            this.WriterValidator.ValidateResourceInExpandedLink(entityType, parentNestedResourceInfoScope.ResourceType);
+                            resourceScope.ResourceTypeFromMetadata = parentNestedResourceInfoScope.ResourceType;
                         }
-                        else if (this.CurrentFeedValidator != null)
+                        else if (this.CurrentResourceSetValidator != null)
                         {
-                            // Validate the consistency of entity types in the top-level feeds
-                            this.CurrentFeedValidator.ValidateResource(entityType);
+                            // Validate the consistency of entity types in the top-level resource sets
+                            this.CurrentResourceSetValidator.ValidateResource(entityType);
                         }
 
-                        entryScope.ResourceType = entityType;
+                        resourceScope.ResourceType = entityType;
 
-                        this.PrepareEntryForWriteStart(resource, entryScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse), entryScope.SelectedProperties);
+                        this.PrepareResourceForWriteStart(resource, resourceScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse), resourceScope.SelectedProperties);
                         this.ValidateEntryMediaResource(resource, entityType);
                     }
 
-                    this.StartEntry(resource);
+                    this.StartResource(resource);
                 });
             }
         }
 
         /// <summary>
-        /// Verifies that calling WriteStart navigation link is valid.
+        /// Verifies that calling WriteStart nested resource info is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        /// <param name="navigationLink">Navigation link to write.</param>
-        private void VerifyCanWriteStartNavigationLink(bool synchronousCall, ODataNestedResourceInfo navigationLink)
+        /// <param name="nestedResourceInfo">Navigation link to write.</param>
+        private void VerifyCanWriteStartNestedResourceInfo(bool synchronousCall, ODataNestedResourceInfo nestedResourceInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(navigationLink, "navigationLink");
+            ExceptionUtils.CheckArgumentNotNull(nestedResourceInfo, "nestedResourceInfo");
 
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
         }
 
         /// <summary>
-        /// Start writing a navigation link - implementation of the actual functionality.
+        /// Start writing a nested resource info - implementation of the actual functionality.
         /// </summary>
-        /// <param name="navigationLink">Navigation link to write.</param>
-        private void WriteStartNavigationLinkImplementation(ODataNestedResourceInfo navigationLink)
+        /// <param name="nestedResourceInfo">Navigation link to write.</param>
+        private void WriteStartNestedResourceInfoImplementation(ODataNestedResourceInfo nestedResourceInfo)
         {
-            this.EnterScope(WriterState.NavigationLink, navigationLink);
+            this.EnterScope(WriterState.NestedResourceInfo, nestedResourceInfo);
 
-            // If the parent resource has a metadata builder, use that metadatabuilder on the navigation link as well.
+            // If the parent resource has a metadata builder, use that metadatabuilder on the nested resource info as well.
             Debug.Assert(this.scopes.Parent != null, "Navigation link scopes must have a parent scope.");
-            Debug.Assert(this.scopes.Parent.Item is ODataResource, "The parent of a navigation link scope should always be a resource");
-            ODataResource parentEntry = (ODataResource)this.scopes.Parent.Item;
-            if (parentEntry.MetadataBuilder != null)
+            Debug.Assert(this.scopes.Parent.Item is ODataResource, "The parent of a nested resource info scope should always be a resource");
+            ODataResource parentResource = (ODataResource)this.scopes.Parent.Item;
+            if (parentResource.MetadataBuilder != null)
             {
-                navigationLink.MetadataBuilder = parentEntry.MetadataBuilder;
+                nestedResourceInfo.MetadataBuilder = parentResource.MetadataBuilder;
             }
         }
 
@@ -956,7 +956,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Finish writing a resourceSet/resource/navigation link.
+        /// Finish writing a resourceSet/resource/nested resource info.
         /// </summary>
         private void WriteEndImplementation()
         {
@@ -971,11 +971,11 @@ namespace Microsoft.OData.Core
                         {
                             ODataResource resource = (ODataResource)currentScope.Item;
                             Debug.Assert(
-                                resource != null || this.ParentNavigationLink != null && !this.ParentNavigationLink.IsCollection.Value,
+                                resource != null || this.ParentNestedResourceInfo != null && !this.ParentNestedResourceInfo.IsCollection.Value,
                                 "when resource == null, it has to be an expanded single resource navigation");
 
-                            this.EndEntry(resource);
-                            this.DecreaseEntryDepth();
+                            this.EndResource(resource);
+                            this.DecreaseResourceDepth();
                         }
 
                         break;
@@ -984,11 +984,11 @@ namespace Microsoft.OData.Core
                         {
                             ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
                             this.WriterValidator.ValidateResourceSetAtEnd(resourceSet, !this.outputContext.WritingResponse);
-                            this.EndFeed(resourceSet);
+                            this.EndResourceSet(resourceSet);
                         }
 
                         break;
-                    case WriterState.NavigationLink:
+                    case WriterState.NestedResourceInfo:
                         if (!this.outputContext.WritingResponse)
                         {
                             throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
@@ -998,19 +998,19 @@ namespace Microsoft.OData.Core
                         {
                             ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
                             this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(link, false, link.IsCollection);
-                            this.WriteDeferredNavigationLink(link);
+                            this.WriteDeferredNestedResourceInfo(link);
 
-                            this.MarkNavigationLinkAsProcessed(link);
+                            this.MarkNestedResourceInfoAsProcessed(link);
                         }
 
                         break;
-                    case WriterState.NavigationLinkWithContent:
+                    case WriterState.NestedResourceInfoWithContent:
                         if (!this.SkipWriting)
                         {
                             ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            this.EndNavigationLinkWithContent(link);
+                            this.EndNestedResourceInfoWithContent(link);
 
-                            this.MarkNavigationLinkAsProcessed(link);
+                            this.MarkNestedResourceInfoAsProcessed(link);
                         }
 
                         break;
@@ -1031,16 +1031,16 @@ namespace Microsoft.OData.Core
         /// This is needed so that at the end of writing the resource we can query for all the unwritten navigation properties
         /// defined on the entity type and write out their metadata in fullmetadata mode.
         /// </summary>
-        /// <param name="link">The navigation link being written.</param>
-        private void MarkNavigationLinkAsProcessed(ODataNestedResourceInfo link)
+        /// <param name="link">The nested resource info being written.</param>
+        private void MarkNestedResourceInfoAsProcessed(ODataNestedResourceInfo link)
         {
             Debug.Assert(
-                this.CurrentScope.State == WriterState.NavigationLink || this.CurrentScope.State == WriterState.NavigationLinkWithContent,
-                "This method should only be called when we're writing a navigation link.");
+                this.CurrentScope.State == WriterState.NestedResourceInfo || this.CurrentScope.State == WriterState.NestedResourceInfoWithContent,
+                "This method should only be called when we're writing a nested resource info.");
 
             ODataResource parent = (ODataResource)this.scopes.Parent.Item;
             Debug.Assert(parent.MetadataBuilder != null, "parent.MetadataBuilder != null");
-            parent.MetadataBuilder.MarkNavigationLinkProcessed(link.Name);
+            parent.MetadataBuilder.MarkNestedResourceInfoProcessed(link.Name);
         }
 
         /// <summary>
@@ -1069,10 +1069,10 @@ namespace Microsoft.OData.Core
                 this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkInResponse, null);
             }
 
-            this.CheckForNavigationLinkWithContent(ODataPayloadKind.EntityReferenceLink);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.EntityReferenceLink);
             Debug.Assert(
                 this.CurrentScope.Item is ODataNestedResourceInfo,
-                "The CheckForNavigationLinkWithContent should have verified that entity reference link can only be written inside a navigation link.");
+                "The CheckForNestedResourceInfoWithContent should have verified that entity reference link can only be written inside a nested resource info.");
 
             if (!this.SkipWriting)
             {
@@ -1143,63 +1143,63 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Checks whether we are currently writing a navigation link and switches to NavigationLinkWithContent state if we do.
+        /// Checks whether we are currently writing a nested resource info and switches to NestedResourceInfoWithContent state if we do.
         /// </summary>
         /// <param name="contentPayloadKind">
-        /// What kind of payload kind is being written as the content of a navigation link.
-        /// Only Feed, Resource or EntityRefernceLink are allowed.
+        /// What kind of payload kind is being written as the content of a nested resource info.
+        /// Only Resource Set, Resource or EntityRefernceLink are allowed.
         /// </param>
-        private void CheckForNavigationLinkWithContent(ODataPayloadKind contentPayloadKind)
+        private void CheckForNestedResourceInfoWithContent(ODataPayloadKind contentPayloadKind)
         {
             Debug.Assert(
                 contentPayloadKind == ODataPayloadKind.ResourceSet || contentPayloadKind == ODataPayloadKind.Resource || contentPayloadKind == ODataPayloadKind.EntityReferenceLink,
-                "Only ResourceSet, Resource or EntityReferenceLink can be specified as a payload kind for a navigation link content.");
+                "Only ResourceSet, Resource or EntityReferenceLink can be specified as a payload kind for a nested resource info content.");
 
             Scope currentScope = this.CurrentScope;
-            if (currentScope.State == WriterState.NavigationLink || currentScope.State == WriterState.NavigationLinkWithContent)
+            if (currentScope.State == WriterState.NestedResourceInfo || currentScope.State == WriterState.NestedResourceInfoWithContent)
             {
-                ODataNestedResourceInfo currentNavigationLink = (ODataNestedResourceInfo)currentScope.Item;
+                ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
                 this.InterceptException(() =>
                 {
                     IEdmNavigationProperty navigationProperty =
-                        this.WriterValidator.ValidateNavigationLink(currentNavigationLink, this.ParentResourceType, contentPayloadKind);
+                        this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind);
                     if (navigationProperty != null)
                     {
                         this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
-                        IEdmNavigationSource parentNavigationSource = this.ParentEntryNavigationSource;
+                        IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
 
                         this.CurrentScope.NavigationSource = parentNavigationSource == null ? null : parentNavigationSource.FindNavigationTarget(navigationProperty);
                     }
                 });
 
-                if (currentScope.State == WriterState.NavigationLinkWithContent)
+                if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
-                    // If we are already in the NavigationLinkWithContent state, it means the caller is trying to write two items
-                    // into the navigation link content. This is only allowed for collection navigation property in request.
-                    if (this.outputContext.WritingResponse || currentNavigationLink.IsCollection != true)
+                    // If we are already in the NestedResourceInfoWithContent state, it means the caller is trying to write two items
+                    // into the nested resource info content. This is only allowed for collection navigation property in request.
+                    if (this.outputContext.WritingResponse || currentNestedResourceInfo.IsCollection != true)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNavigationLinkContent, currentNavigationLink);
+                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNavigationLinkContent, currentNestedResourceInfo);
                     }
 
                     // Note that we don't invoke duplicate property checker in this case as it's not necessary.
-                    // What happens inside the navigation link was already validated by the condition above.
+                    // What happens inside the nested resource info was already validated by the condition above.
                     // For collection in request we allow any combination anyway.
                     // For everything else we only allow a single item in the content and thus we will fail above.
                 }
                 else
                 {
-                    // we are writing a navigation link with content; change the state
-                    this.PromoteNavigationLinkScope();
+                    // we are writing a nested resource info with content; change the state
+                    this.PromoteNestedResourceInfoScope();
 
                     if (!this.SkipWriting)
                     {
                         this.InterceptException(() =>
                         {
                             this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(
-                                    currentNavigationLink,
+                                    currentNestedResourceInfo,
                                     contentPayloadKind != ODataPayloadKind.EntityReferenceLink,
                                     contentPayloadKind == ODataPayloadKind.ResourceSet);
-                            this.StartNavigationLinkWithContent(currentNavigationLink);
+                            this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
                         });
                     }
                 }
@@ -1238,11 +1238,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Increments the nested resource count by one and fails if the new value exceeds the maxiumum nested resource depth limit.
         /// </summary>
-        private void IncreaseEntryDepth()
+        private void IncreaseResourceDepth()
         {
-            this.currentEntryDepth++;
+            this.currentResourceDepth++;
 
-            if (this.currentEntryDepth > this.outputContext.MessageWriterSettings.MessageQuotas.MaxNestingDepth)
+            if (this.currentResourceDepth > this.outputContext.MessageWriterSettings.MessageQuotas.MaxNestingDepth)
             {
                 this.ThrowODataException(Strings.ValidationUtils_MaxDepthOfNestedEntriesExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxNestingDepth), null);
             }
@@ -1251,11 +1251,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Decrements the nested resource count by one.
         /// </summary>
-        private void DecreaseEntryDepth()
+        private void DecreaseResourceDepth()
         {
-            Debug.Assert(this.currentEntryDepth > 0, "Resource depth should never become negative.");
+            Debug.Assert(this.currentResourceDepth > 0, "Resource depth should never become negative.");
 
-            this.currentEntryDepth--;
+            this.currentResourceDepth--;
         }
 
 
@@ -1309,33 +1309,33 @@ namespace Microsoft.OData.Core
 
             if (this.writingDelta)
             {
-                // When writing expanded feeds in delta response, we start with the parent delta resource.
-                // But what we really want in the payload are only the navigation links and expanded feeds
+                // When writing expanded resource sets in delta response, we start with the parent delta resource.
+                // But what we really want in the payload are only the navigation links and expanded resource sets
                 // so we need to skip writing the top-level delta resource including its structural properties
                 // and instance annotations.
                 skipWriting = currentState == WriterState.Start && newState == WriterState.Resource;
             }
 
-            // When writing a navigation link, check if the link is being projected.
+            // When writing a nested resource info, check if the link is being projected.
             // If we are projecting properties, but the nav. link is not projected mark it to skip its content.
-            if (currentState == WriterState.Resource && newState == WriterState.NavigationLink)
+            if (currentState == WriterState.Resource && newState == WriterState.NestedResourceInfo)
             {
                 Debug.Assert(currentScope.Item is ODataResource, "If the current state is Resource the current Item must be resource as well (and not null either).");
-                Debug.Assert(item is ODataNestedResourceInfo, "If the new state is NavigationLink the new item must be a navigation link as well (and not null either).");
-                ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)item;
+                Debug.Assert(item is ODataNestedResourceInfo, "If the new state is NestedResourceInfo the new item must be a nested resource info as well (and not null either).");
+                ODataNestedResourceInfo nestedResourceInfo = (ODataNestedResourceInfo)item;
 
                 if (!skipWriting)
                 {
                     ProjectedPropertiesAnnotation projectedProperties = GetProjectedPropertiesAnnotation(currentScope);
-                    skipWriting = projectedProperties.ShouldSkipProperty(navigationLink.Name);
-                    selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, navigationLink.Name);
+                    skipWriting = projectedProperties.ShouldSkipProperty(nestedResourceInfo.Name);
+                    selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, nestedResourceInfo.Name);
 
                     if (this.outputContext.WritingResponse)
                     {
                         odataUri = currentScope.ODataUri.Clone();
 
                         IEdmEntityType currentResourceType = currentScope.ResourceType;
-                        IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNavigationLink(navigationLink, currentResourceType, /*payloadKind*/null);
+                        IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
                         if (navigationProperty != null)
                         {
                             entityType = navigationProperty.ToEntityType();
@@ -1348,7 +1348,7 @@ namespace Microsoft.OData.Core
                             if (clause != null)
                             {
                                 SelectExpandClause subClause;
-                                clause.GetSubSelectExpandClause(navigationLink.Name, out subClause, out typeCastFromExpand);
+                                clause.GetSubSelectExpandClause(nestedResourceInfo.Name, out subClause, out typeCastFromExpand);
                                 odataUri.SelectAndExpand = subClause;
                             }
 
@@ -1367,7 +1367,7 @@ namespace Microsoft.OData.Core
                                         ODataItem odataItem = this.CurrentScope.Item;
                                         Debug.Assert(odataItem is ODataResource, "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
                                         ODataResource resource = (ODataResource)odataItem;
-                                        KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, this.GetEntrySerializationInfo(resource), currentResourceType);
+                                        KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, this.GetResourceSerializationInfo(resource), currentResourceType);
                                         odataPath = odataPath.AppendKeySegment(keys, currentResourceType, currentNavigationSource);
                                     }
 
@@ -1399,7 +1399,7 @@ namespace Microsoft.OData.Core
             else if (newState == WriterState.Resource && currentState == WriterState.ResourceSet)
             {
                 // When we're entering a resource scope on a resourceSet, increment the count of entries on that resourceSet.
-                ((ResourceSetScope)currentScope).EntryCount++;
+                ((ResourceSetScope)currentScope).ResourceCount++;
             }
 
             this.PushScope(newState, item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
@@ -1430,21 +1430,21 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Promotes the current navigation link scope to a navigation link scope with content.
+        /// Promotes the current nested resource info scope to a nested resource info scope with content.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Second cast only in debug.")]
-        private void PromoteNavigationLinkScope()
+        private void PromoteNestedResourceInfoScope()
         {
             Debug.Assert(
-                this.State == WriterState.NavigationLink,
-                "Only a NavigationLink state can be promoted right now. If this changes please review the scope replacement code below.");
+                this.State == WriterState.NestedResourceInfo,
+                "Only a NestedResourceInfo state can be promoted right now. If this changes please review the scope replacement code below.");
             Debug.Assert(
                 this.CurrentScope.Item != null && this.CurrentScope.Item is ODataNestedResourceInfo,
-                "Item must be a non-null navigation link.");
+                "Item must be a non-null nested resource info.");
 
-            this.ValidateTransition(WriterState.NavigationLinkWithContent);
-            NavigationLinkScope previousScope = (NavigationLinkScope)this.scopes.Pop();
-            NavigationLinkScope newScope = previousScope.Clone(WriterState.NavigationLinkWithContent);
+            this.ValidateTransition(WriterState.NestedResourceInfoWithContent);
+            NestedResourceInfoScope previousScope = (NestedResourceInfoScope)this.scopes.Pop();
+            NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
             this.scopes.Push(newScope);
         }
 
@@ -1469,12 +1469,12 @@ namespace Microsoft.OData.Core
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
                     }
 
-                    if (newState == WriterState.ResourceSet && !this.writingFeed)
+                    if (newState == WriterState.ResourceSet && !this.writingResourceSet)
                     {
                         throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelFeedWithEntryWriter);
                     }
 
-                    if (newState == WriterState.Resource && this.writingFeed)
+                    if (newState == WriterState.Resource && this.writingResourceSet)
                     {
                         throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter);
                     }
@@ -1487,7 +1487,7 @@ namespace Microsoft.OData.Core
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullEntry(this.State.ToString(), newState.ToString()));
                         }
 
-                        if (newState != WriterState.NavigationLink)
+                        if (newState != WriterState.NestedResourceInfo)
                         {
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromEntry(this.State.ToString(), newState.ToString()));
                         }
@@ -1501,14 +1501,14 @@ namespace Microsoft.OData.Core
                     }
 
                     break;
-                case WriterState.NavigationLink:
-                    if (newState != WriterState.NavigationLinkWithContent)
+                case WriterState.NestedResourceInfo:
+                    if (newState != WriterState.NestedResourceInfoWithContent)
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidStateTransition(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
-                case WriterState.NavigationLinkWithContent:
+                case WriterState.NestedResourceInfoWithContent:
                     if (newState != WriterState.ResourceSet && newState != WriterState.Resource)
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink(this.State.ToString(), newState.ToString()));
@@ -1548,8 +1548,8 @@ namespace Microsoft.OData.Core
                 state == WriterState.Error ||
                 state == WriterState.Resource && (item == null || item is ODataResource) ||
                 state == WriterState.ResourceSet && item is ODataResourceSet ||
-                state == WriterState.NavigationLink && item is ODataNestedResourceInfo ||
-                state == WriterState.NavigationLinkWithContent && item is ODataNestedResourceInfo ||
+                state == WriterState.NestedResourceInfo && item is ODataNestedResourceInfo ||
+                state == WriterState.NestedResourceInfoWithContent && item is ODataNestedResourceInfo ||
                 state == WriterState.Start && item == null ||
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
@@ -1563,9 +1563,9 @@ namespace Microsoft.OData.Core
                 case WriterState.ResourceSet:
                     scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
                     break;
-                case WriterState.NavigationLink:            // fall through
-                case WriterState.NavigationLinkWithContent:
-                    scope = this.CreateNavigationLinkScope(state, (ODataNestedResourceInfo)item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
+                case WriterState.NestedResourceInfo:            // fall through
+                case WriterState.NestedResourceInfoWithContent:
+                    scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
                     break;
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
@@ -1845,7 +1845,7 @@ namespace Microsoft.OData.Core
             private readonly ODataResourceSerializationInfo serializationInfo;
 
             /// <summary>The number of entries in this resourceSet seen so far.</summary>
-            private int entryCount;
+            private int resourceCount;
 
             /// <summary>Maintains the write status for each annotation using its key.</summary>
             private InstanceAnnotationWriteTracker instanceAnnotationWriteTracker;
@@ -1871,16 +1871,16 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// The number of entries in this resourceSet seen so far.
             /// </summary>
-            internal int EntryCount
+            internal int ResourceCount
             {
                 get
                 {
-                    return this.entryCount;
+                    return this.resourceCount;
                 }
 
                 set
                 {
-                    this.entryCount = value;
+                    this.resourceCount = value;
                 }
             }
 
@@ -2045,33 +2045,33 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// A scope for a navigation link.
+        /// A scope for a nested resource info.
         /// </summary>
-        internal class NavigationLinkScope : Scope
+        internal class NestedResourceInfoScope : Scope
         {
             /// <summary>
-            /// Constructor to create a new navigation link scope.
+            /// Constructor to create a new nested resource info scope.
             /// </summary>
             /// <param name="writerState">The writer state for the new scope.</param>
-            /// <param name="navLink">The navigation link for the new scope.</param>
+            /// <param name="navLink">The nested resource info for the new scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the resourceSet to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal NavigationLinkScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            internal NestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(writerState, navLink, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
             }
 
             /// <summary>
-            /// Clones this navigation link scope and sets a new writer state.
+            /// Clones this nested resource info scope and sets a new writer state.
             /// </summary>
             /// <param name="newWriterState">The <see cref="WriterState"/> to set.</param>
-            /// <returns>The cloned navigation link scope with the specified writer state.</returns>
-            internal virtual NavigationLinkScope Clone(WriterState newWriterState)
+            /// <returns>The cloned nested resource info scope with the specified writer state.</returns>
+            internal virtual NestedResourceInfoScope Clone(WriterState newWriterState)
             {
-                return new NavigationLinkScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ResourceType, this.SkipWriting, this.SelectedProperties, this.ODataUri);
+                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ResourceType, this.SkipWriting, this.SelectedProperties, this.ODataUri);
             }
         }
     }

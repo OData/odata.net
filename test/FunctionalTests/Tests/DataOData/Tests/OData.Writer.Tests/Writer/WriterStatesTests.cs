@@ -27,7 +27,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private enum WriterAction
         {
-            StartEntry,
+            StartResource,
             StartFeed,
             StartLink,
             End,
@@ -74,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new WriterStatesTestDescriptor {
                     Setup = null,
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, feedWriter ? ODataExpectedExceptions.ODataException("ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter") : (ExpectedException)null },
+                        { WriterAction.StartResource, feedWriter ? ODataExpectedExceptions.ODataException("ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter") : (ExpectedException)null },
                         { WriterAction.StartFeed, feedWriter ? (ExpectedException)null : ODataExpectedExceptions.ODataException("ODataWriterCore_CannotWriteTopLevelFeedWithEntryWriter") },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromStart", "Start", "NavigationLink") },
                         { WriterAction.End, ODataExpectedExceptions.ODataException("ODataWriterCore_WriteEndCalledInInvalidState", "Start") },
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         w.WriteStart(ObjectModelUtils.CreateDefaultEntry()); 
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromEntry", "Entry", "Entry") },
+                        { WriterAction.StartResource, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromEntry", "Entry", "Entry") },
                         { WriterAction.StartFeed, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromEntry", "Entry", "Feed") },
                         { WriterAction.StartLink, null },
                         { WriterAction.End, null },
@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         else { w.WriteStart(ObjectModelUtils.CreateDefaultEntry()); w.WriteStart(ObjectModelUtils.CreateDefaultCollectionLink()); w.WriteStart(ObjectModelUtils.CreateDefaultFeed()); }
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, null },
+                        { WriterAction.StartResource, null },
                         { WriterAction.StartFeed, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromFeed", "Feed", "Feed") },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromFeed", "Feed", "NavigationLink") },
                         { WriterAction.End, null },
@@ -120,7 +120,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         w.WriteStart(new ODataNestedResourceInfo { Name = ObjectModelUtils.DefaultLinkName, Url = ObjectModelUtils.DefaultLinkUrl, IsCollection = false });
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, null },
+                        { WriterAction.StartResource, null },
                         { WriterAction.StartFeed, ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/link") },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidStateTransition", "NavigationLink", "NavigationLink") },
                         { WriterAction.End, null },
@@ -137,7 +137,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         w.WriteStart(ObjectModelUtils.CreateDefaultCollectionLink());
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/link") },
+                        { WriterAction.StartResource, ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/link") },
                         { WriterAction.StartFeed, null },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidStateTransition", "NavigationLink", "NavigationLink") },
                         { WriterAction.End, null },
@@ -156,7 +156,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         else { w.WriteStart(ObjectModelUtils.CreateDefaultEntry()); w.WriteEnd(); }
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromCompleted", "Completed", "Entry") },
+                        { WriterAction.StartResource, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromCompleted", "Completed", "Entry") },
                         { WriterAction.StartFeed, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromCompleted", "Completed", "Feed") },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromCompleted", "Completed", "NavigationLink") },
                         { WriterAction.End, ODataExpectedExceptions.ODataException("ODataWriterCore_WriteEndCalledInInvalidState", "Completed") },
@@ -170,7 +170,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         TestExceptionUtils.RunCatching(() => w.WriteStart(ObjectModelUtils.CreateDefaultCollectionLink()));
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "Entry") },
+                        { WriterAction.StartResource, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "Entry") },
                         { WriterAction.StartFeed, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "Feed") },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "NavigationLink") },
                         { WriterAction.End, ODataExpectedExceptions.ODataException("ODataWriterCore_WriteEndCalledInInvalidState", "Error") },
@@ -185,7 +185,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         mw.WriteError(new ODataError(), false);
                     },
                     ExpectedResults = new Dictionary<WriterAction, ExpectedException> { 
-                        { WriterAction.StartEntry, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "Entry") },
+                        { WriterAction.StartResource, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "Entry") },
                         { WriterAction.StartFeed, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "Feed") },
                         { WriterAction.StartLink, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "NavigationLink") },
                         { WriterAction.End, ODataExpectedExceptions.ODataException("ODataWriterCore_WriteEndCalledInInvalidState", "Error") },
@@ -245,7 +245,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             switch (writerAction)
             {
-                case WriterAction.StartEntry:
+                case WriterAction.StartResource:
                     writer.WriteStart(ObjectModelUtils.CreateDefaultEntry());
                     break;
                 case WriterAction.StartFeed:

@@ -251,7 +251,7 @@ namespace Microsoft.OData.Client.Materialization
 
             bool result = false;
             MaterializerNavigationLink atomProperty = default(MaterializerNavigationLink);
-            IEnumerable<ODataNestedResourceInfo> properties = entry.NavigationLinks;
+            IEnumerable<ODataNestedResourceInfo> properties = entry.NestedResourceInfos;
             ClientEdmModel model = entry.EntityDescriptor.Model;
             for (int i = 0; i < path.Count; i++)
             {
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Client.Materialization
                     else
                     {
                         entry = atomProperty.Entry;
-                        properties = entry.NavigationLinks;
+                        properties = entry.NestedResourceInfos;
                     }
                 }
                 else
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
                 // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
-                atomProperty = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, propertyName);
+                atomProperty = ODataEntityMaterializer.GetPropertyOrThrow(entry.NestedResourceInfos, propertyName);
 
                 if (atomProperty.Entry != null)
                 {
@@ -390,7 +390,7 @@ namespace Microsoft.OData.Client.Materialization
 
             // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
             // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
-            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, name);
+            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NestedResourceInfos, name);
             MaterializerEntry result = property.Entry;
             if (result == null)
             {
@@ -461,7 +461,7 @@ namespace Microsoft.OData.Client.Materialization
                 // be on its Atom payload from the server. Thus we don't need to set the MyEmployee.Manager link.
                 StreamDescriptor streamInfo;
                 var odataProperty = entry.Entry.Properties.Where(p => p.Name == propertyName).FirstOrDefault();
-                var link = odataProperty == null && entry.NavigationLinks != null ? entry.NavigationLinks.Where(l => l.Name == propertyName).FirstOrDefault() : null;
+                var link = odataProperty == null && entry.NestedResourceInfos != null ? entry.NestedResourceInfos.Where(l => l.Name == propertyName).FirstOrDefault() : null;
 
                 if (link == null && odataProperty == null && !entry.EntityDescriptor.TryGetNamedStreamInfo(propertyName, out streamInfo))
                 {
@@ -597,7 +597,7 @@ namespace Microsoft.OData.Client.Materialization
             object result = null;
             ODataNestedResourceInfo link = null;
             ODataProperty odataProperty = null;
-            ICollection<ODataNestedResourceInfo> links = entry.NavigationLinks;
+            ICollection<ODataNestedResourceInfo> links = entry.NestedResourceInfos;
             IEnumerable<ODataProperty> properties = entry.Entry.Properties;
             ClientEdmModel edmModel = this.MaterializerContext.Model;
             for (int i = 0; i < path.Count; i++)
@@ -734,7 +734,7 @@ namespace Microsoft.OData.Client.Materialization
                             }
 
                             properties = linkEntry.Properties;
-                            links = linkEntry.NavigationLinks;
+                            links = linkEntry.NestedResourceInfos;
                             result = linkEntry.ResolvedObject;
                             entry = linkEntry;
                         }

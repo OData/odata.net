@@ -3821,8 +3821,8 @@ public enum Microsoft.OData.Core.ODataReaderState : int {
 	Completed = 9
 	EntityReferenceLink = 7
 	Exception = 8
-	NavigationLinkEnd = 6
-	NavigationLinkStart = 5
+	NestedResourceInfoEnd = 6
+	NestedResourceInfoStart = 5
 	ResourceEnd = 4
 	ResourceSetEnd = 2
 	ResourceSetStart = 1
@@ -3937,13 +3937,13 @@ public abstract class Microsoft.OData.Core.ODataDeltaWriter {
 	public abstract void WriteEnd ()
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteStart (Microsoft.OData.Core.ODataDeltaResourceSet deltaResourceSet)
-	public abstract void WriteStart (Microsoft.OData.Core.ODataNestedResourceInfo navigationLink)
+	public abstract void WriteStart (Microsoft.OData.Core.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract void WriteStart (Microsoft.OData.Core.ODataResource deltaResource)
-	public abstract void WriteStart (Microsoft.OData.Core.ODataResourceSet expandedFeed)
+	public abstract void WriteStart (Microsoft.OData.Core.ODataResourceSet expandedResourceSet)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataDeltaResourceSet deltaResourceSet)
-	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataNestedResourceInfo navigationLink)
+	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataResource deltaResource)
-	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataResourceSet expandedFeed)
+	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataResourceSet expandedResourceSet)
 }
 
 public abstract class Microsoft.OData.Core.ODataFormat {
@@ -4158,10 +4158,10 @@ public abstract class Microsoft.OData.Core.ODataWriter {
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteEntityReferenceLink (Microsoft.OData.Core.ODataEntityReferenceLink entityReferenceLink)
 	public abstract System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.Core.ODataEntityReferenceLink entityReferenceLink)
-	public abstract void WriteStart (Microsoft.OData.Core.ODataNestedResourceInfo navigationLink)
+	public abstract void WriteStart (Microsoft.OData.Core.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract void WriteStart (Microsoft.OData.Core.ODataResource resource)
 	public abstract void WriteStart (Microsoft.OData.Core.ODataResourceSet resourceSet)
-	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataNestedResourceInfo navigationLink)
+	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataResource resource)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.Core.ODataResourceSet resourceSet)
 }
@@ -4234,7 +4234,7 @@ public sealed class Microsoft.OData.Core.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetSerializationInfo (Microsoft.OData.Core.ODataDeltaResourceSet deltaFeed, Microsoft.OData.Core.ODataDeltaResourceSetSerializationInfo serializationInfo)
+	public static void SetSerializationInfo (Microsoft.OData.Core.ODataDeltaResourceSet deltaResourceSet, Microsoft.OData.Core.ODataDeltaResourceSetSerializationInfo serializationInfo)
 
 	[
 	ExtensionAttribute(),
@@ -4703,9 +4703,6 @@ public sealed class Microsoft.OData.Core.ODataMessageWriter : IDisposable {
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataCollectionWriter]] CreateODataCollectionWriterAsync (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
 	public Microsoft.OData.Core.ODataDeltaWriter CreateODataDeltaWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataDeltaWriter]] CreateODataDeltaWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataWriter]] CreateODataEntryWriterAsync ()
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataWriter]] CreateODataEntryWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataWriter]] CreateODataEntryWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmEntityType entityType)
 	public Microsoft.OData.Core.ODataParameterWriter CreateODataParameterWriter (Microsoft.OData.Edm.IEdmOperation operation)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataParameterWriter]] CreateODataParameterWriterAsync (Microsoft.OData.Edm.IEdmOperation operation)
 	public Microsoft.OData.Core.ODataWriter CreateODataResourceSetWriter ()
@@ -4717,6 +4714,9 @@ public sealed class Microsoft.OData.Core.ODataMessageWriter : IDisposable {
 	public Microsoft.OData.Core.ODataWriter CreateODataResourceWriter ()
 	public Microsoft.OData.Core.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 	public Microsoft.OData.Core.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmEntityType resourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataWriter]] CreateODataResourceWriterAsync ()
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataWriter]] CreateODataResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataWriter]] CreateODataResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmEntityType entityType)
 	public virtual void Dispose ()
 	public void WriteEntityReferenceLink (Microsoft.OData.Core.ODataEntityReferenceLink link)
 	public System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.Core.ODataEntityReferenceLink link)
@@ -6181,8 +6181,8 @@ public class Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguratio
 	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnEntryEnding (System.Action`1[[Microsoft.OData.Client.WritingEntryArgs]] action)
 	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnEntryStarting (System.Action`1[[Microsoft.OData.Client.WritingEntryArgs]] action)
 	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnMessageWriterSettingsCreated (System.Action`1[[Microsoft.OData.Client.MessageWriterSettingsArgs]] args)
-	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnNavigationLinkEnding (System.Action`1[[Microsoft.OData.Client.WritingNavigationLinkArgs]] action)
-	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnNavigationLinkStarting (System.Action`1[[Microsoft.OData.Client.WritingNavigationLinkArgs]] action)
+	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnNestedResourceInfoEnding (System.Action`1[[Microsoft.OData.Client.WritingNestedResourceInfoArgs]] action)
+	public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnNestedResourceInfoStarting (System.Action`1[[Microsoft.OData.Client.WritingNestedResourceInfoArgs]] action)
 }
 
 public class Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration {
@@ -6192,8 +6192,8 @@ public class Microsoft.OData.Client.DataServiceClientResponsePipelineConfigurati
 	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnFeedEnded (System.Action`1[[Microsoft.OData.Client.ReadingFeedArgs]] action)
 	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnFeedStarted (System.Action`1[[Microsoft.OData.Client.ReadingFeedArgs]] action)
 	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnMessageReaderSettingsCreated (System.Action`1[[Microsoft.OData.Client.MessageReaderSettingsArgs]] messageReaderSettingsAction)
-	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnNavigationLinkEnded (System.Action`1[[Microsoft.OData.Client.ReadingNavigationLinkArgs]] action)
-	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnNavigationLinkStarted (System.Action`1[[Microsoft.OData.Client.ReadingNavigationLinkArgs]] action)
+	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnNestedResourceInfoEnded (System.Action`1[[Microsoft.OData.Client.ReadingNestedResourceInfoArgs]] action)
+	public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnNestedResourceInfoStarted (System.Action`1[[Microsoft.OData.Client.ReadingNestedResourceInfoArgs]] action)
 }
 
 public class Microsoft.OData.Client.DataServiceCollection`1 : ObservableCollection`1, ICollection`1, IEnumerable`1, IList`1, IReadOnlyCollection`1, IReadOnlyList`1, ICollection, IEnumerable, IList, INotifyPropertyChanged, INotifyCollectionChanged {
@@ -6826,8 +6826,8 @@ public sealed class Microsoft.OData.Client.ReadingFeedArgs {
 	Microsoft.OData.Core.ODataResourceSet Feed  { public get; }
 }
 
-public sealed class Microsoft.OData.Client.ReadingNavigationLinkArgs {
-	public ReadingNavigationLinkArgs (Microsoft.OData.Core.ODataNestedResourceInfo link)
+public sealed class Microsoft.OData.Client.ReadingNestedResourceInfoArgs {
+	public ReadingNestedResourceInfoArgs (Microsoft.OData.Core.ODataNestedResourceInfo link)
 
 	Microsoft.OData.Core.ODataNestedResourceInfo Link  { public get; }
 }
@@ -6857,8 +6857,8 @@ public sealed class Microsoft.OData.Client.WritingEntryArgs {
 	Microsoft.OData.Core.ODataResource Entry  { public get; }
 }
 
-public sealed class Microsoft.OData.Client.WritingNavigationLinkArgs {
-	public WritingNavigationLinkArgs (Microsoft.OData.Core.ODataNestedResourceInfo link, object source, object target)
+public sealed class Microsoft.OData.Client.WritingNestedResourceInfoArgs {
+	public WritingNestedResourceInfoArgs (Microsoft.OData.Core.ODataNestedResourceInfo link, object source, object target)
 
 	Microsoft.OData.Core.ODataNestedResourceInfo Link  { public get; }
 	object Source  { public get; }

@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core.Tests
 {
     internal class TestJsonLightReaderEntryState : IODataJsonLightReaderResourceState
     {
-        private ODataResource entry = ReaderUtils.CreateNewEntry();
+        private ODataResource entry = ReaderUtils.CreateNewResource();
         private readonly EdmEntityType edmEntityType = new EdmEntityType("TestNamespace", "EntityType");
         private SelectedPropertiesNode selectedProperties;
         private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.Tests
 
         public bool AnyPropertyFound { get; set; }
 
-        public ODataJsonLightReaderNavigationLinkInfo FirstNavigationLinkInfo
+        public ODataJsonLightReaderNestedResourceInfo FirstNestedResourceInfo
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Core.Tests
             get { throw new NotImplementedException(); }
         }
 
-        public bool ProcessingMissingProjectedNavigationLinks
+        public bool ProcessingMissingProjectedNestedResourceInfos
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }

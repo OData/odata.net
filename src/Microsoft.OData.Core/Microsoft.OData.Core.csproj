@@ -133,7 +133,7 @@
     <Compile Include="JsonLight\ODataJsonLightPropertyAndValueDeserializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightPropertySerializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightReader.cs" />
-    <Compile Include="JsonLight\ODataJsonLightReaderNavigationLinkInfo.cs" />
+    <Compile Include="JsonLight\ODataJsonLightReaderNestedResourceInfo.cs" />
     <Compile Include="JsonLight\ODataJsonLightReaderUtils.cs" />
     <Compile Include="JsonLight\ODataJsonLightSerializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightServiceDocumentDeserializer.cs" />

@@ -14,7 +14,7 @@ namespace Microsoft.OData.Core
         /// <summary>None delta</summary>
         None,
 
-        /// <summary>Delta feed</summary>
+        /// <summary>Delta resource set</summary>
         ResourceSet,
 
         /// <summary>Delta resource</summary>

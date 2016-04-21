@@ -585,7 +585,7 @@ namespace Microsoft.OData.Service.Serializers
                     continue;
                 }
 
-                var linkArgs = new DataServiceODataWriterNavigationLinkArgs(navLink, this.Service.OperationContext);
+                var linkArgs = new DataServiceODataWriterNestedResourceInfoArgs(navLink, this.Service.OperationContext);
                 this.dataServicesODataWriter.WriteStart(linkArgs);
 
                 if (navProperty.Expand)

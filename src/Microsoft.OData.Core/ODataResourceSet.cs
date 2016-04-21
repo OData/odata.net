@@ -13,10 +13,10 @@ namespace Microsoft.OData.Core
     /// </summary>
     public sealed class ODataResourceSet : ODataResourceSetBase
     {
-        /// <summary>The feed actions provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The resource set actions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataAction> actions = new List<ODataAction>();
 
-        /// <summary>The feed functions provided by the user or seen on the wire (never computed).</summary>
+        /// <summary>The resource set functions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataFunction> functions = new List<ODataFunction>();
 
         /// <summary>
@@ -24,15 +24,15 @@ namespace Microsoft.OData.Core
         /// </summary>
         private ODataResourceSerializationInfo serializationInfo;
 
-        /// <summary>Gets the feed actions.</summary>
-        /// <returns>The feed actions.</returns>
+        /// <summary>Gets the resource set actions.</summary>
+        /// <returns>The resource set actions.</returns>
         public IEnumerable<ODataAction> Actions
         {
             get { return this.actions; }
         }
 
-        /// <summary>Gets the feed functions.</summary>
-        /// <returns>The feed functions.</returns>
+        /// <summary>Gets the resource set functions.</summary>
+        /// <returns>The resource set functions.</returns>
         public IEnumerable<ODataFunction> Functions
         {
             get { return this.functions; }
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Add action to feed.
+        /// Add action to resource set.
         /// </summary>
         /// <param name="action">The action to add.</param>
         public void AddAction(ODataAction action)
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Add function to feed.
+        /// Add function to resource set.
         /// </summary>
         /// <param name="function">The function to add.</param>
         public void AddFunction(ODataFunction function)

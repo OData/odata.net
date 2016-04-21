@@ -29,8 +29,8 @@ namespace Microsoft.OData.Core
         /// <summary>The input to read the payload from.</summary>
         private readonly ODataInputContext inputContext;
 
-        /// <summary>true if the reader is created for reading a feed; false when it is created for reading a resource.</summary>
-        private readonly bool readingFeed;
+        /// <summary>true if the reader is created for reading a resource set; false when it is created for reading a resource.</summary>
+        private readonly bool readingResourceSet;
 
         /// <summary>true if the reader is created for reading expanded navigation property in delta response; false otherwise.</summary>
         private readonly bool readingDelta;
@@ -42,39 +42,39 @@ namespace Microsoft.OData.Core
         private readonly IODataReaderWriterListener listener;
 
         /// <summary>
-        /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this feed.
-        /// Only applies when reading a top-level feed; otherwise null.
+        /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resource set.
+        /// Only applies when reading a top-level resource set; otherwise null.
         /// </summary>
-        private readonly ResourceSetWithoutExpectedTypeValidator feedValidator;
+        private readonly ResourceSetWithoutExpectedTypeValidator resourceSetValidator;
 
         /// <summary>The number of entries which have been started but not yet ended.</summary>
-        private int currentEntryDepth;
+        private int currentResourceDepth;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input to read the payload from.</param>
-        /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading a resource.</param>
+        /// <param name="readingResourceSet">true if the reader is created for reading a resource set; false when it is created for reading a resource.</param>
         /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCore(
             ODataInputContext inputContext,
-            bool readingFeed,
+            bool readingResourceSet,
             bool readingDelta,
             IODataReaderWriterListener listener)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
 
             this.inputContext = inputContext;
-            this.readingFeed = readingFeed;
+            this.readingResourceSet = readingResourceSet;
             this.readingDelta = readingDelta;
             this.listener = listener;
-            this.currentEntryDepth = 0;
+            this.currentResourceDepth = 0;
 
-            // create a collection validator when reading a top-level feed and a user model is present
-            if (this.readingFeed && this.inputContext.Model.IsUserModel())
+            // create a collection validator when reading a top-level resource set and a user model is present
+            if (this.readingResourceSet && this.inputContext.Model.IsUserModel())
             {
-                this.feedValidator = new ResourceSetWithoutExpectedTypeValidator();
+                this.resourceSetValidator = new ResourceSetWithoutExpectedTypeValidator();
             }
         }
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Returns the current item as <see cref="ODataResource"/>. Must only be called if the item actually is a resource.
         /// </summary>
-        protected ODataResource CurrentEntry
+        protected ODataResource CurrentResource
         {
             get
             {
@@ -117,9 +117,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the current item as <see cref="ODataResourceSet"/>. Must only be called if the item actually is a feed.
+        /// Returns the current item as <see cref="ODataResourceSet"/>. Must only be called if the item actually is a resource set.
         /// </summary>
-        protected ODataResourceSet CurrentFeed
+        protected ODataResourceSet CurrentResourceSet
         {
             get
             {
@@ -131,18 +131,18 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Returns the current resource depth.
         /// </summary>
-        protected int CurrentEntryDepth
+        protected int CurrentResourceDepth
         {
             get
             {
-                return this.currentEntryDepth;
+                return this.currentResourceDepth;
             }
         }
 
         /// <summary>
-        /// Returns the current item as <see cref="ODataNestedResourceInfo"/>. Must only be called if the item actually is a navigation link.
+        /// Returns the current item as <see cref="ODataNestedResourceInfo"/>. Must only be called if the item actually is a nested resource info.
         /// </summary>
-        protected ODataNestedResourceInfo CurrentNavigationLink
+        protected ODataNestedResourceInfo CurrentNestedResourceInfo
         {
             get
             {
@@ -211,12 +211,12 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Returns the scope of the entity owning the current link.
         /// </summary>
-        protected Scope LinkParentEntityScope
+        protected Scope LinkParentResourceScope
         {
             get
             {
                 Debug.Assert(this.scopes != null && this.scopes.Count > 1, "We must have at least two scoped for LinkParentEntityScope to be called.");
-                Debug.Assert(this.scopes.Peek().State == ODataReaderState.NavigationLinkStart, "The LinkParentEntityScope can only be accessed when in NavigationLinkStart state.");
+                Debug.Assert(this.scopes.Peek().State == ODataReaderState.NestedResourceInfoStart, "The LinkParentEntityScope can only be accessed when in NestedResourceInfoStart state.");
                 return this.scopes.Skip(1).First();
             }
         }
@@ -231,13 +231,13 @@ namespace Microsoft.OData.Core
                 Debug.Assert(this.scopes != null, "Scopes must exist.");
 
                 // there is the root scope at the top (when the writer has not started or has completed) 
-                // and then the top-level scope (the top-level resource/feed item) as the second scope on the stack
+                // and then the top-level scope (the top-level resource/resource set item) as the second scope on the stack
                 return this.scopes.Count <= 2;
             }
         }
 
         /// <summary>
-        /// If the current scope is a content of an expanded link, this returns the parent navigation link scope, otherwise null.
+        /// If the current scope is a content of an expanded link, this returns the parent nested resource info scope, otherwise null.
         /// </summary>
         protected Scope ExpandedLinkContentParentScope
         {
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Core
                 if (this.scopes.Count > 1)
                 {
                     Scope parentScope = this.scopes.Skip(1).First();
-                    if (parentScope.State == ODataReaderState.NavigationLinkStart)
+                    if (parentScope.State == ODataReaderState.NestedResourceInfoStart)
                     {
                         return parentScope;
                     }
@@ -258,7 +258,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// True if we are reading a resource or feed that is the direct content of an expanded link. Otherwise false.
+        /// True if we are reading a resource or resource set that is the direct content of an expanded link. Otherwise false.
         /// </summary>
         protected bool IsExpandedLinkContent
         {
@@ -269,20 +269,20 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Set to true if a feed is being read.
+        /// Set to true if a resource set is being read.
         /// </summary>
-        protected bool ReadingFeed
+        protected bool ReadingResourceSet
         {
             get
             {
-                return this.readingFeed;
+                return this.readingResourceSet;
             }
         }
 
         /// <summary>
         /// Returns true if we are reading a nested payload,
-        /// e.g. an expanded resource or feed within a delta payload, 
-        /// or a resource or a feed within a parameters payload.
+        /// e.g. an expanded resource or resource set within a delta payload, 
+        /// or a resource or a resource set within a parameters payload.
         /// </summary>
         protected bool IsReadingNestedPayload
         {
@@ -293,19 +293,19 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validator to validate consistency of entries in top-level feeds.
+        /// Validator to validate consistency of entries in top-level resource sets.
         /// </summary>
-        /// <remarks>We only use this for top-level feeds since we support collection validation for 
-        /// feeds only when metadata is available and in these cases we already validate the 
-        /// types of the entries in nested feeds.</remarks>
-        protected ResourceSetWithoutExpectedTypeValidator CurrentFeedValidator
+        /// <remarks>We only use this for top-level resource sets since we support collection validation for 
+        /// resource sets only when metadata is available and in these cases we already validate the 
+        /// types of the entries in nested resource sets.</remarks>
+        protected ResourceSetWithoutExpectedTypeValidator CurrentResourceSetValidator
         {
             get
             {
-                Debug.Assert(this.State == ODataReaderState.ResourceStart, "CurrentFeedValidator should only be called while reading a resource.");
+                Debug.Assert(this.State == ODataReaderState.ResourceStart, "CurrentResourceSetValidator should only be called while reading a resource.");
 
-                // Only return the collection validator for entries in top-level feeds
-                return this.scopes.Count == 3 ? this.feedValidator : null;
+                // Only return the collection validator for entries in top-level resource sets
+                return this.scopes.Count == 3 ? this.resourceSetValidator : null;
             }
         }
 
@@ -363,16 +363,16 @@ namespace Microsoft.OData.Core
         protected abstract bool ReadAtResourceEndImplementation();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'NavigationLinkStart'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract bool ReadAtNavigationLinkStartImplementation();
+        protected abstract bool ReadAtNestedResourceInfoStartImplementation();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'NavigationLinkEnd'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract bool ReadAtNavigationLinkEndImplementation();
+        protected abstract bool ReadAtNestedResourceInfoEndImplementation();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
@@ -451,47 +451,47 @@ namespace Microsoft.OData.Core
         /// This method should be called even if the type name was not found in which case a null should be passed in.
         /// The method validates that some type will be available as the current entity type after it returns (if we are parsing using metadata).
         /// </summary>
-        /// <param name="entityTypeNameFromPayload">The entity type name found in the payload or null if no type was specified in the payload.</param>
-        protected void ApplyEntityTypeNameFromPayload(string entityTypeNameFromPayload)
+        /// <param name="resourceTypeNameFromPayload">The entity type name found in the payload or null if no type was specified in the payload.</param>
+        protected void ApplyResourceTypeNameFromPayload(string resourceTypeNameFromPayload)
         {
             Debug.Assert(
                 this.scopes.Count > 0 && this.scopes.Peek().Item is ODataResource,
-                "Entity type can be applied only when in resource scope.");
+                "Resource type can be applied only when in resource scope.");
 
             SerializationTypeNameAnnotation serializationTypeNameAnnotation;
             EdmTypeKind targetTypeKind;
-            IEdmEntityTypeReference targetEntityTypeReference =
+            IEdmEntityTypeReference targetResourceTypeReference =
                 (IEdmEntityTypeReference)ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.Entity,
                     /*defaultPrimitivePayloadType*/ null,
                     this.CurrentEntityType.ToTypeReference(),
-                    entityTypeNameFromPayload,
+                    resourceTypeNameFromPayload,
                     this.inputContext.Model,
                     this.inputContext.MessageReaderSettings,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);
 
-            IEdmEntityType targetEntityType = null;
-            ODataResource resource = this.CurrentEntry;
-            if (targetEntityTypeReference != null)
+            IEdmEntityType targetResourceType = null;
+            ODataResource resource = this.CurrentResource;
+            if (targetResourceTypeReference != null)
             {
-                targetEntityType = targetEntityTypeReference.EntityDefinition();
-                resource.TypeName = targetEntityType.FullTypeName();
+                targetResourceType = targetResourceTypeReference.EntityDefinition();
+                resource.TypeName = targetResourceType.FullTypeName();
 
                 if (serializationTypeNameAnnotation != null)
                 {
                     resource.SetAnnotation(serializationTypeNameAnnotation);
                 }
             }
-            else if (entityTypeNameFromPayload != null)
+            else if (resourceTypeNameFromPayload != null)
             {
-                resource.TypeName = entityTypeNameFromPayload;
+                resource.TypeName = resourceTypeNameFromPayload;
             }
 
             // Set the current entity type since the type from payload might be more derived than
             // the expected one.
-            this.CurrentEntityType = targetEntityType;
+            this.CurrentEntityType = targetResourceType;
         }
 
         /// <summary>
@@ -521,11 +521,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Increments the nested resource count by one and fails if the new value exceeds the maxiumum nested resource depth limit.
         /// </summary>
-        protected void IncreaseEntryDepth()
+        protected void IncreaseResourceDepth()
         {
-            this.currentEntryDepth++;
+            this.currentResourceDepth++;
 
-            if (this.currentEntryDepth > this.inputContext.MessageReaderSettings.MessageQuotas.MaxNestingDepth)
+            if (this.currentResourceDepth > this.inputContext.MessageReaderSettings.MessageQuotas.MaxNestingDepth)
             {
                 throw new ODataException(Strings.ValidationUtils_MaxDepthOfNestedEntriesExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxNestingDepth));
             }
@@ -534,11 +534,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Decrements the nested resource count by one.
         /// </summary>
-        protected void DecreaseEntryDepth()
+        protected void DecreaseResourceDepth()
         {
-            Debug.Assert(this.currentEntryDepth > 0, "Resource depth should never become negative.");
+            Debug.Assert(this.currentResourceDepth > 0, "Resource depth should never become negative.");
 
-            this.currentEntryDepth--;
+            this.currentResourceDepth--;
         }
 
         /// <summary>
@@ -563,21 +563,21 @@ namespace Microsoft.OData.Core
                     break;
 
                 case ODataReaderState.ResourceStart:
-                    this.IncreaseEntryDepth();
+                    this.IncreaseResourceDepth();
                     result = this.ReadAtResourceStartImplementation();
                     break;
 
                 case ODataReaderState.ResourceEnd:
-                    this.DecreaseEntryDepth();
+                    this.DecreaseResourceDepth();
                     result = this.ReadAtResourceEndImplementation();
                     break;
 
-                case ODataReaderState.NavigationLinkStart:
-                    result = this.ReadAtNavigationLinkStartImplementation();
+                case ODataReaderState.NestedResourceInfoStart:
+                    result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
 
-                case ODataReaderState.NavigationLinkEnd:
-                    result = this.ReadAtNavigationLinkEndImplementation();
+                case ODataReaderState.NestedResourceInfoEnd:
+                    result = this.ReadAtNestedResourceInfoEndImplementation();
                     break;
 
                 case ODataReaderState.EntityReferenceLink:
@@ -595,7 +595,7 @@ namespace Microsoft.OData.Core
 
             if ((this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd) && this.Item != null)
             {
-                ReaderValidationUtils.ValidateEntry(this.CurrentEntry);
+                ReaderValidationUtils.ValidateResource(this.CurrentResource);
             }
 
             return result;
@@ -690,14 +690,14 @@ namespace Microsoft.OData.Core
             /// <param name="expectedEntityType">The expected entity type for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meanings for given state:
-            /// Start -               it's the expected base type of the top-level resource or entries in the top-level feed.
-            /// ResourceSetStart -           it's the expected base type of the entries in the feed.
-            ///                       note that it might be a more derived type than the base type of the entity set for the feed.
+            /// Start -               it's the expected base type of the top-level resource or entries in the top-level resource set.
+            /// ResourceSetStart -           it's the expected base type of the entries in the resource set.
+            ///                       note that it might be a more derived type than the base type of the entity set for the resource set.
             /// EntryStart -          it's the expected base type of the resource. If the resource has no type name specified
             ///                       this type will be assumed. Otherwise the specified type name must be
             ///                       the expected type or a more derived type.
-            /// NavigationLinkStart - it's the expected base type the entries in the expanded link (either the single resource
-            ///                       or entries in the expanded feed).
+            /// NestedResourceInfoStart - it's the expected base type the entries in the expanded link (either the single resource
+            ///                       or entries in the expanded resource set).
             /// EntityReferenceLink - it's null, no need for types on entity reference links.
             /// In all cases the specified type must be an entity type.</remarks>
             [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
@@ -709,8 +709,8 @@ namespace Microsoft.OData.Core
                     state == ODataReaderState.ResourceEnd && (item == null || item is ODataResource) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
-                    state == ODataReaderState.NavigationLinkStart && item is ODataNestedResourceInfo ||
-                    state == ODataReaderState.NavigationLinkEnd && item is ODataNestedResourceInfo ||
+                    state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||
+                    state == ODataReaderState.NestedResourceInfoEnd && item is ODataNestedResourceInfo ||
                     state == ODataReaderState.EntityReferenceLink && item is ODataEntityReferenceLink ||
                     state == ODataReaderState.Start && item == null ||
                     state == ODataReaderState.Completed && item == null,

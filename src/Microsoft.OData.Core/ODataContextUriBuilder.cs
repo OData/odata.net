@@ -162,7 +162,7 @@ namespace Microsoft.OData.Core
 
                         break;
                     case ODataDeltaKind.ResourceSet:
-                        builder.Append(ODataConstants.ContextUriDeltaFeed);
+                        builder.Append(ODataConstants.ContextUriDeltaResourceSet);
                         break;
                     case ODataDeltaKind.DeletedEntry:
                         builder.Append(ODataConstants.ContextUriDeletedEntry);

@@ -52,12 +52,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
                     case ODataReaderState.ResourceSetStart:
                         writer.WriteStart((ODataResourceSet)reader.Item);
                         break;
-                    case ODataReaderState.NavigationLinkStart:
+                    case ODataReaderState.NestedResourceInfoStart:
                         writer.WriteStart((ODataNestedResourceInfo)reader.Item);
                         break;
                     case ODataReaderState.ResourceEnd:
                     case ODataReaderState.ResourceSetEnd:
-                    case ODataReaderState.NavigationLinkEnd:
+                    case ODataReaderState.NestedResourceInfoEnd:
                         writer.WriteEnd();
                         break;
                     default:

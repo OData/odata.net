@@ -356,14 +356,14 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WritingEntryArgs.cs">
       <Link>WritingEntryArgs.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WritingNavigationLinkArgs.cs">
-      <Link>WritingNavigationLinkArgs.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WritingNestedResourceInfoArgs.cs">
+      <Link>WritingNestedResourceInfoArgs.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceClientRequestPipelineConfiguration.cs">
       <Link>DataServiceClientRequestPipelineConfiguration.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReadingNavigationLinkArgs.cs">
-      <Link>ReadingNavigationLinkArgs.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReadingNestedResourceInfoArgs.cs">
+      <Link>ReadingNestedResourceInfoArgs.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReadingFeedArgs.cs">
       <Link>ReadingFeedArgs.cs</Link>

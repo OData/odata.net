@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
     internal sealed class ResourceSetWithoutExpectedTypeValidator
     {
         /// <summary>
-        /// The base type for all entries in the feed.
+        /// The base type for all entries in the resource set.
         /// </summary>
         private IEdmEntityType itemType;
 
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates the type of a resource in a top-level feed.
+        /// Validates the type of a resource in a top-level resource set.
         /// </summary>
         /// <param name="resourceType">The type of the resource.</param>
         internal void ValidateResource(IEdmEntityType resourceType)

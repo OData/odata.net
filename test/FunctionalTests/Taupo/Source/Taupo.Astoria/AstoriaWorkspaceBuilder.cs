@@ -357,7 +357,7 @@ namespace Microsoft.Test.Taupo.Astoria
         {
             var entitySets = this.CurrentWorkspace.ConceptualModel.EntityContainers.SelectMany(ec => ec.EntitySets);
             return entitySets.Any(entitySet => entitySet.Annotations.OfType<EntitySetEndPointAnnotation>().Any()) ||
-                entitySets.Any(entitySet => entitySet.Annotations.OfType<NavigationLinkEndPointAnnotation>().Any()) ||
+                entitySets.Any(entitySet => entitySet.Annotations.OfType<NestedResourceInfoEndPointAnnotation>().Any()) ||
                 entitySets.Any(entitySet => entitySet.Annotations.OfType<RelationshipLinkEndPointAnnotation>().Any()) ||
                 entitySets.Any(entitySet => entitySet.Annotations.OfType<EditLinkReplacementAnnotation>().Any()) ||
                 entitySets.Any(entitySet => entitySet.Annotations.OfType<EditMediaLinkReplacementAnnotation>().Any()) ||

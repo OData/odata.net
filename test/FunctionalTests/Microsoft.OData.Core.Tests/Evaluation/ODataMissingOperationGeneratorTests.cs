@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             this.odataAction = new ODataAction {Metadata = new Uri("http://temp.org/$metadata#Fake.FakeAction")};
             this.odataFunction = new ODataFunction {Metadata = new Uri("http://temp.org/$metadata#Fake.FakeFunction")};
 
-            this.entry = ReaderUtils.CreateNewEntry();
+            this.entry = ReaderUtils.CreateNewResource();
             this.entityType = new EdmEntityType("TestNamespace", "EntityType");
         }
 

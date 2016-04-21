@@ -142,7 +142,7 @@ namespace Microsoft.OData.Service.Serializers
                         itemsStack.Pop();
                         break;
 
-                    case ODataReaderState.NavigationLinkStart:
+                    case ODataReaderState.NestedResourceInfoStart:
                         ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)odataReader.Item;
                         Debug.Assert(navigationLink != null, "Navigation link should never be null.");
 
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Service.Serializers
                         itemsStack.Push(navigationLink);
                         break;
 
-                    case ODataReaderState.NavigationLinkEnd:
+                    case ODataReaderState.NestedResourceInfoEnd:
                         Debug.Assert(itemsStack.Count > 0 && itemsStack.Peek() == odataReader.Item, "The navigation link which is ending should be on the top of the items stack.");
                         itemsStack.Pop();
                         break;

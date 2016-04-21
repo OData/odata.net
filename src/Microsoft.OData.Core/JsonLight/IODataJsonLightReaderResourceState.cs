@@ -43,10 +43,10 @@ namespace Microsoft.OData.Core.JsonLight
         bool AnyPropertyFound { get; set; }
 
         /// <summary>
-        /// If the reader finds a navigation link to report, but it must first report the parent resource
-        /// it will store the navigation link info in this property. So this will only ever store the first navigation link of a resource.
+        /// If the reader finds a nested resource info to report, but it must first report the parent resource
+        /// it will store the nested resource info info in this property. So this will only ever store the first nested resource info of a resource.
         /// </summary>
-        ODataJsonLightReaderNavigationLinkInfo FirstNavigationLinkInfo { get; set; }
+        ODataJsonLightReaderNestedResourceInfo FirstNestedResourceInfo { get; set; }
 
         /// <summary>
         /// The duplicate property names checker for the resource represented by the current state. May be null.
@@ -66,6 +66,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// true if we have started processing missing projected navigation links, false otherwise.
         /// </summary>
-        bool ProcessingMissingProjectedNavigationLinks { get; set; }
+        bool ProcessingMissingProjectedNestedResourceInfos { get; set; }
     }
 }

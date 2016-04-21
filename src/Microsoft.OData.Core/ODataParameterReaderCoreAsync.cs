@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core
         protected abstract Task<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state Value, Resource, Feed or Collection state.
+        /// Implementation of the reader logic when in state Value, Resource, Resource Set or Collection state.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -56,10 +56,10 @@ namespace Microsoft.OData.Core
         protected abstract Task<ODataReader> CreateResourceReaderAsync(IEdmEntityType expectedEntityType);
 
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.
+        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected feed element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
+        /// <param name="expectedEntityType">Expected resource set element type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntityType expectedEntityType);
 

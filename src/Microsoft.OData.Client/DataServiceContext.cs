@@ -2288,7 +2288,7 @@ namespace Microsoft.OData.Client
                 {
                     Entity = target,
                     State = EntityStates.Modified,
-                    EditLink = sourceResource.GetNavigationLink(this.baseUriResolver, property)
+                    EditLink = sourceResource.GetNestedResourceInfo(this.baseUriResolver, property)
                 };
 
                 targetResource.SetParentForUpdate(sourceResource, sourceProperty);
@@ -3080,7 +3080,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    requestUri = box.GetNavigationLink(this.baseUriResolver, property);
+                    requestUri = box.GetNestedResourceInfo(this.baseUriResolver, property);
                 }
             }
 

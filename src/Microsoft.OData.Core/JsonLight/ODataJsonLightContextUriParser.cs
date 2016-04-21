@@ -200,10 +200,10 @@ namespace Microsoft.OData.Core.JsonLight
                 hasItemSelector = true;
                 fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriFragmentItemSelector.Length);
             }
-            else if (fragment.EndsWith(ODataConstants.ContextUriDeltaFeed, StringComparison.Ordinal))
+            else if (fragment.EndsWith(ODataConstants.ContextUriDeltaResourceSet, StringComparison.Ordinal))
             {
                 kind = ODataDeltaKind.ResourceSet;
-                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeltaFeed.Length);
+                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeltaResourceSet.Length);
             }
             else if (fragment.EndsWith(ODataConstants.ContextUriDeletedEntry, StringComparison.Ordinal))
             {
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                     if (foundNavigationSource != null)
                     {
-                        // Feed: {schema.entity-container.entity-set} or Singleton: {schema.entity-container.singleton}
+                        // Resource Set: {schema.entity-container.entity-set} or Singleton: {schema.entity-container.singleton}
                         this.parseResult.NavigationSource = foundNavigationSource;
                         this.parseResult.EdmType = edmTypeResolver.GetElementType(foundNavigationSource);
                         detectedPayloadKind = foundNavigationSource is IEdmSingleton ? ODataPayloadKind.Resource : ODataPayloadKind.ResourceSet;

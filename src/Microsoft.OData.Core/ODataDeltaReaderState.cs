@@ -15,14 +15,14 @@ namespace Microsoft.OData.Core
         /// <remarks>In this state, the Item property of the <see cref="ODataDeltaReader"/> returns null.</remarks>
         Start,
 
-        /// <summary>The start of a delta feed has been read.</summary>
+        /// <summary>The start of a delta resource set has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
-        /// an <see cref="ODataDeltaResourceSet"/> but no properties may be filled in until the DeltaFeedEnd state is reached.
+        /// an <see cref="ODataDeltaResourceSet"/> but no properties may be filled in until the DeltaResourceSetEnd state is reached.
         /// </remarks>
         DeltaResourceSetStart,
 
-        /// <summary>The end of a delta feed has been read.</summary>
+        /// <summary>The end of a delta resource set has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
         /// an <see cref="ODataDeltaResourceSet"/> with all properties filled in.

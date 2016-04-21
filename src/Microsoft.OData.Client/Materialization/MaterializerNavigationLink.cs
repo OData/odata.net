@@ -66,10 +66,10 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materializer link.</returns>
         public static MaterializerNavigationLink CreateLink(ODataNestedResourceInfo link, MaterializerEntry entry)
         {
-            Debug.Assert(link.GetAnnotation<MaterializerNavigationLink>() == null, "there should be no MaterializerNavigationLink annotation on the entry link yet");
-            MaterializerNavigationLink materializedNavigationLink = new MaterializerNavigationLink(link, entry);
-            link.SetAnnotation<MaterializerNavigationLink>(materializedNavigationLink);
-            return materializedNavigationLink;
+            Debug.Assert(link.GetAnnotation<MaterializerNavigationLink>() == null, "there should be no MaterializerNestedResourceInfo annotation on the entry link yet");
+            MaterializerNavigationLink materializedNestedResourceInfo = new MaterializerNavigationLink(link, entry);
+            link.SetAnnotation<MaterializerNavigationLink>(materializedNestedResourceInfo);
+            return materializedNestedResourceInfo;
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materializer link.</returns>
         public static MaterializerNavigationLink CreateLink(ODataNestedResourceInfo link, ODataResourceSet resourceSet)
         {
-            Debug.Assert(link.GetAnnotation<MaterializerNavigationLink>() == null, "there should be no MaterializerNavigationLink annotation on the feed link yet");
-            MaterializerNavigationLink materializedNavigationLink = new MaterializerNavigationLink(link, resourceSet);
-            link.SetAnnotation<MaterializerNavigationLink>(materializedNavigationLink);
-            return materializedNavigationLink;
+            Debug.Assert(link.GetAnnotation<MaterializerNavigationLink>() == null, "there should be no MaterializerNestedResourceInfo annotation on the feed link yet");
+            MaterializerNavigationLink materializedNestedResourceInfo = new MaterializerNavigationLink(link, resourceSet);
+            link.SetAnnotation<MaterializerNavigationLink>(materializedNestedResourceInfo);
+            return materializedNestedResourceInfo;
         }
 
         /// <summary>

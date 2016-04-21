@@ -15,14 +15,14 @@ namespace Microsoft.OData.Core
         /// <remarks>In this state the Item property of the <see cref="ODataReader"/> returns null.</remarks>
         Start,
 
-        /// <summary>The start of a feed has been read.</summary>
+        /// <summary>The start of a resource set has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
         /// an <see cref="ODataResourceSet"/> but no properties may be filled in until the ResourceSetEnd state is reached.
         /// </remarks>
         ResourceSetStart,
 
-        /// <summary>The end of a feed has been read.</summary>
+        /// <summary>The end of a resource set has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
         /// an <see cref="ODataResourceSet"/> with all properties filled in.
@@ -43,19 +43,19 @@ namespace Microsoft.OData.Core
         /// </remarks>
         ResourceEnd,
 
-        /// <summary>The start of a navigation link has been read.</summary>
+        /// <summary>The start of a nested resource info has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
         /// an <see cref="ODataNestedResourceInfo"/> but no properties may be filled in until the LinkEnd state is reached.
         /// </remarks>
-        NavigationLinkStart,
+        NestedResourceInfoStart,
 
-        /// <summary>The end of a navigation link has been read.</summary>
+        /// <summary>The end of a nested resource info has been read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataReader"/> returns 
         /// an <see cref="ODataNestedResourceInfo"/> with all properties filled in.
         /// </remarks>
-        NavigationLinkEnd,
+        NestedResourceInfoEnd,
 
         /// <summary>An entity reference link was read.</summary>
         /// <remarks>
