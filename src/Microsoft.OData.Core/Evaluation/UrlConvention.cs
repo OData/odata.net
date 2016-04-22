@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_DESIGN
-    using System.Xml.Linq;
-#endif
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,11 +21,7 @@ namespace Microsoft.OData.Client
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if ODATALIB
 namespace Microsoft.OData.Core.Evaluation
-#else
-namespace Microsoft.OData.Service.Design
-#endif
 #endif
 #endif
 {
@@ -168,20 +161,6 @@ namespace Microsoft.OData.Service.Design
         }
 #endif
 
-#if ASTORIA_DESIGN
-        /// <summary>
-        /// Gets the url convention for an entity container based on its vocabulary annotations.
-        /// </summary>
-        /// <param name="edmxOrCsdlDocument">The edmx or csdl document that defines the model the container belongs to.</param>
-        /// <param name="containerName">The name of the container to get the url convention for.</param>
-        /// <returns>The url convention of the container.</returns>
-        internal static UrlConvention ForEntityContainer(XDocument edmxOrCsdlDocument, string containerName)
-        {
-            bool keyAsSegment = HasKeyAsSegmentAnnotation(edmxOrCsdlDocument, containerName);
-            return CreateWithExplicitValue(keyAsSegment);
-        }
-#endif
-
 #if ODATA_SERVICE
         /// <summary>
         /// Builds the annotations needed to indicate the supported url conventions based on the service's configuration.
@@ -296,59 +275,6 @@ namespace Microsoft.OData.Service.Design
             {
                 requestHeaders.SetHeader(UrlConventionHeaderName, KeyAsSegmentConventionName);
             }
-        }
-#endif
-
-#if ASTORIA_DESIGN
-        /// <summary>
-        /// Determines whether the model contains a value annotation indicating that the container with the given name uses the 'KeyAsSegment' url convention.
-        /// </summary>
-        /// <param name="edmxOrCsdlDocument">The edmx or csdl document.</param>
-        /// <param name="containerName">The name of the entity container.</param>
-        /// <returns>Whether the container uses the key-as-segment convention.</returns>
-        private static bool HasKeyAsSegmentAnnotation(XDocument edmxOrCsdlDocument, string containerName)
-        {
-            // <Annotations Target="AstoriaUnitTests.Tests.KeyAsSegmentContext">
-            //   <Annotation Term="Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" String="KeyAsSegment" />
-            // </Annotations>
-            const string TermValue = ConventionTermNamespace + "." + ConventionTermName;
-            XNamespace annotationsNamespace = XNamespace.Get("http://docs.oasis-open.org/odata/ns/edm");
-
-            // 1) Get all 'Annotations' elements...
-            // 2) which target a container with the given full name or unqualified name...
-            // 3) get all 'Annotation' elements...
-            // 4) and see if any of them have the right term and value.
-            bool containerNameHasNamespace = containerName.Contains(".");
-            return edmxOrCsdlDocument
-                .Descendants(annotationsNamespace.GetName("Annotations"))                
-                .Where(annotations => HasAnnotationWithValue(annotations, "Target", value => value == containerName || (!containerNameHasNamespace && value.EndsWith("." + containerName, StringComparison.Ordinal))))
-                .SelectMany(annotations => annotations.Elements(annotationsNamespace.GetName("Annotation")))
-                .Any(annotation => HasAnnotationWithValue(annotation, "Term", TermValue) && HasAnnotationWithValue(annotation, "String", KeyAsSegmentConventionName));
-        }
-
-        /// <summary>
-        /// Returns whether the given element has an annotation with the given name/value.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="annotationName">The annotation name.</param>
-        /// <param name="annotationValue">The annotation value.</param>
-        /// <returns>True if an annotation with the name/value was found, false otherwise.</returns>
-        private static bool HasAnnotationWithValue(XElement element, XName annotationName, string annotationValue)
-        {
-            return HasAnnotationWithValue(element, annotationName, value => value == annotationValue);
-        }
-
-        /// <summary>
-        /// Returns whether the given element has an annotation with the given name that passes the given predicate.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="annotationName">The annotation name.</param>
-        /// <param name="checkAnnotationValue">The callback to check the annotation's value.</param>
-        /// <returns>True if an annotation with the name and a suitable value was found, false otherwise.</returns>
-        private static bool HasAnnotationWithValue(XElement element, XName annotationName, Func<string, bool> checkAnnotationValue)
-        {
-            XAttribute annotation = element.Attribute(annotationName);
-            return annotation != null && checkAnnotationValue(annotation.Value);
         }
 #endif
     }
