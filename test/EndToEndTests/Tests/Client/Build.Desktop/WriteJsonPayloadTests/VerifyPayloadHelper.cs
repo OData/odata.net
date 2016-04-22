@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         }
                     case ODataReaderState.ResourceEnd:
                         {
-                            if (verifyEntry != null)
+                            if (verifyEntry != null && reader.Item != null)
                             {
                                 verifyEntry((ODataResource)reader.Item);
                             }

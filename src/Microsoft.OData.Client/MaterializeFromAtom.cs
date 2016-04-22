@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client
                     Type expectedType = implementationType.GetGenericArguments()[0]; // already know its ICollection<>
                     
                     // We should use the inner type only if this is a collection of entities (as opposed to a collection of primitive or complex types)
-                    if (ClientTypeUtil.TypeIsEntity(expectedType, model))
+                    if (ClientTypeUtil.TypeIsStructured(expectedType, model))
                     {
                         return expectedType;
                     }

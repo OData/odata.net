@@ -78,7 +78,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The type kind of the entity type of the resource set or resource.
+        /// The flag we use to identify if the current resource is from a collection type or not.
         /// </summary>
         public virtual bool IsFromCollection
         {
@@ -107,11 +107,11 @@ namespace Microsoft.OData
         /// <param name="serializationInfo">The serialization info from the resource set or resource instance.</param>
         /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
         /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
-        /// <param name="expectedEntityType">The expected entity type of the resource set or resource.</param>
+        /// <param name="expectedResourceType">The expected structured type of the resource set or resource.</param>
         /// <param name="model">The Edm model instance to use.</param>
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
         /// <returns>A new instance of <see cref="ODataResourceTypeContext"/>.</returns>
-        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model, bool throwIfMissingTypeInfo)
+        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, IEdmModel model, bool throwIfMissingTypeInfo)
         {
             Debug.Assert(model != null, "model != null");
             if (serializationInfo != null)
@@ -122,8 +122,8 @@ namespace Microsoft.OData
             if (navigationSource != null && model.IsUserModel())
             {
                 Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
-                Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedEntityType, model);
+                Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
+                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType, model);
             }
 
             return new ODataResourceTypeContext(throwIfMissingTypeInfo);
@@ -242,7 +242,7 @@ namespace Microsoft.OData
             }
 
             /// <summary>
-            /// The type kind of the entity type of the resource set or resource.
+            /// The flag we use to identify if the current resource is from a collection type or not.
             /// </summary>
             public override bool IsFromCollection
             {
@@ -271,11 +271,11 @@ namespace Microsoft.OData
             private readonly IEdmEntityType navigationSourceEntityType;
 
             /// <summary>
-            /// The expected entity type of the resource set or resource.
-            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
-            /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
+            /// The expected resource type of the resource set or resource.
+            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
+            /// (The entity set element type name in this example may be Person, and the actual resource type of a particular resource might be a type more derived than VIP_Person)
             /// </summary>
-            private readonly IEdmEntityType expectedEntityType;
+            private readonly IEdmStructuredType expectedResourceType;
 
             /// <summary>
             /// The navigation source name of the resource set or resource.
@@ -302,19 +302,19 @@ namespace Microsoft.OData
             /// </summary>
             /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
             /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
-            /// <param name="expectedEntityType">The expected entity type of the resource set or resource.</param>
+            /// <param name="expectedResourceType">The expected resource type of the resource set or resource.</param>
             /// <param name="model">The Edm model instance to use.</param>
-            internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model)
+            internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, IEdmModel model)
                 : base(/*throwIfMissingTypeInfo*/false)
             {
                 Debug.Assert(model != null, "model != null");
                 Debug.Assert(navigationSource != null, "navigationSource != null");
                 Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
-                Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
+                Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
 
                 this.navigationSource = navigationSource;
                 this.navigationSourceEntityType = navigationSourceEntityType;
-                this.expectedEntityType = expectedEntityType;
+                this.expectedResourceType = expectedResourceType;
                 this.model = model;
 
                 IEdmContainedEntitySet containedEntitySet = navigationSource as IEdmContainedEntitySet;
@@ -336,7 +336,8 @@ namespace Microsoft.OData
                 }
 
                 this.navigationSourceName = this.navigationSource.Name;
-                this.isMediaLinkEntry = this.expectedEntityType.HasStream;
+                var entityType = this.expectedResourceType as IEdmEntityType;
+                this.isMediaLinkEntry = entityType == null ? false : entityType.HasStream;
                 this.lazyUrlConvention = new SimpleLazy<UrlConvention>(() => UrlConvention.ForModel(this.model));
             }
 
@@ -373,13 +374,13 @@ namespace Microsoft.OData
             }
 
             /// <summary>
-            /// The expected entity type name of the resource.
-            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
-            /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
+            /// The expected resource type name of the resource.
+            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
+            /// (The entity set element type name in this example may be Person, and the actual resource type of a particular resource might be a type more derived than VIP_Person)
             /// </summary>
             public override string ExpectedEntityTypeName
             {
-                get { return this.expectedEntityType.FullName(); }
+                get { return this.expectedResourceType.FullTypeName(); }
             }
 
             /// <summary>
@@ -399,7 +400,7 @@ namespace Microsoft.OData
             }
 
             /// <summary>
-            /// The type kind of the entity type of the resource set or resource.
+            /// The flag we use to identify if the current resource is from a collection type or not.
             /// </summary>
             public override bool IsFromCollection
             {

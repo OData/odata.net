@@ -462,7 +462,10 @@ namespace Microsoft.Test.OData.Tests.Client
         #region helpers
         internal bool VerifyCtxCount(DataServiceContext ctx, int expectedEntities, int expectedLinks)
         {
-            return (ctx.Entities.Count() == expectedEntities && ctx.Links.Count == expectedLinks);
+            var navigationLinks = ctx.Links
+                .Where(l => l.Source.GetType().GetProperty(l.SourceProperty).PropertyType.IsSubclassOf(typeof(BaseEntityType)));
+            return
+                (ctx.Entities.Count() == expectedEntities && navigationLinks.Count() == expectedLinks);
         }
 
         internal void CheckState(DataServiceContext ctx, EntityStates state,Object o)

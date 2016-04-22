@@ -112,7 +112,6 @@ namespace Microsoft.OData.JsonLight
             {
                 // Only primitive type references are validated. Core model is sufficient.
                 ReaderValidationUtils.ValidateNullValue(
-                    EdmCoreModel.Instance,
                     primitiveTypeReference,
                     messageReaderSettings,
                     validateNullValue,

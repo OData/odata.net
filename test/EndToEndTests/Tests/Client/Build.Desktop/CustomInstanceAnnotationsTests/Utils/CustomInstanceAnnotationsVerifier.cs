@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
                 if (verifyAnnotationsOnStart)
                 {
                     var actualAnnotationsOnStart = actualItem.AnnotationsOnStart.ToList();
-                    var baselineAnnotationsOnStart = baselineItem.GetExpectedAnnotationsOnStart(contentType, hasExpandedNavigationProperties).ToList();
+                    var baselineAnnotationsOnStart = baselineItem.GetExpectedAnnotationsOnStart(contentType, hasExpandedNavigationProperties && actualItem.hasNestedResourceInfo).ToList();
                     VerifyAnnotations(baselineAnnotationsOnStart, actualAnnotationsOnStart, "start", i, actualItem.TypeOfAnnotatedItem.Name);
                 }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
                 return annotatedItem.AnnotationsOnStart;
             }
 
-            if (annotatedItem.IsTopLevelEntryOrEntryOfTopLevelFeed() && hasExpandedNavigationProperties)
+            if (annotatedItem.TypeOfAnnotatedItem == typeof(ODataResource) && hasExpandedNavigationProperties)
             {
                 return annotatedItem.AnnotationsOnStart;
             }

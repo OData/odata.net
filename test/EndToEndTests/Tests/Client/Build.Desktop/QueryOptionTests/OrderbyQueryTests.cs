@@ -39,35 +39,41 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             foreach (var mimeType in mimeTypes)
             {
                 // $count collection of primitive type
-                List<ODataResource> details = this.TestsHelper.QueryFeed("People?$orderby=Emails/$count", mimeType);
+                List<ODataResource> resources = this.TestsHelper.QueryFeed("People?$orderby=Emails/$count", mimeType);
+                Func<List<ODataResource>, List<ODataResource>> getEntries = 
+                    (res) => res.Where(r => r != null && (r.TypeName.Contains("Person") 
+                        || r.TypeName.Contains("Customer")
+                        || r.TypeName.Contains("Product")
+                        || r.TypeName.Contains("Employee"))).ToList();
+                var details = getEntries(resources);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual("Jill", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
 
                 // $count collection of primitive type, descending
-                details = this.TestsHelper.QueryFeed("People?$orderby=Emails/$count desc", mimeType);
+                details = getEntries(this.TestsHelper.QueryFeed("People?$orderby=Emails/$count desc", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual("Elmo", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
 
                 // $count collection of enum type
-                details = this.TestsHelper.QueryFeed("Products?$orderby=CoverColors/$count", mimeType);
+                details = getEntries(this.TestsHelper.QueryFeed("Products?$orderby=CoverColors/$count", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual("Apple", details.First().Properties.Single(p => p.Name == "Name").Value);
                 }
 
                 // $count collection of complex type
-                details = this.TestsHelper.QueryFeed("People?$orderby=Addresses/$count", mimeType);
+                details = getEntries(this.TestsHelper.QueryFeed("People?$orderby=Addresses/$count", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual("Jill", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
 
                 // $count collection of entity type
-                details = this.TestsHelper.QueryFeed("Customers?$orderby=Orders/$count", mimeType);
+                details = getEntries(this.TestsHelper.QueryFeed("Customers?$orderby=Orders/$count", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual("Bob", details.First().Properties.Single(p => p.Name == "FirstName").Value);

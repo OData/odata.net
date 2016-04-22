@@ -235,7 +235,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName + "\":null }")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd", JsonLightConstants.ODataEditLinkAnnotationName)
-                },                
+                },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Invalid OData instance annotation after collection property - should fail.",

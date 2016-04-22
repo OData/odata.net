@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void NoMetadataLevelShouldReturnNullMetadataBuilder()
         {
-            testSubject.CreateEntityMetadataBuilder(
+            testSubject.CreateResourceMetadataBuilder(
                 new ODataResource(), 
                 /*typeContext*/ null,
                 /*serializationInfo*/ null,

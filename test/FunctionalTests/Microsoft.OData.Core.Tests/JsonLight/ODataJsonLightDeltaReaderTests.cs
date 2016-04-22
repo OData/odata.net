@@ -49,21 +49,18 @@ namespace Microsoft.OData.Tests.JsonLight
             Id = new Uri("Orders(10643)", UriKind.Relative),
             Properties = new List<ODataProperty>
             {
-                new ODataProperty
-                {
-                    Name = "ShippingAddress",
-                    Value = new ODataComplexValue
-                    {
-                        Properties = new List<ODataProperty>
-                        {
-                            new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                            new ODataProperty { Name = "City", Value = "Tsawassen" },
-                            new ODataProperty { Name = "Region", Value = "BC" },
-                            new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                        }
-                    }
-                }
             },
+        };
+
+        private readonly ODataResource complexPropertyInOrder10643 = new ODataResource
+        {
+            Properties = new List<ODataProperty>
+            {
+                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
+                new ODataProperty { Name = "City", Value = "Tsawassen" },
+                new ODataProperty { Name = "Region", Value = "BC" },
+                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
+            }
         };
 
         private readonly ODataDeltaDeletedEntry customerDeleted = new ODataDeltaDeletedEntry("Customers('ANTON')", DeltaDeletedEntryReason.Deleted);
@@ -525,7 +522,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         }
                         else
                         {
-                            Assert.True(false, "Invalid id read.");
+                            Assert.True(this.PropertiesEqual(deltaResource.Properties, complexPropertyInOrder10643.Properties));
                         }
                         break;
                     case ODataDeltaReaderState.DeltaDeletedEntry:
@@ -587,7 +584,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             case ODataReaderState.NestedResourceInfoStart:
                                 ODataNestedResourceInfo navigationLink = tuple.Item1 as ODataNestedResourceInfo;
                                 Assert.NotNull(navigationLink);
-                                Assert.Equal("Details", navigationLink.Name);
+                                Assert.True(navigationLink.Name.Equals("Details") || navigationLink.Name.Equals("ShippingAddress"));
                                 break;
                             default:
                                 Assert.True(false, "Wrong reader sub state.");

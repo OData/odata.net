@@ -491,14 +491,14 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetSelectedPropertiesForNavigationPropertyForEmptyNodeShouldReturnEmptyNodeWhenEntityTypeIsNull()
         {
-            EmptyNode.GetSelectedPropertiesForNavigationProperty(entityType: null, navigationPropertyName: "foo").Should().BeSameAs(EmptyNode);
+            EmptyNode.GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EmptyNode);
         }
 
         [Fact]
         public void GetSelectedPropertiesForNavigationPropertyForNonEmptyNodeShouldAlwaysReturnEntireSubtreeWhenEntityTypeIsNull()
         {
-            EntireSubtreeNode.GetSelectedPropertiesForNavigationProperty(entityType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
-            SelectedPropertiesNode.Create("bar").GetSelectedPropertiesForNavigationProperty(entityType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
+            EntireSubtreeNode.GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
+            SelectedPropertiesNode.Create("bar").GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
         }
 
         [Fact]

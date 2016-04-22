@@ -5413,7 +5413,7 @@ Content-Type: application/atom+xml;type=entry
 
                 String[] callOrder = new String[] { 
                     // primitive or complex properties goes first, in the order which they are specified
-                    "ID", "City", "PostalCode", "State", "StreetAddress", "Address", "Name", 
+                    "ID", "Name", "City", "PostalCode", "State", "StreetAddress", "Address", 
                     // navigation properties goes last, in the order which they are specified
                     "ID", "DollarAmount", "Orders", "Orders", "ID", "DollarAmount", "Orders" };
 

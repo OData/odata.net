@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests
             set { this.entry = value; }
         }
 
-        public IEdmEntityType EntityType
+        public IEdmStructuredType ResourceType
         {
             get
             {

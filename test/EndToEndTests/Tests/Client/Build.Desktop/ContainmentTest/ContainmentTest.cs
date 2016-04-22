@@ -34,7 +34,6 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
         private readonly string[] containmentMimeTypes = new string[]
             {
-                // MimeTypes.ApplicationAtomXml,
                 MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
                 MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata,
                 MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
@@ -515,15 +514,15 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
                         var reader = messageReader.CreateODataResourceReader();
-
+                        ODataResource entry = null;
                         while (reader.Read())
                         {
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "AccountID").Value);
+                                entry = reader.Item as ODataResource;
                             }
                         }
+                        Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "AccountID").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -546,20 +545,23 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
                         var reader = messageReader.CreateODataResourceSetReader();
-
+                        ODataResourceSet feed = null;
                         while (reader.Read())
                         {
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "AccountID").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Account"))
+                                {
+                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "AccountID").Value);
+                                }
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                feed = reader.Item as ODataResourceSet;
                             }
                         }
-
+                        Assert.IsNotNull(feed);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -717,17 +719,64 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                         {
                             List<ODataResource> entries = new List<ODataResource>();
                             List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
-
                             var reader = messageReader.CreateODataResourceReader();
+                            Stack<ODataResource> resourceStacks = new Stack<ODataResource>();
+                            Stack<bool> isNavigations = new Stack<bool>();
                             while (reader.Read())
                             {
-                                if (reader.State == ODataReaderState.ResourceEnd)
+                                switch(reader.State)
                                 {
-                                    entries.Add(reader.Item as ODataResource);
-                                }
-                                else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
-                                {
-                                    navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                                    case ODataReaderState.ResourceStart:
+                                        {
+                                            var resource = reader.Item as ODataResource;
+                                            if (resource != null)
+                                            {
+                                                resourceStacks.Push(resource);
+                                            }
+                                            break;
+                                        }
+                                    case ODataReaderState.ResourceEnd:
+                                        {
+                                            var resource = reader.Item as ODataResource;
+                                            if (resource != null)
+                                            {
+                                                resourceStacks.Pop();
+
+                                                if (resourceStacks.Count == 0 || isNavigations.Peek())
+                                                {
+                                                    entries.Add(resource);
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    case ODataReaderState.NestedResourceInfoStart:
+                                        {
+                                            var nestedResourceInfo = reader.Item as ODataNestedResourceInfo;
+                                            var parentResource = resourceStacks.Peek();
+                                            var parentType = Model.FindDeclaredType(parentResource.TypeName);
+                                            if (parentType is IEdmEntityType)
+                                            {
+                                                if (((IEdmEntityType)parentType).NavigationProperties().Any(n => n.Name == nestedResourceInfo.Name))
+                                                {
+                                                    isNavigations.Push(true);
+                                                    break;
+                                                }
+                                            }
+                                            isNavigations.Push(false);
+                                            break;
+                                        }
+                                    case ODataReaderState.NestedResourceInfoEnd:
+                                        {
+                                            var nestedResourceInfo = reader.Item as ODataNestedResourceInfo;
+                                            var isNavigation = isNavigations.Pop();
+                                            if (isNavigation)
+                                            {
+                                                navigationLinks.Add(nestedResourceInfo);
+                                            }
+                                            break;
+                                        }
+                                    default:
+                                        break;
                                 }
                             }
 

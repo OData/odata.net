@@ -530,7 +530,8 @@ namespace Microsoft.OData.Client.Materialization
                 materializer.EntityTrackingAdapter.TargetInstance == null,
                 "materializer.targetInstance == null -- projection shouldn't have a target instance set; that's only used for POST replies");
 
-            if (!materializer.EntityTrackingAdapter.TryResolveAsExistingEntry(entry, requiredType))
+            // TODO : Need to handle complex type with no tracking and entity with tracking but no id.
+            if (entry.Id == null || !materializer.EntityTrackingAdapter.TryResolveAsExistingEntry(entry, requiredType))
             {
                 // The type is always required, so skip ResolveByCreating.
                 materializer.EntryValueMaterializationPolicy.ResolveByCreatingWithType(entry, requiredType);
@@ -853,10 +854,8 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (this.CurrentEntry == null && this.CurrentFeed != null)
                 {
-                    if (!this.ReadNextFeedOrEntry())
-                    {
-                        return false;
-                    }
+                    this.currentValue = null;
+                    return true;
                 }
 
                 Debug.Assert(this.CurrentEntry != null, "Read successfully without finding an entry.");

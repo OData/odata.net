@@ -881,6 +881,14 @@ namespace Microsoft.Test.Taupo.OData.Common
             return payloadElement;
         }
 
+        public static EntityInstance IsComplex(this EntityInstance entity, bool isComplex)
+        {
+            ExceptionUtilities.CheckArgumentNotNull(entity, "entity");
+
+            entity.IsComplex = isComplex;
+            return entity;
+        }
+
         /// <summary>
         /// Adds a stream reference property to an entity instance.
         /// </summary>

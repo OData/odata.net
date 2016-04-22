@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
             var entry = new ODataResource() { TypeName = "DefaultNamespace.Person" };
-            var entityType = coreWriter.ValidateEntityType2(entry);
+            var entityType = coreWriter.ValidateResourceType2(entry);
             entityType.Should().BeSameAs(model.FindDeclaredType("DefaultNamespace.Person"));
         }
 
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
             var entry = new ODataResource();
-            var entityType = coreWriter.ValidateEntityType2(entry);
+            var entityType = coreWriter.ValidateResourceType2(entry);
             entityType.Should().BeSameAs(objectType);
         }
 
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, peopleSet, null, false);
 
             var entry = new ODataResource();
-            var entityType = coreWriter.ValidateEntityType2(entry);
+            var entityType = coreWriter.ValidateResourceType2(entry);
             entityType.Should().BeSameAs(personType);
         }
 
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, null, null, false);
 
             var entry = new ODataResource();
-            Action test = () => coreWriter.ValidateEntityType2(entry);
+            Action test = () => coreWriter.ValidateResourceType2(entry);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
         }
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests
             {
             }
 
-            public IEdmEntityType ValidateEntityType2(ODataResource entry)
+            public IEdmStructuredType ValidateResourceType2(ODataResource entry)
             {
                 return this.ValidateResourceType(entry);
             }
@@ -173,12 +173,12 @@ namespace Microsoft.OData.Tests
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceCollection, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceCollection, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.ResourceScope CreateResourceScope(ODataResource entry, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceScope CreateResourceScope(ODataResource entry, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 throw new NotImplementedException();
             }

@@ -232,7 +232,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     // In V1/V2, we allowed System.Object type to be allowed to pass to ExecuteQuery.
                     // Hence we need to explicitly check for System.Object to allow this
-                    if (edmType != null && edmType.TypeKind != EdmTypeKind.Entity)
+                    if (edmType != null && edmType.TypeKind != EdmTypeKind.Entity && edmType.TypeKind != EdmTypeKind.Complex)
                     {
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidNonEntityType(materializerType.FullName));
                     }
@@ -278,7 +278,7 @@ namespace Microsoft.OData.Client.Materialization
                         case ODataPayloadKind.Property:
                         case ODataPayloadKind.IndividualProperty:
                             // Top level properties cannot be of entity type.
-                            if (edmType != null && edmType.TypeKind == EdmTypeKind.Entity)
+                            if (edmType != null && (edmType.TypeKind == EdmTypeKind.Entity || edmType.TypeKind == EdmTypeKind.Complex))
                             {
                                 throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(materializerType.FullName));
                             }

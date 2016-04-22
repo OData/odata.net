@@ -62,7 +62,7 @@ namespace AstoriaUnitTests.Tests
                 readCounter++;
             }
 
-            readCounter.Should().Be(2);
+            readCounter.Should().Be(1);
         }
     }   
 }

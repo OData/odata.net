@@ -234,10 +234,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets the selected properties node for the specified navigation property.
         /// </summary>
-        /// <param name="entityType">The current entity type.</param>
+        /// <param name="structuredType">The current structured type.</param>
         /// <param name="navigationPropertyName">The name of the navigation property.</param>
         /// <returns>The selected properties node for the property with name <paramref name="navigationPropertyName"/>.</returns>
-        internal SelectedPropertiesNode GetSelectedPropertiesForNavigationProperty(IEdmEntityType entityType, string navigationPropertyName)
+        internal SelectedPropertiesNode GetSelectedPropertiesForNavigationProperty(IEdmStructuredType structuredType, string navigationPropertyName)
         {
             if (this.selectionType == SelectionType.Empty)
             {
@@ -251,7 +251,7 @@ namespace Microsoft.OData
 
             // We cannot determine the selected navigation properties without the user model. This means we won't be computing the missing navigation properties.
             // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
-            if (entityType == null)
+            if (structuredType == null)
             {
                 return EntireSubtree;
             }
@@ -274,8 +274,8 @@ namespace Microsoft.OData
 
                 // try to find a child with a type segment before it that matches the current type.
                 // Note: the result of this aggregation will be either empty or a found child node.
-                return this.GetMatchingTypeSegments(entityType)
-                    .Select(typeSegmentChild => typeSegmentChild.GetSelectedPropertiesForNavigationProperty(entityType, navigationPropertyName))
+                return this.GetMatchingTypeSegments(structuredType)
+                    .Select(typeSegmentChild => typeSegmentChild.GetSelectedPropertiesForNavigationProperty(structuredType, navigationPropertyName))
                     .Aggregate(child, CombineNodes);
             }
 
@@ -380,31 +380,31 @@ namespace Microsoft.OData
         /// <summary>
         /// Determines whether or not the given operation is selected and takes type-segments into account.
         /// </summary>
-        /// <param name="entityType">The current entity type.</param>
+        /// <param name="structuredType">The current resource type.</param>
         /// <param name="operation">The operation.</param>
         /// <param name="mustBeNamespaceQualified">Whether or not the operation name must be container qualified in the $select string.</param>
         /// <returns>
         ///   <c>true</c> if the operation is selected; otherwise, <c>false</c>.
         /// </returns>
-        internal bool IsOperationSelected(IEdmEntityType entityType, IEdmOperation operation, bool mustBeNamespaceQualified)
+        internal bool IsOperationSelected(IEdmStructuredType structuredType, IEdmOperation operation, bool mustBeNamespaceQualified)
         {
-            Debug.Assert(entityType != null, "entityType != null");
+            Debug.Assert(structuredType != null, "structuredType != null");
             Debug.Assert(operation != null, "operation != null");
 
             // If the operation name conflicts with a property name then it must be namespace qualified
-            mustBeNamespaceQualified = mustBeNamespaceQualified || entityType.FindProperty(operation.Name) != null;
+            mustBeNamespaceQualified = mustBeNamespaceQualified || structuredType.FindProperty(operation.Name) != null;
 
-            return this.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified) || this.GetMatchingTypeSegments(entityType).Any(typeSegment => typeSegment.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified));
+            return this.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified) || this.GetMatchingTypeSegments(structuredType).Any(typeSegment => typeSegment.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified));
         }
 
         /// <summary>
         /// Gets an enumerable containing the given type and all of its base/ancestor types.
         /// </summary>
-        /// <param name="entityType">The starting entity type. Will be included in the returned enumeration.</param>
+        /// <param name="structuredType">The starting resource type. Will be included in the returned enumeration.</param>
         /// <returns>An enumerable containing the given type and all of its base/ancestor types.</returns>
-        private static IEnumerable<IEdmEntityType> GetBaseTypesAndSelf(IEdmEntityType entityType)
+        private static IEnumerable<IEdmStructuredType> GetBaseTypesAndSelf(IEdmStructuredType structuredType)
         {
-            for (IEdmEntityType currentType = entityType; currentType != null; currentType = currentType.BaseEntityType())
+            for (IEdmStructuredType currentType = structuredType; currentType != null; currentType = currentType.BaseStructuredType())
             {
                 yield return currentType;
             }
@@ -468,16 +468,16 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets the matching type segments for the given type based on this node's children.
         /// </summary>
-        /// <param name="entityType">The entity type to match.</param>
+        /// <param name="structuredType">The structured type to match.</param>
         /// <returns>All child nodes which start with a type segment in the given types hierarchy.</returns>
-        private IEnumerable<SelectedPropertiesNode> GetMatchingTypeSegments(IEdmEntityType entityType)
+        private IEnumerable<SelectedPropertiesNode> GetMatchingTypeSegments(IEdmStructuredType structuredType)
         {
             if (this.children != null)
             {
-                foreach (IEdmEntityType currentType in GetBaseTypesAndSelf(entityType))
+                foreach (IEdmStructuredType currentType in GetBaseTypesAndSelf(structuredType))
                 {
                     SelectedPropertiesNode typeSegmentChild;
-                    if (this.children.TryGetValue(currentType.FullName(), out typeSegmentChild))
+                    if (this.children.TryGetValue(currentType.FullTypeName(), out typeSegmentChild))
                     {
                         if (typeSegmentChild.hasWildcard)
                         {

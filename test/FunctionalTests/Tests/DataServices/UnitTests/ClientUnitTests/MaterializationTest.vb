@@ -758,7 +758,9 @@ Partial Public Class ClientModule
             Dim oe = MismatchedNavigationType(Of Orders_ElementNotEntityType)(New InvalidOperationException())
             Assert.IsNull(oe)
         End Sub
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingDescribedKey()
+
+        'Doesn't check entry key properties before execute, So this case is invalid'
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingDescribedKey()
             ctx.IgnoreMissingProperties = False
             ExtraMissing(Of Order_Details_MissingDescribedKey)(New InvalidOperationException())
 

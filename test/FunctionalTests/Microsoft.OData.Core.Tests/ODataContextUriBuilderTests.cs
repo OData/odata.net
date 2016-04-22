@@ -21,8 +21,8 @@ namespace Microsoft.OData.Tests
     {
         private const string ServiceDocumentUriString = "http://odata.org/service/";
         private const string MetadataDocumentUriString = "http://odata.org/service/$metadata";
-        private static readonly ODataResourceTypeContext ResponseTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
-        private static readonly ODataResourceTypeContext RequestTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
+        private static readonly ODataResourceTypeContext ResponseTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
+        private static readonly ODataResourceTypeContext RequestTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
 
         private Uri metadataDocumentBaseUri;
         private EdmModel edmModel;
@@ -288,7 +288,7 @@ namespace Microsoft.OData.Tests
                 },
                 navigationSource: null,
                 navigationSourceEntityType: null,
-                expectedEntityType: null,
+                expectedResourceType: null,
                 model: EdmCoreModel.Instance,
                 throwIfMissingTypeInfo: true),
                 isResponse: true);

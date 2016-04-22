@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             var stream = new MemoryStream();
             ODataJsonLightOutputContext outputContext = CreateJsonLightOutputContext(stream, writingResponse: true, userModel: null, serviceDocumentUri: null);
-            Action action = () => new ODataJsonLightWriter(outputContext, navigationSource: null, entityType: null, writingResourceSet: true);
+            Action action = () => new ODataJsonLightWriter(outputContext, navigationSource: null, resourceType: null, writingResourceSet: true);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 

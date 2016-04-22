@@ -446,12 +446,19 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
             Action<ODataResource> verifyEntry = (entry) =>
             {
-                Assert.AreEqual(3, entry.Properties.Count(), "entry.Properties.Count");
+                if (entry.TypeName.Contains("Order"))
+                {
+                    Assert.AreEqual(2, entry.Properties.Count(), "entry.Properties.Count");
+                }
+                else
+                {
+                    Assert.IsTrue(entry.TypeName.Contains("ConcurrencyInfo"), "complex Property Concurrency should be read into ODataResource");
+                }
                 verifyEntryCalled = true;
             };
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
-                Assert.IsTrue(navigation.Name == "Customer" || navigation.Name == "Login", "navigation.Name");
+                Assert.IsTrue(navigation.Name == "Customer" || navigation.Name == "Login" || navigation.Name == "Concurrency", "navigation.Name");
                 verifyNavigationCalled = true;
             };
 
@@ -532,15 +539,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             {
                 if (entry.TypeName.Contains("Customer"))
                 {
-                    Assert.AreEqual(7, entry.Properties.Count());
+                    Assert.AreEqual(4, entry.Properties.Count());
+                    verifyEntryCalled++;
                 }
 
                 if (entry.TypeName.Contains("Login"))
                 {
                     Assert.AreEqual(2, entry.Properties.Count());
+                    verifyEntryCalled++;
                 }
-
-                verifyEntryCalled++;
             };
 
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
@@ -913,20 +920,18 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 ODataMessageReader messageReader = new ODataMessageReader(requestMessageWithoutModel, settings,
                                                                           WritePayloadHelper.Model);
                 ODataReader reader = messageReader.CreateODataResourceReader(WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType);
-                bool verifyEntryCalled = false;
+                ODataResource entry = null;
                 while (reader.Read())
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
-                        Assert.IsTrue(entry.Id.ToString().Contains("Order(-10)"), "entry.Id");
-                        Assert.AreEqual(3, entry.Properties.Count(), "entry.Properties.Count");
-                        verifyEntryCalled = true;
+                        entry = reader.Item as ODataResource;
                     }
                 }
 
+                Assert.IsTrue(entry.Id.ToString().Contains("Order(-10)"), "entry.Id");
+                Assert.AreEqual(2, entry.Properties.Count(), "entry.Properties.Count");
                 Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                Assert.IsTrue(verifyEntryCalled, "verifyEntryCalled");
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);

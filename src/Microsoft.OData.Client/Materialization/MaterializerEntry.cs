@@ -319,7 +319,8 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (this.Id == null)
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
+                        // TODO: Remove these lines since complex type doesn't have Id.
+                        // throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
                     }
 
                     this.EntityDescriptor.Identity = this.entry.Id;

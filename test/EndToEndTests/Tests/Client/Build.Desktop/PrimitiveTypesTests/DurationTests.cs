@@ -53,7 +53,10 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                }
                             }
                         }
                     }
@@ -84,7 +87,10 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.AreEqual(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                }
                             }
                         }
                     }
@@ -145,7 +151,10 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.AreEqual(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                }
                             }
                         }
                     }

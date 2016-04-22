@@ -49,13 +49,12 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             Assert.IsTrue(descriptor.OperationDescriptors.Where(op => op.Title == "ModifyEntryAction").Any(), "Action not added");
             foreach (var linkInfo in descriptor.LinkInfos)
             {
-                if (contextWrapper.Format.ODataFormat == ODataFormat.Json)
+                if (linkInfo.NavigationLink != null)
                 {
                     // In Jsonlight, navigation link is calculated using edit link after the reading delegates
                     Assert.IsTrue(linkInfo.NavigationLink.AbsoluteUri.StartsWith("http://myeditlink/ModifyEntryEditLink"), "Wrong navigation link");
+                    Assert.AreEqual("http://modifyassociationlinkurl/", linkInfo.AssociationLink.AbsoluteUri, "AssociationLink not updated");
                 }
-
-                Assert.AreEqual("http://modifyassociationlinkurl/", linkInfo.AssociationLink.AbsoluteUri, "AssociationLink not updated");
             }
         }
 
@@ -64,7 +63,20 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<ReadingEntryArgs> ModifyEntryId_Reading
         {
-            get { return args => args.Entry.Id = new Uri(((args.Entry.Id == null ? string.Empty : args.Entry.Id.OriginalString) + "ModifyEntryId"), UriKind.RelativeOrAbsolute); }
+            get
+            {
+                return args =>
+                {
+                    if (args.Entry != null
+                        &&
+                        ( args.Entry.TypeName.EndsWith("Customer")
+                        || args.Entry.TypeName.EndsWith("Car")
+                        || args.Entry.TypeName.EndsWith("Order")))
+                    {
+                        args.Entry.Id = new Uri(((args.Entry.Id == null ? string.Empty : args.Entry.Id.OriginalString) + "ModifyEntryId"), UriKind.RelativeOrAbsolute);
+                    }
+                };
+            }
         }
 
         /// <summary>
@@ -76,7 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                 {
-                    if (args.Entry != null)
+                    if (args.Entry != null && (args.Entry.TypeName.Contains("Customer") || args.Entry.TypeName.Contains("License")))
                     {
                         args.Entry.Id = new Uri(((args.Entry.Id == null ? string.Empty : args.Entry.Id.OriginalString) + "ModifyEntryId"), UriKind.RelativeOrAbsolute);
                     }
@@ -89,7 +101,16 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<ReadingEntryArgs> ModifyEntryEditLink_ReadingStart
         {
-            get { return args => args.Entry.EditLink = new Uri("http://myeditlink/entry", UriKind.Absolute); }
+            get
+            {
+                return args =>
+                {
+                    if (args.Entry != null)
+                    {
+                        args.Entry.EditLink = new Uri("http://myeditlink/entry", UriKind.Absolute);
+                    }
+                };
+            }
         }
 
         /// <summary>
@@ -97,7 +118,16 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<ReadingEntryArgs> ModifyEntryEditLink_ReadingEnd
         {
-            get { return args => args.Entry.EditLink = new Uri(args.Entry.EditLink, "ModifyEntryEditLink"); }
+            get
+            {
+                return args =>
+                {
+                    if (args.Entry != null)
+                    {
+                        args.Entry.EditLink = new Uri(args.Entry.EditLink, "ModifyEntryEditLink");
+                    }
+                };
+            }
         }
 
         /// <summary>
@@ -204,7 +234,10 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                     {
-                        args.Entry.AddAction(new ODataAction() { Title = "ModifyEntryAction", Metadata = new Uri("#ModifyEntryAction", UriKind.Relative), Target = new Uri("http://svc/Target", UriKind.Absolute) });
+                        if (args.Entry != null)
+                        {
+                            args.Entry.AddAction(new ODataAction() { Title = "ModifyEntryAction", Metadata = new Uri("#ModifyEntryAction", UriKind.Relative), Target = new Uri("http://svc/Target", UriKind.Absolute) });
+                        }
                     };
             }
         }
@@ -222,7 +255,13 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<ReadingNestedResourceInfoArgs> ModifyAssociationLinkUrl_ReadingNavigationLink
         {
-            get { return args => args.Link.AssociationLinkUrl = new Uri("http://ModifyAssociationLinkUrl", UriKind.Absolute); }
+            get
+            {
+                return args =>
+                    {
+                        args.Link.AssociationLinkUrl = new Uri("http://ModifyAssociationLinkUrl", UriKind.Absolute);
+                    };
+            }
         }
 
         /// <summary>
@@ -230,7 +269,18 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// </summary>
         public static Action<MaterializedEntityArgs> ModifyPropertyValueCustomer_Materialized
         {
-            get { return args => (args.Entity as Customer).Name += "ModifyPropertyValueCustomer_Materialized"; }
+            get
+            {
+                return args =>
+                {
+                    var customer = args.Entity as Customer;
+                    if (customer != null)
+                    {
+                        customer.Name += "ModifyPropertyValueCustomer_Materialized";
+                    }
+                };
+            }
+
         }
 
         /// <summary>
@@ -242,7 +292,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                 {
-                    if (args.Entry.TypeName.EndsWith("SpecialEmployee"))
+                    if (args.Entry != null && args.Entry.TypeName.EndsWith("SpecialEmployee"))
                     {
                         List<ODataProperty> properties = args.Entry.Properties.ToList();
                         properties.Add(new ODataProperty() { Name = "CarsLicensePlate", Value = "AddRemovePropertySpecialEmployeeEntry_Reading" });
@@ -266,7 +316,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                 {
-                    if (args.Entry.TypeName.EndsWith("Customer"))
+                    if (args.Entry != null && args.Entry.TypeName.EndsWith("Customer"))
                     {
                         List<ODataProperty> properties = args.Entry.Properties.ToList();
                         ODataProperty property = properties.Single(p => p.Name == "Auditing");
@@ -285,7 +335,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                     {
-                        if (args.Entry.TypeName.EndsWith("SpecialEmployee"))
+                        if (args.Entry != null && args.Entry.TypeName.EndsWith("SpecialEmployee"))
                         {
                             if (args.Entry.InstanceAnnotations.Where(a => a.Name == "CustomInstanceAnnotations.Term1").Any())
                             {
@@ -305,7 +355,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                 {
-                    if (args.Entry.TypeName.EndsWith("Customer"))
+                    if (args.Entry != null && args.Entry.TypeName.EndsWith("Customer"))
                     {
                         Customer customer = args.Entity as Customer;
                         customer.PrimaryContactInfo.EmailBag.Add("ModifyPropertyValueCustomerEntity_Materialized");

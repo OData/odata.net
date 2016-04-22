@@ -28,9 +28,9 @@ namespace Microsoft.OData.Evaluation
         IODataResourceTypeContext TypeContext { get; }
 
         /// <summary>
-        /// The actual entity type of the resource, i.e. ODataResource.TypeName.
+        /// The actual structured type of the resource, i.e. ODataResource.TypeName.
         /// </summary>
-        string ActualEntityTypeName { get; }
+        string ActualResourceTypeName { get; }
 
         /// <summary>
         /// The key property name and value pairs of the resource.

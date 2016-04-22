@@ -153,6 +153,18 @@ namespace Microsoft.OData.Client.Materialization
                             if (this.currentFeed != null)
                             {
                                 this.feedEntries = MaterializerFeed.GetFeed(this.currentFeed).Entries.GetEnumerator();
+
+                                // Try to read the first entry.
+                                if (!this.feedEntries.MoveNext())
+                                {
+                                    this.feedEntries = null;
+                                    this.currentEntry = null;
+                                    return false;
+                                }
+                                else
+                                {
+                                    this.currentEntry = this.feedEntries.Current;
+                                }
                             }
 
                             return true;

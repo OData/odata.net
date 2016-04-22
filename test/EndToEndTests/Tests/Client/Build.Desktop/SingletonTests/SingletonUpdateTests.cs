@@ -33,19 +33,19 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             for (int i = 0; i < mimeTypes.Length; i++)
             {
-                ODataResource entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(cities[i], entry.Properties.Single(p => p.Name == "City").Value);
+                    Assert.AreEqual(cities[i], entries[1].Properties.Single(p => p.Name == "City").Value);
                 }
 
                 var properties = new[] { new ODataProperty { Name = "City", Value = cities[i + 1] } };
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
 
-                ODataResource updatedEntry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> updatedEntries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(cities[i + 1], updatedEntry.Properties.Single(p => p.Name == "City").Value);
+                    Assert.AreEqual(cities[i + 1], updatedEntries[1].Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
@@ -93,28 +93,28 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                     currentHomeAddress = homeAddress1;
                     updatedHomeAddress = homeAddress0;
                 }
-                ODataResource entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertyAreEqual((ODataProperty)entry.Properties.Single(p => p.Name == "HomeAddress"), currentHomeAddress);
+                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceAreEqual(currentHomeAddress, entries[0] );
                 }
 
                 var properties = new[] { updatedHomeAddress };
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
 
-                ODataResource updatedentry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> updatedentries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertyAreEqual(updatedHomeAddress, (ODataProperty)updatedentry.Properties.Single(p => p.Name == "HomeAddress"));
+                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceAreEqual(updatedHomeAddress, updatedentries[0]);
                 }
             }
         }
 
         #region Help function
 
-        private ODataResource QueryEntry(string requestUri, string mimeType)
+        private List<ODataResource> QueryEntry(string requestUri, string mimeType)
         {
-            ODataResource entry = null;
+            List<ODataResource> entries = new List<ODataResource>();
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -132,13 +132,13 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                     {
                         if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            entry = reader.Item as ODataResource;
+                            entries.Add(reader.Item as ODataResource);
                         }
                     }
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
                 }
             }
-            return entry;
+            return entries;
         }
 
         private void UpdateEntry(string singletonType, string singletonName, string mimeType, IEnumerable<ODataProperty> properties)

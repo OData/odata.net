@@ -126,62 +126,62 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the resource set.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedBaseResourceType">The expected base structured type for the items in the resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public override ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedBaseResourceType)
         {
             this.AssertSynchronous();
-            this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataReader(entitySet, expectedBaseResourceType);
 
-            return this.CreateResourceSetReaderImplementation(entitySet, expectedBaseEntityType);
+            return this.CreateResourceSetReaderImplementation(entitySet, expectedBaseResourceType);
         }
 
 #if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the resource set.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedBaseResourceType">The expected base structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedBaseResourceType)
         {
             this.AssertAsynchronous();
-            this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataReader(entitySet, expectedBaseResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedBaseEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedBaseResourceType));
         }
 #endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             this.AssertSynchronous();
-            this.VerifyCanCreateODataReader(navigationSource, expectedEntityType);
+            this.VerifyCanCreateODataReader(navigationSource, expectedResourceType);
 
-            return this.CreateResourceReaderImplementation(navigationSource, expectedEntityType);
+            return this.CreateResourceReaderImplementation(navigationSource, expectedResourceType);
         }
 
 #if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
-            this.VerifyCanCreateODataReader(navigationSource, expectedEntityType);
+            this.VerifyCanCreateODataReader(navigationSource, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
         }
 #endif
 
@@ -532,29 +532,30 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Verifies that CreateResourceReader or CreateResourceSetReader or CreateDeltaReader can be called.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="entityType">The expected entity type for the resource/entries to be read.</param>
-        private void VerifyCanCreateODataReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="structuredType">The expected structured type for the resource/resource set to be read.</param>
+        private void VerifyCanCreateODataReader(IEdmNavigationSource navigationSource, IEdmStructuredType structuredType)
         {
-            Debug.Assert(navigationSource == null || entityType != null, "If an navigation source is specified, the entity type must be specified as well.");
+            Debug.Assert(navigationSource == null || structuredType != null, "If an navigation source is specified, the structured type must be specified as well.");
 
             // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();
 
-                if (navigationSource == null)
+                // TODO: check for entity only
+                if (navigationSource == null && (structuredType != null && structuredType.IsODataEntityTypeKind()))
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_NoEntitySetForRequest);
                 }
             }
 
             // We only check that the base type of the entity set is assignable from the specified entity type.
-            // If no entity set/entity type is specified in the API, we will read it from the context URI.
+            // If no resource set/resource type is specified in the API, we will read it from the context URI.
             IEdmEntityType entitySetElementType = this.EdmTypeResolver.GetElementType(navigationSource);
-            if (navigationSource != null && entityType != null && !entityType.IsOrInheritsFrom(entitySetElementType))
+            if (navigationSource != null && structuredType != null && !structuredType.IsOrInheritsFrom(entitySetElementType))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(entityType.FullName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(structuredType.FullTypeName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
             }
         }
 
@@ -625,12 +626,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the resource set.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedBaseResourceType">The expected base structured type for the items in the resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateResourceSetReaderImplementation(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        private ODataReader CreateResourceSetReaderImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType expectedBaseResourceType)
         {
-            return new ODataJsonLightReader(this, entitySet, expectedBaseEntityType, true);
+            return new ODataJsonLightReader(this, entitySet, expectedBaseResourceType, true);
         }
 
         /// <summary>
@@ -647,12 +648,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedBaseResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateResourceReaderImplementation(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        private ODataReader CreateResourceReaderImplementation(IEdmNavigationSource navigationSource, IEdmStructuredType expectedBaseResourceType)
         {
-            return new ODataJsonLightReader(this, navigationSource, expectedEntityType, false);
+            return new ODataJsonLightReader(this, navigationSource, expectedBaseResourceType, false);
         }
 
         /// <summary>

@@ -65,149 +65,43 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataResource entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
-            entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
-            entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(34.98f, "value should be in correct type.");
-            entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(56.01d, "value should be in correct type.");
-            entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(78.62m, "value should be in correct type.");
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            Assert.Equal(2, entries.Count);
+            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
+            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(34.98f, "value should be in correct type.");
+            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(56.01d, "value should be in correct type.");
+            entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(78.62m, "value should be in correct type.");
 
-            var complextProperty = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "ComplexProperty", StringComparison.OrdinalIgnoreCase)).Value as ODataComplexValue;
+            var complextProperty = entries[1];
             complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
             complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
             complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDoubleId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(-1.0D, "value should be in correct type.");
             complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDecimalId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(0.0M, "value should be in correct type.");
 
-            var longCollection = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+            var longCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
             longCollection.Items.Should().Contain(-1L).And.Contain(long.MinValue).And.Contain(long.MaxValue);
-            var floatCollection = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+            var floatCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
             floatCollection.Items.Should().Contain(-1F).And.Contain(float.MinValue).And.Contain(float.MaxValue).And.Contain(float.PositiveInfinity).And.Contain(float.NegativeInfinity).And.Contain(float.NaN);
-            var doubleCollection = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+            var doubleCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
             doubleCollection.Items.Should().Contain(1.0D).And.Contain(double.MinValue).And.Contain(double.MaxValue).And.Contain(double.PositiveInfinity).And.Contain(double.NegativeInfinity).And.Contain(double.NaN);
-            var decimalCollection = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+            var decimalCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalNumbers", StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
             decimalCollection.Items.Should().Contain(0M).And.Contain(decimal.MinValue).And.Contain(decimal.MaxValue);
-        }
-
-        [Fact]
-        public void ReadingComplexInheritWithModel()
-        {
-            EdmModel model = new EdmModel();
-            EdmEntityType entityType = new EdmEntityType("NS", "MyTestEntity");
-            EdmStructuralProperty key = entityType.AddStructuralProperty("LongId", EdmPrimitiveTypeKind.Int64, false);
-            entityType.AddKeys(key);
-
-            EdmComplexType complexType = new EdmComplexType("NS", "MyComplexType");
-            complexType.AddStructuralProperty("CLongId", EdmPrimitiveTypeKind.Int64, false);
-
-            EdmComplexType derivedComplexType = new EdmComplexType("NS", "MyDerivedComplexType", complexType, false);
-            derivedComplexType.AddStructuralProperty("CFloatId", EdmPrimitiveTypeKind.Single, false);
-
-            EdmComplexType derivedDerivedComplexType = new EdmComplexType("NS", "MyDerivedDerivedComplexType", derivedComplexType, false);
-            derivedDerivedComplexType.AddStructuralProperty("DerivedCFloatId", EdmPrimitiveTypeKind.Single, false);
-
-            model.AddElement(complexType);
-            model.AddElement(derivedComplexType);
-            model.AddElement(derivedDerivedComplexType);
-
-            EdmComplexTypeReference complexTypeRef = new EdmComplexTypeReference(complexType, true);
-            entityType.AddStructuralProperty("ComplexProperty", complexTypeRef);
-            model.AddElement(entityType);
-
-            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer_sub");
-            EdmEntitySet entitySet = container.AddEntitySet("MyTestEntitySet", entityType);
-            model.AddElement(container);
-
-            const string payload =
-                "{" +
-                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.MyTestEntitySet/$entity\"," +
-                "\"@odata.id\":\"http://MyTestEntity\"," +
-                "\"LongId\":\"12\"," +
-                "\"ComplexProperty\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1}" +
-                "}";
-
-            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataResource entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
-            entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
-
-            var complextProperty = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "ComplexProperty", StringComparison.OrdinalIgnoreCase)).Value as ODataComplexValue;
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
-
-            const string payload2 =
-                "{" +
-                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.MyTestEntitySet/$entity\"," +
-                "\"@odata.id\":\"http://MyTestEntity\"," +
-                "\"LongId\":\"12\"," +
-                "\"ComplexProperty\":{\"@odata.type\":\"#NS.MyDerivedDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1,\"DerivedCFloatId\":1}" +
-                "}";
-
-            entry = null;
-            this.ReadEntryPayload(mainModel, payload2, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
-            entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(12L, "value should be in correct type.");
-
-            complextProperty = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "ComplexProperty", StringComparison.OrdinalIgnoreCase)).Value as ODataComplexValue;
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-            complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "DerivedCFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
-        }
-
-        [Fact]
-        public void ReadingComplexInheritInCollection()
-        {
-            EdmModel model = new EdmModel();
-            EdmEntityType entityType = new EdmEntityType("NS", "MyTestEntity");
-            EdmStructuralProperty key = entityType.AddStructuralProperty("LongId", EdmPrimitiveTypeKind.Int64, false);
-            entityType.AddKeys(key);
-
-            EdmComplexType complexType = new EdmComplexType("NS", "MyComplexType");
-            complexType.AddStructuralProperty("CLongId", EdmPrimitiveTypeKind.Int64, false);
-
-            EdmComplexType derivedComplexType = new EdmComplexType("NS", "MyDerivedComplexType", complexType, false);
-            derivedComplexType.AddStructuralProperty("CFloatId", EdmPrimitiveTypeKind.Single, false);
-
-            model.AddElement(complexType);
-            model.AddElement(derivedComplexType);
-
-            EdmComplexTypeReference complexTypeRef = new EdmComplexTypeReference(complexType, true);
-            entityType.AddStructuralProperty("ComplexCollectionProperty", new EdmCollectionTypeReference(new EdmCollectionType(complexTypeRef)));
-            model.AddElement(entityType);
-
-            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer_sub");
-            EdmEntitySet entitySet = container.AddEntitySet("MyTestEntitySet", entityType);
-            model.AddElement(container);
-
-            const string payload =
-                "{" +
-                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.MyTestEntitySet/$entity\"," +
-                "\"@odata.id\":\"http://MyTestEntity\"," +
-                "\"LongId\":\"12\"," +
-                "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
-                "}";
-
-            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataResource entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
-
-            var intCollection = entry.Properties.FirstOrDefault(
-                s => string.Equals(
-                    s.Name,
-                    "ComplexCollectionProperty",
-                    StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            var list = new List<int?>();
-
-            Boolean derived = true;
-            foreach (var val in intCollection.Items)
-            {
-                var complextProperty = val as ODataComplexValue;
-                complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
-                if (derived) complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1.0F, "value should be in correct type.");
-                derived = false;
-            }
-
         }
 
         [Fact]
@@ -373,46 +267,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
-        public void ReadingPayloadOpenComplexTypeJsonLight()
-        {
-            EdmModel model = new EdmModel();
-
-            EdmEntityType entityType = new EdmEntityType("NS", "Person");
-            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
-
-            EdmComplexType complexType = new EdmComplexType("NS", "OpenAddress", null, false, true);
-            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String, false);
-            EdmComplexTypeReference complexTypeRef = new EdmComplexTypeReference(complexType, true);
-
-            entityType.AddStructuralProperty("Address", complexTypeRef);
-
-            model.AddElement(complexType);
-            model.AddElement(entityType);
-
-            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer_sub");
-            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
-            model.AddElement(container);
-
-            const string payload =
-                "{" +
-                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
-                "\"@odata.id\":\"http://mytest\"," +
-                "\"Id\":\"0\"," +
-                "\"Address\":{\"CountryRegion\":\"China\",\"City\":\"Shanghai\"}" +
-                "}";
-
-            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataResource entry = null;
-
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
-
-            var address = entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.OrdinalIgnoreCase)).Value as ODataComplexValue;
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Shanghai", "value should be in correct type.");
-        }
-
-        [Fact]
         public void ReadingTypeDefinitionPayloadJsonLight()
         {
             EdmModel model = new EdmModel();
@@ -451,16 +305,32 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataResource entry = null;
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
+            Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entry.Properties.ToList();
+            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60.5);
 
-            var address = propertyList[2].Value as ODataComplexValue;
+            navigationLink.Name.Should().Be("Address");
+            var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
 
@@ -507,19 +377,34 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion@odata.type\":\"#NS.Address\",\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataResource entry = null;
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            Assert.Equal(2, entries.Count);
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
-
-            IList<ODataProperty> propertyList = entry.Properties.ToList();
+            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60);
 
             propertyList[2].Name.Should().Be("Height");
             propertyList[2].Value.Should().Be(180);
 
-            var address = propertyList[3].Value as ODataComplexValue;
+            navigationLink.Name.Should().Be("Address");
+            var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
 
@@ -569,16 +454,32 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion@odata.type\":\"#NS.City\",\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataResource entry = null;
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
+            Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entry.Properties.ToList();
+            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60.5);
 
-            var address = propertyList[2].Value as ODataComplexValue;
+            navigationLink.Name.Should().Be("Address");
+            var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
 
@@ -625,16 +526,32 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"Address\":{\"CountryRegion@odata.type\":\"#Edm.String\",\"CountryRegion\":\"China\"}" +
                 "}";
 
-            ODataResource entry = null;
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
 
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
+            Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entry.Properties.ToList();
+            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
             propertyList[1].Name.Should().Be("Weight");
             propertyList[1].Value.Should().Be(60.5);
 
-            var address = propertyList[2].Value as ODataComplexValue;
+            navigationLink.Name.Should().Be("Address");
+            var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
 

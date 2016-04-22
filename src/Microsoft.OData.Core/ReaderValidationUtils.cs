@@ -9,6 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.JsonLight;
@@ -82,14 +83,12 @@ namespace Microsoft.OData
         /// <summary>
         /// Validate a null value.
         /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> used to read the payload.</param>
         /// <param name="expectedTypeReference">The expected type of the null value.</param>
         /// <param name="messageReaderSettings">The message reader settings.</param>
         /// <param name="validateNullValue">true to validate the the null value; false to only check whether the type is supported.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         internal static void ValidateNullValue(
-            IEdmModel model,
             IEdmTypeReference expectedTypeReference,
             ODataMessageReaderSettings messageReaderSettings,
             bool validateNullValue,
@@ -107,7 +106,7 @@ namespace Microsoft.OData
 
                 if (!messageReaderSettings.DisablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
                 {
-                    ValidateNullValueAllowed(expectedTypeReference, validateNullValue, model, propertyName, isDynamicProperty);
+                    ValidateNullValueAllowed(expectedTypeReference, validateNullValue, propertyName, isDynamicProperty);
                 }
             }
         }
@@ -394,9 +393,11 @@ namespace Microsoft.OData
 
             // Compute the target type kind based on the expected type, the payload type kind
             // and a function to detect the target type kind from the shape of the payload.
+            bool forResource = (expectedTypeKind & (EdmTypeKind.Complex | EdmTypeKind.Entity)) > 0;
+
             targetTypeKind = ComputeTargetTypeKind(
                 expectedTypeReference,
-                /*forEntityValue*/ expectedTypeKind == EdmTypeKind.Entity,
+                forResource,
                 payloadTypeName,
                 payloadTypeKind,
                 messageReaderSettings,
@@ -721,7 +722,7 @@ namespace Microsoft.OData
             Debug.Assert(
                 contextUriParseResult.NavigationSource != null || contextUriParseResult.EdmType != null,
                 "contextUriParseResult.EntitySet != null || contextUriParseResult.EdmType != null");
-            Debug.Assert(contextUriParseResult.EdmType is IEdmEntityType, "contextUriParseResult.StructuredType is IEdmEntityType");
+            Debug.Assert(contextUriParseResult.EdmType is IEdmStructuredType, "contextUriParseResult.EdmType is IEdmStructuredType");
 
             // Set the navigation source name or make sure the navigation source names match.
             if (scope.NavigationSource == null)
@@ -739,28 +740,28 @@ namespace Microsoft.OData
                     scope.NavigationSource.FullNavigationSourceName()));
             }
 
-            // Set the entity type or make sure the entity types are assignable.
-            IEdmEntityType payloadEntityType = (IEdmEntityType)contextUriParseResult.EdmType;
-            if (scope.EntityType == null)
+            // Set the resource type or make sure the resource types are assignable.
+            IEdmStructuredType payloadEntityType = (IEdmStructuredType)contextUriParseResult.EdmType;
+            if (scope.ResourceType == null)
             {
                 if (updateScope)
                 {
-                    scope.EntityType = payloadEntityType;
+                    scope.ResourceType = payloadEntityType;
                 }
             }
-            else if (scope.EntityType.IsAssignableFrom(payloadEntityType))
+            else if (scope.ResourceType.IsAssignableFrom(payloadEntityType))
             {
                 if (updateScope)
                 {
-                    scope.EntityType = payloadEntityType;
+                    scope.ResourceType = payloadEntityType;
                 }
             }
-            else if (!payloadEntityType.IsAssignableFrom(scope.EntityType))
+            else if (!payloadEntityType.IsAssignableFrom(scope.ResourceType))
             {
                 throw new ODataException(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntityType(
                     UriUtils.UriToString(contextUriParseResult.ContextUri),
                     contextUriParseResult.EdmType.FullTypeName(),
-                    scope.EntityType.FullName()));
+                    scope.ResourceType.FullTypeName()));
             }
         }
 
@@ -780,21 +781,36 @@ namespace Microsoft.OData
                 return expectedItemTypeReference;
             }
 
-            Debug.Assert(contextUriParseResult.EdmType is IEdmCollectionType, "contextUriParseResult.EdmType is IEdmCollectionType");
-            IEdmCollectionType actualCollectionType = (IEdmCollectionType)contextUriParseResult.EdmType;
-            if (expectedItemTypeReference != null)
+            if (contextUriParseResult.EdmType is IEdmCollectionType)
             {
-                // We allow co-variance in collection types (e.g., expecting the item type of Geography from a payload of Collection(GeographyPoint).
-                if (!expectedItemTypeReference.IsAssignableFrom(actualCollectionType.ElementType))
+                Debug.Assert(contextUriParseResult.EdmType is IEdmCollectionType, "contextUriParseResult.EdmType is IEdmCollectionType");
+                IEdmCollectionType actualCollectionType = (IEdmCollectionType)contextUriParseResult.EdmType;
+                if (expectedItemTypeReference != null)
                 {
-                    throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
-                        UriUtils.UriToString(contextUriParseResult.ContextUri),
-                        actualCollectionType.ElementType.FullName(),
-                        expectedItemTypeReference.FullName()));
+                    // We allow co-variance in collection types (e.g., expecting the item type of Geography from a payload of Collection(GeographyPoint).
+                    if (!expectedItemTypeReference.IsAssignableFrom(actualCollectionType.ElementType))
+                    {
+                        throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                            UriUtils.UriToString(contextUriParseResult.ContextUri),
+                            actualCollectionType.ElementType.FullName(),
+                            expectedItemTypeReference.FullName()));
+                    }
                 }
+
+                return actualCollectionType.ElementType;
             }
 
-            return actualCollectionType.ElementType;
+            Debug.Assert(contextUriParseResult.EdmType is IEdmComplexType && contextUriParseResult.DetectedPayloadKinds.Any(k => k == ODataPayloadKind.Collection),
+                "contextUriParseResult.EdmType is IEdmComplexType");
+            if (expectedItemTypeReference != null && !expectedItemTypeReference.Definition.IsAssignableFrom(contextUriParseResult.EdmType))
+            {
+                throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                    UriUtils.UriToString(contextUriParseResult.ContextUri),
+                    contextUriParseResult.EdmType.FullTypeName(),
+                    expectedItemTypeReference.Definition.FullTypeName()));
+            }
+
+            return contextUriParseResult.EdmType.ToTypeReference(true);
         }
 
         /// <summary>
@@ -1086,7 +1102,7 @@ namespace Microsoft.OData
         /// possibly the payload shape.
         /// </summary>
         /// <param name="expectedTypeReference">The expected type reference used to read the payload value.</param>
-        /// <param name="forEntityValue">true when resolving a type name for an entity value; false for a non-entity value.</param>
+        /// <param name="forResource">true when resolving a type name for a resource; false for a non-resource; none for indetermination</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <param name="messageReaderSettings">The message reader settings.</param>
@@ -1094,7 +1110,7 @@ namespace Microsoft.OData
         /// <returns>The type kind to be used to read the payload.</returns>
         private static EdmTypeKind ComputeTargetTypeKind(
             IEdmTypeReference expectedTypeReference,
-            bool forEntityValue,
+            bool forResource,
             string payloadTypeName,
             EdmTypeKind payloadTypeKind,
             ODataMessageReaderSettings messageReaderSettings,
@@ -1128,7 +1144,7 @@ namespace Microsoft.OData
                 if (payloadTypeKind != EdmTypeKind.None)
                 {
                     // If we have a type kind based on the type name, use it.
-                    if (!forEntityValue)
+                    if (!forResource)
                     {
                         ValidationUtils.ValidateValueTypeKind(payloadTypeKind, payloadTypeName);
                     }
@@ -1210,13 +1226,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedValueTypeReference">The expected type for the value, or null if no such type is available.</param>
         /// <param name="validateNullValue">true to validate the null value; otherwise false.</param>
-        /// <param name="model">The model to use to get the OData-Version.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
-        private static void ValidateNullValueAllowed(IEdmTypeReference expectedValueTypeReference, bool validateNullValue, IEdmModel model, string propertyName, bool? isDynamicProperty)
+        private static void ValidateNullValueAllowed(IEdmTypeReference expectedValueTypeReference, bool validateNullValue, string propertyName, bool? isDynamicProperty)
         {
-            Debug.Assert(model != null, "For null validation, model is required.");
-
             if (validateNullValue && expectedValueTypeReference != null)
             {
                 Debug.Assert(
@@ -1253,13 +1266,10 @@ namespace Microsoft.OData
                 }
                 else if (expectedValueTypeReference.IsODataComplexTypeKind())
                 {
-                    if (ValidationUtils.ShouldValidateComplexPropertyNullValue(model))
+                    IEdmComplexTypeReference complexTypeReference = expectedValueTypeReference.AsComplex();
+                    if (!complexTypeReference.IsNullable)
                     {
-                        IEdmComplexTypeReference complexTypeReference = expectedValueTypeReference.AsComplex();
-                        if (!complexTypeReference.IsNullable)
-                        {
-                            ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
-                        }
+                        ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
                     }
                 }
             }

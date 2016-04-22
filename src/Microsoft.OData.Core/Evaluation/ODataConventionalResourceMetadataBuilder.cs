@@ -20,7 +20,7 @@ namespace Microsoft.OData.Evaluation
     #endregion
 
     /// <summary>
-    /// Implementation of OData entity metadata builder based on OData protocol conventions.
+    /// Implementation of OData resource metadata builder based on OData protocol conventions.
     /// </summary>
     internal sealed class ODataConventionalResourceMetadataBuilder : ODataResourceMetadataBuilder
     {
@@ -495,9 +495,9 @@ namespace Microsoft.OData.Evaluation
             Uri uri = this.resourceMetadataContext.Resource.HasNonComputedId ? this.resourceMetadataContext.Resource.NonComputedId : this.ComputedId;
 
             Debug.Assert(this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null, "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
-            if (this.resourceMetadataContext.ActualEntityTypeName != this.resourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
+            if (this.resourceMetadataContext.ActualResourceTypeName != this.resourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
             {
-                uri = this.uriBuilder.AppendTypeSegment(uri, this.resourceMetadataContext.ActualEntityTypeName);
+                uri = this.uriBuilder.AppendTypeSegment(uri, this.resourceMetadataContext.ActualResourceTypeName);
             }
 
             return uri;
@@ -542,7 +542,7 @@ namespace Microsoft.OData.Evaluation
         {
             Uri uri = this.uriBuilder.BuildBaseUri();
             uri = this.uriBuilder.BuildEntitySetUri(uri, this.resourceMetadataContext.TypeContext.NavigationSourceName);
-            uri = this.uriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.resourceMetadataContext.ActualEntityTypeName);
+            uri = this.uriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.resourceMetadataContext.ActualResourceTypeName);
             return uri;
         }
 
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Evaluation
                     ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
                     if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.resourceMetadataContext.TypeContext.NavigationSourceName) == null)
                     {
-                        uri = new Uri(UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualEntityTypeName);    
+                        uri = new Uri(UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualResourceTypeName);    
                     }
                 }
             }
@@ -593,7 +593,7 @@ namespace Microsoft.OData.Evaluation
                 uri = this.uriBuilder.BuildEntityInstanceUri(
                     uri,
                     this.ComputedKeyProperties,
-                    this.resourceMetadataContext.ActualEntityTypeName);
+                    this.resourceMetadataContext.ActualResourceTypeName);
             }
 
             return uri;

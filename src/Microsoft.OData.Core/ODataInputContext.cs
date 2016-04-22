@@ -187,10 +187,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the resource set.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected base structured type for the items in the resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public virtual ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public virtual ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -199,10 +199,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the resource set.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected base structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -211,10 +211,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public virtual ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public virtual ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
@@ -223,10 +223,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the resource to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public virtual Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }

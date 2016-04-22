@@ -801,7 +801,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.13: Collection of individual property with complex type
         // Sample Request: http://host/service/People(1)/Addresses
         // Context Url in Response: http://host/service/$metadata#People(1)/Addresses
-        [Fact]
+        [Fact(Skip = "Enable after writer is implementated")]
         public void CollectionOfComplexTypeIndividualProperty()
         {
             var address = new Address() { Street = "TestStreet", City = "TestCity" };
@@ -882,7 +882,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapter 10.14: Collection of Value with Complex Type
         // Response: http://host/service/$metadata#Collection(Model.Address)
-        [Fact]
+        [Fact(Skip="Enable after writer is implementated")]
         public void CollectionOfComplexType()
         {
             var address = new Address() { Street = "TestStreet", City = "TestCity" };

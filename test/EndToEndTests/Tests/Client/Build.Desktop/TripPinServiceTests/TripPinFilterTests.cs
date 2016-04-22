@@ -34,7 +34,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.IsTrue(userName.ToString().Contains("v"));
-            });
+            },
+            "Person");
             #endregion
 
             #region endswith
@@ -44,7 +45,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.IsTrue(userName.ToString().Contains("chum"));
                 Assert.IsTrue(userName.ToString().EndsWith("chum"));
-            });
+            },
+            "Person");
             #endregion
 
             #region startswith
@@ -54,7 +56,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.IsTrue(userName.ToString().Contains("v"));
                 Assert.IsTrue(userName.ToString().StartsWith("v"));
-            });
+            },
+            "Person");
             #endregion
 
             #region length
@@ -63,7 +66,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.AreEqual(userName.ToString().Length, 12);
-            });
+            },
+            "Person");
             #endregion
 
             #region indexof
@@ -73,7 +77,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.IsTrue(userName.ToString().Contains("vincent"));
                 Assert.AreEqual(userName.ToString().IndexOf("vincent"), 1);
-            });
+            },
+            "Person");
             #endregion
 
             #region substring
@@ -83,7 +88,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.IsTrue(userName.ToString().Contains("incentcalabrese"));
                 Assert.AreEqual(userName.ToString().Substring(1), "incentcalabrese");
-            });
+            },
+            "Person");
 
             uri = "People?$filter=substring(UserName,1,6) eq 'incent'";
             requestAndCheckResult(uri, (item) =>
@@ -91,7 +97,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.IsTrue(userName.ToString().Contains("incent"));
                 Assert.AreEqual(userName.ToString().Substring(1, 6), "incent");
-            });
+            },
+            "Person");
             #endregion
 
             #region tolower
@@ -100,7 +107,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.AreEqual(userName.ToString(), "vincentcalabrese");
-            });
+            },
+            "Person");
             #endregion
 
             #region toupper
@@ -109,7 +117,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.AreEqual(userName.ToString().ToUpper(), "VINCENTCALABRESE");
-            });
+            },
+            "Person");
             #endregion
 
             #region trim
@@ -118,7 +127,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.AreEqual(userName.ToString(), "vincentcalabrese");
-            });
+            },
+            "Person");
             #endregion
 
             #region concat
@@ -128,7 +138,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var firstName = item.Properties.Single(p => p.Name == "FirstName").Value;
                 var lastName = item.Properties.Single(p => p.Name == "LastName").Value;
                 Assert.AreEqual(string.Concat(string.Concat(firstName, ", "), lastName), "Vincent, Calabrese");
-            });
+            },
+            "Person");
             #endregion
         }
 
@@ -233,7 +244,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.AreEqual(userName.GetType(), typeof(String));
-            });
+            },
+            "Person");
 
             //TODO: should remove the single quotation marks (' '), this should be ODL bug
             uri = string.Format("People?$filter=isof(Gender,'{0}PersonGender')", NameSpacePrefix);
@@ -243,20 +255,23 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 Assert.AreEqual(gender.GetType(), typeof(ODataEnumValue));
                 Assert.AreEqual((gender as ODataEnumValue).TypeName, "Microsoft.OData.SampleService.Models.TripPin.PersonGender");
-            });
+            },
+            "Person");
 
             //TODO: should remove the single quotation marks (' '), this should be ODL bug
             uri = string.Format("People?$filter=isof('{0}Person')", NameSpacePrefix);
             requestAndCheckFeedResult(uri, (feed) =>
             {
                 Assert.IsTrue(feed.Count > 0);
-            });
+            },
+            "Person");
 
             uri = string.Format("People('russellwhyte')/Trips(0)/PlanItems?$filter=isof('{0}Flight')", NameSpacePrefix);
             requestAndCheckFeedResult(uri, (feed) =>
             {
                 Assert.IsTrue(feed.Count > 0);
-            });
+            },
+            "Flight");
             #endregion
 
             #region cast
@@ -265,35 +280,40 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.AreEqual(userName.ToString(), "vincentcalabrese");
-            });
+            },
+            "Person");
 
             uri = "People('russellwhyte')/Trips?$filter=cast(TripId, Edm.Int32) eq 1001";
             requestAndCheckResult(uri, (item) =>
             {
                 var tripId = item.Properties.Single(p => p.Name == "TripId").Value;
                 Assert.AreEqual((int)tripId, 1001);
-            });
+            },
+            "Trip");
 
             uri = "People('russellwhyte')/Trips?$filter=cast(TripId, Edm.String) eq '1001'";
             requestAndCheckResult(uri, (item) =>
             {
                 var tripId = item.Properties.Single(p => p.Name == "TripId").Value;
                 Assert.AreEqual(tripId.ToString(), "1001");
-            });
+            },
+            "Trip");
 
             uri = "People('russellwhyte')/Trips?$filter=cast(TripId, Edm.String) eq '1001'";
             requestAndCheckResult(uri, (item) =>
             {
                 var tripId = item.Properties.Single(p => p.Name == "TripId").Value;
                 Assert.AreEqual(tripId.ToString(), "1001");
-            });
+            },
+            "Trip");
 
             //TODO, should add parameter with Doulbe type in trip pin.
             uri = string.Format("People?$filter=cast(12.66, Edm.Int32) eq 13");
             requestAndCheckFeedResult(uri, (feed) =>
             {
                 Assert.IsTrue(feed.Count > 0);
-            });
+            },
+            "Person");
 
             //Only support convert enum to string
             uri = string.Format("People?$filter=cast(Gender, Edm.String) eq 'Male'");
@@ -304,13 +324,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 Assert.AreEqual(gender.GetType(), typeof(ODataEnumValue));
                 Assert.AreEqual((gender as ODataEnumValue).TypeName, "Microsoft.OData.SampleService.Models.TripPin.PersonGender");
                 Assert.AreEqual((gender as ODataEnumValue).Value, "Male");
-            });
+            },
+            "Person");
 
             uri = string.Format("People?$filter=cast('Male', {0}PersonGender) eq {0}PersonGender'Male'", NameSpacePrefix);
             requestAndCheckFeedResult(uri, (feed) =>
             {
                 Assert.IsTrue(feed.Count > 0);
-            });
+            },
+            "Person");
             #endregion
         }
 
@@ -322,13 +344,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
         #region private methods
-        private void requestAndCheckResult(string uri, Action<ODataResource> verify)
+        private void requestAndCheckResult(string uri, Action<ODataResource> verify, params string[] resourceTypeNames)
         {
             foreach (var mimeType in mimeTypes)
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataResource> entries = QueryFeed(uri, mimeType);
+                    List<ODataResource> entries = QueryFeed(uri, mimeType, resourceTypeNames);
                     entries.ForEach(item =>
                     {
                         verify.Invoke(item);
@@ -337,19 +359,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        private void requestAndCheckFeedResult(string uri, Action<List<ODataResource>> verify)
+        private void requestAndCheckFeedResult(string uri, Action<List<ODataResource>> verify, params string[] resourceTypeNames)
         {
             foreach (var mimeType in mimeTypes)
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataResource> entries = QueryFeed(uri, mimeType);
+                    List<ODataResource> entries = QueryFeed(uri, mimeType, resourceTypeNames);
                     verify.Invoke(entries);
                 }
             }
         }
 
-        private List<ODataResource> QueryFeed(string requestUri, string mimeType)
+        private List<ODataResource> QueryFeed(string requestUri, string mimeType, params string[] resourceTypeNames)
         {
             List<ODataResource> entries = new List<ODataResource>();
 
@@ -364,20 +386,24 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
                     var reader = messageReader.CreateODataResourceSetReader();
-
+                    ODataResourceSet feed = null;
                     while (reader.Read())
                     {
                         if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             ODataResource entry = reader.Item as ODataResource;
-                            entries.Add(entry);
+                            if (entry != null && resourceTypeNames.Any(r=>entry.TypeName.EndsWith(r)))
+                            {
+                                entries.Add(entry);
+                            }
                         }
                         else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataResourceSet);
+                            feed = reader.Item as ODataResourceSet;
+                            
                         }
                     }
-
+                    Assert.IsNotNull(feed as ODataResourceSet);
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
                 }
             }

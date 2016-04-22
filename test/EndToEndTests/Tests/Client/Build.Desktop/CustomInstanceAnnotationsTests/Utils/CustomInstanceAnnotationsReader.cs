@@ -9,6 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -56,27 +57,97 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, model))
             {
                 var reader = isFeed ? messageReader.CreateODataResourceSetReader() : messageReader.CreateODataResourceReader();
+                Stack<bool> isNavigations = new Stack<bool>();
+
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.ResourceSetStart:
                         case ODataReaderState.ResourceStart:
                             {
-                                var instanceAnnotations = GetItemInstanceAnnotations(reader);
+                                var resource = reader.Item as ODataResource;
+
                                 var parent = annotationsStack.Count == 0 ? null : annotationsStack.Peek();
+                                if (parent != null)
+                                {
+                                    parent.hasNestedResourceInfo = true;
+                                }
+                                if (resource != null && (resource.TypeName.EndsWith("Customer")
+                                || resource.TypeName.EndsWith("Login")
+                                || resource.TypeName.EndsWith("Message")
+                                || resource.TypeName.EndsWith("Order")))
+                                {
+                                    var instanceAnnotations = resource.InstanceAnnotations.Clone();
+                                    var current = new CustomInstanceAnnotationsDescriptor { TypeOfAnnotatedItem = reader.Item.GetType(), Parent = parent, AnnotationsOnStart = instanceAnnotations };
+                                    annotationsStack.Push(current);
+                                    allAnnotations.Add(current);
+                                }
+                                break;
+                            }
+                        case ODataReaderState.ResourceSetStart:
+                            {
+                                var feed = reader.Item as ODataResourceSet;
+                                var instanceAnnotations = feed.InstanceAnnotations.Clone();
+                                var parent = annotationsStack.Count == 0 ? null : annotationsStack.Peek();
+                                if (parent != null)
+                                {
+                                    parent.hasNestedResourceInfo = true;
+                                }
                                 var current = new CustomInstanceAnnotationsDescriptor { TypeOfAnnotatedItem = reader.Item.GetType(), Parent = parent, AnnotationsOnStart = instanceAnnotations };
                                 annotationsStack.Push(current);
-                                allAnnotations.Add(current);
+                                if (isNavigations.Count == 0 || isNavigations.Peek())
+                                {
+                                    allAnnotations.Add(current);
+                                }
+                                break;
+                            }
+                        case ODataReaderState.NestedResourceInfoStart:
+                            {
+                                var nestedResource = reader.Item as ODataNestedResourceInfo;
+                                if (nestedResource.Name.Equals("Customer")
+                                    || nestedResource.Name.Equals("Login")
+                                    || nestedResource.Name.Equals("Orders")
+                                    || nestedResource.Name.Equals("SentMessages")
+                                    || nestedResource.Name.Equals("ReceivedMessages"))
+                                {
+                                    isNavigations.Push(true);
+                                }
+                                else
+                                {
+                                    isNavigations.Push(false);
+                                }
+                                break;
+                            }
+                        case ODataReaderState.ResourceEnd:
+                            {
+                                var resource = reader.Item as ODataResource;
+                                if (resource != null && (resource.TypeName.EndsWith("Customer")
+                                    || resource.TypeName.EndsWith("Login")
+                                    || resource.TypeName.EndsWith("Message")
+                                    || resource.TypeName.EndsWith("Order")))
+                                {
+                                    var instanceAnnotations = resource.InstanceAnnotations.Clone();
+                                    var current = annotationsStack.Pop();
+                                    current.AnnotationsOnEnd = instanceAnnotations;
+                                }
+                                break;
+                            }
+                        case ODataReaderState.ResourceSetEnd:
+                            {
+                                var feed = reader.Item as ODataResourceSet;
+                                var instanceAnnotations = feed.InstanceAnnotations.Clone();
+                                var current = annotationsStack.Pop();
+                                if (isNavigations.Count == 0 || isNavigations.Peek())
+                                {
+                                    current.AnnotationsOnEnd = instanceAnnotations;
+                                }
+                                
                                 break;
                             }
 
-                        case ODataReaderState.ResourceSetEnd:
-                        case ODataReaderState.ResourceEnd:
+                        case ODataReaderState.NestedResourceInfoEnd:
                             {
-                                var instanceAnnotations = GetItemInstanceAnnotations(reader);
-                                var current = annotationsStack.Pop();
-                                current.AnnotationsOnEnd = instanceAnnotations;
+                                isNavigations.Pop();
                                 break;
                             }
                     }

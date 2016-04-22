@@ -21,14 +21,14 @@ namespace Microsoft.OData.JsonLight
         ODataResource Resource { get; }
 
         /// <summary>
-        /// The entity type for the resource (if available)
+        /// The structured type for the resource (if available)
         /// </summary>
-        IEdmEntityType ResourceType { get; }
+        IEdmStructuredType ResourceType { get; }
 
         /// <summary>
-        /// The entity type which was derived from the model (may be either the same as entity type or its base type.
+        /// The structured type which was derived from the model (may be either the same as structured type or its base type).
         /// </summary>
-        IEdmEntityType ResourceTypeFromMetadata { get; }
+        IEdmStructuredType ResourceTypeFromMetadata { get; }
 
         /// <summary>
         /// The serialization info for the current resource.

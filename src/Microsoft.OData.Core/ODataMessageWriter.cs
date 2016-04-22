@@ -300,26 +300,26 @@ namespace Microsoft.OData
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceWriter()
         {
-            return CreateODataResourceWriter(/*navigationSource*/null, /*entityType*/ null);
+            return CreateODataResourceWriter(/*navigationSource*/null, /*resourceType*/ null);
         }
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write resources for.</param>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource)
         {
-            return CreateODataResourceWriter(navigationSource, /*entityType*/ null);
+            return CreateODataResourceWriter(navigationSource, /*resourceType*/ null);
         }
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
+        public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutput(
@@ -333,7 +333,7 @@ namespace Microsoft.OData
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceWriterAsync()
         {
-            return CreateODataResourceWriterAsync(/*entitySet*/null, /*entityType*/null);
+            return CreateODataResourceWriterAsync(/*entitySet*/null, /*resourceType*/null);
         }
 
         /// <summary>
@@ -343,22 +343,22 @@ namespace Microsoft.OData
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource)
         {
-            return CreateODataResourceWriterAsync(navigationSource, /*entityType*/null);
+            return CreateODataResourceWriterAsync(navigationSource, /*resourceType*/null);
         }
 
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Resource,
                 null /* verifyHeaders */,
-                (context) => context.CreateODataResourceWriterAsync(navigationSource, entityType));
+                (context) => context.CreateODataResourceWriterAsync(navigationSource, resourceType));
         }
 #endif
 

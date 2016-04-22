@@ -206,7 +206,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
+        public override ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.AssertSynchronous();
 
@@ -218,10 +218,10 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType resourceType)
+        public override Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.AssertAsynchronous();
 
@@ -674,12 +674,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataResourceWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        private ODataWriter CreateODataResourceWriterImplementation(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingResourceSet*/false);
+            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, resourceType, /*writingResourceSet*/false);
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }

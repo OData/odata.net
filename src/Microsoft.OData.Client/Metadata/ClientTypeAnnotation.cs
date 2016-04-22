@@ -70,10 +70,19 @@ namespace Microsoft.OData.Client.Metadata
             this.model = model;
         }
 
-        /// <summary>if true then EntityType else if !KnownType then ComplexType else PrimitiveType</summary>
+        /// <summary>if it is an IEdmEntityType</summary>
         internal bool IsEntityType
         {
             get { return this.EdmType.TypeKind == EdmTypeKind.Entity; }
+        }
+
+        /// <summary>if it is an IEdmStructuredType</summary>
+        internal bool IsStructuredType
+        {
+            get
+            {
+                return this.EdmType.TypeKind == EdmTypeKind.Entity || this.EdmType.TypeKind == EdmTypeKind.Complex;
+            }
         }
 
         /// <summary>Property that holds data for ATOM-style media link entries</summary>

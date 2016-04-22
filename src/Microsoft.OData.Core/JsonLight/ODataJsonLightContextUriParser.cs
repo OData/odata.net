@@ -137,7 +137,25 @@ namespace Microsoft.OData.JsonLight
 
             // unsupported payload kind indicates that this is during payload kind detection, so we should not fail.
             bool detectedPayloadKindMatchesExpectation = detectedPayloadKind == expectedPayloadKind || expectedPayloadKind == ODataPayloadKind.Unsupported;
-            if (detectedPayloadKind == ODataPayloadKind.Collection)
+            bool isIndividualProperty = this.parseResult.Path != null && this.parseResult.Path.IsIndividualProperty();
+            if (detectedPayloadKind == ODataPayloadKind.ResourceSet && this.parseResult.EdmType.IsODataComplexTypeKind())
+            {
+                this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection };
+
+                if (expectedPayloadKind == ODataPayloadKind.Property || expectedPayloadKind == ODataPayloadKind.Collection)
+                {
+                    detectedPayloadKindMatchesExpectation = true;
+                }
+            }
+            else if (detectedPayloadKind == ODataPayloadKind.Resource && this.parseResult.EdmType.IsODataComplexTypeKind())
+            {
+                this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Resource, ODataPayloadKind.Property };
+                if (expectedPayloadKind == ODataPayloadKind.Property)
+                {
+                    detectedPayloadKindMatchesExpectation = true;
+                }
+            }
+            else if (detectedPayloadKind == ODataPayloadKind.Collection)
             {
                 // If the detected payload kind is 'collection' it can always also be treated as a property.
                 this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Collection, ODataPayloadKind.Property };
@@ -369,11 +387,27 @@ namespace Microsoft.OData.JsonLight
                 else if (path.IsIndividualProperty())
                 {
                     detectedPayloadKind = ODataPayloadKind.Property;
-
-                    IEdmCollectionType collectionType = parseResult.EdmType as IEdmCollectionType;
-                    if (collectionType != null)
+                    IEdmComplexType complexType = parseResult.EdmType as IEdmComplexType;
+                    if (complexType != null)
                     {
-                        detectedPayloadKind = ODataPayloadKind.Collection;
+                        detectedPayloadKind = ODataPayloadKind.Resource;
+                    }
+                    else
+                    {
+                        IEdmCollectionType collectionType = parseResult.EdmType as IEdmCollectionType;
+
+                        if (collectionType != null)
+                        {
+                            if (collectionType.ElementType.IsComplex())
+                            {
+                                this.parseResult.EdmType = collectionType.ElementType.Definition;
+                                detectedPayloadKind = ODataPayloadKind.ResourceSet;
+                            }
+                            else
+                            {
+                                detectedPayloadKind = ODataPayloadKind.Collection;
+                            }
+                        }
                     }
                 }
                 else
@@ -403,12 +437,13 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(UriUtils.UriToString(this.parseResult.ContextUri), typeName));
             }
 
-            if (resolvedType.TypeKind == EdmTypeKind.Entity)
+            if (resolvedType.TypeKind == EdmTypeKind.Entity || resolvedType.TypeKind == EdmTypeKind.Complex)
             {
                 this.parseResult.EdmType = resolvedType;
                 return isCollection ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
             }
 
+            // For structured collection ,the EdmType is element type. for primitive collection, it is collection type
             resolvedType = isCollection ? EdmLibraryExtensions.GetCollectionType(resolvedType.ToTypeReference(true /*nullable*/)) : resolvedType;
             this.parseResult.EdmType = resolvedType;
             return isCollection ? ODataPayloadKind.Collection : ODataPayloadKind.Property;

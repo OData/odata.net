@@ -8,6 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
@@ -36,8 +37,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         private string[] testMimeTypes = 
         { 
             MimeTypes.ApplicationJsonODataLightNonStreaming, 
-            MimeTypes.ApplicationJsonODataLightStreaming, 
-        //    MimeTypes.ApplicationAtomXml
+            MimeTypes.ApplicationJsonODataLightStreaming,
         };
 
         private string[] feedQueries = 
@@ -107,7 +107,21 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
 
         public static bool HasExpandedNavigationProperties(string uri)
         {
-            return (uri.Contains("$expand"));
+            if (uri.Contains("$expand"))
+            {
+                return true;
+            }
+
+            if (uri.Contains("Customer"))
+            {
+                var parts = uri.Split('?', '&');
+                var selects = parts.Where(s => s.Contains("$select"));
+                if(selects.Count() == 0 || selects.Any(s=>s.Contains("PrimaryContactInfo") || s.Contains("BackupContactInfo")))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static ODataMessageReaderSettings CreateODataMessageReaderSettings(Func<string,bool> shouldIncludeAnnotation)

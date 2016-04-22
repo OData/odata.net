@@ -225,11 +225,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public virtual ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
@@ -238,11 +238,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public virtual Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }

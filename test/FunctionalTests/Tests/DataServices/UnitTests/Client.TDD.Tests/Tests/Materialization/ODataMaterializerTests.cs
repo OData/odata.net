@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
         {
             MaterializeColOfBaseComplex("BaseETs(0)/EColOfBaseCTP", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfBaseCTP).GetValue().ToList());
             MaterializeColOfNullableBaseComplex("BaseETs(0)/EColOfNullableBaseCTP", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfNullableBaseCTP).GetValue().ToList());
-            MaterializeColOfDerivedComplex("DerivedETs(0)/EColOfDerviedCTP", () => this.dsc.DerivedETs.ByKey(0).Select(e => e.EColOfDerivedCTP).GetValue().ToList());
+            MaterializeColOfDerivedComplex("DerivedETs(0)/EColOfDerivedCTP", () => this.dsc.DerivedETs.ByKey(0).Select(e => e.EColOfDerivedCTP).GetValue().ToList());
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
         {
             MaterializeColOfBaseComplex("BaseETs(0)/EColOfBaseCTP", () => this.dsc.DerivedETs.ByKey(0).BETRColOfBaseCT().ToList());
             MaterializeColOfBaseComplex("BaseETs(0)/EColOfNullableBaseCTP", () => this.dsc.DerivedETs.ByKey(0).BETRColOfNullableBaseCT().ToList());
-            MaterializeColOfDerivedComplex("DerivedETs(0)/EColOfDerviedCTP", () => this.dsc.DerivedETs.ByKey(0).BETRColOfDerivedCT().ToList());
+            MaterializeColOfDerivedComplex("DerivedETs(0)/EColOfDerivedCTP", () => this.dsc.DerivedETs.ByKey(0).BETRColOfDerivedCT().ToList());
         }
 
         private void MaterializeColOfBaseComplex(string contextUri, Func<List<BaseCT>> func)

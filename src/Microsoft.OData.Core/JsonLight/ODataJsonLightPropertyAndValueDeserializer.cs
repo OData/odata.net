@@ -364,7 +364,6 @@ namespace Microsoft.OData.JsonLight
                 // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
                 //       type; we always fall back to the expected type.
                 ReaderValidationUtils.ValidateNullValue(
-                    this.Model,
                     expectedPropertyTypeReference,
                     this.MessageReaderSettings,
                     /*validateNullValue*/ true,

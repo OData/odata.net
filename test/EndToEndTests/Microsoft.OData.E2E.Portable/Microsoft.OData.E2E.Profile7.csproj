@@ -74,6 +74,7 @@
     <Compile Include="BindingTests.cs" />
     <Compile Include="DesktopExternalUriGenerator.cs" />
     <Compile Include="EndToEndTestBase.cs" />
+    <Compile Include="PlatformHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceGeneratorFactory.cs" />
   </ItemGroup>

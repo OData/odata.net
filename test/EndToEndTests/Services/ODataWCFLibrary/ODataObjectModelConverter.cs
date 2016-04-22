@@ -362,6 +362,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 ODataEnumValue enumValue = (ODataEnumValue)propertyValue;
                 return Enum.Parse(propertyUnderlyingType, enumValue.Value);
             }
+            else if (propertyUnderlyingType.IsGenericType && propertyValue is IEnumerable)
+            {
+                var collection = Utility.QuickCreateInstance(propertyUnderlyingType);
+
+                foreach (var item in propertyValue as IEnumerable)
+                {
+                    var itemType = propertyUnderlyingType.GetGenericArguments().Single();
+                    var collectionItem = ODataObjectModelConverter.ConvertPropertyValue(item, itemType);
+
+                    propertyUnderlyingType.GetMethod("Add").Invoke(collection, new object[] { collectionItem });
+                }
+
+                return collection;
+            }
 
             return propertyValue;
         }
@@ -388,8 +402,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     var item = ConvertPropertyValue(odataItem);
                     if (collectionList == null)
                     {
-                        Type itemType = item.GetType();
-                        Type listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                        Type listType = string.IsNullOrEmpty(collection.TypeName) ? null : EdmClrTypeUtils.GetInstanceType(collection.TypeName);
+                        if(listType == null)
+                        {
+                            Type itemType = item.GetType();
+                            listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                        }
                         collectionList = (IList)Utility.QuickCreateInstance(listType);
                     }
 

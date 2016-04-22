@@ -108,15 +108,15 @@ namespace Microsoft.OData.Tests.Evaluation
         public void ActualEntityTypeNmeShouldReturnTypeName()
         {
             this.entry.TypeName = "ns.MyTypeName";
-            this.entryMetadataContextWithoutModel.ActualEntityTypeName.Should().Be("ns.MyTypeName");
-            this.entryMetadataContextWithModel.ActualEntityTypeName.Should().Be("ns.TypeName");
+            this.entryMetadataContextWithoutModel.ActualResourceTypeName.Should().Be("ns.MyTypeName");
+            this.entryMetadataContextWithModel.ActualResourceTypeName.Should().Be("ns.TypeName");
         }
 
         [Fact]
         public void ActualEntityTypeNmeShouldThrowForContextWithoutModelIfEntryTypeNameIsNull()
         {
             this.entry.TypeName = null;
-            Action test = () => this.entryMetadataContextWithoutModel.ActualEntityTypeName.Should().BeNull();
+            Action test = () => this.entryMetadataContextWithoutModel.ActualResourceTypeName.Should().BeNull();
             test.ShouldThrow<ODataException>(Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
         }
         #endregion ActualEntityTypeName
@@ -315,7 +315,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void SelectedBindableOperationsShouldReturnEmptyWithoutModel()
         {
-            var metadataContext = new TestMetadataContext { GetBindableOperationsForTypeFunc = type => new IEdmOperation[] { Action1, Action2, Function1, Function2 }, OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = type => false };
+            var metadataContext = new TestMetadataContext { GetBindableOperationsForTypeFunc = type => new IEdmOperation[] { Action1, Action2, Function1, Function2 }, OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false };
             var entryMetadataContext = ODataResourceMetadataContext.Create(new ODataResource(), new TestFeedAndEntryTypeContext(), new ODataResourceSerializationInfo(), /*actualEntityType*/null, metadataContext, SelectedPropertiesNode.Create("Action1,Function1"));
             entryMetadataContext.SelectedBindableOperations.Should().BeEmpty();
         }
@@ -323,7 +323,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void SelectedBindableOperationsShouldReturnPropertiesBasedOnMetadata()
         {
-            var metadataContext = new TestMetadataContext { GetBindableOperationsForTypeFunc = type => new IEdmOperation[] { Action1, Action2, Function1, Function2 }, OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = type => false };
+            var metadataContext = new TestMetadataContext { GetBindableOperationsForTypeFunc = type => new IEdmOperation[] { Action1, Action2, Function1, Function2 }, OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false };
             var entryMetadataContext = ODataResourceMetadataContext.Create(new ODataResource(), new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, ActualEntityType, metadataContext, SelectedPropertiesNode.Create("Action1,Function1"));
             entryMetadataContext.SelectedBindableOperations.Should().HaveCount(2).And.Contain(Action1).And.Contain(Function1);
         }

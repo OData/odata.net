@@ -350,7 +350,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             {
                                 resultValue = customerPayload.DeepCopy();
                                 ComplexInstance resultAddressValue = ((ComplexProperty)resultValue.GetProperty("Address")).Value;
-                                resultAddressValue.Remove(resultAddressValue.GetProperty(testCase.PropertyName));
+                                var property = resultAddressValue.GetProperty(testCase.PropertyName);
+                                if (!(property is ComplexProperty))
+                                {
+                                    resultAddressValue.Remove(property);
+                                }
+                                else
+                                {
+                                    SetToNull(resultAddressValue, testCase.PropertyName);
+                                }
                             }
 
                             return new PayloadReaderTestDescriptor(this.Settings)

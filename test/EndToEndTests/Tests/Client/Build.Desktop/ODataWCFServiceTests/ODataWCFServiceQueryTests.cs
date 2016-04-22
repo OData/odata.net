@@ -87,7 +87,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                }
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
@@ -123,7 +126,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.AreEqual(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                }
                             }
                         }
 
@@ -419,11 +425,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                             Assert.IsTrue(navigationLinks.Count > 0);
 
-                            var order = entries.SingleOrDefault(e => e.Id.AbsoluteUri.Contains("Orders"));
+                            var order = entries.FirstOrDefault(e => e.Id != null && e.Id.AbsoluteUri.Contains("Orders"));
                             Assert.IsNotNull(order);
                             Assert.AreEqual(8, order.Properties.Single(p => p.Name == "OrderID").Value);
 
-                            var customer = entries.SingleOrDefault(e => e.Id.AbsoluteUri.Contains("Customers"));
+                            var customer = entries.FirstOrDefault(e => e.Id != null && e.Id.AbsoluteUri.Contains("Customers"));
                             Assert.IsNotNull(customer);
                             Assert.AreEqual(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
 
@@ -449,7 +455,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Dictionary<string, int> testCases = new Dictionary<string, int>()
             {
                 { "Customers?$select=PersonID,FirstName", 2 },
-                { "Customers?$select=*", 12 },
+                { "Customers?$select=*", 10 },
             };
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -473,10 +479,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 if (reader.State == ODataReaderState.ResourceEnd)
                                 {
                                     ODataResource entry = reader.Item as ODataResource;
-                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
-                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
-                                    Assert.AreEqual(testCase.Value, entry.Properties.Count());
-                                    count++;
+                                    if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                    {
+                                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
+                                        Assert.AreEqual(testCase.Value, entry.Properties.Count());
+                                        count++;
+                                    }
                                 }
                                 else if (reader.State == ODataReaderState.ResourceSetEnd)
                                 {
@@ -521,22 +530,43 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         {
                             var reader = messageReader.CreateODataResourceSetReader();
 
+                            int depth = 0;
                             while (reader.Read())
                             {
-                                if (reader.State == ODataReaderState.ResourceEnd)
+                                switch(reader.State)
                                 {
-                                    if (null == entry1)
-                                    {
-                                        entry1 = reader.Item as ODataResource;
-                                    }
-                                    else
-                                    {
-                                        entry2 = reader.Item as ODataResource;
-                                    }
-                                }
-                                else if (reader.State == ODataReaderState.ResourceSetEnd)
-                                {
-                                    feed = reader.Item as ODataResourceSet;
+                                    case ODataReaderState.ResourceSetStart: 
+                                    case ODataReaderState.ResourceStart:
+                                    case ODataReaderState.NestedResourceInfoStart:
+                                        depth++;
+                                        break;
+                                    case ODataReaderState.ResourceSetEnd:
+                                        if(depth == 1)
+                                        {
+                                            feed = reader.Item as ODataResourceSet;
+                                        }
+                                        depth--;
+                                        break;
+
+                                    case ODataReaderState.ResourceEnd:
+                                        if(depth ==2)
+                                        {
+                                            if (null == entry1)
+                                            {
+                                                entry1 = reader.Item as ODataResource;
+                                            }
+                                            else
+                                            {
+                                                entry2 = reader.Item as ODataResource;
+                                            }
+                                        }
+                                        depth--;
+                                        break;
+                                    case ODataReaderState.NestedResourceInfoEnd:
+                                        depth--;
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                         }
@@ -557,7 +587,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             Dictionary<string, string> testCases = new Dictionary<string, string>()
             {
-                //{"Customers?$format=application/atom%2Bxml", "application/atom+xml"},
                 {"Customers?$format=application/json", "application/json"},
                 {"Customers?$format=application/json;odata.metadata=full", "application/json;odata.metadata=full"},
                 {"Customers?$format=json", "application/json"},
@@ -582,11 +611,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             ODataResource entry = reader.Item as ODataResource;
-                            Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
-                        }
-                        else if (reader.State == ODataReaderState.ResourceSetEnd)
-                        {
-                            Assert.IsNotNull(reader.Item as ODataResourceSet);
+                            if (entry != null && entry.TypeName.EndsWith("Customer"))
+                            {
+                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                            }
                         }
                     }
 

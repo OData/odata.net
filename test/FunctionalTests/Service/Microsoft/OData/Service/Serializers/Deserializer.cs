@@ -67,7 +67,8 @@ namespace Microsoft.OData.Service.Serializers
             this.recursionDepth = parent.recursionDepth;
             this.service = parent.service;
             this.tracker = parent.tracker;
-            this.update = parent.update;
+            //this.update = parent.update;
+            this.update = false;
             this.description = parent.description;
         }
 
@@ -988,7 +989,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(this.Service != null, "this.Service != null");
             Debug.Assert(this.Service.Provider != null, "this.Service.Provider != null");
             Debug.Assert(resourceType != null, "Must have valid resource type");
-            Debug.Assert(resourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "resourceType.ResourceTypeKind == ResourceTypeKind.EntityType");
+            Debug.Assert(resourceType.ResourceTypeKind == ResourceTypeKind.EntityType || resourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "resourceType is structured type");
             Debug.Assert(this.RequestDescription != null, "this.RequestDescription != null");
             Debug.Assert(this.RequestDescription.LastSegmentInfo != null, "this.RequestDescription.LastSegmentInfo != null");
             Debug.Assert(this.RequestDescription.LastSegmentInfo.TargetResourceSet != null, "this.RequestDescription.LastSegmentInfo.TargetContainer != null");

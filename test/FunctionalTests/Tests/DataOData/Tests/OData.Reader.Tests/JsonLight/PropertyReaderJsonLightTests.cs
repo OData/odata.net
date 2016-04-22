@@ -625,9 +625,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     JsonTypeInformation = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\",",
                     Json = "{0}{1}\"Street\":\"First\"",
                 },
+
+                new OpenPropertyTestCase
+                {
+                    DebugDescription = "Complex property with data.",
+                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address").PrimitiveProperty("Street", "First")),
+                    ExpectedPropertyType = addressType.ToTypeReference(),
+                    JsonTypeInformation = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\",",
+                    Json = "{0}{1}\"Street\":\"First\"",
+                },
             };
 
-            bool[] withExpectedTypes = new bool[] { true, false };
+            bool[] withExpectedTypes = new bool[] { true, false};
             bool[] withPayloadTypes = new bool[] { true, false };
             bool[] includeContextUri = new bool[] { true, false };
 
@@ -681,9 +690,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         string firstPropertyName = isEmpty ? null : complexValue.Properties.First().Name;
 
                         // An open property without expected and payload type cannot be read; expect an exception.
-                        expectedException = isEmpty
-                            ? ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload")
-                            : ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName", firstPropertyName, JsonLightConstants.ODataValuePropertyName);
+                        expectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType");
                     }
 
                     PayloadReaderTestDescriptor testDescriptor = new PayloadReaderTestDescriptor(this.Settings)

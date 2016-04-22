@@ -157,7 +157,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataResourceSetReader(IEdmEntityType expectedBaseEntityType)
+        public ODataReader CreateODataResourceSetReader(IEdmStructuredType expectedBaseEntityType)
         {
             if (this.testConfiguration.Synchronous)
             {
@@ -182,7 +182,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataResourceSetReader(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        public ODataReader CreateODataResourceSetReader(IEdmEntitySet entitySet, IEdmStructuredType expectedBaseEntityType)
         {
             if (this.testConfiguration.Synchronous)
             {
@@ -227,20 +227,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="expectedResourceType">The expected entity type for the entry to be read.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataResourceReader(IEdmEntityType expectedEntityType)
+        public ODataReader CreateODataResourceReader(IEdmStructuredType expectedResourceType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(expectedEntityType), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(expectedResourceType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataResourceReaderAsync(expectedEntityType).ContinueWith(
+                return this.messageReader.CreateODataResourceReaderAsync(expectedResourceType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -252,20 +252,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="expectedResourceType">The expected entity type for the entry to be read.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataResourceReader(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        public ODataReader CreateODataResourceReader(IEdmEntitySet entitySet, IEdmStructuredType expectedResourceType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(entitySet, expectedEntityType), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(entitySet, expectedResourceType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataResourceReaderAsync(entitySet, expectedEntityType).ContinueWith(
+                return this.messageReader.CreateODataResourceReaderAsync(entitySet, expectedResourceType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();

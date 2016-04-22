@@ -113,7 +113,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var entries = this.QueryFeed("People?$filter=FirstName ne 'Bob'", mimeType);
+                var entries = this.QueryFeed("People?$filter=FirstName ne 'Bob'", mimeType, "Person");
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var entries = this.QueryFeed("People?$orderby=FirstName desc", mimeType);
+                var entries = this.QueryFeed("People?$orderby=FirstName desc", mimeType, "Person");
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -230,7 +230,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var entries = this.QueryFeed("Products", mimeType);
+                var entries = this.QueryFeed("Products", mimeType, "Product");
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -439,7 +439,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var entries = this.QueryFeed("Products?$filter=Quantity eq 100", mimeType);
+                var entries = this.QueryFeed("Products?$filter=Quantity eq 100", mimeType, "Product");
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -448,7 +448,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     Assert.AreEqual(100u, quantity);
                 }
 
-                entries = this.QueryFeed("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", mimeType); //UInt64.Max
+                entries = this.QueryFeed("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", mimeType, "Product"); //UInt64.Max
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -457,7 +457,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     Assert.AreEqual(UInt64.MaxValue, lifetime);
                 }
 
-                entries = this.QueryFeed("Products?$filter=NullableUInt32 eq null", mimeType); //null
+                entries = this.QueryFeed("Products?$filter=NullableUInt32 eq null", mimeType, "Product"); //null
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -473,7 +473,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var entries = this.QueryFeed("Products?$orderby=LifeTimeInSeconds desc", mimeType);
+                var entries = this.QueryFeed("Products?$orderby=LifeTimeInSeconds desc", mimeType, "Product");
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -535,7 +535,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             return entry;
         }
 
-        private List<ODataResource> QueryFeed(string uri, string mimeType)
+        private List<ODataResource> QueryFeed(string uri, string mimeType, params string[] entryTypeNames)
         {
             List<ODataResource> entries = new List<ODataResource>();
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -556,9 +556,10 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                         if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             ODataResource entry = reader.Item as ODataResource;
-                            Assert.IsNotNull(entry);
-                            
-                            entries.Add(entry);
+                            if (entry != null && (entryTypeNames.Length == 0 || entryTypeNames.Any(e => entry.TypeName.Contains(e))))
+                            {
+                                entries.Add(entry);
+                            }
                         }
                         else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {

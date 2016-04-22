@@ -59,6 +59,7 @@ namespace Microsoft.OData
             }
 
             writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType);
+
             return resolvedType;
         }
 

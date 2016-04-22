@@ -8,6 +8,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
@@ -214,32 +215,163 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         private void ProcessUpdateRequestBody(IODataRequestMessage requestMessage, IODataResponseMessage responseMessage, object targetObject, bool isUpsert)
         {
-            if (this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
+            if (this.QueryContext.Target.NavigationSource != null
+                && (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex))
             {
                 using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings(), this.DataSource.Model))
                 {
                     var entryReader = messageReader.CreateODataResourceReader(this.QueryContext.Target.NavigationSource, (IEdmEntityType)this.QueryContext.Target.Type);
+                    // Need to handle complex property or collection of complex property
+                    var odataItemStack = new Stack<ODataItem>();
+                    var entityStack = new Stack<IEdmNavigationSource>();
+                    var parentInstances = new Stack<object>();
+                    var currentTargetEntitySet = this.QueryContext.Target.NavigationSource;
 
                     while (entryReader.Read())
                     {
                         switch (entryReader.State)
                         {
-                            case ODataReaderState.ResourceEnd:
-                                var entry = (ODataResource)entryReader.Item;
-                                foreach (var property in entry.Properties)
+                            case ODataReaderState.ResourceStart:
                                 {
-                                    if (Utility.IsETagProperty(targetObject, property.Name)) continue;
-                                    // the property might be an open property, so test null first
-                                    var propertyInfo = targetObject.GetType().GetProperty(property.Name);
-                                    if (propertyInfo != null)
+                                    var entry = (ODataResource)entryReader.Item;
+                                    if (entry == null)
                                     {
-                                        if (!isUpsert && Utility.IsReadOnly(propertyInfo)) continue;
+                                        break;
                                     }
 
-                                    this.DataSource.UpdateProvider.Update(targetObject, property.Name, property.Value);
+                                    odataItemStack.Push(entryReader.Item);
+                                    entityStack.Push(currentTargetEntitySet);
+                                    if (parentInstances.Count == 0)
+                                    {
+                                        parentInstances.Push(targetObject);
+                                    }
+                                    else
+                                    {
+                                        var parent = parentInstances.Peek();
+                                        if (parent == null)
+                                        {
+                                            // Here is for collection, we need to create a brand new instance.
+                                            var valueType = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
+                                            parentInstances.Push(Utility.QuickCreateInstance(valueType));
+                                        }
+                                        else
+                                        {
+
+                                            parentInstances.Push(parent);
+                                        }
+                                    }
+
+                                    break;
+                                }
+
+                            case ODataReaderState.ResourceEnd:
+                                {
+                                    var entry = (ODataResource)entryReader.Item;
+                                    if (entry == null)
+                                    {
+                                        break;
+                                    }
+
+                                    object newInstance = parentInstances.Pop();
+                                    currentTargetEntitySet = entityStack.Pop();
+
+                                    foreach (var property in entry.Properties)
+                                    {
+                                        if (Utility.IsETagProperty(targetObject, property.Name)) continue;
+                                        // the property might be an open property, so test null first
+                                        var propertyInfo = newInstance.GetType().GetProperty(property.Name);
+                                        if (propertyInfo != null)
+                                        {
+                                            if (!isUpsert && Utility.IsReadOnly(propertyInfo)) continue;
+                                        }
+
+                                        this.DataSource.UpdateProvider.Update(newInstance, property.Name, property.Value);
+                                    }
+
+                                    var boundNavPropAnnotation = odataItemStack.Pop().GetAnnotation<BoundNavigationPropertyAnnotation>();
+                                    if (boundNavPropAnnotation != null)
+                                    {
+                                        foreach (var boundProperty in boundNavPropAnnotation.BoundProperties)
+                                        {
+                                            var isCollection = boundProperty.Item1.IsCollection == true;
+                                            var propertyValue = isCollection ? boundProperty.Item2 : ((IEnumerable<object>)boundProperty.Item2).Single();
+                                            this.DataSource.UpdateProvider.Update(newInstance, boundProperty.Item1.Name, propertyValue);
+                                        }
+                                    }
+
+                                    var parentItem = odataItemStack.Count > 0 ? odataItemStack.Peek() : null;
+                                    if (parentItem != null)
+                                    {
+                                        // This new entry belongs to a navigation property and/or feed -
+                                        // propagate it up the tree for further processing.
+                                        AddChildInstanceAnnotation(parentItem, newInstance);
+                                    }
                                 }
 
                                 break;
+                            case ODataReaderState.ResourceSetStart:
+                                odataItemStack.Push(entryReader.Item);
+
+                                //"null" here indicate that we need to create a new instance for collection to replace the old one.
+                                parentInstances.Push(null);
+                                break;
+
+                            case ODataReaderState.ResourceSetEnd:
+                                {
+                                    parentInstances.Pop();
+                                    var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
+
+                                    var parentNavLink = odataItemStack.Count > 0 ? odataItemStack.Peek() as ODataNestedResourceInfo : null;
+                                    if (parentNavLink != null)
+                                    {
+                                        // This feed belongs to a navigation property or complex property or a complex collection property.
+                                        // propagate it up the tree for further processing.
+                                        AddChildInstanceAnnotations(parentNavLink, childAnnotation == null ? new object[0] : (childAnnotation.ChildInstances ?? new object[0]));
+                                    }
+                                }
+
+                                break;
+
+                            case ODataReaderState.NestedResourceInfoStart:
+                                {
+                                    object parent = parentInstances.Peek(); 
+                                    odataItemStack.Push(entryReader.Item);
+
+                                    var nestedResourceInfo = (ODataNestedResourceInfo)entryReader.Item;
+                                    var property = parent.GetType().GetProperty(nestedResourceInfo.Name);
+                                    var propertyInstance = property.GetValue(parent);
+                                    parentInstances.Push(propertyInstance);
+
+                                    IEdmNavigationProperty navigationProperty = currentTargetEntitySet == null ? null : currentTargetEntitySet.EntityType().FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
+
+                                    // Current model implementation doesn't expose associations otherwise this would be much cleaner.
+                                    if (navigationProperty != null)
+                                    {
+                                        currentTargetEntitySet = this.DataSource.Model.EntityContainer.EntitySets().Single(s => s.EntityType() == navigationProperty.Type.Definition);
+                                    }
+                                    else
+                                    {
+                                        currentTargetEntitySet = null;
+                                    }
+
+                                    entityStack.Push(currentTargetEntitySet);
+                                    break;
+                                }
+                            case ODataReaderState.NestedResourceInfoEnd:
+                                {
+                                    var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
+                                    parentInstances.Pop();
+                                    var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
+                                    if (childAnnotation != null)
+                                    {
+                                        // Propagate the bound resources to the parent resource.
+                                        AddBoundNavigationPropertyAnnotation(odataItemStack.Peek(), navigationLink, childAnnotation == null ? new object[0] : childAnnotation.ChildInstances);
+                                    }
+
+                                    entityStack.Pop();
+                                    currentTargetEntitySet = entityStack.Peek();
+                                    break;
+                                }
                         }
                     }
                 }

@@ -225,27 +225,27 @@ namespace Microsoft.Test.Taupo.OData.Common
             string typeName;
             ComplexInstance complexValue;
 
-            // Null complex value
-            if (fullSet)
-            {
-                typeName = "NullComplexType";
+            //// Null complex value
+            //if (fullSet)
+            //{
+            //    typeName = "NullComplexType";
 
-                // Can't specify type name for a null complex value since the reader will not read it (in JSON it's not even in the payload anywhere)
-                complexValue = new ComplexInstance(null, true);
-                complexValuesList.Add(complexValue);
-                if (model != null)
-                {
+            //    // Can't specify type name for a null complex value since the reader will not read it (in JSON it's not even in the payload anywhere)
+            //    complexValue = new ComplexInstance(null, true);
+            //    complexValuesList.Add(complexValue);
+            //    if (model != null)
+            //    {
 
-                    complexType = (EdmComplexType)model.FindDeclaredType(GetFullTypeName(typeName));
-                    if (complexType == null)
-                    {
-                        complexType = new EdmComplexType(NamespaceName, typeName);
-                        model.AddElement(complexType);
-                    }
+            //        complexType = (EdmComplexType)model.FindDeclaredType(GetFullTypeName(typeName));
+            //        if (complexType == null)
+            //        {
+            //            complexType = new EdmComplexType(NamespaceName, typeName);
+            //            model.AddElement(complexType);
+            //        }
 
-                    complexValue.WithTypeAnnotation(new EdmComplexTypeReference(complexType, true));
-                }
-            }
+            //        complexValue.WithTypeAnnotation(new EdmComplexTypeReference(complexType, true));
+            //    }
+            //}
 
             if (fullSet)
             {
@@ -641,46 +641,46 @@ namespace Microsoft.Test.Taupo.OData.Common
                     }
                 }
 
-                instanceList = new List<ComplexInstance>()
-                {
-                    PayloadBuilder.ComplexValue(withTypeNames ? GetFullTypeName(typeName) : null)
-                        .PrimitiveProperty("Rating", 1)
-                        .Property("Complex", (withTypeNames ? 
-                                                PayloadBuilder.ComplexValue(GetFullTypeName(innerTypeName))
-                                                : PayloadBuilder.ComplexValue(null).AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null }))
-                                        .PrimitiveProperty("Include", false)
-                                        .WithTypeAnnotation(innerComplexType))
-                        .WithTypeAnnotation(complexType),
-                    PayloadBuilder.ComplexValue(withTypeNames ? GetFullTypeName(typeName) : null)
-                        .PrimitiveProperty("Rating", 2)
-                        .Property("Complex", (withTypeNames ? 
-                                                PayloadBuilder.ComplexValue(GetFullTypeName(innerTypeName))
-                                                : PayloadBuilder.ComplexValue(null).AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null }))
-                                        .PrimitiveProperty("Include", true)
-                                        .WithTypeAnnotation(innerComplexType))
-                        .WithTypeAnnotation(complexType),
-                    PayloadBuilder.ComplexValue(withTypeNames ? GetFullTypeName(typeName) : null)
-                        .PrimitiveProperty("Rating", 1)
-                        .Property("Complex", new ComplexInstance(null, true))
-                        .WithTypeAnnotation(complexType)
-                };
-                if (!withTypeNames)
-                {
-                    foreach (var item in instanceList)
-                    {
-                        item.AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
-                    }
-                }
+                //instanceList = new List<ComplexInstance>()
+                //{
+                //    //PayloadBuilder.ComplexValue(withTypeNames ? GetFullTypeName(typeName) : null)
+                //    //    .PrimitiveProperty("Rating", 1)
+                //    //    .Property("Complex", (withTypeNames ? 
+                //    //                            PayloadBuilder.ComplexValue(GetFullTypeName(innerTypeName))
+                //    //                            : PayloadBuilder.ComplexValue(null).AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null }))
+                //    //                    .PrimitiveProperty("Include", false)
+                //    //                    .WithTypeAnnotation(innerComplexType))
+                //    //    .WithTypeAnnotation(complexType),
+                //    //PayloadBuilder.ComplexValue(withTypeNames ? GetFullTypeName(typeName) : null)
+                //    //    .PrimitiveProperty("Rating", 2)
+                //    //    .Property("Complex", (withTypeNames ? 
+                //    //                            PayloadBuilder.ComplexValue(GetFullTypeName(innerTypeName))
+                //    //                            : PayloadBuilder.ComplexValue(null).AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null }))
+                //    //                    .PrimitiveProperty("Include", true)
+                //    //                    .WithTypeAnnotation(innerComplexType))
+                //    //    .WithTypeAnnotation(complexType),
+                //    //PayloadBuilder.ComplexValue(withTypeNames ? GetFullTypeName(typeName) : null)
+                //    //    .PrimitiveProperty("Rating", 1)
+                //    //    .Property("Complex", new ComplexInstance(null, true))
+                //    //    .WithTypeAnnotation(complexType)
+                //};
+                //if (!withTypeNames)
+                //{
+                //    foreach (var item in instanceList)
+                //    {
+                //        item.AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
+                //    }
+                //}
 
-                complexCollection = PayloadBuilder.ComplexMultiValue(withTypeNames ? EntityModelUtils.GetCollectionTypeName(GetFullTypeName(typeName)) : null)
-                    .Items(instanceList);
-                complexCollection.WithTypeAnnotation(complexType == null ? null : new EdmCollectionType(complexType.ToTypeReference()));
-                if (!withTypeNames)
-                {
-                    complexCollection.AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
-                }
+                //complexCollection = PayloadBuilder.ComplexMultiValue(withTypeNames ? EntityModelUtils.GetCollectionTypeName(GetFullTypeName(typeName)) : null)
+                //    .Items(instanceList);
+                //complexCollection.WithTypeAnnotation(complexType == null ? null : new EdmCollectionType(complexType.ToTypeReference()));
+                //if (!withTypeNames)
+                //{
+                //    complexCollection.AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
+                //}
 
-                results.Add(complexCollection);
+                //results.Add(complexCollection);
             }
 
             return results;

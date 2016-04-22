@@ -201,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, null, testConfiguration);
                     this.Assert.ExpectedException(
                         () => messageReader.CreateODataResourceReader(entityType),
-                        ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "entityType"),
+                        ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "resourceType"),
                         this.ExceptionVerifier);
                 });
         }

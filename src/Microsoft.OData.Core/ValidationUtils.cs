@@ -52,7 +52,8 @@ namespace Microsoft.OData
         {
             Debug.Assert(typeName != null, "typeName != null");
 
-            if (typeKind != EdmTypeKind.Primitive && typeKind != EdmTypeKind.Enum && typeKind != EdmTypeKind.Complex && typeKind != EdmTypeKind.Collection)
+            // TODO : should delete the EdmTypeKind.Complex after we remove ODataComplexValue.
+            if ((typeKind & (EdmTypeKind.Primitive | EdmTypeKind.Enum | EdmTypeKind.Complex | EdmTypeKind.Collection)) <= 0)
             {
                 throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
             }
@@ -255,7 +256,7 @@ namespace Microsoft.OData
         /// <param name="model">Model containing the entity type.</param>
         /// <param name="validateMediaResource">true if the validation of the default MediaResource should be done; false otherwise.</param>
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
-        internal static void ValidateEntryMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model, bool validateMediaResource)
+        internal static void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model, bool validateMediaResource)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -412,15 +413,15 @@ namespace Microsoft.OData
         /// <param name="typeName">The name of the type to use in the error.</param>
         internal static void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, string typeName)
         {
-            if (actualTypeKind != expectedTypeKind)
+            if ((expectedTypeKind & actualTypeKind) <= 0)
             {
                 if (typeName == null)
                 {
                     throw new ODataException(Strings.ValidationUtils_IncorrectTypeKindNoTypeName(actualTypeKind.ToString(), expectedTypeKind.ToString()));
                 }
 
-                if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive ||
-                    actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition)
+                if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive
+                    || actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition)
                 {
                     return;
                 }
@@ -444,21 +445,6 @@ namespace Microsoft.OData
             //// NOTE: we do not have to check the validity of the characters in the boundary string
             ////       since we check their validity when reading the boundary parameter value of the Content-Type header.
             ////       See HttpUtils.ReadQuotedParameterValue.
-        }
-
-        /// <summary>
-        /// Null validation of complex properties will be skipped if edm version is less than v3 and data service version exists.
-        /// In such cases, the provider decides what should be done if a null value is stored on a non-nullable complex property.
-        /// </summary>
-        /// <param name="model">The model containing the complex property.</param>
-        /// <returns>True if complex property should be validated for null values.</returns>
-        internal static bool ShouldValidateComplexPropertyNullValue(IEdmModel model)
-        {
-            // Null validation of complex properties will be skipped if edm version < v3 and data service version exists.
-            Debug.Assert(model != null, "For null validation model is required.");
-            Debug.Assert(model.IsUserModel(), "For complex properties, the model should be user model.");
-
-            return true;
         }
 
         /// <summary>

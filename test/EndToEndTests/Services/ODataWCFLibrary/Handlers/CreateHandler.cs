@@ -130,6 +130,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings(), this.DataSource.Model))
             {
                 var odataItemStack = new Stack<ODataItem>();
+                var entityStack = new Stack<IEdmEntitySetBase>();
                 var entryReader = messageReader.CreateODataResourceReader(entitySet, entitySet.EntityType());
                 var currentTargetEntitySet = entitySet;
 
@@ -138,19 +139,44 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     switch (entryReader.State)
                     {
                         case ODataReaderState.ResourceStart:
-                            odataItemStack.Push(entryReader.Item);
-                            break;
+                            {
+                                var entry = (ODataResource)entryReader.Item;
+                                if (entry == null)
+                                {
+                                    break;
+                                }
 
+                                odataItemStack.Push(entryReader.Item);
+                                entityStack.Push(currentTargetEntitySet);
+                                break;
+                            }
                         case ODataReaderState.ResourceEnd:
                             {
                                 var entry = (ODataResource)entryReader.Item;
+                                if (entry == null)
+                                {
+                                    break;
+                                }
 
                                 // TODO: the code here will be changed to handle following scenarios
                                 //       1: non-contained navigation, e.g. People(1)/Friends
                                 //       2. general entity set, e.g. People
                                 //       3. contained navigation, e.g. People(1)/Trips
-                                //       4. upsert, e.g. People(1)/Friends(2)
-                                var newInstance = this.DataSource.UpdateProvider.Create(entry.TypeName, queryResults);
+                                //       4. complex property, e.g. Airports('KSFO')/Location
+                                //       5. upsert, e.g. People(1)/Friends(2)
+                                object newInstance;
+                                currentTargetEntitySet = entityStack.Pop();
+                                if (currentTargetEntitySet == null)
+                                {
+                                    // For entry
+                                    var valueType = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
+                                    newInstance = Utility.QuickCreateInstance(valueType);
+                                }
+                                else
+                                {
+                                    // For complex property
+                                    newInstance = this.DataSource.UpdateProvider.Create(entry.TypeName, queryResults);
+                                }
 
                                 foreach (var property in entry.Properties)
                                 {
@@ -172,7 +198,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                 var parentItem = odataItemStack.Count > 0 ? odataItemStack.Peek() : null;
                                 if (parentItem != null)
                                 {
-                                    // This new entry belongs to a navigation property and/or feed -
+                                    // This new resource belongs to a navigation property and/or complex/complex collection property and/or feed -
                                     // propagate it up the tree for further processing.
                                     AddChildInstanceAnnotation(parentItem, newInstance);
                                 }
@@ -181,7 +207,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             }
 
                             break;
-
                         case ODataReaderState.ResourceSetStart:
                             odataItemStack.Push(entryReader.Item);
                             break;
@@ -189,26 +214,33 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         case ODataReaderState.ResourceSetEnd:
                             {
                                 var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
-
                                 var parentNavLink = odataItemStack.Count > 0 ? odataItemStack.Peek() as ODataNestedResourceInfo : null;
                                 if (parentNavLink != null)
                                 {
                                     // This feed belongs to a navigation property -
                                     // propagate it up the tree for further processing.
-                                    AddChildInstanceAnnotation(parentNavLink, childAnnotation.ChildInstances ?? new object[0]);
+                                    AddChildInstanceAnnotations(parentNavLink, childAnnotation == null ? new object[0] : (childAnnotation.ChildInstances ?? new object[0]));
                                 }
                             }
 
                             break;
-
                         case ODataReaderState.NestedResourceInfoStart:
                             {
                                 odataItemStack.Push(entryReader.Item);
-                                var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
-                                var navigationProperty = (IEdmNavigationProperty)currentTargetEntitySet.EntityType().FindProperty(navigationLink.Name);
+                                var nestedResourceInfo = (ODataNestedResourceInfo)entryReader.Item;
+                                IEdmNavigationProperty navigationProperty = currentTargetEntitySet == null ? null : currentTargetEntitySet.EntityType().FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
 
                                 // Current model implementation doesn't expose associations otherwise this would be much cleaner.
-                                currentTargetEntitySet = this.DataSource.Model.EntityContainer.EntitySets().Single(s => s.EntityType() == navigationProperty.Type.Definition);
+                                if (navigationProperty != null)
+                                {
+                                    currentTargetEntitySet = this.DataSource.Model.EntityContainer.EntitySets().Single(s => s.EntityType() == navigationProperty.Type.Definition);
+                                }
+                                else
+                                {
+                                    currentTargetEntitySet = null;
+                                }
+
+                                entityStack.Push(currentTargetEntitySet);
                             }
 
                             break;
@@ -220,8 +252,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                 if (childAnnotation != null)
                                 {
                                     // Propagate the bound entries to the parent entry.
-                                    AddBoundNavigationPropertyAnnotation(odataItemStack.Peek(), navigationLink, childAnnotation.ChildInstances);
+                                    AddBoundNavigationPropertyAnnotation(odataItemStack.Peek(), navigationLink, childAnnotation == null ? new object[0] : childAnnotation.ChildInstances);
                                 }
+
+                                entityStack.Pop();
+                                currentTargetEntitySet = entityStack.Peek();
                             }
 
                             break;
@@ -232,29 +267,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             return lastNewInstance;
         }
 
-        private static void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNestedResourceInfo navigationLink, object boundValue)
-        {
-            var annotation = item.GetAnnotation<BoundNavigationPropertyAnnotation>();
-            if (annotation == null)
-            {
-                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNestedResourceInfo, object>>() };
-                item.SetAnnotation(annotation);
-            }
-
-            annotation.BoundProperties.Add(new Tuple<ODataNestedResourceInfo, object>(navigationLink, boundValue));
-        }
-
-        private static void AddChildInstanceAnnotation(ODataItem item, object childEntry)
-        {
-            var annotation = item.GetAnnotation<ChildInstanceAnnotation>();
-            if (annotation == null)
-            {
-                annotation = new ChildInstanceAnnotation { ChildInstances = new List<object>() };
-                item.SetAnnotation(annotation);
-            }
-
-            annotation.ChildInstances.Add(childEntry);
-        }
 
         private bool IsAllowInsert(IEdmEntitySet edmEntitySet)
         {
@@ -267,22 +279,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             IEnumerable<string> unused;
             this.DataSource.Model.GetInsertRestrictions(edmEntitySet, out result, out unused);
             return result.HasValue ? result.Value : true;
-        }
-
-        /// <summary>
-        /// Annotation for marking a new entry with bound associated entries.
-        /// </summary>
-        private class BoundNavigationPropertyAnnotation
-        {
-            public IList<Tuple<ODataNestedResourceInfo, object>> BoundProperties { get; set; }
-        }
-
-        /// <summary>
-        /// Annotation for marking a navigation property or feed with new entry instances belonging to it.
-        /// </summary>
-        private class ChildInstanceAnnotation
-        {
-            public IList<object> ChildInstances { get; set; }
         }
     }
 }

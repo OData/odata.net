@@ -240,11 +240,12 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = this.RunParameterReaderTest(payload);
             var pair = result.Entries.First();
             pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
+            pair.Value.Count().Should().Be(2);
+            pair.Value.ElementAt(0).Properties.First().Value.Should().Be("ComplexName");
+            var entry = pair.Value.Last();
+            entry.Properties.Count().Should().Be(1);
             entry.Properties.First().Value.Should().Be(1);
-            entry.Properties.ElementAt(1).Value.Should().BeOfType<ODataComplexValue>();
+            var complex = pair.Value.ElementAt(1);
             result.Values.Count().Should().Be(1);
             result.Values.First().Value.Should().BeOfType<ODataComplexValue>();
         }

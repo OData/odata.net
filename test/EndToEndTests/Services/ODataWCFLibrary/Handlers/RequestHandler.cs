@@ -308,5 +308,54 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         }
 
         #endregion
+
+        /// <summary>
+        /// Annotation for marking a new entry with bound associated entries.
+        /// </summary>
+        protected class BoundNavigationPropertyAnnotation
+        {
+            public IList<Tuple<ODataNestedResourceInfo, object>> BoundProperties { get; set; }
+        }
+
+        /// <summary>
+        /// Annotation for marking a navigation property or feed with new entry instances belonging to it.
+        /// </summary>
+        protected class ChildInstanceAnnotation
+        {
+            public IList<object> ChildInstances { get; set; }
+        }
+
+        protected static void AddChildInstanceAnnotation(ODataItem item, object childEntry)
+        {
+            var annotation = item.GetAnnotation<ChildInstanceAnnotation>();
+            if (annotation == null)
+            {
+                annotation = new ChildInstanceAnnotation { ChildInstances = new List<object>() };
+                item.SetAnnotation(annotation);
+            }
+
+            annotation.ChildInstances.Add(childEntry);
+        }
+        protected static void AddChildInstanceAnnotations(ODataItem item, IList<object> childEntries)
+        {
+            var annotation = item.GetAnnotation<ChildInstanceAnnotation>();
+            if (annotation == null)
+            {
+                annotation = new ChildInstanceAnnotation { ChildInstances = childEntries };
+                item.SetAnnotation(annotation);
+            }
+        }
+
+        protected static void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNestedResourceInfo navigationLink, object boundValue)
+        {
+            var annotation = item.GetAnnotation<BoundNavigationPropertyAnnotation>();
+            if (annotation == null)
+            {
+                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNestedResourceInfo, object>>() };
+                item.SetAnnotation(annotation);
+            }
+
+            annotation.BoundProperties.Add(new Tuple<ODataNestedResourceInfo, object>(navigationLink, boundValue));
+        }
     }
 }

@@ -46,17 +46,17 @@ namespace Microsoft.OData.Tests
 
             SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "MyCustomers", NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer" };
             SerializationInfoWithEdmUnknowEntitySet = new ODataResourceSerializationInfo() { NavigationSourceName = null, NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer", NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet };
-            TypeContextWithoutModel = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
+            TypeContextWithoutModel = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: Model, throwIfMissingTypeInfo: true);
             TypeContextWithModel = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, Model, throwIfMissingTypeInfo: true);
-            TypeContextWithEdmUnknowEntitySet = ODataResourceTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
-            BaseTypeContextThatThrows = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: true);
-            BaseTypeContextThatWillNotThrow = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: Model, throwIfMissingTypeInfo: false);
+            TypeContextWithEdmUnknowEntitySet = ODataResourceTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: Model, throwIfMissingTypeInfo: true);
+            BaseTypeContextThatThrows = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: Model, throwIfMissingTypeInfo: true);
+            BaseTypeContextThatWillNotThrow = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: Model, throwIfMissingTypeInfo: false);
         }
 
         [Fact]
         public void ShouldCreateSubclassWithoutModelWhenSerializationInfoIsGiven()
         {
-            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
             typeContext.Should().NotBeNull();
             typeContext.GetType().Name.EndsWith("WithoutModel").Should().BeTrue();
         }
@@ -87,14 +87,14 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsTrue()
         {
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
             typeContext.Should().BeOfType<ODataResourceTypeContext>();
         }
 
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsFalse()
         {
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedEntityType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
             typeContext.Should().BeOfType<ODataResourceTypeContext>();
         }
 

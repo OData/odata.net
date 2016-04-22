@@ -44,10 +44,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var entries = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
+                    var resources = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
 
-                    Assert.AreEqual(20, entries.Count);
-                    Assert.AreEqual("Russell", entries[0].Properties.Single(p => p.Name == "FirstName").Value);
+                    var entries = resources.Where(e => e != null && e.Id != null);
+                    Assert.AreEqual(20, entries.Count());
+                    Assert.AreEqual("Russell", entries.ElementAt(0).Properties.Single(p => p.Name == "FirstName").Value);
                 }
             }
         }
@@ -95,10 +96,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var entries = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
+                    var resources = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
 
-                    Assert.AreEqual(4, entries.Count);
-                    Assert.AreEqual("scottketchum", entries[0].Properties.Single(p => p.Name == "UserName").Value);
+                    var entries = resources.Where(e => e != null && e.Id != null);
+                    Assert.AreEqual(4, entries.Count());
+                    Assert.AreEqual("scottketchum", entries.ElementAt(0).Properties.Single(p => p.Name == "UserName").Value);
                 }
             }
         }
@@ -128,9 +130,23 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var entries = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
+                    int count = 0;
+                    List<ODataResource> entries = new List<ODataResource>();
+                    new QueryFeedHelper(this)
+                    {
+                        RequestUri = uri,
+                        MimeType = mimeType,
+                        ReadEntryEnd = argument =>
+                        {
+                            if (argument.ParentName == null)
+                            {
+                                count++;
+                                entries.Add(argument.Entry);
+                            }
+                        }
+                    }.Execute();
 
-                    Assert.AreEqual(2, entries.Count); // russellwhyte and marshallgaray
+                    Assert.AreEqual(2, count);// russellwhyte and marshallgaray
                     Assert.AreEqual("russellwhyte", entries[0].Properties.Single(p => p.Name == "UserName").Value);
                 }
             }
@@ -225,9 +241,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var entry = new QueryEntryHelper(this) { RequestUri = string.Format("People('russellwhyte')/Trips(0)/PlanItems(12)/{0}Event", NameSpacePrefix), MimeType = mimeTypes[i], IfMatch = "*" }.Execute();
-                    var updatedAddress = entry.Properties.Single(p => p.Name == "OccursAt").Value;
-                    Assert.AreEqual(100 + i, (updatedAddress as ODataComplexValue).Properties.Single(p => p.Name == "RoomNumber").Value);
+                    var entry = new QueryEntryHelper(this)
+                    {
+                        RequestUri = string.Format("People('russellwhyte')/Trips(0)/PlanItems(12)/{0}Event", NameSpacePrefix),
+                        MimeType = mimeTypes[i],
+                        IfMatch = "*",
+                        ReadEntryEnd = argument =>
+                            {
+                                if (argument.Entry.TypeName.EndsWith("EventLocation"))
+                                {
+                                     Assert.AreEqual(100 + i, argument.Entry.Properties.Single(p => p.Name == "RoomNumber").Value);
+                                }
+                            }
+                    }.Execute();
                 }
             }
         }
@@ -311,7 +337,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(10, entries.Count);
+                    Assert.AreEqual(10, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -323,14 +349,22 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var entries = new QueryFeedHelper(this)
+                    List<ODataResource> entries = new List<ODataResource>();
+                    new QueryFeedHelper(this)
                     {
                         RequestUri = "Me/Friends?$filter=Friends/any(f:f/FirstName eq 'Scott')",
                         MimeType = mimeType,
                         ExpectedStatusCode = 200,
+                        ReadEntryEnd = argument =>
+                        {
+                            if (argument.ParentName == null)
+                            {
+                                entries.Add(argument.Entry);
+                            }
+                        }
                     }.Execute();
 
-                    Assert.AreEqual(2, entries.Count);
+                    Assert.AreEqual(2, entries.Where(e => e != null && e.Id != null).Count());
                     Assert.IsNotNull(entries.SingleOrDefault(e => (string)e.Properties.Single(p => p.Name == "UserName").Value == "russellwhyte"));
                     Assert.IsNotNull(entries.SingleOrDefault(e => (string)e.Properties.Single(p => p.Name == "UserName").Value == "ronaldmundy"));
                 }
@@ -371,7 +405,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     }.Execute();
 
                     // the result includes empty friends due to the all Lambda operator is translated to Enumerable.All method which returns true for empty collection
-                    Assert.AreEqual(3, entries.Count);
+                    Assert.AreEqual(3, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -457,10 +491,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var entries = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
+                    var resources = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
 
-                    Assert.AreEqual(2, entries.Count);
-                    Assert.AreEqual("scottketchum", entries[1].Properties.Single(p => p.Name == "UserName").Value);
+                    var entries = resources.Where(e => e != null && e.Id != null);
+                    Assert.AreEqual(2, entries.Count());
+                    Assert.AreEqual("scottketchum", entries.ElementAt(1).Properties.Single(p => p.Name == "UserName").Value);
                 }
             }
         }
@@ -524,7 +559,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var entries = new QueryFeedHelper(this) { RequestUri = "Airports?$search=\"United States\"", MimeType = mimeType }.Execute();
-                    Assert.AreEqual(6, entries.Count);
+                    Assert.AreEqual(6, entries.Where(e => e != null && e.Id != null).Count());
                     Assert.IsTrue(predicate(entries, "KSFO"));
                     Assert.IsTrue(predicate(entries, "KLAX"));
                     Assert.IsTrue(predicate(entries, "KJFK"));
@@ -545,7 +580,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             {
                 var entries = new QueryFeedHelper(this) { RequestUri = "People?$search=(Male OR Female) AND NOT \"@contoso.com\"", MimeType = MimeTypes.ApplicationJson }.Execute();
-                Assert.AreEqual(4, entries.Count);
+                Assert.AreEqual(4, entries.Where(e => e != null && e.Id != null).Count());
                 Assert.IsTrue(predicate(entries, "scottketchum"));
                 Assert.IsTrue(predicate(entries, "clydeguess"));
                 Assert.IsTrue(predicate(entries, "angelhuffman"));
@@ -566,7 +601,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             {
                 var entries = new QueryFeedHelper(this) { RequestUri = "People?$expand=Trips($search=Shanghai OR Beijing)&$search=Male", MimeType = MimeTypes.ApplicationJson }.Execute();
-                Assert.AreEqual(13, entries.Count);
                 Assert.IsTrue(predicate(entries, PersonTypeName, 10));
                 Assert.IsTrue(predicate(entries, TripTypeName, 3));
             }
@@ -596,7 +630,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(20, entries.Count);
+                    Assert.AreEqual(20, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -621,7 +655,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(19, entries.Count);
+                    Assert.AreEqual(19, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -646,7 +680,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(8, entries.Count);
+                    Assert.AreEqual(8, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -671,7 +705,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(3, entries.Count);
+                    Assert.AreEqual(3, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -719,7 +753,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(20, entries.Count);
+                    Assert.AreEqual(20, entries.Where(e=>e !=null && e.Id !=null).Count());
                 }
             }
         }
@@ -767,7 +801,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(20, entries.Count);
+                    Assert.AreEqual(20, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -817,7 +851,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }.Execute();
 
-                    Assert.AreEqual(3, entries.Count);
+                    Assert.AreEqual(3, entries.Where(e=>e !=null && e.Id !=null).Count());
                 }
             }
         }
@@ -985,11 +1019,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     continue;
                 }
 
-                var entries = new QueryFeedHelper(this)
+                var entries = new List<ODataResource>();
+                new QueryFeedHelper(this)
                 {
                     RequestUri = uri,
                     MimeType = mimeType,
                     RequestedHandler = argument => Assert.IsNull(argument.Response.GetHeader("ETag")),
+                    ReadEntryEnd = argument =>
+                        {
+                            if (argument.ParentName == null)
+                            {
+                                entries.Add(argument.Entry);
+                            }
+                        }
                 }.Execute();
 
                 Assert.AreEqual(2, entries.Count);
@@ -1092,11 +1134,20 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             foreach (var mimeType in this.mimeTypes)
             {
-                var entries = new QueryFeedHelper(this)
+                var entries = new List<ODataResource>();
+
+                new QueryFeedHelper(this)
                 {
                     RequestUri = "People",
                     MimeType = mimeType,
                     ExpectedStatusCode = 200,
+                    ReadEntryEnd = argument =>
+                    {
+                        if (argument.ParentName == null)
+                        {
+                            entries.Add(argument.Entry);
+                        }
+                    }
                 }.Execute();
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -1267,14 +1318,22 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
+                    int count = 0;
                     var entries = new QueryFeedHelper(this)
                     {
                         RequestUri = "People?$count=true",
                         MimeType = mimeType,
-                        ReadFeedEnd = argument => Assert.IsNotNull(argument.Feed.Count),
+                        ReadFeedEnd = argument =>
+                            {
+                                if(argument.ParentName == null)
+                                {
+                                    Assert.IsNotNull(argument.Feed.Count);
+                                }
+                            },
+                        ReadEntryEnd = argument => count += argument.ParentName == null ? 1 : 0
                     }.Execute();
 
-                    Assert.AreEqual(20, entries.Count);
+                    Assert.AreEqual(20, count);
                 }
             }
         }
@@ -1293,7 +1352,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         ReadFeedEnd = argument => Assert.IsNull(argument.Feed.Count),
                     }.Execute();
 
-                    Assert.AreEqual(20, entries.Count);
+                    Assert.AreEqual(20, entries.Where(e => e != null && e.Id != null).Count());
                 }
             }
         }
@@ -1325,23 +1384,21 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    var hit = 0;
                     var entries = new QueryFeedHelper(this)
                     {
                         RequestUri = "People?$expand=Trips($count=true)",
                         MimeType = mimeType,
                         ReadFeedEnd = argument =>
                         {
-                            ++hit;
-                            if (hit == 9 || hit == 18 || hit == 23)
-                            {
-                                // People feed
-                                Assert.IsFalse(argument.Feed.Count.HasValue);
-                            }
-                            else
+                            if (argument.ParentName == "Trips")
                             {
                                 // Trip feed
                                 Assert.IsTrue(argument.Feed.Count.HasValue);
+                            }
+                            else
+                            {
+                                // People feed or collection of complex property
+                                Assert.IsFalse(argument.Feed.Count.HasValue);
                             }
                         },
                     }.Execute();
@@ -1855,11 +1912,12 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 MimeType = MimeTypes.ApplicationJsonLight
             }.Execute();
 
-            var friends = new QueryFeedHelper(this)
+            var resources = new QueryFeedHelper(this)
             {
                 RequestUri = "People('ronaldmundy')/Friends",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
             }.Execute();
+            var friends = resources.Where(r => r.Id != null);
             target = friends.SingleOrDefault(friend => object.Equals(friend.Properties.Single(p => p.Name == "UserName").Value, "russellwhyte"));
             Assert.IsNull(target);
 
@@ -1990,6 +2048,16 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 this.ExpectedStatusCode = 200;
             }
 
+            public Action<ReadEntryArgument> ReadEntryEnd { get; set; }
+
+            protected virtual void OnReadEntryEnd(ReadEntryArgument argument)
+            {
+                if (this.ReadEntryEnd != null)
+                {
+                    this.ReadEntryEnd(argument);
+                }
+            }
+
             public virtual ODataResource Execute()
             {
                 ODataResource result = null;
@@ -2021,6 +2089,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 result = reader.Item as ODataResource;
+                                OnReadEntryEnd(new ReadEntryArgument() { Entry = result });
                             }
                         }
 
@@ -2092,6 +2161,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         {
                             var reader = messageReader.CreateODataResourceSetReader();
 
+                            Stack<string> parentNestedResourceInfo = new Stack<string>();
                             while (reader.Read())
                             {
                                 switch (reader.State)
@@ -2105,7 +2175,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                         {
                                             var feed = (ODataResourceSet)reader.Item;
                                             Assert.IsNotNull(feed);
-                                            OnReadFeedEnd(new ReadFeedArgument() { Feed = feed });
+                                            OnReadFeedEnd(new ReadFeedArgument() { Feed = feed, ParentName = parentNestedResourceInfo.Count() > 0 ? parentNestedResourceInfo.Peek() : null });
                                             // next link
                                             webRequestUri = feed.NextPageLink;
 
@@ -2119,9 +2189,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                     case ODataReaderState.ResourceEnd:
                                         {
                                             var entry = (ODataResource)reader.Item;
-                                            OnReadEntryEnd(new ReadEntryArgument() { Entry = entry });
+                                            OnReadEntryEnd(new ReadEntryArgument() { Entry = entry, ParentName = parentNestedResourceInfo.Count() > 0 ? parentNestedResourceInfo.Peek() : null });
                                             result.Add(entry);
 
+                                            break;
+                                        }
+                                    case ODataReaderState.NestedResourceInfoStart:
+                                        {
+                                            parentNestedResourceInfo.Push(((ODataNestedResourceInfo)reader.Item).Name);
+                                            break;
+                                        }
+                                    case ODataReaderState.NestedResourceInfoEnd:
+                                        {
+                                            parentNestedResourceInfo.Pop();
                                             break;
                                         }
                                 }
@@ -2655,11 +2735,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public class ReadEntryArgument
         {
             public ODataResource Entry { get; set; }
+
+            //Indicate this entry belongs to which navigation or complex property or collection of complex property
+            public string ParentName { get; set; }
         }
 
         public class ReadFeedArgument
         {
             public ODataResourceSet Feed { get; set; }
+            public string ParentName { get; set; }
         }
 
         private ODataResource CreateEntry(string userName)

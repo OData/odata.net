@@ -3010,7 +3010,7 @@ namespace Microsoft.OData.Client
                 throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, "httpMethod");
             }
 
-            if (ClientTypeUtil.TypeOrElementTypeIsEntity(typeof(TElement)))
+            if (ClientTypeUtil.TypeOrElementTypeIsStructured(typeof(TElement)))
             {
                 singleResult = null;
             }

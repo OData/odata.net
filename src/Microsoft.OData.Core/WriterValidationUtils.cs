@@ -309,13 +309,13 @@ namespace Microsoft.OData
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
-        /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structural property or navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
-        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for nested resource info multiplicity in one place.")]
         internal static IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
-            IEdmEntityType declaringEntityType,
+            IEdmStructuredType declaringStructuredType,
             ODataPayloadKind? expandedPayloadKind)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
@@ -355,9 +355,9 @@ namespace Microsoft.OData
             }
 
             IEdmNavigationProperty navigationProperty = null;
-            if (errorTemplate == null && declaringEntityType != null)
+            if (errorTemplate == null && declaringStructuredType != null)
             {
-                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringEntityType);
+                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType as IEdmEntityType);
                 Debug.Assert(navigationProperty != null, "If we have a declaring type we expect a non-null navigation property since open nav props are not allowed.");
 
                 bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;
@@ -444,13 +444,10 @@ namespace Microsoft.OData
                 }
                 else if (expectedPropertyTypeReference.IsODataComplexTypeKind())
                 {
-                    if (ValidationUtils.ShouldValidateComplexPropertyNullValue(model))
+                    IEdmComplexTypeReference complexTypeReference = expectedPropertyTypeReference.AsComplex();
+                    if (!complexTypeReference.IsNullable)
                     {
-                        IEdmComplexTypeReference complexTypeReference = expectedPropertyTypeReference.AsComplex();
-                        if (!complexTypeReference.IsNullable)
-                        {
-                            throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
-                        }
+                        throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                     }
                 }
             }

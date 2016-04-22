@@ -90,9 +90,9 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
-        /// The actual entity type of the resource, i.e. ODataResource.TypeName.
+        /// The actual structured type of the resource, i.e. ODataResource.TypeName.
         /// </summary>
-        public abstract string ActualEntityTypeName { get; }
+        public abstract string ActualResourceTypeName { get; }
 
         /// <summary>
         /// The key property name and value pairs of the resource.
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="resource">The resource instance.</param>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
         /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
-        /// <param name="actualEntityType">The entity type of the resource.</param>
+        /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="metadataContext">The metadata context to use.</param>
         /// <param name="selectedProperties">The selected properties.</param>
         /// <returns>A new instance of <see cref="ODataResourceMetadataContext"/>.</returns>
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Evaluation
             ODataResource resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
-            IEdmEntityType actualEntityType,
+            IEdmStructuredType actualResourceType,
             IODataMetadataContext metadataContext,
             SelectedPropertiesNode selectedProperties)
         {
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Evaluation
                 return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo);
             }
 
-            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualEntityType, metadataContext, selectedProperties);
+            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties);
         }
 
         /// <summary>
@@ -311,8 +311,8 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.keyProperties == null)
                     {
-                        this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.Key, this.ActualEntityTypeName);
-                        ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualEntityTypeName);
+                        this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.Key, this.ActualResourceTypeName);
+                        ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
                     }
 
                     return this.keyProperties;
@@ -324,13 +324,13 @@ namespace Microsoft.OData.Evaluation
             /// </summary>
             public override IEnumerable<KeyValuePair<string, object>> ETagProperties
             {
-                get { return this.etagProperties ?? (this.etagProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.ETag, this.ActualEntityTypeName)); }
+                get { return this.etagProperties ?? (this.etagProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.ETag, this.ActualResourceTypeName)); }
             }
 
             /// <summary>
-            /// The actual entity type of the resource, i.e. ODataResource.TypeName.
+            /// The actual structured type of the resource, i.e. ODataResource.TypeName.
             /// </summary>
-            public override string ActualEntityTypeName
+            public override string ActualResourceTypeName
             {
                 get
                 {
@@ -374,9 +374,9 @@ namespace Microsoft.OData.Evaluation
         private sealed class ODataResourceMetadataContextWithModel : ODataResourceMetadataContext
         {
             /// <summary>
-            /// The entity type of the resource.
+            /// The structured type of the resource.
             /// </summary>
-            private readonly IEdmEntityType actualEntityType;
+            private readonly IEdmStructuredType actualResourceType;
 
             /// <summary>
             /// The metadata context to use.
@@ -393,17 +393,17 @@ namespace Microsoft.OData.Evaluation
             /// </summary>
             /// <param name="resource">The resource instance.</param>
             /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
-            /// <param name="actualEntityType">The entity type of the resource.</param>
+            /// <param name="actualResourceType">The structured type of the resource.</param>
             /// <param name="metadataContext">The metadata context to use.</param>
             /// <param name="selectedProperties">The selected properties.</param>
-            internal ODataResourceMetadataContextWithModel(ODataResource resource, IODataResourceTypeContext typeContext, IEdmEntityType actualEntityType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
+            internal ODataResourceMetadataContextWithModel(ODataResource resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
                 : base(resource, typeContext)
             {
-                Debug.Assert(actualEntityType != null, "actualEntityType != null");
+                Debug.Assert(actualResourceType != null, "actualResourceType != null");
                 Debug.Assert(metadataContext != null, "metadataContext != null");
                 Debug.Assert(selectedProperties != null, "selectedProperties != null");
 
-                this.actualEntityType = actualEntityType;
+                this.actualResourceType = actualResourceType;
                 this.metadataContext = metadataContext;
                 this.selectedProperties = selectedProperties;
             }
@@ -417,13 +417,21 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.keyProperties == null)
                     {
-                        IEnumerable<IEdmStructuralProperty> edmKeyProperties = this.actualEntityType.Key();
-                        if (edmKeyProperties != null)
+                        var entityType = this.actualResourceType as IEdmEntityType;
+                        if (entityType != null)
                         {
-                            this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/true))).ToArray();
-                        }
+                            IEnumerable<IEdmStructuralProperty> edmKeyProperties = entityType.Key();
+                            if (edmKeyProperties != null)
+                            {
+                                this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/true))).ToArray();
+                            }
 
-                        ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualEntityTypeName);
+                            ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
+                        }
+                        else
+                        {
+                            this.keyProperties = Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
+                        }
                     }
 
                     return this.keyProperties;
@@ -443,15 +451,15 @@ namespace Microsoft.OData.Evaluation
                         if (properties.Any())
                         {
                             this.etagProperties = properties
-                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray();
+                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray();
                         }
                         else
                         {
-                            properties = this.actualEntityType.StructuralProperties();
+                            properties = this.actualResourceType.StructuralProperties();
                             this.etagProperties = properties != null 
                                 ? properties
                                     .Where(p => p.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray() 
+                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray() 
                                 : EmptyProperties;
                         }
                     }
@@ -461,12 +469,12 @@ namespace Microsoft.OData.Evaluation
             }
 
             /// <summary>
-            /// The actual entity type name of the resource.
+            /// The actual structured type name of the resource.
             /// </summary>
-            public override string ActualEntityTypeName
+            public override string ActualResourceTypeName
             {
-                // Note that resource.TypeName can be null. When that happens, we use the expected entity type as the actual entity type.
-                get { return this.actualEntityType.FullName(); }
+                // Note that resource.TypeName can be null. When that happens, we use the expected structured type as the actual structured type.
+                get { return this.actualResourceType.FullTypeName(); }
             }
 
             /// <summary>
@@ -474,7 +482,11 @@ namespace Microsoft.OData.Evaluation
             /// </summary>
             public override IEnumerable<IEdmNavigationProperty> SelectedNavigationProperties
             {
-                get { return this.selectedNavigationProperties ?? (this.selectedNavigationProperties = this.selectedProperties.GetSelectedNavigationProperties(this.actualEntityType)); }
+                get
+                {
+                    return this.selectedNavigationProperties
+                        ?? (this.selectedNavigationProperties = this.selectedProperties.GetSelectedNavigationProperties(this.actualResourceType as IEdmEntityType));
+                }
             }
 
             /// <summary>
@@ -482,7 +494,11 @@ namespace Microsoft.OData.Evaluation
             /// </summary>
             public override IDictionary<string, IEdmStructuralProperty> SelectedStreamProperties
             {
-                get { return this.selectedStreamProperties ?? (this.selectedStreamProperties = this.selectedProperties.GetSelectedStreamProperties(this.actualEntityType)); }
+                get
+                {
+                    return this.selectedStreamProperties
+                        ?? (this.selectedStreamProperties = this.selectedProperties.GetSelectedStreamProperties(this.actualResourceType as IEdmEntityType));
+                }
             }
 
             /// <summary>
@@ -494,9 +510,9 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.selectedBindableOperations == null)
                     {
-                        bool mustBeContainerQualified = this.metadataContext.OperationsBoundToEntityTypeMustBeContainerQualified(this.actualEntityType);
-                        this.selectedBindableOperations = this.metadataContext.GetBindableOperationsForType(this.actualEntityType)
-                            .Where(operation => this.selectedProperties.IsOperationSelected(this.actualEntityType, operation, mustBeContainerQualified))
+                        bool mustBeContainerQualified = this.metadataContext.OperationsBoundToStructuredTypeMustBeContainerQualified(this.actualResourceType);
+                        this.selectedBindableOperations = this.metadataContext.GetBindableOperationsForType(this.actualResourceType)
+                            .Where(operation => this.selectedProperties.IsOperationSelected(this.actualResourceType, operation, mustBeContainerQualified))
                             .ToArray();
                     }
 
@@ -529,10 +545,10 @@ namespace Microsoft.OData.Evaluation
                                 // TODO: 
                                 //  1. Add support for Complex type
                                 //  2. Add new exception when collectionExpression is not IEdmCollectionExpression: CoreOptimisticConcurrencyControl must be followed by collection expression
-                                IEdmStructuralProperty property = this.actualEntityType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.Path.LastOrDefault());
+                                IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.Path.LastOrDefault());
                                 if (property == null)
                                 {
-                                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(this.ActualEntityTypeName, pathExpression.Path.LastOrDefault()));
+                                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(this.ActualResourceTypeName, pathExpression.Path.LastOrDefault()));
                                 }
 
                                 yield return property;

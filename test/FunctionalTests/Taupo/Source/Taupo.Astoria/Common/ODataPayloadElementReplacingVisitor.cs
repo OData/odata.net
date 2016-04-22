@@ -271,7 +271,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             }
 
             replacedInstance.EditLink = payloadElement.EditLink;
-            
+            replacedInstance.IsComplex = payloadElement.IsComplex;
             return replacedInstance;
         }
 

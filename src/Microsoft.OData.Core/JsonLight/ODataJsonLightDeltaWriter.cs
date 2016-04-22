@@ -258,9 +258,9 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// The entity type of the current delta resource.
+        /// The structured type of the current delta resource.
         /// </summary>
-        private IEdmEntityType DeltaResourceEntityType
+        private IEdmStructuredType DeltaResourceType
         {
             get
             {
@@ -876,7 +876,8 @@ namespace Microsoft.OData.JsonLight
             }
 
             // Get entity type from the parent scope.
-            IEdmEntityType entityTypeFromResourceSet = CurrentDeltaResourceScope.ResourceType;
+            // TODO: Update this one in the code change for writer.
+            IEdmEntityType entityTypeFromResourceSet = CurrentDeltaResourceScope.ResourceType as IEdmEntityType;
             resourceScope.ResourceTypeFromMetadata = entityTypeFromResourceSet;
 
             // For expected entity type, prefer type from resource over resource set.
@@ -906,7 +907,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.ResolveEntityType(resource);
             this.PrepareResourceForWriteStart(resource);
-            this.ValidateEntryMediaResource(resource, CurrentDeltaResourceScope.ResourceType);
+            this.ValidateEntryMediaResource(resource, CurrentDeltaResourceScope.ResourceType as IEdmEntityType);
         }
 
         /// <summary>
@@ -920,7 +921,7 @@ namespace Microsoft.OData.JsonLight
                 DeltaResourceScope resourceScope = this.CurrentDeltaResourceScope;
                 Debug.Assert(resourceScope != null, "resourceScope != null");
 
-                ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateEntityMetadataBuilder(
+                ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
                     resource,
                     resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model),
                     resourceScope.SerializationInfo,
@@ -1203,7 +1204,7 @@ namespace Microsoft.OData.JsonLight
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             this.jsonLightResourceSerializer.WriteProperties(
-                this.DeltaResourceEntityType,
+                this.DeltaResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
                 this.DuplicatePropertyNamesChecker,
@@ -1425,7 +1426,9 @@ namespace Microsoft.OData.JsonLight
                 newState == WriterState.DeltaResourceSet || newState == WriterState.ExpandedNavigationProperty)
             {
                 navigationSource = currentScope.NavigationSource;
-                entityType = currentScope.ResourceType;
+
+                // TODO: Update this one in the code change for writer.
+                entityType = currentScope.ResourceType as IEdmEntityType;
             }
 
             this.PushScope(newState, item, navigationSource, entityType, selectedProperties, odataUri);
@@ -1447,7 +1450,9 @@ namespace Microsoft.OData.JsonLight
             {
                 Scope startScope = this.scopes.Pop();
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
-                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType, startScope.SelectedProperties, startScope.ODataUri);
+
+                // TODO: Update this one in the code change for writer.
+                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType as IEdmEntityType, startScope.SelectedProperties, startScope.ODataUri);
                 this.InterceptException(this.EndPayload);
             }
         }
@@ -1457,11 +1462,11 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="state">The writer state of the scope to create.</param>
         /// <param name="item">The item attached to the scope to create.</param>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set  for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The OdataUri info of this scope.</param>
-        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             Debug.Assert(
                 state == WriterState.Error ||
@@ -1479,27 +1484,27 @@ namespace Microsoft.OData.JsonLight
             switch (state)
             {
                 case WriterState.DeltaResource:
-                    scope = this.CreateDeltaResourceScope(WriterState.DeltaResource, item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaResourceScope(WriterState.DeltaResource, item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaDeletedEntry:
-                    scope = this.CreateDeltaResourceScope(WriterState.DeltaDeletedEntry, item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaResourceScope(WriterState.DeltaDeletedEntry, item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaResourceSet:
-                    scope = this.CreateDeltaResourceSetScope(item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaResourceSetScope(item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaLink:
-                    scope = this.CreateDeltaLinkScope(WriterState.DeltaLink, item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaLinkScope(WriterState.DeltaLink, item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaDeletedLink:
-                    scope = this.CreateDeltaLinkScope(WriterState.DeltaDeletedLink, item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaLinkScope(WriterState.DeltaDeletedLink, item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.ExpandedNavigationProperty:
-                    scope = this.CreateExpandedNavigationPropertyScope(item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = this.CreateExpandedNavigationPropertyScope(item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
                 case WriterState.Error:
-                    scope = new Scope(state, item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = new Scope(state, item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 default:
                     string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
@@ -1559,14 +1564,14 @@ namespace Microsoft.OData.JsonLight
         /// Create a new delta resource set scope.
         /// </summary>
         /// <param name="resourceSet">The resource set for the new scope.</param>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        private DeltaResourceSetScope CreateDeltaResourceSetScope(ODataItem resourceSet, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private DeltaResourceSetScope CreateDeltaResourceSetScope(ODataItem resourceSet, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new JsonLightDeltaResourceSetScope(resourceSet, navigationSource, entityType, selectedProperties, odataUri);
+            return new JsonLightDeltaResourceSetScope(resourceSet, navigationSource, resourceType, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -1574,19 +1579,19 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="state">The writer state of the scope to create.</param>
         /// <param name="resource">The resource for the new scope.</param>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type of the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        private DeltaResourceScope CreateDeltaResourceScope(WriterState state, ODataItem resource, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private DeltaResourceScope CreateDeltaResourceScope(WriterState state, ODataItem resource, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             return new JsonLightDeltaResourceScope(
                 state,
                 resource,
                 this.GetResourceSerializationInfo(resource),
                 navigationSource,
-                entityType,
+                resourceType,
                 this.jsonLightOutputContext.MessageWriterSettings,
                 selectedProperties,
                 odataUri);
@@ -1836,24 +1841,24 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             /// <param name="state">The writer state of this scope.</param>
             /// <param name="item">The item attached to this scope.</param>
-            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-            /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+            /// <param name="resourceType">The structured type of the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 this.state = state;
                 this.item = item;
-                this.ResourceType = entityType;
+                this.ResourceType = resourceType;
                 this.NavigationSource = navigationSource;
                 this.selectedProperties = selectedProperties;
                 this.odataUri = odataUri;
             }
 
             /// <summary>
-            /// The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).
+            /// The structured type of the items in the resource set to be written (or null if the entity set base type should be used).
             /// </summary>
-            public IEdmEntityType ResourceType { get; set; }
+            public IEdmStructuredType ResourceType { get; set; }
 
             /// <summary>
             /// The writer state of this scope.
@@ -1952,7 +1957,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The entity type which was derived from the model (may be either the same as entity type or its base type.
             /// </summary>
-            public IEdmEntityType ResourceTypeFromMetadata { get; set; }
+            public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
 
             /// <summary>
             /// The serialization info for the current resource.
@@ -2030,12 +2035,12 @@ namespace Microsoft.OData.JsonLight
             /// Constructor to create a new resource set scope.
             /// </summary>
             /// <param name="item">The resource set for the new scope.</param>
-            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-            /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+            /// <param name="resourceType">The structured type of the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            protected DeltaResourceSetScope(ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(WriterState.DeltaResourceSet, item, navigationSource, entityType, selectedProperties, odataUri)
+            protected DeltaResourceSetScope(ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.DeltaResourceSet, item, navigationSource, resourceType, selectedProperties, odataUri)
             {
                 Debug.Assert(item != null, "item != null");
 
@@ -2372,11 +2377,11 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             /// <param name="resourceSet">The resource set for the new scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-            /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public JsonLightDeltaResourceSetScope(ODataItem resourceSet, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(resourceSet, navigationSource, entityType, selectedProperties, odataUri)
+            public JsonLightDeltaResourceSetScope(ODataItem resourceSet, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(resourceSet, navigationSource, resourceType, selectedProperties, odataUri)
             {
             }
 

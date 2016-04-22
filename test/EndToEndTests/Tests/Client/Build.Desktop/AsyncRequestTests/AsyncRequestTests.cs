@@ -73,8 +73,10 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                 if (feedReader.State == ODataReaderState.ResourceEnd)
                                 {
                                     ODataResource entry = feedReader.Item as ODataResource;
-                                    Assert.IsNotNull(entry);
-                                    entries.Add(entry);
+                                    if (entry != null && entry.Id != null)
+                                    {
+                                        entries.Add(entry);
+                                    }
                                 }
                                 else if (feedReader.State == ODataReaderState.ResourceSetEnd)
                                 {
@@ -191,8 +193,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                             }
 
                             Assert.AreEqual(ODataReaderState.Completed, entryReader.State);
-                            Assert.AreEqual(1, entries.Count);
-                            Assert.AreEqual(110, entries[0].Properties.Single(p => p.Name == "AccountID").Value);
+                            Assert.AreEqual(2, entries.Count);
+                            Assert.AreEqual(110, entries[1].Properties.Single(p => p.Name == "AccountID").Value);
                         }
 
                     }

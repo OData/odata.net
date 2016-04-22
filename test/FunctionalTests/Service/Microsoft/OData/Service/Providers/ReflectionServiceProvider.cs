@@ -111,6 +111,10 @@ namespace Microsoft.OData.Service.Providers
             }
 
             ResourceType targetType = resourceProperty.ResourceType;
+            if (targetType.ResourceTypeKind == ResourceTypeKind.ComplexType)
+            {
+                return null;
+            }
             Debug.Assert(targetType != null, "targetType != null");
             if (targetType.ResourceTypeKind != ResourceTypeKind.EntityType)
             {

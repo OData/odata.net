@@ -23,9 +23,9 @@ namespace Microsoft.OData.JsonLight
         ODataResource Resource { get; }
 
         /// <summary>
-        /// The entity type for the resource (if available)
+        /// The structured type for the resource (if available)
         /// </summary>
-        IEdmEntityType EntityType { get; }
+        IEdmStructuredType ResourceType { get; }
 
         /// <summary>
         /// The metadata builder instance for the resource.
@@ -44,7 +44,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// If the reader finds a nested resource info to report, but it must first report the parent resource
-        /// it will store the nested resource info info in this property. So this will only ever store the first nested resource info of a resource.
+        /// it will store the nested resource info in this property. So this will only ever store the first nested resource info of a resource.
         /// </summary>
         ODataJsonLightReaderNestedResourceInfo FirstNestedResourceInfo { get; set; }
 

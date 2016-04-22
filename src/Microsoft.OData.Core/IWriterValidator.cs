@@ -119,13 +119,13 @@ namespace Microsoft.OData
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
-        /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
-        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
-        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the nested resources; or null if metadata is not available.</param>
+        /// <param name="nestedPayloadKind">The <see cref="ODataPayloadKind"/> of the content of this nested resource info or null for deferred links.</param>
+        /// <returns>The type of the nested resource for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
-            IEdmEntityType declaringEntityType,
-            ODataPayloadKind? expandedPayloadKind);
+            IEdmStructuredType declaringStructuredType,
+            ODataPayloadKind? nestedPayloadKind);
 
         /// <summary>
         /// Validates that the sepcified nested resource info has cardinality, that is it has the IsCollection value set.

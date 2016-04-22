@@ -164,15 +164,15 @@ namespace Microsoft.OData
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
-        /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structured property or navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
-        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         public IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
-            IEdmEntityType declaringEntityType,
+            IEdmStructuredType declaringStructuredType,
             ODataPayloadKind? expandedPayloadKind)
         {
-            return WriterValidationUtils.ValidateNestedResourceInfo(nestedResourceInfo, declaringEntityType, expandedPayloadKind);
+            return WriterValidationUtils.ValidateNestedResourceInfo(nestedResourceInfo, declaringStructuredType, expandedPayloadKind);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Microsoft.OData
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
         public void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
         {
-            ValidationUtils.ValidateEntryMetadataResource(resource, resourceType, model, true);
+            ValidationUtils.ValidateMediaResource(resource, resourceType, model, true);
         }
     }
 }

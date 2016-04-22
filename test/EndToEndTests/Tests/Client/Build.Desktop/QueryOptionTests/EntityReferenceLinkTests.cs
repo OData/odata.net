@@ -75,7 +75,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataResource> entries = this.TestsHelper.QueryEntries("People(2)?$expand=Parent/$ref", mimeType);
+                    List<ODataResource> entries = this.TestsHelper.QueryEntries("People(2)?$expand=Parent/$ref", mimeType)
+                        .Where(e=>e!= null && (e.TypeName.EndsWith("Customer") || e.TypeName.EndsWith("Person"))).ToList();
                     Assert.AreEqual(2, entries.Count);
                     ODataInstanceAnnotation annotation = entries.First().InstanceAnnotations.SingleOrDefault(ia => ia.Name == "Link.AnnotationByEntry");
                     Assert.IsNotNull(annotation);

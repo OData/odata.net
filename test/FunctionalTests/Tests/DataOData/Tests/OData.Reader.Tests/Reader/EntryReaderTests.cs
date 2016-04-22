@@ -1220,14 +1220,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadEdmModel = model,
-                    PayloadElement = CreateDeeplyNestedProperty(depthLimit + 1, "TestModel.RecursiveComplexType", "PropertyName"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_RecursionDepthLimitReached", Convert.ToString(depthLimit)),
+                    PayloadElement = CreateDeeplyNestedProperty(depthLimit, "TestModel.RecursiveComplexType", "PropertyName"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_MaxDepthOfNestedEntriesExceeded", Convert.ToString(depthLimit)),
                 },
                 // Property with depth equal to the depth limit, which should pass.
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadEdmModel = model,
-                    PayloadElement = CreateDeeplyNestedProperty(depthLimit, "TestModel.RecursiveComplexType", "PropertyName"),
+                    PayloadElement = CreateDeeplyNestedProperty(depthLimit-1, "TestModel.RecursiveComplexType", "PropertyName"),
                 },
                 // Payload with two separate nested complex value properties, whose combined depth would exceed the limit, but are individually below it.
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -1242,14 +1242,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadEdmModel = model,
-                    PayloadElement = PayloadBuilder.Property("CollectionProperty", CreateDeeplyNestedComplexValuesWithCollections(depthLimit + 1, "TestModel.RecursiveComplexTypeWithCollection", "CollectionProperty")),
-                    ExpectedException =  ODataExpectedExceptions.ODataException("ValidationUtils_RecursionDepthLimitReached", Convert.ToString(depthLimit)),
+                    PayloadElement = PayloadBuilder.Property("CollectionProperty", CreateDeeplyNestedComplexValuesWithCollections((depthLimit + 1 )* 2, "TestModel.RecursiveComplexTypeWithCollection", "CollectionProperty")),
+                    ExpectedException =  ODataExpectedExceptions.ODataException("ValidationUtils_MaxDepthOfNestedEntriesExceeded", Convert.ToString(depthLimit)),
                 },
                 // Complex values nested inside collections at the depth limit (should pass).
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadEdmModel = model,
-                    PayloadElement = PayloadBuilder.Property("CollectionProperty", CreateDeeplyNestedComplexValuesWithCollections(depthLimit, "TestModel.RecursiveComplexTypeWithCollection", "CollectionProperty")),
+                    PayloadElement = PayloadBuilder.Property("CollectionProperty", CreateDeeplyNestedComplexValuesWithCollections(depthLimit * 2, "TestModel.RecursiveComplexTypeWithCollection", "CollectionProperty")),
                 },
             };
 

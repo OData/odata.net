@@ -1185,12 +1185,12 @@ namespace Microsoft.OData.Metadata
         /// <summary>
         /// Determines whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
         /// </summary>
-        /// <param name="entityType">The entity type the operations are bound to.</param>
+        /// <param name="structuredType">The structured type the operations are bound to.</param>
         /// <returns>True if the operations must be container qualified, otherwise false.</returns>
-        internal static bool OperationsBoundToEntityTypeMustBeContainerQualified(this IEdmEntityType entityType)
+        internal static bool OperationsBoundToStructuredTypeMustBeContainerQualified(this IEdmStructuredType structuredType)
         {
-            Debug.Assert(entityType != null, "entityType != null");
-            return entityType.IsOpen;
+            Debug.Assert(structuredType != null, "structuredType != null");
+            return structuredType.IsOpen;
         }
 #endif
         #endregion

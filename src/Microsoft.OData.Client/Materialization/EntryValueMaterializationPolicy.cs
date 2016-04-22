@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using DSClient = Microsoft.OData.Client;
-    
+
     /// <summary>
     /// Used to materialize entities from an <see cref="ODataResource"/> to an object.
     /// </summary>
@@ -32,9 +32,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
         /// <param name="nextLinkTable">The next link table.</param>
         internal EntryValueMaterializationPolicy(
-            IODataMaterializerContext context, 
-            EntityTrackingAdapter entityTrackingAdapter, 
-            DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter, 
+            IODataMaterializerContext context,
+            EntityTrackingAdapter entityTrackingAdapter,
+            DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter,
             Dictionary<IEnumerable, DataServiceQueryContinuation> nextLinkTable)
             : base(context, lazyPrimitivePropertyConverter)
         {
@@ -88,18 +88,18 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (link.IsCollection.Value)
                 {
-                    // We need to fail if the payload states that the property is a navigation collection property
+                    // We need to fail if the payload states that the property is a navigation collection property or a complex collection property
                     // and in the client, the property is not a collection property.
-                    if (!property.IsEntityCollection)
+                    if (!property.IsResourceSet)
                     {
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchAtomLinkFeedPropertyNotCollection(property.PropertyName));
                     }
 
-                    propertyType = property.EntityCollectionItemType;
+                    propertyType = property.ResourceSetItemType;
                 }
                 else
                 {
-                    if (property.IsEntityCollection)
+                    if (property.IsResourceSet)
                     {
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchAtomLinkEntryPropertyIsCollection(property.PropertyName));
                     }
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client.Materialization
             // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
             if (propertyType != null && performEntityCheck)
             {
-                if (!ClientTypeUtil.TypeIsEntity(propertyType, model))
+                if (!ClientTypeUtil.TypeIsStructured(propertyType, model))
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidNonEntityType(propertyType.ToString()));
                 }
@@ -189,8 +189,10 @@ namespace Microsoft.OData.Client.Materialization
                 "entry.ResolvedObject == null || entry.ResolvedObject == this.targetInstance -- otherwise getting called twice");
             Debug.Assert(expectedEntryType != null, "expectedType != null");
 
-            // ResolvedObject will already be assigned when we have a TargetInstance, for example.
-            if (!this.EntityTrackingAdapter.TryResolveExistingEntity(entry, expectedEntryType))
+            // TODO : Need to handle complex type with no tracking and entity with tracking but no id.
+            // ResolvedObject will already be assigned when we have a TargetInstance.
+            if ((entry.IsTracking && entry.Id == null)
+                || !this.EntityTrackingAdapter.TryResolveExistingEntity(entry, expectedEntryType))
             {
                 // If the type is a derived one this call will resolve to derived type, cannot put code in  ResolveByCreatingWithType as this is used by projection and in this case
                 // the type cannot be changed or updated
@@ -232,7 +234,7 @@ namespace Microsoft.OData.Client.Materialization
             object collection = this.PopulateCollectionProperty(entry, property, itemsEnumerable, nextLink, continuationPlan);
 
             // Get collection of all non-linked elements in collection and remove them except for the ones that were obtained from the response.
-            if (this.EntityTrackingAdapter.MergeOption == MergeOption.OverwriteChanges || 
+            if (this.EntityTrackingAdapter.MergeOption == MergeOption.OverwriteChanges ||
                 this.EntityTrackingAdapter.MergeOption == MergeOption.PreserveChanges)
             {
                 var linkedItemsInCollection =
@@ -258,7 +260,7 @@ namespace Microsoft.OData.Client.Materialization
                 if (!isContinuation)
                 {
                     IEnumerable<object> itemsToRemove;
-                    
+
                     if (this.EntityTrackingAdapter.MergeOption == MergeOption.OverwriteChanges)
                     {
                         itemsToRemove = linkedItemsInCollection.Select(i => i.Target);
@@ -266,7 +268,7 @@ namespace Microsoft.OData.Client.Materialization
                     else
                     {
                         Debug.Assert(
-                            this.EntityTrackingAdapter.MergeOption == MergeOption.PreserveChanges, 
+                            this.EntityTrackingAdapter.MergeOption == MergeOption.PreserveChanges,
                             "this.EntityTrackingAdapter.MergeOption == MergeOption.PreserveChanges");
 
                         itemsToRemove = linkedItemsInCollection
@@ -406,7 +408,7 @@ namespace Microsoft.OData.Client.Materialization
             object collection = null;
 
             ClientEdmModel edmModel = this.MaterializerContext.Model;
-            ClientTypeAnnotation collectionType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.EntityCollectionItemType));
+            ClientTypeAnnotation collectionType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.ResourceSetItemType));
 
             if (entry.ShouldUpdateFromPayload)
             {
@@ -454,7 +456,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             Debug.Assert(instance != null, "instance != null");
             Debug.Assert(property != null, "property != null");
-            Debug.Assert(property.IsEntityCollection, "property.IsEntityCollection has to be true - otherwise property isn't a collection");
+            Debug.Assert(property.IsResourceSet, "property.IsEntityCollection has to be true - otherwise property isn't a collection");
 
             // NOTE: in V1, we would have instantiated nested objects before setting them.
             object result;
@@ -527,7 +529,7 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(feed != null, "feed != null");
 
             ClientEdmModel edmModel = this.MaterializerContext.Model;
-            ClientTypeAnnotation collectionType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.EntityCollectionItemType));
+            ClientTypeAnnotation collectionType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.ResourceSetItemType));
 
             IEnumerable<ODataResource> entries = MaterializerFeed.GetFeed(feed).Entries;
 
@@ -536,22 +538,22 @@ namespace Microsoft.OData.Client.Materialization
                 this.Materialize(MaterializerEntry.GetEntry(feedEntry), collectionType.ElementType, includeLinks);
             }
 
-            ProjectionPlan continuationPlan = includeLinks ? 
-                ODataEntityMaterializer.CreatePlanForDirectMaterialization(property.EntityCollectionItemType) : 
-                ODataEntityMaterializer.CreatePlanForShallowMaterialization(property.EntityCollectionItemType);
-            
+            ProjectionPlan continuationPlan = includeLinks ?
+                ODataEntityMaterializer.CreatePlanForDirectMaterialization(property.ResourceSetItemType) :
+                ODataEntityMaterializer.CreatePlanForShallowMaterialization(property.ResourceSetItemType);
+
             this.ApplyItemsToCollection(
-                entry, 
-                property, 
-                entries.Select(e => MaterializerEntry.GetEntry(e).ResolvedObject), 
-                feed.NextPageLink, 
+                entry,
+                property,
+                entries.Select(e => MaterializerEntry.GetEntry(e).ResolvedObject),
+                feed.NextPageLink,
                 continuationPlan,
                 false);
         }
 
         /// <summary>Materializes the specified <paramref name="entry"/>.</summary>
         /// <param name="entry">Entry with object to materialize.</param>
-        /// <param name="includeLinks">Whether links that are expanded should be materialized.</param>
+        /// <param name="includeLinks">Whether links that are expanded for navigation property should be materialized.</param>
         /// <remarks>This is a payload-driven materialization process.</remarks>
         private void MaterializeResolvedEntry(MaterializerEntry entry, bool includeLinks)
         {
@@ -563,7 +565,7 @@ namespace Microsoft.OData.Client.Materialization
             // While materializing entities, we need to make sure the payload that came in the wire is also an entity.
             // Otherwise we need to fail.
             // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
-            if (!actualType.IsEntityType)
+            if (!actualType.IsStructuredType)
             {
                 throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidNonEntityType(actualType.ElementTypeName));
             }
@@ -584,55 +586,56 @@ namespace Microsoft.OData.Client.Materialization
                     }
                 }
 
-                if (includeLinks)
+                foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
-                    foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
+                    MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
+
+                    if (linkState == null)
                     {
-                        MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
+                        continue;
+                    }
 
-                        // Ignore...
-                        if (linkState == null)
+                    var prop = actualType.GetProperty(link.Name, this.MaterializerContext.IgnoreMissingProperties);
+
+                    if (prop == null)
+                    {
+                        continue;
+                    }
+
+                    // includeLinks is for Navigation property, so we should handle complex property when includeLinks equals false;
+                    if (!includeLinks && (prop.IsEntityCollection || prop.EntityCollectionItemType != null))
+                    {
+                        continue;
+                    }
+
+                    if (linkState.Feed != null)
+                    {
+                        this.ApplyFeedToCollection(entry, prop, linkState.Feed, includeLinks);
+                    }
+                    else if (linkState.Entry != null)
+                    {
+                        MaterializerEntry linkEntry = linkState.Entry;
+
+                        if (linkEntry.Entry != null)
                         {
-                            continue;
+                            this.Materialize(linkEntry, prop.PropertyType, includeLinks);
                         }
 
-                        var prop = actualType.GetProperty(link.Name, this.MaterializerContext.IgnoreMissingProperties);
-
-                        if (prop == null)
+                        if (entry.ShouldUpdateFromPayload)
                         {
-                            continue;
-                        }
+                            prop.SetValue(entry.ResolvedObject, linkEntry.ResolvedObject, link.Name, true /* allowAdd? */);
 
-                        if (linkState.Feed != null)
-                        {
-                            this.ApplyFeedToCollection(entry, prop, linkState.Feed, includeLinks);
-                        }
-                        else if (linkState.Entry != null)
-                        {
-                            MaterializerEntry linkEntry = linkState.Entry;
-
-                            if (linkEntry.Entry != null)
+                            if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization && linkEntry.ShouldUpdateFromPayload)
                             {
-                                Debug.Assert(includeLinks, "includeLinks -- otherwise we shouldn't be materializing this entry");
-                                this.Materialize(linkEntry, prop.PropertyType, includeLinks);
+                                // Apply instance annotation for navigation property
+                                this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(
+                                    prop.PropertyName, linkEntry.Entry, entry.ActualType.ElementType, entry.ResolvedObject);
+
+                                // Apply instance annotation for entity of the navigation property
+                                this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(linkEntry.Entry, linkEntry.ResolvedObject);
                             }
 
-                            if (entry.ShouldUpdateFromPayload)
-                            {
-                                prop.SetValue(entry.ResolvedObject, linkEntry.ResolvedObject, link.Name, true /* allowAdd? */);
-
-                                if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization && linkEntry.ShouldUpdateFromPayload)
-                                {
-                                    // Apply instance annotation for navigation property
-                                    this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(
-                                        prop.PropertyName, linkEntry.Entry, entry.ActualType.ElementType, entry.ResolvedObject);
-
-                                    // Apply instance annotation for entity of the navigation property
-                                    this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(linkEntry.Entry, linkEntry.ResolvedObject);
-                                }
-
-                                this.EntityTrackingAdapter.MaterializationLog.SetLink(entry, prop.PropertyName, linkEntry.ResolvedObject);
-                            }
+                            this.EntityTrackingAdapter.MaterializationLog.SetLink(entry, prop.PropertyName, linkEntry.ResolvedObject);
                         }
                     }
                 }

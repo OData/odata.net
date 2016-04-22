@@ -57,9 +57,9 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Determines whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
         /// </summary>
-        /// <param name="entityType">The entity type the operations are bound to.</param>
+        /// <param name="structuredType">The structured type the operations are bound to.</param>
         /// <returns>True if the operations must be container qualified, otherwise false.</returns>
-        bool OperationsBoundToEntityTypeMustBeContainerQualified(IEdmEntityType entityType);
+        bool OperationsBoundToStructuredTypeMustBeContainerQualified(IEdmStructuredType structuredType);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Callback to determine whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
         /// </summary>
-        private readonly Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified;
+        private readonly Func<IEdmStructuredType, bool> operationsBoundToStructuredTypeMustBeContainerQualified;
 
         /// <summary>
         /// The metadata document Uri.
@@ -129,7 +129,7 @@ namespace Microsoft.OData.Evaluation
         /// Constructs an ODataMetadataContext.
         /// </summary>
         /// <param name="isResponse">true if we are reading a response payload, false otherwise.</param>
-        /// <param name="operationsBoundToEntityTypeMustBeContainerQualified">Callback to determine whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.</param>
+        /// <param name="operationsBoundToStructuredTypeMustBeContainerQualified">Callback to determine whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.</param>
         /// <param name="edmTypeResolver">EdmTypeResolver instance to resolve entity set base type.</param>
         /// <param name="model">The Edm model.</param>
         /// <param name="metadataDocumentUri">The metadata document Uri.</param>
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Evaluation
         /// <remarks>This overload should only be used by the reader.</remarks>
         public ODataMetadataContext(
             bool isResponse,
-            Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified,
+            Func<IEdmStructuredType, bool> operationsBoundToStructuredTypeMustBeContainerQualified,
             EdmTypeResolver edmTypeResolver,
             IEdmModel model,
             Uri metadataDocumentUri,
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(model != null, "model != null");
 
             this.isResponse = isResponse;
-            this.operationsBoundToEntityTypeMustBeContainerQualified = operationsBoundToEntityTypeMustBeContainerQualified ?? EdmLibraryExtensions.OperationsBoundToEntityTypeMustBeContainerQualified;
+            this.operationsBoundToStructuredTypeMustBeContainerQualified = operationsBoundToStructuredTypeMustBeContainerQualified ?? EdmLibraryExtensions.OperationsBoundToStructuredTypeMustBeContainerQualified;
             this.edmTypeResolver = edmTypeResolver;
             this.model = model;
             this.metadataDocumentUri = metadataDocumentUri;
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Evaluation
         /// <remarks>This overload should only be used by the reader.</remarks>
         public ODataMetadataContext(
             bool isResponse,
-            Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified,
+            Func<IEdmStructuredType, bool> operationsBoundToEntityTypeMustBeContainerQualified,
             EdmTypeResolver edmTypeResolver,
             IEdmModel model,
             Uri metadataDocumentUri,
@@ -230,12 +230,12 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
-        /// Gets an entity metadata builder for the given resource.
+        /// Gets a resource metadata builder for the given resource.
         /// </summary>
         /// <param name="resourceState">Resource state to use as reference for information needed by the builder.</param>
         /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
-        /// <returns>An entity metadata builder.</returns>
+        /// <returns>A resource metadata builder.</returns>
         public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool? useKeyAsSegment)
         {
             Debug.Assert(resourceState != null, "resource != null");
@@ -252,13 +252,21 @@ namespace Microsoft.OData.Evaluation
                     IEdmNavigationSource navigationSource = typeAnnotation.NavigationSource;
 
                     IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
-                    IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.EntityType, this.model, /*throwIfMissingTypeInfo*/ true);
-                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmEntityType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
+                    IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.ResourceType, this.model, /*throwIfMissingTypeInfo*/ true);
+                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmStructuredType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
 
                     UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(useKeyAsSegment, typeContext);
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri, urlConvention);
 
-                    resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
+                    // For complex type or collection of complex, we don't need compute odata.Id etc. So just use the NoOpResourceMetadataBuilder now.
+                    if (typeAnnotation.Type.IsEntity())
+                    {
+                        resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
+                    }
+                    else
+                    {
+                        resourceState.MetadataBuilder = new NoOpResourceMetadataBuilder(resource);
+                    }
                 }
                 else
                 {
@@ -293,15 +301,15 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Determines whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
         /// </summary>
-        /// <param name="entityType">The entity type the operations are bound to.</param>
+        /// <param name="structuredType">The structured type the operations are bound to.</param>
         /// <returns>True if the operations must be container qualified, otherwise false.</returns>
-        public bool OperationsBoundToEntityTypeMustBeContainerQualified(IEdmEntityType entityType)
+        public bool OperationsBoundToStructuredTypeMustBeContainerQualified(IEdmStructuredType structuredType)
         {
-            Debug.Assert(entityType != null, "entityType != null");
+            Debug.Assert(structuredType != null, "entityType != null");
             Debug.Assert(this.isResponse, "this.isResponse");
-            Debug.Assert(this.operationsBoundToEntityTypeMustBeContainerQualified != null, "this.operationsBoundToEntityTypeMustBeContainerQualified != null");
+            Debug.Assert(this.operationsBoundToStructuredTypeMustBeContainerQualified != null, "this.operationsBoundToStructuredTypeMustBeContainerQualified != null");
 
-            return this.operationsBoundToEntityTypeMustBeContainerQualified(entityType);
+            return this.operationsBoundToStructuredTypeMustBeContainerQualified(structuredType);
         }
     }
 }

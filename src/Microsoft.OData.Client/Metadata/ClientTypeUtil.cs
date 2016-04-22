@@ -279,6 +279,18 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
+        /// Is the type an structured type?
+        /// </summary>
+        /// <param name="t">Type to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>bool indicating whether or not structured type</returns>
+        internal static bool TypeIsStructured(Type t, ClientEdmModel model)
+        {
+            var typeKind = model.GetOrCreateEdmType(t).TypeKind;
+            return typeKind == EdmTypeKind.Entity || typeKind == EdmTypeKind.Complex;
+        }
+
+        /// <summary>
         /// Is the type or element type (in the case of nullableOfT or IEnumOfT) a Entity Type?
         /// </summary>
         /// <param name="type">Type to examine</param>
@@ -288,6 +300,18 @@ namespace Microsoft.OData.Client.Metadata
             type = TypeSystem.GetElementType(type);
             type = Nullable.GetUnderlyingType(type) ?? type;
             return !PrimitiveType.IsKnownType(type) && ClientTypeUtil.GetKeyPropertiesOnType(type) != null;
+        }
+
+        /// <summary>
+        /// Is the type or element type (in the case of nullableOfT or IEnumOfT) a structured type?
+        /// </summary>
+        /// <param name="type">Type to examine</param>
+        /// <returns>bool indicating whether or not structured type</returns>
+        internal static bool TypeOrElementTypeIsStructured(Type type)
+        {
+            type = TypeSystem.GetElementType(type);
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            return !PrimitiveType.IsKnownType(type) && !type.IsEnum();
         }
 
         /// <summary>Checks whether the specified type is a DataServiceCollection type (or inherits from one).</summary>

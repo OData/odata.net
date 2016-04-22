@@ -10,6 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.ODataLibTest;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
@@ -41,17 +42,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             var owningType = new EdmEntityType("TestModel", "OwningType");
             owningType.AddKeys(owningType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
             owningType.AddStructuralProperty("PrimitiveCollection", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false)));
-            owningType.AddStructuralProperty("ComplexCollection", EdmCoreModel.GetCollection(complexType.ToTypeReference()));
             model.AddElement(owningType);
             model.Fixup();
             
             var primitiveMultiValue = PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)").Item(42).Item(43);
-            var complexMultiValue = PayloadBuilder.ComplexMultiValue("Collection(TestModel.ComplexType)").Item(
-                PayloadBuilder.ComplexValue("TestModel.ComplexType")
-                    .PrimitiveProperty("Name", "Value")
-                    .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null }))
-                .JsonRepresentation("[{\"Name\":\"Value\"}]")
-                .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
 
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new[]
             {
@@ -114,6 +108,45 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         ? PayloadBuilder.Property(string.Empty, primitiveMultiValue)
                         : PayloadBuilder.Property("PrimitiveCollection", primitiveMultiValue)
                 },
+            };
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                (testDescriptor, testConfiguration) =>
+                {
+                    // These descriptors are already tailored specifically for Json Light and 
+                    // do not require normalization.
+                    testDescriptor.TestDescriptorNormalizers.Clear();
+                    testDescriptor.RunTest(testConfiguration);
+                });
+        }
+
+        public void CollectionOfComplexInstanceTest()
+        {
+            EdmModel model = new EdmModel();
+            var complexType = new EdmComplexType("TestModel", "ComplexType").Property("Name", EdmPrimitiveTypeKind.String, true);
+            model.AddElement(complexType);
+            var owningType = new EdmEntityType("TestModel", "OwningType");
+            owningType.AddKeys(owningType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
+            owningType.AddStructuralProperty("PrimitiveCollection", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false)));
+            owningType.AddStructuralProperty("ComplexCollection", EdmCoreModel.GetCollection(complexType.ToTypeReference()));
+            model.AddElement(owningType);
+            model.Fixup();
+
+            var primitiveMultiValue = PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)").Item(42).Item(43);
+            var complexMultiValue = PayloadBuilder.EntitySet(new EntityInstance[]
+                            {
+                                PayloadBuilder.Entity("TestModel.ComplexType")
+                                .PrimitiveProperty("Name", "Value")
+                                .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null })
+                                .IsComplex(true)
+                            })
+                            .JsonRepresentation("[{\"Name\":\"Value\"}]")
+                            .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
+
+            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new[]
+            {
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Simple complex collection.",

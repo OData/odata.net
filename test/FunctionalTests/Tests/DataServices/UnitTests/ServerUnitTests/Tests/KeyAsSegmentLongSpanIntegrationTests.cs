@@ -259,13 +259,14 @@ namespace AstoriaUnitTests.Tests
                 var customer = ctx.CreateQuery<Customer>("Customers").Where(c => c.ID == 0).Single();
                 var descriptor = ctx.GetEntityDescriptor(customer);
 
+                var navigationsLinks = descriptor.LinkInfos.Where(l => l.NavigationLink != null).ToList();
                 var baseUri = request.ServiceRoot.AbsoluteUri;
                 Assert.AreEqual(baseUri + "/Customers/0", descriptor.Identity.OriginalString);
                 Assert.AreEqual(baseUri + "/Customers/0", descriptor.EditLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/BestFriend/$ref", descriptor.LinkInfos[0].AssociationLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/BestFriend", descriptor.LinkInfos[0].NavigationLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/Orders/$ref", descriptor.LinkInfos[1].AssociationLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/Orders", descriptor.LinkInfos[1].NavigationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/BestFriend/$ref", navigationsLinks[0].AssociationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/BestFriend", navigationsLinks[0].NavigationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/Orders/$ref", navigationsLinks[1].AssociationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/Orders", navigationsLinks[1].NavigationLink.OriginalString);
             }
         }
 

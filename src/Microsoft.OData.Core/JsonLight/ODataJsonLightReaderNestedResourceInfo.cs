@@ -23,19 +23,19 @@ namespace Microsoft.OData.JsonLight
         private readonly ODataNestedResourceInfo nestedResourceInfo;
 
         /// <summary>
-        /// The navigation property for which the link will be reported.
+        /// The nested property for which the nested resource info will be reported.
         /// </summary>
-        private readonly IEdmNavigationProperty navigationProperty;
+        private readonly IEdmProperty nestedProperty;
 
         /// <summary>
-        /// true if the nested resource info has a value (is expanded).
+        /// true if the nested resource info has a value.
         /// </summary>
-        private readonly bool isExpanded;
+        private readonly bool hasValue;
 
         /// <summary>
-        /// The expanded resource set for expanded nested resource info to be reported.
+        /// The nested resource set for nested resource info to be reported.
         /// </summary>
-        private ODataResourceSet expandedResourceSet;
+        private ODataResourceSet resourceSet;
 
         /// <summary>
         /// List of entity reference links to be reported to the navigation link.
@@ -51,16 +51,16 @@ namespace Microsoft.OData.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
-        /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
+        /// <param name="nestedProperty">The navigation property for which the link will be reported.</param>
         /// <param name="isExpanded">true if the nested resource info is expanded.</param>
-        private ODataJsonLightReaderNestedResourceInfo(ODataNestedResourceInfo nestedResourceInfo, IEdmNavigationProperty navigationProperty, bool isExpanded)
+        private ODataJsonLightReaderNestedResourceInfo(ODataNestedResourceInfo nestedResourceInfo, IEdmProperty nestedProperty, bool isExpanded)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
-            Debug.Assert(navigationProperty == null || navigationProperty.Name == nestedResourceInfo.Name, "The name of the nested resource info doesn't match the name of the property.");
+            Debug.Assert(nestedProperty == null || nestedProperty.Name == nestedResourceInfo.Name, "The name of the nested resource info doesn't match the name of the property.");
 
             this.nestedResourceInfo = nestedResourceInfo;
-            this.navigationProperty = navigationProperty;
-            this.isExpanded = isExpanded;
+            this.nestedProperty = nestedProperty;
+            this.hasValue = isExpanded;
         }
 
         /// <summary>
@@ -75,35 +75,57 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// The navigation property for which the link will be reported.
+        /// The navigation property for which the navigation link will be reported.
         /// </summary>
         internal IEdmNavigationProperty NavigationProperty
         {
             get
             {
-                return this.navigationProperty;
+                return this.nestedProperty as IEdmNavigationProperty;
             }
         }
 
         /// <summary>
-        /// true if the nested resource info is expanded (has a value).
+        /// The structural property for which the nested resource info will be reported.
         /// </summary>
-        internal bool IsExpanded
+        internal IEdmStructuralProperty StructuralProperty
         {
             get
             {
-                return this.isExpanded;
+                return this.nestedProperty as IEdmStructuralProperty;
             }
         }
 
         /// <summary>
-        /// The expanded resource set for expanded nested resource info to be reported.
+        /// The Edm property for which the nested resource info will be reported.
         /// </summary>
-        internal ODataResourceSet ExpandedResourceSet
+        internal IEdmProperty NestedProperty
         {
             get
             {
-                return this.expandedResourceSet;
+                return this.nestedProperty;
+            }
+        }
+
+        /// <summary>
+        /// true if the nested resource info has a value.
+        /// </summary>
+        internal bool HasValue
+        {
+            get
+            {
+                return this.hasValue;
+            }
+        }
+
+        /// <summary>
+        /// The nested resource set for nested resource info to be reported.
+        /// </summary>
+        internal ODataResourceSet NestedResourceSet
+        {
+            get
+            {
+                return this.resourceSet;
             }
         }
 
@@ -119,11 +141,11 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates a nested resource info info for a deferred link.
+        /// Creates a nested resource info for a deferred link.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
-        /// <returns>The nested resource info info created.</returns>
+        /// <returns>The nested resource info created.</returns>
         internal static ODataJsonLightReaderNestedResourceInfo CreateDeferredLinkInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmNavigationProperty navigationProperty)
@@ -132,51 +154,51 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates a nested resource info info for an expanded resource link.
+        /// Creates a nested resource info for an expanded resource link.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
-        /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
-        /// <returns>The nested resource info info created.</returns>
-        internal static ODataJsonLightReaderNestedResourceInfo CreateExpandedEntryLinkInfo(
+        /// <param name="nestedProperty">The navigation property for which the link will be reported.</param>
+        /// <returns>The nested resource info created.</returns>
+        internal static ODataJsonLightReaderNestedResourceInfo CreateResourceReaderNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
-            IEdmNavigationProperty navigationProperty)
+            IEdmProperty nestedProperty)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
-            Debug.Assert(nestedResourceInfo.IsCollection == false, "Expanded resource can only be reported for a singleton nested resource info.");
+            Debug.Assert(nestedResourceInfo.IsCollection == false, "Resource can only be reported for a singleton nested resource info.");
 
-            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = new ODataJsonLightReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, /*isExpanded*/ true);
+            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = new ODataJsonLightReaderNestedResourceInfo(nestedResourceInfo, nestedProperty, /*isExpanded*/ true);
             return readerNestedResourceInfo;
         }
 
         /// <summary>
-        /// Creates a nested resource info info for an expanded resource set link.
+        /// Creates a nested resource info for nested resources.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
-        /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
-        /// <param name="expandedResourceSet">The expanded resource set for the nested resource info to report.</param>
-        /// <returns>The nested resource info info created.</returns>
-        internal static ODataJsonLightReaderNestedResourceInfo CreateExpandedResourceSetLinkInfo(
+        /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
+        /// <param name="resourceSet">The nested resource set for the nested resource info to report.</param>
+        /// <returns>The nested resource info created.</returns>
+        internal static ODataJsonLightReaderNestedResourceInfo CreateResourceSetReaderNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
-            IEdmNavigationProperty navigationProperty,
-            ODataResourceSet expandedResourceSet)
+            IEdmProperty nestedProperty,
+            ODataResourceSet resourceSet)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
-            Debug.Assert(nestedResourceInfo.IsCollection == true, "Expanded resource sets can only be reported for collection navigation links.");
-            Debug.Assert(expandedResourceSet != null, "expandedResourceSet != null");
+            Debug.Assert(nestedResourceInfo.IsCollection == true, "Resource sets can only be reported for collection nested resource info.");
+            Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = new ODataJsonLightReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, /*isExpanded*/ true);
-            readerNestedResourceInfo.expandedResourceSet = expandedResourceSet;
+            ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = new ODataJsonLightReaderNestedResourceInfo(nestedResourceInfo, nestedProperty, /*isExpanded*/ true);
+            readerNestedResourceInfo.resourceSet = resourceSet;
             return readerNestedResourceInfo;
         }
 
         /// <summary>
-        /// Creates a nested resource info info for a singleton entity reference link.
+        /// Creates a nested resource info for a singleton entity reference link.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
         /// <param name="entityReferenceLink">The entity reference link for the nested resource info to report.</param>
         /// <param name="isExpanded">true if the nested resource info is expanded.</param>
-        /// <returns>The nested resource info info created.</returns>
+        /// <returns>The nested resource info created.</returns>
         internal static ODataJsonLightReaderNestedResourceInfo CreateSingletonEntityReferenceLinkInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmNavigationProperty navigationProperty,
@@ -198,13 +220,13 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates a nested resource info info for a collection of entity reference links.
+        /// Creates a nested resource info for a collection of entity reference links.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to report.</param>
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
         /// <param name="entityReferenceLinks">The entity reference links for the nested resource info to report.</param>
         /// <param name="isExpanded">true if the nested resource info is expanded.</param>
-        /// <returns>The nested resource info info created.</returns>
+        /// <returns>The nested resource info created.</returns>
         internal static ODataJsonLightReaderNestedResourceInfo CreateCollectionEntityReferenceLinksInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmNavigationProperty navigationProperty,
@@ -222,10 +244,10 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates a nested resource info info for a projected nested resource info that is missing from the payload.
+        /// Creates a nested resource info for a projected nested resource info that is missing from the payload.
         /// </summary>
         /// <param name="navigationProperty">The navigation property for which the link will be reported.</param>
-        /// <returns>The nested resource info info created.</returns>
+        /// <returns>The nested resource info created.</returns>
         internal static ODataJsonLightReaderNestedResourceInfo CreateProjectedNestedResourceInfo(IEdmNavigationProperty navigationProperty)
         {
             Debug.Assert(navigationProperty != null, "navigationProperty != null");

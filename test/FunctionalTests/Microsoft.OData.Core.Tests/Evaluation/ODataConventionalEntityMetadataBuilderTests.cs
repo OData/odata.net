@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.Evaluation
         private readonly SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
 
         private readonly ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(DefaultBaseUri, UrlConvention.CreateWithExplicitValue(false));
-        private readonly TestMetadataContext metadataContext = new TestMetadataContext { GetMetadataDocumentUriFunc = () => MetadataDocumentUri, GetModelFunc = () => TestModel.Model, OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = type => false };
+        private readonly TestMetadataContext metadataContext = new TestMetadataContext { GetMetadataDocumentUriFunc = () => MetadataDocumentUri, GetModelFunc = () => TestModel.Model, OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false };
         private ODataResource productEntry;
         private Dictionary<string, object> sinlgeKeyCollection;
         private Dictionary<string, object> multiKeysCollection;
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 Resource = this.productEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.sinlgeKeyCollection,
-                ActualEntityTypeName = EntityTypeName,
+                ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 Resource = this.derivedMultiKeyMultiEtagMleEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("ETag1", "ETagValue1"), new KeyValuePair<string, object>("ETag2", "ETagValue2") },
                 KeyProperties = this.multiKeysCollection,
-                ActualEntityTypeName = DerivedMleEntityTypeName,
+                ActualResourceTypeName = DerivedMleEntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[] 
                 {
                     action,
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 Resource = this.containedCollectionProductEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.containedSinlgeKeyCollection,
-                ActualEntityTypeName = EntityTypeName,
+                ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 Resource = this.containedCollectionProductEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.containedSinlgeKeyCollection,
-                ActualEntityTypeName = EntityTypeName,
+                ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
@@ -1114,7 +1114,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 Resource = new ODataResource(),
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.sinlgeKeyCollection,
-                ActualEntityTypeName = "BossType",
+                ActualResourceTypeName = "BossType",
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>(),
@@ -1171,7 +1171,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
         public IODataResourceTypeContext TypeContext { get; set; }
 
-        public string ActualEntityTypeName { get; set; }
+        public string ActualResourceTypeName { get; set; }
 
         public ICollection<KeyValuePair<string, object>> KeyProperties { get; set; }
 

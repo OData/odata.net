@@ -6,9 +6,12 @@
 
 namespace Microsoft.OData.Edm
 {
+    using System;
+
     /// <summary>
     /// Defines EDM metatypes.
     /// </summary>
+    [Flags]
     public enum EdmTypeKind
     {
         /// <summary>
@@ -19,37 +22,37 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a type implementing <see cref="IEdmPrimitiveType"/>. 
         /// </summary>
-        Primitive,
+        Primitive = 1,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEntityType"/>. 
         /// </summary>
-        Entity,
+        Entity = 2,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmComplexType"/>. 
         /// </summary>
-        Complex,
+        Complex = 4,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmCollectionType"/>. 
         /// </summary>
-        Collection,
+        Collection = 8,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEntityReferenceType"/>.
         /// </summary>
-        EntityReference,
+        EntityReference = 16,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEnumType"/>.
         /// </summary>
-        Enum,
+        Enum = 32,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmTypeDefinition"/>.
         /// </summary>
-        TypeDefinition,
+        TypeDefinition = 64,
     }
 
     /// <summary>

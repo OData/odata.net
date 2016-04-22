@@ -197,7 +197,31 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <returns>An <see cref="ODataResourceSet"/>, possibly with annotations.</returns>
             public ODataResourceSet ReadTopLevelFeed(ODataMessageReaderTestWrapper messageReader, IEdmEntitySet entitySet, IEdmTypeReference expectedBaseEntityType)
             {
-                IEdmEntityType entityType = expectedBaseEntityType == null ? null : expectedBaseEntityType.Definition as IEdmEntityType;
+                IEdmStructuredType entityType;
+                if (expectedBaseEntityType == null)
+                {
+                    entityType = null;
+                }
+                else
+                {
+                    var tmpType = expectedBaseEntityType.Definition as IEdmCollectionType;
+                    if (tmpType != null)
+                    {
+                        var entityTypeRef = tmpType.ElementType as IEdmStructuredTypeReference;
+                        if (entityTypeRef != null)
+                        {
+                            entityType = entityTypeRef.Definition as IEdmStructuredType;
+                        }
+                        else
+                        {
+                            entityType = null;
+                        }
+                    }
+                    else
+                    {
+                        entityType = expectedBaseEntityType.Definition as IEdmStructuredType;
+                    }
+                }
                 ODataReader feedReader = messageReader.CreateODataResourceSetReader(entitySet, entityType);
                 try
                 {
@@ -234,7 +258,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <returns>An <see cref="ODataResource"/>, possibly with annotations.</returns>
             public ODataResource ReadTopLevelEntry(ODataMessageReaderTestWrapper messageReader, IEdmEntitySet entitySet, IEdmTypeReference expectedEntityTypeReference)
             {
-                IEdmEntityType entityType = expectedEntityTypeReference == null ? null : expectedEntityTypeReference.Definition as IEdmEntityType;
+                IEdmStructuredType entityType = expectedEntityTypeReference == null ? null : expectedEntityTypeReference.Definition as IEdmStructuredType;
                 ODataReader entryReader = messageReader.CreateODataResourceReader(entitySet, entityType);
                 try
                 {

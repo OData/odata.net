@@ -1547,6 +1547,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the base type of this structured type definition.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The base type of this structured type definition.</returns>
+        public static IEdmStructuredType BaseStructuredType(this IEdmStructuredType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.BaseType as IEdmStructuredType;
+        }
+
+        /// <summary>
         /// Gets the navigation properties declared in this entity definition.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
@@ -1914,6 +1925,22 @@ namespace Microsoft.OData.Edm
             }
 
             return target as IEdmEntityType;
+        }
+
+        /// <summary>
+        /// Gets the structured type targeted by this structural property.
+        /// </summary>
+        /// <param name="property">Reference to the calling object.</param>
+        /// <returns>The structured type targeted by this structural property.</returns>
+        public static IEdmStructuredType ToStructuredType(this IEdmProperty property)
+        {
+            IEdmType target = property.Type.Definition;
+            if (target.TypeKind == EdmTypeKind.Collection)
+            {
+                target = ((IEdmCollectionType)target).ElementType.Definition;
+            }
+
+            return target as IEdmStructuredType;
         }
 
         /// <summary>

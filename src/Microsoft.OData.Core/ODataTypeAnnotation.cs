@@ -30,12 +30,12 @@ namespace Microsoft.OData
         /// Creates a new instance of the type annotation for an entity value.
         /// </summary>
         /// <param name="navigationSource">The navigation source the entity belongs to (required).</param>
-        /// <param name="entityType">The entity type of the entity value if not the base type of the entity set (optional).</param>
-        public ODataTypeAnnotation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        /// <param name="structuredType">The structured type of the entity value if not the base type of the entity set (optional).</param>
+        public ODataTypeAnnotation(IEdmNavigationSource navigationSource, IEdmStructuredType structuredType)
         {
-            ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
+            ExceptionUtils.CheckArgumentNotNull(structuredType, "structuredType");
             this.navigationSource = navigationSource;
-            this.type = entityType.ToTypeReference(/*isNullable*/ true);
+            this.type = structuredType.ToTypeReference(/*isNullable*/ true);
         }
 
         /// <summary>

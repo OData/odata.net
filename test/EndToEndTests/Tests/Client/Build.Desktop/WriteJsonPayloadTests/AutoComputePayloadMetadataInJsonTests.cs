@@ -455,12 +455,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                     settings.AutoComputePayloadMetadataInJson = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyRequestMessage(settings, mimeType, hasModel);
-
-                    // For Atom, verify that the result is the same for AutoComputePayloadMetadataInJson=true/false
-                    if (mimeType == MimeTypes.ApplicationAtomXml)
-                    {
-                        WritePayloadHelper.VerifyPayloadString(defaultModeResult, autoComputeMetadataModeResult, mimeType);
-                    }
                 }
             }
         }
@@ -509,8 +503,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             ODataResource entry = reader.Item as ODataResource;
-                            Assert.AreEqual(3, entry.Properties.Count(), "entry.Properties.Count");
-                            verifyEntryCalled = true;
+                            if (entry != null)
+                            {
+                                Assert.AreEqual(2, entry.Properties.Count(), "entry.Properties.Count");
+                                verifyEntryCalled = true;
+                            }
+                            else
+                            {
+                                Assert.IsNull(entry);
+                            }
                         }
                     }
 

@@ -34,12 +34,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public AvroReader AvroReader { get; private set; }
 
-        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             return new ODataAvroReader(this, false);
         }
 
-        public override ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             return new ODataAvroReader(this, true);
         }

@@ -282,7 +282,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(entry.Entry != null, "entry != null");
             Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise this is not a target");
-            
+
             if (IsEntity(entry))
             {
                 Debug.Assert(entry.IsTracking, "entry.isTracking == true, otherwise we should not be tracking this entry with the context.");

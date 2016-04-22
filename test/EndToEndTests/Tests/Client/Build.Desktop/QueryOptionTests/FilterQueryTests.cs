@@ -39,28 +39,33 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             foreach (var mimeType in mimeTypes)
             {
                 // $count collection of primitive type
-                List<ODataResource> details = this.TestsHelper.QueryFeed("People?$filter=Emails/$count lt 2", mimeType);
+                List<ODataResource> details = this.TestsHelper.QueryFeed("People?$filter=Emails/$count lt 2", mimeType)
+                    .Where(r=>r != null && r.Id != null).ToList();
+
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(4, details.Count);
                 }
 
                 // $count collection of enum type
-                details = this.TestsHelper.QueryFeed("Products?$filter=CoverColors/$count lt 2", mimeType);
+                details = this.TestsHelper.QueryFeed("Products?$filter=CoverColors/$count lt 2", mimeType)
+                    .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(1, details.Count);
                 }
 
                 // $count collection of complex type
-                details = this.TestsHelper.QueryFeed("People?$filter=Addresses/$count eq 2", mimeType);
+                details = this.TestsHelper.QueryFeed("People?$filter=Addresses/$count eq 2", mimeType)
+                    .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(2, details.Count);
                 }
 
                 // $count collection of entity type
-                details = this.TestsHelper.QueryFeed("Customers?$filter=Orders/$count lt 2", mimeType);
+                details = this.TestsHelper.QueryFeed("Customers?$filter=Orders/$count lt 2", mimeType)
+                    .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(1, details.Count);

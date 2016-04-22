@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var metadataLevelWithoutMetadataDocumentUri = new JsonFullMetadataLevel(/*metadataDocumentUri*/ null, Model);
 
             Action test = () => metadataLevelWithoutMetadataDocumentUri
-                .CreateEntityMetadataBuilder(
+                .CreateResourceMetadataBuilder(
                 new ODataResource(),
                 new TestFeedAndEntryTypeContext(),
                 new ODataResourceSerializationInfo(),
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void FullMetadataLevelShouldReturnODataConventionalEntityMetadataBuilder()
         {
-            testSubject.CreateEntityMetadataBuilder(
+            testSubject.CreateResourceMetadataBuilder(
                 new ODataResource(),
                 new TestFeedAndEntryTypeContext { UrlConvention = UrlConvention.CreateWithExplicitValue(generateKeyAsSegment: false) }, new ODataResourceSerializationInfo(), /*actualEntityType*/null,
                 SelectedPropertiesNode.EntireSubtree,

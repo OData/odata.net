@@ -254,8 +254,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <returns>CLR type</returns>
         private static Type TransateEdmType(string typeName)
         {
+            string collectionString = "Collection(";
             string edmString = "Edm.";
-            if (typeName.StartsWith(edmString, StringComparison.OrdinalIgnoreCase))
+            if (typeName.StartsWith(collectionString, StringComparison.OrdinalIgnoreCase))
+            {
+                var itemTypeName = typeName.Substring(collectionString.Length, typeName.Length - 1 - collectionString.Length);
+                var elementType = TransateEdmType(itemTypeName);
+                return typeof(List<>).MakeGenericType(new[] { elementType });
+            }
+            else if (typeName.StartsWith(edmString, StringComparison.OrdinalIgnoreCase))
             {
                 string edmTypeValue = typeName.Substring(edmString.Length);
                 EdmPrimitiveTypeKind edmType = EdmPrimitiveTypeKind.None;

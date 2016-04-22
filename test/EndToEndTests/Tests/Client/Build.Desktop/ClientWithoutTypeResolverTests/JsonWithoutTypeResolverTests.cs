@@ -73,7 +73,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         public void NestedComplexPropertyQuery()
         {
             var contextWrapper = this.CreateContext();
-            var queryResults1 = contextWrapper.Execute<ICollection<Phone>>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/MobilePhoneBag")).ToArray();
+            var queryResults1 = contextWrapper.Execute<Phone>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/MobilePhoneBag")).ToArray();
             var queryResults2 = contextWrapper.Execute<Aliases>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/ContactAlias")).ToArray();
             var queryResults3 = contextWrapper.Execute<ICollection<string>>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/ContactAlias/AlternativeNames")).ToArray();
             var queryResults4 = contextWrapper.Execute<ICollection<string>>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/Microsoft.Test.OData.Services.AstoriaDefaultService.Customer/PrimaryContactInfo/ContactAlias/AlternativeNames")).ToArray();
@@ -83,7 +83,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         public void CollectionOfComplexPropertyQuery()
         {
             var contextWrapper = this.CreateContext();
-            var queryResults = contextWrapper.Execute<ICollection<Phone>>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/MobilePhoneBag")).ToArray();
+            var queryResults = contextWrapper.Execute<Phone>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/PrimaryContactInfo/MobilePhoneBag")).ToArray();
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         public void ServiceOperationCollectionOfComplexQuery()
         {
             var contextWrapper = this.CreateContext();
-            var queryResult = contextWrapper.Execute<ICollection<ContactDetails>>(new Uri(this.ServiceUri.OriginalString + "/EntityProjectionReturnsCollectionOfComplexTypes")).ToArray();
+            var queryResult = contextWrapper.Execute<ContactDetails>(new Uri(this.ServiceUri.OriginalString + "/EntityProjectionReturnsCollectionOfComplexTypes")).ToArray();
         }
 
         private DataServiceContextWrapper<DefaultContainer> CreateContext()

@@ -117,6 +117,26 @@ namespace Microsoft.OData.Tests
         }
         #region Util methods to AssertAreEqual ODataValues
 
+        public static void AssertODataResourceAreEqual(ODataResource value1, ODataResource value2)
+        {
+            Assert.NotNull(value1);
+            Assert.NotNull(value2);
+            Assert.Equal(value1.TypeName, value2.TypeName);
+            AssertODataPropertiesAreEqual(value1.Properties, value2.Properties);
+        }
+
+        public static void AssertODataResourceSetAreEqual(List<ODataResource> collectionValue1, List<ODataResource> collectionValue2)
+        {
+            Assert.NotNull(collectionValue1);
+            Assert.NotNull(collectionValue2);
+
+            Assert.Equal(collectionValue1.Count, collectionValue2.Count);
+            for (int i = 0; i < collectionValue1.Count; i++)
+            {
+                AssertODataResourceAreEqual(collectionValue1[i], collectionValue2[i]);
+            }
+        }
+
         public static void AssertODataValueAreEqual(ODataValue value1, ODataValue value2)
         {
             if (value1.IsNullValue && value2.IsNullValue)

@@ -67,16 +67,16 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 case ODataPayloadElementType.NullPropertyInstance:
                 case ODataPayloadElementType.PrimitiveProperty:
-                case ODataPayloadElementType.ComplexProperty:
                 case ODataPayloadElementType.PrimitiveMultiValueProperty:
-                case ODataPayloadElementType.ComplexMultiValueProperty:
                 case ODataPayloadElementType.NamedStreamInstance:
                 case ODataPayloadElementType.NavigationPropertyInstance:
                     return ODataPayloadKind.Property;
 
+                case ODataPayloadElementType.ComplexMultiValueProperty:
                 case ODataPayloadElementType.EntitySetInstance:
                     return ODataPayloadKind.ResourceSet;
 
+                case ODataPayloadElementType.ComplexProperty:
                 case ODataPayloadElementType.EntityInstance:
                     return ODataPayloadKind.Resource;
 

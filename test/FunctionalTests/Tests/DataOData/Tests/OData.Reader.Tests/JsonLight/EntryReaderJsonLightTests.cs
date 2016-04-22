@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                         {
                             ExpectedException = tc.IsRequest
-                                ? ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest")
+                                ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType")
                                 : ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty")
                         }
                 },
@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}"),
                     PayloadEdmModel = model,
                     // For requests the context URI is ignored and thus there's no type information in this case the reading should fail.
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType"),
                     SkipTestConfiguration = tc => !tc.IsRequest
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -141,7 +141,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}"),
                     PayloadEdmModel = model,
                     SkipTestConfiguration = tc => !tc.IsRequest,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest")
+                    //ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

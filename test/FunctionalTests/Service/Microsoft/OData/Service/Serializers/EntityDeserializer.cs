@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Service.Serializers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -236,7 +237,9 @@ namespace Microsoft.OData.Service.Serializers
 
             // Get the type from the entry.
             ResourceType entityResourceType = this.GetEntryResourceType(entry, segmentInfo.TargetResourceType);
-            Debug.Assert(entityResourceType != null && entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Each entity must have an entity type.");
+            Debug.Assert(entityResourceType != null
+                && (entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType
+                ||entityResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType), "Each entity must have an entity type.");
 
             // We have the actual type info from the payload. Update the request/response DSV based on the particular type.
             this.UpdateAndCheckRequestResponseDSV(entityResourceType, topLevel);
@@ -251,27 +254,34 @@ namespace Microsoft.OData.Service.Serializers
 
             object entityResource;
 
-            if (this.Update)
+            if (entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType)
             {
-                Debug.Assert(topLevel, "Updates don't allow deep payload, only deep links.");
+                if (this.Update)
+                {
+                    Debug.Assert(topLevel, "Updates don't allow deep payload, only deep links.");
 
-                // If it's a top level resource, then it cannot be null.
-                // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
-                // We decided to break WCF DS and always check ETag - seems like a security issue.
-                entityResource = this.GetObjectFromSegmentInfo(
-                    entityResourceType,
-                    segmentInfo,
-                    true /*verifyETag*/,
-                    true /*checkForNull*/,
-                    this.Service.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT /*replaceResource*/);
+                    // If it's a top level resource, then it cannot be null.
+                    // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
+                    // We decided to break WCF DS and always check ETag - seems like a security issue.
+                    entityResource = this.GetObjectFromSegmentInfo(
+                        entityResourceType,
+                        segmentInfo,
+                        true /*verifyETag*/,
+                        true /*checkForNull*/,
+                        this.Service.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT /*replaceResource*/);
+                }
+                else
+                {
+                    // Check for append rights whenever we need to create a resource.
+                    DataServiceConfiguration.CheckResourceRights(segmentInfo.TargetResourceSet, EntitySetRights.WriteAppend);
+                    // Create new instance of the entity.
+                    entityResource = this.Updatable.CreateResource(segmentInfo.TargetResourceSet == null ? null : segmentInfo.TargetResourceSet.Name, entityResourceType.FullName);
+                }
             }
             else
             {
-                // Check for append rights whenever we need to create a resource.
-                DataServiceConfiguration.CheckResourceRights(segmentInfo.TargetResourceSet, EntitySetRights.WriteAppend);
-
-                // Create new instance of the entity.
-                entityResource = this.Updatable.CreateResource(segmentInfo.TargetResourceSet.Name, entityResourceType.FullName);
+                // For complex type, always create a new instance instead of update the original one.
+                entityResource = this.Updatable.CreateResource(segmentInfo.TargetResourceSet == null ? null : segmentInfo.TargetResourceSet.Name, entityResourceType.FullName);
             }
 
             entryAnnotation.EntityResource = entityResource;
@@ -299,21 +309,25 @@ namespace Microsoft.OData.Service.Serializers
             // First apply all non-navigation properties.
             this.ApplyValueProperties(entry, entityResourceType, entityResource);
 
+            this.ApplyComplexProperties(entryAnnotation, entityResourceType, entityResource);
             // And then apply all navigation properties.
             this.ApplyNavigationProperties(entryAnnotation, segmentInfo.TargetResourceSet, entityResourceType, entityResource);
 
             Debug.Assert(this.Tracker != null, "this.Tracker != null");
 
-            // Track the operation
-            if (this.Update)
+            if (entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType)
             {
-                // Originally JSON used to fire the change interceptor only if something actually changed
-                // We decided to make it consistent and fire the change interceptor always.
-                this.Tracker.TrackAction(entityResource, segmentInfo.TargetResourceSet, UpdateOperations.Change);
-            }
-            else
-            {
-                this.Tracker.TrackAction(entityResource, segmentInfo.TargetResourceSet, UpdateOperations.Add);
+                // Track the operation
+                if (this.Update)
+                {
+                    // Originally JSON used to fire the change interceptor only if something actually changed
+                    // We decided to make it consistent and fire the change interceptor always.
+                    this.Tracker.TrackAction(entityResource, segmentInfo.TargetResourceSet, UpdateOperations.Change);
+                }
+                else
+                {
+                    this.Tracker.TrackAction(entityResource, segmentInfo.TargetResourceSet, UpdateOperations.Add);
+                }
             }
         }
 
@@ -351,7 +365,8 @@ namespace Microsoft.OData.Service.Serializers
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(expectedType != null, "We must always have an expected type for entities.");
-            Debug.Assert(expectedType.ResourceTypeKind == ResourceTypeKind.EntityType, "Expected type for entities must be an entity type.");
+            Debug.Assert(expectedType.ResourceTypeKind == ResourceTypeKind.EntityType
+                || expectedType.ResourceTypeKind == ResourceTypeKind.ComplexType, "Expected type for entities must be an structured type.");
 
             ResourceType resourceType;
 
@@ -406,7 +421,8 @@ namespace Microsoft.OData.Service.Serializers
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entityResourceType != null, "entityResourceType != null");
-            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
+            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType
+                || entityResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "Only entity types can be specified for entities.");
             Debug.Assert(entityResource != null, "entityResource != null");
 
             Debug.Assert(entry.Properties != null, "The ODataLib reader should always populate the ODataResource.Properties collection.");
@@ -430,18 +446,45 @@ namespace Microsoft.OData.Service.Serializers
             object entityResource)
         {
             Debug.Assert(entryAnnotation != null, "entryAnnotation != null");
-            Debug.Assert(entityResourceSet != null, "entityResourceSet != null");
             Debug.Assert(entityResourceType != null, "entityResourceType != null");
-            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
+            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType
+                || entityResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "Only entity types can be specified for entities.");
             Debug.Assert(entityResource != null, "entityResource != null");
 
             foreach (ODataNestedResourceInfo navigationLink in entryAnnotation)
             {
                 ResourceProperty navigationProperty = entityResourceType.TryResolvePropertyName(navigationLink.Name, exceptKind: ResourcePropertyKind.Stream);
                 Debug.Assert(navigationProperty != null, "ODataLib reader should have already validated that all navigation properties are declared and none is open.");
-                Debug.Assert(navigationProperty.TypeKind == ResourceTypeKind.EntityType, "Navigation properties should already be validated by ODataLib to be of entity types.");
+                Debug.Assert(navigationProperty.TypeKind == ResourceTypeKind.EntityType
+                    || navigationProperty.TypeKind == ResourceTypeKind.ComplexType
+                    || (navigationProperty.TypeKind == ResourceTypeKind.Collection
+                    && navigationProperty.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType), "Navigation properties should already be validated by ODataLib to be of entity types.");
 
-                this.ApplyNavigationProperty(navigationLink, entityResourceSet, entityResourceType, navigationProperty, entityResource);
+                if(navigationProperty.ResourceType.ResourceTypeKind == ResourceTypeKind.EntityType)
+                {
+                    this.ApplyNavigationProperty(navigationLink, entityResourceSet, entityResourceType, navigationProperty, entityResource);
+                }
+            }
+        }
+
+        private void ApplyComplexProperties(
+            ODataEntryAnnotation entryAnnotation,
+            ResourceType entityResourceType,
+            object entityResource)
+        {
+            Debug.Assert(entryAnnotation != null, "entryAnnotation != null");
+            Debug.Assert(entityResourceType != null, "entityResourceType != null");
+            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType
+                || entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
+            Debug.Assert(entityResource != null, "entityResource != null");
+
+            foreach (ODataNestedResourceInfo navigationLink in entryAnnotation)
+            {
+                ResourceProperty navigationProperty = entityResourceType.TryResolvePropertyName(navigationLink.Name, exceptKind: ResourcePropertyKind.Stream);
+                if (navigationProperty.TypeKind == ResourceTypeKind.ComplexType)
+                {
+                    this.ApplyComplexProperty(navigationLink, entityResourceType, navigationProperty, entityResource);
+                }
             }
         }
 
@@ -463,16 +506,14 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(entityResourceSet != null, "entityResourceSet != null");
             Debug.Assert(entityResourceType != null, "entityResourceType != null");
-            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
-            Debug.Assert(navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType, "navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType");
+            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType
+                || entityResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "Only entity types can be specified for entities.");
+            Debug.Assert(navigationProperty != null
+                && (navigationProperty.TypeKind == ResourceTypeKind.EntityType
+                ||  navigationProperty.TypeKind == ResourceTypeKind.ComplexType)
+                , "navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType");
             Debug.Assert(navigationLink.Name == navigationProperty.Name, "The navigationProperty must have the same name as the navigationLink to apply.");
             Debug.Assert(entityResource != null, "entityResource != null");
-
-            ResourceSetWrapper targetResourceSet = null;
-
-            // Get the target resource set for the navigation property, this also causes validation of the resource set and thus migth fail.
-            // WCF DS Used to do this in ATOM only if the link was expanded, which was a security issue we decided to fix, so now we do it always.
-            targetResourceSet = this.GetNavigationPropertyTargetResourceSet(entityResourceSet, entityResourceType, navigationProperty);
 
             ODataNavigationLinkAnnotation navigationLinkAnnotation = navigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
             Debug.Assert(navigationLinkAnnotation != null, "navigationLinkAnnotation != null");
@@ -498,6 +539,15 @@ namespace Microsoft.OData.Service.Serializers
                     continue;
                 }
 
+                ResourceSetWrapper targetResourceSet= null;
+
+                if(entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType)
+                {
+                    // Get the target resource set for the navigation property, this also causes validation of the resource set and thus migth fail.
+                    // WCF DS Used to do this in ATOM only if the link was expanded, which was a security issue we decided to fix, so now we do it always.
+                    targetResourceSet = this.GetNavigationPropertyTargetResourceSet(entityResourceSet, entityResourceType, navigationProperty);
+                }
+
                 ODataResourceSet feed = childItem as ODataResourceSet;
                 if (feed != null)
                 {
@@ -510,6 +560,54 @@ namespace Microsoft.OData.Service.Serializers
                 this.ApplyEntryInNavigationProperty(navigationProperty, targetResourceSet, entityResource, entry);
             }
         }
+
+        private void ApplyComplexProperty(
+            ODataNestedResourceInfo navigationLink,
+            ResourceType entityResourceType,
+            ResourceProperty navigationProperty,
+            object entityResource)
+        {
+            Debug.Assert(navigationLink != null, "navigationLink != null");
+            Debug.Assert(entityResourceType != null, "entityResourceType != null");
+            Debug.Assert(entityResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType ||
+            entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "Only entity types can be specified for entities.");
+            Debug.Assert(navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.ComplexType 
+                , "navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.ComplexType");
+            Debug.Assert(navigationLink.Name == navigationProperty.Name, "The navigationProperty must have the same name as the navigationLink to apply.");
+            Debug.Assert(entityResource != null, "entityResource != null");
+
+            ODataNavigationLinkAnnotation navigationLinkAnnotation = navigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
+            Debug.Assert(navigationLinkAnnotation != null, "navigationLinkAnnotation != null");
+            Debug.Assert(navigationLinkAnnotation.Count > 0, "Each navigation link must have at least one child in request.");
+            Debug.Assert(navigationLink.IsCollection.HasValue, "We should know the cardinality of the navigation link by now.");
+
+            // We have to allow IsCollection=false for ResourceSetReference properties as well.
+            Debug.Assert(
+                navigationLink.IsCollection == true || (navigationLinkAnnotation.Count == 1),
+                "If the navigation link is a singleton, then there must be exactly one child in it and the property must be a singleton as well.");
+            Debug.Assert(
+                navigationLink.IsCollection == false || (navigationProperty.Kind == ResourcePropertyKind.ResourceSetReference || navigationProperty.Kind == ResourcePropertyKind.Collection),
+                "If the navigation link is a collection, then the property must be a collection as well.");
+
+            // Just loop through the navigation link content
+            // Note that if the navigation link is a singleton it must have just one item in it, so it's OK to loop anyway.
+            foreach (ODataItem childItem in navigationLinkAnnotation)
+            {
+                ODataResourceSet feed = childItem as ODataResourceSet;
+                if (feed != null)
+                {
+                    this.ApplyFeedInCollectionProperty(navigationProperty, entityResource, feed);
+                    continue;
+                }
+
+                // It must be entry by now.
+                ODataResource entry = (ODataResource)childItem;
+
+                this.ApplyEntryInComplexProperty(navigationProperty, entityResource, entry);
+            }
+        }
+
+
 
         /// <summary>
         /// Applies an entity reference link (value of a navigation link) to an entity.
@@ -594,6 +692,58 @@ namespace Microsoft.OData.Service.Serializers
             }
         }
 
+        private void ApplyFeedInCollectionProperty(
+            ResourceProperty navigationProperty,
+            object entityResource,
+            ODataResourceSet feed)
+        {
+            Debug.Assert(
+                navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType,
+                "navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType");
+            Debug.Assert(
+                navigationProperty.Kind == ResourcePropertyKind.ResourceSetReference,
+                "ODataLib reader should never report a feed for a singleton navigation property.");
+            Debug.Assert(entityResource != null, "entityResource != null");
+            Debug.Assert(feed != null, "feed != null");
+
+            ODataFeedAnnotation feedAnnotation = feed.GetAnnotation<ODataFeedAnnotation>();
+            Debug.Assert(feedAnnotation != null, "Each feed we create should gave annotation on it.");
+
+            // Deep insert is not allowed in updates.
+            // In JSON we must not fail due to deep updates if the feed is empty. In JSON empty array is reported as an empty feed
+            // but there's no telling if it means empty deep update array or empty array of bindings.
+            if (this.Update && feedAnnotation.Count > 0)
+            {
+                throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.BadRequest_DeepUpdateNotSupported);
+            }
+
+            SegmentInfo propertySegmentInfo = CreateSegment(navigationProperty, navigationProperty.Name, null, false /* singleResult */);
+            Debug.Assert(propertySegmentInfo.TargetKind != RequestTargetKind.OpenProperty, "Open navigation properties are not supported on OpenTypes.");
+            Debug.Assert(
+                    propertySegmentInfo.TargetSource == RequestTargetSource.Property &&
+                    propertySegmentInfo.TargetKind == RequestTargetKind.Resource &&
+                    propertySegmentInfo.SingleResult == false,
+                    "Must be navigation set property.");
+
+            IList collectionList = Deserializer.CreateNewCollection();
+
+            this.RecurseEnter();
+
+            // Look through the entries in the feed.
+            foreach (ODataResource entryInFeed in feedAnnotation)
+            {
+                // For each entry create the corresponding entity resource.
+                object childEntityResource = this.CreateNestedEntityAndApplyProperties(propertySegmentInfo, entryInFeed);
+                Debug.Assert(childEntityResource != null, "Non top-level entries should never produce null entity resource.");
+
+                collectionList.Add(childEntityResource);
+            }
+            this.RecurseLeave();
+
+            var collection = Deserializer.GetReadOnlyCollection(collectionList, navigationProperty.ResourceType as CollectionResourceType);
+            Deserializer.SetPropertyValue(navigationProperty, entityResource, collection, this.Service);
+        }
+
         /// <summary>
         /// Applies an entry which is the content of a navigation property to the specified entity resource.
         /// </summary>
@@ -609,12 +759,12 @@ namespace Microsoft.OData.Service.Serializers
             ODataResource entry)
         {
             Debug.Assert(
-                navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType,
+                navigationProperty != null && (navigationProperty.TypeKind == ResourceTypeKind.EntityType || navigationProperty.TypeKind == ResourceTypeKind.ComplexType),
                 "navigationProperty != null && navigationProperty.TypeKind == ResourceTypeKind.EntityType");
             Debug.Assert(
-                navigationProperty.Kind == ResourcePropertyKind.ResourceReference,
+                navigationProperty.Kind == ResourcePropertyKind.ResourceReference
+                || navigationProperty.Kind == ResourcePropertyKind.ComplexType,
                 "ODataLib reader should never report an entry for a collection navigation property.");
-            Debug.Assert(targetResourceSet != null, "targetResourceSet != null");
             Debug.Assert(entityResource != null, "entityResource != null");
 
             // Deep insert is not allowed in updates, unless it's JSON and the deep insert is a null value.
@@ -629,13 +779,40 @@ namespace Microsoft.OData.Service.Serializers
             }
             else
             {
-                Debug.Assert(targetResourceSet != null, "targetResourceSet != null");
                 SegmentInfo propertySegmentInfo = CreateSegment(navigationProperty, navigationProperty.Name, targetResourceSet, true /* singleResult */);
                 Debug.Assert(propertySegmentInfo.TargetKind != RequestTargetKind.OpenProperty, "Open navigation properties are not supported on OpenTypes.");
 
                 object childEntityResource = this.CreateNestedEntityAndApplyProperties(propertySegmentInfo, entry);
 
+
                 this.Updatable.SetReference(entityResource, navigationProperty.Name, childEntityResource);
+            }
+        }
+
+        private void ApplyEntryInComplexProperty(
+            ResourceProperty complexProperty,
+            object entityResource,
+            ODataResource entry)
+        {
+            Debug.Assert(
+                complexProperty != null && (complexProperty.TypeKind == ResourceTypeKind.EntityType || complexProperty.TypeKind == ResourceTypeKind.ComplexType),
+                "complexProperty != null && complexProperty.TypeKind == ResourceTypeKind.EntityType");
+            Debug.Assert(
+                complexProperty.Kind == ResourcePropertyKind.ResourceReference
+                || complexProperty.Kind == ResourcePropertyKind.ComplexType,
+                "ODataLib reader should never report an entry for a collection navigation property.");
+            Debug.Assert(entityResource != null, "entityResource != null");
+
+            if (entry == null)
+            {
+                Deserializer.SetPropertyValue(complexProperty, entityResource, null, this.Service);
+            }
+            else
+            {
+                SegmentInfo propertySegmentInfo = CreateSegment(complexProperty, complexProperty.Name, null, true /* singleResult */);
+
+                object childEntityResource = this.CreateNestedEntityAndApplyProperties(propertySegmentInfo, entry);
+                Deserializer.SetPropertyValue(complexProperty, entityResource, childEntityResource, this.Service);
             }
         }
 
@@ -658,7 +835,8 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             // For open properties, we will assume that this is a reference property and set it to null
-            Debug.Assert(navigationProperty.Kind == ResourcePropertyKind.ResourceReference, "Only navigation properties are allowed in this method.");
+            Debug.Assert(navigationProperty.Kind == ResourcePropertyKind.ResourceReference
+                || navigationProperty.Kind == ResourcePropertyKind.ComplexType, "Only navigation properties are allowed in this method.");
             this.Updatable.SetReference(entityResource, navigationProperty.Name, null);
         }
 
@@ -710,13 +888,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(parentResourceType != null, "parentResourceType != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
-            ResourceSetWrapper targetResourceSet = this.Service.Provider.GetResourceSet(parentResourceSet, parentResourceType, navigationProperty);
-            if (targetResourceSet == null)
-            {
-                throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.BadRequest_InvalidPropertyNameSpecified(navigationProperty.Name, parentResourceType.FullName));
-            }
-
-            return targetResourceSet;
+            return this.Service.Provider.GetResourceSet(parentResourceSet, parentResourceType, navigationProperty);
         }
 
         /// <summary>

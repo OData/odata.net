@@ -20,9 +20,9 @@ namespace Microsoft.OData
     internal sealed class ResourceSetWithoutExpectedTypeValidator
     {
         /// <summary>
-        /// The base type for all entries in the resource set.
+        /// The base type for all items in the resource set.
         /// </summary>
-        private IEdmEntityType itemType;
+        private IEdmStructuredType itemType;
 
         /// <summary>
         /// Constructor.
@@ -35,7 +35,7 @@ namespace Microsoft.OData
         /// Validates the type of a resource in a top-level resource set.
         /// </summary>
         /// <param name="resourceType">The type of the resource.</param>
-        internal void ValidateResource(IEdmEntityType resourceType)
+        internal void ValidateResource(IEdmStructuredType resourceType)
         {
             Debug.Assert(resourceType != null, "entityType != null");
 
@@ -58,7 +58,7 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.FeedWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), this.itemType.FullTypeName()));
             }
 
-            this.itemType = (IEdmEntityType)commonBaseType;
+            this.itemType = (IEdmStructuredType)commonBaseType;
         }
     }
 }

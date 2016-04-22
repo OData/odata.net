@@ -68,8 +68,8 @@ namespace Microsoft.OData.Tests.Evaluation
                 this.edmModel,
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
-            context.OperationsBoundToEntityTypeMustBeContainerQualified(closedType).Should().BeFalse();
-            context.OperationsBoundToEntityTypeMustBeContainerQualified(openType).Should().BeTrue();
+            context.OperationsBoundToStructuredTypeMustBeContainerQualified(closedType).Should().BeFalse();
+            context.OperationsBoundToStructuredTypeMustBeContainerQualified(openType).Should().BeTrue();
         }
     }
 }

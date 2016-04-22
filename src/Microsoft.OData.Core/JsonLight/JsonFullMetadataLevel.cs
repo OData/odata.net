@@ -98,18 +98,18 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resource">The resource to create the metadata builder for.</param>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
         /// <param name="serializationInfo">The serialization info for the resource.</param>
-        /// <param name="actualEntityType">The entity type of the resource.</param>
+        /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        /// <param name="isResponse">true if the entity metadata builder to create should be for a response payload; false for a request.</param>
+        /// <param name="isResponse">true if the resource metadata builder to create should be for a response payload; false for a request.</param>
         /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
-        internal override ODataResourceMetadataBuilder CreateEntityMetadataBuilder(
+        internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
             ODataResource resource, 
             IODataResourceTypeContext typeContext, 
             ODataResourceSerializationInfo serializationInfo,
-            IEdmEntityType actualEntityType, 
+            IEdmStructuredType actualResourceType,  
             SelectedPropertiesNode selectedProperties, 
             bool isResponse, 
             bool? keyAsSegment,
@@ -128,7 +128,7 @@ namespace Microsoft.OData.JsonLight
             UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(keyAsSegment, typeContext);
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri, urlConvention);
 
-            IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualEntityType, metadataContext, selectedProperties);
+            IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties);
             return new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
         }
 
