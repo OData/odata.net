@@ -1808,7 +1808,7 @@ namespace Microsoft.OData.Client
                 // Call Order: Do not short circuit the get key properties call
                 // in V1 we will always call this for memberaccess expr, and thus always create a client type.
                 // There are certain types that we don't support and this could be throwing.
-#if DNXCORE50
+#if PORTABLELIB
                 Type resourceType = pi.DeclaringType;
 #else
                 Type resourceType = pi.ReflectedType;
@@ -2876,7 +2876,7 @@ namespace Microsoft.OData.Client
                         {
                             foundInstance = unaryInstance.Operand;
                         }
-#if DNXCORE50
+#if PORTABLELIB
                         Type resourceType = propertyMember.Member.DeclaringType;
 #else
                         Type resourceType = propertyMember.Member.ReflectedType;

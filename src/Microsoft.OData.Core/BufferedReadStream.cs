@@ -261,7 +261,7 @@ namespace Microsoft.OData.Core
                     currentBuffer = this.AddNewBuffer();
                 }
 
-#if DNXCORE50
+#if PORTABLELIB
                 yield return inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes)
                     .ContinueWith(t =>
                     {

@@ -209,7 +209,7 @@ namespace Microsoft.OData.Core
         /// Asynchronous flush operation. This will flush all buffered bytes to the underlying stream through asynchronous writes.
         /// </summary>
         /// <returns>The task representing the asynchronous flush operation.</returns>
-#if DNX451 || DNXCORE50
+#if PORTABLELIB
         internal new Task FlushAsync()
 #else
         internal Task FlushAsync()
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Core
             public Task WriteToStreamAsync(Stream stream)
             {
                 Debug.Assert(stream != null, "stream != null");
-#if DNXCORE50
+#if PORTABLELIB
                 return stream.WriteAsync(this.buffer, 0, this.storedCount);
 #else
                 return Task.Factory.FromAsync(

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.Spatial</AssemblyName>
@@ -14,7 +14,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <DefineConstants>$(DefineConstants);SPATIAL;DNXCORE50;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+    <DefineConstants>$(DefineConstants);SPATIAL;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <EnableLocalization>true</EnableLocalization>
   </PropertyGroup>
   <!-- References -->

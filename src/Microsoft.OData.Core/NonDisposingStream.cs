@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.IO;
-#if DNXCORE50
+#if PORTABLELIB
     using System.Threading;
     using System.Threading.Tasks;
 #endif
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Core
             return this.innerStream.Read(buffer, offset, count);
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <inheritdoc />
         public async override Task<int> ReadAsync(
             byte[] buffer,
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core
             this.innerStream.Write(buffer, offset, count);
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {

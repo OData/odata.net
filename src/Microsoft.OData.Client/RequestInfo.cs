@@ -91,7 +91,7 @@ namespace Microsoft.OData.Client
             get
             {
                 Debug.Assert(this.Context.ResolveName != null, "this.context.ResolveName != null.");
-#if DNXCORE50
+#if PORTABLELIB
     // Func<>.Method property does not exist on Win8 and there is no other way to access any MethodInfo that is behind the Func,
     // so we have no way to determine if the Func was supplied by the user or if it's the one provided by codegen.
     // In this case we will always assume it's the one provided by codegen, which means we'll try to resolve the name using the entity descriptor

@@ -874,7 +874,7 @@ namespace Microsoft.OData.Core {
         ResourceManager resources;
 
         internal TextRes() {
-#if !DNXCORE50
+#if !PORTABLELIB
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetTypeInfo().Assembly);

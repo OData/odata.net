@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.IO;
     using System.Threading;
-#if DNXCORE50
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core;
@@ -302,7 +302,7 @@ namespace Microsoft.OData.Client
             return PostInvokeAsync(asyncResult, callback);
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>
         /// This is the Win8 version of the InvokeAsync overload below. See comments on that method for more details.
         /// </summary>
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Client
                 pereq.RequestContentBufferValidLength = -1;
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetRequestStream_BeforeBeginRead");
-#if DNXCORE50
+#if PORTABLELIB
                 asyncResult = BaseAsyncResult.InvokeTask(contentStream.Stream.ReadAsync, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncState);
 #else
                 asyncResult = BaseAsyncResult.InvokeAsync(contentStream.Stream.BeginRead, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncState);
@@ -629,7 +629,7 @@ namespace Microsoft.OData.Client
             return asyncResult;
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>
         /// This is the Win8 version of the PostInvokeAsync method above. Note that method is still used where possible on Win8, but there are some
         /// case where the Win8 API has been completely migrated to use Task, so this method supports that usage.
@@ -680,7 +680,7 @@ namespace Microsoft.OData.Client
             };
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>
         /// This is the Win8 version of the GetDataServiceAsyncCallback overload above. See comments on that method for more details.
         /// </summary>
@@ -723,7 +723,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>
         /// Callback for Stream.ReadAsync on the request content input stream. Calls request content output stream WriteAsync
         /// and in case of synchronous also the next ReadAsync.
@@ -741,11 +741,11 @@ namespace Microsoft.OData.Client
         private void AsyncRequestContentEndRead(IAsyncResult asyncResult)
 #endif
         {
-#if DNXCORE50
+#if PORTABLELIB
             IAsyncResult asyncResult = (IAsyncResult)task;
 #endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if DNXCORE50
+#if PORTABLELIB
             AsyncStateBag asyncStateBag = asyncState as AsyncStateBag;
 #else
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
@@ -766,7 +766,7 @@ namespace Microsoft.OData.Client
                 Stream httpRequestStream = Util.NullCheck(pereq.RequestStream, InternalError.InvalidEndReadStream);
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncRequestContentEndRead_BeforeEndRead");
-#if DNXCORE50
+#if PORTABLELIB
                 int count = ((Task<int>)task).Result;
 #else
                 int count = contentStream.Stream.EndRead(asyncResult);
@@ -784,7 +784,7 @@ namespace Microsoft.OData.Client
                         {
                             // Write the data we've read to the request stream
                             Util.DebugInjectFault("SaveAsyncResult::AsyncRequestContentEndRead_BeforeBeginWrite");
-#if DNXCORE50
+#if PORTABLELIB
                             asyncResult = BaseAsyncResult.InvokeTask(httpRequestStream.WriteAsync, pereq.RequestContentBuffer, 0, pereq.RequestContentBufferValidLength, this.AsyncEndWrite, asyncStateBag);
 #else
                             asyncResult = BaseAsyncResult.InvokeAsync(httpRequestStream.BeginWrite, pereq.RequestContentBuffer, 0, pereq.RequestContentBufferValidLength, this.AsyncEndWrite, asyncStateBag);
@@ -797,7 +797,7 @@ namespace Microsoft.OData.Client
                             if (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally)
                             {
                                 Util.DebugInjectFault("SaveAsyncResult::AsyncRequestContentEndRead_BeforeBeginRead");
-#if DNXCORE50
+#if PORTABLELIB
                                 asyncResult = BaseAsyncResult.InvokeTask(contentStream.Stream.ReadAsync, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
 #else
                                 asyncResult = BaseAsyncResult.InvokeAsync(contentStream.Stream.BeginRead, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
@@ -842,7 +842,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>Handle requestStream.WriteAsync and complete the write operation, then call BeginGetResponse.</summary>
         /// <param name="task">The task associated with the completed operation.</param>
         /// <param name="asyncState">State associated with the task.</param>
@@ -856,11 +856,11 @@ namespace Microsoft.OData.Client
         private void AsyncEndWrite(IAsyncResult asyncResult)
 #endif
         {
-#if DNXCORE50
+#if PORTABLELIB
             IAsyncResult asyncResult = (IAsyncResult)task;
 #endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if DNXCORE50
+#if PORTABLELIB
             AsyncStateBag asyncStateBag = asyncState as AsyncStateBag;
 #else
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
@@ -879,7 +879,7 @@ namespace Microsoft.OData.Client
                 Util.NullCheck(contentStream.Stream, InternalError.InvalidEndWriteStream);
                 Stream httpRequestStream = Util.NullCheck(pereq.RequestStream, InternalError.InvalidEndWriteStream);
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndWrite_BeforeEndWrite");
-#if DNXCORE50
+#if PORTABLELIB
                 // Ensure we surface any errors that may have occurred during the write operation
                 task.Wait();
 #else
@@ -894,7 +894,7 @@ namespace Microsoft.OData.Client
                 if (!asyncResult.CompletedSynchronously)
                 {
                     Util.DebugInjectFault("SaveAsyncResult::AsyncEndWrite_BeforeBeginRead");
-#if DNXCORE50
+#if PORTABLELIB
                     asyncResult = BaseAsyncResult.InvokeTask(contentStream.Stream.ReadAsync, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
 #else
                     asyncResult = BaseAsyncResult.InvokeAsync(contentStream.Stream.BeginRead, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
