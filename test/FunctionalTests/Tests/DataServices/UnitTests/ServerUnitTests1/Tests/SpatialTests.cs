@@ -428,14 +428,6 @@ namespace AstoriaUnitTests.Tests.Server
             TestSpatialMetadata(DSPDataProviderKind.CustomProvider);
         }
 
-#if !EFRTM
-        [TestMethod, Variation("Verify spatial properties are represented correctly in $metadata for ObjectContextServiceProvider")]
-        public void SpatialMetadataObjectContext()
-        {
-            TestSpatialMetadata(DSPDataProviderKind.EF);
-        }
-#endif
-
         #endregion
 
         #region Helper Methods

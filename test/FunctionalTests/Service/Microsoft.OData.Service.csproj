@@ -7,7 +7,7 @@
     <TransparentAssembly>true</TransparentAssembly>
     <SecurityMigration>false</SecurityMigration>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <DefineConstants>$(DefineConstants);ODATA_SERVICE;ASTORIA_OPEN_OBJECT;EFRTM</DefineConstants>
+    <DefineConstants>$(DefineConstants);ODATA_SERVICE;ASTORIA_OPEN_OBJECT</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
     <ProjectGuid>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</ProjectGuid>
@@ -372,7 +372,6 @@
     <Compile Include="Microsoft\OData\Service\Providers\OperationKind.cs" />
     <Compile Include="Microsoft\OData\Service\Providers\ResourceSetPathExpression.cs" />
     <Compile Include="Microsoft\OData\Service\Providers\ServiceAction.cs" />
-    <Compile Include="Microsoft\OData\Service\ObjectContextSpatialUtil.cs" />
     <Compile Include="Microsoft\OData\Service\Providers\ResourceReferentialConstraint.cs" />
     <!-- Code Analysis suppressions. -->
     <Compile Include="GlobalSuppressions.cs" />

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP
-
 namespace Microsoft.OData.Core
 {
     /// <summary>
@@ -38,4 +36,3 @@ namespace Microsoft.OData.Core
         EdmLibraryExtensions_Clone_PrimitiveTypeKind,
     }
 }
-#endif

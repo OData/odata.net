@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
 namespace Microsoft.OData.Core.UriParser
 {
     using System;
@@ -240,5 +238,3 @@ namespace Microsoft.OData.Core.UriParser
         }
     }
 }
-
-#endif

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
@@ -69,5 +67,3 @@ namespace Microsoft.OData.Core
         }
     }
 }
-
-#endif

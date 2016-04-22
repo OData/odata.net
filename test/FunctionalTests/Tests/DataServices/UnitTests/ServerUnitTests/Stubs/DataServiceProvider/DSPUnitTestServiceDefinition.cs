@@ -177,34 +177,8 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
         {
             PropertyInfo propertyInfo = instance.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
 
-#if !EFRTM
-            // If the underlying property is DbGeography, we need to convert from the Geography value we have into a DbGeography instance.
-            if (typeof(DbGeography).IsAssignableFrom(propertyInfo.PropertyType))
-            {
-                Geography geography = (Geography)propertyValue;
-                string wellKnownText = GetWellKnownText(geography);
-                propertyValue = DbGeography.FromText(wellKnownText, geography.CoordinateSystem != null ? geography.CoordinateSystem.Id : CoordinateSystem.DefaultGeography.Id);                
-            }
-#endif
-
             propertyInfo.GetSetMethod().Invoke(instance, new object[] { propertyValue });
         }
-
-#if !EFRTM
-        /// <summary>
-        /// Get the Well Known Text format that DbGeography supports. This is a little different from the Well Known Text that is output
-        /// by Microsoft.Data.Spatial.Geography types, so we can't just directly use that representation here.
-        /// </summary>
-        /// <param name="geography">Geography instance to convert to Well Known Text.</param>
-        /// <returns>Well Known Text for the specified geography instance.</returns>
-        private static string GetWellKnownText(Geography geography)
-        {
-            string extendedWKT = geography.ToString();
-            int semicolon = extendedWKT.IndexOf(';');
-            Assert.IsTrue(semicolon > 0, "Expected to find a semicolon in the extended WellKnownText output (using ToString) for the type {0}", geography.GetType());
-            return extendedWKT.Substring(semicolon + 1);
-        }
-#endif
 
         private static object GetPropertyValue(object instance, string propertyName)
         {
@@ -282,11 +256,8 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
 
                         // Entity Framework's spatial types are not currently the same as the type we use, so we need to use their type for the entity property
                         Type resourcePropertyType = property.ResourceType.InstanceType;
-#if !EFRTM
-                        Type efPropertyType = typeof(Geography).IsAssignableFrom(resourcePropertyType) ? typeof(System.Data.Spatial.DbGeography) : resourcePropertyType;
-#else
                         Type efPropertyType = resourcePropertyType;
-#endif
+
                         stringBuilder.AppendLine(String.Format("public {0} {1} {{ get; set; }}", efPropertyType.ToCSharpString(), property.Name));
                     }
                     else if (IsPropertyKind(property, ResourcePropertyKind.ComplexType) ||

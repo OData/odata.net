@@ -14,8 +14,6 @@ using Microsoft.OData.Core.Evaluation;
 using Microsoft.OData.Core.Metadata;
 using Microsoft.OData.Edm;
 
-#if !INTERNAL_DROP || ODATALIB
-
 namespace Microsoft.OData.Core.UriParser
 {
     /// <summary>
@@ -233,4 +231,3 @@ namespace Microsoft.OData.Core.UriParser
         }
     }
 }
-#endif

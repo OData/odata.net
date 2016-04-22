@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
@@ -222,5 +220,3 @@ namespace Microsoft.OData.Core.UriParser
         }
     }
 }
-
-#endif

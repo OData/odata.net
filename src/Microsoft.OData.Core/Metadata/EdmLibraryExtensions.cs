@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP
 namespace Microsoft.OData.Core.Metadata
 {
     #region Namespaces
@@ -2320,4 +2319,3 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
     }
 }
-#endif

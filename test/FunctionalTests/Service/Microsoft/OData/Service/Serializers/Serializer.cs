@@ -234,12 +234,6 @@ namespace Microsoft.OData.Service.Serializers
                 return ((Binary)propertyValue).ToArray();
             }
 
-#if !INTERNAL_DROP && !EFRTM
-            if (ObjectContextSpatialUtil.IsDbGeography(type))
-            {
-                return ObjectContextSpatialUtil.ConvertDbGeography(propertyValue);
-            }
-#endif
             // Since WCF DS support DateTime Clr type, it needs to convert into DateTimeOffset before passing to ODataLib
             // for serialization.
             if (type == typeof(DateTime))

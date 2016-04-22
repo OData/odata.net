@@ -235,11 +235,7 @@ namespace AstoriaUnitTests.Tests.Server
 
             Action test = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
 
-#if !EFRTM
-            string expectedFunctions = "geo.distance(System.Data.Spatial.Geography.GeographyPoint, System.Data.Spatial.Geography.GeographyPoint); geo.distance(System.Data.Spatial.DbGeography, System.Data.Spatial.Geography.GeographyPoint); geo.distance(System.Data.Spatial.DbGeography, System.Data.Spatial.DbGeography); geo.distance(System.Data.Spatial.Geography.GeographyPoint, System.Data.Spatial.DbGeography)";
-#else
             string expectedFunctions = "geo.distance(System.Data.Spatial.Geography.GeographyPoint, System.Data.Spatial.Geography.GeographyPoint)";
-#endif
 
             test.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Service.Strings.RequestQueryParser_NoApplicableFunction(
                             "geo.distance",

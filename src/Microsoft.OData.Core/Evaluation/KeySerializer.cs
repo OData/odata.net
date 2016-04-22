@@ -43,8 +43,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal static KeySerializer Create(UrlConvention urlConvention)
         {
-#if ODATALIB
-#endif
             Debug.Assert(urlConvention != null, "UrlConvention != null");
 
             if (urlConvention.GenerateKeyAsSegment)
@@ -121,7 +119,7 @@ namespace Microsoft.OData.Core.Evaluation
                     builder.Append(getPropertyName(property));
                     builder.Append('=');
                 }
-                
+
                 var keyValueText = GetKeyValueAsString(getPropertyValue, property, literalFormatter);
                 builder.Append(keyValueText);
             }
@@ -134,14 +132,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         private sealed class DefaultKeySerializer : KeySerializer
         {
-#if ODATALIB
-            /// <summary>
-            /// Creates a new instance of <see cref="DefaultKeySerializer"/>.
-            /// </summary>
-            internal DefaultKeySerializer()
-            {
-            }
-#endif
             /// <summary>
             /// Appends the key expression for an entity to the given <see cref="StringBuilder"/>
             /// </summary>

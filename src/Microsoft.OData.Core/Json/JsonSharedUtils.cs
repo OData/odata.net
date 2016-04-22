@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
 namespace Microsoft.OData.Core.Json
 {
     #region Namespaces
@@ -54,15 +52,13 @@ namespace Microsoft.OData.Core.Json
                     double doubleValue = (double)primitiveValue.Value;
 
                     // If a double value is positive infinity, negative infinity, or NaN, we serialize the double as a string.
-                    // Thus the reader can't infer the type from the JSON representation, and we must write the type name explicitly 
+                    // Thus the reader can't infer the type from the JSON representation, and we must write the type name explicitly
                     // (i.e., if the property is open or the property type is assumed to be unknown, as is the case when writing in full metadata mode).
                     return !IsDoubleValueSerializedAsString(doubleValue);
-                
+
                 default:
                     return false;
             }
         }
     }
 }
-
-#endif

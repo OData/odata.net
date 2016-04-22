@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
 using System;
 using System.Diagnostics;
 using System.Xml;
@@ -146,5 +144,3 @@ namespace Microsoft.OData.Core
         }
     }
 }
-
-#endif

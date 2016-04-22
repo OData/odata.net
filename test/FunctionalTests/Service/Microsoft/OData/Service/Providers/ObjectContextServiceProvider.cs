@@ -492,14 +492,6 @@ namespace Microsoft.OData.Service.Providers
                 throw new InvalidOperationException(Strings.ObjectContext_PropertyNotDefinedOnType(resourceType.FullName, propertyName));
             }
 
-#if !INTERNAL_DROP && !EFRTM
-            // If the new value is a Geography, we need to convert it to the DbGeography type that EF understands
-            if (typeof(Geography).IsInstanceOfType(propertyValue))
-            {
-                propertyValue = ObjectContextSpatialUtil.ConvertGeography((Geography)propertyValue);
-            }
-#endif
-
             // is target Resource going to be replaced?
             // See comment in ResetResources
             object replacedTarget;
@@ -890,11 +882,8 @@ namespace Microsoft.OData.Service.Providers
                 switch (member.EdmTypeKind)
                 {
                     case BuiltInTypeKind.PrimitiveType:
-#if !INTERNAL_DROP && !EFRTM
-                        Type propertyClrType = ObjectContextSpatialUtil.IsDbGeography(propertyInfo.PropertyType) ? typeof(Geography) : propertyInfo.PropertyType;
-#else
+
                         Type propertyClrType = propertyInfo.PropertyType;
-#endif
                         propertyType = primitiveResourceTypeMap.GetPrimitive(propertyClrType);
 
                         if (propertyType == null)
