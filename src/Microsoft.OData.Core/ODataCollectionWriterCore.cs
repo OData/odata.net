@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core
             this.WriteStartImplementation(collectionStart);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a collection.
         /// </summary>
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Core
             this.WriteItemImplementation(item);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a collection item.
         /// </summary>
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a collection.
         /// </summary>
@@ -302,7 +302,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -464,7 +464,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataCollectionWriterCore_AsyncCallOnSyncWriter);

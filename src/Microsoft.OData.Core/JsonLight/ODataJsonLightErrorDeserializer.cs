@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Json;
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
 
         /// <summary>
         /// Read a top-level error.

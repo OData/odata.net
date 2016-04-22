@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Collections.Generic;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core
             return false;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes a stream.
         /// </summary>

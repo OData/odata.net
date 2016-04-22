@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Json;
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.JsonLight
             return serviceDocument;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 

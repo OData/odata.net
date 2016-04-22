@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Metadata;
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateResourceSetReaderImplementation(entitySet, expectedBaseEntityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateResourceReaderImplementation(navigationSource, expectedEntityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
@@ -237,7 +237,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateCollectionReaderImplementation(expectedItemTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataCollectionReader"/>.
         /// </summary>
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightPropertyAndValueDeserializer.ReadTopLevelProperty(expectedPropertyTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read the property from the input and 
         /// return an <see cref="ODataProperty"/> representing the read property.
@@ -299,7 +299,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightErrorDeserializer.ReadTopLevelError();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level error.
         /// </summary>
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateParameterReaderImplementation(operation);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightServiceDocumentDeserializer.ReadServiceDocument();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a service document. 
         /// This method reads the service document from the input and returns 
@@ -415,7 +415,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinks();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
@@ -442,7 +442,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLink();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Core.JsonLight
             return payloadKindDetectionDeserializer.DetectPayloadKind(detectionInfo);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>

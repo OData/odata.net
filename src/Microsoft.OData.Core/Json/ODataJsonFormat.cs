@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.Json
     #region Namespaces
     using System.Collections.Generic;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.JsonLight;
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Core.Json
                 messageInfo.UrlResolver);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Core.Json
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>

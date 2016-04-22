@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Json;
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Core.JsonLight
             return entityReferenceLinks;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Core.JsonLight
             return entityReferenceLink;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>

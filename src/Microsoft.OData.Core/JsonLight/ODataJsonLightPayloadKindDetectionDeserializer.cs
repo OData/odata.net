@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Json;
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Detects the payload kind(s).
         /// </summary>

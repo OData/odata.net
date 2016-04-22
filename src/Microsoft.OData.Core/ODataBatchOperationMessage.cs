@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core
             return contentStream;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>

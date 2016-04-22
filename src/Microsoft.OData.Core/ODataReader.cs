@@ -8,7 +8,7 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core
         /// <returns>true if more items were read; otherwise false.</returns>
         public abstract bool Read();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.Core.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]

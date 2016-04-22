@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.Json
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Core.Json
             this.jsonWriter.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flush the writer.
         /// </summary>

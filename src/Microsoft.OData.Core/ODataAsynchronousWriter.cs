@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System.Diagnostics;
     using System.Globalization;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core
             return this.CreateResponseMessageImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates a message for writing an async response.
         /// </summary>
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Core
             this.rawOutputContext.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.rawOutputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataAsyncWriter_AsyncCallOnSyncWriter);

@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using System.Xml;
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Core
             return detectedPayloadKinds;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Determines the potential payload kinds and formats of the payload being read and returns it.</summary>
         /// <returns>The set of potential payload kinds and formats for the payload being read by this reader.</returns>
         /// <remarks>When this method is called it first analyzes the content type and determines whether there
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Asynchronous);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncReader" /> to read an async response.</summary>
         /// <returns>A running task for the created async reader.</returns>
         public Task<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
@@ -347,7 +347,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceSetReaderAsync()
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
@@ -445,7 +445,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Resource);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:System.Data.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceReaderAsync()
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Collection);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
         /// <returns>A running task for the created collection reader.</returns>
         public Task<ODataCollectionReader> CreateODataCollectionReaderAsync()
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Batch);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchReader" /> to read a batch of requests or responses.</summary>
         /// <returns>A running task for the created batch reader.</returns>
         public Task<ODataBatchReader> CreateODataBatchReaderAsync()
@@ -557,7 +557,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Parameter);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterReader" /> to read the parameters for <paramref name="operation"/>.
         /// </summary>
@@ -582,7 +582,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.ServiceDocument);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads a service document payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the service document.</returns>
         public Task<ODataServiceDocument> ReadServiceDocumentAsync()
@@ -627,7 +627,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Property);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the property.</returns>
         public Task<ODataProperty> ReadPropertyAsync()
@@ -673,7 +673,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Error);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the error.</returns>
         public Task<ODataError> ReadErrorAsync()
@@ -695,7 +695,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.EntityReferenceLinks);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads the result of a $ref query as the message payload.</summary>
         /// <returns>A task representing the asynchronous reading of the entity reference links.</returns>
         public Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
@@ -717,7 +717,7 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.EntityReferenceLink);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads a singleton result of a $ref query (entity reference link) as the message payload.</summary>
         /// <returns>A running task representing the reading of the entity reference link.</returns>
         public Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
@@ -743,7 +743,7 @@ namespace Microsoft.OData.Core
                 supportedPayloadKinds);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads a single value as the message body.
         /// </summary>
@@ -1215,7 +1215,7 @@ namespace Microsoft.OData.Core
                     {
                         Encoding = this.encoding,
                         GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                         GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                         IsResponse = this.readingResponse,
@@ -1277,7 +1277,7 @@ namespace Microsoft.OData.Core
             return first.PayloadKind < second.PayloadKind ? -1 : 1;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Get an enumerable of tasks to get the supported payload kinds for all formats.
         /// </summary>
@@ -1299,7 +1299,7 @@ namespace Microsoft.OData.Core
                 {
                     Encoding = this.encoding,
                     GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.readingResponse,
@@ -1350,7 +1350,7 @@ namespace Microsoft.OData.Core
                 {
                     Encoding = this.encoding,
                     GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.readingResponse,

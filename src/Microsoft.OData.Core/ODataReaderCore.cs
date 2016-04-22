@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -501,7 +501,7 @@ namespace Microsoft.OData.Core
             return this.ReadImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -654,7 +654,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.inputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataReaderCore_AsyncCallOnSyncReader);

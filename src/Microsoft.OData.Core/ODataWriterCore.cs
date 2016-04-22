@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Evaluation;
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Core
             this.WriteStartResourceSetImplementation(resourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a resourceSet.
         /// </summary>
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Core
             this.WriteStartResourceImplementation(resource);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a resource.
         /// </summary>
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Core
             this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a nested resource info.
         /// </summary>
@@ -453,7 +453,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a resourceSet/resource/nested resource info.
         /// </summary>
@@ -494,7 +494,7 @@ namespace Microsoft.OData.Core
             this.WriteEntityReferenceLinkImplementation(entityReferenceLink);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an entity reference link, which is used to represent binding to an existing resource in a request payload.
         /// </summary>
@@ -609,7 +609,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -1108,7 +1108,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);

@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core
     using System.Globalization;
     using System.Linq;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core
             this.InterceptException(this.FlushSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -129,7 +129,7 @@ namespace Microsoft.OData.Core
             this.InterceptException(() => this.WriteStartImplementation());
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a parameter payload.
         /// </summary>
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core
             this.InterceptException(() => this.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a value parameter.
         /// </summary>
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(() => this.CreateCollectionWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
         /// </summary>
@@ -205,7 +205,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(() => this.CreateResourceSetWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a parameter payload.
         /// </summary>
@@ -323,7 +323,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -668,7 +668,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataParameterWriterCore_AsyncCallOnSyncWriter);

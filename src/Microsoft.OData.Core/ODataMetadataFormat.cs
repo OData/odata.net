@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.IO;
     using System.Linq;
     using System.Xml;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Metadata;
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core
                 messageInfo.UrlResolver);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>

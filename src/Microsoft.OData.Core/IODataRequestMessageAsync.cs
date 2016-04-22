@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
 namespace Microsoft.OData.Core
 {
     #region Namespaces

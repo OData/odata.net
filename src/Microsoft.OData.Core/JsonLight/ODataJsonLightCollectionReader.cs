@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.JsonLight
 
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the collection reader logic when in state 'Start'.
         /// </summary>
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtCollectionStartImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionStart'.
         /// </summary>
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtValueImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Value'.
         /// </summary>
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtCollectionEndImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionEnd'.
         /// </summary>

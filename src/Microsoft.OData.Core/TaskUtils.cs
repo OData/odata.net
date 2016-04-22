@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_ASYNC || ODATA_CLIENT
+#if PORTABLELIB || ODATA_CLIENT
 #if ODATALIB
 namespace Microsoft.OData.Core
 #else

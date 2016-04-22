@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -203,7 +203,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
 
         /// <summary>
         /// Asynchronous flush operation. This will flush all buffered bytes to the underlying stream through asynchronous writes.
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Core
             return buffers;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Returns enumeration of tasks to run to flush all pending buffers to the underlying stream.
         /// </summary>
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core
                 stream.Write(this.buffer, 0, this.storedCount);
             }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
             /// <summary>
             /// Creates a task which writes the buffer to the specified stream.
             /// </summary>

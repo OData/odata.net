@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateODataResourceSetWriterImplementation(entitySet, entityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateODataResourceWriterImplementation(navigationSource, resourceType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateODataCollectionWriterImplementation(itemTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
         /// </summary>
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateODataParameterWriterImplementation(operation);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
@@ -282,7 +282,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
@@ -329,7 +329,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateODataDeltaWriterImplementation(entitySet, entityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes the result of a $ref query as the message payload.
         /// </summary>
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a singleton result of a $ref query as the message payload.
         /// </summary>

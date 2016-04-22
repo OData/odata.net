@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Evaluation;
@@ -305,7 +305,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteStartDeltaResourceSetImplementation(deltaResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a delta resource set.
         /// </summary>
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a delta resource set.
         /// </summary>
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a nested resource info.
         /// </summary>
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteStartExpandedResourceSetImplementation(expandedResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing an expanded resource set.
         /// </summary>
@@ -411,7 +411,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteStartDeltaResourceImplementation(deltaResource);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a delta resource.
         /// </summary>
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteEnd();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta deleted resource.
         /// </summary>
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteEnd();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta link.
         /// </summary>
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.WriteEnd();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta deleted link.
         /// </summary>
@@ -516,7 +516,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -579,7 +579,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.jsonLightOutputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);

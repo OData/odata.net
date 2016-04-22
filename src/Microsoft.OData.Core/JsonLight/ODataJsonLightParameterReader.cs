@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Metadata;
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtStartImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the parameter reader logic when in state 'Start'.
         /// </summary>
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadNextParameterImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state Value, Resource, Resource Set or Collection state.
         /// </summary>
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateResourceReaderSynchronously(expectedEntityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
         /// </summary>
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateResourceSetReaderSynchronously(expectedEntityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
         /// </summary>
@@ -205,7 +205,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateCollectionReaderSynchronously(expectedItemTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
         /// </summary>

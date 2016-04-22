@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Metadata;
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flush the writer.
         /// </summary>
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Core
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Core
             return this.CreateODataBatchWriterImplementation(batchBoundary);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Core
             return this.CreateODataAsynchronousWriterImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Core
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a single value as the message body.
         /// </summary>
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flushes all buffered data to the underlying stream asynchronously.
         /// </summary>

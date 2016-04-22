@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
 
         /// <summary>
         /// Read the start of the top-level data wrapper in JSON responses.

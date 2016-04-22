@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Core
 {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     #region Namespaces
     using System;
     using System.Collections.Generic;

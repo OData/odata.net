@@ -8,7 +8,7 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
 
-    #if ODATALIB_ASYNC
+    #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
 
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core
         /// <param name="resourceSet">The resource set or collection to write.</param>
         public abstract void WriteStart(ODataResourceSet resourceSet);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resourceSet">The resource set or collection to write.</param>
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core
         /// <param name="resource">The resource or item to write.</param>
         public abstract void WriteStart(ODataResource resource);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resource">The resource or item to write.</param>
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         public abstract void WriteStart(ODataNestedResourceInfo nestedResourceInfo);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously start writing a nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core
         /// <summary>Finishes the writing of a resource set, a resource, or a nested resource info.</summary>
         public abstract void WriteEnd();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously finish writing a resource set, resource, or nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteEndAsync();
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core
         /// </remarks>
         public abstract void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="entityReferenceLink">The entity reference link to write.</param>
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
         public abstract void Flush();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
         public abstract Task FlushAsync();

@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core
         /// <param name="deltaResourceSet">Delta resource set/collection to write.</param>
         public abstract void WriteStart(ODataDeltaResourceSet deltaResourceSet);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a delta resource set.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         public abstract void WriteEnd();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a delta resource set.
         /// </summary>
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         public abstract void WriteStart(ODataNestedResourceInfo nestedResourceInfo);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a nested resource info.
         /// </summary>
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core
         /// <param name="expandedResourceSet">The expanded resource set to write.</param>
         public abstract void WriteStart(ODataResourceSet expandedResourceSet);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing an expanded resource set.
         /// </summary>
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Core
         /// <param name="deltaResource">The delta resource to write.</param>
         public abstract void WriteStart(ODataResource deltaResource);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a delta resource.
         /// </summary>
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Core
         /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         public abstract void WriteDeltaDeletedEntry(ODataDeltaDeletedEntry deltaDeletedEntry);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta deleted resource.
         /// </summary>
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core
         /// <param name="deltaLink">The delta link to write.</param>
         public abstract void WriteDeltaLink(ODataDeltaLink deltaLink);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta link.
         /// </summary>
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core
         /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
         public abstract void WriteDeltaDeletedLink(ODataDeltaDeletedLink deltaDeletedLink);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writing a delta deleted link.
         /// </summary>
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         public abstract void Flush();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>

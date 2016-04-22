@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Evaluation;
@@ -288,7 +288,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.Core.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         public override Task<bool> ReadAsync()
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.jsonLightInputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataReaderCore_AsyncCallOnSyncReader);
@@ -513,7 +513,7 @@ namespace Microsoft.OData.Core.JsonLight
             return result;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -656,7 +656,7 @@ namespace Microsoft.OData.Core.JsonLight
 
         #region ReadAt<...>ImplementationAsync Methods
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>

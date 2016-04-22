@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Core
             return this.CreateResponseMessageImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously returns a message for reading the content of an async response.
         /// </summary>
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.rawInputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataAsyncReader_AsyncCallOnSyncReader);

@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using System.Xml;
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
@@ -288,7 +288,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataCollectionReader"/>.
         /// </summary>
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read the property from the input and 
         /// return an <see cref="ODataProperty"/> representing the read property.
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level error.
         /// </summary>
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
@@ -377,7 +377,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
@@ -425,7 +425,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a service document. 
         /// This method reads the service document from the input and returns 
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
@@ -505,7 +505,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
@@ -526,7 +526,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level value.
         /// </summary>

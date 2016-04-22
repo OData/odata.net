@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Core
             return this.CreateAsynchronousReaderImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Core
             return this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ true);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Core
             return this.ReadValueImplementation(expectedPrimitiveTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level value.
         /// </summary>

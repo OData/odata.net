@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Intentionally a method.")]
         public abstract Stream GetStream();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Core
             return messageStream;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Validates that a given task providing the message stream can be used.
         /// </summary>

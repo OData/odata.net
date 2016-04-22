@@ -8,7 +8,7 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
 
-    #if ODATALIB_ASYNC
+    #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
 
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
         /// <summary>Start writing a parameter payload.</summary>
         public abstract void WriteStart();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously start writing a parameter payload.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteStartAsync();
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Core
         /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
         public abstract void WriteValue(string parameterName, object parameterValue);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously start writing a value parameter.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="parameterName">The name of the parameter to write.</param>
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         public abstract ODataCollectionWriter CreateCollectionWriter(string parameterName);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" />.</returns>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Core
         /// <returns>The created writer.</returns>
         public abstract ODataWriter CreateResourceWriter(string parameterName);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core
         /// <returns>The created writer.</returns>
         public abstract ODataWriter CreateResourceSetWriter(string parameterName);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core
         /// <summary>Finish writing a parameter payload.</summary>
         public abstract void WriteEnd();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously finish writing a parameter payload.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteEndAsync();
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
         public abstract void Flush();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously flushes the write buffer to the underlying stream.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
         public abstract Task FlushAsync();

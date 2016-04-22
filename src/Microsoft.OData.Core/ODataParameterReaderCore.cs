@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next item from the message payload.
         /// </summary>
@@ -421,7 +421,7 @@ this.State == ODataParameterReaderState.Collection,
             return this.ReadImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -530,7 +530,7 @@ this.State == ODataParameterReaderState.Collection,
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 this.VerifyAsynchronousCallAllowed();
 #else
                 Debug.Assert(false, "Async calls are not allowed in this build.");
@@ -549,7 +549,7 @@ this.State == ODataParameterReaderState.Collection,
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Verifies that an asynchronous operation is allowed on this reader.
         /// </summary>

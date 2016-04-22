@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
     /// Wrapper class around an IODataRequestMessageAsync to isolate our code from the interface implementation.
     /// </summary>
     internal sealed class ODataRequestMessage : ODataMessage, 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         IODataRequestMessageAsync
 #else
         IODataRequestMessage
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Core
             return this.GetStream(this.requestMessage.GetStream, /*isRequest*/ true);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>

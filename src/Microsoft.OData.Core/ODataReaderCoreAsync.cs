@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core
         {
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>

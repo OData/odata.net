@@ -8,7 +8,7 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System.Collections.Generic;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Json;
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created output context.</returns>
         public abstract ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>

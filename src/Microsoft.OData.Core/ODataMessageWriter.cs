@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataResourceSetWriter(entitySet, entityType));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataDeltaWriter(entitySet, entityType));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
@@ -315,7 +315,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataResourceWriter(navigationSource, resourceType));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceWriterAsync()
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataCollectionWriter(itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
         public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataBatchWriter(this.batchBoundary));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
         public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
@@ -431,7 +431,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataParameterWriter(operation));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -458,7 +458,7 @@ namespace Microsoft.OData.Core
                 (context) => context.WriteServiceDocument(serviceDocument));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes a service document with the specified <paramref name="serviceDocument" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -483,7 +483,7 @@ namespace Microsoft.OData.Core
                 (context) => context.WriteProperty(property));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <param name="property">The property to write</param>
@@ -522,7 +522,7 @@ namespace Microsoft.OData.Core
             this.outputContext.WriteInStreamError(error, includeDebugInformation);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
@@ -560,7 +560,7 @@ namespace Microsoft.OData.Core
                 (context) => context.WriteEntityReferenceLinks(links));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes the result of a $ref query as the message payload. </summary>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <param name="links">The entity reference links to write as message payload.</param>
@@ -585,7 +585,7 @@ namespace Microsoft.OData.Core
                 (context) => context.WriteEntityReferenceLink(link));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes a singleton result of a $ref query as the message payload. </summary>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <param name="link">The link result to write as the message payload.</param>
@@ -610,7 +610,7 @@ namespace Microsoft.OData.Core
                 (context) => context.WriteValue(value));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes a single value as the message body. </summary>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <param name="value">The value to write.</param>
@@ -1155,7 +1155,7 @@ namespace Microsoft.OData.Core
                 {
                     Encoding = this.encoding,
                     GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.writingResponse,
@@ -1191,7 +1191,7 @@ namespace Microsoft.OData.Core
                 {
                     Encoding = this.encoding,
                     GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.writingResponse,
@@ -1203,7 +1203,7 @@ namespace Microsoft.OData.Core
             return writeFunc(this.outputContext);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
@@ -1228,7 +1228,7 @@ namespace Microsoft.OData.Core
                 {
                     Encoding = this.encoding,
                     GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.writingResponse,
@@ -1271,7 +1271,7 @@ namespace Microsoft.OData.Core
                 {
                     Encoding = this.encoding,
                     GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.writingResponse,

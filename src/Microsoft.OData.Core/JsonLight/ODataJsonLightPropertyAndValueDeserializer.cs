@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core.JsonLight
             return resultProperty;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// This method creates an reads the property from the input and 
         /// returns an <see cref="ODataProperty"/> representing the read property.

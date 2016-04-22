@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         public IODataUrlResolver UrlResolver { get; internal set; }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Function to get the message stream task
         /// </summary>

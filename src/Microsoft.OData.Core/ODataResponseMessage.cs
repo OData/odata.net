@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core
     /// detection logic on the format implementations and manages the buffering read stream.
     /// </remarks>
     internal sealed class ODataResponseMessage : ODataMessage, 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         IODataResponseMessageAsync
 #else
         IODataResponseMessage
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core
             return this.GetStream(this.responseMessage.GetStream, /*isRequest*/ false);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>

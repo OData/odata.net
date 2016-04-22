@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>

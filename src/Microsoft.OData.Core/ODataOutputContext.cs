@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
         /// </summary>
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
@@ -369,7 +369,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
@@ -406,7 +406,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
@@ -465,7 +465,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
@@ -494,7 +494,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
@@ -522,7 +522,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
@@ -546,7 +546,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes the result of a $ref query as the message payload.
         /// </summary>
@@ -569,7 +569,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a singleton result of a $ref query as the message payload.
         /// </summary>
@@ -592,7 +592,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a single value as the message body.
         /// </summary>

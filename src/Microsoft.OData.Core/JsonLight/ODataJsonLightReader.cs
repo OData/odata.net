@@ -10,7 +10,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Evaluation;
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtResourceSetStartImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetStart'.
         /// </summary>
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtResourceSetEndImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtResourceStartImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryStart'.
         /// </summary>
@@ -299,7 +299,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtResourceEndImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
         /// </summary>
@@ -337,7 +337,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtNestedResourceInfoStartImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtNestedResourceInfoEndImplementationSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
         /// </summary>
@@ -418,7 +418,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.ReadAtEntityReferenceLinkSynchronously();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
         /// </summary>

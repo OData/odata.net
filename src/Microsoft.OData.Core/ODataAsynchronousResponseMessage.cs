@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
     /// Representing the message of a non-batch async response.
     /// </summary>
     public sealed class ODataAsynchronousResponseMessage :
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         IODataResponseMessageAsync
 #else
         IODataResponseMessage
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Core
             return this.stream;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
         public Task<Stream> GetStreamAsync()

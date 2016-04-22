@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException((Func<bool>)this.ReadSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads the next part from the batch message payload.</summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a request message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException((Func<ODataBatchOperationResponseMessage>)this.CreateOperationResponseMessageImplementation);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a response message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Core
             this.operationState = OperationState.StreamRequested;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
@@ -254,7 +254,7 @@ namespace Microsoft.OData.Core
             return this.ReadImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next part from the batch message payload.
         /// </summary>
@@ -729,7 +729,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.synchronous)
                 {
                     throw new ODataException(Strings.ODataBatchReader_AsyncCallOnSyncReader);
