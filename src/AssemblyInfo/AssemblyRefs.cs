@@ -62,17 +62,6 @@ internal static class DataFxAssemblyRef
         internal const string SilverlightV5_SdkClientReferenceAssemblyPath = @"%ProgramFiles%\Microsoft SDKs\Silverlight\v5.0\Libraries\Client";
         internal const string SilverlightV5_SdkServerReferenceAssemblyPath = @"%ProgramFiles%\Microsoft SDKs\Silverlight\v5.0\Libraries\Server";
 
-#if SILVERLIGHT // Needed by the legacy SL test projects in TFS builds
-
-        /// <summary>where find executable binaries</summary>
-        internal const string DE_InstallPath = DotNetFrameworkV4_InstallPath;
-        internal const string DS_InstallPath = @"%ProgramFiles(x86)%\Microsoft WCF Data Services\" + DS_BaseVersion + @"\bin\.NetFramework";
-
-        /// <summary>where to find desktop reference assemblies</summary>
-        internal const string DE_ReferenceAssemblyPath = DotNetFrameworkV4_InstallPath;
-        internal const string DS_ReferenceAssemblyPath = @"%ProgramFiles(x86)%\Microsoft WCF Data Services\" + DS_BaseVersion + @"\bin\.NetFramework";
-#else
-        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal static string DE_InstallPath
         {
@@ -94,7 +83,7 @@ internal static class DataFxAssemblyRef
         {
             get { return GetDS_Tools_InstallPath(); }
         }
-        
+
         /// <summary>where to find desktop reference assemblies</summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal static string DE_ReferenceAssemblyPath
@@ -106,7 +95,7 @@ internal static class DataFxAssemblyRef
         {
             get { return GetDS_InstallPath(); }
         }
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private static string GetDE_InstallPath()
         {
@@ -135,7 +124,6 @@ internal static class DataFxAssemblyRef
                 ? @"%ProgramFiles(x86)%\Microsoft WCF Data Services\" + DS_BaseVersion + @"\bin\tools"
                 : @"%ProgramFiles%\Microsoft WCF Data Services\" + DS_BaseVersion + @"\bin\tools");
         }
-#endif
 
         /// <summary>where to find silverlight reference assemblies</summary>
         internal const string DS_SilverlightReferenceAssemblyPath = @"%ProgramFiles%\Microsoft WCF Data Services\" + DS_BaseVersion + @"\bin\Silverlight";

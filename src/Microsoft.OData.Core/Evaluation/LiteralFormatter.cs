@@ -7,14 +7,14 @@
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 namespace Microsoft.OData.Core.Evaluation
 #endif
 #endif
 {
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
     using System.Data.Linq;
 #endif
     using System;
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>Default singleton instance for keys formatted as segments.</summary>
         private static readonly LiteralFormatter KeyAsSegmentInstance = new KeysAsSegmentsLiteralFormatter();
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
         /// <summary>
         /// Gets the literal formatter for ETags.
         /// </summary>
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Core.Evaluation
                 return XmlConvert.ToString((byte)value);
             }
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
             if (value is DateTime)
             {
                 // Since the server/client supports DateTime values, convert the DateTime value
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Core.Evaluation
             /// <returns>The exception that should be thrown.</returns>
             internal static InvalidOperationException CreateExceptionForUnconvertableType(object value)
             {
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
                 return new InvalidOperationException(Microsoft.OData.Service.Strings.Serializer_CannotConvertValue(value));
 #endif
 #if ASTORIA_CLIENT
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 // DEVNOTE: the client does not have a reference to System.Data.Linq, but the server does.
                 // So we need to interact with Binary differently.            
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
                 Binary binary = value as Binary;
                 if (binary != null)
                 {

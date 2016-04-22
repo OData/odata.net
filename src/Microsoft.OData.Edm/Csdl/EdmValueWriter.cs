@@ -10,7 +10,7 @@ using System.Xml;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 #if ASTORIA_CLIENT
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         private static char[] Hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-#if !ODATALIB && !ASTORIA_CLIENT && !ASTORIA_SERVER
+#if !ODATALIB && !ASTORIA_CLIENT && !ODATA_SERVICE
         /// <summary>
         /// Converts the IEdmPrimitiveValue to a String.
         /// </summary>

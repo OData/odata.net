@@ -7,10 +7,10 @@
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #endif
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #endif
-#if !ASTORIA_CLIENT && !ASTORIA_SERVER
+#if !ASTORIA_CLIENT && !ODATA_SERVICE
 namespace Microsoft.OData.Core
 #endif
 {

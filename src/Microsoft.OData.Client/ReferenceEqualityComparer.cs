@@ -124,7 +124,7 @@ namespace Microsoft.OData.Service
             {
                 if (instance == null)
                 {
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
                     Debug.Assert(!typeof(T).IsValueType, "!typeof(T).IsValueType -- can't use reference equality in a meaningful way with value types");
 #else
                     Debug.Assert(!typeof(T).IsValueType(), "!typeof(T).IsValueType() -- can't use reference equality in a meaningful way with value types");

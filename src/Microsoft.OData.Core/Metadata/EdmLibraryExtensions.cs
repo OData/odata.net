@@ -18,14 +18,14 @@ namespace Microsoft.OData.Core.Metadata
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
     using Microsoft.OData.Service;
     using ErrorStrings = Microsoft.OData.Service.Strings;
 #endif
 #if ASTORIA_CLIENT
     using ErrorStrings = Microsoft.OData.Client.Strings;
 #endif
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
     using Microsoft.OData.Core.JsonLight;
     using ErrorStrings = Microsoft.OData.Core.Strings;
     using PlatformHelper = Microsoft.OData.Core.PlatformHelper;
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(String), StringTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Single), SingleTypeReference);
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
             PrimitiveTypeReferenceMap.Add(typeof(DateTime), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
 #endif
             PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Core.Metadata
 
             PrimitiveTypeReferenceMap.Add(typeof(Boolean?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), true));
             PrimitiveTypeReferenceMap.Add(typeof(Byte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Byte), true));
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
             PrimitiveTypeReferenceMap.Add(typeof(DateTime?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
 #endif
             PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.Metadata
 
         #region Internal methods
         #region ODataLib only
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
 
         /// <summary>
         /// Returns the fully qualified name of a navigation source.
@@ -1239,7 +1239,7 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static string ODataShortQualifiedName(this IEdmTypeReference typeReference)
         {
-#if !ASTORIA_SERVER
+#if !ODATA_SERVICE
 #endif
             Debug.Assert(typeReference != null, "typeReference != null");
             Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
@@ -1258,7 +1258,7 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static string ODataShortQualifiedName(this IEdmType type)
         {
-#if !ASTORIA_SERVER
+#if !ODATA_SERVICE
 #endif
             Debug.Assert(type != null, "type != null");
 
@@ -1432,7 +1432,7 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
 
         #region ODataLib and Query project
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
         /// <summary>
         /// Checks if the <paramref name="baseType"/> is assignable to <paramref name="subtype"/>.
         /// In other words, if <paramref name="subtype"/> is a subtype of <paramref name="baseType"/> or not.
@@ -1710,7 +1710,7 @@ namespace Microsoft.OData.Core.Metadata
 #endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
 #endif
             Debug.Assert(containerElement != null, "containerElement != null");
 
@@ -1891,7 +1891,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>Type name for a collection of the specified item type name.</returns>
         internal static string GetCollectionTypeName(string itemTypeName)
         {
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
 #endif
             return string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, itemTypeName);
         }
@@ -1926,7 +1926,7 @@ namespace Microsoft.OData.Core.Metadata
                 return Enumerable.Empty<IEdmOperationImport>();
             }
 
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
             int indexOfParameterStart = operationImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
             string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
@@ -1959,7 +1959,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IEnumerable<IEdmOperationImport> operationImports = container.FindOperationImports(operationNameWithoutContainerOrNamespace);
             Debug.Assert(operationImports != null, "operationImports != null");
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ASTORIA_CLIENT
             if (indexOfParameterStart > 0)
             {
                 return FilterByOperationParameterTypes(operationImports, functionImportNameWithoutParameterTypes, operationImportName);

@@ -7,7 +7,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 #if ASTORIA_CLIENT

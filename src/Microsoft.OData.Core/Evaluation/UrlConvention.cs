@@ -21,7 +21,7 @@ using Microsoft.OData.Edm.Vocabularies;
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 #if ODATALIB
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Service.Design
         /// </summary>
         private const string UrlConventionHeaderName = "DataServiceUrlConventions";
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
         /// <summary>
         /// The term to use for building value annotations for indicating the conventions used.
         /// </summary>
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Service.Design
             return new UrlConvention(false, true);
         }
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
         /// <summary>
         /// Creates an instance of <see cref="UrlConvention"/> based on the data services' configuration and operation context.
         /// </summary>
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Service.Design
         }
 #endif
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
         /// <summary>
         /// Builds the annotations needed to indicate the supported url conventions based on the service's configuration.
         /// </summary>

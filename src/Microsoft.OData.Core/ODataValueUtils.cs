@@ -6,14 +6,14 @@
 
 #if !INTERNAL_DROP || ODATALIB
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 namespace Microsoft.OData.Core
 #endif
 {
     #region Namespaces
-    #if ASTORIA_SERVER
+    #if ODATA_SERVICE
     using Microsoft.OData.Core;
     #endif
     #endregion Namespaces
