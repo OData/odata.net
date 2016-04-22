@@ -12,12 +12,7 @@ namespace Microsoft.OData.Core.Json
     /// <summary>
     /// Enumeration of all JSON node type.
     /// </summary>
-#if ODATALIB_PUBLICJSONREADER
-    public
-#else
-    internal
-#endif
-    enum JsonNodeType
+    internal enum JsonNodeType
     {
         /// <summary>
         /// No node - invalid value.

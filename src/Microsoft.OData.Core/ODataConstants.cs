@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Constant values used by the OData or HTTP protocol or OData library.
     /// </summary>
-#if ODATALIB
+#if ODATA_CORE
     public static class ODataConstants
 #else
     internal static class ODataInternalConstants

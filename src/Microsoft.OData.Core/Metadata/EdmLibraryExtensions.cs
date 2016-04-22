@@ -2058,7 +2058,7 @@ namespace Microsoft.OData.Core.Metadata
 
         #region Private methods
         #region ODataLib only
-#if ODATALIB
+#if ODATA_CORE
 
         /// <summary>
         /// Validates the kind of the operation group returns only on.

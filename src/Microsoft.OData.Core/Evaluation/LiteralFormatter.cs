@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Text;
     using System.Linq;
     using System.Xml;
-#if ODATALIB
+#if ODATA_CORE
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>Default singleton instance for parenthetical keys, etags, or skiptokens.</summary>
         private static readonly LiteralFormatter DefaultInstance = new DefaultLiteralFormatter();
 
-#if ODATALIB
+#if ODATA_CORE
         /// <summary>Default singleton instance which does not URL-encode the resulting string.</summary>
         private static readonly LiteralFormatter DefaultInstanceWithoutEncoding = new DefaultLiteralFormatter(/*disableUrlEncoding*/ true);
 #endif
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Core.Evaluation
         }
 #endif
 
-#if ODATALIB
+#if ODATA_CORE
         /// <summary>
         /// Gets the literal formatter for URL constants which does not URL-encode the string.
         /// </summary>
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Core.Evaluation
 #if ODATA_CLIENT
                 return Error.InvalidOperation(Client.Strings.Context_CannotConvertKey(value));
 #endif
-#if ODATALIB
+#if ODATA_CORE
                 return new ODataException(OData.Core.Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
 #endif
             }
@@ -310,7 +310,7 @@ namespace Microsoft.OData.Core.Evaluation
                     return true;
                 }
 
-#if !ODATALIB
+#if !ODATA_CORE
                 XElement xml = value as XElement;
                 if (xml != null)
                 {
@@ -332,10 +332,10 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 // DEVNOTE: for some reason, the client adds .0 to doubles where the server does not.
                 // Unfortunately, it would be a breaking change to alter this behavior now.
-#if ODATA_CLIENT || ODATALIB
+#if ODATA_CLIENT || ODATA_CORE
                 IEnumerable<char> characters = input.ToCharArray();
 
-#if ODATALIB
+#if ODATA_CORE
                 // negative numbers can also be 'whole', but the client did not take that into account.
                 if (input[0] == '-')
                 {
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
             }
 
-#if ODATALIB
+#if ODATA_CORE
             /// <summary>
             /// Creates a new instance of <see cref="DefaultLiteralFormatter"/>.
             /// </summary>
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Core.Evaluation
             /// <returns>The escaped string.</returns>
             protected override string EscapeResultForUri(string result)
             {
-#if !ODATALIB
+#if !ODATA_CORE
                 Debug.Assert(!this.disableUrlEncoding, "Only supported for ODataLib for backwards compatibility reasons.");
 #endif
                 if (!this.disableUrlEncoding)

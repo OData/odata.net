@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB
+#if ODATA_CORE
 namespace Microsoft.OData.Core.UriParser
 #else
 namespace Microsoft.OData.Service.Parsing
 #endif
 {
     using System.Collections.Generic;
-#if !ODATALIB
+#if !ODATA_CORE
     using System.Data.Linq;
 #endif
     using System;
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Text;
     using System.Xml;
     using System.Globalization;
-#if !ODATALIB
+#if !ODATA_CORE
     using System.Xml.Linq;
 
 #else
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Service.Parsing
         /// </summary>
         private static readonly LiteralParser DefaultInstance = new DefaultLiteralParser();
 
-#if !ODATALIB
+#if !ODATA_CORE
         /// <summary>
         /// Singleton instance of the literal parser to use for filters and operation parameters.
         /// </summary>
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Service.Parsing
             { typeof(Guid), DelegatingPrimitiveParser<Guid>.WithoutMarkup(XmlConvert.ToGuid) },
 
             // Types with prefixes and single-quotes.
-#if !ODATALIB
+#if !ODATA_CORE
             { typeof(DateTime), DelegatingPrimitiveParser<DateTime>.WithoutMarkup((s) => { var dateTimeOffset = XmlConvert.ToDateTimeOffset(s); return WebUtil.ConvertDateTimeOffsetToDateTime(dateTimeOffset); }) },
  #endif
             { typeof(TimeSpan), DelegatingPrimitiveParser<TimeSpan>.WithPrefix(Microsoft.OData.Service.EdmValueParser.ParseDuration, XmlConstants.LiteralPrefixDuration) },
@@ -77,13 +77,13 @@ namespace Microsoft.OData.Service.Parsing
             { typeof(Single), DelegatingPrimitiveParser<float>.WithSuffix(XmlConvert.ToSingle, XmlConstants.LiteralSuffixSingle, /*required*/ false) },
             { typeof(Double), DelegatingPrimitiveParser<double>.WithSuffix(XmlConvert.ToDouble, XmlConstants.LiteralSuffixDouble, /*required*/ false) },
             
-#if !ODATALIB
+#if !ODATA_CORE
             // Special types.
             { typeof(XElement), DelegatingPrimitiveParser<XElement>.WithoutMarkup(t => XElement.Parse(t, LoadOptions.PreserveWhitespace)) },
 #endif
         };
 
-#if !ODATALIB
+#if !ODATA_CORE
         /// <summary>
         /// Gets the literal parser to use for constants in filter/orderby expressions and operation parameters.
         /// </summary>
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Service.Parsing
         /// <summary>
         /// Default literal parser which has type-markers and single-quotes. Also supports arbitrary literals being re-encoded in binary form.
         /// </summary>
-#if ODATALIB
+#if ODATA_CORE
         private sealed class DefaultLiteralParser : LiteralParser
 #else
         private class DefaultLiteralParser : LiteralParser
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Service.Parsing
                         return true;
                     }
 
-#if !ODATALIB
+#if !ODATA_CORE
                     if (targetType == typeof(Binary))
                     {
                         result = new Binary(byteArrayValue);
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Service.Parsing
                     return TryRemoveFormattingAndConvert(keyValue, targetType, out result);
                 }
 
-#if ODATALIB
+#if ODATA_CORE
                 if (targetType == typeof(byte[]))
 #else
                 if (targetType == typeof(byte[]) || targetType == typeof(Binary))
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Service.Parsing
             }
         }
 
-#if !ODATALIB
+#if !ODATA_CORE
         /// <summary>
         /// Literal parser which supports spatial values, but is otherwise equivalent to the default parser.
         /// </summary>
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Service.Parsing
 
                 Debug.Assert(!targetType.IsSpatial(), "Not supported for spatial types, as they cannot be part of a key, etag, or skiptoken");
 
-#if !ODATALIB
+#if !ODATA_CORE
                 if (targetType == typeof(Binary))
                 {
                     if (Parsers[typeof(byte[])].TryConvert(text, out result))
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Service.Parsing
             private static bool ValueOfTypeCanContainQuotes(Type type)
             {
                 Debug.Assert(type != null, "type != null");
-#if ODATALIB
+#if ODATA_CORE
                 return type == typeof(string);
 #else
                 return type == typeof(XElement) || type == typeof(string);

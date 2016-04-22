@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ODATALIB
+#if ODATA_CORE
 namespace Microsoft.OData.Core
 #else
 namespace Microsoft.OData.Edm.Csdl

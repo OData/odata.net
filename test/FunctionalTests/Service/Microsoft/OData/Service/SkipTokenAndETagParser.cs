@@ -31,7 +31,7 @@ namespace Microsoft.OData.Service
             List<object> positionalValues = new List<object>();
             values = positionalValues;
 
-#if ODATALIB
+#if ODATA_CORE
             ExpressionLexer lexer = new ExpressionLexer(text, true, false);
 #else
             ExpressionLexer lexer = new ExpressionLexer(text);

@@ -16,7 +16,7 @@ namespace Microsoft.OData.Service
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ODATALIB
+#if ODATA_CORE
 namespace Microsoft.OData.Core
 #else
 namespace Microsoft.OData.Edm.Csdl
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         private static char[] Hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-#if !ODATALIB && !ODATA_CLIENT && !ODATA_SERVICE
+#if !ODATA_CORE && !ODATA_CLIENT && !ODATA_SERVICE
         /// <summary>
         /// Converts the IEdmPrimitiveValue to a String.
         /// </summary>

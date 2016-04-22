@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core
             recursionDepth++;
             if (recursionDepth > maxInnerErrorDepth)
             {
-#if ODATALIB
+#if ODATA_CORE
                 throw new ODataException(Strings.ValidationUtils_RecursionDepthLimitReached(maxInnerErrorDepth));
 #else
                 throw new ODataException(Microsoft.OData.Service.Strings.BadRequest_DeepRecursion(maxInnerErrorDepth));

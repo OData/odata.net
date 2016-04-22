@@ -20,12 +20,7 @@ namespace Microsoft.OData.Core.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-#if ODATALIB_PUBLICJSONREADER
-    public
-#else
-    internal
-#endif
-    class JsonReader
+    internal class JsonReader
     {
         /// <summary>
         /// The initial size of the buffer of characters.

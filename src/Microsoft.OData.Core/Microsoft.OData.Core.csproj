@@ -14,7 +14,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <DefineConstants>$(DefineConstants);ODATALIB;PORTABLELIB;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+    <DefineConstants>$(DefineConstants);ODATA_CORE;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <EnableLocalization>true</EnableLocalization>
   </PropertyGroup>
   <Import Project="..\Build.props" />

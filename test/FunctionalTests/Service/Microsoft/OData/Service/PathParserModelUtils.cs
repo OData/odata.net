@@ -4,21 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB
+#if ODATA_CORE
 namespace Microsoft.OData.Core.Query
 #else
 namespace Microsoft.OData.Service
 #endif
 {
     using System.Collections.Generic;
-#if !ODATALIB
+#if !ODATA_CORE
     using Microsoft.OData.Service.Providers;
 #endif
     using System;
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-#if ODATALIB
+#if ODATA_CORE
     using ErrorStrings = Microsoft.OData.Core.Strings;
     using ExceptionUtil = ODataUriParserException;
     using VersionUtil = TemporaryVersionUtil;

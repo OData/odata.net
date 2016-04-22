@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB
+#if ODATA_CORE
 namespace Microsoft.OData.Core.UriParser
 #else
 namespace Microsoft.OData.Service

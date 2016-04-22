@@ -94,7 +94,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             get
             {
-#if ODATALIB
+#if ODATA_CORE
 #endif
                 return this.generateKeyAsSegment;
             }
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>A new UrlConvention instance with the given value.</returns>
         internal static UrlConvention CreateWithExplicitValue(bool generateKeyAsSegment)
         {
-#if ODATALIB
+#if ODATA_CORE
 #endif
             return new UrlConvention(generateKeyAsSegment);
         }
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Core.Evaluation
         }
 #endif
 
-#if ODATALIB
+#if ODATA_CORE
         /// <summary>
         /// Gets the url convention for the given model based on its vocabulary annotations in the entity container of the model.
         /// </summary>
