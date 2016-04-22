@@ -272,9 +272,6 @@ namespace AstoriaUnitTests
                 ctx.ResolveName = resolveName;
                 #endregion
 
-#if ASTORIA_OPEN_OBJECT
-                int totalOpenObject = 0;
-#endif
                 int totalTypedObject = 0;
                 int totalRequestCount = 0;
                 int totalSendingRequestCount = 0;
@@ -349,33 +346,6 @@ namespace AstoriaUnitTests
                 List<string> resourceContainerNames = (from cont in workspace.ServiceContainer.ResourceContainers
                                                        select cont.Name).ToList<string>();
 
-#if ASTORIA_OPEN_OBJECT
-                #region Test OpenObject requests
-                WhichExecuteMethod = 0;
-                foreach (ResourceContainer container in workspace.ServiceContainer.ResourceContainers)
-                {
-                    int tmpTotal = totalOpenObject;
-
-                    totalRequestCount++;
-                    foreach (OpenObject x in ExecuteQuery(ctx, ctx.CreateQuery<OpenObject>(container.Name)))
-                    {
-                        totalOpenObject++;
-                    }
-
-                    totalRequestCount++;
-                    foreach (OpenObject x in ExecuteQuery(ctx, ctx.CreateUri<OpenObject>(container.Name)))
-                    {
-                        tmpTotal++;
-                    }
-
-                    Assert.AreEqual(totalOpenObject, tmpTotal, "CreateQuery vs. Execute Container={0}", container.Name);
-                }
-                Assert.AreEqual(0, ctx.Entities.Count); // OpenObject aren't cached
-                Assert.AreEqual(0, ctx.Links.Count);
-                Assert.IsTrue(7 <= WhichExecuteMethod, "didn't use all execute methods");
-                #endregion
-#endif
-
                 #region Test Typed object requests
                 List<string> resourceContainerNamesWithoutProperty = new List<String>(resourceContainerNames);
 
@@ -440,9 +410,6 @@ namespace AstoriaUnitTests
                 Assert.IsTrue(7 <= WhichExecuteMethod, "didn't use all execute methods");
                 #endregion
 
-#if ASTORIA_OPEN_OBJECT
-                Assert.AreEqual(totalOpenObject, totalTypedObject, "using Open vs. Typed objects generated different results");
-#endif
                 Assert.IsFalse(expectBadRequestBecauseMisinterpretedUri);
 
                 #region Test load property

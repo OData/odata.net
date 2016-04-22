@@ -118,7 +118,6 @@
     <Compile Include="Models\NorthwindSimple.vb" />
     <Compile Include="Models\NorthwindBinding.vb" />
     <Compile Include="NamedStreams_Projections.vb" />
-    <Compile Include="OpenObjectTests.vb" />
     <Compile Include="PublicPlaces.vb" />
     <Compile Include="SelfEditLinksTests.vb" />
     <Compile Include="ServerDrivenPaging.vb" />

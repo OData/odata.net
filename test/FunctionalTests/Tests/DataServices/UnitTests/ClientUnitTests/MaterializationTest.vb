@@ -114,9 +114,6 @@ Partial Public Class ClientModule
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders", True)
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openQuery = ctx.CreateUri(Of OpenObject)(explictQuery.ToString())
-#End If
             Assert.AreEqual(explictQuery.ToString(), languageQuery.ToString())
 
             For Each merger As MergeOption In New MergeOption() {MergeOption.NoTracking, MergeOption.AppendOnly}
@@ -134,19 +131,12 @@ Partial Public Class ClientModule
                     Assert.AreEqual(13, ctx.Links.Count, "link count")
                 End If
             Next
-
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openCustomer = ctx.Execute(openQuery).Single()
-#End If
         End Sub
         'Remove Atom
         <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders($expand=Customers)")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders($expand=Customers)", True)
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openQuery = ctx.CreateUri(Of OpenObject)(explictQuery.ToString())
-#End If
             Assert.AreEqual(explictQuery.ToString(), languageQuery.ToString())
 
             For Each merger As MergeOption In New MergeOption() {MergeOption.NoTracking, MergeOption.AppendOnly}
@@ -163,19 +153,12 @@ Partial Public Class ClientModule
                     Assert.AreEqual(26, ctx.Links.Count, "link count")
                 End If
             Next
-
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openCustomer = ctx.Execute(openQuery).Single()
-#End If
         End Sub
         'Remove Atom
         <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships_ExpandedFurther()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders($expand=Employees($expand=Orders($expand=Customers)))")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders($expand=Employees($expand=Orders($expand=Customers)))", True)
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openQuery = ctx.CreateUri(Of OpenObject)(explictQuery.ToString())
-#End If
             Assert.AreEqual(explictQuery.ToString(), languageQuery.ToString())
 
             For Each merger As MergeOption In New MergeOption() {MergeOption.NoTracking, MergeOption.AppendOnly}
@@ -192,10 +175,6 @@ Partial Public Class ClientModule
                     Assert.IsTrue(1200 < ctx.Links.Count, "link count")
                 End If
             Next
-
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openCustomer = ctx.Execute(openQuery).Single()
-#End If
         End Sub
         'Remove Atom
         <Ignore> <TestCategory("Partition2")> <TestMethod()>
@@ -278,18 +257,6 @@ Partial Public Class ClientModule
             ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of NorthwindSimpleModel.Alphabetical_list_of_products)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton'%20Cajun%20Seasoning')"))
 
             ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of NorthwindSimpleModel.Alphabetical_list_of_products)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton%27%20Cajun%20Seasoning')"))
-
-#If ASTORIA_OPEN_OBJECT Then
-            ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef Anton''s Cajun Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton''s%20Cajun%20Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton%27%27s%20Cajun%20Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton'%20Cajun%20Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton%27%20Cajun%20Seasoning')"))
-#End If
         End Sub
 
         Private Function ExecuteQuerySingle(Of T)(ByVal status As HttpStatusCode, ByVal query As DataServiceRequest(Of T)) As T
@@ -716,18 +683,6 @@ Partial Public Class ClientModule
                 Assert.AreEqual("queries", ex.ParamName, "{0}", ex)
             End Try
         End Sub
-
-#If ASTORIA_OPEN_OBJECT Then
-        <TestMethod()> Public Sub LoadPropertyOpenType()
-            Dim customer As OpenObject = ctx.CreateQuery(Of OpenObject)("Customers").First()
-            Try
-                ctx.LoadProperty(customer, "Orders")
-                Assert.Fail("expected InvalidOperationException")
-            Catch ex As InvalidOperationException
-                Assert.IsTrue(ex.Message.Contains("not currently tracking"), "{0}", ex)
-            End Try
-        End Sub
-#End If
 
         Private Function ExtraMissing(Of T)(ByVal expected As Exception) As T
             Try
