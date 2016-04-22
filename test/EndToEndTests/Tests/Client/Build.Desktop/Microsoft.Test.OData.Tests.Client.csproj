@@ -186,6 +186,7 @@
     <Compile Include="SingletonTests\SingletonQueryTests.cs" />
     <Compile Include="SingletonTests\SingletonUpdateTests.cs" />
     <Compile Include="TransportLayerTests\RequestMessageArgsTests.cs" />
+    <Compile Include="TransportLayerTests\ResponseMessageHeaderTests.cs" />
     <Compile Include="TransportLayerTests\TransportLayerErrorTests.cs" />
     <Compile Include="TransportLayerTests\HttpClientRequestMessage.cs" />
     <Compile Include="TransportLayerTests\HttpClientTests.cs" />

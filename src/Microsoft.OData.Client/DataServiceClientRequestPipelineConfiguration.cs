@@ -59,7 +59,7 @@ namespace Microsoft.OData.Client
         {
             get 
             { 
-                return this.onmessageCreating; 
+                return this.onmessageCreating;
             }
             
             set
