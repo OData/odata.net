@@ -439,9 +439,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataAtomErrorDeserializer.cs">
       <Link>Microsoft\OData\Core\Metadata\ODataAtomErrorDeserializer.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataEdmPropertyAnnotation.cs">
-      <Link>Microsoft\OData\Core\Metadata\ODataEdmPropertyAnnotation.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataMetadataConstants.cs">
       <Link>Microsoft\OData\Core\Metadata\ODataMetadataConstants.cs</Link>
     </Compile>
@@ -450,9 +447,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataMetadataWriterUtils.cs">
       <Link>Microsoft\OData\Core\Metadata\ODataMetadataWriterUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\ODataNullValueBehaviorKind.cs">
-      <Link>Microsoft\OData\Core\Metadata\ODataNullValueBehaviorKind.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Metadata\XmlReaderExtensions.cs">
       <Link>Microsoft\OData\Core\Metadata\XmlReaderExtensions.cs</Link>
@@ -1568,6 +1562,12 @@
     </Compile>
     <Compile Include="..\IWriterValidator.cs">
       <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataEdmPropertyAnnotation.cs">
+      <Link>Microsoft\OData\Core\ODataEdmPropertyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNullValueBehaviorKind.cs">
+      <Link>Microsoft\OData\Core\ODataNullValueBehaviorKind.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>

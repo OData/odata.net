@@ -4,22 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Xml;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+
 namespace Microsoft.OData.Core
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using System.Xml;
-#if ODATALIB_ASYNC
-#endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Validation;
-    #endregion Namespaces
-
     /// <summary>
     /// Implementation of the OData input for metadata documents.
     /// </summary>

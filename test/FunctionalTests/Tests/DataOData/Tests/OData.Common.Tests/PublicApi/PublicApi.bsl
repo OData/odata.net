@@ -3780,6 +3780,12 @@ public enum Microsoft.OData.Core.ODataDeltaReaderState : int {
 	Start = 0
 }
 
+public enum Microsoft.OData.Core.ODataNullValueBehaviorKind : int {
+	Default = 0
+	DisableValidation = 2
+	IgnoreValue = 1
+}
+
 public enum Microsoft.OData.Core.ODataParameterReaderState : int {
 	Collection = 2
 	Completed = 4
@@ -4284,14 +4290,14 @@ public sealed class Microsoft.OData.Core.ODataUtils {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty property)
+	public static Microsoft.OData.Core.ODataNullValueBehaviorKind NullValueReadBehaviorKind (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty property)
 
 	public static string ODataVersionToString (Microsoft.OData.Core.ODataVersion version)
 	public static Microsoft.OData.Core.ODataFormat SetHeadersForPayload (Microsoft.OData.Core.ODataMessageWriter messageWriter, Microsoft.OData.Core.ODataPayloadKind payloadKind)
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetNullValueReaderBehavior (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty property, Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind nullValueReadBehaviorKind)
+	public static void SetNullValueReaderBehavior (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty property, Microsoft.OData.Core.ODataNullValueBehaviorKind nullValueReadBehaviorKind)
 
 	public static Microsoft.OData.Core.ODataVersion StringToODataVersion (string version)
 }
@@ -4469,6 +4475,12 @@ public sealed class Microsoft.OData.Core.ODataDeltaSerializationInfo {
 	public ODataDeltaSerializationInfo ()
 
 	string NavigationSourceName  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.Core.ODataEdmPropertyAnnotation {
+	public ODataEdmPropertyAnnotation ()
+
+	Microsoft.OData.Core.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { public get; public set; }
 }
 
 [
@@ -4911,18 +4923,6 @@ public sealed class Microsoft.OData.Core.SerializationTypeNameAnnotation {
 	public SerializationTypeNameAnnotation ()
 
 	string TypeName  { public get; public set; }
-}
-
-public enum Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind : int {
-	Default = 0
-	DisableValidation = 2
-	IgnoreValue = 1
-}
-
-public sealed class Microsoft.OData.Core.Metadata.ODataEdmPropertyAnnotation {
-	public ODataEdmPropertyAnnotation ()
-
-	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { public get; public set; }
 }
 
 public enum Microsoft.OData.Core.UriParser.BinaryOperatorKind : int {

@@ -4,11 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
+namespace Microsoft.OData.Core
 {
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary> Represents the behavior of readers when reading property with null value. </summary>
     public enum ODataNullValueBehaviorKind
     {

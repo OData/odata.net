@@ -6,14 +6,13 @@
 
 #if !INTERNAL_DROP || ODATALIB
 
+using System;
+using System.Diagnostics;
+using System.Xml;
+using Microsoft.OData.Core.Metadata;
+
 namespace Microsoft.OData.Core
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.Xml;
-    #endregion Namespaces
-
     /// <summary>
     /// Utility methods serializing the xml error payload
     /// </summary>

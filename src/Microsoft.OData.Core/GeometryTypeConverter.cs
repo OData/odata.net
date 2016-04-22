@@ -4,16 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+using System.IO;
+using System.Xml;
+using Microsoft.OData.Core.Json;
+using Microsoft.OData.Core.Metadata;
+using Microsoft.Spatial;
+
 namespace Microsoft.OData.Core
 {
-    #region Namespaces
-    using System.Diagnostics;
-    using System.IO;
-    using System.Xml;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.Spatial;
-    #endregion
-
     /// <summary>
     /// Handles serialization and deserialization for types derived from Geometry.
     /// This file is currently compiled by ODataLib and Astoria server, because it contains

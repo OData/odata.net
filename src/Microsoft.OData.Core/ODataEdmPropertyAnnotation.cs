@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
-{
-    #region Namespaces
-    using System.Diagnostics.CodeAnalysis;
-    #endregion Namespaces
+using System.Diagnostics.CodeAnalysis;
 
+namespace Microsoft.OData.Core
+{
     /// <summary>Represents an annotation to hold information for a particular property.</summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm", Justification = "Camel-casing in class name.")]
     public sealed class ODataEdmPropertyAnnotation

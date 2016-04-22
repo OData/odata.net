@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData.Core.Metadata
 {
     /// <summary>
     /// Constant values related to the Metadata format.

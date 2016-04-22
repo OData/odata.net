@@ -46,6 +46,8 @@
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="Metadata\ODataAtomErrorDeserializer.cs" />
     <Compile Include="Metadata\ODataMetadataConstants.cs" />
+    <Compile Include="ODataEdmPropertyAnnotation.cs" />
+    <Compile Include="ODataNullValueBehaviorKind.cs" />
     <Compile Include="ODataRawValueUtils.cs" />
     <Compile Include="Metadata\BufferingXmlReader.cs" />
     <Compile Include="ODataRawValueConverter.cs" />
@@ -179,8 +181,6 @@
     <Compile Include="Metadata\EdmTypeWriterResolver.cs" />
     <Compile Include="Metadata\MetadataUtils.cs" />
     <Compile Include="Metadata\MetadataUtilsCommon.cs" />
-    <Compile Include="Metadata\ODataEdmPropertyAnnotation.cs" />
-    <Compile Include="Metadata\ODataNullValueBehaviorKind.cs" />
     <Compile Include="MimeConstants.cs" />
     <Compile Include="NonDisposingStream.cs" />
     <Compile Include="ODataAction.cs" />
