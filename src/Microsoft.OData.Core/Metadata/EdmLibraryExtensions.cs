@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.Metadata
 
         #region Internal methods
         #region ODataLib only
-#if !ODATALIB_QUERY && !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ASTORIA_SERVER && !ASTORIA_CLIENT
 
         /// <summary>
         /// Returns the fully qualified name of a navigation source.
@@ -1226,7 +1226,7 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
 
         #region ODataLib and WCF DS Server
-#if !ODATALIB_QUERY && !ASTORIA_CLIENT
+#if !ASTORIA_CLIENT
         /// <summary>
         /// Gets the Partail name of the definition referred to by the type reference.
         /// </summary>
@@ -1705,7 +1705,7 @@ namespace Microsoft.OData.Core.Metadata
         /// </summary>
         /// <param name="containerElement">The container element to get the full name for.</param>
         /// <returns>The full name of the owning entity container, slash, name of the container element.</returns>
-#if ASTORIA_CLIENT || ODATALIB_QUERY
+#if ASTORIA_CLIENT
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be used in a later change")]
 #endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
@@ -1926,7 +1926,7 @@ namespace Microsoft.OData.Core.Metadata
                 return Enumerable.Empty<IEdmOperationImport>();
             }
 
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT && !ODATALIB_QUERY
+#if !ASTORIA_SERVER && !ASTORIA_CLIENT
             int indexOfParameterStart = operationImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
             string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
@@ -1959,7 +1959,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IEnumerable<IEdmOperationImport> operationImports = container.FindOperationImports(operationNameWithoutContainerOrNamespace);
             Debug.Assert(operationImports != null, "operationImports != null");
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT && !ODATALIB_QUERY
+#if !ASTORIA_SERVER && !ASTORIA_CLIENT
             if (indexOfParameterStart > 0)
             {
                 return FilterByOperationParameterTypes(operationImports, functionImportNameWithoutParameterTypes, operationImportName);

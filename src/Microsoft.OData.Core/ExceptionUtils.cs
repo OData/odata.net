@@ -6,8 +6,6 @@
 
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
-#elif ODATALIB_QUERY
-namespace Microsoft.OData.Query
 #else
 namespace Microsoft.OData.Core
 #endif
@@ -73,11 +71,10 @@ namespace Microsoft.OData.Core
             {
 #if !ASTORIA_CLIENT
                 throw Error.ArgumentNull(parameterName);
-#endif 
+#endif
             }
         }
 
-#if !ODATALIB_QUERY
         /// <summary>
         /// Checks the argument string value empty string and throws <see cref="ArgumentNullException"/> if it is empty. The value can be null though.
         /// </summary>
@@ -94,7 +91,6 @@ namespace Microsoft.OData.Core
 #endif
             }
         }
-#endif
 
         /// <summary>
         /// Checks the argument string value for null or empty string and throws <see cref="ArgumentNullException"/> if it is null or empty.
@@ -164,7 +160,6 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if !ODATALIB_QUERY
         /// <summary>
         /// Checks the <paramref name="value"/> for not being empty.
         /// </summary>
@@ -189,7 +184,6 @@ namespace Microsoft.OData.Core
 #endif
             }
         }
-#endif
 
         /// <summary>
         /// A workaround to a problem with FxCop which does not recognize the CheckArgumentNotNull method

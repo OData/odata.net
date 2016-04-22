@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_QUERY
-namespace Microsoft.OData.Query
-#else
 namespace Microsoft.OData.Core
-#endif
 {
     #region Namespaces
     using System;
@@ -33,7 +29,7 @@ namespace Microsoft.OData.Core
         /// <summary>Gets a non-nullable version of the specified type.</summary>
         /// <param name="type">Type to get non-nullable version for.</param>
         /// <returns>
-        /// <paramref name="type"/> if type is a reference type or a 
+        /// <paramref name="type"/> if type is a reference type or a
         /// non-nullable type; otherwise, the underlying value type.
         /// </returns>
         internal static Type GetNonNullableType(Type type)
@@ -68,8 +64,6 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(type != null, "type != null");
 
-            //// This is a copy of WebUtil.TypeAllowsNull from the product.
-
             return !type.IsValueType() || IsNullableType(type);
         }
 
@@ -79,7 +73,7 @@ namespace Microsoft.OData.Core
         /// <param name="typeA">First type to compare.</param>
         /// <param name="typeB">Second type to compare.</param>
         /// <returns>true if the types are equivalent (they both represent the same type), or false otherwise.</returns>
-        /// <remarks>This method abstracts away the necessity to call Type.IsEquivalentTo method in .NET 4 and higher but 
+        /// <remarks>This method abstracts away the necessity to call Type.IsEquivalentTo method in .NET 4 and higher but
         /// use simple reference equality on platforms which don't have that method (like Silverlight).</remarks>
         internal static bool AreTypesEquivalent(Type typeA, Type typeB)
         {

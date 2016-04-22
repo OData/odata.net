@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ODATALIB || ODATALIB_QUERY
+#if ODATALIB
 namespace Microsoft.OData.Core
 #else
 namespace Microsoft.OData.Edm.Csdl

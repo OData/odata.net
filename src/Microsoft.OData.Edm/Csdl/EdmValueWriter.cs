@@ -16,7 +16,7 @@ namespace Microsoft.OData.Service
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ODATALIB || ODATALIB_QUERY
+#if ODATALIB
 namespace Microsoft.OData.Core
 #else
 namespace Microsoft.OData.Edm.Csdl
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         private static char[] Hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-#if !ODATALIB && !ODATALIB_QUERY && !ASTORIA_CLIENT && !ASTORIA_SERVER
+#if !ODATALIB && !ASTORIA_CLIENT && !ASTORIA_SERVER
         /// <summary>
         /// Converts the IEdmPrimitiveValue to a String.
         /// </summary>
