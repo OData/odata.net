@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
@@ -767,12 +767,6 @@
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MimeTypePropertyAttribute.cs">
       <Link>MimeTypePropertyAttribute.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\OpenObject.cs">
-      <Link>OpenObject.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\OpenObjectAttribute.cs">
-      <Link>OpenObjectAttribute.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\EntityDescriptor.cs">
       <Link>EntityDescriptor.cs</Link>

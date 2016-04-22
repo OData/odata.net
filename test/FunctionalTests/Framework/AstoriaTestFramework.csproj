@@ -232,7 +232,6 @@
       <Link>Features\Expressions\Resources\ExpressionTreeToXmlSerializer.cs</Link>
     </EmbeddedResource>
     <Compile Include="Client\CLWrappers\KeyAttWrapper.cs" />
-    <Compile Include="Client\CLWrappers\OpenObjectWrapper.cs" />
     <Compile Include="Client\CLWrappers\ServerDrivenPagingClientWrapper.cs" />
     <Compile Include="Client\CLWrappers\WebDataContextWrapper.cs" />
     <Compile Include="Client\CLWrappers\WebDataQueryWrapper.cs" />
