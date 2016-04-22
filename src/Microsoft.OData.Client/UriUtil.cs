@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Service
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Service
     /// </summary>
     internal static class UriUtil
     {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>forward slash char array for triming uris</summary>
         internal static readonly char[] ForwardSlash = new char[1] { '/' };
 #endif
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Service
             return uri.IsAbsoluteUri ? uri.AbsoluteUri : uri.OriginalString;
         }
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>new Uri(string uriString, UriKind uriKind)</summary>
         /// <param name="value">value</param>
         /// <param name="kind">kind</param>
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Service
         }
 #endif
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>
         /// Appends the absolute baseUri with the relativeUri to create a new absolute uri
         /// </summary>

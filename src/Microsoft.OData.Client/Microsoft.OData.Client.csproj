@@ -7,7 +7,7 @@
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <SecurityMigration>false</SecurityMigration>
     <!-- process -->
-    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);ODATA_CLIENT</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <!-- project -->
     <RootNamespace>System</RootNamespace>

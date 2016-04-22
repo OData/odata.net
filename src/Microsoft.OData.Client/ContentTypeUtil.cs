@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Service
@@ -15,7 +15,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using System.Net;
 #endif
     using Microsoft.OData.Core;
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Service
         /// </remarks>
         internal static readonly UTF8Encoding EncodingUtf8NoPreamble = new UTF8Encoding(false, true);
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Allowable Media Types for an Entity or Feed in V2.
         /// </summary>
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Service
             }
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
 
         /// <summary>Selects an acceptable MIME type that satisfies the Accepts header.</summary>
         /// <param name="acceptTypesText">Text for Accepts header.</param>
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Service
         }
 #endif
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>Reads a Content-Type header and extracts the MIME type/subtype.</summary>
         /// <param name="contentType">The Content-Type header.</param>
         /// <param name="mime">The MIME type in standard type/subtype form, without parameters.</param>
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Service
             }
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>Creates a new exception for parsing errors.</summary>
         /// <param name="message">Message for error.</param>
         /// <returns>A new exception that can be thrown for a parsing error.</returns>
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.Service
             return c < '\x7F' && c > '\x1F' && !IsHttpSeparator(c);
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>Provides a struct to encapsulate a charset name and its relative desirability.</summary>
         private struct CharsetPart
         {
@@ -1112,7 +1112,7 @@ namespace Microsoft.OData.Service
                 get { return this.parameters; }
             }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
             /// <summary>Gets a number of non-* matching types, or -1 if not matching at all.</summary>
             /// <param name="candidate">Candidate MIME type to match.</param>
             /// <returns>The number of non-* matching types, or -1 if not matching at all.</returns>

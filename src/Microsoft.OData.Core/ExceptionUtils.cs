@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
 namespace Microsoft.OData.Core
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Core
 
             if (value == null)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw Error.ArgumentNull(parameterName);
 #endif
             }
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core
 
             if (value != null && value.Length == 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif
             }
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core
 
             if (string.IsNullOrEmpty(value))
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentNullException(parameterName, Strings.ExceptionUtils_ArgumentStringNullOrEmpty);
 #endif
             }
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Core
 
             if (value < 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckIntegerNotNegative(value));
 #endif
             }
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Core
 
             if (value <= 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckIntegerPositive(value));
 #endif
             }
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Core
 
             if (value <= 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckLongPositive(value));
 #endif
             }
@@ -172,13 +172,13 @@ namespace Microsoft.OData.Core
 
             if (value == null)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw Error.ArgumentNull(parameterName);
 #endif
             }
             else if (value.Count == 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 // TODO: STRINGS The string is fine; just rename it to just ArgumentEmpty
                 throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif

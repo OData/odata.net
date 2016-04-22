@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Core.Evaluation
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.Evaluation
     /// </summary>
     internal abstract class ODataResourceMetadataBuilder
     {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Gets an instance of the metadata builder which never returns anything other than nulls.
         /// </summary>
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal abstract string GetETag();
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Gets the default media resource of the entity.
         /// </summary>
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri GetStreamEditLink(string streamPropertyName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri GetStreamReadLink(string streamPropertyName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNestedResourceInfoUrl)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri GetAssociationLinkUri(string navigationPropertyName, Uri associationLinkUrl, bool hasAssociationLinkUrl)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
@@ -250,7 +250,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri GetOperationTargetUri(string operationName, string bindingParameterTypeName, string parameterNames)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
@@ -268,7 +268,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual string GetOperationTitle(string operationName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Core.Evaluation
             return null;
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Implementation of the metadata builder which only returns nulls.
         /// </summary>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 #if ODATA_SERVICE
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Core.Evaluation
 #if ODATA_SERVICE
                 return new InvalidOperationException(Microsoft.OData.Service.Strings.Serializer_CannotConvertValue(value));
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
                 return Error.InvalidOperation(Client.Strings.Context_CannotConvertKey(value));
 #endif
 #if ODATALIB
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 // DEVNOTE: for some reason, the client adds .0 to doubles where the server does not.
                 // Unfortunately, it would be a breaking change to alter this behavior now.
-#if ASTORIA_CLIENT || ODATALIB
+#if ODATA_CLIENT || ODATALIB
                 IEnumerable<char> characters = input.ToCharArray();
 
 #if ODATALIB
@@ -372,7 +372,7 @@ namespace Microsoft.OData.Core.Evaluation
                     return true;
                 }
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
                 return ClientConvert.TryConvertBinaryToByteArray(value, out array);
 #else
                 array = null;

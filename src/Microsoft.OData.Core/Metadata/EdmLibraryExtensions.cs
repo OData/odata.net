@@ -22,10 +22,10 @@ namespace Microsoft.OData.Core.Metadata
     using Microsoft.OData.Service;
     using ErrorStrings = Microsoft.OData.Service.Strings;
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using ErrorStrings = Microsoft.OData.Client.Strings;
 #endif
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
     using Microsoft.OData.Core.JsonLight;
     using ErrorStrings = Microsoft.OData.Core.Strings;
     using PlatformHelper = Microsoft.OData.Core.PlatformHelper;
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.Metadata
 
         #region Internal methods
         #region ODataLib only
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
 
         /// <summary>
         /// Returns the fully qualified name of a navigation source.
@@ -1226,7 +1226,7 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
 
         #region ODataLib and WCF DS Server
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Gets the Partail name of the definition referred to by the type reference.
         /// </summary>
@@ -1432,7 +1432,7 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
 
         #region ODataLib and Query project
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
         /// <summary>
         /// Checks if the <paramref name="baseType"/> is assignable to <paramref name="subtype"/>.
         /// In other words, if <paramref name="subtype"/> is a subtype of <paramref name="baseType"/> or not.
@@ -1705,19 +1705,19 @@ namespace Microsoft.OData.Core.Metadata
         /// </summary>
         /// <param name="containerElement">The container element to get the full name for.</param>
         /// <returns>The full name of the owning entity container, slash, name of the container element.</returns>
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be used in a later change")]
 #endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
 #endif
             Debug.Assert(containerElement != null, "containerElement != null");
 
             return containerElement.Container.Name + "." + containerElement.Name;
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Returns the primitive type reference for the given Clr type.
         /// </summary>
@@ -1854,7 +1854,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>A type reference for the <paramref name="type"/>.</returns>
         internal static IEdmTypeReference ToTypeReference(this IEdmType type, bool nullable)
         {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
 #endif
 
             if (type == null)
@@ -1891,12 +1891,12 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>Type name for a collection of the specified item type name.</returns>
         internal static string GetCollectionTypeName(string itemTypeName)
         {
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
 #endif
             return string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, itemTypeName);
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Resolves a operation import or operation import group.
         /// </summary>
@@ -1926,7 +1926,7 @@ namespace Microsoft.OData.Core.Metadata
                 return Enumerable.Empty<IEdmOperationImport>();
             }
 
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
             int indexOfParameterStart = operationImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
             string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
@@ -1959,7 +1959,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IEnumerable<IEdmOperationImport> operationImports = container.FindOperationImports(operationNameWithoutContainerOrNamespace);
             Debug.Assert(operationImports != null, "operationImports != null");
-#if !ODATA_SERVICE && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
             if (indexOfParameterStart > 0)
             {
                 return FilterByOperationParameterTypes(operationImports, functionImportNameWithoutParameterTypes, operationImportName);

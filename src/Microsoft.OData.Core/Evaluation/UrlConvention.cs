@@ -18,7 +18,7 @@ using Microsoft.OData.Edm.Library.Annotations;
 using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Vocabularies;
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 #if ODATA_SERVICE
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Service.Design
         }
 #endif
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>
         /// Adds the required headers for the url convention.
         /// </summary>

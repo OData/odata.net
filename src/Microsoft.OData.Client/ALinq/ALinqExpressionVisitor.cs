@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
                 case ExpressionType.MultiplyChecked:
                 case ExpressionType.Divide:
                 case ExpressionType.Modulo:
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 case ExpressionType.Power:
 #endif
                 case ExpressionType.And:

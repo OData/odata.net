@@ -7,7 +7,7 @@
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 #if ODATALIB

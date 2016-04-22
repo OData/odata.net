@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #endif
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #endif
-#if !ASTORIA_CLIENT && !ODATA_SERVICE
+#if !ODATA_CLIENT && !ODATA_SERVICE
 namespace Microsoft.OData.Core
 #endif
 {

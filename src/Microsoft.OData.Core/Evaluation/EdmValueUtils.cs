@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Core.Evaluation
@@ -18,7 +18,7 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using Microsoft.OData.Core;
     using ErrorStrings = Microsoft.OData.Client.Strings;
     using PlatformHelpers = Microsoft.OData.Client.PlatformHelper;
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>An <see cref="IEdmDelayedValue"/> for the <paramref name="primitiveValue"/>.</returns>
         internal static IEdmDelayedValue ConvertPrimitiveValue(object primitiveValue, IEdmPrimitiveTypeReference type)
         {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
 #endif
             Debug.Assert(primitiveValue != null, "primitiveValue != null");
 
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The clr value</returns>
         internal static object ToClrValue(this IEdmPrimitiveValue edmValue)
         {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
 #endif
             Debug.Assert(edmValue != null, "edmValue != null");
             EdmPrimitiveTypeKind primitiveKind = edmValue.Type.PrimitiveKind();
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Core.Evaluation
             throw new ODataException(ErrorStrings.EdmValueUtils_CannotConvertTypeToClrValue(edmValue.ValueKind));
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Tries to get a stream property of the specified name.
         /// </summary>
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Core.Evaluation
                 throw new NotImplementedException();
             }
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             IEdmDelayedValue convertPrimitiveValueWithoutTypeCode;
             if (TryConvertClientSpecificPrimitiveValue(primitiveValue, type, out convertPrimitiveValueWithoutTypeCode))
             {
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Core.Evaluation
             throw new ODataException(ErrorStrings.EdmValueUtils_UnsupportedPrimitiveType(primitiveValue.GetType().FullName));
         }
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>
         /// Tries to convert the given value if it is of a type specific to the client library but still able to be mapped to EDM.
         /// </summary>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_ASYNC || ASTORIA_CLIENT
+#if ODATALIB_ASYNC || ODATA_CLIENT
 #if ODATALIB
 namespace Microsoft.OData.Core
 #else
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using ExceptionUtils = CommonUtil;
 #endif
     #endregion Namespaces

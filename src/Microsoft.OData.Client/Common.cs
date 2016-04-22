@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Service
@@ -18,7 +18,7 @@ namespace Microsoft.OData.Service
     using System.Xml;
     using System.Text;
     using Microsoft.OData.Core;
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
     using Microsoft.OData.Client;
 #endif
 
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Service
         /// <returns>Returns true if the type is not supported</returns>
         internal static bool IsUnsupportedType(Type type)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             if (type.IsGenericType())
 #else
             if (type.IsGenericType)
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Service
             {
                 if (isNested)
                 {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
                     throw Error.InvalidOperation(Strings.ClientType_CollectionOfCollectionNotSupported);
 #else
                     throw DataServiceException.CreateBadRequestError(Strings.BadRequest_CollectionOfCollectionNotSupported);
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Service
             return null;
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// checks whether the given xml reader element is empty or not.
         /// This method reads over the start tag and if this returns false,
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Service
         internal static string GetModelTypeName(Type type)
         {
             Debug.Assert(type != null, "type != null");
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             if (type.IsGenericType())
 #else
             if (type.IsGenericType)
