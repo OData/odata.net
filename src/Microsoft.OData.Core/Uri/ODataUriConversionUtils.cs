@@ -337,142 +337,144 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(primitiveValue, "primitiveValue");
             ExceptionUtils.CheckArgumentNotNull(targetEdmType, "targetEdmType");
 
-            Type fromType = primitiveValue.GetType();
-            TypeCode fromTypeCode = ODataPlatformHelper.GetTypeCode(fromType);
             EdmPrimitiveTypeKind targetPrimitiveKind = targetEdmType.PrimitiveKind;
 
-            switch (fromTypeCode)
+            if (primitiveValue is SByte)
             {
-                case TypeCode.SByte:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.SByte:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Int16:
-                            return Convert.ToInt16((SByte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Int32:
-                            return Convert.ToInt32((SByte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Int64:
-                            return Convert.ToInt64((SByte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Single:
-                            return Convert.ToSingle((SByte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Double:
-                            return Convert.ToDouble((SByte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return Convert.ToDecimal((SByte)primitiveValue);
-                    }
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.SByte:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Int16:
+                        return Convert.ToInt16((SByte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Int32:
+                        return Convert.ToInt32((SByte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Int64:
+                        return Convert.ToInt64((SByte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Single:
+                        return Convert.ToSingle((SByte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Double:
+                        return Convert.ToDouble((SByte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return Convert.ToDecimal((SByte)primitiveValue);
+                }
+            }
 
-                    break;
-                case TypeCode.Byte:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Byte:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Int16:
-                            return Convert.ToInt16((Byte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Int32:
-                            return Convert.ToInt32((Byte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Int64:
-                            return Convert.ToInt64((Byte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Single:
-                            return Convert.ToSingle((Byte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Double:
-                            return Convert.ToDouble((Byte)primitiveValue);
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return Convert.ToDecimal((Byte)primitiveValue);
-                    }
+            if (primitiveValue is Byte)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Byte:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Int16:
+                        return Convert.ToInt16((Byte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Int32:
+                        return Convert.ToInt32((Byte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Int64:
+                        return Convert.ToInt64((Byte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Single:
+                        return Convert.ToSingle((Byte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Double:
+                        return Convert.ToDouble((Byte)primitiveValue);
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return Convert.ToDecimal((Byte)primitiveValue);
+                }
+            }
 
-                    break;
-                case TypeCode.Int16:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Int16:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Int32:
-                            return Convert.ToInt32((Int16)primitiveValue);
-                        case EdmPrimitiveTypeKind.Int64:
-                            return Convert.ToInt64((Int16)primitiveValue);
-                        case EdmPrimitiveTypeKind.Single:
-                            return Convert.ToSingle((Int16)primitiveValue);
-                        case EdmPrimitiveTypeKind.Double:
-                            return Convert.ToDouble((Int16)primitiveValue);
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return Convert.ToDecimal((Int16)primitiveValue);
-                    }
+            if (primitiveValue is Int16)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Int16:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Int32:
+                        return Convert.ToInt32((Int16)primitiveValue);
+                    case EdmPrimitiveTypeKind.Int64:
+                        return Convert.ToInt64((Int16)primitiveValue);
+                    case EdmPrimitiveTypeKind.Single:
+                        return Convert.ToSingle((Int16)primitiveValue);
+                    case EdmPrimitiveTypeKind.Double:
+                        return Convert.ToDouble((Int16)primitiveValue);
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return Convert.ToDecimal((Int16)primitiveValue);
+                }
+            }
 
-                    break;
-                case TypeCode.Int32:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Int32:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Int64:
-                            return Convert.ToInt64((Int32)primitiveValue);
-                        case EdmPrimitiveTypeKind.Single:
-                            return Convert.ToSingle((Int32)primitiveValue);
-                        case EdmPrimitiveTypeKind.Double:
-                            return Convert.ToDouble((Int32)primitiveValue);
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return Convert.ToDecimal((Int32)primitiveValue);
-                    }
+            if (primitiveValue is Int32)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Int32:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Int64:
+                        return Convert.ToInt64((Int32)primitiveValue);
+                    case EdmPrimitiveTypeKind.Single:
+                        return Convert.ToSingle((Int32)primitiveValue);
+                    case EdmPrimitiveTypeKind.Double:
+                        return Convert.ToDouble((Int32)primitiveValue);
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return Convert.ToDecimal((Int32)primitiveValue);
+                }
+            }
 
-                    break;
-                case TypeCode.Int64:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Int64:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Single:
-                            return Convert.ToSingle((Int64)primitiveValue);
-                        case EdmPrimitiveTypeKind.Double:
-                            return Convert.ToDouble((Int64)primitiveValue);
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return Convert.ToDecimal((Int64)primitiveValue);
-                    }
+            if (primitiveValue is Int64)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Int64:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Single:
+                        return Convert.ToSingle((Int64)primitiveValue);
+                    case EdmPrimitiveTypeKind.Double:
+                        return Convert.ToDouble((Int64)primitiveValue);
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return Convert.ToDecimal((Int64)primitiveValue);
+                }
+            }
 
-                    break;
-                case TypeCode.Single:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Single:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Double:
-                            /*to string then to double, avoid losing precision like "(double)123.001f" which is 123.00099945068359, instead of 123.001d.*/
-                            return double.Parse(((Single)primitiveValue).ToString("R", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return Convert.ToDecimal((Single)primitiveValue);
-                    }
+            if (primitiveValue is Single)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Single:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Double:
+                        /*to string then to double, avoid losing precision like "(double)123.001f" which is 123.00099945068359, instead of 123.001d.*/
+                        return double.Parse(((Single)primitiveValue).ToString("R", CultureInfo.InvariantCulture),
+                            CultureInfo.InvariantCulture);
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return Convert.ToDecimal((Single)primitiveValue);
+                }
+            }
 
-                    break;
-                case TypeCode.Double:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Double:
-                            return primitiveValue;
-                        case EdmPrimitiveTypeKind.Decimal:
-                            // TODO: extract these convertion steps to an individual function
-                            decimal doubleToDecimalR;
+            if (primitiveValue is Double)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Double:
+                        return primitiveValue;
+                    case EdmPrimitiveTypeKind.Decimal:
+                        // TODO: extract these convertion steps to an individual function
+                        decimal doubleToDecimalR;
 
-                            // To keep the full presion of the current value, which if necessary is all 17 digits of precision supported by the Double type.
-                            if (decimal.TryParse(((Double)primitiveValue).ToString("R", CultureInfo.InvariantCulture), out doubleToDecimalR))
-                            {
-                                return doubleToDecimalR;
-                            }
+                        // To keep the full presion of the current value, which if necessary is all 17 digits of precision supported by the Double type.
+                        if (decimal.TryParse(((Double)primitiveValue).ToString("R", CultureInfo.InvariantCulture),
+                            out doubleToDecimalR))
+                        {
+                            return doubleToDecimalR;
+                        }
 
-                            return Convert.ToDecimal((Double)primitiveValue);
-                    }
-
-                    break;
-                case TypeCode.Decimal:
-                    switch (targetPrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.Decimal:
-                            return primitiveValue;
-                    }
-
-                    break;
-                default:
-                    break;
+                        return Convert.ToDecimal((Double)primitiveValue);
+                }
+            }
+            
+            if (primitiveValue is Decimal)
+            {
+                switch (targetPrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return primitiveValue;
+                }
             }
 
             return null;

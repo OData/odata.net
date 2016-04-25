@@ -634,27 +634,13 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(clrType != null, "clrType != null");
 
-            // PERF
-            switch (PlatformHelper.GetTypeCode(clrType))
+            if (clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64))
             {
-                case TypeCode.Boolean:
-                case TypeCode.Byte:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                case TypeCode.SByte:
-                case TypeCode.String:
-                case TypeCode.Single:
-                    return true;
-
-                default:
-                    return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
+                // Since UInt types are not in the core model, they cannot be found in the map below.
+                return true;
             }
+
+            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
         }
 
         /// <summary>
@@ -1726,40 +1712,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(Type clrType)
         {
             Debug.Assert(clrType != null, "clrType != null");
-
-            TypeCode typeCode = PlatformHelper.GetTypeCode(clrType);
-            switch (typeCode)
-            {
-                case TypeCode.Boolean:
-                    return BooleanTypeReference;
-
-                case TypeCode.Byte:
-                    return ByteTypeReference;
-
-                case TypeCode.Decimal:
-                    return DecimalTypeReference;
-
-                case TypeCode.Double:
-                    return DoubleTypeReference;
-
-                case TypeCode.Int16:
-                    return Int16TypeReference;
-
-                case TypeCode.Int32:
-                    return Int32TypeReference;
-
-                case TypeCode.Int64:
-                    return Int64TypeReference;
-
-                case TypeCode.SByte:
-                    return SByteTypeReference;
-
-                case TypeCode.String:
-                    return StringTypeReference;
-
-                case TypeCode.Single:
-                    return SingleTypeReference;
-            }
 
             // Try to lookup the type in our map.
             IEdmPrimitiveTypeReference primitiveTypeReference;

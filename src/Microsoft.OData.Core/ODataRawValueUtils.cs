@@ -29,97 +29,110 @@ namespace Microsoft.OData.Core
         internal static bool TryConvertPrimitiveToString(object value, out string result)
         {
             Debug.Assert(value != null, "value != null");
-            result = null;
 
-            TypeCode typeCode = PlatformHelper.GetTypeCode(value.GetType());
-            switch (typeCode)
+            if (value is bool)
             {
-                case TypeCode.Boolean:
-                    result = ODataRawValueConverter.ToString((bool)value);
-                    break;
-
-                case TypeCode.Byte:
-                    result = ODataRawValueConverter.ToString((byte)value);
-                    break;
-
-                case TypeCode.Decimal:
-                    result = ODataRawValueConverter.ToString((decimal)value);
-                    break;
-
-                case TypeCode.Double:
-                    result = ODataRawValueConverter.ToString((double)value);
-                    break;
-
-                case TypeCode.Int16:
-                    result = ODataRawValueConverter.ToString((Int16)value);
-                    break;
-
-                case TypeCode.Int32:
-                    result = ODataRawValueConverter.ToString((Int32)value);
-                    break;
-
-                case TypeCode.Int64:
-                    result = ODataRawValueConverter.ToString((Int64)value);
-                    break;
-
-                case TypeCode.SByte:
-                    result = ODataRawValueConverter.ToString((SByte)value);
-                    break;
-
-                case TypeCode.String:
-                    result = (string)value;
-                    break;
-
-                case TypeCode.Single:
-                    result = ODataRawValueConverter.ToString((Single)value);
-                    break;
-
-                default:
-                    byte[] bytes = value as byte[];
-                    if (bytes != null)
-                    {
-                        result = ODataRawValueConverter.ToString(bytes);
-                        break;
-                    }
-
-                    if (value is DateTimeOffset)
-                    {
-                        result = ODataRawValueConverter.ToString((DateTimeOffset)value);
-                        break;
-                    }
-
-                    if (value is Guid)
-                    {
-                        result = ODataRawValueConverter.ToString((Guid)value);
-                        break;
-                    }
-
-                    if (value is TimeSpan)
-                    {
-                        // Edm.Duration
-                        result = ODataRawValueConverter.ToString((TimeSpan)value);
-                        break;
-                    }
-
-                    if (value is Date)
-                    {
-                        // Edm.Date
-                        result = ODataRawValueConverter.ToString((Date)value);
-                        break;
-                    }
-
-                    if (value is TimeOfDay)
-                    {
-                        // Edm.TimeOfDay
-                        result = ODataRawValueConverter.ToString((TimeOfDay)value);
-                        break;
-                    }
-
-                    return false;
+                result = ODataRawValueConverter.ToString((bool)value);
+                return true;
             }
 
-            Debug.Assert(result != null, "result != null");
-            return true;
+            if (value is byte)
+            {
+                result = ODataRawValueConverter.ToString((byte)value);
+                return true;
+            }
+
+            if (value is decimal)
+            {
+                result = ODataRawValueConverter.ToString((decimal)value);
+                return true;
+            }
+
+            if (value is double)
+            {
+                result = ODataRawValueConverter.ToString((double)value);
+                return true;
+            }
+
+            if (value is Int16)
+            {
+                result = ODataRawValueConverter.ToString((Int16)value);
+                return true;
+            }
+
+            if (value is Int32)
+            {
+                result = ODataRawValueConverter.ToString((Int32)value);
+                return true;
+            }
+
+            if (value is Int64)
+            {
+                result = ODataRawValueConverter.ToString((Int64)value);
+                return true;
+            }
+
+            if (value is SByte)
+            {
+                result = ODataRawValueConverter.ToString((SByte)value);
+                return true;
+            }
+
+            var str = value as string;
+            if (str != null)
+            {
+                result = str;
+                return true;
+            }
+
+            if (value is Single)
+            {
+                result = ODataRawValueConverter.ToString((Single)value);
+                return true;
+            }
+
+            byte[] bytes = value as byte[];
+            if (bytes != null)
+            {
+                result = ODataRawValueConverter.ToString(bytes);
+                return true;
+            }
+
+            if (value is DateTimeOffset)
+            {
+                result = ODataRawValueConverter.ToString((DateTimeOffset)value);
+                return true;
+            }
+
+            if (value is Guid)
+            {
+                result = ODataRawValueConverter.ToString((Guid)value);
+                return true;
+            }
+
+            if (value is TimeSpan)
+            {
+                // Edm.Duration
+                result = ODataRawValueConverter.ToString((TimeSpan)value);
+                return true;
+            }
+
+            if (value is Date)
+            {
+                // Edm.Date
+                result = ODataRawValueConverter.ToString((Date)value);
+                return true;
+            }
+
+            if (value is TimeOfDay)
+            {
+                // Edm.TimeOfDay
+                result = ODataRawValueConverter.ToString((TimeOfDay)value);
+                return true;
+            }
+
+            result = null;
+            return false;
         }
 
         /// <summary>

@@ -38,70 +38,8 @@ namespace Microsoft.OData.Edm
     using System.Threading;
 #endif
     using System.Xml;
-
 #if !SPATIAL
     using Microsoft.OData.Edm.Library;
-#endif
-
-#if PORTABLELIB
-
-    #region Missing enums
-
-    /// <summary>
-    /// Replacement for TypeCode enum.
-    /// </summary>
-    internal enum TypeCode
-    {
-        /// <summary>Indicates that no specific TypeCode exists for this type.</summary>
-        Object = 1,
-
-        /// <summary>Boolean</summary>
-        Boolean = 3,
-
-        /// <summary>Char</summary>
-        Char = 4,
-
-        /// <summary>Signed 8-bit integer</summary>
-        SByte = 5,
-
-        /// <summary>Unsigned 8-bit integer</summary>
-        Byte = 6,
-
-        /// <summary>Signed 16-bit integer</summary>
-        Int16 = 7,
-
-        /// <summary>Unsigned 16-bit integer</summary>
-        UInt16 = 8,
-
-        /// <summary>Signed 32-bit integer</summary>
-        Int32 = 9,
-
-        /// <summary>Unsigned 32-bit integer</summary>
-        UInt32 = 10,
-
-        /// <summary>Signed 64-bit integer</summary>
-        Int64 = 11,
-
-        /// <summary>Unsigned 64-bit integer</summary>
-        UInt64 = 12,
-
-        /// <summary>IEEE 32-bit float</summary>
-        Single = 13,
-
-        /// <summary>IEEE 64-bit double</summary>
-        Double = 14,
-
-        /// <summary>Decimal</summary>
-        Decimal = 15,
-
-        /// <summary>DateTime</summary>
-        DateTime = 16,
-
-        /// <summary>Unicode character string</summary>
-        String = 18,
-    }
-
-    #endregion
 #endif
 
     /// <summary>
@@ -154,13 +92,6 @@ namespace Microsoft.OData.Edm
         internal static readonly string UriSchemeHttps = Uri.UriSchemeHttps;
 #endif
 
-#if PORTABLELIB
-        /// <summary>
-        /// Map of TypeCodes used with GetTypeCode method. Only initialized if that method is called.
-        /// </summary>
-        private static TypeCodeMap typeCodeMap;
-#endif
-
         #region Helper methods for properties
 
         /// <summary>
@@ -191,17 +122,6 @@ namespace Microsoft.OData.Edm
 #else
             return type.IsValueType;
 #endif
-        }
-
-        /// <summary>
-        /// Replacement for Type.IsGenericParameter.
-        /// </summary>
-        /// <param name="type">Type on which to call this helper method.</param>
-        /// <returns>See documentation for property being accessed in the body of the method.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsGenericParameter(this Type type)
-        {
-            return type.IsGenericParameter;
         }
 
         /// <summary>
@@ -343,22 +263,6 @@ namespace Microsoft.OData.Edm
 
         #region Helper methods for static methods
 
-        /// <summary>
-        /// Replacement for Array.AsReadOnly(T[]).
-        /// </summary>
-        /// <typeparam name="T">Type of items in the array.</typeparam>
-        /// <param name="array">Array to use to create the ReadOnlyCollection.</param>
-        /// <returns>ReadOnlyCollection containing the specified array items.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static ReadOnlyCollection<T> AsReadOnly<T>(this T[] array)
-        {
-#if PORTABLELIB
-            return new ReadOnlyCollection<T>(array);
-#else
-            return Array.AsReadOnly(array);
-#endif
-        }
-
 #if !SPATIAL
         /// <summary>
         /// Converts a string to a Date.
@@ -466,31 +370,6 @@ namespace Microsoft.OData.Edm
         internal static Type GetTypeOrThrow(string typeName)
         {
             return Type.GetType(typeName, true);
-        }
-
-        /// <summary>
-        /// Gets the TypeCode for the specified type.
-        /// </summary>
-        /// <param name="type">Type on which to call this helper method.</param>
-        /// <returns>TypeCode representing the specified type.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static TypeCode GetTypeCode(Type type)
-        {
-#if PORTABLELIB
-            if (typeCodeMap == null)
-            {
-                Interlocked.CompareExchange(ref typeCodeMap, new TypeCodeMap(), null);
-            }
-
-            if (type.IsEnum())
-            {
-                type = Enum.GetUnderlyingType(type);
-            }
-
-            return typeCodeMap.GetTypeCode(type);
-#else
-            return Type.GetTypeCode(type);
-#endif
         }
 
         #endregion
@@ -1102,18 +981,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Replacement for Stream.Close().
-        /// </summary>
-        /// <param name="stream">Stream on which to call this helper method.</param>
-        /// <remarks>
-        /// Many Close methods have been eliminated on Win8, the recommended pattern is to just use Dispose instead.
-        /// </remarks>
-        internal static void Close(this Stream stream)
-        {
-            stream.Dispose();
-        }
-
-        /// <summary>
         /// Replacement for Assembly.GetType(string, bool).
         /// </summary>
         /// <param name="assembly">Assembly on which to call this helper method.</param>
@@ -1176,54 +1043,6 @@ namespace Microsoft.OData.Edm
             return (propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsPublic) || (propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic);
         }
         #endregion
-        /// <summary>
-        /// Manages the type code mapping used to provide the GetTypeCode functionality.
-        /// </summary>
-        private sealed class TypeCodeMap
-        {
-            /// <summary>
-            /// Dictionary of types and their type codes.
-            /// </summary>
-            private Dictionary<Type, TypeCode> typeCodes = new Dictionary<Type, TypeCode>(EqualityComparer<Type>.Default);
-
-            /// <summary>
-            /// Constructor for the map.
-            /// </summary>
-            internal TypeCodeMap()
-            {
-                this.typeCodes.Add(typeof(bool), TypeCode.Boolean);
-                this.typeCodes.Add(typeof(char), TypeCode.Char);
-                this.typeCodes.Add(typeof(byte), TypeCode.Byte);
-                this.typeCodes.Add(typeof(DateTime), TypeCode.DateTime);
-                this.typeCodes.Add(typeof(decimal), TypeCode.Decimal);
-                this.typeCodes.Add(typeof(double), TypeCode.Double);
-                this.typeCodes.Add(typeof(Int16), TypeCode.Int16);
-                this.typeCodes.Add(typeof(UInt16), TypeCode.UInt16);
-                this.typeCodes.Add(typeof(Int32), TypeCode.Int32);
-                this.typeCodes.Add(typeof(UInt32), TypeCode.UInt32);
-                this.typeCodes.Add(typeof(Int64), TypeCode.Int64);
-                this.typeCodes.Add(typeof(UInt64), TypeCode.UInt64);
-                this.typeCodes.Add(typeof(sbyte), TypeCode.SByte);
-                this.typeCodes.Add(typeof(Single), TypeCode.Single);
-                this.typeCodes.Add(typeof(string), TypeCode.String);
-            }
-
-            /// <summary>
-            /// Method that does the lookup in the type map, given a type.
-            /// </summary>
-            /// <param name="type">Type for which to find the type code.</param>
-            /// <returns>TypeCode for the specified type if it's in the map, otherwise TypeCode.Object.</returns>
-            internal TypeCode GetTypeCode(Type type)
-            {
-                TypeCode typeCode;
-                if (this.typeCodes.TryGetValue(type, out typeCode))
-                {
-                    return typeCode;
-                }
-
-                return TypeCode.Object;
-            }
-        }
 #endif
 
         /// <summary>
@@ -1241,15 +1060,6 @@ namespace Microsoft.OData.Edm
             options = options | RegexOptions.Compiled;
 #endif
             return new Regex(pattern, options);
-        }
-
-        public static string[] GetSegments(this Uri uri)
-        {
-#if PORTABLELIB
-            return uri.AbsolutePath.Split('/');
-#else
-            return uri.Segments;
-#endif
         }
     }
 }

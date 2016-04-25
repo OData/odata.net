@@ -45,52 +45,70 @@ namespace Microsoft.OData.Core.Evaluation
 #endif
             Debug.Assert(primitiveValue != null, "primitiveValue != null");
 
-            TypeCode typeCode = PlatformHelpers.GetTypeCode(primitiveValue.GetType());
-            switch (typeCode)
+            if (primitiveValue is Boolean)
             {
-                case TypeCode.Boolean:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Boolean);
-                    return new EdmBooleanConstant(type, (bool)primitiveValue);
-
-                case TypeCode.Byte:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Byte);
-                    return new EdmIntegerConstant(type, (byte)primitiveValue);
-
-                case TypeCode.SByte:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.SByte);
-                    return new EdmIntegerConstant(type, (sbyte)primitiveValue);
-
-                case TypeCode.Int16:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int16);
-                    return new EdmIntegerConstant(type, (Int16)primitiveValue);
-
-                case TypeCode.Int32:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int32);
-                    return new EdmIntegerConstant(type, (Int32)primitiveValue);
-
-                case TypeCode.Int64:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int64);
-                    return new EdmIntegerConstant(type, (Int64)primitiveValue);
-
-                case TypeCode.Decimal:
-                    IEdmDecimalTypeReference decimalType = (IEdmDecimalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Decimal);
-                    return new EdmDecimalConstant(decimalType, (decimal)primitiveValue);
-
-                case TypeCode.Single:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Single);
-                    return new EdmFloatingConstant(type, (Single)primitiveValue);
-
-                case TypeCode.Double:
-                    type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Double);
-                    return new EdmFloatingConstant(type, (double)primitiveValue);
-
-                case TypeCode.String:
-                    IEdmStringTypeReference stringType = (IEdmStringTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.String);
-                    return new EdmStringConstant(stringType, (string)primitiveValue);
-
-                default:
-                    return ConvertPrimitiveValueWithoutTypeCode(primitiveValue, type);
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Boolean);
+                return new EdmBooleanConstant(type, (bool)primitiveValue);
             }
+
+            if (primitiveValue is Byte)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Byte);
+                return new EdmIntegerConstant(type, (byte)primitiveValue);
+            }
+
+            if (primitiveValue is SByte)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.SByte);
+                return new EdmIntegerConstant(type, (sbyte)primitiveValue);
+            }
+
+            if (primitiveValue is Int16)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int16);
+                return new EdmIntegerConstant(type, (Int16)primitiveValue);
+            }
+
+            if (primitiveValue is Int32)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int32);
+                return new EdmIntegerConstant(type, (Int32)primitiveValue);
+            }
+
+            if (primitiveValue is Int64)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int64);
+                return new EdmIntegerConstant(type, (Int64)primitiveValue);
+            }
+
+            if (primitiveValue is Decimal)
+            {
+                var decimalType =
+                    (IEdmDecimalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Decimal);
+                return new EdmDecimalConstant(decimalType, (decimal)primitiveValue);
+            }
+
+            if (primitiveValue is Single)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Single);
+                return new EdmFloatingConstant(type, (Single)primitiveValue);
+            }
+
+            if (primitiveValue is Double)
+            {
+                type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Double);
+                return new EdmFloatingConstant(type, (Double)primitiveValue);
+            }
+
+            var str = primitiveValue as string;
+            if (str != null)
+            {
+                var stringType =
+                    (IEdmStringTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.String);
+                return new EdmStringConstant(stringType, str);
+            }
+
+            return ConvertPrimitiveValueWithoutTypeCode(primitiveValue, type);
         }
 
         /// <summary>

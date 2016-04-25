@@ -9,8 +9,8 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Xml.Linq;
     using Microsoft.Spatial;
-    using PlatformHelper = Microsoft.OData.Client.PlatformHelper;
 
     /// <summary>
     /// Converter for primitive values which do not match the client property types. This can happen for two reasons:
@@ -41,34 +41,15 @@ namespace Microsoft.OData.Client.Materialization
 
                 // Fast path for the supported primitive types that have a type code and are supported by ODataLib.
                 Type nonNullablePropertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
-                TypeCode typeCode = PlatformHelper.GetTypeCode(nonNullablePropertyType);
-                switch (typeCode)
+                if (IsSupportedODataPrimitiveType(nonNullablePropertyType))
                 {
-                    case TypeCode.Boolean:  // fall through
-                    case TypeCode.Byte:     // fall through
-                    case TypeCode.Decimal:  // fall through
-                    case TypeCode.Double:   // fall through
-                    case TypeCode.Int16:    // fall through
-                    case TypeCode.Int32:    // fall through
-                    case TypeCode.Int64:    // fall through
-                    case TypeCode.SByte:    // fall through
-                    case TypeCode.Single:   // fall through
-                    case TypeCode.String:
-                        return this.ConvertValueIfNeeded(value, propertyType);
+                    return this.ConvertValueIfNeeded(value, propertyType);
                 }
 
                 // Do the conversion for types that are not supported by ODataLib e.g. char[], char, etc
                 // PropertyType might be nullable. Hence to avoid nullable checks, we currently check for
                 // primitiveType.ClrType
-                if (typeCode == TypeCode.Char ||
-                    typeCode == TypeCode.UInt16 ||
-                    typeCode == TypeCode.UInt32 ||
-                    typeCode == TypeCode.UInt64 ||
-                    nonNullablePropertyType == typeof(Char[]) ||
-                    nonNullablePropertyType == typeof(Type) ||
-                    nonNullablePropertyType == typeof(Uri) ||
-                    nonNullablePropertyType == typeof(System.Xml.Linq.XDocument) ||
-                    nonNullablePropertyType == typeof(System.Xml.Linq.XElement))
+                if (CanMapToODataPrimitiveType(nonNullablePropertyType))
                 {
                     PrimitiveType primitiveType;
                     PrimitiveType.TryGetPrimitiveType(propertyType, out primitiveType);
@@ -91,6 +72,24 @@ namespace Microsoft.OData.Client.Materialization
             return this.ConvertValueIfNeeded(value, propertyType);
         }
 
+        private static bool IsSupportedODataPrimitiveType(Type type)
+        {
+            return type == typeof(Boolean) || type == typeof(Byte) ||
+                   type == typeof(Decimal) || type == typeof(Double) ||
+                   type == typeof(Int16) || type == typeof(Int32) ||
+                   type == typeof(Int64) || type == typeof(SByte) ||
+                   type == typeof(Single) || type == typeof(String);
+        }
+
+        private static bool CanMapToODataPrimitiveType(Type type)
+        {
+            return type == typeof(Char) || type == typeof(UInt16) ||
+                   type == typeof(UInt32) || type == typeof(UInt64) ||
+                   type == typeof(Char[]) || type == typeof(Type) ||
+                   type == typeof(Uri) || type == typeof(XDocument) ||
+                   type == typeof(XElement);
+        }
+
         /// <summary>
         /// Converts a non-spatial primitive value to the target type.
         /// </summary>
@@ -100,22 +99,22 @@ namespace Microsoft.OData.Client.Materialization
         private static object ConvertNonSpatialValue(object value, Type targetType)
         {
             Debug.Assert(value != null, "value != null");
-            TypeCode targetTypeCode = PlatformHelper.GetTypeCode(targetType);
 
             // These types can be safely converted to directly, as there is no risk of precision being lost.
-            switch (targetTypeCode)
+            if (CanSafelyConvertTo(targetType))
             {
-                case TypeCode.Boolean:
-                case TypeCode.Byte:
-                case TypeCode.SByte:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                    return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+                return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
             }
 
             string stringValue = ClientConvert.ToString(value);
             return ClientConvert.ChangeType(stringValue, targetType);
+        }
+
+        private static bool CanSafelyConvertTo(Type targetType)
+        {
+            return targetType == typeof(Boolean) || targetType == typeof(Byte) ||
+                   targetType == typeof(SByte) || targetType == typeof(Int16) ||
+                   targetType == typeof(Int32) || targetType == typeof(Int64);
         }
 
         /// <summary>

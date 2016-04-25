@@ -195,19 +195,27 @@ namespace Microsoft.OData.Core.JsonLight
                 return null;
             }
 
-            TypeCode typeCode = ODataPlatformHelper.GetTypeCode(payloadItem.GetType());
-            switch (typeCode)
+            // In JSON only boolean, String, Int32 and Double are recognized as primitive types
+            // (without additional type conversion). So only check for those; if not one of these primitive
+            // types it must be a complex, entity or collection value.
+            if (payloadItem is Boolean)
             {
-                // In JSON only boolean, String, Int32 and Double are recognized as primitive types
-                // (without additional type conversion). So only check for those; if not one of these primitive
-                // types it must be a complex, entity or collection value.
-                case TypeCode.Boolean: return Metadata.EdmConstants.EdmBooleanTypeName;
-                case TypeCode.String: return Metadata.EdmConstants.EdmStringTypeName;
-                case TypeCode.Int32: return Metadata.EdmConstants.EdmInt32TypeName;
-                case TypeCode.Double: return Metadata.EdmConstants.EdmDoubleTypeName;
-                default:
-                    Debug.Assert(typeCode == TypeCode.Object, "If not one of the primitive types above, it must be an object in JSON.");
-                    break;
+                return Metadata.EdmConstants.EdmBooleanTypeName;
+            }
+
+            if (payloadItem is String)
+            {
+                return Metadata.EdmConstants.EdmStringTypeName;
+            }
+
+            if (payloadItem is Int32)
+            {
+                return Metadata.EdmConstants.EdmInt32TypeName;
+            }
+
+            if (payloadItem is Double)
+            {
+                return Metadata.EdmConstants.EdmDoubleTypeName;
             }
 
             ODataComplexValue complexValue = payloadItem as ODataComplexValue;

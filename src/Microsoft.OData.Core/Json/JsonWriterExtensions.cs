@@ -56,91 +56,105 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">The value to write.</param>
         internal static void WritePrimitiveValue(this IJsonWriter jsonWriter, object value)
         {
-            TypeCode typeCode = ODataPlatformHelper.GetTypeCode(value.GetType());
-            switch (typeCode)
+            if (value is bool)
             {
-                case TypeCode.Boolean:
-                    jsonWriter.WriteValue((bool)value);
-                    break;
-
-                case TypeCode.Byte:
-                    jsonWriter.WriteValue((byte)value);
-                    break;
-
-                case TypeCode.Decimal:
-                    jsonWriter.WriteValue((decimal)value);
-                    break;
-
-                case TypeCode.Double:
-                    jsonWriter.WriteValue((double)value);
-                    break;
-
-                case TypeCode.Int16:
-                    jsonWriter.WriteValue((Int16)value);
-                    break;
-
-                case TypeCode.Int32:
-                    jsonWriter.WriteValue((Int32)value);
-                    break;
-
-                case TypeCode.Int64:
-                    jsonWriter.WriteValue((Int64)value);
-                    break;
-
-                case TypeCode.SByte:
-                    jsonWriter.WriteValue((sbyte)value);
-                    break;
-
-                case TypeCode.Single:
-                    jsonWriter.WriteValue((Single)value);
-                    break;
-
-                case TypeCode.String:
-                    jsonWriter.WriteValue((string)value);
-                    break;
-
-                default:
-                    {
-                        byte[] valueAsByteArray = value as byte[];
-                        if (valueAsByteArray != null)
-                        {
-                            jsonWriter.WriteValue(valueAsByteArray);
-                            break;
-                        }
-
-                        if (value is DateTimeOffset)
-                        {
-                            jsonWriter.WriteValue((DateTimeOffset)value);
-                            break;
-                        }
-
-                        if (value is Guid)
-                        {
-                            jsonWriter.WriteValue((Guid)value);
-                            break;
-                        }
-
-                        if (value is TimeSpan)
-                        {
-                            jsonWriter.WriteValue((TimeSpan)value);
-                            break;
-                        }
-
-                        if (value is Date)
-                        {
-                            jsonWriter.WriteValue((Date)value);
-                            break;
-                        }
-
-                        if (value is TimeOfDay)
-                        {
-                            jsonWriter.WriteValue((TimeOfDay)value);
-                            break;
-                        }
-                    }
-
-                    throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName));
+                jsonWriter.WriteValue((bool)value);
+                return;
             }
+
+            if (value is byte)
+            {
+                jsonWriter.WriteValue((byte)value);
+                return;
+            }
+
+            if (value is decimal)
+            {
+                jsonWriter.WriteValue((decimal)value);
+                return;
+            }
+
+            if (value is double)
+            {
+                jsonWriter.WriteValue((double)value);
+                return;
+            }
+
+            if (value is Int16)
+            {
+                jsonWriter.WriteValue((Int16)value);
+                return;
+            }
+
+            if (value is Int32)
+            {
+                jsonWriter.WriteValue((Int32)value);
+                return;
+            }
+
+            if (value is Int64)
+            {
+                jsonWriter.WriteValue((Int64)value);
+                return;
+            }
+
+            if (value is sbyte)
+            {
+                jsonWriter.WriteValue((sbyte)value);
+                return;
+            }
+
+            if (value is Single)
+            {
+                jsonWriter.WriteValue((Single)value);
+                return;
+            }
+
+            var str = value as string;
+            if (str != null)
+            {
+                jsonWriter.WriteValue(str);
+                return;
+            }
+
+            byte[] valueAsByteArray = value as byte[];
+            if (valueAsByteArray != null)
+            {
+                jsonWriter.WriteValue(valueAsByteArray);
+                return;
+            }
+
+            if (value is DateTimeOffset)
+            {
+                jsonWriter.WriteValue((DateTimeOffset)value);
+                return;
+            }
+
+            if (value is Guid)
+            {
+                jsonWriter.WriteValue((Guid)value);
+                return;
+            }
+
+            if (value is TimeSpan)
+            {
+                jsonWriter.WriteValue((TimeSpan)value);
+                return;
+            }
+
+            if (value is Date)
+            {
+                jsonWriter.WriteValue((Date)value);
+                return;
+            }
+
+            if (value is TimeOfDay)
+            {
+                jsonWriter.WriteValue((TimeOfDay)value);
+                return;
+            }
+
+            throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName));
         }
 
         /// <summary>

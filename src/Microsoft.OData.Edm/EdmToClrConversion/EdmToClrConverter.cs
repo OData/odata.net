@@ -377,82 +377,106 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
 
         #region Private implementation
 
-        private static bool TryConvertAsNonGuidPrimitiveType(TypeCode typeCode, IEdmValue edmValue, out object clrValue)
+        private static bool TryConvertAsNonGuidPrimitiveType(Type clrType, IEdmValue edmValue, out object clrValue)
         {
-            switch (typeCode)
+            if (clrType == typeof(Boolean))
             {
-                case TypeCode.Boolean:
-                    clrValue = AsClrBoolean(edmValue);
-                    return true;
-
-                case TypeCode.Char:
-                    clrValue = AsClrChar(edmValue);
-                    return true;
-
-                case TypeCode.SByte:
-                    checked
-                    {
-                        clrValue = (SByte)AsClrInt64(edmValue);
-                        return true;
-                    }
-
-                case TypeCode.Byte:
-                    clrValue = AsClrByte(edmValue);
-                    return true;
-
-                case TypeCode.Int16:
-                    clrValue = AsClrInt16(edmValue);
-                    return true;
-
-                case TypeCode.UInt16:
-                    checked
-                    {
-                        clrValue = (UInt16)AsClrInt64(edmValue);
-                        return true;
-                    }
-
-                case TypeCode.Int32:
-                    clrValue = AsClrInt32(edmValue);
-                    return true;
-
-                case TypeCode.UInt32:
-                    checked
-                    {
-                        clrValue = (UInt32)AsClrInt64(edmValue);
-                        return true;
-                    }
-
-                case TypeCode.Int64:
-                    clrValue = AsClrInt64(edmValue);
-                    return true;
-
-                case TypeCode.UInt64:
-                    checked
-                    {
-                        clrValue = (UInt64)AsClrInt64(edmValue);
-                        return true;
-                    }
-
-                case TypeCode.Single:
-                    clrValue = AsClrSingle(edmValue);
-                    return true;
-
-                case TypeCode.Double:
-                    clrValue = AsClrDouble(edmValue);
-                    return true;
-
-                case TypeCode.Decimal:
-                    clrValue = AsClrDecimal(edmValue);
-                    return true;
-
-                case TypeCode.String:
-                    clrValue = AsClrString(edmValue);
-                    return true;
-
-                default:
-                    clrValue = null;
-                    return false;
+                clrValue = AsClrBoolean(edmValue);
+                return true;
             }
+
+            if (clrType == typeof(Char))
+            {
+                clrValue = AsClrChar(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(SByte))
+            {
+                checked
+                {
+                    clrValue = (SByte)AsClrInt64(edmValue);
+                    return true;
+                }
+            }
+
+            if (clrType == typeof(Byte))
+            {
+                clrValue = AsClrByte(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(Int16))
+            {
+                clrValue = AsClrInt16(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(UInt16))
+            {
+                checked
+                {
+                    clrValue = (UInt16)AsClrInt64(edmValue);
+                    return true;
+                }
+            }
+
+            if (clrType == typeof(Int32))
+            {
+                clrValue = AsClrInt32(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(UInt32))
+            {
+                checked
+                {
+                    clrValue = (UInt32)AsClrInt64(edmValue);
+                    return true;
+                }
+            }
+
+            if (clrType == typeof(Int64))
+            {
+                clrValue = AsClrInt64(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(UInt64))
+            {
+                checked
+                {
+                    clrValue = (UInt64)AsClrInt64(edmValue);
+                    return true;
+                }
+            }
+
+            if (clrType == typeof(Single))
+            {
+                clrValue = AsClrSingle(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(Double))
+            {
+                clrValue = AsClrDouble(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(Decimal))
+            {
+                clrValue = AsClrDecimal(edmValue);
+                return true;
+            }
+
+            if (clrType == typeof(String))
+            {
+                clrValue = AsClrString(edmValue);
+                return true;
+            }
+
+            clrValue = null;
+            return false;
         }
 
         private static MethodInfo FindICollectionOfElementTypeAddMethod(Type collectionType, Type elementType)
@@ -532,11 +556,14 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
             return interfaceType.Name;
         }
 
+        private static bool IsBuiltInOrEnumType(Type type)
+        {
+            return type.IsPrimitive() || type == typeof(string) || type == typeof(decimal) || type.IsEnum();
+        }
+
         private object AsClrValue(IEdmValue edmValue, Type clrType, bool convertEnumValues)
         {
-            TypeCode typeCode = PlatformHelper.GetTypeCode(clrType);
-
-            if (typeCode == TypeCode.Object)
+            if (!IsBuiltInOrEnumType(clrType))
             {
                 // First look for nullable primitives, then DateTime, DateTimeOffset and byte[] which don't have dedicated TypeCode, so they are processed here.
                 if (clrType.IsGenericType() && clrType.GetGenericTypeDefinition() == TypeNullableOfT)
@@ -590,9 +617,11 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                 // A CLR enum type will report some primitive type code, so we get here.
                 // If this is the case and the value is of an edm enumeration type, we want to unbox the primitive type value,
                 // otherwise assume the edm value is primitive and let it fail inside the converter if it's not.
+                Type underlyingType = null;
                 bool isEnum = clrType.IsEnum();
                 if (isEnum)
                 {
+                    underlyingType = Enum.GetUnderlyingType(clrType);
                     IEdmEnumValue edmEnumValue = edmValue as IEdmEnumValue;
                     if (edmEnumValue != null)
                     {
@@ -601,9 +630,9 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                 }
 
                 object clrValue;
-                if (!TryConvertAsNonGuidPrimitiveType(PlatformHelper.GetTypeCode(clrType), edmValue, out clrValue))
+                if (!TryConvertAsNonGuidPrimitiveType(underlyingType ?? clrType, edmValue, out clrValue))
                 {
-                    throw new InvalidCastException(Strings.EdmToClr_UnsupportedTypeCode(typeCode));
+                    throw new InvalidCastException(Strings.EdmToClr_UnsupportedTypeCode(clrType.FullName));
                 }
 
                 // In case of enums, because the converter returns a primitive type value we want to convert it to the CLR enum type.
