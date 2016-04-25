@@ -101,47 +101,6 @@ namespace Microsoft.OData.Edm
         String = 18,
     }
 
-    [Flags]
-    internal enum BindingFlags
-    {
-        /// <summary>Specifies that the case of the member name should not be considered when binding.</summary>
-        IgnoreCase = 1,
-
-        /// <summary>Specifies that only members declared at the level of the supplied type's hierarchy should be
-        ///  considered. Inherited members are not considered.</summary>
-        DeclaredOnly = 2,
-
-        /// <summary>Specifies that instance members are to be included in the search.</summary>
-        Instance = 4,
-
-        /// <summary>Specifies that static members are to be included in the search.</summary>
-        Static = 8,
-
-        /// <summary>Specifies that public members are to be included in the search.</summary>
-        Public = 16,
-
-        /// <summary>Specifies that non-public members are to be included in the search.</summary>
-        NonPublic = 32,
-
-        /// <summary>Specifies that public and protected static members up the hierarchy should
-        /// be returned. Private static members in inherited classes are not returned.
-        /// Static members include fields, methods, events, and properties. Nested types are not returned.</summary>
-        FlattenHierarchy = 64,
-
-        /// <summary>Specifies that types of the supplied arguments must exactly match the types
-        /// of the corresponding formal parameters. Reflection throws an exception if
-        /// the caller supplies a non-null Binder object, since that implies that the
-        /// caller is supplying BindToXXX implementations that will pick the appropriate method.</summary>
-        ExactBinding = 65536,
-
-        /// <summary>Returns the set of members whose parameter count matches the number of supplied
-        /// arguments. This binding flag is used for methods with parameters that have
-        /// default values and methods with variable arguments (varargs). This flag should
-        /// only be used with System.Type.InvokeMember(System.String,System.Reflection.BindingFlags,System.Reflection.Binder,System.Object,System.Object[],System.Reflection.ParameterModifier[],System.Globalization.CultureInfo,System.String[]).
-        /// </summary>
-        OptionalParamBinding = 262144,
-    }
-
     #endregion
 #endif
 
@@ -780,23 +739,6 @@ namespace Microsoft.OData.Edm
 #endif
         }
 
-#if PORTABLELIB
-        internal static MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr)
-        {
-            var isPublic = bindingAttr.HasFlag(BindingFlags.Public);
-            var isStatic = bindingAttr.HasFlag(BindingFlags.Static);
-            return type.GetMethod(name, isPublic, isStatic);
-        }
-
-        internal static MethodInfo[] GetMethods(this Type type, BindingFlags bindingAttr)
-        {
-            var isPublic = bindingAttr.HasFlag(BindingFlags.Public);
-            var isStatic = bindingAttr.HasFlag(BindingFlags.Static);
-
-            return type.GetRuntimeMethods().Where(m => isPublic == m.IsPublic && isStatic == m.IsStatic).ToArray();
-        }
-#endif
-
         /// <summary>
         /// Gets a method on the specified type.
         /// </summary>
@@ -808,7 +750,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static MethodInfo GetMethod(this Type type, string name, bool isPublic, bool isStatic)
         {
-
             // WIN8: The BindingFlags enum and all related reflection method overloads have been removed from Win8. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
@@ -821,21 +762,10 @@ namespace Microsoft.OData.Edm
                         isStatic == m.IsStatic)
                 .SingleOrDefault();
 #else
-            // PortableLib: The BindingFlags enum and all related reflection method overloads have been removed from . Instead of trying to provide
-            // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
-            // still allow for the same functionality as needed by the calling code.
-
-#if PORTABLELIB
-            BindingFlags bindingFlags = isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
-            return type.GetMethod(name, bindingFlags);
-#endif
-#if !PORTABLELIB
             BindingFlags bindingFlags = BindingFlags.Default;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
             return type.GetMethod(name, bindingFlags);
-#endif
 #endif
         }
 
@@ -859,8 +789,7 @@ namespace Microsoft.OData.Edm
             }
 
             return null;
-#endif
-#if !PORTABLELIB
+#else
             BindingFlags bindingFlags = BindingFlags.Default;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
@@ -926,9 +855,7 @@ namespace Microsoft.OData.Edm
 
             return true;
         }
-#endif
 
-#if PORTABLELIB
         #region Extension Methods to replace missing functionality (used for PORTABLELIB only, methods with these signatures already exist on other platforms)
         /// <summary>
         /// Replacement for Type.IsAssignableFrom(Type)

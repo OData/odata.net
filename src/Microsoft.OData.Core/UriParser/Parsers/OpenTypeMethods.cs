@@ -23,69 +23,61 @@ namespace Microsoft.OData.Core.UriParser
         #region Reflection OpenType MethodInfos
 
         /// <summary>MethodInfo for Add.</summary>
-        internal static readonly MethodInfo AddMethodInfo = typeof(OpenTypeMethods).GetMethod("Add", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo AddMethodInfo = GetMethodInfoFromThisClass("Add");
 
         /// <summary>MethodInfo for AndAlso.</summary>
-        internal static readonly MethodInfo AndAlsoMethodInfo = typeof(OpenTypeMethods).GetMethod("AndAlso", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo AndAlsoMethodInfo = GetMethodInfoFromThisClass("AndAlso");
 
         /// <summary>MethodInfo for Convert.</summary>
-        internal static readonly MethodInfo ConvertMethodInfo = typeof(OpenTypeMethods).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo ConvertMethodInfo = GetMethodInfoFromThisClass("Convert");
 
         /// <summary>MethodInfo for Divide.</summary>
-        internal static readonly MethodInfo DivideMethodInfo = typeof(OpenTypeMethods).GetMethod("Divide", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo DivideMethodInfo = GetMethodInfoFromThisClass("Divide");
 
         /// <summary>MethodInfo for Equal.</summary>
-        internal static readonly MethodInfo EqualMethodInfo = typeof(OpenTypeMethods).GetMethod("Equal", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo EqualMethodInfo = GetMethodInfoFromThisClass("Equal");
 
         /// <summary>MethodInfo for GreaterThan.</summary>
-        internal static readonly MethodInfo GreaterThanMethodInfo = typeof(OpenTypeMethods).GetMethod("GreaterThan", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo GreaterThanMethodInfo = GetMethodInfoFromThisClass("GreaterThan");
 
         /// <summary>MethodInfo for GreaterThanOrEqual.</summary>
-        internal static readonly MethodInfo GreaterThanOrEqualMethodInfo = typeof(OpenTypeMethods).GetMethod("GreaterThanOrEqual", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo GreaterThanOrEqualMethodInfo = GetMethodInfoFromThisClass("GreaterThanOrEqual");
 
         /// <summary>MethodInfo for LessThan.</summary>
-        internal static readonly MethodInfo LessThanMethodInfo = typeof(OpenTypeMethods).GetMethod("LessThan", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo LessThanMethodInfo = GetMethodInfoFromThisClass("LessThan");
 
         /// <summary>MethodInfo for LessThanOrEqual.</summary>
-        internal static readonly MethodInfo LessThanOrEqualMethodInfo = typeof(OpenTypeMethods).GetMethod("LessThanOrEqual", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo LessThanOrEqualMethodInfo = GetMethodInfoFromThisClass("LessThanOrEqual");
 
         /// <summary>MethodInfo for Modulo.</summary>
-        internal static readonly MethodInfo ModuloMethodInfo = typeof(OpenTypeMethods).GetMethod("Modulo", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo ModuloMethodInfo = GetMethodInfoFromThisClass("Modulo");
 
         /// <summary>MethodInfo for Multiply.</summary>
-        internal static readonly MethodInfo MultiplyMethodInfo = typeof(OpenTypeMethods).GetMethod("Multiply", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo MultiplyMethodInfo = GetMethodInfoFromThisClass("Multiply");
 
         /// <summary>MethodInfo for Negate.</summary>
-        internal static readonly MethodInfo NegateMethodInfo = typeof(OpenTypeMethods).GetMethod("Negate", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo NegateMethodInfo = GetMethodInfoFromThisClass("Negate");
 
         /// <summary>MethodInfo for Not.</summary>
-        internal static readonly MethodInfo NotMethodInfo = typeof(OpenTypeMethods).GetMethod("Not", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo NotMethodInfo = GetMethodInfoFromThisClass("Not");
 
         /// <summary>MethodInfo for NotEqual.</summary>
-        internal static readonly MethodInfo NotEqualMethodInfo = typeof(OpenTypeMethods).GetMethod("NotEqual", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo NotEqualMethodInfo = GetMethodInfoFromThisClass("NotEqual");
 
         /// <summary>MethodInfo for OrElse.</summary>
-        internal static readonly MethodInfo OrElseMethodInfo = typeof(OpenTypeMethods).GetMethod("OrElse", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo OrElseMethodInfo = GetMethodInfoFromThisClass("OrElse");
 
         /// <summary>MethodInfo for Subtract.</summary>
-        internal static readonly MethodInfo SubtractMethodInfo = typeof(OpenTypeMethods).GetMethod("Subtract", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo SubtractMethodInfo = GetMethodInfoFromThisClass("Subtract");
 
         /// <summary>MethodInfo for TypeIs.</summary>
-        internal static readonly MethodInfo TypeIsMethodInfo = typeof(OpenTypeMethods).GetMethod("TypeIs", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo TypeIsMethodInfo = GetMethodInfoFromThisClass("TypeIs");
 
         /// <summary>MethodInfo for object OpenTypeMethods.GetValue(this object value, string propertyName).</summary>
-        internal static readonly MethodInfo GetValueOpenPropertyMethodInfo = typeof(OpenTypeMethods).GetMethod(
-            "GetValue",
-            new Type[] { typeof(object), typeof(string) },
-            true /*isPublic*/,
-            true /*isStatic*/);
+        internal static readonly MethodInfo GetValueOpenPropertyMethodInfo = GetMethodInfoFromThisClass("GetValue");
 
         /// <summary>MethodInfo for IEnumerable&lt;object&gt; OpenTypeMethods.GetCollectionValue(this object value, string propertyName).</summary>
-        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = typeof(OpenTypeMethods).GetMethod(
-            "GetCollectionValue",
-            new Type[] { typeof(object), typeof(string) },
-            true /*isPublic*/,
-            true /*isStatic*/);
+        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = GetMethodInfoFromThisClass("GetCollectionValue");
 
         #endregion Internal fields.
 
@@ -727,6 +719,11 @@ namespace Microsoft.OData.Core.UriParser
         {
             Debug.Assert(expression != null, "expression != null");
             return expression.Type.IsValueType() ? Expression.Convert(expression, typeof(object)) : expression;
+        }
+
+        private static MethodInfo GetMethodInfoFromThisClass(string methodName)
+        {
+            return typeof(OpenTypeMethods).GetMethod(methodName, /*isPublic*/true, /*isStatic*/true);
         }
 
         #endregion
