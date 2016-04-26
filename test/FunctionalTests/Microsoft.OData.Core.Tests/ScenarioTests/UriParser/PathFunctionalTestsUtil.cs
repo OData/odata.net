@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Class that contains common methods to test URI Path related Functional tests

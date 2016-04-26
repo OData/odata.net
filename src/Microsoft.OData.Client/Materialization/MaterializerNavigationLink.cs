@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client.Materialization
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Materializer state for a given ODataNestedResourceInfo

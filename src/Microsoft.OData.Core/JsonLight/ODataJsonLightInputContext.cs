@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -15,11 +15,11 @@ namespace Microsoft.OData.Core.JsonLight
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     // ReSharper disable RedundantUsingDirective
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     // ReSharper restore RedundantUsingDirective
     #endregion Namespaces
 

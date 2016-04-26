@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Json;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     internal class MockJsonLightValueSerializer : IODataJsonLightValueSerializer
     {

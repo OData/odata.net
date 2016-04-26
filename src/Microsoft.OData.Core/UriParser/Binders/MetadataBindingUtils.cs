@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Helper methods for metadata binding.

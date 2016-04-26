@@ -11,7 +11,7 @@ namespace Microsoft.OData.Service.Serializers
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
 
     /// <summary>
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Service.Serializers
     /// suggests that this method might be called many times during serialization since it will get called once for every resource instance inside
     /// the feed. If it is an expensive operation to determine whether to advertise the service action for the <paramref name="resourceInstance"/>,
     /// the provider may choose to always advertise in order to optimize for performance.</param>
-    /// <param name="actionToSerialize">The <see cref="Microsoft.OData.Core.ODataAction"/> to be serialized. The server constructs 
+    /// <param name="actionToSerialize">The <see cref="Microsoft.OData.ODataAction"/> to be serialized. The server constructs 
     /// the version passed into this call, which may be replaced by an implementation of this interface.
     /// This should never be set to null unless returning false.</param>
     /// <returns>true if the service action should be advertised; false otherwise.</returns>

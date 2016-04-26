@@ -17,7 +17,7 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = Orders
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 	Equal
 		ConvertNode
 			TypeReference = [Edm.Int32 Nullable=True]

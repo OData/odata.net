@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core.JsonLight
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 if (error != null)
                 {
-                    throw new ODataException(OData.Core.Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(JsonLightConstants.ODataErrorPropertyName));
+                    throw new ODataException(Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(JsonLightConstants.ODataErrorPropertyName));
                 }
 
                 error = new ODataError();

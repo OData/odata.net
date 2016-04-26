@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     #region Namespaces
     using System;
@@ -13,9 +13,9 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     #endregion
 
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Core.Evaluation
                     uri = this.ComputeIdForContainment();
                     break;
                 case EdmNavigationSourceKind.UnknownEntitySet:
-                    throw new ODataException(OData.Core.Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+                    throw new ODataException(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
                 default:
                     uri = this.ComputeId();
                     break;
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             if (odataUri == null || odataUri.Path == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataMetadataBuilder_MissingODataUri);
+                throw new ODataException(Strings.ODataMetadataBuilder_MissingODataUri);
             }
 
             ODataPath path = odataUri.Path;

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// The reason of deleted resource in delta response.

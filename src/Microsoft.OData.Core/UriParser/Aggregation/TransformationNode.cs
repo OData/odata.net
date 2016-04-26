@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     /// <summary>
     /// Base class for all transformation nodes.

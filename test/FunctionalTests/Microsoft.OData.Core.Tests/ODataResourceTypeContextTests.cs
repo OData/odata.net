@@ -11,7 +11,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataResourceTypeContextTests
     {

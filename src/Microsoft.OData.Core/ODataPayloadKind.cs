@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Enumeration representing the different kinds of payloads ODatLib can write.

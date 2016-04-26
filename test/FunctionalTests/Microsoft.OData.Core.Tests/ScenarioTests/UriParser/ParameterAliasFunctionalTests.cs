@@ -8,14 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class ParameterAliasFunctionalTests
     {
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             // run 2 test passes:
             // 1. low level api - ODataUriParser instance methods
             {
-                List<CustomQueryOptionToken> queries = Microsoft.OData.Core.UriParser.QueryOptionUtils.ParseQueryOptions(uri);
+                List<CustomQueryOptionToken> queries = Microsoft.OData.UriParser.QueryOptionUtils.ParseQueryOptions(uri);
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbledygook/"), uri);
 
                 ODataPath path = parser.ParsePath();

@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 

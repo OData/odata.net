@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -34,8 +34,8 @@ namespace Microsoft.OData.Core
             set;
         }
 
-        /// <summary>Gets or sets the enumerable of <see cref="T:Microsoft.OData.Core.ODataEntityReferenceLink" /> instances representing the links of the referenced entities.</summary>
-        /// <returns>The enumerable of <see cref="T:Microsoft.OData.Core.ODataEntityReferenceLink" /> instances.</returns>
+        /// <summary>Gets or sets the enumerable of <see cref="T:Microsoft.OData.ODataEntityReferenceLink" /> instances representing the links of the referenced entities.</summary>
+        /// <returns>The enumerable of <see cref="T:Microsoft.OData.ODataEntityReferenceLink" /> instances.</returns>
         /// <remarks>These links should be usable to retrieve or modify the referenced entities.</remarks>
         public IEnumerable<ODataEntityReferenceLink> Links
         {

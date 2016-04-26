@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>web utility functions</summary>

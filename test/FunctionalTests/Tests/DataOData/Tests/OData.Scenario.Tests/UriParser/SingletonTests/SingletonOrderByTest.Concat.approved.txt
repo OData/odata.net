@@ -38,7 +38,7 @@ OrderByClause
 												Name = $it
 												NavigationSource = VipCustomer
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-												Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+												Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 										SingleValuePropertyAccessNode
 											Property = LastName
 											TypeReference = [Edm.String Nullable=True Unicode=True]
@@ -47,7 +47,7 @@ OrderByClause
 												Name = $it
 												NavigationSource = VipCustomer
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-												Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+												Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 						7(Type: [Edm.Int32 Nullable=False])
 				r(Type: [Edm.String Nullable=True Unicode=True])
 	And

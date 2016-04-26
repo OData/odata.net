@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Linq;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.EntityModel;
     using Microsoft.Test.Taupo.Common;

@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Aggregation;
+    using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Main Public API to parse an ODataURI.

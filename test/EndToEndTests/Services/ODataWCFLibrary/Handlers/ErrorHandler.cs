@@ -9,8 +9,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
 
     public class ErrorHandler : RequestHandler
     {

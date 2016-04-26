@@ -7,10 +7,10 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Base class for Applt transformation tokens

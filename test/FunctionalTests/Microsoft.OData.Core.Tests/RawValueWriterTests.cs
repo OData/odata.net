@@ -11,7 +11,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     /// <summary>
     /// This is a test class for RawValueWriter and is intended

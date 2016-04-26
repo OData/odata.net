@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>

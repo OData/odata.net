@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataEntityMetadataBuilderTests
     {

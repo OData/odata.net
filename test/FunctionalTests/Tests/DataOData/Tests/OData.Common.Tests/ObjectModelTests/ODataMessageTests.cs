@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Execution;
@@ -27,9 +27,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     [TestClass, TestCase(Name="OData Message Tests")]
     public class ODataMessageTests : ODataTestCase
     {
-        private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchOperationHeaders");
-        private static readonly Type batchOperationListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.Core.IODataBatchOperationListener");
-        private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.Core.ODataBatchUrlResolver");
+        private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchOperationHeaders");
+        private static readonly Type batchOperationListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.IODataBatchOperationListener");
+        private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.ODataBatchUrlResolver");
 
         [InjectDependency]
         public ICombinatorialEngineProvider CombinatorialEngineProvider { get; set; }
@@ -177,7 +177,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             object message = response
                 ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject
                 : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject;
-            Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.Core.ODataRawOutputContext");
+            Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.ODataRawOutputContext");
             object rawOutputContext = ReflectionUtils.CreateInstance(odataRawOutputContextType,
                 new Type[]
                 {
@@ -207,7 +207,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
         private sealed class ODataRequestMessageWrapper : IODataRequestMessage
         {
-            private static readonly Type requestMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.Core.ODataRequestMessage");
+            private static readonly Type requestMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.ODataRequestMessage");
 
             private readonly object requestMessage;
 
@@ -259,7 +259,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
         private sealed class ODataResponseMessageWrapper : IODataResponseMessage
         {
-            private static readonly Type responseMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.Core.ODataResponseMessage");
+            private static readonly Type responseMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.ODataResponseMessage");
 
             private readonly object responseMessage;
 

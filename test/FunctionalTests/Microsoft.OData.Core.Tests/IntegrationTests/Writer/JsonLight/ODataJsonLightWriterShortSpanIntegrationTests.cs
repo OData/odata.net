@@ -9,13 +9,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
     public class ODataJsonLightWriterShortSpanIntegrationTests
     {
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             var stream = new MemoryStream();
             ODataJsonLightOutputContext outputContext = CreateJsonLightOutputContext(stream, writingResponse: true, userModel: null, serviceDocumentUri: null);
             Action action = () => new ODataJsonLightWriter(outputContext, navigationSource: null, entityType: null, writingResourceSet: true);
-            action.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.ODataOutputContext_MetadataDocumentUriMissing);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]

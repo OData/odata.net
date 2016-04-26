@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.Json
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
 

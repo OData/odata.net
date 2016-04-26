@@ -9,7 +9,7 @@ namespace AstoriaUnitTests.TDD.Common
     using System;
     using FluentAssertions;
     using FluentAssertions.Primitives;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     [CLSCompliant(false)]
     public static class ODataValueAssertionsExtensions

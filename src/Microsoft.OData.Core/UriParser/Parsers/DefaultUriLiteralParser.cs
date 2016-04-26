@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     internal sealed class DefaultUriLiteralParser : IUriLiteralParser
     {

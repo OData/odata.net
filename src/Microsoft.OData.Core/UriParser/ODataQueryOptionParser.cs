@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Core.Metadata;
-using Microsoft.OData.Core.UriParser.Aggregation;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Parser for query options

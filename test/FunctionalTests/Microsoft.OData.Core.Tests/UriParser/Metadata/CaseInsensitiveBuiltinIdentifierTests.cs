@@ -8,12 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     // not support by design: true false null $it
     // not support as not support (in ODL): $entity, $all, $crossjoin, $format, $skiptoken, $root, date, time

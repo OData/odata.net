@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System.Collections.ObjectModel;
     using Microsoft.OData.Service;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class CustomInstanceAnnotationsWriter : DataServiceODataWriter
     {

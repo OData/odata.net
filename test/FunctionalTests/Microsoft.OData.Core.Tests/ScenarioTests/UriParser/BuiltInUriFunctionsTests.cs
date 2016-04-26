@@ -1,4 +1,4 @@
-﻿using Microsoft.OData.Core.UriParser;
+﻿using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using FluentAssertions;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Tests the BuiltInUriFunctions class.

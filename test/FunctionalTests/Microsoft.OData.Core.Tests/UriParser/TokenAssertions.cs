@@ -6,9 +6,9 @@
 
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Contains fluent assertion APIs for testing QueryTokens.

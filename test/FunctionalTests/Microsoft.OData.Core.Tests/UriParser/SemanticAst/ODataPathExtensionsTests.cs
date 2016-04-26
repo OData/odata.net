@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
-using mbh = Microsoft.OData.Core.Tests.UriParser.ModelBuildingHelpers;
+using mbh = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class ODataPathExtensionsTests
     {

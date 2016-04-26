@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.PluggableFormat.VCard;
 #if ENABLE_AVRO
     using Microsoft.Test.OData.PluggableFormat.Avro;

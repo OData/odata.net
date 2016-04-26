@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <DefineConstants>$(DefineConstants);ODATA_CORE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <RootNamespace>Microsoft.OData.Core</RootNamespace>
+    <RootNamespace>Microsoft.OData</RootNamespace>
     <ProjectGuid>{E7B15F0C-0442-458D-9D16-69F3272420BF}</ProjectGuid>
     <ODataCrossTargettingSourcePath>..\</ODataCrossTargettingSourcePath>
   </PropertyGroup>

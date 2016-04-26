@@ -6,13 +6,13 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Test code for testing the function overload resolver.

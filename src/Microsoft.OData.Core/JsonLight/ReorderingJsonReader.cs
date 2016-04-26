@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Core.JsonLight
                         else
                         {
                             // unexpected instance annotation name
-                            throw new ODataException(Microsoft.OData.Core.Strings.JsonReaderExtensions_UnexpectedInstanceAnnotationName(jsonPropertyName));
+                            throw new ODataException(Microsoft.OData.Strings.JsonReaderExtensions_UnexpectedInstanceAnnotationName(jsonPropertyName));
                         }
                     }
                 }

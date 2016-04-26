@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using System.Collections.Generic;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Providers;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     internal delegate bool ServiceResolutionDelegateWithString(DataServiceOperationContext operationContext, string actionName, out ServiceAction serviceAction);
 

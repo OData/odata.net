@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
@@ -36,7 +36,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ODataPropertyKind = Microsoft.OData.Core.ODataPropertyKind;
+    using ODataPropertyKind = Microsoft.OData.ODataPropertyKind;
 
     /// <summary>
     /// Tests for writing properties with the OData writer.
@@ -838,7 +838,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new ODataProperty { Name = "CollectionProperty", Value = new ODataCollectionValue { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String"), Items = new object[] { new ODataMessageWriterSettings() } } },
                     (tc) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        ExpectedException2 =  ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.Core.ODataMessageWriterSettings"),
+                        ExpectedException2 =  ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.ODataMessageWriterSettings"),
                     }
                 ) { Model = model, PayloadEdmElementContainer = container }
             };

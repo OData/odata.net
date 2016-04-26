@@ -15,7 +15,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Validation;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Class that provides methods to allow unit tests to quickly create various EDM model elements that are entirely independent

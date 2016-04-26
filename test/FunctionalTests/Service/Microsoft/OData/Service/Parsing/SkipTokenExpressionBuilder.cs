@@ -11,7 +11,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using ServiceStrings = Microsoft.OData.Service.Strings;

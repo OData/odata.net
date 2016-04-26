@@ -6,7 +6,7 @@
 
 #if PORTABLELIB || ODATA_CLIENT
 #if ODATA_CORE
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Client
 #endif

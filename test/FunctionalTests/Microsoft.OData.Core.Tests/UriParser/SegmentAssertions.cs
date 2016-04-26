@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Contains fluent assertion APIs for testing Segments

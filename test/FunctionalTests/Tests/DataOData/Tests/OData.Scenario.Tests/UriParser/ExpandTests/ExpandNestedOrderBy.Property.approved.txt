@@ -24,7 +24,7 @@ SelectExpandQueryOption
 						Name = $it
 						NavigationSource = CustomerForOrder
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 				Then By = 
 			SelectExpandQueryOption
 				AllSelected = True

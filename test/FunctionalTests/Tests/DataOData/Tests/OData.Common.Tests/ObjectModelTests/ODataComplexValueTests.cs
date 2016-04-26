@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

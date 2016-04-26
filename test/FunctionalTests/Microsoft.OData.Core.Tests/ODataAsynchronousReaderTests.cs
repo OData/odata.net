@@ -13,7 +13,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataAsynchronousReaderTests
     {

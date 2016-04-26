@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
 
     /// <summary>
     /// Defines an interface for a class that can write OData values in Json Light.

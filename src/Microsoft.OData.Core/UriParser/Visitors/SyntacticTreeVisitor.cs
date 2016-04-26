@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Aggregation;
+    using Microsoft.OData.UriParser.Aggregation;
 
     /// <summary>
     /// Visitor interface for walking the Syntactic Tree.

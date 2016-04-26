@@ -7,7 +7,7 @@
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Node representing a type segment that casts an collection property node.

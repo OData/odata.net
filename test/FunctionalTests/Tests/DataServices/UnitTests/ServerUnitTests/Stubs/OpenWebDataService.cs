@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.Stubs
     using System.Collections.Generic;
     using System.Reflection;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service;
     using test = System.Data.Test.Astoria;
     using BindingFlags = System.Reflection.BindingFlags;

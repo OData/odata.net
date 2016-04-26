@@ -13,7 +13,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
     using System.Linq.Expressions;
     using FluentAssertions;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Service;

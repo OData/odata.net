@@ -267,7 +267,7 @@ namespace AstoriaUnitTests.Tests
             [TestMethod]
             public void TestDefaultBatchReaderBufferLength()
             {
-                Type batchStreamType = typeof(Microsoft.OData.Core.ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchReaderStreamBuffer");
+                Type batchStreamType = typeof(Microsoft.OData.ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchReaderStreamBuffer");
                 FieldInfo defaultBufferSizeField = batchStreamType.GetField("BufferLength", BindingFlags.NonPublic | BindingFlags.Static);
                 Assert.IsNotNull(defaultBufferSizeField);
                 int defaultBufferSize = (int)defaultBufferSizeField.GetValue(null);

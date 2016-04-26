@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 #if ODATA_CORE
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 #else
 namespace Microsoft.OData.Service.Parsing
 #endif

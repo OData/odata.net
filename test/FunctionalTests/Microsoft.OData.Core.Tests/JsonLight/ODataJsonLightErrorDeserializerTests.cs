@@ -7,11 +7,11 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightErrorDeserializerTests
     {

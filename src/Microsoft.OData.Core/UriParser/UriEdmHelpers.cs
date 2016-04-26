@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Class to provide methods that wrap EdmLib calls that are normally not allows in ODataLib, but
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core.UriParser
             {
                 // If the parentType is an open property, parentType will be null and can't have an ODataFullName.
                 string parentTypeName = (parentType != null) ? parentType.FullTypeName() : "<null>";
-                throw new ODataException(OData.Core.Strings.MetadataBinder_HierarchyNotFollowed(childType.FullTypeName(), parentTypeName));
+                throw new ODataException(Strings.MetadataBinder_HierarchyNotFollowed(childType.FullTypeName(), parentTypeName));
             }
         }
 
@@ -90,13 +90,13 @@ namespace Microsoft.OData.Core.UriParser
                 navPropSegment = currentSegment as NavigationPropertySegment;
                 if (typeSegment == null && navPropSegment == null)
                 {
-                    throw new ODataException(OData.Core.Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
+                    throw new ODataException(Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
                 }
             }
 
             if (navPropSegment == null)
             {
-                throw new ODataException(OData.Core.Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
+                throw new ODataException(Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
             }
             else
             {

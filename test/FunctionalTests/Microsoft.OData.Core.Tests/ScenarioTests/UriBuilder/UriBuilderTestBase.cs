@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
+namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     public class UriBuilderTestBase
     {

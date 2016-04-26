@@ -586,7 +586,7 @@ X-Content-Type-Options: nosniff
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
-{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""The parameter 'value3' in the request payload is not a valid parameter for the operation 'ActionOnEntityCollectionWithParam_Primitive_Primitive'."",""type"":""Microsoft.OData.Core.ODataException"",""stacktrace"":""",
+{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""The parameter 'value3' in the request payload is not a valid parameter for the operation 'ActionOnEntityCollectionWithParam_Primitive_Primitive'."",""type"":""Microsoft.OData.ODataException"",""stacktrace"":""",
 
 @"""}}}
 --changesetresponse--
@@ -953,7 +953,7 @@ X-Content-Type-Options: nosniff
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
-{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""Multiple parameters with the name 'value1' were found in the request payload."",""type"":""Microsoft.OData.Core.ODataException"",""stacktrace""",
+{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""Multiple parameters with the name 'value1' were found in the request payload."",""type"":""Microsoft.OData.ODataException"",""stacktrace""",
 @"""}}}
 --changesetresponse--
 --batchresponse--

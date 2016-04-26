@@ -7,12 +7,12 @@
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #endif
 {
     #region Namespaces
     #if ODATA_SERVICE
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endif
     #endregion Namespaces
 

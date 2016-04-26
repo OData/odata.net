@@ -21,7 +21,7 @@ namespace Microsoft.Test.OData.Services.ODataWriterService
     using Microsoft.Data.Edm.Csdl;
     using Microsoft.Data.Edm.Validation;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using BaseService = Microsoft.Test.OData.Services.AstoriaDefaultService.Service;
 
     [ServiceBehaviorAttribute(IncludeExceptionDetailInFaults = true)]

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Xml;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     using Microsoft.Spatial;
     #endregion
 

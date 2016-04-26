@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;

@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;

@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     using Microsoft.Spatial;
 
     /// <summary>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces

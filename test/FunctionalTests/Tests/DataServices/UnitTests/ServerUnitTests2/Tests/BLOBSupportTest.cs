@@ -28,7 +28,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Data;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.ModuleCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NorthwindModel;

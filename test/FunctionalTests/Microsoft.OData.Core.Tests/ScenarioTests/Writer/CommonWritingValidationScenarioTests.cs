@@ -12,7 +12,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
+namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     public class CommonWritingValidationScenarioTests
     {

@@ -4,16 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
+    using ODataErrorStrings = Microsoft.OData.Strings;
+    using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces
 
     /// <summary>

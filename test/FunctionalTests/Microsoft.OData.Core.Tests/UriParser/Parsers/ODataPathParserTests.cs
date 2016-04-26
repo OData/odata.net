@@ -8,15 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class ODataPathParserTests
     {

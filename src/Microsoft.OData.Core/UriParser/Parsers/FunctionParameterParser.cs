@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Component for parsing function parameters in both $filter/$orderby expressions and in paths.

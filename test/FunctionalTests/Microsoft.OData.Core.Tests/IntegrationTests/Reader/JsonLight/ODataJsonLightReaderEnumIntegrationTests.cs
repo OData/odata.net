@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 {
     public class ODataJsonLightReaderEnumIntegrationTests
     {
@@ -389,7 +389,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":2}";
             ODataResource entry = null;
             Action parse = () => ReadReqeustEntryPayload(this.userModel, payload, "application/json;odata.metadata=minimal", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            parse.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
         }
         #endregion
 

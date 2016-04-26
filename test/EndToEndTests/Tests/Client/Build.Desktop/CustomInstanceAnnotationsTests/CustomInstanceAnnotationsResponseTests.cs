@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
     using System.Diagnostics;
     using System.Reflection;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.DataDriven;
     using Microsoft.Test.OData.Framework;
     using Microsoft.Test.OData.Services.TestServices;

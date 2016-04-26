@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.ODataLibTest;

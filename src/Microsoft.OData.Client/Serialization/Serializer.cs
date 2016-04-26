@@ -17,8 +17,8 @@ namespace Microsoft.OData.Client
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
     #endregion Namespaces

@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>Represents an annotation to hold information for a particular property.</summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Edm", Justification = "Camel-casing in class name.")]

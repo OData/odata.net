@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.Linq;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class AvroMediaTypeResolver : ODataMediaTypeResolver
     {

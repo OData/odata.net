@@ -28,6 +28,6 @@ FilterQueryOption
 						Name = $it
 						NavigationSource = People
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 	NotEqual
 		Shanghai(Type: [Edm.String Nullable=True Unicode=True])

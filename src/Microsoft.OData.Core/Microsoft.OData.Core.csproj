@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
@@ -9,7 +9,7 @@
     <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <TransparentAssembly>true</TransparentAssembly>
     <SecurityMigration>false</SecurityMigration>
-    <RootNamespace>Microsoft.OData.Core</RootNamespace>
+    <RootNamespace>Microsoft.OData</RootNamespace>
     <ProjectGuid>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</ProjectGuid>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

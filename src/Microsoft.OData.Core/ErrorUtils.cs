@@ -7,9 +7,9 @@
 using System;
 using System.Diagnostics;
 using System.Xml;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Utility methods serializing the xml error payload

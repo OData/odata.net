@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     
     /// <summary>
     /// Base class for all semantic metadata bound nodes.

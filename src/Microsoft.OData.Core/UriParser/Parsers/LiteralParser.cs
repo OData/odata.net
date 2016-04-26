@@ -6,7 +6,7 @@
 
 using Microsoft.Spatial;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;

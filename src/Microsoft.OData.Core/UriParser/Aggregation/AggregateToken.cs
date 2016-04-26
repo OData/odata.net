@@ -7,11 +7,11 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     internal sealed class AggregateToken : ApplyTransformationToken
     {

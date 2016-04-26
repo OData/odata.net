@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;

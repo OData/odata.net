@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
@@ -387,7 +387,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             }
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.Core.ODataMessageWriterSettings"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.ODataMessageWriterSettings"),
                 },
                 // Bogus item for a complex collection
                 new {
@@ -402,7 +402,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             }
                         }),
                     MetadataCreate = entityTypeWithComplexCollectionProperty,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.Core.ODataMessageWriterSettings"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.ODataMessageWriterSettings"),
                 },
             };
 

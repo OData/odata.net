@@ -15,7 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.Net;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
@@ -492,10 +492,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
 
             // set the OData-Version header
-            message.SetHeader(Microsoft.OData.Core.ODataConstants.ODataVersionHeader, testConfiguration.Version.ToText());
+            message.SetHeader(Microsoft.OData.ODataConstants.ODataVersionHeader, testConfiguration.Version.ToText());
             if (customContentTypeHeader != null)
             {
-                message.SetHeader(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, customContentTypeHeader);
+                message.SetHeader(Microsoft.OData.ODataConstants.ContentTypeHeader, customContentTypeHeader);
             }
             else if (payloadKind.HasValue)
             {
@@ -852,7 +852,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                             if (op.Body != null && op.Body.RootElement != null)
                             {
-                                var contentType = changesetOperation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                                var contentType = changesetOperation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                                 ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, op.Body.RootElement.GetPayloadKindFromPayloadElement());
 
                                 var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
@@ -890,7 +890,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                         if (operation.RootElement != null)
                         {
-                            var contentType = operation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                            var contentType = operation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                             ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, operation.RootElement.GetPayloadKindFromPayloadElement());
                             var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
                             messageWriterSettings.SetContentType(format);
@@ -921,7 +921,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                             if (op.RootElement != null)
                             {
-                                var contentType = op.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                                var contentType = op.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                                 ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, op.RootElement.GetPayloadKindFromPayloadElement());
                                 var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
                                 messageWriterSettings.SetContentType(format);
@@ -1282,7 +1282,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             string expectedContentType = expectedResults.ExpectedContentType;
             if (expectedContentType != null)
             {
-                string actualContentType = testMessage.GetHeader(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                string actualContentType = testMessage.GetHeader(Microsoft.OData.ODataConstants.ContentTypeHeader);
                 assert.IsNotNull(actualContentType, "Expected to find non-null 'Content-Type' header on a response message.");
                 if (exactMatch)
                 {

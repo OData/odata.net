@@ -7,10 +7,10 @@
 using System;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     public class JsonReaderTests
     {

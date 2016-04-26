@@ -23,7 +23,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.DataWebClientCSharp;
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using CustomDataClient = AstoriaUnitTests.Stubs.CustomDataClient;
     using DSClient = Microsoft.OData.Client;

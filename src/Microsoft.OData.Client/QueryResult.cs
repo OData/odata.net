@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Wrapper HttpWebRequest &amp; HttWebResponse

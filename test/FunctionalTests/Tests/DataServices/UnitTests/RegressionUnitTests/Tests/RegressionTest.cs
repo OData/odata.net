@@ -33,7 +33,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.ModuleCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using edm = System.Data.Metadata.Edm;

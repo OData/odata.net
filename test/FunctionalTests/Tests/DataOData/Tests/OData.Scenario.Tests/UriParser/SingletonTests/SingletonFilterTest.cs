@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
     using System.Runtime.CompilerServices;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

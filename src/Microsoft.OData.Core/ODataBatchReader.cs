@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -129,7 +129,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Returns an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A request message for reading the content of a batch operation.</returns>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage()
         {
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a request message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
         {
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Returns an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A response message for reading the content of a batch operation.</returns>
         public ODataBatchOperationResponseMessage CreateOperationResponseMessage()
         {
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a response message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
         {

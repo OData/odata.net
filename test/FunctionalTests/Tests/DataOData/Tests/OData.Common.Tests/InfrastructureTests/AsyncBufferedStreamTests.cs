@@ -141,7 +141,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 
             public AsyncBufferedStreamTestWrapper(Stream stream)
             {
-                Type asyncBufferedStreamType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.AsyncBufferedStream");
+                Type asyncBufferedStreamType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.AsyncBufferedStream");
                 
                 this.asyncBufferedStream = (Stream)Activator.CreateInstance(
                     asyncBufferedStreamType,

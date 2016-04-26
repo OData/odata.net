@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.Test.OData.Services.ODataWCFService;
 using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

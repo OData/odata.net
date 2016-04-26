@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
 namespace Microsoft.Spatial
 #else
 #if ODATA_CORE
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Edm
 #endif

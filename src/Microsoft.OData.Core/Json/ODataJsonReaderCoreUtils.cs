@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 

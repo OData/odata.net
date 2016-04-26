@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Encapsulates the state of metadata binding.

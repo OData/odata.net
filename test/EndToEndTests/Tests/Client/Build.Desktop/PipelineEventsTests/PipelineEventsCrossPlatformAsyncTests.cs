@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
     using System.Linq;
     using System.Threading;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.DataDriven;
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;

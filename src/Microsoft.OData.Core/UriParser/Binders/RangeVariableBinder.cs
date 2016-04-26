@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Class that knows how to bind ParameterQueryTokens.

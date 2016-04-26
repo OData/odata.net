@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
 

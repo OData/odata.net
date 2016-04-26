@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using DSClient = Microsoft.OData.Client;

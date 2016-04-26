@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;

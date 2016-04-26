@@ -10,13 +10,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Parser which consumes the URI format of primitive types and converts it to primitive types.

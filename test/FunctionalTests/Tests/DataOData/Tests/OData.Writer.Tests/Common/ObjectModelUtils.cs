@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;

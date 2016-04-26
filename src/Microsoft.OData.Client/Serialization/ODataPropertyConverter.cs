@@ -11,9 +11,9 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData;
+    using Microsoft.OData.Json;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
 

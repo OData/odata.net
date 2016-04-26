@@ -8,17 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// This file contains functional tests for the ODataUriParser.ParseFilter and ParseOrderBy.

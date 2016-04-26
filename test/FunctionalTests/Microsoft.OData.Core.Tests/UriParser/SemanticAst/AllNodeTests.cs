@@ -6,11 +6,11 @@
 
 using System.Collections.ObjectModel;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Unit tests for the AllNode class

@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service.Serializers
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
 

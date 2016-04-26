@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
@@ -23,7 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <summary>
         /// The type of the batch operations headers class in the product code.
         /// </summary>
-        private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchOperationHeaders");
+        private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchOperationHeaders");
 
         /// <summary>
         /// The batch operations headers instance from the product code.

@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     /// <summary>
     /// Tests for the internal ODataRequestMessage that wraps a user-implemented IODataRequestMessage.

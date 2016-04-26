@@ -7,7 +7,7 @@
 using System;
 using FluentAssertions;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     internal static class ArgumentValidationUtils
     {

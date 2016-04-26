@@ -8,12 +8,12 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Json;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class BinaryValueEncodingTests
     {

@@ -9,10 +9,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

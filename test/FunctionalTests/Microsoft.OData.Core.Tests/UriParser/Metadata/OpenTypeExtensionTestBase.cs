@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     public class OpenTypeExtensionTestBase
     {

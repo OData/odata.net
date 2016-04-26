@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (propertyValue == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull(propertyName, metadata));
+                throw new ODataException(Strings.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull(propertyName, metadata));
             }
         }
     }

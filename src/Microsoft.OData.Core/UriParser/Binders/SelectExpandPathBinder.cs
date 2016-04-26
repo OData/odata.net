@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Walk down a chain of type segments, checking that we find the correct type at each level.

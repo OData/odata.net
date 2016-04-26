@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers

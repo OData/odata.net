@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     #endregion Namespaces
 
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         private ODataMediaTypeResolver mediaTypeResolver;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with default settings. </summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
             // Create the default writer behavior
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core
             this.EnableFullValidation = true;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with specified settings.</summary>
         /// <param name="other">The specified settings.</param>
         public ODataMessageWriterSettings(ODataMessageWriterSettings other)
             : base(other)
@@ -354,7 +354,7 @@ namespace Microsoft.OData.Core
             this.useFormat = true;
         }
 
-        /// <summary>Enables the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> default behavior.</summary>
+        /// <summary>Enables the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> default behavior.</summary>
         public void EnableDefaultBehavior()
         {
             this.writerBehavior = ODataWriterBehavior.DefaultBehavior;

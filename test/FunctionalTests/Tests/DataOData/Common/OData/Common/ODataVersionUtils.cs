@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Diagnostics;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     public static class ODataVersionUtils

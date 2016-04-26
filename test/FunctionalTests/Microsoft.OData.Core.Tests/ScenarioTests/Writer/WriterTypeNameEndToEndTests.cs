@@ -12,7 +12,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
+namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     /// <summary>
     /// These tests baseline the end-to-end behavior of when type names are written on the wire, 

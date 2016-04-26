@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
 {
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

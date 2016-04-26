@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Uri utility methods.

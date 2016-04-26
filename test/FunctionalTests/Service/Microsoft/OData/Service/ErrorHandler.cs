@@ -16,7 +16,7 @@ namespace Microsoft.OData.Service
     using System.Reflection;
     using System.Text;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>

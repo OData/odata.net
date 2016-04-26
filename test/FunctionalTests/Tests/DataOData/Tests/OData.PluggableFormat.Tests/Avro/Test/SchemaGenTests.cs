@@ -7,7 +7,7 @@
 #if ENABLE_AVRO
 namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

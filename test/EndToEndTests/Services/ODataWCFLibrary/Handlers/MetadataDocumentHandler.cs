@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 {
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Class for handling $metadata requests.

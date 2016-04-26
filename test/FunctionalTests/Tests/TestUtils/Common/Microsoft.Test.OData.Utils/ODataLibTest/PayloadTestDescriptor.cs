@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Test descriptor for a payload.

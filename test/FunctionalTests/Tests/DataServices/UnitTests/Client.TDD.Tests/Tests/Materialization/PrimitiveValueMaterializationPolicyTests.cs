@@ -14,7 +14,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DSClient = Microsoft.OData.Client;
-    using OData = Microsoft.OData.Core;
 
     [TestClass]
     public class PrimitiveValueMaterializationPolicyTests

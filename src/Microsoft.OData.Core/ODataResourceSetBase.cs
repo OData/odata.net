@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>

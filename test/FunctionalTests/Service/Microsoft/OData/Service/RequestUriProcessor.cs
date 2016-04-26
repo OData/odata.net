@@ -17,8 +17,8 @@ namespace Microsoft.OData.Service
     using System.Reflection;
     using System.Web;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;

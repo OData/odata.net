@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 

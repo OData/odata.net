@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;

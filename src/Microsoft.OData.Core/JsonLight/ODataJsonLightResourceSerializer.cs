@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -368,14 +368,14 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (operations.Count() > 1 && operations.Any(o => o.Target == null))
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(operations.Key));
+                throw new ODataException(Strings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(operations.Key));
             }
 
             foreach (IGrouping<string, ODataOperation> operationsByTarget in operations.GroupBy(this.GetOperationTargetUriString))
             {
                 if (operationsByTarget.Count() > 1)
                 {
-                    throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(operations.Key, operationsByTarget.Key));
+                    throw new ODataException(Strings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(operations.Key, operationsByTarget.Key));
                 }
             }
         }

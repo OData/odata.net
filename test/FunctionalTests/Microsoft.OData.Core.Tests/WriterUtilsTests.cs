@@ -5,12 +5,12 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class WriterUtilsTests
     {

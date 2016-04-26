@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class that knows how to resolve an IEdmExpression to find its associated EntitySet.

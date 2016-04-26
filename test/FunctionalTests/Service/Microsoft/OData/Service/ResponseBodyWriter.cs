@@ -12,7 +12,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;

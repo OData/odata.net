@@ -11,7 +11,7 @@ namespace Microsoft.OData.Service
 namespace Microsoft.OData.Client
 #else
 #if ODATA_CORE
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Edm.Csdl
 #endif

@@ -15,7 +15,7 @@ namespace AstoriaUnitTests.Tests
     using System.Text;
     using System.Xml;
     using AstoriaUnitTests.Data;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

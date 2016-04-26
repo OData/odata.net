@@ -14,7 +14,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Linq.Expressions;
     using System.Reflection;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using Microsoft.Spatial;

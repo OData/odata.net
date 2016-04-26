@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;

@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;

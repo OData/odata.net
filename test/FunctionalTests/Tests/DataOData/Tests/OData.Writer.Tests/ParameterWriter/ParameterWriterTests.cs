@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
@@ -954,7 +954,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", new ODataCollectionValue())
                     },
                     FunctionImport = default(IEdmOperationImport),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.Core.ODataCollectionValue"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.ODataCollectionValue"),
                 },
                 new
                 {
@@ -963,7 +963,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", new ODataStreamReferenceValue())
                     },
                     FunctionImport = default(IEdmOperationImport),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.Core.ODataStreamReferenceValue"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.ODataStreamReferenceValue"),
                 },
                 // Calling WriteValue and CreateCollectionWriter with null parameterName
                 new

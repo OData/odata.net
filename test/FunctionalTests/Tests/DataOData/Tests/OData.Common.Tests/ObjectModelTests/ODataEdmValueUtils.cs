@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     #endregion Namespaces
 
@@ -24,10 +24,10 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     internal static class ODataEdmValueUtils
     {
         private static readonly Type odataEdmStructuredValueType = 
-            typeof(ODataFormat).Assembly.GetType("Microsoft.OData.Core.Evaluation.ODataEdmStructuredValue");
+            typeof(ODataFormat).Assembly.GetType("Microsoft.OData.Evaluation.ODataEdmStructuredValue");
 
         private static readonly Type odataTypeAnnotationType =
-            typeof(ODataFormat).Assembly.GetType("Microsoft.OData.Core.ODataTypeAnnotation");
+            typeof(ODataFormat).Assembly.GetType("Microsoft.OData.ODataTypeAnnotation");
 
         internal static void CompareValue(IEdmValue edmValue, object odataValue, AssertionHandler assert)
         {

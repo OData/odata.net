@@ -28,7 +28,7 @@ SelectExpandQueryOption
 									Name = $it
 									NavigationSource = CustomerForOrder
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 							d(Type: [Edm.String Nullable=True Unicode=True])
 							n(Type: [Edm.String Nullable=True Unicode=True])
 				Equal

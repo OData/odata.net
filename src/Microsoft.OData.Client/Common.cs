@@ -17,7 +17,7 @@ namespace Microsoft.OData.Service
     using System.Linq;
     using System.Xml;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 #if !ODATA_CLIENT
     using Microsoft.OData.Client;
 #endif

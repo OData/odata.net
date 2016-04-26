@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public static class ODataValueAssertEqualHelper

@@ -6,13 +6,13 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Unit tests for InnerPathTokenBinder.

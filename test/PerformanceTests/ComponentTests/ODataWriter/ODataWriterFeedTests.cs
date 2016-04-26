@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using System.Linq;
     using global::Xunit;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Xunit.Performance;

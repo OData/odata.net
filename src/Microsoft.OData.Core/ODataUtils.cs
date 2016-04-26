@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Returns the format used by the message reader for reading the payload.</summary>
         /// <returns>The format used by the messageReader for reading the payload.</returns>
-        /// <param name="messageReader">The <see cref="T:Microsoft.OData.Core.ODataMessageReader" /> to get the read format from.</param>
+        /// <param name="messageReader">The <see cref="T:Microsoft.OData.ODataMessageReader" /> to get the read format from.</param>
         /// <remarks>This method must only be called once reading has started.
         /// This means that a read method has been called on the <paramref name="messageReader"/> or that a reader (for entries, resource sets, collections, etc.) has been created.
         /// If the method is called prior to that it will throw.</remarks>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
@@ -12,9 +12,9 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser.Aggregation;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 

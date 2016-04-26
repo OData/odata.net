@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Text;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// IODataRequestMessage interface implementation.

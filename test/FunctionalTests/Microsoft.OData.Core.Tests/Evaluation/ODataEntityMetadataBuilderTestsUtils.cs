@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     internal static class ODataEntityMetadataBuilderTestsUtils
     {

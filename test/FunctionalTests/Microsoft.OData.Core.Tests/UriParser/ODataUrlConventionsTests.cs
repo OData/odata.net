@@ -7,7 +7,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     public class ODataUrlConventionsTests
     {

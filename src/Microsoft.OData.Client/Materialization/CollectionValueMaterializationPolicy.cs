@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
 

@@ -19,9 +19,9 @@ namespace Microsoft.OData.Service.Providers
     using System.Xml;
     using System.Xml.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;

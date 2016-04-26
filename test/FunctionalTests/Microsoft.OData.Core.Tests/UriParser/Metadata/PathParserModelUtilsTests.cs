@@ -6,14 +6,14 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Metadata;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     public class PathParserModelUtilsTests
     {

@@ -8,7 +8,7 @@ namespace Microsoft.OData.Performance
 {
     using System;
     using global::Xunit;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Xunit.Performance;
 

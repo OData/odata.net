@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Service
 {
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Public class which wraps the ODataWriter instance.

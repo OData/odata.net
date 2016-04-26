@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     #region Namespaces
     using Microsoft.OData.Edm;

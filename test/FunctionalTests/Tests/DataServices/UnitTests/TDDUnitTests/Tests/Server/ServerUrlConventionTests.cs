@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Core.Tests;
+    using Microsoft.OData.Tests;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;

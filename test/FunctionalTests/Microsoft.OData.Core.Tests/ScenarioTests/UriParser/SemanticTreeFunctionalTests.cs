@@ -8,13 +8,13 @@ using System;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Legacy long-span integration tests that use SemanticTree to test various features.

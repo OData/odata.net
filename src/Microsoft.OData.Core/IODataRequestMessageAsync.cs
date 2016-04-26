@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 #if PORTABLELIB
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics.CodeAnalysis;

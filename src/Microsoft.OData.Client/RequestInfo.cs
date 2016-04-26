@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Xml.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>

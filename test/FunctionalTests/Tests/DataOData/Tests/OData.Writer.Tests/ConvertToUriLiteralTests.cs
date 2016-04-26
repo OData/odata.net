@@ -10,8 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
@@ -762,17 +762,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Parameter = '?',
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "System.Char"),
                 });
-            //testCases.Add(
-            //    new ConvertToUriLiteralTestCase()
-            //    {
-            //        Parameter = new ODataResource(),
-            //        ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.Core.ODataResource"),
-            //    });
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
                 {
                     Parameter = new ODataResourceSet(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.Core.ODataResourceSet"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "Microsoft.OData.ODataResourceSet"),
                 });
             testCases.Add(
                 new ConvertToUriLiteralTestCase()

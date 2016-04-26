@@ -6,15 +6,15 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Core.Tests.Evaluation;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonFullMetadataLevelTests
     {

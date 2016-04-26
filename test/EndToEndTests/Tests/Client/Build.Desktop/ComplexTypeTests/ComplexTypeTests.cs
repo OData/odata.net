@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;

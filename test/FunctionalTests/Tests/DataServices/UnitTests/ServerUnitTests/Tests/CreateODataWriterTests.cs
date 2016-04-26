@@ -9,7 +9,7 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData.Service;
     using System.Net;
     using AstoriaUnitTests.Stubs;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;

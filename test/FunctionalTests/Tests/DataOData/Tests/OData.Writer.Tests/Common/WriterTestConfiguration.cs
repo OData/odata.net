@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;

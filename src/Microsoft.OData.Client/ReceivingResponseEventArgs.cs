@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// <see cref="EventArgs"/> class for the <see cref="DataServiceContext.ReceivingResponse"/> event.

@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
     using Microsoft.OData.Client;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

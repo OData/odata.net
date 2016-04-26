@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Common;

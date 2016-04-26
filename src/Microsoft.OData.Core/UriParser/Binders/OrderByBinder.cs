@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class to handle the binding of orderby tokens.

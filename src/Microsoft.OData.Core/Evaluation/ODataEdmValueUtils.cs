@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     #region Namespaces
 
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 

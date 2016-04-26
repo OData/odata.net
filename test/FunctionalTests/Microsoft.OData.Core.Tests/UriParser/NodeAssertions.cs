@@ -7,11 +7,11 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Contains fluent assertion APIs for testing QueryNodes.

@@ -17,7 +17,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Tests.Server;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

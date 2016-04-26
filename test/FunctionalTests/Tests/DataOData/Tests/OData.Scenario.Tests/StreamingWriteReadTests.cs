@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
                (testDescriptor, testConfiguration) =>
                {
                    testConfiguration = testConfiguration.Clone();
-                   testConfiguration.MessageWriterSettings.ODataUri = new Microsoft.OData.Core.ODataUri()
+                   testConfiguration.MessageWriterSettings.ODataUri = new Microsoft.OData.ODataUri()
                    {
                        ServiceRoot = ServiceDocumentUri
                    };

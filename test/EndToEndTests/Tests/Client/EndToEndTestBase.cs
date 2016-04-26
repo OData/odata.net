@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client
 {
     using System;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 #if !WIN8 && !SILVERLIGHT && !PORTABLELIB && !WINDOWSPHONE
     using Microsoft.Test.OData.Tests.Client.Common;

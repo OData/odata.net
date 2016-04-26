@@ -6,14 +6,14 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
+namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
     public class KeyAsSegmentTemplateIntegrationTests
     {

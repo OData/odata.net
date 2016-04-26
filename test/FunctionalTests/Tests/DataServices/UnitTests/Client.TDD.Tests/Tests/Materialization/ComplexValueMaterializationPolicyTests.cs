@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DSClient = Microsoft.OData.Client;

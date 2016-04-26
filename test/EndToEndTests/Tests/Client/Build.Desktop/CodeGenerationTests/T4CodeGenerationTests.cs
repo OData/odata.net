@@ -20,7 +20,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     using Microsoft.CSharp;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Design.T4;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Framework.Server;

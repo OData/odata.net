@@ -6,10 +6,10 @@
 
 using System.IO;
 using System.Linq;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     public class BufferingJsonReaderTests
     {

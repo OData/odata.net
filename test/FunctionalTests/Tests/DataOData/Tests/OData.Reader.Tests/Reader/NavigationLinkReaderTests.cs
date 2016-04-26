@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;

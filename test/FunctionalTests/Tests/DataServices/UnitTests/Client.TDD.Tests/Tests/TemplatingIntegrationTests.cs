@@ -8,7 +8,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.Tests.Evaluation;
+    using Microsoft.OData.Tests.Evaluation;
     using System.Text;
     using FluentAssertions;
     using Microsoft.OData.Edm.Values;

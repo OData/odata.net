@@ -8,12 +8,12 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
     public class ODataJsonLightPropertyTypeSerializerTests
     {

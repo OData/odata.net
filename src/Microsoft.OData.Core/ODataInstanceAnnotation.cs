@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Xml;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
 
     /// <summary>
     /// Represents an instance annotation.

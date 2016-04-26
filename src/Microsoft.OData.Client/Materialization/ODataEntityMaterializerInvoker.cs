@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Use this class to invoke projection methods from <see cref="ODataEntityMaterializer"/>.

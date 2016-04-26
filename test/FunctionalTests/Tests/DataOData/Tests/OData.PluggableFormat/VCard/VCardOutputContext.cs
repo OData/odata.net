@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
     using System;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal class VCardOutputContext : ODataOutputContext

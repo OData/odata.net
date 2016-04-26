@@ -10,14 +10,14 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// Unit tests for the JsonLightInstanceAnnotationWriter.

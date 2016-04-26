@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
@@ -39,39 +39,39 @@ namespace Microsoft.OData.Core
         public abstract Task WriteValueAsync(string parameterName, object parameterValue);
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
-        /// <returns>The newly created <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" />.</returns>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
+        /// <returns>The newly created <see cref="T:Microsoft.OData.ODataCollectionWriter" />.</returns>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         public abstract ODataCollectionWriter CreateCollectionWriter(string parameterName);
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" />.</returns>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataCollectionWriter" />.</returns>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         public abstract Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName);
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public abstract ODataWriter CreateResourceWriter(string parameterName);
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
         public abstract Task<ODataWriter> CreateResourceWriterAsync(string parameterName);
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public abstract ODataWriter CreateResourceSetWriter(string parameterName);
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource set.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
         public abstract Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName);
 #endif
 

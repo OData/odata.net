@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>

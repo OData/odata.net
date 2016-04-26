@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>Enumeration with all the states the batch reader can be in.</summary>
     public enum ODataBatchReaderState

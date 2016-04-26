@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Represents a primitive property value.

@@ -10,7 +10,7 @@ using Microsoft.Spatial;
 using System.Xml.Linq;
 using AstoriaUnitTests.TDD.Common;
 using DataSpatialUnitTests.Utils;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.Spatial.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Util = Microsoft.OData.Client.Util;

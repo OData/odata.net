@@ -13,7 +13,7 @@ namespace Microsoft.OData.Service
     using System.IO;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// IODataRequestMessage interface implementation.

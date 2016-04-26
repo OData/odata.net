@@ -6,9 +6,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Translate a select tree into the right format to be used with an expand tree.

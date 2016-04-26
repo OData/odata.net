@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>Use this class to customize how exceptions are handled.</summary>
     public class HandleExceptionArgs

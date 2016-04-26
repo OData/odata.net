@@ -7,7 +7,7 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 {
     #region Namespaces
@@ -19,12 +19,12 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
 #if ODATA_CLIENT
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using ErrorStrings = Microsoft.OData.Client.Strings;
     using PlatformHelpers = Microsoft.OData.Client.PlatformHelper;
 #else
-    using ErrorStrings = Microsoft.OData.Core.Strings;
-    using PlatformHelpers = Microsoft.OData.Core.PlatformHelper;
+    using ErrorStrings = Microsoft.OData.Strings;
+    using PlatformHelpers = Microsoft.OData.PlatformHelper;
 #endif
     #endregion Namespaces
 

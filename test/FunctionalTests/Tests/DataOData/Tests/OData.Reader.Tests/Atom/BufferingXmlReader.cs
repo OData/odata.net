@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Atom
         /// <summary>
         /// The type of the BufferingXmlReader from the product.
         /// </summary>
-        private static Type BufferingXmlReaderType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.Metadata.BufferingXmlReader");
+        private static Type BufferingXmlReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Metadata.BufferingXmlReader");
 
         /// <summary>
         /// The underlying product instance.

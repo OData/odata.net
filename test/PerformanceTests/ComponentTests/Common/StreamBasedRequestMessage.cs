@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// An OData Request Message backed by a Stream.

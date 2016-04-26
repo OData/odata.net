@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Service
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Class that keeps track of the ODataResource, entity instance and other information

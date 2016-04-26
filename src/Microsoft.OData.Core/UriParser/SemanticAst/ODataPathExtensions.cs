@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Extension methods for <see cref="ODataPath"/>. These method provide convenince functions.

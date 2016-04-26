@@ -19,7 +19,7 @@ Imports System.Text
 Imports System.Web
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
-Imports Microsoft.OData.Core
+Imports Microsoft.OData
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel

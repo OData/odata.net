@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Collections.Generic;
     using Microsoft.OData.Client;
     using FluentAssertions;
-    using Microsoft.OData.Core.Tests.Evaluation;
+    using Microsoft.OData.Tests.Evaluation;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;

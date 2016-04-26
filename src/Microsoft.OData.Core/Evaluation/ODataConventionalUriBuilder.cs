@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     #region Namespaces
     using System;
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
 
     #endregion
 
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             if (keyPropertyValue == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataConventionalUriBuilder_NullKeyValue(keyPropertyName, entityTypeName));
+                throw new ODataException(Strings.ODataConventionalUriBuilder_NullKeyValue(keyPropertyName, entityTypeName));
             }
 
             return keyPropertyValue;
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Core.Evaluation
 
             if (!keyProperties.Any())
             {
-                throw new ODataException(OData.Core.Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties(entityTypeName));
+                throw new ODataException(Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties(entityTypeName));
             }
 
             this.keySerializer.AppendKeyExpression(builder, keyProperties, p => p.Key, p => ValidateKeyValue(p.Key, p.Value, entityTypeName));

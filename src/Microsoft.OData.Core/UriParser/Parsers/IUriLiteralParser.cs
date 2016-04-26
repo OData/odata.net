@@ -6,7 +6,7 @@
 
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Interface for Uri literal parser.

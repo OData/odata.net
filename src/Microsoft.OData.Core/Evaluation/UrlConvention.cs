@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 #endif
 {

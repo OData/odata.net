@@ -6,11 +6,11 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class SelectExpandClauseFinisherTests
     {

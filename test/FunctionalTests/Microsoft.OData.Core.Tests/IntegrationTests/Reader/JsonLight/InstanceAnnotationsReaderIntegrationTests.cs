@@ -13,7 +13,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 {
     public class InstanceAnnotationsReaderIntegrationTests
     {

@@ -6,11 +6,11 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Json;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ReorderingJsonReaderTests
     {

@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Execution;

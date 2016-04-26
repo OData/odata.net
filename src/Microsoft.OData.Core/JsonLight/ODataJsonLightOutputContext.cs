@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
 
@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
 
     #endregion Namespaces
 

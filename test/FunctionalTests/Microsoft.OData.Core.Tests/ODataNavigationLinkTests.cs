@@ -6,12 +6,12 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Tests.Evaluation;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataNavigationLinkTests
     {

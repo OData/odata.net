@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Text.RegularExpressions;
     using Microsoft.OData.Client;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FluentAssertions;
 

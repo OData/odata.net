@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Collections.Generic;
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

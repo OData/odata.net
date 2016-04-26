@@ -11,8 +11,8 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Linq;
     using System.Linq.Expressions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Contracts;
     #endregion Namespaces
 

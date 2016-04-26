@@ -6,7 +6,7 @@
 
 using System.IO;
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     /// <summary>
     /// Writes text indented as per the indentation level setting

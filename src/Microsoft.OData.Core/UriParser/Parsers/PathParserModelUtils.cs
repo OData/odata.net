@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Set of helpers and extensions to make it easier to convert the semantic path parser

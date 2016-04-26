@@ -7,8 +7,8 @@
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using System;
     using System.Linq;
     using Microsoft.Spatial;

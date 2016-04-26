@@ -24,7 +24,7 @@ SelectExpandQueryOption
 						NamedFunctionParameterNode
 							Parameter Name = Location
 							Value = 
-							Microsoft.OData.Core.ODataComplexValue(Type: )
+							Microsoft.OData.ODataComplexValue(Type: )
 						NamedFunctionParameterNode
 							Parameter Name = Distance
 							Value = 

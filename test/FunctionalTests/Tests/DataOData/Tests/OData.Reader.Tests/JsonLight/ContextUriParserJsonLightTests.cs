@@ -12,9 +12,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Execution;

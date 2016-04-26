@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Class which implements the <see cref="IAsyncResult"/> for the GetReadStream operation.

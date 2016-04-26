@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 {
     #region Namespaces
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>

@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using FluentAssertions;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public partial class Container : DataServiceContext

@@ -21,7 +21,7 @@ using System.Xml;
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
     using System.Reflection;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using System.Text.RegularExpressions;
 
     [TestClass]

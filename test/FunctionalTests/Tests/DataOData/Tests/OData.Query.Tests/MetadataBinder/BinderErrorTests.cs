@@ -6,8 +6,8 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Test.Taupo.Common;
 using Microsoft.Test.Taupo.Execution;
@@ -15,7 +15,7 @@ using Microsoft.Test.Taupo.OData.Common;
 using Microsoft.Test.Taupo.OData.Contracts;
 using Microsoft.Test.Taupo.OData.Query.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 {
@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                 });
         }
 
-        internal sealed class ErrorMetadataBinder : Microsoft.OData.Core.UriParser.MetadataBinder
+        internal sealed class ErrorMetadataBinder : Microsoft.OData.UriParser.MetadataBinder
         {
             public ErrorMetadataBinder(IEdmModel model)
                 : base(new BindingState(new ODataUriParserConfiguration(model)))

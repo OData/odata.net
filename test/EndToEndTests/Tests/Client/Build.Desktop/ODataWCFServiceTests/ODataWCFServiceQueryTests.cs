@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.TestServices;

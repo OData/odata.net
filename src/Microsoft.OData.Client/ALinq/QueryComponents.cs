@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     #endregion Namespaces
 

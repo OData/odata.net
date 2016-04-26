@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Materializer state for a given ODataResourceSet

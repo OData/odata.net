@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     #region Namespaces
     using System.Collections.Generic;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Astoria.Json;
     using Microsoft.Test.Taupo.Common;

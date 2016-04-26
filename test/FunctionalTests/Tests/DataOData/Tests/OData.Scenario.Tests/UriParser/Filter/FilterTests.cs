@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Filter
     using System;
     using System.Runtime.CompilerServices;
     using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

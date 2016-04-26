@@ -8,7 +8,7 @@ namespace Microsoft.OData.Client
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Forwards calls to an OData Writer

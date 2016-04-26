@@ -17,7 +17,7 @@ FilterQueryOption
 					Name = $it
 					NavigationSource = SpecialProduct
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 		LessThanOrEqual
 			200(Type: [Edm.Single Nullable=False])
 	And
@@ -29,6 +29,6 @@ FilterQueryOption
 					Name = $it
 					NavigationSource = SpecialProduct
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 		GreaterThan
 			3.5(Type: [Edm.Single Nullable=False])

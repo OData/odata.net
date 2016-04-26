@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// This is intended to be a Mock for the JsonWriter.

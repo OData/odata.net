@@ -7,11 +7,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataUriBuilderTests : ODataUriBuilderTestsBase
     {

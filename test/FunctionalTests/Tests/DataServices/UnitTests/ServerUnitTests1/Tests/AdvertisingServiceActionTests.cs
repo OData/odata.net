@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.Tests.Server
     using System.Reflection;
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using AstoriaTest = System.Data.Test.Astoria;
     

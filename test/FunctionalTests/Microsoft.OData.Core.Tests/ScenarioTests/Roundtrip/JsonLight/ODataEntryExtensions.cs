@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     /// <summary>
     /// Extensions methods for building OData Entries

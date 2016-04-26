@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Xml;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary> IODataRequestMessage interface implementation. </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Returning MemoryStream which doesn't require disposal")]

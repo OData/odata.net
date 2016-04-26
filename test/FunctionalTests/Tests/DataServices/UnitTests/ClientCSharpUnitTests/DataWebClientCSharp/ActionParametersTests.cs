@@ -17,8 +17,8 @@ namespace AstoriaUnitTests
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Tests;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using AstoriaTest = System.Data.Test.Astoria;
 

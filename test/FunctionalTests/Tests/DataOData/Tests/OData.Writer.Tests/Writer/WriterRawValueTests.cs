@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -79,17 +79,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {   // invalid value (non-primitive)
                     Value = (object)new ODataComplexValue(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataComplexValue' could not be converted to a raw string.",
+                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataComplexValue' could not be converted to a raw string.",
                 },
                 new
                 {   // invalid value (non-primitive)
                     Value = (object)new ODataCollectionValue(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataCollectionValue' could not be converted to a raw string."
+                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataCollectionValue' could not be converted to a raw string."
                 },
                 new
                 {   // invalid value (entry)
                     Value = (object)new ODataResource(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataResource' could not be converted to a raw string."
+                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataResource' could not be converted to a raw string."
                 },
                 new
                 {   // null value

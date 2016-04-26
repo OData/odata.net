@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
 namespace Microsoft.OData.Service
 #endif
 #if !ODATA_CLIENT && !ODATA_SERVICE
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #endif
 {
     using System;

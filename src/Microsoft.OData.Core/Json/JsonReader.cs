@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;

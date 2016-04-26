@@ -12,8 +12,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

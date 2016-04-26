@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// An implementation of IODataResponseMessageAsync that uses an HttpWebResponse under the covers.

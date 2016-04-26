@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;

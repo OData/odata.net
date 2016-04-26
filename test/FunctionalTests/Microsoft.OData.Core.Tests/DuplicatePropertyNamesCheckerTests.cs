@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class DuplicatePropertyNamesCheckerTests
     {

@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 #if !SILVERLIGHT
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;

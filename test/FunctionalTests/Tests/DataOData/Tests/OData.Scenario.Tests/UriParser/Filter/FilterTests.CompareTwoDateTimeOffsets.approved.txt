@@ -23,7 +23,7 @@ FilterQueryOption
 							Name = a
 							NavigationSource = OrderDetails
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-							Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 			GreaterThanOrEqual
 				3.2(Type: [Edm.Single Nullable=False])
 		And
@@ -35,7 +35,7 @@ FilterQueryOption
 						Name = a
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 			Equal
 				SingleValuePropertyAccessNode
 					Property = OrderPlaced
@@ -45,7 +45,7 @@ FilterQueryOption
 						Name = a
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-						Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 		Source = 
 		CollectionNavigationNode
 			ItemType = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
@@ -58,7 +58,7 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = Orders
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 		Parameters = 
 		EntityRangeVariable
 			Name = a

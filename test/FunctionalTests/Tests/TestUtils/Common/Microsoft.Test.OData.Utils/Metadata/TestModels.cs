@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.ODataLibTest;
 
     #endregion Namespaces

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         private readonly HashSet<string> projectedProperties;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ProjectedPropertiesAnnotation" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ProjectedPropertiesAnnotation" /> class.</summary>
         /// <param name="projectedPropertyNames">The enumeration of projected property names.</param>
         public ProjectedPropertiesAnnotation(IEnumerable<string> projectedPropertyNames)
         {

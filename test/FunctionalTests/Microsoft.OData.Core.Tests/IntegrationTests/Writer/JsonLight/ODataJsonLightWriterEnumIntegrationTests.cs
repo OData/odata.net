@@ -10,13 +10,13 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
     /// <summary>
     /// Writer may modify entry (like entry.MetadataBuilder = builder, looks like a problem), 

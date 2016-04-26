@@ -11,9 +11,9 @@ using FluentAssertions.Primitives;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class SelectedPropertiesNodeTests
     {

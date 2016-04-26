@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

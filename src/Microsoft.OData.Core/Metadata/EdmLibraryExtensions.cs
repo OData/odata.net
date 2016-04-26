@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
+namespace Microsoft.OData.Metadata
 {
     #region Namespaces
     using System;
@@ -25,9 +25,9 @@ namespace Microsoft.OData.Core.Metadata
     using ErrorStrings = Microsoft.OData.Client.Strings;
 #endif
 #if !ODATA_SERVICE && !ODATA_CLIENT
-    using Microsoft.OData.Core.JsonLight;
-    using ErrorStrings = Microsoft.OData.Core.Strings;
-    using PlatformHelper = Microsoft.OData.Core.PlatformHelper;
+    using Microsoft.OData.JsonLight;
+    using ErrorStrings = Microsoft.OData.Strings;
+    using PlatformHelper = Microsoft.OData.PlatformHelper;
 #endif
     #endregion Namespaces
 

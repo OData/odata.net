@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -72,14 +72,14 @@ namespace Microsoft.OData.Core
         /// <remarks>This is either set via the SetHeadersForPayload method or implicitly when one of the write (or writer creation) methods is called.</remarks>
         private ODataMediaType mediaType;
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given request message. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage)
             : this(requestMessage, null)
         {
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given request message and message writer settings. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message and message writer settings. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         /// <param name="settings">The message writer settings to use for writing the message payload.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage, ODataMessageWriterSettings settings)
@@ -110,14 +110,14 @@ namespace Microsoft.OData.Core
             this.settings.ShouldIncludeAnnotation = AnnotationFilter.CreateInclueAllFilter().Matches;
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given response message. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message. </summary>
         /// <param name="responseMessage">The response message for which to create the writer.</param>
         public ODataMessageWriter(IODataResponseMessage responseMessage)
             : this(responseMessage, null)
         {
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given response message and message writer settings. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message and message writer settings. </summary>
         /// <param name="responseMessage">The response message for which to create the writer.</param>
         /// <param name="settings">The message writer settings to use for writing the message payload.</param>
         public ODataMessageWriter(IODataResponseMessage responseMessage, ODataMessageWriterSettings settings)
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>The created writer.</returns>
         public ODataAsynchronousWriter CreateODataAsynchronousWriter()
         {
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Core
                 context => context.CreateODataAsynchronousWriter());
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceSetWriter()
         {
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Core
                 (context) => context.CreateODataAsynchronousWriterAsync());
         }
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceSetWriterAsync()
         {
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceWriter()
         {
@@ -316,7 +316,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceWriterAsync()
         {
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>The created collection writer.</returns>
         public ODataCollectionWriter CreateODataCollectionWriter()
         {
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
         public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
         {
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>The created batch writer.</returns>
         public ODataBatchWriter CreateODataBatchWriter()
         {
@@ -405,7 +405,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
         public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
@@ -472,7 +472,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Writes an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as the message payload. </summary>
+        /// <summary> Writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <param name="property">The property to write.</param>
         public void WriteProperty(ODataProperty property)
         {
@@ -484,7 +484,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as the message payload. </summary>
+        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <param name="property">The property to write</param>
         public Task WritePropertyAsync(ODataProperty property)
@@ -497,7 +497,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Writes an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload. </summary>
+        /// <summary> Writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
         public void WriteError(ODataError error, bool includeDebugInformation)
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload. </summary>
+        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
@@ -735,8 +735,8 @@ namespace Microsoft.OData.Core
         /// <remarks>
         /// This method computes and ensures that a content type exists and computes the 
         /// OData format from it. If a content type is explicitly specified through 
-        /// <see cref="Microsoft.OData.Core.ODataUtils.SetHeadersForPayload(Microsoft.OData.Core.ODataMessageWriter, Microsoft.OData.Core.ODataPayloadKind)"/>
-        /// or <see cref="Microsoft.OData.Core.ODataMessageWriterSettings.SetContentType(string, string)"/> it will be used. If no
+        /// <see cref="Microsoft.OData.ODataUtils.SetHeadersForPayload(Microsoft.OData.ODataMessageWriter, Microsoft.OData.ODataPayloadKind)"/>
+        /// or <see cref="Microsoft.OData.ODataMessageWriterSettings.SetContentType(string, string)"/> it will be used. If no
         /// content type is specified in either place, the message headers are checked for
         /// a content type header.
         /// If the content type is computed from settings, the content type header is set on the message.

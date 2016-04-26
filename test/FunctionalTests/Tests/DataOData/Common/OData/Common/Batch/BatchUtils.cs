@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Batch
     using System.Linq;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;

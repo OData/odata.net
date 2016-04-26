@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Utils.ODataLibOM
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.Common;
     
     /// <summary>

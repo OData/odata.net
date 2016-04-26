@@ -6,8 +6,8 @@
 
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.OData.Core;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Service.Providers;
 
 namespace Microsoft.OData.Service

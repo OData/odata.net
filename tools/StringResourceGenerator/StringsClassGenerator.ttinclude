@@ -47,7 +47,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace <#= Configuration.AssemblyName #> {
+namespace <#= Configuration.ResourceClassNamespace #> {
     using System;
     using System.Resources;
 

@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.PrimitiveValueConverters;

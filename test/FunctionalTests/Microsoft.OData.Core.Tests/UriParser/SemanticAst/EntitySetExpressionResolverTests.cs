@@ -5,11 +5,11 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Tests for classes in the semantic tree object model that we have not fully unit tested yet.

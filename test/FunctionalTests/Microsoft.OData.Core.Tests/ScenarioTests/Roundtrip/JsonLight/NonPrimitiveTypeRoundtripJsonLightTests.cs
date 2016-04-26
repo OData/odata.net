@@ -8,14 +8,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Core.Tests.JsonLight;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class NonPrimitiveTypeRoundtripJsonLightTests
     {

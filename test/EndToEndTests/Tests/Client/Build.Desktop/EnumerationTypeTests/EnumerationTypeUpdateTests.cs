@@ -9,8 +9,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
     using System;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;

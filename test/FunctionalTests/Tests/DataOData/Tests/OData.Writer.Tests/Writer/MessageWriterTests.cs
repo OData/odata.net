@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 #if !SILVERLIGHT
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;

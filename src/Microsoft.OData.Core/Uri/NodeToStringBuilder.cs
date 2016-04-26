@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Globalization;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Build QueryNode to String Representation 

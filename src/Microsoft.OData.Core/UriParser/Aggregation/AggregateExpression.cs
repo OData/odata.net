@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// A aggregate expression representing a aggregation transformation.

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Data.Test.Astoria.Util;
 using System.Text;
 using AstoriaUnitTests.Tests;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AstoriaUnitTests

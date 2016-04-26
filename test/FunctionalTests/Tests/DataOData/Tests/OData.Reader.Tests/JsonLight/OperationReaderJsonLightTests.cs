@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;

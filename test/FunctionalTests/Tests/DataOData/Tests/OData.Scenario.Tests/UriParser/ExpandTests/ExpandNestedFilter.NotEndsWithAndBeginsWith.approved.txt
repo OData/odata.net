@@ -29,7 +29,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-											Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 									milk(Type: [Edm.String Nullable=True Unicode=True])
 						)
 					And
@@ -46,7 +46,7 @@ SelectExpandQueryOption
 										Name = $it
 										NavigationSource = Products
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-										Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 								word(Type: [Edm.String Nullable=True Unicode=True])
 				Or
 						SingleValueFunctionCallNode
@@ -62,7 +62,7 @@ SelectExpandQueryOption
 										Name = $it
 										NavigationSource = Products
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-										Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 					Equal
 						15(Type: [Edm.Int32 Nullable=False])
 			SelectExpandQueryOption

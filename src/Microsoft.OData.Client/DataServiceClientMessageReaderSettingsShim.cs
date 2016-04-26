@@ -8,7 +8,7 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Client reader settings shim class to restrict settings to the base for OData message reader.

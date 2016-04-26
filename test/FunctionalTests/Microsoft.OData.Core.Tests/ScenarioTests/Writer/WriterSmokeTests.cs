@@ -10,7 +10,7 @@ using System.Text;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
+namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     /// <summary>
     /// Smoke tests for ODataLib writing scenarios. The intent of this file is to provide a location for writing user code that uses

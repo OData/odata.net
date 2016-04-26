@@ -15,7 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 #if !SILVERLIGHT
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
@@ -291,10 +291,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             IEnumerable<string> httpMethodValues = new string[]
             {
-                Microsoft.OData.Core.ODataConstants.MethodGet,
-                Microsoft.OData.Core.ODataConstants.MethodPatch,
-                Microsoft.OData.Core.ODataConstants.MethodPost,
-                Microsoft.OData.Core.ODataConstants.MethodPut,
+                Microsoft.OData.ODataConstants.MethodGet,
+                Microsoft.OData.ODataConstants.MethodPatch,
+                Microsoft.OData.ODataConstants.MethodPost,
+                Microsoft.OData.ODataConstants.MethodPut,
             };
 
             // Now we allow non-query outside of changeset.
@@ -1697,7 +1697,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             public ODataBatchOperationRequestMessage(Stream outputStream)
             {
-                Type classType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.ODataBatchOperationRequestMessage");
+                Type classType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.ODataBatchOperationRequestMessage");
                 this.instance = Activator.CreateInstance(classType, outputStream, null);
             }
 

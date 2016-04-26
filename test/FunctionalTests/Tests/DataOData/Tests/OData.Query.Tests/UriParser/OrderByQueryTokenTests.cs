@@ -4,21 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.Taupo.Common;
+using Microsoft.Test.Taupo.Execution;
+using Microsoft.Test.Taupo.OData.Common;
+using Microsoft.Test.Taupo.OData.Contracts;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
 {
-    #region Namespaces
-
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Execution;
-    using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    #endregion Namespaces
-
     /// <summary>
     /// Tests for the filter and orderby expression parsing.
     /// </summary>

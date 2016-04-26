@@ -6,7 +6,7 @@
 
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Add semantic meaning to a Select or Expand token.

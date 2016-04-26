@@ -6,7 +6,7 @@
 
 using System;
 using System.Linq;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Test.OData.Utils.Common;

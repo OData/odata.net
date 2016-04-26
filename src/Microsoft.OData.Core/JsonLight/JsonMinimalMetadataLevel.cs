@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
-    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Evaluation;
     using Microsoft.OData.Edm;
 
     /// <summary>

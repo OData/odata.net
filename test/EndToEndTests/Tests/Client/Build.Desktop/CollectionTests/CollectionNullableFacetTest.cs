@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.CollectionTests
 {
     using System;
 using System.Linq;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Tests.Client.Common;

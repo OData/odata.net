@@ -7,11 +7,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Json;
+using Microsoft.OData.Metadata;
 using Microsoft.Spatial;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Handles serialization and deserialization for types derived from Geography.

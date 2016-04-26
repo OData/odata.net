@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// An implementation of IODataRequestMessageAsync that uses an HttpWebRequest under the covers.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.

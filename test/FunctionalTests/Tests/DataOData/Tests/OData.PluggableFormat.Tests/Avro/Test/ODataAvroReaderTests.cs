@@ -13,7 +13,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
     using Microsoft.Hadoop.Avro.Schema;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

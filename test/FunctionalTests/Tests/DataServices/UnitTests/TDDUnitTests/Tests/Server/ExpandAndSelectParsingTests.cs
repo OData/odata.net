@@ -8,7 +8,7 @@ using System;
 using AstoriaUnitTests.TDD.Tests.Server.Simulators;
 using AstoriaUnitTests.Tests.Server.Simulators;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Service;
 using Microsoft.OData.Service.Caching;
 using Microsoft.OData.Service.Providers;

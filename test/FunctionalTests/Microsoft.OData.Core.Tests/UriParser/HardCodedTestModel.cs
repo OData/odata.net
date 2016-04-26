@@ -11,7 +11,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Library;
@@ -19,7 +19,7 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Class to provide a test model for semantic unit tests.

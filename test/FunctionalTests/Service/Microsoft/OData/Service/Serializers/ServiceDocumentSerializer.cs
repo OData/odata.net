@@ -11,7 +11,7 @@ namespace Microsoft.OData.Service.Serializers
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
     #endregion Namespaces
 

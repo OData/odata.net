@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
     using System.Collections.Generic;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Providers;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using System;
     using System.Linq;
     using System.Reflection;

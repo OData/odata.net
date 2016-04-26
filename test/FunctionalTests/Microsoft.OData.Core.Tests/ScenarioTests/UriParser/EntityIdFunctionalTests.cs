@@ -5,11 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Class containing tests for Entity-Id identified by $id system query parameter

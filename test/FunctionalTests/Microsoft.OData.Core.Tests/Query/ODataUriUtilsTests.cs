@@ -6,12 +6,12 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Query
+namespace Microsoft.OData.Tests.Query
 {
     public class ODataUriUtilsTests
     {

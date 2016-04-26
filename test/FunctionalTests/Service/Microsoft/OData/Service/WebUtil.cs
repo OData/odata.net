@@ -22,7 +22,7 @@ namespace Microsoft.OData.Service
     using System.Xml;
     using System.Xml.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Internal;
     using Microsoft.OData.Service.Providers;

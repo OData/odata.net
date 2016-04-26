@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Net;
     using System.ServiceModel.Web;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     class ODataResponseMessage : IODataResponseMessage
     {

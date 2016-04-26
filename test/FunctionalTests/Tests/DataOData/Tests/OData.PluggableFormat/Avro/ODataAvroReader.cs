@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Collections;
     using System.Diagnostics;
     using Microsoft.Hadoop.Avro;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     internal class ODataAvroReader : ODataReader
     {

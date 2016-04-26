@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class AvroFormat : ODataFormat
     {

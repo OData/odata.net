@@ -8,7 +8,7 @@ namespace Microsoft.OData.Service
 {
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Extension methods classes in WCF Data Services Server.

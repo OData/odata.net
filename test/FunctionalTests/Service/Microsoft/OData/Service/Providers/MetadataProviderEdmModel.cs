@@ -19,8 +19,8 @@ namespace Microsoft.OData.Service.Providers
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>

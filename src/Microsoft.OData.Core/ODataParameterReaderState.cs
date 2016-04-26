@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
-    /// <summary> Enumeration of all possible states of an <see cref="T:Microsoft.OData.Core.ODataParameterReader" />. </summary>
+    /// <summary> Enumeration of all possible states of an <see cref="T:Microsoft.OData.ODataParameterReader" />. </summary>
     public enum ODataParameterReaderState
     {
         /// <summary>The reader is at the start; nothing has been read yet.</summary>

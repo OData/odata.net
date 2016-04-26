@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;

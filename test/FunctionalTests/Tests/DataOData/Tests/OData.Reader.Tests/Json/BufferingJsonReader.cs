@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         /// <summary>
         /// The type of the BufferingJsonReader from the product.
         /// </summary>
-        private static Type BufferingJsonReaderType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.Json.BufferingJsonReader");
+        private static Type BufferingJsonReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.BufferingJsonReader");
 
         /// <summary>A flag indicating whether the reader is currently buffering or not.</summary>
         private bool isBuffering;

@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

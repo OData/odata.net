@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -309,7 +309,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().PrimitiveProperty("UndeclaredProperty", (short)42),
                 },
 
-                // TODO read: Microsoft.OData.Core.ODataException: A type named 'TestModel.Unknown' could not be resolved by the model. When a model is available, each type name must resolve to a valid type. 
+                // TODO read: Microsoft.OData.ODataException: A type named 'TestModel.Unknown' could not be resolved by the model. When a model is available, each type name must resolve to a valid type. 
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Number with invalid type - should work, the type is ignored",

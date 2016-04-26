@@ -29,7 +29,7 @@ SelectExpandQueryOption
 												Name = a
 												NavigationSource = OrderDetails
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-												Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+												Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 								GreaterThanOrEqual
 									3.2(Type: [Edm.Single Nullable=False])
 							And
@@ -46,7 +46,7 @@ SelectExpandQueryOption
 													Name = a
 													NavigationSource = OrderDetails
 													TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-													Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+													Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 								Equal
 									1971(Type: [Edm.Int32 Nullable=False])
 						Or
@@ -63,7 +63,7 @@ SelectExpandQueryOption
 												Name = a
 												NavigationSource = OrderDetails
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-												Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+												Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 							LessThan
 								2(Type: [Edm.Int32 Nullable=False])
 					Or
@@ -80,7 +80,7 @@ SelectExpandQueryOption
 														Name = a
 														NavigationSource = OrderDetails
 														TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-														Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+														Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 									Equal
 										1(Type: [Edm.Int32 Nullable=False])
 								And
@@ -97,7 +97,7 @@ SelectExpandQueryOption
 														Name = a
 														NavigationSource = OrderDetails
 														TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-														Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+														Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 									NotEqual
 										3(Type: [Edm.Int32 Nullable=False])
 							And
@@ -114,7 +114,7 @@ SelectExpandQueryOption
 													Name = a
 													NavigationSource = OrderDetails
 													TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-													Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+													Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 								Equal
 									5(Type: [Edm.Int32 Nullable=False])
 						And
@@ -131,7 +131,7 @@ SelectExpandQueryOption
 												Name = a
 												NavigationSource = OrderDetails
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-												Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+												Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 							LessThan
 								40(Type: [Edm.Int32 Nullable=False])
 					Source = 
@@ -146,7 +146,7 @@ SelectExpandQueryOption
 							Name = $it
 							NavigationSource = Orders
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 					Parameters = 
 					EntityRangeVariable
 						Name = a

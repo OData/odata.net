@@ -19,8 +19,8 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.DataWebClientCSharp.Services;
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     #endregion Namespaces

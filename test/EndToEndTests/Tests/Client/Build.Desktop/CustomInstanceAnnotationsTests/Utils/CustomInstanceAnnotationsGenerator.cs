@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference;
 

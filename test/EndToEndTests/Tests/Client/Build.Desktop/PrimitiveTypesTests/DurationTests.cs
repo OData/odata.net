@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;

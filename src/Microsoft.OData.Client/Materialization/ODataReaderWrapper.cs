@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Contains an odata reader that is wrapped

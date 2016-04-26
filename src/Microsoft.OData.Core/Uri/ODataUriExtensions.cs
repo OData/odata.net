@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Extension methods to ODataUri

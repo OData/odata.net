@@ -9,7 +9,7 @@ using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataResourceSerializationInfoTests
     {

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -13,8 +13,8 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>

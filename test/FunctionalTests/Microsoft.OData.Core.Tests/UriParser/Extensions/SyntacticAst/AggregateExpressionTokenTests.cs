@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Aggregation;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
 {
     public class AggregateExpressionTokenTests
     {

@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.OData.Core.Metadata;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// URI Utility methods.

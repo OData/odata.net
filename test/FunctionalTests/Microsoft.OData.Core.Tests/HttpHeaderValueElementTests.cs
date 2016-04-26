@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class HttpHeaderValueElementTests
     {

@@ -7,19 +7,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
-using System.Resources;
+namespace Microsoft.OData {
+    using System;
+    using System.Globalization;
+    using System.Reflection;
+    using System.Resources;
 #if !PORTABLELIB
-using System.Security.Permissions;
+    using System.Security.Permissions;
 #endif
-using System.Threading;
+    using System.Text;
+    using System.Threading;
 
-namespace Microsoft.OData.Core {
-    
-
+    using System.ComponentModel;
 #if !PORTABLELIB
     [AttributeUsage(AttributeTargets.All)]
     internal sealed class TextResDescriptionAttribute : DescriptionAttribute {

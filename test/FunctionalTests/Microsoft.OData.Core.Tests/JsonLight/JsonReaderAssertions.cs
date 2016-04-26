@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonReaderAssertions
     {

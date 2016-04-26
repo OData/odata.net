@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser.Aggregation;
+    using Microsoft.OData.UriParser;
     #endregion Namespaces
 
     /// <summary>

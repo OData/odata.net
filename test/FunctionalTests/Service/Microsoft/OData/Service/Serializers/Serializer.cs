@@ -15,8 +15,8 @@ namespace Microsoft.OData.Service.Serializers
     using System.Globalization;
     using System.Text;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;

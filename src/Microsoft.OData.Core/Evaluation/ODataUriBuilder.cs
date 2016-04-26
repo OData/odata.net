@@ -11,7 +11,7 @@ using Microsoft.OData.Edm.Values;
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 {
     /// <summary>

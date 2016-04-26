@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;

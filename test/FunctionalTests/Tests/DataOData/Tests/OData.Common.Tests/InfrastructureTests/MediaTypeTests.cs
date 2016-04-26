@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Contracts;
@@ -221,8 +221,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 
             static HttpUtilsWrapper()
             {
-                httpUtilsType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.HttpUtils");
-                mediaType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.MediaType");
+                httpUtilsType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.HttpUtils");
+                mediaType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.MediaType");
             }
 
             internal static IList<KeyValuePair<string, string>> ParseContentType(string contentType, out string mediaTypeName, out string mediaTypeCharset)

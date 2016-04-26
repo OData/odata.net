@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Client.Providers;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Library;

@@ -12,8 +12,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
 
     public class OperationHandler : RequestHandler

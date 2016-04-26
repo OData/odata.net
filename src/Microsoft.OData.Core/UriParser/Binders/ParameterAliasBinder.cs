@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// This class binds parameter alias by :

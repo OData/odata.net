@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     internal class TestJsonLightReaderEntryState : IODataJsonLightReaderResourceState
     {

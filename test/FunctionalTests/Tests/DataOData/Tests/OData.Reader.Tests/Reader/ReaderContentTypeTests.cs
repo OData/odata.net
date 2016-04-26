@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -286,8 +286,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     // create a message reader and call GetFormat; this should fail with the expected error message
                     TestMessage testMessage = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration);
-                    testMessage.SetHeader(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, testCase.ContentType);
-                    testMessage.SetHeader(Microsoft.OData.Core.ODataConstants.ContentLengthHeader, testCase.ContentLength.ToString());
+                    testMessage.SetHeader(Microsoft.OData.ODataConstants.ContentTypeHeader, testCase.ContentType);
+                    testMessage.SetHeader(Microsoft.OData.ODataConstants.ContentLengthHeader, testCase.ContentLength.ToString());
 
                     TestExceptionUtils.ExpectedException(
                         this.Assert,
@@ -365,7 +365,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     // create a message reader and call GetFormat; this should fail with the expected error message
                     TestMessage testMessage = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration);
-                    testMessage.SetHeader(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, testCase.ContentType);
+                    testMessage.SetHeader(Microsoft.OData.ODataConstants.ContentTypeHeader, testCase.ContentType);
 
                     TestExceptionUtils.ExpectedException(
                         this.Assert,

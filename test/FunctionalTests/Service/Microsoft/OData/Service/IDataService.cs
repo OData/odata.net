@@ -12,7 +12,7 @@ namespace Microsoft.OData.Service
 #if ASTORIA_FF_CALLBACKS
     using System.ServiceModel.Syndication;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
 
     #endregion Namespaces

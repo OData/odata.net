@@ -29,7 +29,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = CustomerForOrder
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-											Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 						Multiply
 							3(Type: [Edm.Int32 Nullable=False])
 					Subtract
@@ -46,7 +46,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = CustomerForOrder
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-											Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 						Divide
 							2(Type: [Edm.Int32 Nullable=False])
 				Add
@@ -63,7 +63,7 @@ SelectExpandQueryOption
 										Name = $it
 										NavigationSource = CustomerForOrder
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-										Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 					Modulo
 						30(Type: [Edm.Int32 Nullable=False])
 				Then By = 

@@ -11,14 +11,14 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Evaluation
+namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 {
     public class KeyGenerationPinningTest
     {

@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class EntityParameterRequestMessage : HttpWebRequestMessage
     {

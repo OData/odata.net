@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -16,8 +16,8 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Evaluation;
+    using Microsoft.OData.Json;
 
     #endregion Namespaces
 
@@ -540,7 +540,7 @@ namespace Microsoft.OData.Core.JsonLight
             JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
             if (navigationLinkScope.ResourceSetWritten)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest);
+                throw new ODataException(Strings.ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest);
             }
 
             if (!navigationLinkScope.EntityReferenceLinkWritten)
@@ -724,7 +724,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (resourceSet.InstanceAnnotations.Count > 0)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+                throw new ODataException(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
             }
         }
 

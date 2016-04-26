@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

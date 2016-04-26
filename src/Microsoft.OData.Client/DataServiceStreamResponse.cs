@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>Represents a response from WCF Data Services that contains binary data as a stream.</summary>
     public sealed class DataServiceStreamResponse : IDisposable

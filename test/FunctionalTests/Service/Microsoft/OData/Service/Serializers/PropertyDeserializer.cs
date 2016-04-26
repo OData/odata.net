@@ -8,8 +8,8 @@ namespace Microsoft.OData.Service.Serializers
 {
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
 

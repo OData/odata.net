@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
@@ -19,7 +19,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

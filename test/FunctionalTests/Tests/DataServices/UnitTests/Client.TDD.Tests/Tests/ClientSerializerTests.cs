@@ -15,7 +15,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client.Metadata;
     using FluentAssertions;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

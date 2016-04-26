@@ -24,7 +24,7 @@ namespace AstoriaUnitTests
     using System.Text;
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using t = System.Data.Test.Astoria;
     #endregion

@@ -8,13 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Unit tests for the FunctionCallBinder class.
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                             new ConstantNode("Hello"),
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.String"));
+            a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.String"));
         }
 
         [Fact]
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                             new ConstantNode("Hello")
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
+            a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
         }
 
 
@@ -243,7 +243,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                             new ConstantNode("Hello")
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
+            a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
         }
 
         //EnsureArgumentsAreSingleValue Tests

@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.PluggableFormat
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     internal class InMemoryMessage : IODataRequestMessageAsync, IODataResponseMessageAsync, IDisposable
     {

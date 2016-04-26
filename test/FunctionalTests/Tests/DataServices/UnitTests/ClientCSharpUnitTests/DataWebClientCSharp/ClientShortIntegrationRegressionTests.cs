@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.ClientExtensions;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Test the public API of CustomUriLiteralParser class

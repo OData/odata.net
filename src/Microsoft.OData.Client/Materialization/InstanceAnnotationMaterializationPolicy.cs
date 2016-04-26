@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     /// <summary>

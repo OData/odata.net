@@ -629,7 +629,7 @@ namespace AstoriaUnitTests
         public static System.Resources.ResourceManager MicrosoftDataSpatialResourceManager = new System.Resources.ResourceManager(SystemSpatialBaseName, typeof(Microsoft.Spatial.Geography).Assembly);
         public static System.Resources.ResourceManager SystemDataServicesResourceManager = new System.Resources.ResourceManager(SystemDataServicesBaseName, typeof(Microsoft.OData.Service.DataService<>).Assembly);
         public static System.Resources.ResourceManager SystemDataServicesClientResourceManager = new System.Resources.ResourceManager(SystemDataServicesClientBaseName, typeof(Microsoft.OData.Client.DataServiceContext).Assembly);
-        public static System.Resources.ResourceManager ODataLibResourceManager = new System.Resources.ResourceManager(ODataLibBaseName, typeof(Microsoft.OData.Core.IODataResponseMessage).Assembly);
+        public static System.Resources.ResourceManager ODataLibResourceManager = new System.Resources.ResourceManager(ODataLibBaseName, typeof(Microsoft.OData.IODataResponseMessage).Assembly);
 
         public static string GetStringResource(System.Resources.ResourceManager manager, string name, params object[] args)
         {

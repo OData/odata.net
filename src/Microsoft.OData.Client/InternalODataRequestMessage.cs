@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Collections.Generic;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// This is a just a pass through implementation of IODataRequestMessage. This class is used

@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     public class ODataReflectionUpdateProvider : IODataUpdateProvider

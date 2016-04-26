@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Json;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>

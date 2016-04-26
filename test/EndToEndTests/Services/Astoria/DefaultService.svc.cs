@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Services.AstoriaDefaultService
     using System.Linq;
     using System.ServiceModel.Web;
     using System.Text; 
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.TestProviders.Common;
     using Microsoft.Test.OData.Framework.TestProviders.Contracts.DataOracle;
     using Microsoft.Test.OData.Framework.TestProviders.OptionalProviders;

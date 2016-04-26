@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service.Serializers
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 #endif
 {
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Linq;
     using System.Text;
 #if !ODATA_CORE
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 #endif
 
     /// <summary>

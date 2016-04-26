@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using Microsoft.OData.Edm;
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         private ODataMediaTypeResolver mediaTypeResolver;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class with default values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class with default values.</summary>
         public ODataMessageReaderSettings()
             : base()
         {
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core
             this.EnableFullValidation = true;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class.</summary>
         /// <param name="other">The other message reader settings.</param>
         public ODataMessageReaderSettings(ODataMessageReaderSettings other)
             : base(other)

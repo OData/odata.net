@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Fake implementation of SingleEntityNode. This is intended to be used as a parent node in unit tests.

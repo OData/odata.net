@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;

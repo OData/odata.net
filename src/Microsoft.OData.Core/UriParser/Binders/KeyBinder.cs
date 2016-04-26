@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,8 @@ namespace Microsoft.OData.Core.UriParser
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class that knows how to bind key values.

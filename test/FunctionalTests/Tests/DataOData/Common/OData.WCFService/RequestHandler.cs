@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.ServiceModel.Web;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Base class for processing and responding to a client request.

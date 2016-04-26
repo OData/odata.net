@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Tests.WriterTests.BatchWriter;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;

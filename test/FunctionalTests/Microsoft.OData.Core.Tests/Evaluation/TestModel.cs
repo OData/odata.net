@@ -10,7 +10,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Values;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     internal class TestModel
     {

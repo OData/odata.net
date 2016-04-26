@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

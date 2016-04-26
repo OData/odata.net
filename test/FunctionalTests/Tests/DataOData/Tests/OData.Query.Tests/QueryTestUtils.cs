@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     using System.Collections;
     using Microsoft.OData.Edm;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces

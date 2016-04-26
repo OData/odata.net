@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System.Diagnostics;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Component for controlling what convention are used for generating URLs.

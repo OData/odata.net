@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.IO;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     class ODataRequestMessage : IODataRequestMessage
     {

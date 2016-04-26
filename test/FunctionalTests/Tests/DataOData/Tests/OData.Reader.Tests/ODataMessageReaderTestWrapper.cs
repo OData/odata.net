@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces

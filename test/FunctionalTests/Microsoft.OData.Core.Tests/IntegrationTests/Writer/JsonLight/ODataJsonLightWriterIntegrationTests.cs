@@ -8,13 +8,13 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
     public class ODataJsonLightWriterIntegrationTests
     {

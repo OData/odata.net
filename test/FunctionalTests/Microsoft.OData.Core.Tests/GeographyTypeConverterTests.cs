@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class GeographyTypeConverterTests
     {

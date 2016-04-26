@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
     public class DeltaLinkJsonLightWriterIntegrationTests : DeltaLinkWriterIntegrationTests
     {

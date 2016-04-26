@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;

@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

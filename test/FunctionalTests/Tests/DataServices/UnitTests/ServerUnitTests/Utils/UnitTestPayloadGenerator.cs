@@ -11,7 +11,7 @@ namespace AstoriaUnitTests.Tests
     using System.IO;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using System.Collections;
     using System.Linq;
 

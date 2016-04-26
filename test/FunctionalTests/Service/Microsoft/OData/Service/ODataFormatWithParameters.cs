@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Extends <see cref="ODataFormat"/> to also carry a set of media type parameters.

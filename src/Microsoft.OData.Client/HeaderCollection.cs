@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Collection for header name/value pairs which is known to be case insensitive.

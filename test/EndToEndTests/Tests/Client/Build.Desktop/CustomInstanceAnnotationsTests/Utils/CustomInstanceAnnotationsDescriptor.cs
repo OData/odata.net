@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class CustomInstanceAnnotationsDescriptor
     {

@@ -7,10 +7,10 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Lexical token representing a segment in a path.

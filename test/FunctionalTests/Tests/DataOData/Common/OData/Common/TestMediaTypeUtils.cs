@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     #region Namespaces
     using System;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces
 

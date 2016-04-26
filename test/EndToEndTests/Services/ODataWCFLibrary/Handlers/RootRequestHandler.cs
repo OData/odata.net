@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System;
     using System.IO;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     public class RootRequestHandler : RequestHandler

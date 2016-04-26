@@ -108,7 +108,7 @@ namespace AstoriaUnitTests.Tests.Server
                 var service = this.serviceFactory.CreateService();
 
                 Action processUri = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
-                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
+                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
             }
         }
 
@@ -136,7 +136,7 @@ namespace AstoriaUnitTests.Tests.Server
                 var service = this.serviceFactory.CreateService();
 
                 Action processUri = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
-                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_IncompatibleOperandsError("Edm.GeographyPoint", "Edm.GeographyPoint", test.ErrorName));
+                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Strings.MetadataBinder_IncompatibleOperandsError("Edm.GeographyPoint", "Edm.GeographyPoint", test.ErrorName));
             }
         }
 
@@ -159,7 +159,7 @@ namespace AstoriaUnitTests.Tests.Server
                 var service = this.serviceFactory.CreateService();
 
                 Action processUri = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
-                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
+                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
             }
         }
 

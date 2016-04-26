@@ -10,8 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
     using System.Collections.Generic;
     using ApprovalTests;
     using ApprovalTests.Reporters;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -294,8 +294,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 
             public override void PromoteBinaryOperandTypes(
                 BinaryOperatorKind binaryOperatorKind,
-                ref Microsoft.OData.Core.UriParser.SingleValueNode leftNode,
-                ref Microsoft.OData.Core.UriParser.SingleValueNode rightNode,
+                ref SingleValueNode leftNode,
+                ref SingleValueNode rightNode,
                 out IEdmTypeReference typeReference)
             {
                 sae.PromoteBinaryOperandTypes(binaryOperatorKind, ref leftNode, ref rightNode, out typeReference);

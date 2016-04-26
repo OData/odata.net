@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -249,8 +249,8 @@ this.State == ODataParameterReaderState.Collection,
         /// <paramref name="name"/> and <paramref name="value"/> and pushes it on the stack of scopes.
         /// </summary>
         /// <param name="state">The <see cref="ODataParameterReaderState"/> to use for the new scope.</param>
-        /// <param name="name">The paramter name to attach with the state in the new scope.</param>
-        /// <param name="value">The paramter value to attach with the state in the new scope.</param>
+        /// <param name="name">The parameter name to attach with the state in the new scope.</param>
+        /// <param name="value">The parameter value to attach with the state in the new scope.</param>
         protected internal void EnterScope(ODataParameterReaderState state, string name, object value)
         {
             if (state == ODataParameterReaderState.Value)

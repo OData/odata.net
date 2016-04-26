@@ -15,7 +15,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
+namespace Microsoft.OData.Tests.ScenarioTests.Reader
 {
     public class CustomInstanceAnnotationAcceptanceTests
     {

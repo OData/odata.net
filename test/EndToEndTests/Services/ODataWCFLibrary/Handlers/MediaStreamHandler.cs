@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Linq;
     using System.Net;
     using System.ServiceModel.Web;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Vocabularies;

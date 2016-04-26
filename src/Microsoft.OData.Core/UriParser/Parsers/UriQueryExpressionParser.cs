@@ -4,16 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Aggregation;
+    using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -152,35 +152,35 @@ namespace Microsoft.OData.Core.UriParser
             switch (edmTypeReference.PrimitiveKind())
             {
                 case EdmPrimitiveTypeKind.Boolean:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmBooleanTypeName;
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmTimeOfDayTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmTimeOfDayTypeName;
                 case EdmPrimitiveTypeKind.Date:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDateTypeName;
                 case EdmPrimitiveTypeKind.DateTimeOffset:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDateTimeOffsetTypeName;
                 case EdmPrimitiveTypeKind.Duration:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDurationTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDurationTypeName;
                 case EdmPrimitiveTypeKind.Decimal:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDecimalTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDecimalTypeName;
                 case EdmPrimitiveTypeKind.String:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName;
                 case EdmPrimitiveTypeKind.Int64:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmInt64TypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmInt64TypeName;
                 case EdmPrimitiveTypeKind.Int32:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmInt32TypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmInt32TypeName;
                 case EdmPrimitiveTypeKind.Double:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDoubleTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDoubleTypeName;
                 case EdmPrimitiveTypeKind.Single:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmSingleTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmSingleTypeName;
                 case EdmPrimitiveTypeKind.Guid:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGuidTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmGuidTypeName;
                 case EdmPrimitiveTypeKind.Binary:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmBinaryTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmBinaryTypeName;
                 case EdmPrimitiveTypeKind.Geography:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGeographyTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmGeographyTypeName;
                 case EdmPrimitiveTypeKind.Geometry:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGeometryTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmGeometryTypeName;
                 default:
                     return edmTypeReference.Definition.FullTypeName();
             }

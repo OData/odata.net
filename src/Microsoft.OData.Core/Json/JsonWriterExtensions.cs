@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Collections.Generic;
     using System.Collections;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
+    using ODataErrorStrings = Microsoft.OData.Strings;
+    using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces
 
     /// <summary>

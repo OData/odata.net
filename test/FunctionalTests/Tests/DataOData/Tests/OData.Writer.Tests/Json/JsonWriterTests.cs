@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
     using System.IO;
     using System.Linq;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -247,7 +247,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
         /// </summary>
         private class JsonWriterTestWrapper
         {
-            Type JsonWriterType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.Json.JsonWriter");
+            Type JsonWriterType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.JsonWriter");
             private object jsonWriter;
 
             public JsonWriterTestWrapper(TextWriter writer, bool indent, ODataFormat format)

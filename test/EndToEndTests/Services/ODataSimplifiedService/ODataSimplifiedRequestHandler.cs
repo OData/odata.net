@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Handlers;
 

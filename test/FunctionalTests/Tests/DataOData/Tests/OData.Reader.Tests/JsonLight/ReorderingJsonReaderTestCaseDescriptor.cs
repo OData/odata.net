@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 {
     #region Namespaces
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Json;

@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal class ODataAvroOutputContext : ODataOutputContext

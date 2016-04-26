@@ -9,7 +9,7 @@ using System.IO;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
     public class WritingJsonLightWithoutModelAcceptanceTests
     {

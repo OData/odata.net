@@ -23,7 +23,7 @@ namespace Microsoft.OData.Client
     using System.Threading.Tasks;
     using Microsoft.OData.Client.Annotation;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Values;

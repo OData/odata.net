@@ -7,7 +7,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -18,9 +18,9 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData;
+    using Microsoft.OData.Evaluation;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if ((value is string) ^ this.JsonReader.IsIeee754Compatible)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
+                throw new ODataException(Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
             }
 
             return (long)ODataJsonLightReaderUtils.ConvertValue(
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (metadataDocumentUri == null)
                 {
-                    throw new ODataException(OData.Core.Strings.ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(uriFromPayload, ODataAnnotationNames.ODataContext));
+                    throw new ODataException(Strings.ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(uriFromPayload, ODataAnnotationNames.ODataContext));
                 }
 
                 uri = UriUtils.UriToAbsoluteUri(metadataDocumentUri, uri);
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Core.JsonLight
                     return null;
                 }
 
-                throw new ODataException(OData.Core.Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             // Must make sure the input odata.context has a '@' prefix
@@ -537,7 +537,7 @@ namespace Microsoft.OData.Core.JsonLight
                     return null;
                 }
 
-                throw new ODataException(OData.Core.Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             if (duplicatePropertyNamesChecker != null)
@@ -691,7 +691,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     if (ODataJsonLightReaderUtils.IsAnnotationProperty(parsedPropertyName))
                     {
-                        throw new ODataException(OData.Core.Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
+                        throw new ODataException(Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
                     }
 
                     return PropertyParsingResult.PropertyWithoutValue;
@@ -754,7 +754,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (ODataJsonLightReaderUtils.IsAnnotationProperty(parsedPropertyName))
                 {
-                    throw new ODataException(OData.Core.Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
+                    throw new ODataException(Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
                 }
 
                 return PropertyParsingResult.PropertyWithoutValue;
@@ -775,7 +775,7 @@ namespace Microsoft.OData.Core.JsonLight
             // We don't currently support annotation targeting an instance annotation except for the @odata.type property annotation.
             if (ODataJsonLightReaderUtils.IsAnnotationProperty(annotatedPropertyName) && string.CompareOrdinal(annotationName, ODataAnnotationNames.ODataType) != 0)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(annotationName, annotatedPropertyName, ODataAnnotationNames.ODataType));
+                throw new ODataException(Strings.ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(annotationName, annotatedPropertyName, ODataAnnotationNames.ODataType));
             }
 
             // Read over the property name.

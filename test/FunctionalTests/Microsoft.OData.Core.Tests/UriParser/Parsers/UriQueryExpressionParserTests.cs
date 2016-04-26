@@ -8,12 +8,12 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Aggregation;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class UriQueryExpressionParserTests
     {

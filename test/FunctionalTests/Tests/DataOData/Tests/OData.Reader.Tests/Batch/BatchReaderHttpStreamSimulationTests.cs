@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;

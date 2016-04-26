@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Unit tests for the ExpandOptionParser class.

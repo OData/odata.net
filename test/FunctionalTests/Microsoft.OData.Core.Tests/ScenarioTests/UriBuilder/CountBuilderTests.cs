@@ -7,7 +7,7 @@
 using System;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
+namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     public class CountBuilderTests : UriBuilderTestBase
     {

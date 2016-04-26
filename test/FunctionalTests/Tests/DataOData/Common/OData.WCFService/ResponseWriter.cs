@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Static methods for writing OData responses.

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public sealed override ODataWriter CreateResourceWriter(string parameterName)
@@ -206,9 +206,9 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
         public sealed override Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public sealed override ODataWriter CreateResourceSetWriter(string parameterName)
@@ -229,9 +229,9 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a resource set.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
         public sealed override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");

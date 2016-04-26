@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Compares 2 query nodes

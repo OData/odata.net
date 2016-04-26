@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     internal class TestEntityMetadataBuilder : ODataResourceMetadataBuilder
     {

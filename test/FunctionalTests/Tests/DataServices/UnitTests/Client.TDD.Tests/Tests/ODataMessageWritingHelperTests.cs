@@ -9,7 +9,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System;
     using Microsoft.OData.Client;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 

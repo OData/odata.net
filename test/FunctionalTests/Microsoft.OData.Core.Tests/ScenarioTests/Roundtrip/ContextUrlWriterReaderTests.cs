@@ -12,13 +12,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
     public class Address
     {
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
     public class ContextUrlWriterReaderTests
     {
-        private const string TestNameSpace = "Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip";
+        private const string TestNameSpace = "Microsoft.OData.Tests.ScenarioTests.Roundtrip";
         private const string TestContainerName = "InMemoryEntities";
         private const string TestBaseUri = "http://www.example.com/";
 
@@ -1230,7 +1230,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string.Format("\"{0}$metadata#People/{1}.Employee\"", TestBaseUri, TestNameSpace),
                 out payload, out contentType);
 
-                payload = payload.Replace("$metadata#People/Microsoft.OData.Core.Tests.Employee", "WrongURL");
+                payload = payload.Replace("$metadata#People/Microsoft.OData.Tests.Employee", "WrongURL");
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
                     var reader = omReader.CreateODataResourceSetReader(this.peopleSet, this.employeeType);

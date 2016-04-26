@@ -14,8 +14,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     /// <summary>

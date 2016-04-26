@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
-    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Evaluation;
     using Microsoft.OData.Edm;
 
     /// <summary>

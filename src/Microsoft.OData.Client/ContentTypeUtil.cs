@@ -18,7 +18,7 @@ namespace Microsoft.OData.Service
 #if ODATA_CLIENT
     using System.Net;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>Provides helper methods for processing HTTP requests.</summary>
     internal static class ContentTypeUtil

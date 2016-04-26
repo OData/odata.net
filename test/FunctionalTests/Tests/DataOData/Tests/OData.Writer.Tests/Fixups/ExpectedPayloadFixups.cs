@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.OData.Common;

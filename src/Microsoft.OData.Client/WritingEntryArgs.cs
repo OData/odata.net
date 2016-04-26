@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Writing entry arguments

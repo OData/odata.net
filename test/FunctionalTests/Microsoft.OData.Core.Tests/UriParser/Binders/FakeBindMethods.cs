@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Class that contains fake bind methods to help unit semantic tests from growing in scope.

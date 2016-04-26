@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;

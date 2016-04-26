@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Astoria.OData;
     using Microsoft.Test.Taupo.Common;
@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.OData.Common.Annotations;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.PayloadTransformation;
-    using ODataConstants = Microsoft.OData.Core.ODataConstants;
+    using ODataConstants = Microsoft.OData.ODataConstants;
 
     #endregion Namespaces
 

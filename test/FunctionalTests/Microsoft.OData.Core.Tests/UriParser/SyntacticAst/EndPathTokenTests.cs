@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.SyntacticAst
 {
     public class EndPathTokenTests
     {

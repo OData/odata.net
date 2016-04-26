@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Serializes the QueryNode to string.

@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Common;

@@ -11,15 +11,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Core.Tests.JsonLight;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class PrimitiveValuesRoundtripJsonLightTests
     {

@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -839,7 +839,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 if (payloadElement != null)
                 {
                     string contentType;
-                    if (!request.Headers.TryGetValue(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, out contentType))
+                    if (!request.Headers.TryGetValue(Microsoft.OData.ODataConstants.ContentTypeHeader, out contentType))
                     {
                         throw new InvalidOperationException("ContentType header not found.");
                     }

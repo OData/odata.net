@@ -7,7 +7,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Filter class to determine whether or not to read an annotation.

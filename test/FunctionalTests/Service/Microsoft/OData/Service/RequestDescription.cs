@@ -13,8 +13,8 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
 

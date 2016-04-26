@@ -356,7 +356,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
 #if !SILVERLIGHT
             microsoftDataODataAssembly = Assembly.Load(new AssemblyName(DataFxAssemblyRef.OData));
 #else
-            microsoftDataODataAssembly = typeof(Microsoft.OData.Core.ODataError).GetAssembly();
+            microsoftDataODataAssembly = typeof(Microsoft.OData.ODataError).GetAssembly();
 #endif
             return new AssemblyResourceLookup(microsoftDataODataAssembly);
 #endif

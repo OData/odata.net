@@ -11,12 +11,12 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Class that knows how to bind function call tokens.
@@ -722,7 +722,7 @@ namespace Microsoft.OData.Core.UriParser
             {
                 // throw if cast enum to not-string :
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
-                    && !string.Equals(typeArgument.Value as string, Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
+                    && !string.Equals(typeArgument.Value as string, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
                 {
                     throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
                 }

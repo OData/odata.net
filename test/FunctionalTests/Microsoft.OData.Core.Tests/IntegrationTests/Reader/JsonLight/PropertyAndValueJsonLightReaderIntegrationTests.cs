@@ -10,13 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.JsonLight;
+using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 {
     public class PropertyAndValueJsonLightReaderIntegrationTests
     {

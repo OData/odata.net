@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Evaluation;
 
     /// <summary>
     /// The context object to answer basic questions regarding the type of the resource or resource set.
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Core
         {
             if (this.throwIfMissingTypeInfo && value == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+                throw new ODataException(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
             }
 
             return value;

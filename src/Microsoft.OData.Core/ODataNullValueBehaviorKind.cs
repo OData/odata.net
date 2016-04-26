@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary> Represents the behavior of readers when reading property with null value. </summary>
     public enum ODataNullValueBehaviorKind

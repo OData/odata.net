@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
@@ -902,7 +902,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <returns>Test configuration based on the batch test configuration with the format modified to apply to the operation in question.</returns>
             private ReaderTestConfiguration GetOperationTestConfiguration(IHttpMessage operation)
             {
-                string contentType = operation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                string contentType = operation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
 
                 ODataFormat format = this.batchTestConfiguration.Format;
                 if (IsJsonMimeType(contentType))

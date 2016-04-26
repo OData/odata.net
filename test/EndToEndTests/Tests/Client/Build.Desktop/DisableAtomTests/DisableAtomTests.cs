@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;
@@ -126,7 +126,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
-                catch (Microsoft.OData.Core.ODataContentTypeException)
+                catch (Microsoft.OData.ODataContentTypeException)
                 {
                     return;
                 }
@@ -217,7 +217,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 }
-                catch (Microsoft.OData.Core.ODataContentTypeException)
+                catch (Microsoft.OData.ODataContentTypeException)
                 {
                     return;
                 }
@@ -323,7 +323,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             using (var messageReader = new ODataMessageReader(responseMessage))
             {
                 var error = messageReader.ReadError();
-                Assert.AreEqual(typeof(Microsoft.OData.Core.ODataError), error.GetType());
+                Assert.AreEqual(typeof(Microsoft.OData.ODataError), error.GetType());
                 Assert.AreEqual("UnsupportedMediaType", error.ErrorCode);
             }
         }

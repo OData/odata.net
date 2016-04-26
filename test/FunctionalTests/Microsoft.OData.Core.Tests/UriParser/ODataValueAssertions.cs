@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     public static class ODataValueAssertions
     {

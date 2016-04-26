@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Services.PluggableFormat
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.PluggableFormat;
 

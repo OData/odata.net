@@ -20,7 +20,7 @@ namespace AstoriaUnitTests.Tests
     using System.Xml;
     using AstoriaUnitTests.Stubs;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ResourceType = Microsoft.OData.Service.Providers.ResourceType;
 

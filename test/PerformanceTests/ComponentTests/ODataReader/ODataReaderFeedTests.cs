@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using global::Xunit;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Xunit.Performance;
 
     public class ODataReaderFeedTests

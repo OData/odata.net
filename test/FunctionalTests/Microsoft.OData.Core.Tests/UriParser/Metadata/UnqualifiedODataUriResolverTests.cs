@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     // Select unqualified Function not supported.
     public class UnqualifiedODataUriResolverTests

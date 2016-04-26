@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
     public class WriteFeedWithoutNavigationTargetTests
     {

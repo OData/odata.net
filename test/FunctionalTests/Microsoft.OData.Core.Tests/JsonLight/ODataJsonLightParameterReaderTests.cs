@@ -16,7 +16,7 @@ using Microsoft.OData.Edm.Library.Values;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     /// <summary>
     /// Tests the use of ODataParameterReader class when the payload is JSON.

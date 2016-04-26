@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Linq;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Schema;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     internal static class ODataAvroConvert
     {

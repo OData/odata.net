@@ -14,8 +14,8 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Static methods for converting CLR objects from the data store into OData objects.

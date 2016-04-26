@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.Tests
     using System.Text;
     using AstoriaUnitTests.TDD.Tests;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

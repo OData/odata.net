@@ -8,11 +8,11 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// Unit tests for the JsonWriter class.

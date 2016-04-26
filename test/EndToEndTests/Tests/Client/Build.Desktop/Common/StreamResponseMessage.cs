@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
 {
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// An implementation of IODataResponseMessage.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.

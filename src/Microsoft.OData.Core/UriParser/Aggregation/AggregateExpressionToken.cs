@@ -7,12 +7,12 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Aggregation;
+    using Microsoft.OData.UriParser.Aggregation;
 #else
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
 #endif
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     internal sealed class AggregateExpressionToken : QueryToken
     {

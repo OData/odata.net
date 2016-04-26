@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// This class represents the contract WCF Data Services client with the request message.

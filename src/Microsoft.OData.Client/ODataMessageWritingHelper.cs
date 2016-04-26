@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Helper class for creating ODataLib writers, settings, and other write-related classes based on an instance of <see cref="RequestInfo"/>.

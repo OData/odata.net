@@ -15,7 +15,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #endif
     using FluentAssertions;
 #if !PORTABLELIB
-    using Microsoft.OData.Core.Tests;
+    using Microsoft.OData.Tests;
 #endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 #if !PORTABLELIB

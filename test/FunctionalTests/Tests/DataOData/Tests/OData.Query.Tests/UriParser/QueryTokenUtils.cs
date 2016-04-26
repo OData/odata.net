@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
@@ -457,7 +457,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
             return result;
         }
 
-        internal static string ToDebugString(this Microsoft.OData.Core.UriParser.NamedValue keyValue)
+        internal static string ToDebugString(this Microsoft.OData.UriParser.NamedValue keyValue)
         {
             string result = "";
 

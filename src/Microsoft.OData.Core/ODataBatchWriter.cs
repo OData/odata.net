@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataBatchOperationRequestMessage" /> for writing an operation of a batch request.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for writing an operation of a batch request.</summary>
         /// <returns>The message that can be used to write the request operation.</returns>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
@@ -301,7 +301,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for writing an operation of a batch response.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for writing an operation of a batch response.</summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>A task that when completed returns the newly created operation response message.</returns>
         public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)

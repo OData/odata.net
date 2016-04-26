@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
+namespace Microsoft.OData.Metadata
 {
     #region Namespaces
     using System;

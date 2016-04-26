@@ -28,7 +28,7 @@ SelectExpandQueryOption
 									Name = $it
 									NavigationSource = LoggedInEmployee
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 							SingleValuePropertyAccessNode
 								Property = Office
 								TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
@@ -37,7 +37,7 @@ SelectExpandQueryOption
 									Name = $it
 									NavigationSource = LoggedInEmployee
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
 				LessThan
 					0.5(Type: [Edm.Double Nullable=False])
 			SelectExpandQueryOption

@@ -7,7 +7,7 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 {
     #region Namespaces
@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
     #endregion
 
     /// <summary>

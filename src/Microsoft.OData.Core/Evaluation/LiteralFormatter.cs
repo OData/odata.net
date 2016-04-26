@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 #endif
 {
@@ -25,12 +25,12 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Linq;
     using System.Xml;
 #if ODATA_CORE
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
 #else
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
@@ -291,7 +291,7 @@ namespace Microsoft.OData.Core.Evaluation
                 return Error.InvalidOperation(Client.Strings.Context_CannotConvertKey(value));
 #endif
 #if ODATA_CORE
-                return new ODataException(OData.Core.Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
+                return new ODataException(Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
 #endif
             }
 

@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using ApprovalTests.Reporters;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;

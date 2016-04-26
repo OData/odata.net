@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -75,14 +75,14 @@ namespace Microsoft.OData.Core
         /// <remarks>This is set implicitly when the CreateBatchReader method is called.</remarks>
         private string batchBoundary;
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageReader" /> for the given request message.</summary>
+        /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given request message.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
         public ODataMessageReader(IODataRequestMessage requestMessage)
             : this(requestMessage, new ODataMessageReaderSettings())
         {
         }
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageReader" /> for the given request message and message reader settings.</summary>
+        /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given request message and message reader settings.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
         /// <param name="settings">The message reader settings to use for reading the message payload.</param>
         public ODataMessageReader(IODataRequestMessage requestMessage, ODataMessageReaderSettings settings)
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Core
         {
         }
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageReader" /> for the given response message and message reader settings.</summary>
+        /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given response message and message reader settings.</summary>
         /// <param name="responseMessage">The response message for which to create the reader.</param>
         /// <param name="settings">The message reader settings to use for reading the message payload.</param>
         public ODataMessageReader(IODataResponseMessage responseMessage, ODataMessageReaderSettings settings)
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataAsyncReader" /> to read an async response.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
         /// <returns>The created async reader.</returns>
         public ODataAsynchronousReader CreateODataAsynchronousReader()
         {
@@ -304,7 +304,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncReader" /> to read an async response.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
         /// <returns>A running task for the created async reader.</returns>
         public Task<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
         {
@@ -315,7 +315,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource set.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a resource set.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceSetReader()
         {
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource set.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceSetReaderAsync()
         {
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataReader" /> to read a resource.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceReader()
         {
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
         /// <returns>The created collection reader.</returns>
         public ODataCollectionReader CreateODataCollectionReader()
         {
@@ -500,7 +500,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
         /// <returns>A running task for the created collection reader.</returns>
         public Task<ODataCollectionReader> CreateODataCollectionReaderAsync()
         {
@@ -522,7 +522,7 @@ namespace Microsoft.OData.Core
 
 #endif
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataBatchReader" /> to read a batch of requests or responses.</summary>
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
         /// <returns>The created batch reader.</returns>
         public ODataBatchReader CreateODataBatchReader()
         {
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchReader" /> to read a batch of requests or responses.</summary>
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
         /// <returns>A running task for the created batch reader.</returns>
         public Task<ODataBatchReader> CreateODataBatchReaderAsync()
         {
@@ -594,7 +594,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Reads an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as message payload.</summary>
+        /// <summary>Reads an <see cref="T:Microsoft.OData.ODataProperty" /> as message payload.</summary>
         /// <returns>The property read from the payload.</returns>
         public ODataProperty ReadProperty()
         {
@@ -628,7 +628,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as message payload.</summary>
+        /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.ODataProperty" /> as message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the property.</returns>
         public Task<ODataProperty> ReadPropertyAsync()
         {
@@ -663,8 +663,8 @@ namespace Microsoft.OData.Core
 
 #endif
 
-        /// <summary>Reads an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.Core.ODataError" /> read from the message payload.</returns>
+        /// <summary>Reads an <see cref="T:Microsoft.OData.ODataError" /> as the message payload.</summary>
+        /// <returns>The <see cref="T:Microsoft.OData.ODataError" /> read from the message payload.</returns>
         public ODataError ReadError()
         {
             this.VerifyCanReadError();
@@ -674,7 +674,7 @@ namespace Microsoft.OData.Core
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload.</summary>
+        /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.ODataError" /> as the message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the error.</returns>
         public Task<ODataError> ReadErrorAsync()
         {

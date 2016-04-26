@@ -9,9 +9,9 @@ using System.Text;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class MediaTypeUtilsTests
     {

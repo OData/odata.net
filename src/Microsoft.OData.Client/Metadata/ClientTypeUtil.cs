@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using c = Microsoft.OData.Client;
 

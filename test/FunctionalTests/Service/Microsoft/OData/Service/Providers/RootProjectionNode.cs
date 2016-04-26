@@ -11,7 +11,7 @@ namespace Microsoft.OData.Service.Providers
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
 
     #endregion
 

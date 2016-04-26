@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;

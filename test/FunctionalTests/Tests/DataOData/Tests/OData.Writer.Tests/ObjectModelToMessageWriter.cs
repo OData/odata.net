@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 {
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;

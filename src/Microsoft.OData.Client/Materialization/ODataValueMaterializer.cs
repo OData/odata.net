@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Used to materialize a value from an <see cref="ODataMessageReader"/>.

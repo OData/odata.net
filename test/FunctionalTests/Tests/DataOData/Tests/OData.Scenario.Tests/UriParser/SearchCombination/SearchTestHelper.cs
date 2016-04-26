@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
 {

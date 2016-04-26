@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Utils.ODataLibOM
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// An OData object model annotation for feeds to capture all the entries of the feed.

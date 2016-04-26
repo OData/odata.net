@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -787,7 +787,7 @@ namespace Microsoft.OData.Core
                 // We allow co-variance in collection types (e.g., expecting the item type of Geography from a payload of Collection(GeographyPoint).
                 if (!expectedItemTypeReference.IsAssignableFrom(actualCollectionType.ElementType))
                 {
-                    throw new ODataException(OData.Core.Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                    throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
                         UriUtils.UriToString(contextUriParseResult.ContextUri),
                         actualCollectionType.ElementType.FullName(),
                         expectedItemTypeReference.FullName()));
@@ -811,7 +811,7 @@ namespace Microsoft.OData.Core
 
             if (propertyValue == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull(
+                throw new ODataException(Strings.ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull(
                     propertyName,
                     metadata,
                     operationsHeader));

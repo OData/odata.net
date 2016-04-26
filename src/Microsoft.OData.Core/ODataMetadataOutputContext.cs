@@ -10,12 +10,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// RAW format output context.

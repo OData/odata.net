@@ -42,7 +42,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.OData.Client.DataServiceQuery`1+DataServiceOrderedQuery")]
 
 // The class actually has instances in a code piece just disabled by a macro.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Scope = "type", Target = "Microsoft.OData.Core.Metadata.EdmLibraryExtensions+EdmTypeEqualityComparer")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Scope = "type", Target = "Microsoft.OData.Metadata.EdmLibraryExtensions+EdmTypeEqualityComparer")]
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.#sender")]

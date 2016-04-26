@@ -3092,7 +3092,7 @@ public sealed class ODataClientCSharpTemplate : ODataClientTemplate
     internal override string BodyOperationParameterConstructor { get { return "new global::Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
     internal override string BaseEntityType { get { return " : global::Microsoft.OData.Client.BaseEntityType"; } }
     internal override string OverloadsModifier { get { return "new "; } }
-    internal override string ODataVersion { get { return "global::Microsoft.OData.Core.ODataVersion.V4"; } }
+    internal override string ODataVersion { get { return "global::Microsoft.OData.ODataVersion.V4"; } }
     internal override string ParameterDeclarationTemplate { get { return "{0} {1}"; } }
     internal override string DictionaryItemConstructor { get { return "{{ {0}, {1} }}"; } }
     internal override HashSet<string> LanguageKeywords { get {
@@ -4131,7 +4131,7 @@ public sealed class ODataClientVBTemplate : ODataClientTemplate
     internal override string BodyOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
     internal override string BaseEntityType { get { return "\r\n        Inherits Global.Microsoft.OData.Client.BaseEntityType"; } }
     internal override string OverloadsModifier { get { return "Overloads "; } }
-    internal override string ODataVersion { get { return "Global.Microsoft.OData.Core.ODataVersion.V4"; } }
+    internal override string ODataVersion { get { return "Global.Microsoft.OData.ODataVersion.V4"; } }
     internal override string ParameterDeclarationTemplate { get { return "{1} As {0}"; } }
     internal override string DictionaryItemConstructor { get { return "{{ {0}, {1} }}"; } }
     internal override HashSet<string> LanguageKeywords { get { 

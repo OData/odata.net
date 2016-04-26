@@ -8,15 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataContextUriBuilderTests
     {
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Core.Tests
         public void BuildContextUrlforUnsupportedPayloadKindShouldThrowException()
         {
             Action action = () => this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.MetadataDocument);
-            action.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.ODataContextUriBuilder_UnsupportedPayloadKind(ODataPayloadKind.MetadataDocument.ToString()));
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_UnsupportedPayloadKind(ODataPayloadKind.MetadataDocument.ToString()));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.Tests
         public void ShouldRequireMetadataDocumentUriInResponses()
         {
             Action action = () => ODataContextUriBuilder.Create(null, true);
-            action.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.ODataOutputContext_MetadataDocumentUriMissing);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         #region context uri with $select and $expand
@@ -463,14 +463,14 @@ namespace Microsoft.OData.Core.Tests
         public void BuildPropertyContextUriForComplexPropertyValueWithNoNameShouldFail()
         {
             Action withStream = () => this.CreatePropertyContextUri(new ODataComplexValue());
-            withStream.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
+            withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
         }
 
         [Fact]
         public void BuildPropertyContextUriForCollectionPropertyValueWithNoNameShouldFail()
         {
             Action withStream = () => this.CreatePropertyContextUri(new ODataCollectionValue());
-            withStream.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
+            withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
         }
 
 
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Core.Tests
         public void BuildPropertyContextUriForStreamValueShouldFail()
         {
             Action withStream = () => this.CreatePropertyContextUri(new ODataStreamReferenceValue());
-            withStream.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
+            withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
         }
         #endregion value context uri
 

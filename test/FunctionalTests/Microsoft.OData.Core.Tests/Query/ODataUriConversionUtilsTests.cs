@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Query
+namespace Microsoft.OData.Tests.Query
 {
     public class ODataUriConvesionUtilsTests
     {

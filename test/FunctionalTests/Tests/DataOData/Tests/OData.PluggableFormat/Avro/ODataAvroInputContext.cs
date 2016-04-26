@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Text;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal class ODataAvroInputContext : ODataInputContext

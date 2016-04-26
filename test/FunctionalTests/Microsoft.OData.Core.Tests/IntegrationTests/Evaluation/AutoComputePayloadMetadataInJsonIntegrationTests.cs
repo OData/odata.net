@@ -10,13 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
+namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
     public class AutoComputePayloadMetadataInJsonIntegrationTests
     {

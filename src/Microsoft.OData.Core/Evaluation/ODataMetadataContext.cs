@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 if (this.metadataDocumentUri == null)
                 {
-                    throw new ODataException(OData.Core.Strings.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload(ODataAnnotationNames.ODataContext));
+                    throw new ODataException(Strings.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload(ODataAnnotationNames.ODataContext));
                 }
 
                 Debug.Assert(this.metadataDocumentUri.IsAbsoluteUri, "this.metadataDocumentUri.IsAbsoluteUri");

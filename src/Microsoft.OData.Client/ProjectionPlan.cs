@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
 
     #endregion Namespaces

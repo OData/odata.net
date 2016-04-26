@@ -9,7 +9,7 @@ namespace Microsoft.OData.Service
     using System;
     using System.Collections;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
 
     /// <summary>

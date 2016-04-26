@@ -7,13 +7,13 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 #endif
 {
     #region Namespaces
 
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
         
     #endregion
 

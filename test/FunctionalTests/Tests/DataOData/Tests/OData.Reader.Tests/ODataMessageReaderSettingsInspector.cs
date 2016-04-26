@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #region Namespaces
     using System;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 

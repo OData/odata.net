@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>non-generic placeholder for generic implementation</summary>
     public abstract class DataServiceRequest

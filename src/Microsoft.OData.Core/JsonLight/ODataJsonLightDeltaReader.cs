@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
 
@@ -14,11 +14,11 @@ namespace Microsoft.OData.Core.JsonLight
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Evaluation;
+    using Microsoft.OData.Json;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>
@@ -98,8 +98,8 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
-        /// <summary>Gets the most recent <see cref="T:Microsoft.OData.Core.ODataItem" /> that has been read. </summary>
-        /// <returns>The most recent <see cref="T:Microsoft.OData.Core.ODataItem" /> that has been read.</returns>
+        /// <summary>Gets the most recent <see cref="T:Microsoft.OData.ODataItem" /> that has been read. </summary>
+        /// <returns>The most recent <see cref="T:Microsoft.OData.ODataItem" /> that has been read.</returns>
         public override ODataItem Item
         {
             get
@@ -280,7 +280,7 @@ namespace Microsoft.OData.Core.JsonLight
 
         #region Public Methods
 
-        /// <summary> Reads the next <see cref="T:Microsoft.OData.Core.ODataItem" /> from the message payload. </summary>
+        /// <summary> Reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
         public override bool Read()
         {
@@ -289,7 +289,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
 #if PORTABLELIB
-        /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.Core.ODataItem" /> from the message payload. </summary>
+        /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         public override Task<bool> ReadAsync()
         {

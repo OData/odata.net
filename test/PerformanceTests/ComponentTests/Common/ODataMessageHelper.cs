@@ -8,7 +8,7 @@ namespace Microsoft.OData.Performance
 {
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     /// <summary>

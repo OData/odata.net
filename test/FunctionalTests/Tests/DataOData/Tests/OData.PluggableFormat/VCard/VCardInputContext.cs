@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal class VCardInputContext : ODataInputContext

@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces

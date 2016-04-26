@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Common
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;

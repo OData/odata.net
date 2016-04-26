@@ -12,7 +12,7 @@ namespace Microsoft.OData.Service
     using System.Collections;
     using System.Diagnostics;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service.Providers;
 
     #endregion Namespaces

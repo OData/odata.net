@@ -13,9 +13,9 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
+namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
     public class AutoComputeETagInJsonIntegrationTests
     {

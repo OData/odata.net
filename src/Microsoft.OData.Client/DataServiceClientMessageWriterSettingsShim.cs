@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Client writer settings shim class to restrict settings to the base for OData message writers.

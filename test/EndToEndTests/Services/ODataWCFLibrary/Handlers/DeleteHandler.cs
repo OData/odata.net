@@ -9,8 +9,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System;
     using System.Collections.Generic;
     using System.Net;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Vocabularies;
