@@ -3864,6 +3864,18 @@ public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
 }
 
+public enum Microsoft.OData.ServiceLifetime : int {
+	Scoped = 1
+	Singleton = 0
+	Transient = 2
+}
+
+public interface Microsoft.OData.IContainerBuilder {
+	Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.ServiceLifetime lifetime, System.Type serviceType, System.Func`2[[System.IServiceProvider],[System.Object]] implementationFactory)
+	Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.ServiceLifetime lifetime, System.Type serviceType, System.Type implementationType)
+	System.IServiceProvider BuildContainer ()
+}
+
 public interface Microsoft.OData.IODataRequestMessage {
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public abstract get; }
 	string Method  { public abstract get; public abstract set; }
@@ -4185,6 +4197,36 @@ public abstract class Microsoft.OData.ODataWriter {
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResource resource)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResourceSet resourceSet)
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.ContainerBuilderExtensions {
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.IContainerBuilder AddDefaultODataServices (Microsoft.OData.IContainerBuilder builder)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ServiceLifetime lifetime)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ServiceLifetime lifetime)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ServiceLifetime lifetime, Func`2 implementationFactory)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ServiceLifetime lifetime, System.Type serviceType)
 }
 
 public sealed class Microsoft.OData.ODataConstants {

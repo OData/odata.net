@@ -6124,6 +6124,13 @@ namespace Microsoft.OData {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReaderExtensions_UnexpectedInstanceAnnotationName, p0);
         }
 
+        /// <summary>
+        /// A string like "No service for type '{0}' has been registered."
+        /// </summary>
+        internal static string ServiceProviderExtensions_NoServiceRegistered(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ServiceProviderExtensions_NoServiceRegistered, p0);
+        }
+
     }
 
     /// <summary>

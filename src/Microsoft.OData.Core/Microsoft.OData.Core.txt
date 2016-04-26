@@ -978,3 +978,5 @@ JsonReaderExtensions_CannotReadPropertyValueAsString=Cannot read the value '{0}'
 JsonReaderExtensions_CannotReadValueAsString=Cannot read the value '{0}' as a quoted JSON string value.
 JsonReaderExtensions_CannotReadValueAsDouble=Cannot read the value '{0}' as a double numeric value.
 JsonReaderExtensions_UnexpectedInstanceAnnotationName=An unexpected instance annotation name '{0}' was found when reading from the JSON reader, In OData, Instance annotation name must start with @.
+
+ServiceProviderExtensions_NoServiceRegistered=No service for type '{0}' has been registered.
