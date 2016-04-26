@@ -23,61 +23,61 @@ namespace Microsoft.OData.Core.UriParser
         #region Reflection OpenType MethodInfos
 
         /// <summary>MethodInfo for Add.</summary>
-        internal static readonly MethodInfo AddMethodInfo = GetMethodInfoFromThisClass("Add");
+        internal static readonly MethodInfo AddMethodInfo = GetMethodInfo("Add");
 
         /// <summary>MethodInfo for AndAlso.</summary>
-        internal static readonly MethodInfo AndAlsoMethodInfo = GetMethodInfoFromThisClass("AndAlso");
+        internal static readonly MethodInfo AndAlsoMethodInfo = GetMethodInfo("AndAlso");
 
         /// <summary>MethodInfo for Convert.</summary>
-        internal static readonly MethodInfo ConvertMethodInfo = GetMethodInfoFromThisClass("Convert");
+        internal static readonly MethodInfo ConvertMethodInfo = GetMethodInfo("Convert");
 
         /// <summary>MethodInfo for Divide.</summary>
-        internal static readonly MethodInfo DivideMethodInfo = GetMethodInfoFromThisClass("Divide");
+        internal static readonly MethodInfo DivideMethodInfo = GetMethodInfo("Divide");
 
         /// <summary>MethodInfo for Equal.</summary>
-        internal static readonly MethodInfo EqualMethodInfo = GetMethodInfoFromThisClass("Equal");
+        internal static readonly MethodInfo EqualMethodInfo = GetMethodInfo("Equal");
 
         /// <summary>MethodInfo for GreaterThan.</summary>
-        internal static readonly MethodInfo GreaterThanMethodInfo = GetMethodInfoFromThisClass("GreaterThan");
+        internal static readonly MethodInfo GreaterThanMethodInfo = GetMethodInfo("GreaterThan");
 
         /// <summary>MethodInfo for GreaterThanOrEqual.</summary>
-        internal static readonly MethodInfo GreaterThanOrEqualMethodInfo = GetMethodInfoFromThisClass("GreaterThanOrEqual");
+        internal static readonly MethodInfo GreaterThanOrEqualMethodInfo = GetMethodInfo("GreaterThanOrEqual");
 
         /// <summary>MethodInfo for LessThan.</summary>
-        internal static readonly MethodInfo LessThanMethodInfo = GetMethodInfoFromThisClass("LessThan");
+        internal static readonly MethodInfo LessThanMethodInfo = GetMethodInfo("LessThan");
 
         /// <summary>MethodInfo for LessThanOrEqual.</summary>
-        internal static readonly MethodInfo LessThanOrEqualMethodInfo = GetMethodInfoFromThisClass("LessThanOrEqual");
+        internal static readonly MethodInfo LessThanOrEqualMethodInfo = GetMethodInfo("LessThanOrEqual");
 
         /// <summary>MethodInfo for Modulo.</summary>
-        internal static readonly MethodInfo ModuloMethodInfo = GetMethodInfoFromThisClass("Modulo");
+        internal static readonly MethodInfo ModuloMethodInfo = GetMethodInfo("Modulo");
 
         /// <summary>MethodInfo for Multiply.</summary>
-        internal static readonly MethodInfo MultiplyMethodInfo = GetMethodInfoFromThisClass("Multiply");
+        internal static readonly MethodInfo MultiplyMethodInfo = GetMethodInfo("Multiply");
 
         /// <summary>MethodInfo for Negate.</summary>
-        internal static readonly MethodInfo NegateMethodInfo = GetMethodInfoFromThisClass("Negate");
+        internal static readonly MethodInfo NegateMethodInfo = GetMethodInfo("Negate");
 
         /// <summary>MethodInfo for Not.</summary>
-        internal static readonly MethodInfo NotMethodInfo = GetMethodInfoFromThisClass("Not");
+        internal static readonly MethodInfo NotMethodInfo = GetMethodInfo("Not");
 
         /// <summary>MethodInfo for NotEqual.</summary>
-        internal static readonly MethodInfo NotEqualMethodInfo = GetMethodInfoFromThisClass("NotEqual");
+        internal static readonly MethodInfo NotEqualMethodInfo = GetMethodInfo("NotEqual");
 
         /// <summary>MethodInfo for OrElse.</summary>
-        internal static readonly MethodInfo OrElseMethodInfo = GetMethodInfoFromThisClass("OrElse");
+        internal static readonly MethodInfo OrElseMethodInfo = GetMethodInfo("OrElse");
 
         /// <summary>MethodInfo for Subtract.</summary>
-        internal static readonly MethodInfo SubtractMethodInfo = GetMethodInfoFromThisClass("Subtract");
+        internal static readonly MethodInfo SubtractMethodInfo = GetMethodInfo("Subtract");
 
         /// <summary>MethodInfo for TypeIs.</summary>
-        internal static readonly MethodInfo TypeIsMethodInfo = GetMethodInfoFromThisClass("TypeIs");
+        internal static readonly MethodInfo TypeIsMethodInfo = GetMethodInfo("TypeIs");
 
         /// <summary>MethodInfo for object OpenTypeMethods.GetValue(this object value, string propertyName).</summary>
-        internal static readonly MethodInfo GetValueOpenPropertyMethodInfo = GetMethodInfoFromThisClass("GetValue");
+        internal static readonly MethodInfo GetValueOpenPropertyMethodInfo = GetMethodInfo("GetValue");
 
         /// <summary>MethodInfo for IEnumerable&lt;object&gt; OpenTypeMethods.GetCollectionValue(this object value, string propertyName).</summary>
-        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = GetMethodInfoFromThisClass("GetCollectionValue");
+        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = GetMethodInfo("GetCollectionValue");
 
         #endregion Internal fields.
 
@@ -721,7 +721,7 @@ namespace Microsoft.OData.Core.UriParser
             return expression.Type.IsValueType() ? Expression.Convert(expression, typeof(object)) : expression;
         }
 
-        private static MethodInfo GetMethodInfoFromThisClass(string methodName)
+        private static MethodInfo GetMethodInfo(string methodName)
         {
             return typeof(OpenTypeMethods).GetMethod(methodName, /*isPublic*/true, /*isStatic*/true);
         }

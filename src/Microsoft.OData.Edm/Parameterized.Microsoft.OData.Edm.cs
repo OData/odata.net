@@ -1941,10 +1941,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Conversion of EDM values to a CLR type with type code {0} is not supported."
+        /// A string like "Conversion of EDM values to a CLR type with type {0} is not supported."
         /// </summary>
-        internal static string EdmToClr_UnsupportedTypeCode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmToClr_UnsupportedTypeCode, p0);
+        internal static string EdmToClr_UnsupportedType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmToClr_UnsupportedType, p0);
         }
 
         /// <summary>

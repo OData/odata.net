@@ -287,7 +287,7 @@ Bad_UnresolvedNavigationPropertyPath=A navigation property could not be found fo
 RuleSet_DuplicateRulesExistInRuleSet=The same rule cannot be in the same rule set twice.
 
 ; Error messages for EDM to CLR conversion
-EdmToClr_UnsupportedTypeCode=Conversion of EDM values to a CLR type with type code {0} is not supported.
+EdmToClr_UnsupportedType=Conversion of EDM values to a CLR type with type {0} is not supported.
 EdmToClr_StructuredValueMappedToNonClass=Conversion of an EDM structured value is supported only to a CLR class.
 EdmToClr_IEnumerableOfTPropertyAlreadyHasValue=Cannot initialize a property '{0}' on an object of type '{1}'. The property already has a value.
 EdmToClr_StructuredPropertyDuplicateValue=An EDM structured value contains multiple values for the property '{0}'. Conversion of an EDM structured value with duplicate property values is not supported.

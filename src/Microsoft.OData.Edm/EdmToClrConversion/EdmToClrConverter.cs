@@ -632,7 +632,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                 object clrValue;
                 if (!TryConvertAsNonGuidPrimitiveType(underlyingType ?? clrType, edmValue, out clrValue))
                 {
-                    throw new InvalidCastException(Strings.EdmToClr_UnsupportedTypeCode(clrType.FullName));
+                    throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(clrType.FullName));
                 }
 
                 // In case of enums, because the converter returns a primitive type value we want to convert it to the CLR enum type.

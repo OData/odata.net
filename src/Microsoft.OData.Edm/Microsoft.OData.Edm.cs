@@ -328,7 +328,7 @@ namespace Microsoft.OData.Edm {
         internal const string Bad_CyclicEntityContainer = "Bad_CyclicEntityContainer";
         internal const string Bad_UnresolvedNavigationPropertyPath = "Bad_UnresolvedNavigationPropertyPath";
         internal const string RuleSet_DuplicateRulesExistInRuleSet = "RuleSet_DuplicateRulesExistInRuleSet";
-        internal const string EdmToClr_UnsupportedTypeCode = "EdmToClr_UnsupportedTypeCode";
+        internal const string EdmToClr_UnsupportedType = "EdmToClr_UnsupportedType";
         internal const string EdmToClr_StructuredValueMappedToNonClass = "EdmToClr_StructuredValueMappedToNonClass";
         internal const string EdmToClr_IEnumerableOfTPropertyAlreadyHasValue = "EdmToClr_IEnumerableOfTPropertyAlreadyHasValue";
         internal const string EdmToClr_StructuredPropertyDuplicateValue = "EdmToClr_StructuredPropertyDuplicateValue";
