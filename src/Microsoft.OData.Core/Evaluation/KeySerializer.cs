@@ -142,8 +142,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// <param name="getPropertyValue">The callback to get each property's value.</param>
             internal override void AppendKeyExpression<TProperty>(StringBuilder builder, ICollection<TProperty> keyProperties, Func<TProperty, string> getPropertyName, Func<TProperty, object> getPropertyValue)
             {
-#if ODATA_CORE
-#endif
                 AppendKeyWithParentheses(builder, keyProperties, getPropertyName, getPropertyValue);
             }
         }

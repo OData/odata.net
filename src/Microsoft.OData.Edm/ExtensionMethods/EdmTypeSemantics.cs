@@ -959,6 +959,20 @@ namespace Microsoft.OData.Edm
             return ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
         }
 
+        /// <summary>
+        /// Returns the actual type of the given type.
+        /// If the given type is type definition, the actual type is its underlying type;
+        /// otherwise, return the given type itself.
+        /// </summary>
+        /// <param name="type">The given type.</param>
+        /// <returns>The actual type of the given type.</returns>
+        public static IEdmType AsActualType(this IEdmType type)
+        {
+            IEdmPrimitiveType underlyingType = type.UnderlyingType();
+
+            return underlyingType ?? type;
+        }
+
         internal static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(this IEdmPrimitiveType type, bool isNullable)
         {
             switch (type.PrimitiveKind)
@@ -1044,13 +1058,6 @@ namespace Microsoft.OData.Edm
             }
 
             return ((IEdmTypeDefinition)type).UnderlyingType;
-        }
-
-        internal static IEdmType AsActualType(this IEdmType type)
-        {
-            IEdmPrimitiveType underlyingType = type.UnderlyingType();
-
-            return underlyingType ?? type;
         }
 
         internal static IEdmTypeReference AsActualTypeReference(this IEdmTypeReference type)

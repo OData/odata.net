@@ -41,8 +41,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>An <see cref="IEdmDelayedValue"/> for the <paramref name="primitiveValue"/>.</returns>
         internal static IEdmDelayedValue ConvertPrimitiveValue(object primitiveValue, IEdmPrimitiveTypeReference type)
         {
-#if !ODATA_CLIENT
-#endif
             Debug.Assert(primitiveValue != null, "primitiveValue != null");
 
             if (primitiveValue is Boolean)
@@ -118,8 +116,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The clr value</returns>
         internal static object ToClrValue(this IEdmPrimitiveValue edmValue)
         {
-#if !ODATA_CLIENT
-#endif
             Debug.Assert(edmValue != null, "edmValue != null");
             EdmPrimitiveTypeKind primitiveKind = edmValue.Type.PrimitiveKind();
             switch (edmValue.ValueKind)

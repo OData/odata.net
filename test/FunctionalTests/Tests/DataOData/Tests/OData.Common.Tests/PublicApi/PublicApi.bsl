@@ -879,6 +879,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmType AsActualType (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmBinaryTypeReference AsBinary (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[

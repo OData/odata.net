@@ -94,8 +94,6 @@ namespace Microsoft.OData.Core.Evaluation
         {
             get
             {
-#if ODATA_CORE
-#endif
                 return this.generateKeyAsSegment;
             }
         }
@@ -118,8 +116,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>A new UrlConvention instance with the given value.</returns>
         internal static UrlConvention CreateWithExplicitValue(bool generateKeyAsSegment)
         {
-#if ODATA_CORE
-#endif
             return new UrlConvention(generateKeyAsSegment);
         }
 

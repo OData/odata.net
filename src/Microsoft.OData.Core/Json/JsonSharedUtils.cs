@@ -23,8 +23,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if the value should be written as a string, false if should be written as a JSON number.</returns>
         internal static bool IsDoubleValueSerializedAsString(double value)
         {
-#if ODATA_CORE
-#endif
             return Double.IsInfinity(value) || Double.IsNaN(value);
         }
 
@@ -37,9 +35,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if the given primitive value is of a basic JSON type, false otherwise.</returns>
         internal static bool ValueTypeMatchesJsonType(ODataPrimitiveValue primitiveValue, IEdmPrimitiveTypeReference valueTypeReference)
         {
-#if ODATA_CORE
-#endif
-
             switch (valueTypeReference.PrimitiveKind())
             {
                 // If the value being serialized is of a basic type where we can rely on just the JSON representation to convey type information, then never write the type name.

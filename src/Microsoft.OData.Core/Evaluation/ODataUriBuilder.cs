@@ -30,8 +30,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri BuildBaseUri()
         {
-#if !ODATA_CLIENT
-#endif
             return null;
         }
 

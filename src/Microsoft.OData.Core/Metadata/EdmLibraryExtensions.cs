@@ -935,20 +935,6 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Returns the actual type of the given type.
-        /// If the given type is type definition, the actual type is its underlying type;
-        /// otherwise, return the given type itself.
-        /// </summary>
-        /// <param name="type">The given type.</param>
-        /// <returns>The actual type of the given type.</returns>
-        internal static IEdmType AsActualType(this IEdmType type)
-        {
-            Debug.Assert(type != null, "type != null");
-
-            return type.TypeKind == EdmTypeKind.TypeDefinition ? ((IEdmTypeDefinition)type).UnderlyingType : type;
-        }
-
-        /// <summary>
         /// Compare if the two collection types are equal on the element type regardless of nullable, facets.
         /// </summary>
         /// <param name="type">The left operand.</param>
@@ -1224,8 +1210,6 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static string ODataShortQualifiedName(this IEdmTypeReference typeReference)
         {
-#if !ODATA_SERVICE
-#endif
             Debug.Assert(typeReference != null, "typeReference != null");
             Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
             return typeReference.Definition.ODataShortQualifiedName();
@@ -1243,8 +1227,6 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static string ODataShortQualifiedName(this IEdmType type)
         {
-#if !ODATA_SERVICE
-#endif
             Debug.Assert(type != null, "type != null");
 
             // Handle collection type names here since for EdmLib collection values are functions
@@ -1695,8 +1677,6 @@ namespace Microsoft.OData.Core.Metadata
 #endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
-#if !ODATA_SERVICE && !ODATA_CLIENT
-#endif
             Debug.Assert(containerElement != null, "containerElement != null");
 
             return containerElement.Container.Name + "." + containerElement.Name;
@@ -1805,9 +1785,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>A type reference for the <paramref name="type"/>.</returns>
         internal static IEdmTypeReference ToTypeReference(this IEdmType type, bool nullable)
         {
-#if !ODATA_CLIENT
-#endif
-
             if (type == null)
             {
                 return null;
@@ -1842,8 +1819,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>Type name for a collection of the specified item type name.</returns>
         internal static string GetCollectionTypeName(string itemTypeName)
         {
-#if !ODATA_SERVICE && !ODATA_CLIENT
-#endif
             return string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, itemTypeName);
         }
 

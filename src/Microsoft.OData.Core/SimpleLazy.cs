@@ -50,8 +50,6 @@ namespace Microsoft.OData.Core
         internal SimpleLazy(Func<T> factory)
             : this(factory, false)
         {
-#if ODATA_CORE
-#endif
         }
 
         /// <summary>
@@ -61,8 +59,6 @@ namespace Microsoft.OData.Core
         /// <param name="isThreadSafe">true if the value will be created in a thread safety, false assume single thread access to Value.</param>
         internal SimpleLazy(Func<T> factory, bool isThreadSafe)
         {
-#if ODATA_CORE
-#endif
             Debug.Assert(factory != null, "factory != null");
             this.factory = factory;
             this.valueCreated = false;
@@ -79,8 +75,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-#if ODATA_CORE
-#endif
                 if (!this.valueCreated)
                 {
                     if (this.mutex != null)
