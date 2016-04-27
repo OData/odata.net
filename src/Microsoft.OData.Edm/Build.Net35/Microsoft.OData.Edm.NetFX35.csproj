@@ -953,6 +953,9 @@
     <Compile Include="..\Schema\EdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmPathExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmPrimitiveTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmPrimitiveTypeReference.cs</Link>
     </Compile>
@@ -982,9 +985,6 @@
     </Compile>
     <Compile Include="..\Schema\EdmTemporalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmTemporalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\EdmTerm.cs">
-      <Link>Microsoft\OData\Edm\Schema\EdmTerm.cs</Link>
     </Compile>
     <Compile Include="..\Schema\EdmType.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmType.cs</Link>
@@ -1076,6 +1076,9 @@
     <Compile Include="..\Schema\Interfaces\IEdmEnumTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumTypeReference.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmFunction.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmFunction.cs</Link>
     </Compile>
@@ -1114,6 +1117,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathExpression.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPrimitiveType.cs</Link>
@@ -1157,9 +1163,6 @@
     <Compile Include="..\Schema\Interfaces\IEdmTemporalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTemporalTypeReference.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmTerm.cs">
-      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTerm.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmType.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmType.cs</Link>
     </Compile>
@@ -1174,12 +1177,6 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmUnknownEntitySet.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUnknownEntitySet.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmValueTerm.cs">
-      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmValueTerm.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmVocabularyAnnotatable.cs">
-      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmVocabularyAnnotatable.cs</Link>
     </Compile>
     <Compile Include="..\Schema\TimeOfDay.cs">
       <Link>Microsoft\OData\Edm\Schema\TimeOfDay.cs</Link>
@@ -1205,6 +1202,9 @@
     <Compile Include="..\Vocabularies\Annotations\EdmPropertyValueBinding.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmPropertyValueBinding.cs</Link>
     </Compile>
+    <Compile Include="..\Vocabularies\Annotations\EdmTerm.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmTerm.cs</Link>
+    </Compile>
     <Compile Include="..\Vocabularies\Annotations\EdmTypedDirectValueAnnotationBinding.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmTypedDirectValueAnnotationBinding.cs</Link>
     </Compile>
@@ -1223,8 +1223,17 @@
     <Compile Include="..\Vocabularies\Annotations\IEdmPropertyValueBinding.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmPropertyValueBinding.cs</Link>
     </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmTerm.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmTerm.cs</Link>
+    </Compile>
     <Compile Include="..\Vocabularies\Annotations\IEdmValueAnnotation.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmValueTerm.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmValueTerm.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\Annotations\IEdmVocabularyAnnotation.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmVocabularyAnnotation.cs</Link>
@@ -1280,9 +1289,6 @@
     <Compile Include="..\Vocabularies\Expressions\EdmParameterReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmParameterReferenceExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Vocabularies\Expressions\EdmPathExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPathExpression.cs</Link>
-    </Compile>
     <Compile Include="..\Vocabularies\Expressions\EdmPropertyConstructor.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyConstructor.cs</Link>
     </Compile>
@@ -1334,9 +1340,6 @@
     <Compile Include="..\Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Vocabularies\Expressions\IEdmExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmExpression.cs</Link>
-    </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs</Link>
     </Compile>
@@ -1366,9 +1369,6 @@
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmParameterReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmParameterReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\Vocabularies\Expressions\IEdmPathExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPathExpression.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmPropertyConstructor.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPropertyConstructor.cs</Link>

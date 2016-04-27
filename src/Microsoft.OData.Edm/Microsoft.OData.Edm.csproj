@@ -42,6 +42,9 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs" />
+    <Compile Include="Schema\EdmPathExpression.cs" />
+    <Compile Include="Schema\Interfaces\IEdmExpression.cs" />
+    <Compile Include="Schema\Interfaces\IEdmPathExpression.cs" />
     <Compile Include="Schema\TimeOfDay.cs" />
     <Compile Include="PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />
     <Compile Include="Csdl\CsdlLocation.cs" />
@@ -242,6 +245,7 @@
     <Compile Include="Vocabularies\Annotations\IEdmDirectValueAnnotationsManager.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmPropertyValueBinding.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmValueAnnotation.cs" />
+    <Compile Include="Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmVocabularyAnnotation.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyModel.cs" />
@@ -250,6 +254,7 @@
     <Compile Include="Vocabularies\CoreVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CoreVocabularyModel.cs" />
     <Compile Include="Vocabularies\EdmExpressionEvaluator.cs" />
+    <Compile Include="Vocabularies\Annotations\EdmTerm.cs" />
     <Compile Include="Vocabularies\EdmToClrConverter.cs" />
     <Compile Include="Vocabularies\EdmToClrEvaluator.cs" />
     <Compile Include="Vocabularies\Expressions\EdmApplyExpression.cs" />
@@ -266,7 +271,6 @@
     <Compile Include="Vocabularies\Expressions\EdmNullExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmOperationReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmParameterReferenceExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\EdmPathExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmPropertyConstructor.cs" />
     <Compile Include="Vocabularies\Expressions\EdmPropertyPathExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmPropertyReferenceExpression.cs" />
@@ -284,7 +288,6 @@
     <Compile Include="Vocabularies\Expressions\IEdmEntitySetReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmEnumMemberExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\IEdmExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmFloatingConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmGuidConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmIfExpression.cs" />
@@ -295,7 +298,6 @@
     <Compile Include="Vocabularies\Expressions\IEdmNullExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmOperationReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmParameterReferenceExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\IEdmPathExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmPropertyConstructor.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmPropertyReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmRecordExpression.cs" />
@@ -309,11 +311,9 @@
     <Compile Include="Validation\ObjectLocation.cs" />
     <Compile Include="Validation\ExpressionTypeChecker.cs" />
     <Compile Include="ExtensionMethods\ToTraceStringExtensionMethods.cs" />
-    <Compile Include="Schema\Interfaces\IEdmVocabularyAnnotatable.cs" />
     <Compile Include="Schema\Interfaces\IEdmEnumTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmEnumMember.cs" />
     <Compile Include="Schema\Interfaces\IEdmEnumType.cs" />
-    <Compile Include="Schema\Interfaces\IEdmTerm.cs" />
     <Compile Include="Schema\Interfaces\IEdmCheckable.cs" />
     <Compile Include="Schema\Interfaces\IEdmCollectionType.cs" />
     <Compile Include="Schema\Interfaces\IEdmCollectionTypeReference.cs" />
@@ -373,7 +373,6 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsOperationParameter.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsModel.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsNavigationProperty.cs" />
-    <Compile Include="Schema\Interfaces\IEdmValueTerm.cs" />
     <Compile Include="Schema\EdmEnumMember.cs" />
     <Compile Include="Schema\EdmEnumType.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedOperation.cs" />
@@ -383,7 +382,6 @@
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedValueTerm.cs" />
     <Compile Include="Schema\EdmEnumTypeReference.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs" />
-    <Compile Include="Schema\EdmTerm.cs" />
     <Compile Include="Schema\EdmCollectionType.cs" />
     <Compile Include="Schema\EdmCollectionTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsPrimitiveTypeReference.cs" />
@@ -490,6 +488,8 @@
     <Compile Include="Validation\ValidationRuleSet.cs" />
     <Compile Include="Validation\EdmErrorCode.cs" />
     <Compile Include="..\PlatformHelper.cs" />
+    <Compile Include="Vocabularies\Annotations\IEdmTerm.cs" />
+    <Compile Include="Vocabularies\Annotations\IEdmValueTerm.cs" />
     <Compile Include="Vocabularies\TryCreateObjectInstance.cs" />
     <Compile Include="Vocabularies\Values\IEdmBinaryValue.cs" />
     <Compile Include="Vocabularies\Values\IEdmBooleanValue.cs" />

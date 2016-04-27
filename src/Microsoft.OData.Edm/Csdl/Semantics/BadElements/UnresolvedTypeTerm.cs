@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {

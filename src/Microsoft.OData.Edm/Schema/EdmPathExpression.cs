@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.OData.Edm.Vocabularies
+namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Represents an EDM path expression.

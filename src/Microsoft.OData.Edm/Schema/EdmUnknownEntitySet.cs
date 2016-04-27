@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Edm
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Represents an EDM unknown entity set

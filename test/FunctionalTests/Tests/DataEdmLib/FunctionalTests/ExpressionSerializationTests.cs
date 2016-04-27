@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
-
 namespace EdmLibTests.FunctionalTests
 {
     #if SILVERLIGHT

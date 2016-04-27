@@ -4,19 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace EdmLibTests.FunctionalUtilities.UnitTests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using EdmLibTests.StubEdm;
-    using EdmLibTests.VocabularyStubs;
-    using Microsoft.OData.Edm;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using EdmLibTests.StubEdm;
+using EdmLibTests.VocabularyStubs;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace EdmLibTests.FunctionalUtilities.UnitTests
+{
     [TestClass]
     public class VocabularyModelComparerTests
     {

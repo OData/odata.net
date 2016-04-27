@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm
+namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
     /// Represents an element that can be targeted by Vocabulary Annotations

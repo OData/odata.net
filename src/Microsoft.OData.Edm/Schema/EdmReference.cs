@@ -20,14 +20,14 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="uri">The Uri to load referneced model.</param>
+        /// <param name="uri">The Uri to load referenced model.</param>
         public EdmReference(string uri)
         {
             this.uri = uri;
         }
 
         /// <summary>
-        /// Gets the Uri to load referneced model.
+        /// Gets the Uri to load referenced model.
         /// </summary>
         public string Uri
         {
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the Includes for referneced model.
+        /// Gets the Includes for referenced model.
         /// </summary>
         public IEnumerable<IEdmInclude> Includes
         {
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the IncludeAnnotations for referneced model.
+        /// Gets the IncludeAnnotations for referenced model.
         /// </summary>
         public IEnumerable<IEdmIncludeAnnotations> IncludeAnnotations
         {

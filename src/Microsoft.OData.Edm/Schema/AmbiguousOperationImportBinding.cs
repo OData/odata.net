@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Edm
 {
-    using Microsoft.OData.Edm.Vocabularies;
-
     /// <summary>
     /// Class that represents an unresolved operation import binding to two or more operation imports.
     /// </summary>

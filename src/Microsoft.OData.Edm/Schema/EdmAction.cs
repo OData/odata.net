@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Edm
 {
-    using Microsoft.OData.Edm.Vocabularies;
-
     /// <summary>
     /// Represents an EDM action.
     /// </summary>

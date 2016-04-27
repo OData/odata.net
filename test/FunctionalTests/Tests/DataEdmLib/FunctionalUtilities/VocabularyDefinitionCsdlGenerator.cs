@@ -4,19 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.Utils.Metadata;
+
 namespace EdmLibTests.FunctionalUtilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.Test.OData.Utils.Metadata;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Validation;
-
     /// <summary>
     /// Generates the vocabulary definition Csdl (EntityType and ValueTerm)
     /// </summary>

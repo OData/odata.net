@@ -4,11 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using EdmLibTests.StubEdm;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.VocabularyStubs
 {
-    using EdmLibTests.StubEdm;
-    using Microsoft.OData.Edm.Vocabularies;
-
     public class StubStringConstantExpression : StubEdmElement, IEdmStringConstantExpression
     {
         public StubStringConstantExpression(string value)

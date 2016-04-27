@@ -19,9 +19,9 @@ namespace EdmLibTests.FunctionalUtilities
     /// </summary>
     public class VocabularyApplicationCsdlGenerator
     {
-        public XElement GenerateApplicationCsdl(EdmVersion edmVerion, IEdmModel applicationModel)
+        public XElement GenerateApplicationCsdl(EdmVersion edmVersion, IEdmModel applicationModel)
         {
-            XNamespace ns = this.DetermineXmlNamespace(edmVerion);
+            XNamespace ns = this.DetermineXmlNamespace(edmVersion);
             var schema = new XElement(ns + "Schema", new XAttribute("Namespace", "Application.NS1"));
 
             IEnumerable<IEdmVocabularyAnnotatable> possiblyAnnotated = applicationModel.SchemaElements.OfType<IEdmEntityType>().Cast<IEdmVocabularyAnnotatable>()

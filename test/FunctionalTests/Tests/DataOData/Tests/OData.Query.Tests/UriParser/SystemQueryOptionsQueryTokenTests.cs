@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
 namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
 {
     using System;

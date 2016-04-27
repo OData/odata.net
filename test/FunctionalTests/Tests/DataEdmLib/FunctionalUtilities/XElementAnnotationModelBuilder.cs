@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
 namespace EdmLibTests.FunctionalUtilities
 {
     using System.Collections.Generic;

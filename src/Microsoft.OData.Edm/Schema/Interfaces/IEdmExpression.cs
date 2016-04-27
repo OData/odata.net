@@ -4,7 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.Vocabularies
+using Microsoft.OData.Edm.Vocabularies;
+
+namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Defines EDM expression kinds.

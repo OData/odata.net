@@ -4,13 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.Test.Taupo.Edmlib.StubEdm
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-
     /// <summary>
     /// Stub implementation of EdmComplexType
     /// </summary>

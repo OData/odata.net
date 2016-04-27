@@ -4,11 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using EdmLibTests.StubEdm;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.VocabularyStubs
 {
-    using Microsoft.OData.Edm;
-    using EdmLibTests.StubEdm;
-
     public class StubValueTerm : StubEdmElement, IEdmValueTerm
     {
         public StubValueTerm(string namespaceName, string name)
