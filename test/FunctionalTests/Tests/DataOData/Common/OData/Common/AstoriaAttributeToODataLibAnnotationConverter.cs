@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
 using Microsoft.Test.Taupo.Astoria.Contracts.OData;

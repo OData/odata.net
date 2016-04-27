@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
 
     /// <summary>

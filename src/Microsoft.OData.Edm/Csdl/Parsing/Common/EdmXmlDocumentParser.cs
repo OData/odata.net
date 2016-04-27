@@ -457,7 +457,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     break;
             }
 
-            if (EdmUtil.IsQualifiedName(typeName) || Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None)
+            if (EdmUtil.IsQualifiedName(typeName) || Microsoft.OData.Edm.EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None)
             {
                 return name;
             }

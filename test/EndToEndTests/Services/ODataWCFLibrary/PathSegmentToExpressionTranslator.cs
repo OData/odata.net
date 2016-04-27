@@ -12,7 +12,6 @@ using System.Net;
 using System.Reflection;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 using Microsoft.Test.OData.Services.ODataWCFService.UriHandlers;
 

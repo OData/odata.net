@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.OData.JsonLight;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight

@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Service.Providers
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Implementation of <see cref="IEdmStructuralProperty"/> based on a <see cref="ResourceProperty"/>.

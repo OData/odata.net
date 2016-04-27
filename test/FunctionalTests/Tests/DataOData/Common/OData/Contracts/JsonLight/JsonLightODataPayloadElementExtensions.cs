@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
     using System.Linq;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;

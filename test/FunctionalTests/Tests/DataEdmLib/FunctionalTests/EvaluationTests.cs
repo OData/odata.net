@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
-
 namespace EdmLibTests.FunctionalTests
 {
     #if SILVERLIGHT
@@ -21,8 +19,6 @@ namespace EdmLibTests.FunctionalTests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -1462,8 +1458,8 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
-            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter(
-                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.Vocabularies.EdmToClrConverter(
+                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.Vocabularies.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
                 {
                     objectInstance = null;
                     objectInstanceInitialized = false;
@@ -1709,8 +1705,8 @@ namespace EdmLibTests.FunctionalTests
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
 
             // And finally make sure we can handle nulls for bad graph references.
-            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter(
-                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.Vocabularies.EdmToClrConverter(
+                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.Vocabularies.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
                 {
                     objectInstance = null;
                     objectInstanceInitialized = false;

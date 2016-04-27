@@ -24,7 +24,6 @@ namespace AstoriaUnitTests
     using AstoriaUnitTests.Data;
     using AstoriaUnitTests.Tests;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FluentAssertions;

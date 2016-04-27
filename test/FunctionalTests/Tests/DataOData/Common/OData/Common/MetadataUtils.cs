@@ -15,7 +15,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Spatial;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Common;

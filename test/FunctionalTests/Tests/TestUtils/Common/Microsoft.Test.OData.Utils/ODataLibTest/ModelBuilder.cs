@@ -8,7 +8,6 @@ using System;
 using System.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.Test.OData.Utils.Common;
 using Microsoft.Test.OData.Utils.Metadata;
 using Microsoft.Test.OData.Utils.ODataLibOM;

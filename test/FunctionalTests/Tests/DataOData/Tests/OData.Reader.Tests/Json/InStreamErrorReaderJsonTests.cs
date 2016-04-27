@@ -9,7 +9,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     #region Namespaces.
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;

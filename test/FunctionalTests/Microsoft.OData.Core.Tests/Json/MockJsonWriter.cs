@@ -7,7 +7,7 @@
 using System;
 using FluentAssertions;
 using Microsoft.OData.Json;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Tests.Json
 {

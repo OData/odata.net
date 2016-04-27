@@ -4,27 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.Utils.ODataLibTest;
 
 namespace Microsoft.Test.OData.Utils.Metadata
 {
-    #region Namespaces
-
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData;
-    using Microsoft.Test.OData.Utils.ODataLibTest;
-
-    #endregion Namespaces
-
     /// <summary>
     /// A helper class to create our test models using the <see cref="ModelBuilder"/>.
     /// </summary>

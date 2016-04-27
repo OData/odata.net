@@ -8,7 +8,6 @@ namespace Microsoft.OData.Service.Providers
 {
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Implementation of <see cref="IEdmCollectionType"/> based on a <see cref="ResourceType"/>.

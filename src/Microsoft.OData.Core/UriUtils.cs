@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
 {

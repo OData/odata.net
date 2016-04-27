@@ -12,9 +12,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>

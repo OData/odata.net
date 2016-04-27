@@ -9,7 +9,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Linq;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;

@@ -14,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using AstoriaUnitTests.Tests.Server.Simulators;
+using AstoriaUnitTests.TDD.Tests.Server.Simulators;
+using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -21,10 +23,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AstoriaUnitTests.Tests.Server
 {
-    using AstoriaUnitTests.TDD.Tests.Server.Simulators;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Edm.Library;
-
     [TestClass]
     public class MetadataObjectModelTests
     {

@@ -25,7 +25,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     #endregion Namespaces
 

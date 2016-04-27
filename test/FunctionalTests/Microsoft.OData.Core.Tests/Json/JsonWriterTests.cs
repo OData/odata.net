@@ -9,7 +9,7 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Json;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json

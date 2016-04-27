@@ -12,9 +12,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>Metadata definition for the DSP. This also implements the <see cref="IEdmModel"/>.</summary>

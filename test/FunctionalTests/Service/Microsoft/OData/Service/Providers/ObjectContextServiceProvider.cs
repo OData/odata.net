@@ -1614,7 +1614,7 @@ namespace Microsoft.OData.Service.Providers
             ResourceAssociationTypeEnd dependentEnd = resourceAssociationType.GetEnd(referentialConstraint.ToRole.Name);
 
             List<ResourceProperty> dependentProperties = new List<ResourceProperty>();
-            foreach (EdmProperty edmProperty in referentialConstraint.ToProperties)
+            foreach (System.Data.Metadata.Edm.EdmProperty edmProperty in referentialConstraint.ToProperties)
             {
                 dependentProperties.Add(dependentEnd.ResourceType.TryResolvePropertyName(edmProperty.Name));
             }

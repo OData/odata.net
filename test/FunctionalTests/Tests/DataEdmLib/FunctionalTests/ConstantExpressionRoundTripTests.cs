@@ -117,7 +117,7 @@ namespace EdmLibTests.FunctionalTests
             if (validate)
             {
                 IEnumerable<EdmError> errors;
-                model.Validate(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4, out errors);
+                model.Validate(Microsoft.OData.Edm.EdmConstants.EdmVersion4, out errors);
                 Assert.AreEqual(0, errors.Count(), "Unexpected errors.");
             }
 

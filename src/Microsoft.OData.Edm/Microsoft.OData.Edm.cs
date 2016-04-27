@@ -9,16 +9,15 @@
 
 namespace Microsoft.OData.Edm {
     using System;
+    using System.ComponentModel;
     using System.Globalization;
     using System.Reflection;
     using System.Resources;
 #if !PORTABLELIB
     using System.Security.Permissions;
 #endif
-    using System.Text;
     using System.Threading;
 
-    using System.ComponentModel;
 #if !PORTABLELIB
     [AttributeUsage(AttributeTargets.All)]
     internal sealed class EntityResDescriptionAttribute : DescriptionAttribute {

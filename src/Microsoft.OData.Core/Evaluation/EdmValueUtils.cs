@@ -4,17 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATA_CLIENT
-    using Microsoft.OData;
-#endif
 using System;
 using System.Diagnostics;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Spatial;
+#if ODATA_CLIENT
+    using Microsoft.OData;
+    using ErrorStrings = Microsoft.OData.Client.Strings;
+    using PlatformHelpers = Microsoft.OData.Client.PlatformHelper;
+#else
 using ErrorStrings = Microsoft.OData.Strings;
 using PlatformHelpers = Microsoft.OData.PlatformHelper;
+#endif
 
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client

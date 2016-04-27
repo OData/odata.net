@@ -17,7 +17,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.Xml.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;

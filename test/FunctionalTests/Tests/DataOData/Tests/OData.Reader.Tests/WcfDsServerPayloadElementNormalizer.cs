@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;

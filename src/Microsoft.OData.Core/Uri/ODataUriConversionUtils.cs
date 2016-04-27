@@ -15,7 +15,6 @@ using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using ODataErrorStrings = Microsoft.OData.Strings;
 using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
 

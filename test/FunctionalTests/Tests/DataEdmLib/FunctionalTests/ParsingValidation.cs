@@ -12,7 +12,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;

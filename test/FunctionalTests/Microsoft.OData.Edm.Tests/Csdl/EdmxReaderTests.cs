@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 

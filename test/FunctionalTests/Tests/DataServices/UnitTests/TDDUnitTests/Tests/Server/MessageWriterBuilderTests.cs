@@ -18,8 +18,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

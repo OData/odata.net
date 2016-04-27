@@ -1,6 +1,6 @@
 ﻿using Microsoft.OData;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 using FluentAssertions;
 using Microsoft.OData.Edm;

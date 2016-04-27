@@ -11,7 +11,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 
@@ -138,7 +137,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             if (csdlVersion == EdmVersion.V40)
             {
-                return EdmConstants.EdmOasisNamespace;
+                return Microsoft.Test.OData.Utils.Metadata.EdmConstants.EdmOasisNamespace;
             }
             else
             {

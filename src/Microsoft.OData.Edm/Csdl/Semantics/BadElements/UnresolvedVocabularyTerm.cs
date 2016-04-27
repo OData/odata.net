@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Library;
-
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     internal abstract class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement

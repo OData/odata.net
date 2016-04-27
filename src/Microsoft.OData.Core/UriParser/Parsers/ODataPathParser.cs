@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser

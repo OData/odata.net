@@ -16,7 +16,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.ODataWCFService.BuiltInFunctionHelper;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

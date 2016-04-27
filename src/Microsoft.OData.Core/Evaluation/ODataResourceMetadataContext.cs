@@ -11,7 +11,6 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
 

@@ -12,7 +12,6 @@ namespace Microsoft.OData.JsonLight
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 

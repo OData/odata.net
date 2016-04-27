@@ -9,7 +9,7 @@ using FluentAssertions;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Tests.JsonLight;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests

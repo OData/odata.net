@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     #endregion Namespaces
 

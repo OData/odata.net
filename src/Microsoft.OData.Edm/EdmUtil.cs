@@ -17,7 +17,6 @@ namespace Microsoft.OData.Edm
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 

@@ -20,16 +20,14 @@ namespace Microsoft.OData.Service.Providers
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.OData.Client;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using CommonUtil = Microsoft.OData.Service.CommonUtil;
 
     #endregion Namespaces

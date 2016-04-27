@@ -20,10 +20,7 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -43,7 +40,7 @@ namespace EdmLibTests.FunctionalTests
         public void InterfaceValidatorAutoCheck()
         {
             var edmLib = typeof(IEdmElement).Assembly;
-            Type interfaceValidatorType = edmLib.GetType("Microsoft.OData.Edm.Validation.Internal.InterfaceValidator");
+            Type interfaceValidatorType = edmLib.GetType("Microsoft.OData.Edm.Validation.InterfaceValidator");
             var interfaceVisitorsField = interfaceValidatorType.GetField("InterfaceVisitors", BindingFlags.NonPublic | BindingFlags.Static);
             object interfaceVisitors = interfaceVisitorsField.GetValue(null);
             var containsKeyMethod = interfaceVisitors.GetType().GetMethod("ContainsKey");
@@ -88,7 +85,6 @@ namespace EdmLibTests.FunctionalTests
             {
                 if (skip != typeof(IEdmLocatable) && // location is optional
                     skip != typeof(IEdmNavigationPropertyBinding) && // this interface is processed inline inside IEdmEntitySet visitor
-
                     skip != typeof(IEdmDateTimeOffsetValue) && // the value properties in these interfaces are structs, so they can't be null.
                     skip != typeof(IEdmDateValue) &&
                     skip != typeof(IEdmGuidValue) &&
@@ -121,7 +117,7 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.IsTrue(missingVisitors.Length == 0, "The following interfaces might need a visitor in InterfaceValidator class \r\n" + missingVisitors.ToString());
 
-            var isCriticalMethod = edmLib.GetType("Microsoft.OData.Edm.Validation.Internal.ValidationHelper").GetMethod("IsInterfaceCritical", BindingFlags.NonPublic | BindingFlags.Static);
+            var isCriticalMethod = edmLib.GetType("Microsoft.OData.Edm.Validation.ValidationHelper").GetMethod("IsInterfaceCritical", BindingFlags.NonPublic | BindingFlags.Static);
             foreach (var errorCodeName in Enum.GetNames(typeof(EdmErrorCode)))
             {
                 if (errorCodeName.StartsWith("InterfaceCritical", StringComparison.Ordinal))
@@ -554,7 +550,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
 
-            foreach (var v in new[] { Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest })
+            foreach (var v in new[] { Microsoft.OData.Edm.EdmConstants.EdmVersionLatest })
             {
                 model.SetEdmVersion(v);
                 model.Validate(out errors);
@@ -995,7 +991,7 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.EdmFunction)", EdmErrorCode.InvalidNamespaceName},
+                { "(Microsoft.OData.Edm.EdmFunction)", EdmErrorCode.InvalidNamespaceName},
                 { "(.ComplexType)", EdmErrorCode.InvalidNamespaceName}
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.EdmFunctionNamespaceIsEmpty(), expectedErrors);
@@ -1212,7 +1208,7 @@ namespace EdmLibTests.FunctionalTests
                 {"(.)", EdmErrorCode.InvalidName},
                 {"(.)",  EdmErrorCode.InvalidNamespaceName},
             };
-            ValidationRuleSet ruleset = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4);
+            ValidationRuleSet ruleset = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
             this.VerifySemanticValidation(ValidationTestModelBuilder.IEdmNamedElementNameIsNotAllowed(), ruleset, expectedErrors);
 
             ruleset = new ValidationRuleSet(ruleset.Except(new ValidationRule[] { ValidationRules.NamedElementNameIsNotAllowed }));
@@ -1266,8 +1262,8 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors() 
             {
-                {"(Microsoft.OData.Edm.Library.EdmEnumMember)", EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType},
-                {"(Microsoft.OData.Edm.Library.EdmEnumMember)", EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType},
+                {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType},
+                {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType},
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithMismatchedEnumMemberTypes(), expectedErrors);
         }
@@ -1546,8 +1542,8 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors() 
             {
-                {"(Microsoft.OData.Edm.Library.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
-                {"(Microsoft.OData.Edm.Library.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
+                {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
+                {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.BidirectionalContainmentModel(), expectedErrors);
         }
@@ -2180,7 +2176,7 @@ namespace EdmLibTests.FunctionalTests
 
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.EdmEntitySet)", EdmErrorCode.NavigationMappingMustBeBidirectional },
+                { "(Microsoft.OData.Edm.EdmEntitySet)", EdmErrorCode.NavigationMappingMustBeBidirectional },
             };
             IEnumerable<EdmError> edmErrors;
             model.Validate(out edmErrors);
@@ -2217,7 +2213,7 @@ namespace EdmLibTests.FunctionalTests
 
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.EdmSingleton)", EdmErrorCode.NavigationMappingMustBeBidirectional },
+                { "(Microsoft.OData.Edm.EdmSingleton)", EdmErrorCode.NavigationMappingMustBeBidirectional },
             };
             IEnumerable<EdmError> edmErrors;
             model.Validate(out edmErrors);
@@ -2228,7 +2224,7 @@ namespace EdmLibTests.FunctionalTests
         public void AnnotationNameWhichIsNotSimpleIdentifierShouldPassValidation()
         {
             var model = new EdmModel();
-            model.SetEdmVersion(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4);
+            model.SetEdmVersion(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
             var fredFlintstone = new EdmComplexType("Flintstones", "Fred");
             fredFlintstone.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
             model.AddElement(fredFlintstone);
@@ -2291,7 +2287,7 @@ namespace EdmLibTests.FunctionalTests
         public void CsdlWriterShouldFailWithGoodMessageWhenWritingInvalidXml()
         {
             var model = new EdmModel();
-            model.SetEdmVersion(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4);
+            model.SetEdmVersion(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
             var fredFlintstone = new EdmComplexType("Flintstones", "Fred");
             fredFlintstone.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
             model.AddElement(fredFlintstone);

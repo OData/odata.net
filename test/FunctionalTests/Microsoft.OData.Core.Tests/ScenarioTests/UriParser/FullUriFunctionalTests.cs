@@ -12,7 +12,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 

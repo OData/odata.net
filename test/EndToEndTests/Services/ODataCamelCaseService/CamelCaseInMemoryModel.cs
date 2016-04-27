@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
-    using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Validation;
-
     public static class CamelCaseInMemoryModel
     {
         public static IEdmModel CreateModel(string ns)

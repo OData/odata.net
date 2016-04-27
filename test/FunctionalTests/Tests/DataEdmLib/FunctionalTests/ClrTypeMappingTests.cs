@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
-
 namespace EdmLibTests.FunctionalTests
 {
     using System;
@@ -15,10 +13,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.EdmToClrConversion;
-    using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using BindingFlags = System.Reflection.BindingFlags;

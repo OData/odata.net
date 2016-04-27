@@ -12,7 +12,7 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
@@ -418,7 +418,7 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.AreEqual(7, modelWithAnnotations.VocabularyAnnotations.Count(), "Invalid count of annotation.");
 
-            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4);
+            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
 
             IEnumerable<EdmError> actualErrors = null;
             var validationResult = modelWithAnnotations.Validate(ruleSet, out actualErrors);
@@ -433,11 +433,11 @@ namespace EdmLibTests.FunctionalTests
 
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.BadUnresolvedTerm }
+                { "(Microsoft.OData.Edm.Vocabularies.EdmAnnotation)", EdmErrorCode.BadUnresolvedTerm }
             };
 
             IEnumerable<EdmError> actualErrors = null;
-            var validationResult = model.Validate(Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest, out actualErrors);
+            var validationResult = model.Validate(Microsoft.OData.Edm.EdmConstants.EdmVersionLatest, out actualErrors);
             Assert.IsTrue(actualErrors.Any() ? !validationResult : validationResult, "The return value of the Validate method does not match the reported validation errors.");
             this.CompareErrors(actualErrors, expectedErrors);
         }

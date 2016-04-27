@@ -14,7 +14,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using FluentAssertions;
     using Microsoft.OData.Tests.Evaluation;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using EdmValueUtils = Microsoft.OData.Client.EdmValueUtils;
 

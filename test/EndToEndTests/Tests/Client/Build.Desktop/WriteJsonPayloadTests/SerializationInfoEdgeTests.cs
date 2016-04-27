@@ -11,7 +11,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System.IO;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Tests.Client.Common;

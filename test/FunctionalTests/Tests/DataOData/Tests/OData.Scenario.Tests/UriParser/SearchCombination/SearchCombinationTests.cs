@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.SearchCombination
     using ApprovalTests.Reporters;
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;

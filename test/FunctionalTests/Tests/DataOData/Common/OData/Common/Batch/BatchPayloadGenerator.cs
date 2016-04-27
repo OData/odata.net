@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Batch
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;

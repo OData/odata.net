@@ -10,7 +10,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData;

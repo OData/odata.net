@@ -11,9 +11,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT

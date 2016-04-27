@@ -15,7 +15,6 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

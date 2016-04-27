@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 
     /// <summary>Utility functions for processing Expression trees</summary>

@@ -26,12 +26,12 @@ namespace Microsoft.OData.Evaluation
     using System.Xml;
 #if ODATA_CORE
     using Microsoft.OData.UriParser;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 #else
     using System.Xml.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
 #endif

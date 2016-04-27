@@ -14,7 +14,6 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -397,7 +396,7 @@ namespace EdmLibTests.FunctionalTests
             return model;
         }
 
-        private sealed class MutableDirectValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation
+        private sealed class MutableDirectValueAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation
         {
             public string NamespaceUri
             {

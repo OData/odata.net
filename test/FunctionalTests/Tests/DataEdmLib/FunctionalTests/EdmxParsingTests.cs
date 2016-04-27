@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.FunctionalTests
 {
     using System;
@@ -14,13 +16,12 @@ namespace EdmLibTests.FunctionalTests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Evaluation;
 
     [TestClass]
     public class EdmxParsingTests : EdmLibTestCaseBase

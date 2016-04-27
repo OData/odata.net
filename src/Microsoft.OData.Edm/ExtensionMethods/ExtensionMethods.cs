@@ -10,13 +10,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Serialization;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
@@ -349,7 +345,7 @@ namespace Microsoft.OData.Edm
         /// <param name="termName">Name of the term to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, string termName, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, string termName, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -368,7 +364,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, string termName, string qualifier, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, string termName, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -386,7 +382,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -405,7 +401,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, string qualifier, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -424,7 +420,7 @@ namespace Microsoft.OData.Edm
         /// <param name="termName">Name of the term to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, string termName, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, string termName, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -444,7 +440,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, string termName, string qualifier, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, string termName, string qualifier, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -463,7 +459,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -483,7 +479,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, string qualifier, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, string qualifier, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -501,7 +497,7 @@ namespace Microsoft.OData.Edm
         /// <param name="termName">Name of the term to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -520,7 +516,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, string qualifier, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -538,7 +534,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -557,7 +553,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, Evaluation.EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -576,7 +572,7 @@ namespace Microsoft.OData.Edm
         /// <param name="termName">Name of the term to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -596,7 +592,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, string qualifier, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, string qualifier, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -615,7 +611,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -635,7 +631,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, Evaluation.EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");

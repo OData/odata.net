@@ -8,7 +8,6 @@ namespace Microsoft.Test.Taupo.Edmlib
 {
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
     using Microsoft.Test.Taupo.Contracts.Types;
 

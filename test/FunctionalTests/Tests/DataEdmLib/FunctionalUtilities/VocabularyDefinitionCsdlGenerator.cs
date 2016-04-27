@@ -26,7 +26,7 @@ namespace EdmLibTests.FunctionalUtilities
 
         protected Dictionary<EdmVersion, Version> toProductVersionlookup = new Dictionary<EdmVersion, Version>()
         {
-            { EdmVersion.V40, Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4 }
+            { EdmVersion.V40, Microsoft.OData.Edm.EdmConstants.EdmVersion4 }
         };
 
         public IEnumerable<XElement> GenerateDefinitionCsdl(EdmVersion edmVersion, IEdmModel definitionModel)

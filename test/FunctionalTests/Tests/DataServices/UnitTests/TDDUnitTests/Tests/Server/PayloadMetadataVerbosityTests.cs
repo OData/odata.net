@@ -15,7 +15,6 @@ using System.Text;
 using AstoriaUnitTests.TDD.Tests.Server.Simulators;
 using AstoriaUnitTests.Tests.Server.Simulators;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;

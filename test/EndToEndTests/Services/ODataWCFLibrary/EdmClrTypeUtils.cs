@@ -11,7 +11,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System;
     using System.IO;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.ODataWCFService.Extensions;
     using Microsoft.Test.OData.Services.ODataWCFService.Services;

@@ -4,25 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using AstoriaUnitTests.TDD.Tests.Server.Simulators;
+using AstoriaUnitTests.Tests.Server.Simulators;
+using FluentAssertions;
+using Microsoft.OData.Client;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Service;
+using Microsoft.OData.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UrlConvention = Microsoft.OData.Service.UrlConvention;
 
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
-    using System;
-    using Microsoft.OData.Client;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using AstoriaUnitTests.TDD.Tests.Server.Simulators;
-    using AstoriaUnitTests.Tests.Server.Simulators;
-    using FluentAssertions;
-    using Microsoft.OData.Tests;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Service;
-    using UrlConvention = Microsoft.OData.Service.UrlConvention;
-
     [TestClass]
     public class ServerUrlConventionTests
     {

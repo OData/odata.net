@@ -4,16 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// A segment representing $value
     /// </summary>

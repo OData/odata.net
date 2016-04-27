@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.AnnotationTargetingOperationTestsProxy;
     using Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.ConstantAnnotationProxy;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using OperationProxy = Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.AnnotationTargetingOperationTestsProxy;
 

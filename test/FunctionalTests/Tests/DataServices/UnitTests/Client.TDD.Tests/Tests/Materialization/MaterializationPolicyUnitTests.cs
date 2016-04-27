@@ -11,7 +11,6 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData.Client.Materialization;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

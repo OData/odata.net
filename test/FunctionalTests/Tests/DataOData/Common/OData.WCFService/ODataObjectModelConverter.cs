@@ -13,7 +13,6 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Reflection;
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
 

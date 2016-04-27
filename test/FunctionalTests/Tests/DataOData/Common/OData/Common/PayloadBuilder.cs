@@ -13,7 +13,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Net;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;

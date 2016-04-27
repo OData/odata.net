@@ -17,9 +17,7 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -78,7 +76,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(1, serializationErrors.Count(), "Error on serialization");
         }
 
-        private sealed class MutableValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmValueAnnotation
+        private sealed class MutableValueAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation
         {
             public IEdmExpression Value
             {

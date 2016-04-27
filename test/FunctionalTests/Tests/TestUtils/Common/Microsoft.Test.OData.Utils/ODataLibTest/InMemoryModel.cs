@@ -7,7 +7,6 @@
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
     using System;

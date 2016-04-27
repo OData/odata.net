@@ -17,7 +17,6 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 

@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmProperty ComputeReferenced()
         {
-            return new UnresolvedProperty(this.bindingContext ?? new Library.BadEntityType("", new EdmError[] { }), this.expression.Property, this.Location);
+            return new UnresolvedProperty(this.bindingContext ?? new BadEntityType("", new EdmError[] { }), this.expression.Property, this.Location);
         }
     }
 }

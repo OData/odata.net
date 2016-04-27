@@ -12,7 +12,6 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

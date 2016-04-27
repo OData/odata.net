@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
     using System.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

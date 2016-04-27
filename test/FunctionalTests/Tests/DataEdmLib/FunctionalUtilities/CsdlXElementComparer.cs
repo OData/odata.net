@@ -11,7 +11,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using EdmConstants = Microsoft.Test.OData.Utils.Metadata.EdmConstants;

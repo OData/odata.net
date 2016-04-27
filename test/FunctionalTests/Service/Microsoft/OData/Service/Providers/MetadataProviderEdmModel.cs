@@ -15,10 +15,8 @@ namespace Microsoft.OData.Service.Providers
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -161,7 +159,7 @@ namespace Microsoft.OData.Service.Providers
             Version edmVersion = null;
             if (!MetadataProviderUtils.DataServiceEdmVersionMap.TryGetValue(odataVersion, out edmVersion))
             {
-                this.SetEdmVersion(Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest);
+                this.SetEdmVersion(EdmConstants.EdmVersionLatest);
             }
             else
             {
@@ -169,7 +167,7 @@ namespace Microsoft.OData.Service.Providers
             }
 
             // Initialize the minimum Edm Metadata Version to 4.0.
-            this.MinMetadataEdmSchemaVersion = Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4;
+            this.MinMetadataEdmSchemaVersion = EdmConstants.EdmVersion4;
 
             this.AnnotationsCache = new VocabularyAnnotationCache(this);
         }

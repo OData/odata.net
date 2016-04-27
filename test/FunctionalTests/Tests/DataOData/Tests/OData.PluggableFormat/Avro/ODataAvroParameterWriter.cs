@@ -14,7 +14,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using Microsoft.Hadoop.Avro.Schema;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     class ODataAvroParameterWriter : ODataParameterWriter
     {

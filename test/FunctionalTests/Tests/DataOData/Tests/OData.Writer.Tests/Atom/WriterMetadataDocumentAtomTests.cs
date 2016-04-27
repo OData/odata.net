@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Atom
 {
     using System.Linq;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Common;

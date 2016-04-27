@@ -51,7 +51,7 @@ namespace EdmLibTests.VocabularyStubs
 
         public Microsoft.OData.Edm.IEdmTypeReference Type
         {
-            get { return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetString(false); }
+            get { return Microsoft.OData.Edm.EdmCoreModel.Instance.GetString(false); }
         }
     }
 }

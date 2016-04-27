@@ -10,7 +10,6 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Globalization;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;

@@ -13,10 +13,9 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -249,7 +248,7 @@ namespace EdmLibTests.FunctionalTests
             {
                 { "([. Nullable=False])", EdmErrorCode.ReferencedTypeMustHaveValidName },
                 { "(Foo.Quip)", EdmErrorCode.ReferencedTypeMustHaveValidName },
-                { "(Microsoft.OData.Edm.Library.EdmEntitySet)", EdmErrorCode.ReferencedTypeMustHaveValidName },
+                { "(Microsoft.OData.Edm.EdmEntitySet)", EdmErrorCode.ReferencedTypeMustHaveValidName },
             };
 
             this.CompareErrors(errors, expectedErrors);

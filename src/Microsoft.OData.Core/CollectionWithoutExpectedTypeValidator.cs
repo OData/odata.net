@@ -9,7 +9,6 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 

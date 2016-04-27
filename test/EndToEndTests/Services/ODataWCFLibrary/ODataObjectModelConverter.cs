@@ -17,7 +17,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     /// <summary>
@@ -282,7 +281,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     }
                     return new ODataCollectionValue() { TypeName = genericTypeName, Items = tmp };
                 }
-                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial") && !t.Namespace.StartsWith("Microsoft.OData.Edm.Library"))
+                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial") && !t.Namespace.StartsWith("Microsoft.OData.Edm"))
                 {
                     if (t.IsEnum == true)
                     {

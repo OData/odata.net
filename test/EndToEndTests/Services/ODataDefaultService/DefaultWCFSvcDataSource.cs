@@ -11,7 +11,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

@@ -12,7 +12,6 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
     using System.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Contracts;

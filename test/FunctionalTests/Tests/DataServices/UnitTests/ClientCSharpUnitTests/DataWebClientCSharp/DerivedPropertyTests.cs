@@ -9,7 +9,6 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Edm;
     using System.IO;

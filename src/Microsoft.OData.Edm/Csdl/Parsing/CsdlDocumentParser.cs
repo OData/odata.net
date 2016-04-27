@@ -936,7 +936,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private CsdlNamedTypeReference ParseNamedTypeReference(string typeName, bool isNullable, CsdlLocation parentLocation)
         {
-            var edm = Microsoft.OData.Edm.Library.EdmCoreModel.Instance;
+            var edm = Microsoft.OData.Edm.EdmCoreModel.Instance;
             EdmPrimitiveTypeKind kind = edm.GetPrimitiveTypeKind(typeName);
             switch (kind)
             {

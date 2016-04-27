@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.OData;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

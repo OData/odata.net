@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace EdmLibTests.FunctionalUtilities
 {

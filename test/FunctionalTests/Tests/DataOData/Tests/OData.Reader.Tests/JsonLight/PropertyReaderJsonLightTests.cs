@@ -7,17 +7,15 @@
 namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 {
     #region Namespaces
+
     using System;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.Spatial;
-    using Microsoft.OData.Edm;
     using Microsoft.OData;
+    using Microsoft.OData.Edm;
+    using Microsoft.Spatial;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
@@ -25,8 +23,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.OData.JsonLight;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Library;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
+
     #endregion Namespaces
 
     /// <summary>

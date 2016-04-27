@@ -14,7 +14,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
 
 
     #endregion Namespaces

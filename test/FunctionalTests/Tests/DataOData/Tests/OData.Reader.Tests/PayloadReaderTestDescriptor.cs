@@ -15,7 +15,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Xml.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
@@ -754,7 +753,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 List<StringBuilder> stringBuilders = new List<StringBuilder>();
                 List<XmlWriter> xmlWriters = new List<XmlWriter>();
                 IEnumerable<EdmError> errors;
-                this.PayloadEdmModel.SetEdmVersion(Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest);
+                this.PayloadEdmModel.SetEdmVersion(Microsoft.OData.Edm.EdmConstants.EdmVersionLatest);
                 this.PayloadEdmModel.TryWriteCsdl(
                     s =>
                     {

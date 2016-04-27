@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.Edm.Vocabularies
 {

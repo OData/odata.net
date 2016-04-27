@@ -13,7 +13,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.IO;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.Types;

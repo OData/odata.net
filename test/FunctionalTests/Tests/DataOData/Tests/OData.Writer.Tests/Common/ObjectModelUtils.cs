@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     using System.Collections.Generic;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.OData.Common;

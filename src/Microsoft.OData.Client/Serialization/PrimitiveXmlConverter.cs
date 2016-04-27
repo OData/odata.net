@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Reflection;
     using System.Xml;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 
     /// <summary>

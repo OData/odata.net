@@ -18,7 +18,6 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData;
     using Microsoft.OData.Tests;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     #endregion Namespaces

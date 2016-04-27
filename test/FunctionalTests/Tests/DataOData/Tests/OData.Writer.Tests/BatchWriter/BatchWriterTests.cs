@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;

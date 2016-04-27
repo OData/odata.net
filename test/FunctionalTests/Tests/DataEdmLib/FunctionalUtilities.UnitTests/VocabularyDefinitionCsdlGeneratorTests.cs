@@ -10,7 +10,7 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
     using System.Xml.Linq;
     using EdmLibTests.StubEdm;
     using EdmLibTests.VocabularyStubs;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;

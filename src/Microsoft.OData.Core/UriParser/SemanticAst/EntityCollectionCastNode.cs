@@ -4,15 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.UriParser
-{
-    #region Namespaces
-
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm;
-
-    #endregion Namespaces
-
+{  
     /// <summary>
     /// Node representing a type segment that casts an entity collection node.
     /// </summary>

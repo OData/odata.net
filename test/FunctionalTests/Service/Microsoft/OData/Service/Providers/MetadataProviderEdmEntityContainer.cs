@@ -13,7 +13,6 @@ namespace Microsoft.OData.Service.Providers
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>

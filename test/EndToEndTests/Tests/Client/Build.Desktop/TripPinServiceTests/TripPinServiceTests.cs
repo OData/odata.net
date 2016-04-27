@@ -13,7 +13,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System.Text;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

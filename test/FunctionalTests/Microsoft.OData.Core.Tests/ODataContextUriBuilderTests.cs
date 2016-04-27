@@ -11,7 +11,7 @@ using FluentAssertions;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
 using Xunit.Sdk;

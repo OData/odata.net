@@ -11,9 +11,7 @@ namespace EdmLibTests.StubEdm
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of the EdmModel

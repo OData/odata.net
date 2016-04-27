@@ -14,8 +14,8 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
     using Microsoft.Test.OData.Utils.Metadata;
+    using EdmProperty = System.Data.Metadata.Edm.EdmProperty;
 
     /// <summary>
     /// This factory class creates an IODataMetadataProvider given an Object context and its metadata workspace

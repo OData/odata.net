@@ -15,8 +15,6 @@ namespace EdmLibTests.FunctionalTests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.PrimitiveValueConverters;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT

@@ -8,7 +8,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Provides semantics for CsdlEntitySet.

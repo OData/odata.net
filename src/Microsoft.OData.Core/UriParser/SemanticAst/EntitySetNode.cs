@@ -4,15 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Node representing an entity set.
     /// TODO: This should be deleted but it is used in many, many tests.

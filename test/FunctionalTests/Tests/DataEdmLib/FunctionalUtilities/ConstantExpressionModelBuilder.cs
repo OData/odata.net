@@ -12,8 +12,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
     class ConstantExpressionModelBuilder
     {

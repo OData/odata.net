@@ -7,7 +7,6 @@
 namespace EdmLibTests.VocabularyStubs
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
     using EdmLibTests.StubEdm;
 

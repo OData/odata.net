@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 

@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
 

@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Library;
+using System.Collections.Generic; 
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {

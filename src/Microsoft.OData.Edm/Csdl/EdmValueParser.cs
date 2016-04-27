@@ -4,6 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Microsoft.OData.Edm;
+
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
@@ -18,11 +23,6 @@ namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 {
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using Microsoft.OData.Edm.Library;
-
     /// <summary>
     /// Contains xml parsing methods for Edm.
     /// </summary>

@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

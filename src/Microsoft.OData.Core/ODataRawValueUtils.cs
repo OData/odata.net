@@ -11,7 +11,6 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>

@@ -12,7 +12,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;

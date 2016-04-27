@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System.Linq;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;

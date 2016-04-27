@@ -580,6 +580,63 @@ public enum Microsoft.OData.Edm.EdmTypeKind : int {
 	TypeDefinition = 7
 }
 
+public struct Microsoft.OData.Edm.Date : IComparable, IComparable`1, IEquatable`1 {
+	public static readonly Microsoft.OData.Edm.Date MaxValue = 9999-12-31
+	public static readonly Microsoft.OData.Edm.Date MinValue = 0001-01-01
+
+	public Date (int year, int month, int day)
+
+	int Day  { public get; }
+	int Month  { public get; }
+	Microsoft.OData.Edm.Date Now  { public static get; }
+	int Year  { public get; }
+
+	public Microsoft.OData.Edm.Date AddDays (int value)
+	public Microsoft.OData.Edm.Date AddMonths (int value)
+	public Microsoft.OData.Edm.Date AddYears (int value)
+	public virtual int CompareTo (Microsoft.OData.Edm.Date other)
+	public virtual int CompareTo (object obj)
+	public virtual bool Equals (Microsoft.OData.Edm.Date other)
+	public virtual bool Equals (object obj)
+	public virtual int GetHashCode ()
+	public static Microsoft.OData.Edm.Date Parse (string text)
+	public static Microsoft.OData.Edm.Date Parse (string text, System.IFormatProvider provider)
+	public virtual string ToString ()
+	public static bool TryParse (string text, out Microsoft.OData.Edm.Date& result)
+	public static bool TryParse (string text, System.IFormatProvider provider, out Microsoft.OData.Edm.Date& result)
+}
+
+public struct Microsoft.OData.Edm.TimeOfDay : IComparable, IComparable`1, IEquatable`1 {
+	public static long MaxTickValue = 863999999999
+	public static readonly Microsoft.OData.Edm.TimeOfDay MaxValue = 23:59:59.9999999
+	public static long MinTickValue = 0
+	public static readonly Microsoft.OData.Edm.TimeOfDay MinValue = 00:00:00.0000000
+	public static long TicksPerHour = 36000000000
+	public static long TicksPerMinute = 600000000
+	public static long TicksPerSecond = 10000000
+
+	public TimeOfDay (long ticks)
+	public TimeOfDay (int hour, int minute, int second, int millisecond)
+
+	int Hours  { public get; }
+	long Milliseconds  { public get; }
+	int Minutes  { public get; }
+	Microsoft.OData.Edm.TimeOfDay Now  { public static get; }
+	int Seconds  { public get; }
+	long Ticks  { public get; }
+
+	public virtual int CompareTo (Microsoft.OData.Edm.TimeOfDay other)
+	public virtual int CompareTo (object obj)
+	public virtual bool Equals (Microsoft.OData.Edm.TimeOfDay other)
+	public virtual bool Equals (object obj)
+	public virtual int GetHashCode ()
+	public static Microsoft.OData.Edm.TimeOfDay Parse (string text)
+	public static Microsoft.OData.Edm.TimeOfDay Parse (string text, System.IFormatProvider provider)
+	public virtual string ToString ()
+	public static bool TryParse (string text, out Microsoft.OData.Edm.TimeOfDay& result)
+	public static bool TryParse (string text, System.IFormatProvider provider, out Microsoft.OData.Edm.TimeOfDay& result)
+}
+
 public interface Microsoft.OData.Edm.IEdmAction : IEdmElement, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
 }
 
@@ -696,18 +753,18 @@ public interface Microsoft.OData.Edm.IEdmLocatable {
 
 public interface Microsoft.OData.Edm.IEdmModel : IEdmElement {
 	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public abstract get; }
-	Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public abstract get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public abstract get; }
 	Microsoft.OData.Edm.IEdmEntityContainer EntityContainer  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] ReferencedModels  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public abstract get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public abstract get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public abstract get; }
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
 	Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
 	Microsoft.OData.Edm.IEdmValueTerm FindDeclaredValueTerm (string qualifiedName)
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
 }
 
@@ -851,10 +908,140 @@ public interface Microsoft.OData.Edm.IEdmValueTerm : IEdmElement, IEdmNamedEleme
 public interface Microsoft.OData.Edm.IEdmVocabularyAnnotatable : IEdmElement {
 }
 
+public interface Microsoft.OData.Edm.IPrimitiveValueConverter {
+	object ConvertFromUnderlyingType (object value)
+	object ConvertToUnderlyingType (object value)
+}
+
+public abstract class Microsoft.OData.Edm.EdmElement : IEdmElement {
+	protected EdmElement ()
+}
+
+public abstract class Microsoft.OData.Edm.EdmEntitySetBase : Microsoft.OData.Edm.EdmNavigationSource, IEdmElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource {
+	protected EdmEntitySetBase (string name, Microsoft.OData.Edm.IEdmEntityType elementType)
+
+	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
+}
+
 public abstract class Microsoft.OData.Edm.EdmLocation {
 	protected EdmLocation ()
 
 	public abstract string ToString ()
+}
+
+public abstract class Microsoft.OData.Edm.EdmModelBase : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmModel {
+	protected EdmModelBase (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] referencedModels, Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager annotationsManager)
+
+	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public abstract get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityContainer EntityContainer  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] ReferencedModels  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public abstract get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
+
+	protected void AddReferencedModel (Microsoft.OData.Edm.IEdmModel model)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
+	public virtual Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
+	public virtual Microsoft.OData.Edm.IEdmValueTerm FindDeclaredValueTerm (string qualifiedName)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
+	public abstract System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
+	protected void RegisterElement (Microsoft.OData.Edm.IEdmSchemaElement element)
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public abstract class Microsoft.OData.Edm.EdmNamedElement : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmNamedElement {
+	protected EdmNamedElement (string name)
+
+	string Name  { public virtual get; }
+}
+
+public abstract class Microsoft.OData.Edm.EdmNavigationSource : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmNavigationSource {
+	protected EdmNavigationSource (string name)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]] NavigationPropertyBindings  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression Path  { public abstract get; }
+	Microsoft.OData.Edm.IEdmType Type  { public abstract get; }
+
+	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property, Microsoft.OData.Edm.IEdmNavigationSource target)
+	public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property)
+}
+
+public abstract class Microsoft.OData.Edm.EdmOperation : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
+	protected EdmOperation (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
+	protected EdmOperation (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Vocabularies.IEdmPathExpression entitySetPathExpression)
+
+	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression EntitySetPath  { public virtual get; }
+	bool IsBound  { public virtual get; }
+	string Namespace  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationParameter]] Parameters  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public abstract get; }
+
+	public void AddParameter (Microsoft.OData.Edm.IEdmOperationParameter parameter)
+	public Microsoft.OData.Edm.EdmOperationParameter AddParameter (string name, Microsoft.OData.Edm.IEdmTypeReference type)
+	public virtual Microsoft.OData.Edm.IEdmOperationParameter FindParameter (string name)
+}
+
+public abstract class Microsoft.OData.Edm.EdmOperationImport : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
+	protected EdmOperationImport (Microsoft.OData.Edm.IEdmEntityContainer container, Microsoft.OData.Edm.IEdmOperation operation, string name, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet)
+
+	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
+	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public abstract get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmExpression EntitySet  { public virtual get; }
+	Microsoft.OData.Edm.IEdmOperation Operation  { public virtual get; }
+
+	protected abstract string OperationArgumentNullParameterName ()
+}
+
+public abstract class Microsoft.OData.Edm.EdmProperty : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmProperty, IEdmVocabularyAnnotatable {
+	protected EdmProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type)
+
+	Microsoft.OData.Edm.IEdmStructuredType DeclaringType  { public virtual get; }
+	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
+}
+
+public abstract class Microsoft.OData.Edm.EdmStructuredType : Microsoft.OData.Edm.EdmType, IEdmElement, IEdmStructuredType, IEdmType {
+	protected EdmStructuredType (bool isAbstract, bool isOpen, Microsoft.OData.Edm.IEdmStructuredType baseStructuredType)
+
+	Microsoft.OData.Edm.IEdmStructuredType BaseType  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmProperty]] DeclaredProperties  { public virtual get; }
+	bool IsAbstract  { public virtual get; }
+	bool IsOpen  { public virtual get; }
+	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] PropertiesDictionary  { protected get; }
+
+	public void AddProperty (Microsoft.OData.Edm.IEdmProperty property)
+	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type)
+	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type)
+	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, bool isNullable)
+	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue, Microsoft.OData.Edm.EdmConcurrencyMode concurrencyMode)
+	public virtual Microsoft.OData.Edm.IEdmProperty FindProperty (string name)
+}
+
+public abstract class Microsoft.OData.Edm.EdmType : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmType {
+	protected EdmType ()
+
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public abstract get; }
+
+	public virtual string ToString ()
+}
+
+public abstract class Microsoft.OData.Edm.EdmTypeReference : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmTypeReference {
+	protected EdmTypeReference (Microsoft.OData.Edm.IEdmType definition, bool isNullable)
+
+	Microsoft.OData.Edm.IEdmType Definition  { public virtual get; }
+	bool IsNullable  { public virtual get; }
+
+	public virtual string ToString ()
+}
+
+public sealed class Microsoft.OData.Edm.EdmConstants {
+	public static readonly System.Version EdmVersion4 = 4.0
+	public static readonly System.Version EdmVersionLatest = 4.0
 }
 
 [
@@ -1184,7 +1371,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static void AddAlternateKeyAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
+	public static void AddAlternateKeyAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
 
 	[
 	ExtensionAttribute(),
@@ -1254,7 +1441,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] DirectValueAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmElement element)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] DirectValueAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmElement element)
 
 	[
 	ExtensionAttribute(),
@@ -1374,7 +1561,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
 
 	[
 	ExtensionAttribute(),
@@ -1399,7 +1586,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] FindVocabularyAnnotationsIncludingInheritedAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindVocabularyAnnotationsIncludingInheritedAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
 
 	[
 	ExtensionAttribute(),
@@ -1439,7 +1626,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static object[] GetAnnotationValues (Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding]] annotations)
+	public static object[] GetAnnotationValues (Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 
 	[
 	ExtensionAttribute(),
@@ -1464,102 +1651,102 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.PrimitiveValueConverters.IPrimitiveValueConverter GetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference type)
+	public static Microsoft.OData.Edm.IPrimitiveValueConverter GetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, string qualifier, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, string qualifier, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, string termName, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, string qualifier, Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator expressionEvaluator)
+	public static Microsoft.OData.Edm.Vocabularies.IEdmValue GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, string qualifier, Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator evaluator)
+	public static T GetTermValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator evaluator)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmTypeDefinitionReference GetUInt16 (Microsoft.OData.Edm.Library.EdmModel model, string namespaceName, bool isNullable)
+	public static Microsoft.OData.Edm.IEdmTypeDefinitionReference GetUInt16 (Microsoft.OData.Edm.EdmModel model, string namespaceName, bool isNullable)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmTypeDefinitionReference GetUInt32 (Microsoft.OData.Edm.Library.EdmModel model, string namespaceName, bool isNullable)
+	public static Microsoft.OData.Edm.IEdmTypeDefinitionReference GetUInt32 (Microsoft.OData.Edm.EdmModel model, string namespaceName, bool isNullable)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmTypeDefinitionReference GetUInt64 (Microsoft.OData.Edm.Library.EdmModel model, string namespaceName, bool isNullable)
+	public static Microsoft.OData.Edm.IEdmTypeDefinitionReference GetUInt64 (Microsoft.OData.Edm.EdmModel model, string namespaceName, bool isNullable)
 
 	[
 	ExtensionAttribute(),
@@ -1679,22 +1866,22 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetAnnotationValues (Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding]] annotations)
+	public static void SetAnnotationValues (Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetChangeTrackingAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntityContainer target, bool isSupported)
+	public static void SetChangeTrackingAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityContainer target, bool isSupported)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetChangeTrackingAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, bool isSupported, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] filterableProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] expandableProperties)
+	public static void SetChangeTrackingAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, bool isSupported, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] filterableProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] expandableProperties)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetDescriptionAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, string description)
+	public static void SetDescriptionAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, string description)
 
 	[
 	ExtensionAttribute(),
@@ -1709,23 +1896,23 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetLongDescriptionAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, string description)
+	public static void SetLongDescriptionAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, string description)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetOptimisticConcurrencyAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] properties)
+	public static void SetOptimisticConcurrencyAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] properties)
 
 	[
 	ObsoleteAttribute(),
 	ExtensionAttribute(),
 	]
-	public static void SetOptimisticConcurrencyControlAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] properties)
+	public static void SetOptimisticConcurrencyControlAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] properties)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeDefinitionReference typeDefinition, Microsoft.OData.Edm.PrimitiveValueConverters.IPrimitiveValueConverter converter)
+	public static void SetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeDefinitionReference typeDefinition, Microsoft.OData.Edm.IPrimitiveValueConverter converter)
 
 	[
 	ExtensionAttribute(),
@@ -1810,12 +1997,12 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmValueTerm ValueTerm (Microsoft.OData.Edm.Annotations.IEdmValueAnnotation annotation)
+	public static Microsoft.OData.Edm.IEdmValueTerm ValueTerm (Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation annotation)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] VocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmModel model)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmModel model)
 }
 
 [
@@ -1848,6 +2035,301 @@ public sealed class Microsoft.OData.Edm.ToTraceStringExtensionMethods {
 	public static string ToTraceString (Microsoft.OData.Edm.IEdmTypeReference type)
 }
 
+public class Microsoft.OData.Edm.EdmAction : Microsoft.OData.Edm.EdmOperation, IEdmAction, IEdmElement, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
+	public EdmAction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
+	public EdmAction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Vocabularies.IEdmPathExpression entitySetPathExpression)
+
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmActionImport : Microsoft.OData.Edm.EdmOperationImport, IEdmActionImport, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
+	public EdmActionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmAction action)
+	public EdmActionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmAction action, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySetExpression)
+
+	Microsoft.OData.Edm.IEdmAction Action  { public virtual get; }
+	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
+
+	protected virtual string OperationArgumentNullParameterName ()
+}
+
+public class Microsoft.OData.Edm.EdmBinaryTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmBinaryTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
+	public EdmBinaryTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
+	public EdmBinaryTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength)
+
+	bool IsUnbounded  { public virtual get; }
+	System.Nullable`1[[System.Int32]] MaxLength  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmCollectionType : Microsoft.OData.Edm.EdmType, IEdmCollectionType, IEdmElement, IEdmType {
+	public EdmCollectionType (Microsoft.OData.Edm.IEdmTypeReference elementType)
+
+	Microsoft.OData.Edm.IEdmTypeReference ElementType  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmCollectionTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmCollectionTypeReference, IEdmElement, IEdmTypeReference {
+	public EdmCollectionTypeReference (Microsoft.OData.Edm.IEdmCollectionType collectionType)
+}
+
+public class Microsoft.OData.Edm.EdmComplexType : Microsoft.OData.Edm.EdmStructuredType, IEdmComplexType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmTerm, IEdmType, IEdmVocabularyAnnotatable {
+	public EdmComplexType (string namespaceName, string name)
+	public EdmComplexType (string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType)
+	public EdmComplexType (string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract)
+	public EdmComplexType (string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract, bool isOpen)
+
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTermKind TermKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmComplexTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmComplexTypeReference, IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference {
+	public EdmComplexTypeReference (Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable)
+}
+
+public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmModel, IEdmValidCoreModelElement {
+	public static readonly Microsoft.OData.Edm.EdmCoreModel Instance = Microsoft.OData.Edm.EdmCoreModel
+
+	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityContainer EntityContainer  { public virtual get; }
+	string Namespace  { public static get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] ReferencedModels  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
+
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
+	public virtual Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
+	public virtual Microsoft.OData.Edm.IEdmValueTerm FindDeclaredValueTerm (string qualifiedName)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
+	public System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] FindOperationImportsByNameNonBindingParameterType (string operationImportName, System.Collections.Generic.IEnumerable`1[[System.String]] parameterNames)
+	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isNullable)
+	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetBoolean (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetByte (bool isNullable)
+	public static Microsoft.OData.Edm.IEdmCollectionTypeReference GetCollection (Microsoft.OData.Edm.IEdmTypeReference elementType)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDate (bool isNullable)
+	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDateTimeOffset (bool isNullable)
+	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (bool isNullable)
+	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale, bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDouble (bool isNullable)
+	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDuration (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetGuid (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt16 (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt32 (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt64 (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetPrimitive (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveType GetPrimitiveType (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind)
+	public Microsoft.OData.Edm.EdmPrimitiveTypeKind GetPrimitiveTypeKind (string typeName)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSByte (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSingle (bool isNullable)
+	public Microsoft.OData.Edm.IEdmSpatialTypeReference GetSpatial (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
+	public Microsoft.OData.Edm.IEdmSpatialTypeReference GetSpatial (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] spatialReferenceIdentifier, bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetStream (bool isNullable)
+	public Microsoft.OData.Edm.IEdmStringTypeReference GetString (bool isNullable)
+	public Microsoft.OData.Edm.IEdmStringTypeReference GetString (bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, System.Nullable`1[[System.Boolean]] isUnicode, bool isNullable)
+	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
+	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] precision, bool isNullable)
+	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTimeOfDay (bool isNullable)
+}
+
+public class Microsoft.OData.Edm.EdmDecimalTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmDecimalTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
+	public EdmDecimalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
+	public EdmDecimalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale)
+
+	System.Nullable`1[[System.Int32]] Precision  { public virtual get; }
+	System.Nullable`1[[System.Int32]] Scale  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmEntityContainer : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmEntityContainer, IEdmNamedElement, IEdmSchemaElement, IEdmVocabularyAnnotatable {
+	public EdmEntityContainer (string namespaceName, string name)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEntityContainerElement]] Elements  { public virtual get; }
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+
+	public virtual Microsoft.OData.Edm.EdmActionImport AddActionImport (Microsoft.OData.Edm.IEdmAction action)
+	public virtual Microsoft.OData.Edm.EdmActionImport AddActionImport (string name, Microsoft.OData.Edm.IEdmAction action)
+	public virtual Microsoft.OData.Edm.EdmActionImport AddActionImport (string name, Microsoft.OData.Edm.IEdmAction action, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet)
+	public void AddElement (Microsoft.OData.Edm.IEdmEntityContainerElement element)
+	public virtual Microsoft.OData.Edm.EdmEntitySet AddEntitySet (string name, Microsoft.OData.Edm.IEdmEntityType elementType)
+	public virtual Microsoft.OData.Edm.EdmFunctionImport AddFunctionImport (Microsoft.OData.Edm.IEdmFunction function)
+	public virtual Microsoft.OData.Edm.EdmFunctionImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function)
+	public virtual Microsoft.OData.Edm.EdmFunctionImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet)
+	public virtual Microsoft.OData.Edm.EdmOperationImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet, bool includeInServiceDocument)
+	public virtual Microsoft.OData.Edm.EdmSingleton AddSingleton (string name, Microsoft.OData.Edm.IEdmEntityType entityType)
+	public virtual Microsoft.OData.Edm.IEdmEntitySet FindEntitySet (string setName)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] FindOperationImports (string operationName)
+	public virtual Microsoft.OData.Edm.IEdmSingleton FindSingleton (string singletonName)
+}
+
+public class Microsoft.OData.Edm.EdmEntityReferenceType : Microsoft.OData.Edm.EdmType, IEdmElement, IEdmEntityReferenceType, IEdmType {
+	public EdmEntityReferenceType (Microsoft.OData.Edm.IEdmEntityType entityType)
+
+	Microsoft.OData.Edm.IEdmEntityType EntityType  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmEntityReferenceTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmEntityReferenceTypeReference, IEdmTypeReference {
+	public EdmEntityReferenceTypeReference (Microsoft.OData.Edm.IEdmEntityReferenceType entityReferenceType, bool isNullable)
+
+	Microsoft.OData.Edm.IEdmEntityReferenceType EntityReferenceDefinition  { public get; }
+}
+
+public class Microsoft.OData.Edm.EdmEntitySet : Microsoft.OData.Edm.EdmEntitySetBase, IEdmElement, IEdmEntityContainerElement, IEdmEntitySet, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource, IEdmVocabularyAnnotatable {
+	public EdmEntitySet (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmEntityType elementType)
+
+	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
+	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression Path  { public virtual get; }
+	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmEntityType : Microsoft.OData.Edm.EdmStructuredType, IEdmElement, IEdmEntityType, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmTerm, IEdmType, IEdmVocabularyAnnotatable {
+	public EdmEntityType (string namespaceName, string name)
+	public EdmEntityType (string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType)
+	public EdmEntityType (string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType, bool isAbstract, bool isOpen)
+	public EdmEntityType (string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType, bool isAbstract, bool isOpen, bool hasStream)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] DeclaredKey  { public virtual get; }
+	bool HasStream  { public virtual get; }
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTermKind TermKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+
+	public Microsoft.OData.Edm.EdmNavigationProperty AddBidirectionalNavigation (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo, Microsoft.OData.Edm.EdmNavigationPropertyInfo partnerInfo)
+	public void AddKeys (Microsoft.OData.Edm.IEdmStructuralProperty[] keyProperties)
+	public void AddKeys (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] keyProperties)
+	public Microsoft.OData.Edm.EdmNavigationProperty AddUnidirectionalNavigation (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
+}
+
+public class Microsoft.OData.Edm.EdmEntityTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmEntityTypeReference, IEdmStructuredTypeReference, IEdmTypeReference {
+	public EdmEntityTypeReference (Microsoft.OData.Edm.IEdmEntityType entityType, bool isNullable)
+}
+
+public class Microsoft.OData.Edm.EdmEnumMember : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement, IEdmVocabularyAnnotatable {
+	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
+
+	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmEnumType : Microsoft.OData.Edm.EdmType, IEdmElement, IEdmEnumType, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
+	public EdmEnumType (string namespaceName, string name)
+	public EdmEnumType (string namespaceName, string name, bool isFlags)
+	public EdmEnumType (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind underlyingType, bool isFlags)
+	public EdmEnumType (string namespaceName, string name, Microsoft.OData.Edm.IEdmPrimitiveType underlyingType, bool isFlags)
+
+	bool IsFlags  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEnumMember]] Members  { public virtual get; }
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmPrimitiveType UnderlyingType  { public virtual get; }
+
+	public void AddMember (Microsoft.OData.Edm.IEdmEnumMember member)
+	public Microsoft.OData.Edm.EdmEnumMember AddMember (string name, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
+}
+
+public class Microsoft.OData.Edm.EdmEnumTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmEnumTypeReference, IEdmTypeReference {
+	public EdmEnumTypeReference (Microsoft.OData.Edm.IEdmEnumType enumType, bool isNullable)
+}
+
+public class Microsoft.OData.Edm.EdmFunction : Microsoft.OData.Edm.EdmOperation, IEdmElement, IEdmFunction, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
+	public EdmFunction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
+	public EdmFunction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Vocabularies.IEdmPathExpression entitySetPathExpression, bool isComposable)
+
+	bool IsComposable  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmFunctionImport : Microsoft.OData.Edm.EdmOperationImport, IEdmElement, IEdmEntityContainerElement, IEdmFunctionImport, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
+	public EdmFunctionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmFunction function)
+	public EdmFunctionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySetExpression, bool includeInServiceDocument)
+
+	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmFunction Function  { public virtual get; }
+	bool IncludeInServiceDocument  { public virtual get; }
+
+	protected virtual string OperationArgumentNullParameterName ()
+}
+
+public class Microsoft.OData.Edm.EdmInclude : IEdmInclude {
+	public EdmInclude (string alias, string namespaceIncluded)
+
+	string Alias  { public virtual get; }
+	string Namespace  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmIncludeAnnotations : IEdmIncludeAnnotations {
+	public EdmIncludeAnnotations (string termNamespace, string qualifier, string targetNamespace)
+
+	string Qualifier  { public virtual get; }
+	string TargetNamespace  { public virtual get; }
+	string TermNamespace  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmModel : Microsoft.OData.Edm.EdmModelBase, IEdmElement, IEdmModel {
+	public EdmModel ()
+
+	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
+
+	public void AddElement (Microsoft.OData.Edm.IEdmSchemaElement element)
+	public void AddElements (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] newElements)
+	public void AddReferencedModel (Microsoft.OData.Edm.IEdmModel model)
+	public void AddVocabularyAnnotation (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
+	public void SetVocabularyAnnotation (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation)
+}
+
+public class Microsoft.OData.Edm.EdmNavigationPropertyBinding : IEdmNavigationPropertyBinding {
+	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target)
+
+	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationSource Target  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmOperationParameter : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
+	public EdmOperationParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type)
+
+	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmPrimitiveTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
+	public EdmPrimitiveTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
+}
+
+public class Microsoft.OData.Edm.EdmReference : IEdmElement, IEdmReference {
+	public EdmReference (string uri)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmIncludeAnnotations]] IncludeAnnotations  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmInclude]] Includes  { public virtual get; }
+	string Uri  { public virtual get; }
+
+	public void AddInclude (Microsoft.OData.Edm.IEdmInclude edmInclude)
+	public void AddIncludeAnnotations (Microsoft.OData.Edm.IEdmIncludeAnnotations edmIncludeAnnotations)
+}
+
+public class Microsoft.OData.Edm.EdmReferentialConstraint : IEdmReferentialConstraint {
+	public EdmReferentialConstraint (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair]] propertyPairs)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair]] PropertyPairs  { public virtual get; }
+
+	public static Microsoft.OData.Edm.EdmReferentialConstraint Create (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] dependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] principalProperties)
+}
+
 public class Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair {
 	public EdmReferentialConstraintPropertyPair (Microsoft.OData.Edm.IEdmStructuralProperty dependentProperty, Microsoft.OData.Edm.IEdmStructuralProperty principalProperty)
 
@@ -1855,39 +2337,102 @@ public class Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair {
 	Microsoft.OData.Edm.IEdmStructuralProperty PrincipalProperty  { public get; }
 }
 
-public interface Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation : IEdmElement, IEdmNamedElement {
-	string NamespaceUri  { public abstract get; }
-	object Value  { public abstract get; }
+public class Microsoft.OData.Edm.EdmSingleton : Microsoft.OData.Edm.EdmNavigationSource, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmNavigationSource, IEdmSingleton, IEdmVocabularyAnnotatable {
+	public EdmSingleton (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmEntityType entityType)
+
+	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
+	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression Path  { public virtual get; }
+	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
 }
 
-public interface Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding {
-	Microsoft.OData.Edm.IEdmElement Element  { public abstract get; }
-	string Name  { public abstract get; }
-	string NamespaceUri  { public abstract get; }
-	object Value  { public abstract get; }
+public class Microsoft.OData.Edm.EdmSpatialTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmSpatialTypeReference, IEdmTypeReference {
+	public EdmSpatialTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
+	public EdmSpatialTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] spatialReferenceIdentifier)
+
+	System.Nullable`1[[System.Int32]] SpatialReferenceIdentifier  { public virtual get; }
 }
 
-public interface Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationsManager {
-	object GetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName)
-	object[] GetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding]] annotations)
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] GetDirectValueAnnotations (Microsoft.OData.Edm.IEdmElement element)
-	void SetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName, object value)
-	void SetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding]] annotations)
+public class Microsoft.OData.Edm.EdmStringTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmStringTypeReference, IEdmTypeReference {
+	public EdmStringTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
+	public EdmStringTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, System.Nullable`1[[System.Boolean]] isUnicode)
+
+	bool IsUnbounded  { public virtual get; }
+	System.Nullable`1[[System.Boolean]] IsUnicode  { public virtual get; }
+	System.Nullable`1[[System.Int32]] MaxLength  { public virtual get; }
 }
 
-public interface Microsoft.OData.Edm.Annotations.IEdmPropertyValueBinding : IEdmElement {
-	Microsoft.OData.Edm.IEdmProperty BoundProperty  { public abstract get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public abstract get; }
+public class Microsoft.OData.Edm.EdmStructuralProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmProperty, IEdmStructuralProperty, IEdmVocabularyAnnotatable {
+	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type)
+	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValueString, Microsoft.OData.Edm.EdmConcurrencyMode concurrencyMode)
+
+	Microsoft.OData.Edm.EdmConcurrencyMode ConcurrencyMode  { public virtual get; }
+	string DefaultValueString  { public virtual get; }
+	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
 }
 
-public interface Microsoft.OData.Edm.Annotations.IEdmValueAnnotation : IEdmElement, IEdmVocabularyAnnotation {
-	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public abstract get; }
+public class Microsoft.OData.Edm.EdmTemporalTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTemporalTypeReference, IEdmTypeReference {
+	public EdmTemporalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
+	public EdmTemporalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] precision)
+
+	System.Nullable`1[[System.Int32]] Precision  { public virtual get; }
 }
 
-public interface Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation : IEdmElement {
-	string Qualifier  { public abstract get; }
-	Microsoft.OData.Edm.IEdmVocabularyAnnotatable Target  { public abstract get; }
-	Microsoft.OData.Edm.IEdmTerm Term  { public abstract get; }
+public class Microsoft.OData.Edm.EdmTerm : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmTerm, IEdmValueTerm, IEdmVocabularyAnnotatable {
+	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type)
+	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type)
+	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, string appliesTo)
+	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo)
+	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo, string defaultValue)
+
+	string AppliesTo  { public virtual get; }
+	string DefaultValue  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTermKind TermKind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmTypeDefinition : Microsoft.OData.Edm.EdmType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmTypeDefinition, IEdmVocabularyAnnotatable {
+	public EdmTypeDefinition (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind underlyingType)
+	public EdmTypeDefinition (string namespaceName, string name, Microsoft.OData.Edm.IEdmPrimitiveType underlyingType)
+
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmPrimitiveType UnderlyingType  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmTypeDefinitionReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeDefinitionReference, IEdmTypeReference {
+	public EdmTypeDefinitionReference (Microsoft.OData.Edm.IEdmTypeDefinition typeDefinition, bool isNullable)
+}
+
+public sealed class Microsoft.OData.Edm.EdmNavigationProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmNavigationProperty, IEdmProperty, IEdmVocabularyAnnotatable {
+	bool ContainsTarget  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEntityType DeclaringEntityType  { public get; }
+	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationProperty Partner  { public virtual get; }
+	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmReferentialConstraint ReferentialConstraint  { public virtual get; }
+
+	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationProperty (Microsoft.OData.Edm.IEdmEntityType declaringType, Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
+	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationPropertyWithPartner (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo, Microsoft.OData.Edm.EdmNavigationPropertyInfo partnerInfo)
+	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationPropertyWithPartner (string propertyName, Microsoft.OData.Edm.IEdmTypeReference propertyType, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] dependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] principalProperties, bool containsTarget, Microsoft.OData.Edm.EdmOnDeleteAction onDelete, string partnerPropertyName, Microsoft.OData.Edm.IEdmTypeReference partnerPropertyType, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] partnerDependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] partnerPrincipalProperties, bool partnerContainsTarget, Microsoft.OData.Edm.EdmOnDeleteAction partnerOnDelete)
+}
+
+public sealed class Microsoft.OData.Edm.EdmNavigationPropertyInfo {
+	public EdmNavigationPropertyInfo ()
+
+	bool ContainsTarget  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] DependentProperties  { public get; public set; }
+	string Name  { public get; public set; }
+	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] PrincipalProperties  { public get; public set; }
+	Microsoft.OData.Edm.IEdmEntityType Target  { public get; public set; }
+	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; public set; }
+
+	public Microsoft.OData.Edm.EdmNavigationPropertyInfo Clone ()
 }
 
 public enum Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation : int {
@@ -1948,12 +2493,12 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static string GetSchemaNamespace (Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model)
+	public static string GetSchemaNamespace (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Nullable`1[[Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation]] GetSerializationLocation (Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model)
+	public static System.Nullable`1[[Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation]] GetSerializationLocation (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model)
 
 	[
 	ExtensionAttribute(),
@@ -1993,12 +2538,12 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetSchemaNamespace (Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, string schemaNamespace)
+	public static void SetSchemaNamespace (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, string schemaNamespace)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetSerializationLocation (Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, System.Nullable`1[[Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation]] location)
+	public static void SetSerializationLocation (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, System.Nullable`1[[Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation]] location)
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
@@ -2040,645 +2585,6 @@ public sealed class Microsoft.OData.Edm.Csdl.EdmxReaderSettings {
 
 	System.Func`2[[System.Uri],[System.Xml.XmlReader]] GetReferencedModelReaderFunc  { public get; public set; }
 	bool IgnoreUnexpectedAttributesAndElements  { public get; public set; }
-}
-
-public class Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter {
-	public EdmToClrConverter ()
-	public EdmToClrConverter (Microsoft.OData.Edm.EdmToClrConversion.TryCreateObjectInstance tryCreateObjectInstanceDelegate)
-	public EdmToClrConverter (Microsoft.OData.Edm.EdmToClrConversion.TryCreateObjectInstance tryCreateObjectInstanceDelegate, Microsoft.OData.Edm.EdmToClrConversion.TryGetClrPropertyInfo tryGetClrPropertyInfoDelegate, Microsoft.OData.Edm.EdmToClrConversion.TryGetClrTypeName tryGetClrTypeNameDelegate)
-
-	public T AsClrValue (Microsoft.OData.Edm.Vocabularies.IEdmValue edmValue)
-	public object AsClrValue (Microsoft.OData.Edm.Vocabularies.IEdmValue edmValue, System.Type clrType)
-	public void RegisterConvertedObject (Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue edmValue, object clrObject)
-}
-
-public sealed class Microsoft.OData.Edm.EdmToClrConversion.TryCreateObjectInstance : System.MulticastDelegate, ICloneable, ISerializable {
-	public TryCreateObjectInstance (object object, System.IntPtr method)
-
-	public virtual System.IAsyncResult BeginInvoke (Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue edmValue, System.Type clrType, Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter converter, out System.Object& objectInstance, out System.Boolean& objectInstanceInitialized, System.AsyncCallback callback, object object)
-	public virtual bool EndInvoke (out System.Object& objectInstance, out System.Boolean& objectInstanceInitialized, System.IAsyncResult result)
-	public virtual bool Invoke (Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue edmValue, System.Type clrType, Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter converter, out System.Object& objectInstance, out System.Boolean& objectInstanceInitialized)
-}
-
-public sealed class Microsoft.OData.Edm.EdmToClrConversion.TryGetClrPropertyInfo : System.MulticastDelegate, ICloneable, ISerializable {
-	public TryGetClrPropertyInfo (object object, System.IntPtr method)
-
-	public virtual System.IAsyncResult BeginInvoke (System.Type clrType, string edmName, out System.Reflection.PropertyInfo& propertyInfo, System.AsyncCallback callback, object object)
-	public virtual bool EndInvoke (out System.Reflection.PropertyInfo& propertyInfo, System.IAsyncResult result)
-	public virtual bool Invoke (System.Type clrType, string edmName, out System.Reflection.PropertyInfo& propertyInfo)
-}
-
-public sealed class Microsoft.OData.Edm.EdmToClrConversion.TryGetClrTypeName : System.MulticastDelegate, ICloneable, ISerializable {
-	public TryGetClrTypeName (object object, System.IntPtr method)
-
-	public virtual System.IAsyncResult BeginInvoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName, System.AsyncCallback callback, object object)
-	public virtual bool EndInvoke (out System.String& clrTypeName, System.IAsyncResult result)
-	public virtual bool Invoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName)
-}
-
-public class Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator {
-	public EdmExpressionEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions)
-	public EdmExpressionEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier)
-	public EdmExpressionEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier, System.Func`5[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForType, System.Func`6[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForProperty, Microsoft.OData.Edm.IEdmModel edmModel)
-
-	System.Func`3[[System.String],[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType]] ResolveTypeFromName  { protected get; protected set; }
-
-	public Microsoft.OData.Edm.Vocabularies.IEdmValue Evaluate (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression)
-	public Microsoft.OData.Edm.Vocabularies.IEdmValue Evaluate (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context)
-	public Microsoft.OData.Edm.Vocabularies.IEdmValue Evaluate (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmTypeReference targetType)
-	protected static Microsoft.OData.Edm.IEdmType FindEdmType (string edmTypeName, Microsoft.OData.Edm.IEdmModel edmModel)
-}
-
-public class Microsoft.OData.Edm.Evaluation.EdmToClrEvaluator : Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator {
-	public EdmToClrEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions)
-	public EdmToClrEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier)
-	public EdmToClrEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier, System.Func`5[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForType, System.Func`6[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForProperty, Microsoft.OData.Edm.IEdmModel edmModel)
-
-	Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter EdmToClrConverter  { public get; public set; }
-
-	public T EvaluateToClrValue (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression)
-	public T EvaluateToClrValue (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context)
-	public T EvaluateToClrValue (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmTypeReference targetType)
-}
-
-public struct Microsoft.OData.Edm.Library.Date : IComparable, IComparable`1, IEquatable`1 {
-	public static readonly Microsoft.OData.Edm.Library.Date MaxValue = 9999-12-31
-	public static readonly Microsoft.OData.Edm.Library.Date MinValue = 0001-01-01
-
-	public Date (int year, int month, int day)
-
-	int Day  { public get; }
-	int Month  { public get; }
-	Microsoft.OData.Edm.Library.Date Now  { public static get; }
-	int Year  { public get; }
-
-	public Microsoft.OData.Edm.Library.Date AddDays (int value)
-	public Microsoft.OData.Edm.Library.Date AddMonths (int value)
-	public Microsoft.OData.Edm.Library.Date AddYears (int value)
-	public virtual int CompareTo (Microsoft.OData.Edm.Library.Date other)
-	public virtual int CompareTo (object obj)
-	public virtual bool Equals (Microsoft.OData.Edm.Library.Date other)
-	public virtual bool Equals (object obj)
-	public virtual int GetHashCode ()
-	public static Microsoft.OData.Edm.Library.Date Parse (string text)
-	public static Microsoft.OData.Edm.Library.Date Parse (string text, System.IFormatProvider provider)
-	public virtual string ToString ()
-	public static bool TryParse (string text, out Microsoft.OData.Edm.Library.Date& result)
-	public static bool TryParse (string text, System.IFormatProvider provider, out Microsoft.OData.Edm.Library.Date& result)
-}
-
-public struct Microsoft.OData.Edm.Library.TimeOfDay : IComparable, IComparable`1, IEquatable`1 {
-	public static long MaxTickValue = 863999999999
-	public static readonly Microsoft.OData.Edm.Library.TimeOfDay MaxValue = 23:59:59.9999999
-	public static long MinTickValue = 0
-	public static readonly Microsoft.OData.Edm.Library.TimeOfDay MinValue = 00:00:00.0000000
-	public static long TicksPerHour = 36000000000
-	public static long TicksPerMinute = 600000000
-	public static long TicksPerSecond = 10000000
-
-	public TimeOfDay (long ticks)
-	public TimeOfDay (int hour, int minute, int second, int millisecond)
-
-	int Hours  { public get; }
-	long Milliseconds  { public get; }
-	int Minutes  { public get; }
-	Microsoft.OData.Edm.Library.TimeOfDay Now  { public static get; }
-	int Seconds  { public get; }
-	long Ticks  { public get; }
-
-	public virtual int CompareTo (Microsoft.OData.Edm.Library.TimeOfDay other)
-	public virtual int CompareTo (object obj)
-	public virtual bool Equals (Microsoft.OData.Edm.Library.TimeOfDay other)
-	public virtual bool Equals (object obj)
-	public virtual int GetHashCode ()
-	public static Microsoft.OData.Edm.Library.TimeOfDay Parse (string text)
-	public static Microsoft.OData.Edm.Library.TimeOfDay Parse (string text, System.IFormatProvider provider)
-	public virtual string ToString ()
-	public static bool TryParse (string text, out Microsoft.OData.Edm.Library.TimeOfDay& result)
-	public static bool TryParse (string text, System.IFormatProvider provider, out Microsoft.OData.Edm.Library.TimeOfDay& result)
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmElement : IEdmElement {
-	protected EdmElement ()
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmEntitySetBase : Microsoft.OData.Edm.Library.EdmNavigationSource, IEdmElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource {
-	protected EdmEntitySetBase (string name, Microsoft.OData.Edm.IEdmEntityType elementType)
-
-	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmModelBase : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmModel {
-	protected EdmModelBase (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] referencedModels, Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationsManager annotationsManager)
-
-	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public abstract get; }
-	Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityContainer EntityContainer  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] ReferencedModels  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public abstract get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
-
-	protected void AddReferencedModel (Microsoft.OData.Edm.IEdmModel model)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
-	public virtual Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
-	public virtual Microsoft.OData.Edm.IEdmValueTerm FindDeclaredValueTerm (string qualifiedName)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
-	public abstract System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
-	protected void RegisterElement (Microsoft.OData.Edm.IEdmSchemaElement element)
-}
-
-[
-DebuggerDisplayAttribute(),
-]
-public abstract class Microsoft.OData.Edm.Library.EdmNamedElement : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmNamedElement {
-	protected EdmNamedElement (string name)
-
-	string Name  { public virtual get; }
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmNavigationSource : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmNavigationSource {
-	protected EdmNavigationSource (string name)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]] NavigationPropertyBindings  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression Path  { public abstract get; }
-	Microsoft.OData.Edm.IEdmType Type  { public abstract get; }
-
-	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property, Microsoft.OData.Edm.IEdmNavigationSource target)
-	public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property)
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmOperation : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
-	protected EdmOperation (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
-	protected EdmOperation (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Vocabularies.IEdmPathExpression entitySetPathExpression)
-
-	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression EntitySetPath  { public virtual get; }
-	bool IsBound  { public virtual get; }
-	string Namespace  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationParameter]] Parameters  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public abstract get; }
-
-	public void AddParameter (Microsoft.OData.Edm.IEdmOperationParameter parameter)
-	public Microsoft.OData.Edm.Library.EdmOperationParameter AddParameter (string name, Microsoft.OData.Edm.IEdmTypeReference type)
-	public virtual Microsoft.OData.Edm.IEdmOperationParameter FindParameter (string name)
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmOperationImport : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
-	protected EdmOperationImport (Microsoft.OData.Edm.IEdmEntityContainer container, Microsoft.OData.Edm.IEdmOperation operation, string name, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet)
-
-	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
-	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public abstract get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmExpression EntitySet  { public virtual get; }
-	Microsoft.OData.Edm.IEdmOperation Operation  { public virtual get; }
-
-	protected abstract string OperationArgumentNullParameterName ()
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmProperty : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmProperty, IEdmVocabularyAnnotatable {
-	protected EdmProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type)
-
-	Microsoft.OData.Edm.IEdmStructuredType DeclaringType  { public virtual get; }
-	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public abstract get; }
-	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmStructuredType : Microsoft.OData.Edm.Library.EdmType, IEdmElement, IEdmStructuredType, IEdmType {
-	protected EdmStructuredType (bool isAbstract, bool isOpen, Microsoft.OData.Edm.IEdmStructuredType baseStructuredType)
-
-	Microsoft.OData.Edm.IEdmStructuredType BaseType  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmProperty]] DeclaredProperties  { public virtual get; }
-	bool IsAbstract  { public virtual get; }
-	bool IsOpen  { public virtual get; }
-	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] PropertiesDictionary  { protected get; }
-
-	public void AddProperty (Microsoft.OData.Edm.IEdmProperty property)
-	public Microsoft.OData.Edm.Library.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type)
-	public Microsoft.OData.Edm.Library.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type)
-	public Microsoft.OData.Edm.Library.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, bool isNullable)
-	public Microsoft.OData.Edm.Library.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue, Microsoft.OData.Edm.EdmConcurrencyMode concurrencyMode)
-	public virtual Microsoft.OData.Edm.IEdmProperty FindProperty (string name)
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmType : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmType {
-	protected EdmType ()
-
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public abstract get; }
-
-	public virtual string ToString ()
-}
-
-public abstract class Microsoft.OData.Edm.Library.EdmTypeReference : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmTypeReference {
-	protected EdmTypeReference (Microsoft.OData.Edm.IEdmType definition, bool isNullable)
-
-	Microsoft.OData.Edm.IEdmType Definition  { public virtual get; }
-	bool IsNullable  { public virtual get; }
-
-	public virtual string ToString ()
-}
-
-public sealed class Microsoft.OData.Edm.Library.EdmConstants {
-	public static readonly System.Version EdmVersion4 = 4.0
-	public static readonly System.Version EdmVersionLatest = 4.0
-}
-
-public class Microsoft.OData.Edm.Library.EdmAction : Microsoft.OData.Edm.Library.EdmOperation, IEdmAction, IEdmElement, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
-	public EdmAction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
-	public EdmAction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Vocabularies.IEdmPathExpression entitySetPathExpression)
-
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmActionImport : Microsoft.OData.Edm.Library.EdmOperationImport, IEdmActionImport, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
-	public EdmActionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmAction action)
-	public EdmActionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmAction action, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySetExpression)
-
-	Microsoft.OData.Edm.IEdmAction Action  { public virtual get; }
-	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
-
-	protected virtual string OperationArgumentNullParameterName ()
-}
-
-public class Microsoft.OData.Edm.Library.EdmBinaryTypeReference : Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference, IEdmBinaryTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
-	public EdmBinaryTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
-	public EdmBinaryTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength)
-
-	bool IsUnbounded  { public virtual get; }
-	System.Nullable`1[[System.Int32]] MaxLength  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmCollectionType : Microsoft.OData.Edm.Library.EdmType, IEdmCollectionType, IEdmElement, IEdmType {
-	public EdmCollectionType (Microsoft.OData.Edm.IEdmTypeReference elementType)
-
-	Microsoft.OData.Edm.IEdmTypeReference ElementType  { public virtual get; }
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmCollectionTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmCollectionTypeReference, IEdmElement, IEdmTypeReference {
-	public EdmCollectionTypeReference (Microsoft.OData.Edm.IEdmCollectionType collectionType)
-}
-
-public class Microsoft.OData.Edm.Library.EdmComplexType : Microsoft.OData.Edm.Library.EdmStructuredType, IEdmComplexType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmTerm, IEdmType, IEdmVocabularyAnnotatable {
-	public EdmComplexType (string namespaceName, string name)
-	public EdmComplexType (string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType)
-	public EdmComplexType (string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract)
-	public EdmComplexType (string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract, bool isOpen)
-
-	string Name  { public virtual get; }
-	string Namespace  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTermKind TermKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmComplexTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmComplexTypeReference, IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference {
-	public EdmComplexTypeReference (Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable)
-}
-
-public class Microsoft.OData.Edm.Library.EdmCoreModel : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmModel, IEdmValidCoreModelElement {
-	public static readonly Microsoft.OData.Edm.Library.EdmCoreModel Instance = Microsoft.OData.Edm.Library.EdmCoreModel
-
-	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
-	Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityContainer EntityContainer  { public virtual get; }
-	string Namespace  { public static get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] ReferencedModels  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
-
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
-	public virtual Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
-	public virtual Microsoft.OData.Edm.IEdmValueTerm FindDeclaredValueTerm (string qualifiedName)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
-	public System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] FindOperationImportsByNameNonBindingParameterType (string operationImportName, System.Collections.Generic.IEnumerable`1[[System.String]] parameterNames)
-	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isNullable)
-	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetBoolean (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetByte (bool isNullable)
-	public static Microsoft.OData.Edm.IEdmCollectionTypeReference GetCollection (Microsoft.OData.Edm.IEdmTypeReference elementType)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDate (bool isNullable)
-	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDateTimeOffset (bool isNullable)
-	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (bool isNullable)
-	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale, bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDouble (bool isNullable)
-	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDuration (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetGuid (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt16 (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt32 (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt64 (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetPrimitive (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveType GetPrimitiveType (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind)
-	public Microsoft.OData.Edm.EdmPrimitiveTypeKind GetPrimitiveTypeKind (string typeName)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSByte (bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSingle (bool isNullable)
-	public Microsoft.OData.Edm.IEdmSpatialTypeReference GetSpatial (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
-	public Microsoft.OData.Edm.IEdmSpatialTypeReference GetSpatial (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] spatialReferenceIdentifier, bool isNullable)
-	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetStream (bool isNullable)
-	public Microsoft.OData.Edm.IEdmStringTypeReference GetString (bool isNullable)
-	public Microsoft.OData.Edm.IEdmStringTypeReference GetString (bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, System.Nullable`1[[System.Boolean]] isUnicode, bool isNullable)
-	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
-	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] precision, bool isNullable)
-	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTimeOfDay (bool isNullable)
-}
-
-public class Microsoft.OData.Edm.Library.EdmDecimalTypeReference : Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference, IEdmDecimalTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
-	public EdmDecimalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
-	public EdmDecimalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale)
-
-	System.Nullable`1[[System.Int32]] Precision  { public virtual get; }
-	System.Nullable`1[[System.Int32]] Scale  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmEntityContainer : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmEntityContainer, IEdmNamedElement, IEdmSchemaElement, IEdmVocabularyAnnotatable {
-	public EdmEntityContainer (string namespaceName, string name)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEntityContainerElement]] Elements  { public virtual get; }
-	string Name  { public virtual get; }
-	string Namespace  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-
-	public virtual Microsoft.OData.Edm.Library.EdmActionImport AddActionImport (Microsoft.OData.Edm.IEdmAction action)
-	public virtual Microsoft.OData.Edm.Library.EdmActionImport AddActionImport (string name, Microsoft.OData.Edm.IEdmAction action)
-	public virtual Microsoft.OData.Edm.Library.EdmActionImport AddActionImport (string name, Microsoft.OData.Edm.IEdmAction action, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet)
-	public void AddElement (Microsoft.OData.Edm.IEdmEntityContainerElement element)
-	public virtual Microsoft.OData.Edm.Library.EdmEntitySet AddEntitySet (string name, Microsoft.OData.Edm.IEdmEntityType elementType)
-	public virtual Microsoft.OData.Edm.Library.EdmFunctionImport AddFunctionImport (Microsoft.OData.Edm.IEdmFunction function)
-	public virtual Microsoft.OData.Edm.Library.EdmFunctionImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function)
-	public virtual Microsoft.OData.Edm.Library.EdmFunctionImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet)
-	public virtual Microsoft.OData.Edm.Library.EdmOperationImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySet, bool includeInServiceDocument)
-	public virtual Microsoft.OData.Edm.Library.EdmSingleton AddSingleton (string name, Microsoft.OData.Edm.IEdmEntityType entityType)
-	public virtual Microsoft.OData.Edm.IEdmEntitySet FindEntitySet (string setName)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] FindOperationImports (string operationName)
-	public virtual Microsoft.OData.Edm.IEdmSingleton FindSingleton (string singletonName)
-}
-
-public class Microsoft.OData.Edm.Library.EdmEntityReferenceType : Microsoft.OData.Edm.Library.EdmType, IEdmElement, IEdmEntityReferenceType, IEdmType {
-	public EdmEntityReferenceType (Microsoft.OData.Edm.IEdmEntityType entityType)
-
-	Microsoft.OData.Edm.IEdmEntityType EntityType  { public virtual get; }
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmEntityReferenceTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmElement, IEdmEntityReferenceTypeReference, IEdmTypeReference {
-	public EdmEntityReferenceTypeReference (Microsoft.OData.Edm.IEdmEntityReferenceType entityReferenceType, bool isNullable)
-
-	Microsoft.OData.Edm.IEdmEntityReferenceType EntityReferenceDefinition  { public get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmEntitySet : Microsoft.OData.Edm.Library.EdmEntitySetBase, IEdmElement, IEdmEntityContainerElement, IEdmEntitySet, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource, IEdmVocabularyAnnotatable {
-	public EdmEntitySet (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmEntityType elementType)
-
-	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
-	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression Path  { public virtual get; }
-	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmEntityType : Microsoft.OData.Edm.Library.EdmStructuredType, IEdmElement, IEdmEntityType, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmTerm, IEdmType, IEdmVocabularyAnnotatable {
-	public EdmEntityType (string namespaceName, string name)
-	public EdmEntityType (string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType)
-	public EdmEntityType (string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType, bool isAbstract, bool isOpen)
-	public EdmEntityType (string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType, bool isAbstract, bool isOpen, bool hasStream)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] DeclaredKey  { public virtual get; }
-	bool HasStream  { public virtual get; }
-	string Name  { public virtual get; }
-	string Namespace  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTermKind TermKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
-
-	public Microsoft.OData.Edm.Library.EdmNavigationProperty AddBidirectionalNavigation (Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo propertyInfo, Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo partnerInfo)
-	public void AddKeys (Microsoft.OData.Edm.IEdmStructuralProperty[] keyProperties)
-	public void AddKeys (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] keyProperties)
-	public Microsoft.OData.Edm.Library.EdmNavigationProperty AddUnidirectionalNavigation (Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo propertyInfo)
-}
-
-public class Microsoft.OData.Edm.Library.EdmEntityTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmElement, IEdmEntityTypeReference, IEdmStructuredTypeReference, IEdmTypeReference {
-	public EdmEntityTypeReference (Microsoft.OData.Edm.IEdmEntityType entityType, bool isNullable)
-}
-
-public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement, IEdmVocabularyAnnotatable {
-	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
-
-	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmEnumType : Microsoft.OData.Edm.Library.EdmType, IEdmElement, IEdmEnumType, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
-	public EdmEnumType (string namespaceName, string name)
-	public EdmEnumType (string namespaceName, string name, bool isFlags)
-	public EdmEnumType (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind underlyingType, bool isFlags)
-	public EdmEnumType (string namespaceName, string name, Microsoft.OData.Edm.IEdmPrimitiveType underlyingType, bool isFlags)
-
-	bool IsFlags  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEnumMember]] Members  { public virtual get; }
-	string Name  { public virtual get; }
-	string Namespace  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmPrimitiveType UnderlyingType  { public virtual get; }
-
-	public void AddMember (Microsoft.OData.Edm.IEdmEnumMember member)
-	public Microsoft.OData.Edm.Library.EdmEnumMember AddMember (string name, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
-}
-
-public class Microsoft.OData.Edm.Library.EdmEnumTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmElement, IEdmEnumTypeReference, IEdmTypeReference {
-	public EdmEnumTypeReference (Microsoft.OData.Edm.IEdmEnumType enumType, bool isNullable)
-}
-
-public class Microsoft.OData.Edm.Library.EdmFunction : Microsoft.OData.Edm.Library.EdmOperation, IEdmElement, IEdmFunction, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
-	public EdmFunction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType)
-	public EdmFunction (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.Vocabularies.IEdmPathExpression entitySetPathExpression, bool isComposable)
-
-	bool IsComposable  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmFunctionImport : Microsoft.OData.Edm.Library.EdmOperationImport, IEdmElement, IEdmEntityContainerElement, IEdmFunctionImport, IEdmNamedElement, IEdmOperationImport, IEdmVocabularyAnnotatable {
-	public EdmFunctionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmFunction function)
-	public EdmFunctionImport (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.Vocabularies.IEdmExpression entitySetExpression, bool includeInServiceDocument)
-
-	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmFunction Function  { public virtual get; }
-	bool IncludeInServiceDocument  { public virtual get; }
-
-	protected virtual string OperationArgumentNullParameterName ()
-}
-
-public class Microsoft.OData.Edm.Library.EdmInclude : IEdmInclude {
-	public EdmInclude (string alias, string namespaceIncluded)
-
-	string Alias  { public virtual get; }
-	string Namespace  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmIncludeAnnotations : IEdmIncludeAnnotations {
-	public EdmIncludeAnnotations (string termNamespace, string qualifier, string targetNamespace)
-
-	string Qualifier  { public virtual get; }
-	string TargetNamespace  { public virtual get; }
-	string TermNamespace  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmModel : Microsoft.OData.Edm.Library.EdmModelBase, IEdmElement, IEdmModel {
-	public EdmModel ()
-
-	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElements  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
-
-	public void AddElement (Microsoft.OData.Edm.IEdmSchemaElement element)
-	public void AddElements (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmSchemaElement]] newElements)
-	public void AddReferencedModel (Microsoft.OData.Edm.IEdmModel model)
-	public void AddVocabularyAnnotation (Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation annotation)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.IEdmVocabularyAnnotatable element)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
-	public void SetVocabularyAnnotation (Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation annotation)
-}
-
-public class Microsoft.OData.Edm.Library.EdmNavigationPropertyBinding : IEdmNavigationPropertyBinding {
-	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target)
-
-	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationSource Target  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmOperationParameter : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
-	public EdmOperationParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type)
-
-	Microsoft.OData.Edm.IEdmOperation DeclaringOperation  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
-	public EdmPrimitiveTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
-}
-
-public class Microsoft.OData.Edm.Library.EdmReference : IEdmElement, IEdmReference {
-	public EdmReference (string uri)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmIncludeAnnotations]] IncludeAnnotations  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmInclude]] Includes  { public virtual get; }
-	string Uri  { public virtual get; }
-
-	public void AddInclude (Microsoft.OData.Edm.IEdmInclude edmInclude)
-	public void AddIncludeAnnotations (Microsoft.OData.Edm.IEdmIncludeAnnotations edmIncludeAnnotations)
-}
-
-public class Microsoft.OData.Edm.Library.EdmReferentialConstraint : IEdmReferentialConstraint {
-	public EdmReferentialConstraint (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair]] propertyPairs)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.EdmReferentialConstraintPropertyPair]] PropertyPairs  { public virtual get; }
-
-	public static Microsoft.OData.Edm.Library.EdmReferentialConstraint Create (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] dependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] principalProperties)
-}
-
-public class Microsoft.OData.Edm.Library.EdmSingleton : Microsoft.OData.Edm.Library.EdmNavigationSource, IEdmElement, IEdmEntityContainerElement, IEdmNamedElement, IEdmNavigationSource, IEdmSingleton, IEdmVocabularyAnnotatable {
-	public EdmSingleton (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmEntityType entityType)
-
-	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
-	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmPathExpression Path  { public virtual get; }
-	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmSpatialTypeReference : Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmSpatialTypeReference, IEdmTypeReference {
-	public EdmSpatialTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
-	public EdmSpatialTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] spatialReferenceIdentifier)
-
-	System.Nullable`1[[System.Int32]] SpatialReferenceIdentifier  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmStringTypeReference : Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmStringTypeReference, IEdmTypeReference {
-	public EdmStringTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
-	public EdmStringTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, System.Nullable`1[[System.Boolean]] isUnicode)
-
-	bool IsUnbounded  { public virtual get; }
-	System.Nullable`1[[System.Boolean]] IsUnicode  { public virtual get; }
-	System.Nullable`1[[System.Int32]] MaxLength  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmStructuralProperty : Microsoft.OData.Edm.Library.EdmProperty, IEdmElement, IEdmNamedElement, IEdmProperty, IEdmStructuralProperty, IEdmVocabularyAnnotatable {
-	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type)
-	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValueString, Microsoft.OData.Edm.EdmConcurrencyMode concurrencyMode)
-
-	Microsoft.OData.Edm.EdmConcurrencyMode ConcurrencyMode  { public virtual get; }
-	string DefaultValueString  { public virtual get; }
-	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmTemporalTypeReference : Microsoft.OData.Edm.Library.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTemporalTypeReference, IEdmTypeReference {
-	public EdmTemporalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
-	public EdmTemporalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] precision)
-
-	System.Nullable`1[[System.Int32]] Precision  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmTerm : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmTerm, IEdmValueTerm, IEdmVocabularyAnnotatable {
-	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type)
-	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type)
-	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, string appliesTo)
-	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo)
-	public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo, string defaultValue)
-
-	string AppliesTo  { public virtual get; }
-	string DefaultValue  { public virtual get; }
-	string Namespace  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTermKind TermKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmTypeDefinition : Microsoft.OData.Edm.Library.EdmType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmTypeDefinition, IEdmVocabularyAnnotatable {
-	public EdmTypeDefinition (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind underlyingType)
-	public EdmTypeDefinition (string namespaceName, string name, Microsoft.OData.Edm.IEdmPrimitiveType underlyingType)
-
-	string Name  { public virtual get; }
-	string Namespace  { public virtual get; }
-	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
-	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmPrimitiveType UnderlyingType  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.EdmTypeDefinitionReference : Microsoft.OData.Edm.Library.EdmTypeReference, IEdmElement, IEdmTypeDefinitionReference, IEdmTypeReference {
-	public EdmTypeDefinitionReference (Microsoft.OData.Edm.IEdmTypeDefinition typeDefinition, bool isNullable)
-}
-
-public sealed class Microsoft.OData.Edm.Library.EdmNavigationProperty : Microsoft.OData.Edm.Library.EdmProperty, IEdmElement, IEdmNamedElement, IEdmNavigationProperty, IEdmProperty, IEdmVocabularyAnnotatable {
-	bool ContainsTarget  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityType DeclaringEntityType  { public get; }
-	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationProperty Partner  { public virtual get; }
-	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmReferentialConstraint ReferentialConstraint  { public virtual get; }
-
-	public static Microsoft.OData.Edm.Library.EdmNavigationProperty CreateNavigationProperty (Microsoft.OData.Edm.IEdmEntityType declaringType, Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo propertyInfo)
-	public static Microsoft.OData.Edm.Library.EdmNavigationProperty CreateNavigationPropertyWithPartner (Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo propertyInfo, Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo partnerInfo)
-	public static Microsoft.OData.Edm.Library.EdmNavigationProperty CreateNavigationPropertyWithPartner (string propertyName, Microsoft.OData.Edm.IEdmTypeReference propertyType, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] dependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] principalProperties, bool containsTarget, Microsoft.OData.Edm.EdmOnDeleteAction onDelete, string partnerPropertyName, Microsoft.OData.Edm.IEdmTypeReference partnerPropertyType, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] partnerDependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] partnerPrincipalProperties, bool partnerContainsTarget, Microsoft.OData.Edm.EdmOnDeleteAction partnerOnDelete)
-}
-
-public sealed class Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo {
-	public EdmNavigationPropertyInfo ()
-
-	bool ContainsTarget  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] DependentProperties  { public get; public set; }
-	string Name  { public get; public set; }
-	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] PrincipalProperties  { public get; public set; }
-	Microsoft.OData.Edm.IEdmEntityType Target  { public get; public set; }
-	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; public set; }
-
-	public Microsoft.OData.Edm.Library.EdmNavigationPropertyInfo Clone ()
-}
-
-public interface Microsoft.OData.Edm.PrimitiveValueConverters.IPrimitiveValueConverter {
-	object ConvertFromUnderlyingType (object value)
-	object ConvertToUnderlyingType (object value)
 }
 
 public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
@@ -2954,7 +2860,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationExtensionMethods {
 }
 
 public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmValueAnnotation]] AnnotationInaccessibleTerm = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmValueAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation]] AnnotationInaccessibleTerm = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmBinaryTypeReference]] BinaryTypeReferenceBinaryMaxLengthNegative = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmBinaryTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmBinaryTypeReference]] BinaryTypeReferenceBinaryUnboundedNotValidForMaxLength = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmBinaryTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] BoundOperationMustHaveParameters = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
@@ -2964,7 +2870,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmComplexType]] ComplexTypeMustContainProperties = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmComplexType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmDecimalTypeReference]] DecimalTypeReferencePrecisionOutOfRange = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmDecimalTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmDecimalTypeReference]] DecimalTypeReferenceScaleOutOfRange = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmDecimalTypeReference]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] DirectValueAnnotationHasXmlSerializableName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] DirectValueAnnotationHasXmlSerializableName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmElement]] ElementDirectValueAnnotationFullNameMustBeUnique = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmElement]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityContainer]] EntityContainerDuplicateEntityContainerMemberName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityContainer]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityContainerElement]] EntityContainerElementMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityContainerElement]
@@ -2984,8 +2890,8 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunctionImport]] FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunctionImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunction]] FunctionMustHaveReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunction]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmIfExpression]] IfExpressionAssertCorrectTestType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmIfExpression]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] ImmediateValueAnnotationElementAnnotationHasNameAndNamespace = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] ImmediateValueAnnotationElementAnnotationIsValid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] ImmediateValueAnnotationElementAnnotationHasNameAndNamespace = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] ImmediateValueAnnotationElementAnnotationIsValid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmModel]] ModelBoundFunctionOverloadsMustHaveSameReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmModel]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmModel]] ModelDuplicateEntityContainerName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmModel]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmModel]] ModelDuplicateSchemaElementName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmModel]
@@ -3022,7 +2928,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmPrimitiveType]] PrimitiveTypeMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmPrimitiveType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue]] PrimitiveValueValidForType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmProperty]] PropertyMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmProperty]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmPropertyValueBinding]] PropertyValueBindingValueIsCorrectType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmPropertyValueBinding]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmPropertyValueBinding]] PropertyValueBindingValueIsCorrectType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmPropertyValueBinding]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmRecordExpression]] RecordExpressionPropertiesMatchType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmRecordExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElementMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSchemaElement]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElementNamespaceIsNotAllowed = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSchemaElement]
@@ -3044,9 +2950,9 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmType]] TypeMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmTypeReference]] TypeReferenceInaccessibleSchemaType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmModel]] UnBoundFunctionOverloadsMustHaveIdenticalReturnTypes = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmModel]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmValueAnnotation]] ValueAnnotationAssertCorrectExpressionType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmValueAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation]] ValueAnnotationAssertCorrectExpressionType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmVocabularyAnnotatable]] VocabularyAnnotatableNoDuplicateAnnotations = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmVocabularyAnnotatable]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]] VocabularyAnnotationInaccessibleTarget = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Annotations.IEdmVocabularyAnnotation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotationInaccessibleTarget = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]
 }
 
 public class Microsoft.OData.Edm.Validation.EdmError {
@@ -3182,7 +3088,7 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmDateTimeOffsetValue : IEdm
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmDateValue : IEdmElement, IEdmPrimitiveValue, IEdmValue {
-	Microsoft.OData.Edm.Library.Date Value  { public abstract get; }
+	Microsoft.OData.Edm.Date Value  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmDecimalConstantExpression : IEdmElement, IEdmDecimalValue, IEdmExpression, IEdmPrimitiveValue, IEdmValue {
@@ -3194,6 +3100,26 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmDecimalValue : IEdmElement
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmDelayedValue {
 	Microsoft.OData.Edm.Vocabularies.IEdmValue Value  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation : IEdmElement, IEdmNamedElement {
+	string NamespaceUri  { public abstract get; }
+	object Value  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding {
+	Microsoft.OData.Edm.IEdmElement Element  { public abstract get; }
+	string Name  { public abstract get; }
+	string NamespaceUri  { public abstract get; }
+	object Value  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationsManager {
+	object GetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName)
+	object[] GetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetDirectValueAnnotations (Microsoft.OData.Edm.IEdmElement element)
+	void SetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName, object value)
+	void SetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmDurationConstantExpression : IEdmElement, IEdmDurationValue, IEdmExpression, IEdmPrimitiveValue, IEdmValue {
@@ -3298,6 +3224,11 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmPropertyValue : IEdmDelaye
 	string Name  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.Vocabularies.IEdmPropertyValueBinding : IEdmElement {
+	Microsoft.OData.Edm.IEdmProperty BoundProperty  { public abstract get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.Vocabularies.IEdmRecordExpression : IEdmElement, IEdmExpression {
 	Microsoft.OData.Edm.IEdmStructuredTypeReference DeclaredType  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmPropertyConstructor]] Properties  { public abstract get; }
@@ -3320,7 +3251,7 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayConstantExpressio
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayValue : IEdmElement, IEdmPrimitiveValue, IEdmValue {
-	Microsoft.OData.Edm.Library.TimeOfDay Value  { public abstract get; }
+	Microsoft.OData.Edm.TimeOfDay Value  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmValue : IEdmElement {
@@ -3328,10 +3259,20 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmValue : IEdmElement {
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation : IEdmElement, IEdmVocabularyAnnotation {
+	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.Vocabularies.IEdmValueTermReferenceExpression : IEdmElement, IEdmExpression {
 	Microsoft.OData.Edm.Vocabularies.IEdmExpression Base  { public abstract get; }
 	string Qualifier  { public abstract get; }
 	Microsoft.OData.Edm.IEdmValueTerm Term  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation : IEdmElement {
+	string Qualifier  { public abstract get; }
+	Microsoft.OData.Edm.IEdmVocabularyAnnotatable Target  { public abstract get; }
+	Microsoft.OData.Edm.IEdmTerm Term  { public abstract get; }
 }
 
 public abstract class Microsoft.OData.Edm.Vocabularies.EdmValue : IEdmElement, IEdmDelayedValue, IEdmValue {
@@ -3341,7 +3282,22 @@ public abstract class Microsoft.OData.Edm.Vocabularies.EdmValue : IEdmElement, I
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public abstract get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmApplyExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmApplyExpression, IEdmExpression {
+public abstract class Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmVocabularyAnnotation {
+	protected EdmVocabularyAnnotation (Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier)
+
+	string Qualifier  { public virtual get; }
+	Microsoft.OData.Edm.IEdmVocabularyAnnotatable Target  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTerm Term  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmAnnotation : Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation, IEdmElement, IEdmValueAnnotation, IEdmVocabularyAnnotation {
+	public EdmAnnotation (Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
+	public EdmAnnotation (Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
+
+	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmApplyExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmApplyExpression, IEdmExpression {
 	public EdmApplyExpression (Microsoft.OData.Edm.IEdmOperation appliedOperation, Microsoft.OData.Edm.Vocabularies.IEdmExpression[] arguments)
 	public EdmApplyExpression (Microsoft.OData.Edm.IEdmOperation appliedOperation, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] arguments)
 	public EdmApplyExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression appliedOperation, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] arguments)
@@ -3369,7 +3325,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmBooleanConstant : Microsoft.ODa
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmCastExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmCastExpression, IEdmExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmCastExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmCastExpression, IEdmExpression {
 	public EdmCastExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression operand, Microsoft.OData.Edm.IEdmTypeReference type)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
@@ -3377,7 +3333,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmCastExpression : Microsoft.ODat
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmCollectionExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmCollectionExpression, IEdmExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmCollectionExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmCollectionExpression, IEdmExpression {
 	public EdmCollectionExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression[] elements)
 	public EdmCollectionExpression (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] elements)
 	public EdmCollectionExpression (Microsoft.OData.Edm.IEdmTypeReference declaredType, Microsoft.OData.Edm.Vocabularies.IEdmExpression[] elements)
@@ -3396,11 +3352,11 @@ public class Microsoft.OData.Edm.Vocabularies.EdmCollectionValue : Microsoft.ODa
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmDateConstant : Microsoft.OData.Edm.Vocabularies.EdmValue, IEdmElement, IEdmDateConstantExpression, IEdmDateValue, IEdmDelayedValue, IEdmExpression, IEdmPrimitiveValue, IEdmValue {
-	public EdmDateConstant (Microsoft.OData.Edm.Library.Date value)
-	public EdmDateConstant (Microsoft.OData.Edm.IEdmPrimitiveTypeReference type, Microsoft.OData.Edm.Library.Date value)
+	public EdmDateConstant (Microsoft.OData.Edm.Date value)
+	public EdmDateConstant (Microsoft.OData.Edm.IEdmPrimitiveTypeReference type, Microsoft.OData.Edm.Date value)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.Library.Date Value  { public virtual get; }
+	Microsoft.OData.Edm.Date Value  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
@@ -3422,6 +3378,34 @@ public class Microsoft.OData.Edm.Vocabularies.EdmDecimalConstant : Microsoft.ODa
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
+public class Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotation : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmDirectValueAnnotation {
+	public EdmDirectValueAnnotation (string namespaceUri, string name, object value)
+
+	string NamespaceUri  { public virtual get; }
+	object Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationBinding : IEdmDirectValueAnnotationBinding {
+	public EdmDirectValueAnnotationBinding (Microsoft.OData.Edm.IEdmElement element, string namespaceUri, string name)
+	public EdmDirectValueAnnotationBinding (Microsoft.OData.Edm.IEdmElement element, string namespaceUri, string name, object value)
+
+	Microsoft.OData.Edm.IEdmElement Element  { public virtual get; }
+	string Name  { public virtual get; }
+	string NamespaceUri  { public virtual get; }
+	object Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationsManager : IEdmDirectValueAnnotationsManager {
+	public EdmDirectValueAnnotationsManager ()
+
+	public virtual object GetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName)
+	public virtual object[] GetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
+	protected virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetAttachedAnnotations (Microsoft.OData.Edm.IEdmElement element)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetDirectValueAnnotations (Microsoft.OData.Edm.IEdmElement element)
+	public virtual void SetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName, object value)
+	public virtual void SetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
+}
+
 public class Microsoft.OData.Edm.Vocabularies.EdmDurationConstant : Microsoft.OData.Edm.Vocabularies.EdmValue, IEdmElement, IEdmDelayedValue, IEdmDurationConstantExpression, IEdmDurationValue, IEdmExpression, IEdmPrimitiveValue, IEdmValue {
 	public EdmDurationConstant (System.TimeSpan value)
 	public EdmDurationConstant (Microsoft.OData.Edm.IEdmTemporalTypeReference type, System.TimeSpan value)
@@ -3431,21 +3415,21 @@ public class Microsoft.OData.Edm.Vocabularies.EdmDurationConstant : Microsoft.OD
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmEntitySetReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmEntitySetReferenceExpression, IEdmExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmEntitySetReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmEntitySetReferenceExpression, IEdmExpression {
 	public EdmEntitySetReferenceExpression (Microsoft.OData.Edm.IEdmEntitySet referencedEntitySet)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
 	Microsoft.OData.Edm.IEdmEntitySet ReferencedEntitySet  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmEnumMemberExpression, IEdmExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmEnumMemberExpression, IEdmExpression {
 	public EdmEnumMemberExpression (Microsoft.OData.Edm.IEdmEnumMember[] enumMembers)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMembers  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmEnumMemberReferenceExpression, IEdmExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmEnumMemberReferenceExpression, IEdmExpression {
 	public EdmEnumMemberReferenceExpression (Microsoft.OData.Edm.IEdmEnumMember referencedEnumMember)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
@@ -3458,6 +3442,19 @@ public class Microsoft.OData.Edm.Vocabularies.EdmEnumValue : Microsoft.OData.Edm
 
 	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator {
+	public EdmExpressionEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions)
+	public EdmExpressionEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier)
+	public EdmExpressionEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier, System.Func`5[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForType, System.Func`6[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForProperty, Microsoft.OData.Edm.IEdmModel edmModel)
+
+	System.Func`3[[System.String],[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType]] ResolveTypeFromName  { protected get; protected set; }
+
+	public Microsoft.OData.Edm.Vocabularies.IEdmValue Evaluate (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression)
+	public Microsoft.OData.Edm.Vocabularies.IEdmValue Evaluate (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context)
+	public Microsoft.OData.Edm.Vocabularies.IEdmValue Evaluate (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmTypeReference targetType)
+	protected static Microsoft.OData.Edm.IEdmType FindEdmType (string edmTypeName, Microsoft.OData.Edm.IEdmModel edmModel)
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmFloatingConstant : Microsoft.OData.Edm.Vocabularies.EdmValue, IEdmElement, IEdmDelayedValue, IEdmExpression, IEdmFloatingConstantExpression, IEdmFloatingValue, IEdmPrimitiveValue, IEdmValue {
@@ -3478,7 +3475,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmGuidConstant : Microsoft.OData.
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmIfExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmIfExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmIfExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmIfExpression {
 	public EdmIfExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression testExpression, Microsoft.OData.Edm.Vocabularies.IEdmExpression trueExpression, Microsoft.OData.Edm.Vocabularies.IEdmExpression falseExpression)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
@@ -3496,7 +3493,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmIntegerConstant : Microsoft.ODa
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmIsTypeExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmIsTypeExpression {
 	public EdmIsTypeExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression operand, Microsoft.OData.Edm.IEdmTypeReference type)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
@@ -3504,7 +3501,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression : Microsoft.OD
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmLabeledExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmNamedElement, IEdmExpression, IEdmLabeledExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmLabeledExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmNamedElement, IEdmExpression, IEdmLabeledExpression {
 	public EdmLabeledExpression (string name, Microsoft.OData.Edm.Vocabularies.IEdmExpression expression)
 
 	Microsoft.OData.Edm.Vocabularies.IEdmExpression Expression  { public virtual get; }
@@ -3512,7 +3509,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmLabeledExpression : Microsoft.O
 	string Name  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmLabeledExpressionReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmLabeledExpressionReferenceExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmLabeledExpressionReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmLabeledExpressionReferenceExpression {
 	public EdmLabeledExpressionReferenceExpression ()
 	public EdmLabeledExpressionReferenceExpression (Microsoft.OData.Edm.Vocabularies.IEdmLabeledExpression referencedLabeledExpression)
 
@@ -3535,21 +3532,21 @@ public class Microsoft.OData.Edm.Vocabularies.EdmNullExpression : Microsoft.ODat
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmOperationReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmOperationReferenceExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmOperationReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmOperationReferenceExpression {
 	public EdmOperationReferenceExpression (Microsoft.OData.Edm.IEdmOperation referencedOperation)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
 	Microsoft.OData.Edm.IEdmOperation ReferencedOperation  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmParameterReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmParameterReferenceExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmParameterReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmParameterReferenceExpression {
 	public EdmParameterReferenceExpression (Microsoft.OData.Edm.IEdmOperationParameter referencedParameter)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
 	Microsoft.OData.Edm.IEdmOperationParameter ReferencedParameter  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmPathExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmPathExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmPathExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmPathExpression {
 	public EdmPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] path)
 	public EdmPathExpression (string path)
 	public EdmPathExpression (string[] path)
@@ -3558,7 +3555,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmPathExpression : Microsoft.ODat
 	System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmPropertyConstructor : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmPropertyConstructor {
+public class Microsoft.OData.Edm.Vocabularies.EdmPropertyConstructor : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmPropertyConstructor {
 	public EdmPropertyConstructor (string name, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
 
 	string Name  { public virtual get; }
@@ -3573,7 +3570,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmPropertyPathExpression : Micros
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmPropertyReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmPropertyReferenceExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmPropertyReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmPropertyReferenceExpression {
 	public EdmPropertyReferenceExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression baseExpression, Microsoft.OData.Edm.IEdmProperty referencedProperty)
 
 	Microsoft.OData.Edm.Vocabularies.IEdmExpression Base  { public virtual get; }
@@ -3589,7 +3586,14 @@ public class Microsoft.OData.Edm.Vocabularies.EdmPropertyValue : IEdmDelayedValu
 	Microsoft.OData.Edm.Vocabularies.IEdmValue Value  { public virtual get; public set; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmRecordExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmRecordExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmPropertyValueBinding : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmPropertyValueBinding {
+	public EdmPropertyValueBinding (Microsoft.OData.Edm.IEdmProperty boundProperty, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
+
+	Microsoft.OData.Edm.IEdmProperty BoundProperty  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmRecordExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmRecordExpression {
 	public EdmRecordExpression (Microsoft.OData.Edm.Vocabularies.IEdmPropertyConstructor[] properties)
 	public EdmRecordExpression (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmPropertyConstructor]] properties)
 	public EdmRecordExpression (Microsoft.OData.Edm.IEdmStructuredTypeReference declaredType, Microsoft.OData.Edm.Vocabularies.IEdmPropertyConstructor[] properties)
@@ -3619,15 +3623,45 @@ public class Microsoft.OData.Edm.Vocabularies.EdmStructuredValue : Microsoft.ODa
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant : Microsoft.OData.Edm.Vocabularies.EdmValue, IEdmElement, IEdmDelayedValue, IEdmExpression, IEdmPrimitiveValue, IEdmTimeOfDayConstantExpression, IEdmTimeOfDayValue, IEdmValue {
-	public EdmTimeOfDayConstant (Microsoft.OData.Edm.Library.TimeOfDay value)
-	public EdmTimeOfDayConstant (Microsoft.OData.Edm.IEdmTemporalTypeReference type, Microsoft.OData.Edm.Library.TimeOfDay value)
+	public EdmTimeOfDayConstant (Microsoft.OData.Edm.TimeOfDay value)
+	public EdmTimeOfDayConstant (Microsoft.OData.Edm.IEdmTemporalTypeReference type, Microsoft.OData.Edm.TimeOfDay value)
 
 	Microsoft.OData.Edm.Vocabularies.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.Library.TimeOfDay Value  { public virtual get; }
+	Microsoft.OData.Edm.TimeOfDay Value  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public class Microsoft.OData.Edm.Vocabularies.EdmValueTermReferenceExpression : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmExpression, IEdmValueTermReferenceExpression {
+public class Microsoft.OData.Edm.Vocabularies.EdmToClrConverter {
+	public EdmToClrConverter ()
+	public EdmToClrConverter (Microsoft.OData.Edm.Vocabularies.TryCreateObjectInstance tryCreateObjectInstanceDelegate)
+	public EdmToClrConverter (Microsoft.OData.Edm.Vocabularies.TryCreateObjectInstance tryCreateObjectInstanceDelegate, Microsoft.OData.Edm.Vocabularies.TryGetClrPropertyInfo tryGetClrPropertyInfoDelegate, Microsoft.OData.Edm.Vocabularies.TryGetClrTypeName tryGetClrTypeNameDelegate)
+
+	public T AsClrValue (Microsoft.OData.Edm.Vocabularies.IEdmValue edmValue)
+	public object AsClrValue (Microsoft.OData.Edm.Vocabularies.IEdmValue edmValue, System.Type clrType)
+	public void RegisterConvertedObject (Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue edmValue, object clrObject)
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmToClrEvaluator : Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator {
+	public EdmToClrEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions)
+	public EdmToClrEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier)
+	public EdmToClrEvaluator (System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperation],[System.Func`2[[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]]]] builtInFunctions, System.Func`3[[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmValue[]],[Microsoft.OData.Edm.Vocabularies.IEdmValue]] lastChanceOperationApplier, System.Func`5[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForType, System.Func`6[[Microsoft.OData.Edm.IEdmModel],[Microsoft.OData.Edm.IEdmType],[System.String],[System.String],[System.String],[Microsoft.OData.Edm.Vocabularies.IEdmExpression]] getAnnotationExpressionForProperty, Microsoft.OData.Edm.IEdmModel edmModel)
+
+	Microsoft.OData.Edm.Vocabularies.EdmToClrConverter EdmToClrConverter  { public get; public set; }
+
+	public T EvaluateToClrValue (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression)
+	public T EvaluateToClrValue (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context)
+	public T EvaluateToClrValue (Microsoft.OData.Edm.Vocabularies.IEdmExpression expression, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.IEdmTypeReference targetType)
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmTypedDirectValueAnnotationBinding`1 : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmDirectValueAnnotationBinding {
+	public EdmTypedDirectValueAnnotationBinding`1 (Microsoft.OData.Edm.IEdmElement element, T value)
+
+	Microsoft.OData.Edm.IEdmElement Element  { public virtual get; }
+	string NamespaceUri  { public virtual get; }
+	object Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.Vocabularies.EdmValueTermReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmValueTermReferenceExpression {
 	public EdmValueTermReferenceExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression baseExpression, Microsoft.OData.Edm.IEdmValueTerm term)
 	public EdmValueTermReferenceExpression (Microsoft.OData.Edm.Vocabularies.IEdmExpression baseExpression, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier)
 
@@ -3637,62 +3671,28 @@ public class Microsoft.OData.Edm.Vocabularies.EdmValueTermReferenceExpression : 
 	Microsoft.OData.Edm.IEdmValueTerm Term  { public virtual get; }
 }
 
-public abstract class Microsoft.OData.Edm.Library.Annotations.EdmVocabularyAnnotation : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmVocabularyAnnotation {
-	protected EdmVocabularyAnnotation (Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier)
+public sealed class Microsoft.OData.Edm.Vocabularies.TryCreateObjectInstance : System.MulticastDelegate, ICloneable, ISerializable {
+	public TryCreateObjectInstance (object object, System.IntPtr method)
 
-	string Qualifier  { public virtual get; }
-	Microsoft.OData.Edm.IEdmVocabularyAnnotatable Target  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTerm Term  { public virtual get; }
+	public virtual System.IAsyncResult BeginInvoke (Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue edmValue, System.Type clrType, Microsoft.OData.Edm.Vocabularies.EdmToClrConverter converter, out System.Object& objectInstance, out System.Boolean& objectInstanceInitialized, System.AsyncCallback callback, object object)
+	public virtual bool EndInvoke (out System.Object& objectInstance, out System.Boolean& objectInstanceInitialized, System.IAsyncResult result)
+	public virtual bool Invoke (Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue edmValue, System.Type clrType, Microsoft.OData.Edm.Vocabularies.EdmToClrConverter converter, out System.Object& objectInstance, out System.Boolean& objectInstanceInitialized)
 }
 
-public class Microsoft.OData.Edm.Library.Annotations.EdmAnnotation : Microsoft.OData.Edm.Library.Annotations.EdmVocabularyAnnotation, IEdmElement, IEdmValueAnnotation, IEdmVocabularyAnnotation {
-	public EdmAnnotation (Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmValueTerm term, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
-	public EdmAnnotation (Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmValueTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
+public sealed class Microsoft.OData.Edm.Vocabularies.TryGetClrPropertyInfo : System.MulticastDelegate, ICloneable, ISerializable {
+	public TryGetClrPropertyInfo (object object, System.IntPtr method)
 
-	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public virtual get; }
+	public virtual System.IAsyncResult BeginInvoke (System.Type clrType, string edmName, out System.Reflection.PropertyInfo& propertyInfo, System.AsyncCallback callback, object object)
+	public virtual bool EndInvoke (out System.Reflection.PropertyInfo& propertyInfo, System.IAsyncResult result)
+	public virtual bool Invoke (System.Type clrType, string edmName, out System.Reflection.PropertyInfo& propertyInfo)
 }
 
-public class Microsoft.OData.Edm.Library.Annotations.EdmDirectValueAnnotation : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmDirectValueAnnotation {
-	public EdmDirectValueAnnotation (string namespaceUri, string name, object value)
+public sealed class Microsoft.OData.Edm.Vocabularies.TryGetClrTypeName : System.MulticastDelegate, ICloneable, ISerializable {
+	public TryGetClrTypeName (object object, System.IntPtr method)
 
-	string NamespaceUri  { public virtual get; }
-	object Value  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.Annotations.EdmDirectValueAnnotationBinding : IEdmDirectValueAnnotationBinding {
-	public EdmDirectValueAnnotationBinding (Microsoft.OData.Edm.IEdmElement element, string namespaceUri, string name)
-	public EdmDirectValueAnnotationBinding (Microsoft.OData.Edm.IEdmElement element, string namespaceUri, string name, object value)
-
-	Microsoft.OData.Edm.IEdmElement Element  { public virtual get; }
-	string Name  { public virtual get; }
-	string NamespaceUri  { public virtual get; }
-	object Value  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.Annotations.EdmDirectValueAnnotationsManager : IEdmDirectValueAnnotationsManager {
-	public EdmDirectValueAnnotationsManager ()
-
-	public virtual object GetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName)
-	public virtual object[] GetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding]] annotations)
-	protected virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] GetAttachedAnnotations (Microsoft.OData.Edm.IEdmElement element)
-	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation]] GetDirectValueAnnotations (Microsoft.OData.Edm.IEdmElement element)
-	public virtual void SetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName, object value)
-	public virtual void SetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotationBinding]] annotations)
-}
-
-public class Microsoft.OData.Edm.Library.Annotations.EdmPropertyValueBinding : Microsoft.OData.Edm.Library.EdmElement, IEdmElement, IEdmPropertyValueBinding {
-	public EdmPropertyValueBinding (Microsoft.OData.Edm.IEdmProperty boundProperty, Microsoft.OData.Edm.Vocabularies.IEdmExpression value)
-
-	Microsoft.OData.Edm.IEdmProperty BoundProperty  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmExpression Value  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Library.Annotations.EdmTypedDirectValueAnnotationBinding`1 : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmDirectValueAnnotationBinding {
-	public EdmTypedDirectValueAnnotationBinding`1 (Microsoft.OData.Edm.IEdmElement element, T value)
-
-	Microsoft.OData.Edm.IEdmElement Element  { public virtual get; }
-	string NamespaceUri  { public virtual get; }
-	object Value  { public virtual get; }
+	public virtual System.IAsyncResult BeginInvoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName, System.AsyncCallback callback, object object)
+	public virtual bool EndInvoke (out System.String& clrTypeName, System.IAsyncResult result)
+	public virtual bool Invoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName)
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
@@ -6306,7 +6306,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] ExecuteBatchAsync (Microsoft.OData.Client.DataServiceRequest[] queries)
 	internal virtual Microsoft.OData.Edm.IEdmVocabularyAnnotatable GetEdmOperationOrOperationImport (System.Reflection.MethodInfo methodInfo)
 	public Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor (object entity)
-	internal virtual Microsoft.OData.Client.ODataEntityMetadataBuilder GetEntityMetadataBuilder (string entitySetName, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue entityInstance)
+	internal virtual Microsoft.OData.Client.ODataResourceMetadataBuilder GetEntityMetadataBuilder (string entitySetName, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue entityInstance)
 	public Microsoft.OData.Client.LinkDescriptor GetLinkDescriptor (object source, string sourceProperty, object target)
 	public System.Uri GetMetadataUri ()
 	public Microsoft.OData.Client.DataServiceStreamResponse GetReadStream (object entity)

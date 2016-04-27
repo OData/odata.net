@@ -16,7 +16,6 @@ namespace Microsoft.OData.Metadata
     using System.Linq;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 #if ODATA_SERVICE
     using Microsoft.OData.Service;
     using ErrorStrings = Microsoft.OData.Service.Strings;

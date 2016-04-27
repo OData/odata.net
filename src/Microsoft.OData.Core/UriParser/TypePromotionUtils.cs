@@ -14,7 +14,6 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
 

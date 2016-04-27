@@ -7,8 +7,6 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.PrimitiveValueConverters;
     using Microsoft.OData.Edm.Validation;
     using System;
     using System.Collections.Generic;

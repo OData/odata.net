@@ -11,7 +11,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
 
     public class VocabularyModelComparer

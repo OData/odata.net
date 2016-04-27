@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     #region Namespaces
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData;
     using Microsoft.OData.JsonLight;
     using Microsoft.OData.UriParser;

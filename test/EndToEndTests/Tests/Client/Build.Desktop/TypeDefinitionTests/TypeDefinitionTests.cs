@@ -8,8 +8,6 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 {
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.PrimitiveValueConverters;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;

@@ -12,7 +12,6 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Represent a Primitive Type on the client

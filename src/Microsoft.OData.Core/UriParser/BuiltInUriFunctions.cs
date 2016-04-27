@@ -12,7 +12,6 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 

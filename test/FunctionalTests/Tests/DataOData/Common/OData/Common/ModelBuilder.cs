@@ -22,7 +22,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Test.Taupo.OData.Atom;
     using contractsOData = Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>

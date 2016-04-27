@@ -20,7 +20,6 @@ namespace EdmLibTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Framework.Common;
     using Microsoft.Test.OData.Framework.Verification;
@@ -46,7 +45,7 @@ namespace EdmLibTests
     {
         protected Dictionary<EdmVersion, Version> toProductVersionlookup = new Dictionary<EdmVersion, Version>()
         {
-            { EdmVersion.V40, Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4 }
+            { EdmVersion.V40, Microsoft.OData.Edm.EdmConstants.EdmVersion4 }
         };
         
         private EdmVersion v;

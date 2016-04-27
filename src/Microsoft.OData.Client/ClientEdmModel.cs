@@ -21,9 +21,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Client.Providers;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
 
     #endregion Namespaces.

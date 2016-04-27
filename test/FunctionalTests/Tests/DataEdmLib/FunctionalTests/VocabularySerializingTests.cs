@@ -495,10 +495,10 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> actualErrors;
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName },
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName },
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName },
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName }
+                { "(Microsoft.OData.Edm.Vocabularies.EdmAnnotation)", EdmErrorCode.InvalidName },
+                { "(Microsoft.OData.Edm.Vocabularies.EdmAnnotation)", EdmErrorCode.InvalidName },
+                { "(Microsoft.OData.Edm.Vocabularies.EdmAnnotation)", EdmErrorCode.InvalidName },
+                { "(Microsoft.OData.Edm.Vocabularies.EdmAnnotation)", EdmErrorCode.InvalidName }
             };
 
             GetSerializerResult(VocabularyTestModelBuilder.AnnotationWithInvalidTargetModel(EdmVocabularyAnnotationSerializationLocation.OutOfLine), out actualErrors);

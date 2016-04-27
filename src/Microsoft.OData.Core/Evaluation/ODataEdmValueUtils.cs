@@ -4,29 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-<<<<<<< HEAD
-namespace Microsoft.OData.Evaluation
-=======
+using System.Diagnostics;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Evaluation
->>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
+namespace Microsoft.OData.Evaluation
 {
-    #region Namespaces
-
-    using System.Diagnostics;
-    using Microsoft.OData.Edm;
-<<<<<<< HEAD
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-=======
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
->>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
-
-    #endregion Namespaces
-
     /// <summary>
     /// Class with utility methods to deal with EDM values over OData OM instances.
     /// </summary>

@@ -15,7 +15,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
     using Microsoft.OData.Client;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;

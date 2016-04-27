@@ -8,6 +8,10 @@ using System;
 using System.Collections.Generic;
 
 #if ODATA_CLIENT
+using Microsoft.OData.Edm.Vocabularies;
+#endif
+
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Evaluation

@@ -14,7 +14,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -245,7 +244,7 @@ namespace EdmLibTests.FunctionalTests
                 get { return null; }
             }
 
-            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation> AttachedAnnotations
+            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation> AttachedAnnotations
             {
                 get { throw new NotImplementedException(); }
             }
@@ -354,7 +353,7 @@ namespace EdmLibTests.FunctionalTests
                 get { return "MyName"; }
             }
 
-            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation> AttachedAnnotations
+            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation> AttachedAnnotations
             {
                 get { throw new NotImplementedException(); }
             }
@@ -377,7 +376,7 @@ namespace EdmLibTests.FunctionalTests
                 get { return EdmTypeKind.Entity; }
             }
 
-            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation> AttachedAnnotations
+            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation> AttachedAnnotations
             {
                 get { throw new NotImplementedException(); }
             }
@@ -461,7 +460,7 @@ namespace EdmLibTests.FunctionalTests
                 get { return EdmTypeKind.Entity; }
             }
 
-            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation> AttachedAnnotations
+            public System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation> AttachedAnnotations
             {
                 get { throw new NotImplementedException(); }
             }
@@ -493,7 +492,7 @@ namespace EdmLibTests.FunctionalTests
         }
     }
 
-    internal sealed class MutableValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmValueAnnotation
+    internal sealed class MutableValueAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation
     {
         public IEdmExpression Value
         {

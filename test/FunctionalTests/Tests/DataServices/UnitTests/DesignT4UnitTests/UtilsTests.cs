@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OData.Client.Design.T4;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -566,13 +565,13 @@ namespace Microsoft.OData.Service.Design.UnitTests
         [TestMethod]
         public void GetClrTypeNameDateShouldBeGlobalMicrosoftODataEdmLibraryDate()
         {
-            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.Date), template).Should().Be("global::Microsoft.OData.Edm.Library.Date");
+            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.Date), template).Should().Be("global::Microsoft.OData.Edm.Date");
         }
 
         [TestMethod]
         public void GetClrTypeNameTimeOfDayShouldBeGlobalMicrosoftODataEdmLibraryTimeOfDay()
         {
-            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), template).Should().Be("global::Microsoft.OData.Edm.Library.TimeOfDay");
+            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), template).Should().Be("global::Microsoft.OData.Edm.TimeOfDay");
         }
 
         [TestMethod]

@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.UriParser
 {

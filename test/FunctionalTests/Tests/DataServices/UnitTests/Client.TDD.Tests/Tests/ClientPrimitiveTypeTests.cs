@@ -13,7 +13,6 @@ namespace AstoriaUnitTests.Tests
     using System.Xml.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Strings = Microsoft.OData.Client.Strings;
 

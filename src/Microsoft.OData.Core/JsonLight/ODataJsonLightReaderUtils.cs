@@ -11,7 +11,6 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Strings;
     using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces

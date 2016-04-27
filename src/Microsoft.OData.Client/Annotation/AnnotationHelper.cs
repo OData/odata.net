@@ -13,9 +13,6 @@ namespace Microsoft.OData.Client.Annotation
     using System.Runtime.CompilerServices;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.EdmToClrConversion;
-    using Microsoft.OData.Edm.Evaluation;
     using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>

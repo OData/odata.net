@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 

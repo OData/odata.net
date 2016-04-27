@@ -14,9 +14,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -3204,7 +3202,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             public TestEdmAssociatedElement() : this(false) { }
 
-            public IEnumerable<Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation> AttachedAnnotations
+            public IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation> AttachedAnnotations
             {
                 get { return Enumerable.Empty<IEdmDirectValueAnnotation>(); }
             }

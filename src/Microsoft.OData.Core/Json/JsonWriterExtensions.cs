@@ -11,8 +11,8 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using System.Collections.Generic;
     using System.Collections;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Strings;
     using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces

@@ -18,7 +18,6 @@ namespace Microsoft.OData
 #endif
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 

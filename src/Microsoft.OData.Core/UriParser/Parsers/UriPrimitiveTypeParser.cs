@@ -12,7 +12,6 @@ using System.Text;
 using System.Xml;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using ODataErrorStrings = Microsoft.OData.Strings;
 

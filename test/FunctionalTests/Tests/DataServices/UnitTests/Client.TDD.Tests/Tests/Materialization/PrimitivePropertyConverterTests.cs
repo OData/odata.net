@@ -9,7 +9,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client.Materialization;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using System.Xml;
     using System.Xml.Linq;

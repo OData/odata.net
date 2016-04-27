@@ -8,7 +8,6 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>

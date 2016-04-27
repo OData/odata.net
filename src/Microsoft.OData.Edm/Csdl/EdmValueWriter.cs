@@ -4,19 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-<<<<<<< HEAD
 using System;
 using System.Diagnostics;
 using System.Xml;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Values;
-
-#if ODATA_SERVICE
-=======
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 
-#if ASTORIA_SERVER
->>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 #if ODATA_CLIENT
@@ -30,14 +24,6 @@ namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 {
-<<<<<<< HEAD
-=======
-    using System;
-    using System.Diagnostics;
-    using System.Xml;
-    using Microsoft.OData.Edm.Library;
-
->>>>>>> Move Microsoft.OData.Edm.Values and Microsoft.OData.Edm.Library.Values to
     /// <summary>
     /// Contains methods to convert primitive values to their string representation.
     /// </summary>
@@ -209,8 +195,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Converts the Date to a String.
         /// </summary>
-        /// <param name="d">The <see cref="Microsoft.OData.Edm.Library.Date"/> to be converted</param>
-        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Library.Date"/>.</returns>
+        /// <param name="d">The <see cref="Microsoft.OData.Edm.Date"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Date"/>.</returns>
         internal static string DateAsXml(Date d)
         {
             var value = d.ToString();
@@ -220,8 +206,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Converts the TimeOfDay to a String.
         /// </summary>
-        /// <param name="time">The <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> to be converted</param>
-        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.</returns>
+        /// <param name="time">The <see cref="Microsoft.OData.Edm.TimeOfDay"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.TimeOfDay"/>.</returns>
         internal static string TimeOfDayAsXml(TimeOfDay time)
         {
             var value = time.ToString();

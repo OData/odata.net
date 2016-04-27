@@ -7,6 +7,10 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+#if !SPATIAL
+using Microsoft.OData.Edm;
+#endif
+
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
@@ -27,19 +31,16 @@ namespace Microsoft.OData.Edm
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
 #if PORTABLELIB
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
 #endif
     using System.Reflection;
 #if PORTABLELIB
-    using System.Threading;
 #endif
     using System.Xml;
 #if !SPATIAL
-    using Microsoft.OData.Edm.Library;
+
 #endif
 
     /// <summary>

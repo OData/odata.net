@@ -4,16 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-
-    #endregion Namespaces
-
     /// <summary>
     /// A segment representing an EntitySet in a path.
     /// </summary>

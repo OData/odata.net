@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
     #endregion Namespaces

@@ -15,7 +15,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using ApprovalTests;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.Taupo.Common;

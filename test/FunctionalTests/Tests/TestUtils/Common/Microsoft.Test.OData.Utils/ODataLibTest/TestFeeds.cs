@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.OData.Common;

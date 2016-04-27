@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmElement

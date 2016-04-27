@@ -4,18 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Xml;
+using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 
 namespace Microsoft.OData.UriParser
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Text;
-    using System.Xml;
-    using Edm.Library;
-
     /// <summary>Use this class to parse literals from keys, etags, skiptokens, and filter/orderby expression constants.</summary>
     internal abstract class LiteralParser
     {

@@ -10,7 +10,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     public static class NavigationTestModelBuilder
     {

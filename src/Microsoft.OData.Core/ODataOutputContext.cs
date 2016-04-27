@@ -14,7 +14,6 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 

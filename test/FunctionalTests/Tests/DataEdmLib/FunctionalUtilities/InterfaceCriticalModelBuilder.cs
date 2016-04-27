@@ -11,9 +11,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Vocabularies;
 
     class InterfaceCriticalModelBuilder
@@ -790,7 +787,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
     }
 
-    internal sealed class MutableValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmValueAnnotation
+    internal sealed class MutableValueAnnotation : IEdmValueAnnotation
     {
         public IEdmExpression Value
         {

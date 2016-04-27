@@ -18,7 +18,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Test.Taupo.Contracts.DataGeneration;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 

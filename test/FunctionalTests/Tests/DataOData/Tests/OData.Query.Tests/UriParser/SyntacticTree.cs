@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser;
 
     #endregion Namespaces

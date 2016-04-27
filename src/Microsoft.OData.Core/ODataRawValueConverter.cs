@@ -9,7 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
     using System;
     using System.Xml;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>
