@@ -25,7 +25,6 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.CheckCharacters, "The CheckCharacters should be off by default.");
             Assert.False(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion should be false by default.");
             Assert.False(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal should be false by default.");
-            Assert.False(settings.EnableAtomMetadataReading, "EnableAtomMetadataReading should be false by default.");
             Assert.True(ODataUndeclaredPropertyBehaviorKinds.None == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds should be Default by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
@@ -46,7 +45,6 @@ namespace Microsoft.OData.Tests
                 CheckCharacters = true,
                 DisablePrimitiveTypeConversion = true,
                 DisableMessageStreamDisposal = true,
-                EnableAtomMetadataReading = true,
                 UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty,
                 MaxProtocolVersion = ODataVersion.V4,
                 MessageQuotas = new ODataMessageQuotas
@@ -62,7 +60,6 @@ namespace Microsoft.OData.Tests
             Assert.True(settings.CheckCharacters, "The CheckCharacters should be on when set.");
             Assert.True(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion was not correctly remembered.");
             Assert.True(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal was not correctly remembered.");
-            Assert.True(settings.EnableAtomMetadataReading, "EnableAtomMetadataReading was not correctly remembered.");
             Assert.True(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
@@ -106,7 +103,6 @@ namespace Microsoft.OData.Tests
 
             // Compare original and settings created from copy constructor after setting rest of the values 
             settings.DisableMessageStreamDisposal = true;
-            settings.EnableAtomMetadataReading = true;
             settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty;
             settings.MaxProtocolVersion = ODataVersion.V4;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
@@ -119,7 +115,6 @@ namespace Microsoft.OData.Tests
             // Compare original and settings created from copy constructor after setting some values to null and changing some other values
             settings.BaseUri = null;
             settings.CheckCharacters = false;
-            settings.EnableAtomMetadataReading = false;
             copyOfSettings = new ODataMessageReaderSettings(settings);
             this.CompareMessageReaderSettings(settings, copyOfSettings);
         }
@@ -221,7 +216,6 @@ namespace Microsoft.OData.Tests
                 "BaseUri does not match");
             Assert.True(expected.CheckCharacters == actual.CheckCharacters, "CheckCharacters does not match");
             Assert.True(expected.DisableMessageStreamDisposal == actual.DisableMessageStreamDisposal, "DisableMessageStreamDisposal does not match");
-            Assert.True(expected.EnableAtomMetadataReading == actual.EnableAtomMetadataReading, "EnableAtomMetadataReading does not match");
             Assert.True(expected.UndeclaredPropertyBehaviorKinds == actual.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds does not match");
             Assert.True(expected.MaxProtocolVersion == actual.MaxProtocolVersion, "MaxProtocolVersion does not match.");
             Assert.True(expected.MessageQuotas.MaxPartsPerBatch == actual.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch does not match");

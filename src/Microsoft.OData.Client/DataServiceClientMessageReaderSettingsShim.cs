@@ -29,15 +29,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Flag to control whether ATOM metadata is read in ATOM payloads.
-        /// </summary>
-        public override bool EnableAtomMetadataReading
-        {
-            get { return this.settings.EnableAtomMetadataReading; }
-            set { this.settings.EnableAtomMetadataReading = value; }
-        }
-
-        /// <summary>
         /// Flag to control whether the writer should check for valid Xml characters or not.
         /// </summary>
         public override bool CheckCharacters

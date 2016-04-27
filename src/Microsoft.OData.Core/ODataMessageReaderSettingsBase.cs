@@ -66,16 +66,7 @@ namespace Microsoft.OData
             get { return this.checkCharacters; }
             set { this.checkCharacters = value; }
         }
-        
-        /// <summary>
-        /// Flag to control whether ATOM metadata is read in ATOM payloads.
-        /// </summary>
-        public virtual bool EnableAtomMetadataReading
-        {
-            get { return this.enableAtomMetadataReading; }
-            set { this.enableAtomMetadataReading = value; }
-        }
-        
+
         /// <summary>
         /// Quotas to use for limiting resource consumption when reading an OData message.
         /// </summary>

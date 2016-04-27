@@ -967,7 +967,11 @@ public abstract class Microsoft.OData.Edm.EdmModelBase : Microsoft.OData.Edm.Edm
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
 
 	protected void AddReferencedModel (Microsoft.OData.Edm.IEdmModel model)
+	[
+	IteratorStateMachineAttribute(),
+	]
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
+
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
 	public virtual Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
@@ -1607,6 +1611,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 
 	[
 	ExtensionAttribute(),
+	IteratorStateMachineAttribute(),
 	]
 	public static IEnumerable`1 FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, string termName, string qualifier)
 
@@ -1872,6 +1877,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 
 	[
 	ExtensionAttribute(),
+	IteratorStateMachineAttribute(),
 	]
 	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmProperty]] Properties (Microsoft.OData.Edm.IEdmStructuredType type)
 
@@ -3015,6 +3021,9 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRuleSet : IEnumerab
 	public ValidationRuleSet (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.ValidationRule]] baseSet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.ValidationRule]] newRules)
 
 	public static Microsoft.OData.Edm.Validation.ValidationRuleSet GetEdmModelRuleSet (System.Version version)
+	[
+	IteratorStateMachineAttribute(),
+	]
 	public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.Edm.Validation.ValidationRule]] GetEnumerator ()
 }
 
@@ -3405,7 +3414,11 @@ public class Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationsManager :
 	public virtual object GetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName)
 	public virtual object[] GetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 	protected virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetAttachedAnnotations (Microsoft.OData.Edm.IEdmElement element)
+	[
+	IteratorStateMachineAttribute(),
+	]
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetDirectValueAnnotations (Microsoft.OData.Edm.IEdmElement element)
+
 	public virtual void SetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName, object value)
 	public virtual void SetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 }
@@ -4059,7 +4072,6 @@ public abstract class Microsoft.OData.ODataMessageReaderSettingsBase {
 	protected ODataMessageReaderSettingsBase (Microsoft.OData.ODataMessageReaderSettingsBase other)
 
 	bool CheckCharacters  { public virtual get; public virtual set; }
-	bool EnableAtomMetadataReading  { public virtual get; public virtual set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public virtual get; public virtual set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public virtual get; public virtual set; }
 }
