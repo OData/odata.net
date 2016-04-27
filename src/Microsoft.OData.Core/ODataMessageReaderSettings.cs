@@ -23,7 +23,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The base uri used in payload.
         /// </summary>
-        private Uri payloadBaseUri;
+        private Uri baseUri;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class with default values.</summary>
         public ODataMessageReaderSettings()
@@ -73,31 +73,12 @@ namespace Microsoft.OData
         {
             get
             {
-                return payloadBaseUri;
+                return baseUri;
             }
 
             set
             {
-                this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
-            }
-        }
-
-        /// <summary>Gets or sets the document base URI (used as base for all relative URIs). If this is set, it must be an absolute URI.</summary>
-        /// <returns>The base URI used in payload.</returns>
-        /// <remarks>
-        /// This URI will be used in ATOM format only, it would overrided by &lt;xml:base /&gt; element in ATOM payload.
-        /// If the URI does not end with a slash, a slash would be appended automatically.
-        /// </remarks>
-        public Uri PayloadBaseUri
-        {
-            get
-            {
-                return payloadBaseUri;
-            }
-
-            set
-            {
-                this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
+                this.baseUri = UriUtils.EnsureTaillingSlash(value);
             }
         }
 
