@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using Microsoft.OData;
@@ -22,6 +23,11 @@ namespace Microsoft.OData.Client
         /// Case-insensitive dictionary for storing the header name/value pairs.
         /// </summary>
         private readonly IDictionary<string, string> headers;
+
+        /// <summary>
+        /// Current assembly version.
+        /// </summary>
+        private static Version assemblyVersion = typeof(HeaderCollection).GetAssembly().GetName().Version;
 
         /// <summary>
         /// Initializes a new instance of <see cref="HeaderCollection"/>.
@@ -229,7 +235,7 @@ namespace Microsoft.OData.Client
         {
             // Add User-Agent header to every request - Since UserAgent field is not supported in silverlight,
             // doing this non-silverlight stacks only
-            this.SetHeader(XmlConstants.HttpUserAgent, "Microsoft ADO.NET Data Services");
+            this.SetHeader(XmlConstants.HttpUserAgent, string.Format(CultureInfo.InvariantCulture, "Microsoft.OData.Client/{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
         }
 
         /// <summary>
