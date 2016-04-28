@@ -176,7 +176,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             #region Create and Delete
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var vehicleGPSType = Model.FindType(TestModelNameSpace + ".GPS.VehicleGPSType") as IEdmEntityType;
             var vehicleGPSSet = Model.EntityContainer.FindEntitySet("VehicleGPSSet");
@@ -370,7 +370,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             #region Create and Delete
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var vehicleGPSType = Model.FindType(TestModelNameSpace + ".GPS.VehicleGPSType") as IEdmEntityType;
 

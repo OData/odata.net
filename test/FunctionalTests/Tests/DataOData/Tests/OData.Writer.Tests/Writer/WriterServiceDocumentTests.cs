@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
 
-        private static readonly ODataMessageWriterSettings settingsWithBaseUri = new ODataMessageWriterSettings { PayloadBaseUri = new Uri(baseUri) };
+        private static readonly ODataMessageWriterSettings settingsWithBaseUri = new ODataMessageWriterSettings { BaseUri = new Uri(baseUri) };
 
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of service document writing.")]
@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testCase, testConfig) =>
                 {
                     WriterTestConfiguration newConfiguration = testConfig.Clone();
-                    newConfiguration.MessageWriterSettings.PayloadBaseUri = new Uri(baseUri);
+                    newConfiguration.MessageWriterSettings.BaseUri = new Uri(baseUri);
                     newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testCase,
@@ -120,7 +120,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfig) =>
                 {
                     WriterTestConfiguration newConfiguration = testConfig.Clone();
-                    newConfiguration.MessageWriterSettings.PayloadBaseUri = new Uri(baseUri);
+                    newConfiguration.MessageWriterSettings.BaseUri = new Uri(baseUri);
                     newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
@@ -206,7 +206,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfig) =>
                 {
                     WriterTestConfiguration newConfiguration = testConfig.Clone();
-                    newConfiguration.MessageWriterSettings.PayloadBaseUri = new Uri(baseUri);
+                    newConfiguration.MessageWriterSettings.BaseUri = new Uri(baseUri);
                     newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
@@ -269,7 +269,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfig) =>
                 {
                     WriterTestConfiguration newConfiguration = testConfig.Clone();
-                    newConfiguration.MessageWriterSettings.PayloadBaseUri = new Uri(baseUri);
+                    newConfiguration.MessageWriterSettings.BaseUri = new Uri(baseUri);
                     newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
@@ -332,7 +332,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfig) =>
                 {
                     WriterTestConfiguration newConfiguration = testConfig.Clone();
-                    newConfiguration.MessageWriterSettings.PayloadBaseUri = new Uri(baseUri);
+                    newConfiguration.MessageWriterSettings.BaseUri = new Uri(baseUri);
                     newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
@@ -390,7 +390,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                   }
 
                   WriterTestConfiguration newConfiguration = testConfig.Clone();
-                  newConfiguration.MessageWriterSettings.PayloadBaseUri = new Uri(baseUri);
+                  newConfiguration.MessageWriterSettings.BaseUri = new Uri(baseUri);
                   newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                   TestWriterUtils.WriteAndVerifyTopLevelContent(
                       testDescriptor,

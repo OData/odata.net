@@ -10,16 +10,16 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Caching;
-    using Microsoft.OData.Service.Providers;
-    using System.Net;
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData;    
+    using Microsoft.OData.Client;
+	using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Service;
+    using Microsoft.OData.Service.Caching;
+    using Microsoft.OData.Service.Providers;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -59,9 +59,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             var provider = new DataServiceProviderWrapper(
                 new DataServiceCacheItem(
                     configuration,
-                    staticConfiguration), 
-                providerSimulator, 
-                providerSimulator, 
+                    staticConfiguration),
+                providerSimulator,
+                providerSimulator,
                 this.dataServiceSimulator,
                 false);
 
@@ -102,9 +102,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void ServiceUriShouldBeSetAsBase()
         {
             Uri serviceUri = new Uri("http://www.example.com");
-            var testSubject = new ODataMessageWriterSettings { PayloadBaseUri = null };
+            var testSubject = new ODataMessageWriterSettings { BaseUri = null };
             MessageWriterBuilder.ApplyCommonSettings(testSubject, serviceUri, VersionUtil.Version4Dot0, this.dataServiceSimulator, this.responseMessageSimulator);
-            testSubject.PayloadBaseUri.Should().BeSameAs(serviceUri);
+            testSubject.BaseUri.Should().BeSameAs(serviceUri);
         }
 
         [TestMethod]

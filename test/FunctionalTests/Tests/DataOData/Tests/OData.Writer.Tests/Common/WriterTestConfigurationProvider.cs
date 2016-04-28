@@ -393,7 +393,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             var settings = new ODataMessageWriterSettings()
             {
                 Version = version,
-                PayloadBaseUri = baseUri,
+                BaseUri = baseUri,
                 DisableMessageStreamDisposal = disableMessageStreamDisposal,
             };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));

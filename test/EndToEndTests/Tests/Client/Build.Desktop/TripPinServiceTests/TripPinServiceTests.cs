@@ -152,7 +152,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     }                        
                 };
                 var settings = new ODataMessageWriterSettings();
-                settings.PayloadBaseUri = ServiceBaseUri;
+                settings.BaseUri = ServiceBaseUri;
                 settings.AutoComputePayloadMetadataInJson = true;
 
                 var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
@@ -206,7 +206,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 };
 
                 var settings = new ODataMessageWriterSettings();
-                settings.PayloadBaseUri = ServiceBaseUri;
+                settings.BaseUri = ServiceBaseUri;
                 settings.AutoComputePayloadMetadataInJson = true;
 
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri +
@@ -273,7 +273,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             personEntry.Properties = new[] { personUserName, personFirstName, personLastName, personGender, personEmailAddress, personAddressInfo };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
             var personSet = Model.EntityContainer.FindEntitySet("People");
@@ -405,7 +405,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void TestActionTripPinShareTrip()
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             var readerSettings = new ODataMessageReaderSettings();
             readerSettings.BaseUri = ServiceBaseUri;
 
@@ -2298,7 +2298,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 request.SetHeader("Content-Type", this.MimeType);
                 request.SetHeader("Accept", this.MimeType);
                 request.Method = "POST";
-                using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { PayloadBaseUri = this.Host.ServiceBaseUri }))
+                using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { BaseUri = this.Host.ServiceBaseUri }))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
                     odataWriter.WriteStart(this.EntryToCreate);
@@ -2442,7 +2442,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 OnRequestingHandler(new RequestingArgument() { Request = request });
 
-                using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { PayloadBaseUri = this.Host.ServiceBaseUri, AutoComputePayloadMetadataInJson = true }))
+                using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { BaseUri = this.Host.ServiceBaseUri, AutoComputePayloadMetadataInJson = true }))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
                     odataWriter.WriteStart(this.EntryToUpdate);

@@ -421,7 +421,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     ODataEntityReferenceLink relativeLink = entityReferenceLinks.Links == null ? null : entityReferenceLinks.Links.FirstOrDefault(l => !l.Url.IsAbsoluteUri);
                     bool nextPageLinkRelative = entityReferenceLinks.NextPageLink == null ? false : !entityReferenceLinks.NextPageLink.IsAbsoluteUri;
-                    if ((relativeLink != null || nextPageLinkRelative) && testConfiguration.MessageWriterSettings.PayloadBaseUri == null)
+                    if ((relativeLink != null || nextPageLinkRelative) && testConfiguration.MessageWriterSettings.BaseUri == null)
                     {
                         // We allow relative Uri strings in JSON Light.
                         if (testConfiguration.Format != ODataFormat.Json)
@@ -552,7 +552,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// <returns>The string representation of the <paramref name="uri"/> for the given test configuration.</returns>
         private string GetResultUri(Uri uri, WriterTestConfiguration testConfig)
         {
-            Uri baseUri = testConfig.MessageWriterSettings.PayloadBaseUri;
+            Uri baseUri = testConfig.MessageWriterSettings.BaseUri;
 
             Debug.Assert(testConfig.Format == ODataFormat.Json, "Only ATOM and JSON lite are supported.");
             if (uri.IsAbsoluteUri)
@@ -586,7 +586,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 string uriResultString = GetResultUri(uri, testConfiguration);
 
-                if (!uri.IsAbsoluteUri && testConfiguration.MessageWriterSettings.PayloadBaseUri == null && testConfiguration.Format != ODataFormat.Json)
+                if (!uri.IsAbsoluteUri && testConfiguration.MessageWriterSettings.BaseUri == null && testConfiguration.Format != ODataFormat.Json)
                 {
                     // for relative URIs without base URI we expect to fail
                     return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)

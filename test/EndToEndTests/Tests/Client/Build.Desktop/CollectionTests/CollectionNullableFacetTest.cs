@@ -74,7 +74,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         private void UpdateEntityWithCollectionContainsNull(ODataResource personToAdd, String testProperty)
         {
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
             settings.AutoComputePayloadMetadataInJson = true;
 
             var customerType = Model.FindDeclaredType(NameSpacePrefix + "Customer") as IEdmEntityType;

@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         public void InvokeActionReturnsContainedEntity()
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             var readerSettings = new ODataMessageReaderSettings();
             readerSettings.BaseUri = ServiceBaseUri;
 
@@ -804,7 +804,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             paymentInstrumentEntry.Properties = new[] { paymentInstrumentEntryP1, paymentInstrumentEntryP2, paymentInstrumentEntryP3 };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var accountType = Model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
             var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -858,7 +858,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             giftCardEntry.Properties = new[] { giftCardEntryP1, giftCardEntryP2, giftCardEntryP3, giftCardEntryP4 };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var accountType = Model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
             var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -897,7 +897,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             // create entry and insert
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var accountType = Model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
             var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -942,7 +942,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             // create entry and insert
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var accountType = Model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
             var accountSet = Model.EntityContainer.FindEntitySet("Accounts");

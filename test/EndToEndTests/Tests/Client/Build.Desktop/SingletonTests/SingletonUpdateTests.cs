@@ -147,7 +147,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             entry.Properties = properties;
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var customerType = Model.FindDeclaredType(NameSpacePrefix + singletonType) as IEdmEntityType;
             var customerSet = Model.EntityContainer.FindSingleton(singletonName);

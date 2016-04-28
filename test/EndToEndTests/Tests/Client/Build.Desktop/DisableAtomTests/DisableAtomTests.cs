@@ -107,7 +107,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
                 }
             };
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
             settings.AutoComputePayloadMetadataInJson = true;
 
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
@@ -200,7 +200,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
             var peopleSet = Model.EntityContainer.FindEntitySet("People");

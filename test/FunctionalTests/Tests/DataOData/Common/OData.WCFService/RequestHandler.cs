@@ -87,7 +87,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// <returns>The default ODataMessageWriterSettings for this client request.</returns>
         protected ODataMessageWriterSettings GetDefaultWriterSettings()
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { PayloadBaseUri = ServiceConstants.ServiceBaseUri };
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { BaseUri = ServiceConstants.ServiceBaseUri };
             settings.SetServiceDocumentUri(new Uri(ServiceConstants.ServiceBaseUri.OriginalString));
             return settings;
         }

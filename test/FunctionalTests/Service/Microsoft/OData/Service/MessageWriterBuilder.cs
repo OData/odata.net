@@ -168,7 +168,7 @@ namespace Microsoft.OData.Service
         internal static void ApplyCommonSettings(ODataMessageWriterSettings writerSettings, Uri serviceUri, Version responseVersion, IDataService dataService, IODataResponseMessage responseMessage)
         {
             writerSettings.Version = CommonUtil.ConvertToODataVersion(responseVersion);
-            writerSettings.PayloadBaseUri = serviceUri;
+            writerSettings.BaseUri = serviceUri;
 
             writerSettings.EnableODataServerBehavior();
             writerSettings.DisableMessageStreamDisposal = responseMessage is AstoriaResponseMessage;

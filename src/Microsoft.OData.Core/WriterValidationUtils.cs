@@ -28,9 +28,9 @@ namespace Microsoft.OData
         {
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
-            if (messageWriterSettings.PayloadBaseUri != null && !messageWriterSettings.PayloadBaseUri.IsAbsoluteUri)
+            if (messageWriterSettings.BaseUri != null && !messageWriterSettings.BaseUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.PayloadBaseUri)));
+                throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
             }
 
             if (messageWriterSettings.HasJsonPaddingFunction() && !writingResponse)

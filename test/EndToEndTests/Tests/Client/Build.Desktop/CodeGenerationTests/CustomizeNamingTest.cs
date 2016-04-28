@@ -318,7 +318,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var accountType = Model.FindDeclaredType(ServerSideNameSpacePrefix + "Account") as IEdmEntityType;
             var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -369,7 +369,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 }
             };
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
             settings.AutoComputePayloadMetadataInJson = true;
 
             var companyType = Model.FindDeclaredType(ServerSideNameSpacePrefix + "PublicCompany") as IEdmEntityType;

@@ -665,7 +665,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             orderEntry.Properties = new[] { orderP1, orderp2, orderp3 };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var orderType = Model.FindDeclaredType(NameSpacePrefix + "Order") as IEdmEntityType;
             var orderSet = Model.EntityContainer.FindEntitySet("Orders");

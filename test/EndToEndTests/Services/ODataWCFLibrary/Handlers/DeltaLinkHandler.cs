@@ -383,7 +383,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
                 AutoComputePayloadMetadataInJson = true,
-                PayloadBaseUri = this.ServiceRootUri
+                BaseUri = this.ServiceRootUri
             };
 
             ODataUriParser uriParser = new ODataUriParser(this.DataSource.Model, ServiceConstants.ServiceBaseUri, originalUri);

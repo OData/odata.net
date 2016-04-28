@@ -1010,7 +1010,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
 
                     ODataMessageWriterSettings settingsWithBaseUri = testConfiguration.MessageWriterSettings.Clone();
-                    settingsWithBaseUri.PayloadBaseUri = baseUri;
+                    settingsWithBaseUri.BaseUri = baseUri;
 
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
@@ -1182,7 +1182,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
                     {
                         Version = version,
-                        PayloadBaseUri = new Uri("http://www.odata.org/"),
+                        BaseUri = new Uri("http://www.odata.org/"),
                     };
                     settings.SetServiceDocumentUri(new Uri("http://odata.org/test/"));
 

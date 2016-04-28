@@ -64,7 +64,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             var settings = new ODataMessageWriterSettings()
             {
                 Version = testConfiguration.Version,
-                PayloadBaseUri = testConfiguration.MessageReaderSettings.BaseUri,
+                BaseUri = testConfiguration.MessageReaderSettings.BaseUri,
                 DisableMessageStreamDisposal = testConfiguration.MessageReaderSettings.DisableMessageStreamDisposal,
             };
 

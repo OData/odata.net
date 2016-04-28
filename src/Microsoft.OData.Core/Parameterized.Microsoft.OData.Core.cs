@@ -2669,7 +2669,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The base URI '{0}' specified in ODataMessageWriterSettings.PayloadBaseUri is invalid; it must either be null or an absolute URI."
+        /// A string like "The base URI '{0}' specified in ODataMessageWriterSettings.baseUri is invalid; it must either be null or an absolute URI."
         /// </summary>
         internal static string WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, p0);

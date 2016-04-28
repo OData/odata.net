@@ -97,7 +97,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BaseUriShouldBeNullByDefault()
         {
-            this.settings.PayloadBaseUri.Should().BeNull();
+            this.settings.BaseUri.Should().BeNull();
         }
 
         [Fact]
@@ -190,8 +190,8 @@ namespace Microsoft.OData.Tests
         public void CopyConstructorShouldCopyBaseUri()
         {
             var baseUri = new Uri("http://otherservice.svc");
-            this.settings.PayloadBaseUri = baseUri;
-            (new ODataMessageWriterSettings(this.settings)).PayloadBaseUri.Should().BeSameAs(baseUri);
+            this.settings.BaseUri = baseUri;
+            (new ODataMessageWriterSettings(this.settings)).BaseUri.Should().BeSameAs(baseUri);
         }
 
         [Fact]
@@ -350,7 +350,7 @@ namespace Microsoft.OData.Tests
 
             this.settings = new ODataMessageWriterSettings()
             {
-                PayloadBaseUri = baseUri,
+                BaseUri = baseUri,
                 CheckCharacters = true,
                 Indent = true,
                 Version = version,
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Tests
                 UseKeyAsSegment = true
             };
 
-            this.settings.PayloadBaseUri.Should().BeSameAs(baseUri);
+            this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.CheckCharacters.Should().BeTrue();
             this.settings.Indent.Should().BeTrue();
             this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(maxPartsPerBatch);
@@ -382,17 +382,17 @@ namespace Microsoft.OData.Tests
         {
             var setting = new ODataMessageWriterSettings()
             {
-                PayloadBaseUri = new Uri("http://example.org/odata.svc"),
+                BaseUri = new Uri("http://example.org/odata.svc"),
             };
 
-            var t = setting.PayloadBaseUri.ToString();
-            setting.PayloadBaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
+            var t = setting.BaseUri.ToString();
+            setting.BaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
 
             setting = new ODataMessageWriterSettings()
             {
-                PayloadBaseUri = new Uri("http://example.org/odata.svc/"),
+                BaseUri = new Uri("http://example.org/odata.svc/"),
             };
-            setting.PayloadBaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
+            setting.BaseUri.ToString().Should().BeEquivalentTo("http://example.org/odata.svc/");
         }
         #endregion Property getters and setters tests
 

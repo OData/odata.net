@@ -55,7 +55,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.PayloadBaseUri = this.ServiceUri;
+                    settings.BaseUri = this.ServiceUri;
 
                     settings.AutoComputePayloadMetadataInJson = false;
                     string defaultModeResult = this.WriteAndVerifyOrderFeed(settings, mimeType, hasModel);
@@ -159,7 +159,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri, SelectAndExpand = result };
 
-                    settings.PayloadBaseUri = this.ServiceUri;
+                    settings.BaseUri = this.ServiceUri;
 
                     settings.AutoComputePayloadMetadataInJson = false;
                     string defaultModeResult = this.WriteAndVerifyExpandedCustomerEntry(settings, mimeType, expectedClause, hasModel);
@@ -290,7 +290,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.PayloadBaseUri = this.ServiceUri;
+                    settings.BaseUri = this.ServiceUri;
 
                     settings.AutoComputePayloadMetadataInJson = false;
                     string defaultModeResult = this.WriteAndVerifyPersonFeed(settings, mimeType, hasModel);
@@ -382,7 +382,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.PayloadBaseUri = this.ServiceUri;
+                    settings.BaseUri = this.ServiceUri;
 
                     settings.AutoComputePayloadMetadataInJson = false;
                     string defaultModeResult = this.WriteAndVerifyCarEntry(settings, mimeType, hasModel);
@@ -448,7 +448,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.PayloadBaseUri = this.ServiceUri;
+                    settings.BaseUri = this.ServiceUri;
 
                     settings.AutoComputePayloadMetadataInJson = false;
                     string defaultModeResult = this.WriteAndVerifyRequestMessage(settings, mimeType, hasModel);
@@ -550,7 +550,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.PayloadBaseUri = this.ServiceUri;
+                    settings.BaseUri = this.ServiceUri;
 
                     settings.UseKeyAsSegment = true;
 

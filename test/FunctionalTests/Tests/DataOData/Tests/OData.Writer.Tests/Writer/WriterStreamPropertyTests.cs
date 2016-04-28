@@ -197,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
 
                     ODataMessageWriterSettings settings = testConfiguration.MessageWriterSettings.Clone();
-                    settings.PayloadBaseUri = testDescriptorBaseUriPair.Item2;
+                    settings.BaseUri = testDescriptorBaseUriPair.Item2;
                     settings.SetServiceDocumentUri(ServiceDocumentUri);
 
                     WriterTestConfiguration config =

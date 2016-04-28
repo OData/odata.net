@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             foreach (var mimeType in this.mimeTypes)
             {
-                var settings = new ODataMessageWriterSettings() { PayloadBaseUri = this.ServiceUri };
+                var settings = new ODataMessageWriterSettings() { BaseUri = this.ServiceUri };
                 settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
 
                 string outputWithModel = null;
@@ -207,7 +207,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             foreach (var mimeType in this.mimeTypes)
             {
-                var settings = new ODataMessageWriterSettings() { PayloadBaseUri = this.ServiceUri };
+                var settings = new ODataMessageWriterSettings() { BaseUri = this.ServiceUri };
                 settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                 string outputWithTypeCast = null;
                 string outputWithoutTypeCast = null;
@@ -260,7 +260,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             {
                 string testMimeType = mimeType.Contains("xml") ? MimeTypes.ApplicationXml : mimeType;
 
-                var settings = new ODataMessageWriterSettings() { PayloadBaseUri = this.ServiceUri };
+                var settings = new ODataMessageWriterSettings() { BaseUri = this.ServiceUri };
                 settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                 string outputWithModel = null;
                 string outputWithoutModel = null;

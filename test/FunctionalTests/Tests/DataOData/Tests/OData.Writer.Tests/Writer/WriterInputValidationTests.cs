@@ -43,7 +43,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             Uri absoluteUri = new Uri("http://odata.org");
             Uri relativeUri = absoluteUri.MakeRelativeUri(new Uri(absoluteUri, relativeUriString));
 
-            string expectedError = "The base URI '" + relativeUriString + "' specified in ODataMessageWriterSettings.PayloadBaseUri is invalid; it must either be null or an absolute URI.";
+            string expectedError = "The base URI '" + relativeUriString + "' specified in ODataMessageWriterSettings.BaseUri is invalid; it must either be null or an absolute URI.";
 
             ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
             var testDescriptors = new []
@@ -63,7 +63,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     // clone the test configuration and set an invalid base Uri
                     ODataMessageWriterSettings settings = testConfiguration.MessageWriterSettings.Clone();
-                    settings.PayloadBaseUri = testDescriptor.BaseUri;
+                    settings.BaseUri = testDescriptor.BaseUri;
 
                     WriterTestConfiguration config =
                         new WriterTestConfiguration(testConfiguration.Format, settings, testConfiguration.IsRequest, testConfiguration.Synchronous);

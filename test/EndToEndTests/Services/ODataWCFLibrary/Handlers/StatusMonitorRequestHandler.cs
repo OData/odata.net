@@ -55,7 +55,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
                 AutoComputePayloadMetadataInJson = true,
-                PayloadBaseUri = this.ServiceRootUri
+                BaseUri = this.ServiceRootUri
             };
 
             return settings;

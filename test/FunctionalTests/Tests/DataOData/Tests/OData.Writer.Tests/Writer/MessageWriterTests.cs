@@ -42,9 +42,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             new WriterActionForPayloadKind[]
             {
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Unsupported, WriterAction = messageWriter => { throw new InvalidOperationException("Must not get here for unsupported kinds."); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Resource, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Resource, WriterAction = messageWriter =>
                     { ODataWriter writer = messageWriter.CreateODataResourceWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultEntry("TestModel.CityType")); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.ResourceSet, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.ResourceSet, WriterAction = messageWriter =>
                     { ODataWriter writer = messageWriter.CreateODataResourceSetWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultFeed()); writer.WriteEnd(); writer.Flush(); } },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Collection, WriterAction = messageWriter =>
                     { ODataCollectionWriter writer = messageWriter.CreateODataCollectionWriter(); writer.WriteStart(new ODataCollectionStart { Name = "collection" }); writer.WriteEnd(); writer.Flush(); } },
@@ -120,7 +120,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testCase, testConfiguration) =>
                 {
                     ODataMessageWriterSettings settingsWithBaseUri = testConfiguration.MessageWriterSettings.Clone();
-                    settingsWithBaseUri.PayloadBaseUri = baseUri;
+                    settingsWithBaseUri.BaseUri = baseUri;
                     settingsWithBaseUri.SetServiceDocumentUri(ServiceDocumentUri);
 
                     using (var memoryStream = new TestStream())
@@ -208,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testCase, testConfiguration) =>
                 {
                     ODataMessageWriterSettings settingsWithBaseUri = testConfiguration.MessageWriterSettings.Clone();
-                    settingsWithBaseUri.PayloadBaseUri = baseUri;
+                    settingsWithBaseUri.BaseUri = baseUri;
 
                     ODataPayloadKind payloadKind = testCase.PayloadKind;
 
@@ -707,7 +707,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataMessageWriterSettings clonedSettings = new ODataMessageWriterSettings()
                     {
                         // NOTE intentionally not copying acceptable media types, acceptable char sets, format and useFormat
-                        PayloadBaseUri = settings.PayloadBaseUri,
+                        BaseUri = settings.BaseUri,
                         CheckCharacters = settings.CheckCharacters,
                         DisableMessageStreamDisposal = settings.DisableMessageStreamDisposal,
                         Indent = settings.Indent,

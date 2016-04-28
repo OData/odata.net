@@ -599,7 +599,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         }
 
                         testConfiguration = testConfiguration.Clone();
-                        testConfiguration.MessageWriterSettings.PayloadBaseUri = testDescriptor.BaseUri;
+                        testConfiguration.MessageWriterSettings.BaseUri = testDescriptor.BaseUri;
                         testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                         TestWriterUtils.WriteAndVerifyODataPayload(payloadTestDescriptor, testConfiguration, this.Assert, this.Logger);
                     }

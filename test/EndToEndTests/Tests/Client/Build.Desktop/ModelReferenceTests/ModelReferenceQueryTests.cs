@@ -527,7 +527,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             requestMessage.SetHeader("Accept", "*/*");
             requestMessage.Method = "POST";
 
-            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = ServiceBaseUri };
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = ServiceBaseUri };
             using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, Model))
             {
                 var odataWriter = messageWriter.CreateODataParameterWriter(null);
@@ -549,7 +549,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             requestMessage.SetHeader("Accept", "*/*");
             requestMessage.Method = "POST";
 
-            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = ServiceBaseUri };
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = ServiceBaseUri };
             using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, Model))
             {
                 var odataWriter = messageWriter.CreateODataParameterWriter(null);

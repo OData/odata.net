@@ -1819,7 +1819,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             public ODataVersion? Version { get { return this.settings.Version; } }
             public bool Indent { get { return this.settings.Indent; } }
             public bool CheckCharacters { get { return this.settings.CheckCharacters; } }
-            public Uri BaseUri { get { return this.settings.PayloadBaseUri; } }
+            public Uri BaseUri { get { return this.settings.BaseUri; } }
             public string AcceptableMediaTypes { get { return (string)ReflectionUtils.GetProperty(this.settings, "AcceptableMediaTypes"); } }
             public string AcceptableCharsets { get { return (string)ReflectionUtils.GetProperty(this.settings, "AcceptableCharsets"); } }
             public ODataFormat Format { get { return (ODataFormat)ReflectionUtils.GetProperty(this.settings, "Format"); } }

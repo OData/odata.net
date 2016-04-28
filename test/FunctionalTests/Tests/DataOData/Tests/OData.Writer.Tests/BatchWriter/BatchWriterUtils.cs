@@ -999,7 +999,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     else
                     {
                         // need to prepend the base Uri
-                        Uri baseUri = testConfiguration.MessageWriterSettings.PayloadBaseUri;
+                        Uri baseUri = testConfiguration.MessageWriterSettings.BaseUri;
                         if (baseUri == null)
                         {
                             // we should not get here since the product should have thrown

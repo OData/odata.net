@@ -63,7 +63,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The base uri used in payload.
         /// </summary>
-        private Uri payloadBaseUri;
+        private Uri baseUri;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
@@ -82,7 +82,7 @@ namespace Microsoft.OData
 
             this.acceptCharSets = other.acceptCharSets;
             this.acceptMediaTypes = other.acceptMediaTypes;
-            this.PayloadBaseUri = other.PayloadBaseUri;
+            this.BaseUri = other.BaseUri;
             this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
             this.format = other.format;
             this.useFormat = other.useFormat;
@@ -109,16 +109,16 @@ namespace Microsoft.OData
         /// This URI will be used in ATOM format only, it would be shown in &lt;xml:base /&gt; element, for JSON payload, base URI is context URI
         /// If the URI does not end with a slash, a slash would be appended automatically.
         /// </remarks>
-        public Uri PayloadBaseUri
+        public Uri BaseUri
         {
             get
             {
-                return this.payloadBaseUri;
+                return this.baseUri;
             }
 
             set
             {
-                this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
+                this.baseUri = UriUtils.EnsureTaillingSlash(value);
             }
         }
 

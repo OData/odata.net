@@ -62,7 +62,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Gets or sets the document base URI (used as base for all relative URIs). If this is set, it must be an absolute URI.
-        /// ODataMessageReaderSettings.BaseUri may be deprecated in the furture, please use ODataMessageReaderSettings.PayloadBaseUri instead.
+        /// ODataMessageReaderSettings.BaseUri may be deprecated in the furture, please use ODataMessageReaderSettings.baseUri instead.
         /// </summary>
         /// <returns>The base URI used in payload.</returns>
         /// <remarks>

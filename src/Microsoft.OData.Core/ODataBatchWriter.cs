@@ -85,8 +85,8 @@ namespace Microsoft.OData
         {
             Debug.Assert(rawOutputContext != null, "rawOutputContext != null");
             Debug.Assert(
-                rawOutputContext.MessageWriterSettings.PayloadBaseUri == null || rawOutputContext.MessageWriterSettings.PayloadBaseUri.IsAbsoluteUri,
-                "We should have validated that PayloadBaseUri is absolute.");
+                rawOutputContext.MessageWriterSettings.BaseUri == null || rawOutputContext.MessageWriterSettings.BaseUri.IsAbsoluteUri,
+                "We should have validated that baseUri is absolute.");
 
             ExceptionUtils.CheckArgumentNotNull(batchBoundary, "batchBoundary");
 
@@ -628,7 +628,7 @@ namespace Microsoft.OData
                 this.urlResolver.AddContentId(this.currentOperationContentId);
             }
 
-            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.rawOutputContext.MessageWriterSettings.PayloadBaseUri, this.urlResolver));
+            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.rawOutputContext.MessageWriterSettings.BaseUri, this.urlResolver));
 
             // create the new request operation
             this.CurrentOperationRequestMessage = ODataBatchOperationRequestMessage.CreateWriteMessage(

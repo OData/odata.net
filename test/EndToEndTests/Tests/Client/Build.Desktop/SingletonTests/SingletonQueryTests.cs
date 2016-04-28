@@ -431,7 +431,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                     var oldProperty = this.QueryProperty("Company/Revenue", mimeType);
                     Int64 oldValue = (Int64)oldProperty.Value;
 
-                    ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = ServiceBaseUri };
+                    ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = ServiceBaseUri };
                     using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, Model))
                     {
                         var odataWriter = messageWriter.CreateODataParameterWriter(null);

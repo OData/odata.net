@@ -533,7 +533,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     sampleEntry.ReadLink = uri;
                     ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
 
-                    Uri testCaseBaseUri = testConfig.MessageWriterSettings.PayloadBaseUri;
+                    Uri testCaseBaseUri = testConfig.MessageWriterSettings.BaseUri;
 
                     string expectedResult = null;
                     if (testConfig.Format == ODataFormat.Json)
@@ -1610,7 +1610,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 // clone the message writer settings with a new base Uri
                 newSettings = testConfig.MessageWriterSettings.Clone();
-                newSettings.PayloadBaseUri = testDescriptor.BaseUri;
+                newSettings.BaseUri = testDescriptor.BaseUri;
             }
 
             if (testDescriptor.MaxPartsPerBatch.HasValue || testDescriptor.MaxOperationsPerChangeset.HasValue)
@@ -1644,7 +1644,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 // clone the message writer settings with a new base Uri
                 newSettings = testConfig.MessageWriterSettings.Clone();
-                newSettings.PayloadBaseUri = baseUri;
+                newSettings.BaseUri = baseUri;
             }
 
             return newSettings == null

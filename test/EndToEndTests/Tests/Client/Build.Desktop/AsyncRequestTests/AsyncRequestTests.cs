@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                 accountEntry.Properties = new[] { accountP1, accountP2, accountP3 };
 
                 var settings = new ODataMessageWriterSettings();
-                settings.PayloadBaseUri = ServiceBaseUri;
+                settings.BaseUri = ServiceBaseUri;
 
                 var accountType = Model.FindDeclaredType(NameSpacePrefix + "Account") as IEdmEntityType;
                 var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -204,7 +204,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
         public void AsyncBatchRequestTest()
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             #region send a batch request with respond-async preference

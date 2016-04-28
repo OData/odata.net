@@ -200,7 +200,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
             var peopleSet = Model.EntityContainer.FindEntitySet("People");
@@ -374,7 +374,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var productType = Model.FindDeclaredType(NameSpacePrefix + "Product") as IEdmEntityType;
             var productsSet = Model.EntityContainer.FindEntitySet("Products");
@@ -404,7 +404,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         public void InvokeActionWithUintParameterAndReturnType()
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             var readerSettings = new ODataMessageReaderSettings();
             readerSettings.BaseUri = ServiceBaseUri;
 

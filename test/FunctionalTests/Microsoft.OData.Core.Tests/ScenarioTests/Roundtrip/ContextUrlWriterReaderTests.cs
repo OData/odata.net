@@ -1251,7 +1251,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var writerSettings = new ODataMessageWriterSettings
             {
                 DisableMessageStreamDisposal = true,
-                PayloadBaseUri = new Uri(TestBaseUri),
+                BaseUri = new Uri(TestBaseUri),
                 AutoComputePayloadMetadataInJson = true
             };
             writerSettings.SetServiceDocumentUri(new Uri(TestBaseUri));

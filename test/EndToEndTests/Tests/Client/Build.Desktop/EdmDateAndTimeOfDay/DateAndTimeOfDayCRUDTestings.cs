@@ -376,7 +376,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
         public void ActionTakeDateAndTimeAsParameter()
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             var readerSettings = new ODataMessageReaderSettings();
             readerSettings.BaseUri = ServiceBaseUri;
 
