@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests

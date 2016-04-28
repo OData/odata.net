@@ -11,7 +11,6 @@ using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder

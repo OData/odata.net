@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {

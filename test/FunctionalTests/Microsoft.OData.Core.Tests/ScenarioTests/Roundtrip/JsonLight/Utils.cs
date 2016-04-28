@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {

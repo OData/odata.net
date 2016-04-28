@@ -12,7 +12,6 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 

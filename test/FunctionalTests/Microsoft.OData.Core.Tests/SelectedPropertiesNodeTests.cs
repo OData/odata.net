@@ -9,7 +9,6 @@ using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
 

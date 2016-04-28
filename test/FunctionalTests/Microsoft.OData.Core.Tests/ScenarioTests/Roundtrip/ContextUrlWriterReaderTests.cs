@@ -14,7 +14,6 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 

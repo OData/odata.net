@@ -9,7 +9,6 @@ using FluentAssertions;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 

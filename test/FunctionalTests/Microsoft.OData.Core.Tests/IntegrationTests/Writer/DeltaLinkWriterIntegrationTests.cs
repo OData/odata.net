@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer

@@ -10,7 +10,6 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 

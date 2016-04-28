@@ -12,7 +12,6 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 

@@ -3,7 +3,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 using FluentAssertions;
-using Microsoft.OData.Edm;
 using System;
 using System.Collections.Generic;
 using System.Linq;

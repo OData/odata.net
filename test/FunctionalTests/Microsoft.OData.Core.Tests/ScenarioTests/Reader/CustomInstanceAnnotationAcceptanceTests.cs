@@ -12,7 +12,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader

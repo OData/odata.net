@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
 

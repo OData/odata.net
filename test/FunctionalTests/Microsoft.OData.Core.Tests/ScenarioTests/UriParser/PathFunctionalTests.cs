@@ -12,7 +12,6 @@ using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;

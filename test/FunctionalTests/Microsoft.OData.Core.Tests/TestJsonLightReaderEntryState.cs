@@ -10,7 +10,6 @@ using System.Linq;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Tests
 {
