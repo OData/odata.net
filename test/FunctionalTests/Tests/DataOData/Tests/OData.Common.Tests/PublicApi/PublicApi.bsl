@@ -5038,6 +5038,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentHandler {
 	public virtual void Handle (Microsoft.OData.UriParser.MetadataSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.NavigationPropertyLinkSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.NavigationPropertySegment segment)
+	public virtual void Handle (Microsoft.OData.UriParser.ODataPathSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.OpenPropertySegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.OperationImportSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.OperationSegment segment)

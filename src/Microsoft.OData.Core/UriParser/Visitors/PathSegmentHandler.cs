@@ -14,6 +14,15 @@ namespace Microsoft.OData.UriParser
     public abstract class PathSegmentHandler
     {
         /// <summary>
+        /// Handle a ODataPathSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(ODataPathSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handle a TypeSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
