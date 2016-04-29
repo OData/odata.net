@@ -525,7 +525,8 @@ namespace Microsoft.OData
         {
             // Calling dispose since it's the right thing to do, but when created from a custom-built TextWriter
             // the output context Dispose will not actually dispose anything, it will just cleanup itself.
-            using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, textWriter, messageWriterSettings, model))
+            // TODO: URI parser will also support DI container in the future but set the container to null at this moment.
+            using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, textWriter, messageWriterSettings, model, /*container*/null))
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
                 writeValue(jsonLightValueSerializer);
@@ -551,7 +552,8 @@ namespace Microsoft.OData
 
                 ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);
 
-                using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, stream, mediaType, Encoding.UTF8, messageWriterSettings, false, true, model, null))
+                // TODO: URI parser will also support DI container in the future but set the container to null at this moment.
+                using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, stream, mediaType, Encoding.UTF8, messageWriterSettings, false, true, model, null, null))
                 {
                     writeAction(jsonOutputContext);
                     stream.Position = 0;

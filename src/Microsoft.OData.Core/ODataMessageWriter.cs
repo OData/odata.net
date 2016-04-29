@@ -38,6 +38,9 @@ namespace Microsoft.OData
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs written to the payload.</summary>
         private readonly IODataUrlResolver urlResolver;
 
+        /// <summary>The optional dependency injection container to get related services for message writing.</summary>
+        private readonly IServiceProvider container;
+
         /// <summary>Flag to ensure that only a single write method is called on the message writer.</summary>
         private bool writeMethodCalled;
 
@@ -100,6 +103,7 @@ namespace Microsoft.OData
             this.settings = settings == null ? new ODataMessageWriterSettings() : new ODataMessageWriterSettings(settings);
             this.writingResponse = false;
             this.urlResolver = requestMessage as IODataUrlResolver;
+            this.container = GetContainer(requestMessage);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
@@ -138,6 +142,7 @@ namespace Microsoft.OData
             this.settings = settings == null ? new ODataMessageWriterSettings() : new ODataMessageWriterSettings(settings);
             this.writingResponse = true;
             this.urlResolver = responseMessage as IODataUrlResolver;
+            this.container = GetContainer(responseMessage);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
@@ -667,6 +672,17 @@ namespace Microsoft.OData
             return this.format;
         }
 
+        private static IServiceProvider GetContainer<T>(T message)
+            where T : class
+        {
+#if PORTABLELIB
+            var containerProvider = message as IContainerProvider;
+            return containerProvider == null ? null : containerProvider.Container;
+#else
+            return null;
+#endif
+        }
+
         /// <summary>
         /// If no headers have been set, sets the content-type and OData-Version headers on the message used by the message writer.
         /// If headers have been set explicitly (via ODataUtils.SetHeaderForPayload) this method verifies that the payload kind used to 
@@ -1132,6 +1148,23 @@ namespace Microsoft.OData
             }
         }
 
+        private ODataMessageInfo CreateMessageInfo()
+        {
+            return new ODataMessageInfo
+            {
+                Encoding = this.encoding,
+                GetMessageStream = this.message.GetStream,
+#if PORTABLELIB
+                GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                IsResponse = this.writingResponse,
+                MediaType = this.mediaType,
+                Model = this.model,
+                UrlResolver = this.urlResolver,
+                Container = this.container
+            };
+        }
+
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
@@ -1150,18 +1183,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
+                this.CreateMessageInfo(),
                 this.settings);
             writeAction(this.outputContext);
         }
@@ -1186,18 +1208,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
+                this.CreateMessageInfo(),
                 this.settings);
             return writeFunc(this.outputContext);
         }
@@ -1223,18 +1234,7 @@ namespace Microsoft.OData
 
             // Create the output context
             return this.format.CreateOutputContextAsync(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
+                this.CreateMessageInfo(),
                 this.settings)
 
                 .FollowOnSuccessWithTask(
@@ -1266,18 +1266,7 @@ namespace Microsoft.OData
 
             // Create the output context
             return this.format.CreateOutputContextAsync(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
+                this.CreateMessageInfo(),
                 this.settings)
 
                 .FollowOnSuccessWithTask(

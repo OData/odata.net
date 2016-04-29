@@ -98,7 +98,8 @@ namespace Microsoft.OData.Json
                 messageInfo.IsResponse,
                 /*synchronous*/ true,
                 messageInfo.Model,
-                messageInfo.UrlResolver);
+                messageInfo.UrlResolver,
+                messageInfo.Container);
         }
 
 #if PORTABLELIB
@@ -176,7 +177,8 @@ namespace Microsoft.OData.Json
                         messageInfo.IsResponse,
                         /*synchronous*/ false,
                         messageInfo.Model,
-                        messageInfo.UrlResolver));
+                        messageInfo.UrlResolver,
+                        messageInfo.Container));
         }
 #endif
 

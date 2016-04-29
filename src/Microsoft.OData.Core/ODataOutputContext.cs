@@ -41,6 +41,9 @@ namespace Microsoft.OData
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs written to the payload.</summary>
         private readonly IODataUrlResolver urlResolver;
 
+        /// <summary>The optional dependency injection container to get related services for message writing.</summary>
+        private readonly IServiceProvider container;
+
         /// <summary>The type resolver to use.</summary>
         private readonly EdmTypeResolver edmTypeResolver;
 
@@ -59,13 +62,15 @@ namespace Microsoft.OData
         /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         protected ODataOutputContext(
             ODataFormat format,
             ODataMessageWriterSettings messageWriterSettings,
             bool writingResponse,
             bool synchronous,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
         {
             ExceptionUtils.CheckArgumentNotNull(format, "format");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
@@ -76,6 +81,7 @@ namespace Microsoft.OData
             this.synchronous = synchronous;
             this.model = model ?? EdmCoreModel.Instance;
             this.urlResolver = urlResolver;
+            this.container = container;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = this.model.GetPayloadValueConverter();
             this.writerValidator = ValidatorFactory.CreateWriterValidator(messageWriterSettings.EnableFullValidation);
@@ -134,6 +140,17 @@ namespace Microsoft.OData
             get
             {
                 return this.urlResolver;
+            }
+        }
+
+        /// <summary>
+        /// The optional dependency injection container to get related services for message writing.
+        /// </summary>
+        public IServiceProvider Container
+        {
+            get
+            {
+                return this.container;
             }
         }
 

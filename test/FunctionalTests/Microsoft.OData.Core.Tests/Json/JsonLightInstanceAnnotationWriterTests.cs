@@ -718,7 +718,8 @@ namespace Microsoft.OData.Tests.Json
                 ODataFormat.Json,
                 stringWriter,
                 new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") },
-                model);
+                model,
+                /*container*/null);
 
             var valueSerializer = new ODataJsonLightValueSerializer(outputContext);
 

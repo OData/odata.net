@@ -402,7 +402,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 /*writingResponse*/ true,
                 /*synchronous*/ true,
                 this.model,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
         #endregion
     }

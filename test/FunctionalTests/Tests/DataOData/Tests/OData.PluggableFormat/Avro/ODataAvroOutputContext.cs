@@ -26,7 +26,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
              bool synchronous,
              IEdmModel model,
              IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, /*container*/null)
         {
             this.outputStream = messageStream;
             this.AvroWriter = new AvroWriter(new StreamWrapper(outputStream));

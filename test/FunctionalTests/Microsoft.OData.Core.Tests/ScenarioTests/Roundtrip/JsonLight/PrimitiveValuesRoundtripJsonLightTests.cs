@@ -655,7 +655,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 /*writingResponse*/ true,
                 /*synchronous*/ true,
                 this.model,
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 ODataJsonLightValueSerializer serializer = new ODataJsonLightValueSerializer(outputContext);
                 serializer.WritePrimitiveValue(clrValue, typeReference);

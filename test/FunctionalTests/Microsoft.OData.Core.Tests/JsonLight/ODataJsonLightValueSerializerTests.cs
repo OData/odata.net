@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse)
         {
-            var context = new ODataJsonLightOutputContext(ODataFormat.Json, stream, new ODataMediaType("application", "json"), Encoding.Default, settings, writingResponse, true, model, null);
+            var context = new ODataJsonLightOutputContext(ODataFormat.Json, stream, new ODataMediaType("application", "json"), Encoding.Default, settings, writingResponse, true, model, null, null);
             var serializer = new ODataJsonLightValueSerializer(context);
             return serializer;
         }

@@ -1024,7 +1024,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 writingResponse,
                 /*synchronous*/ true,
                 userModel ?? EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
     }
 }

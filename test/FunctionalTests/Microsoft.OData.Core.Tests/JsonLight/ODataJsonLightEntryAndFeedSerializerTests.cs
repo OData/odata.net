@@ -209,7 +209,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 writingResponse,
                 /*synchronous*/ true,
                 TestUtils.WrapReferencedModelsToMainModel(model),
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
 
         private string SerializeJsonFragment(Action<ODataJsonLightResourceSerializer> writeWithSerializer)

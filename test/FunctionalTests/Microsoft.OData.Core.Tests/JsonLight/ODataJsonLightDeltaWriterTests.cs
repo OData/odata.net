@@ -1034,7 +1034,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*writingResponse*/ true,
                 /*synchronous*/ true,
                 userModel ?? EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
 
         #endregion

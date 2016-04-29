@@ -46,12 +46,14 @@ namespace Microsoft.OData.Json
         /// <param name="textWriter">The text writer to write to.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <param name="model">The model to use.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         protected internal ODataJsonOutputContextBase(
             ODataFormat format,
             TextWriter textWriter,
             ODataMessageWriterSettings messageWriterSettings,
-            IEdmModel model)
-            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/)
+            IEdmModel model,
+            IServiceProvider container)
+            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/, container)
         {
             Debug.Assert(textWriter != null, "textWriter != null");
 
@@ -71,6 +73,7 @@ namespace Microsoft.OData.Json
         /// <param name="isIeee754Compatible">true if it is IEEE754Compatible</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected internal ODataJsonOutputContextBase(
             ODataFormat format,
@@ -81,8 +84,9 @@ namespace Microsoft.OData.Json
             bool synchronous,
             bool isIeee754Compatible,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, container)
         {
             Debug.Assert(messageStream != null, "messageStream != null");
 

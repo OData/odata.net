@@ -45,6 +45,7 @@
     <Compile Include="AnnotationFilterPattern.cs" />
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
+    <Compile Include="IContainerProvider.cs" />
     <Compile Include="ServiceLifetime.cs" />
     <Compile Include="IContainerBuilder.cs" />
     <Compile Include="Metadata\ODataAtomErrorDeserializer.cs" />

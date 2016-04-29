@@ -44,6 +44,11 @@ namespace Microsoft.OData
         /// </summary>
         public IODataUrlResolver UrlResolver { get; internal set; }
 
+        /// <summary>
+        /// The optional dependency injection container to get related services for message writing.
+        /// </summary>
+        public IServiceProvider Container { get; internal set; }
+
 #if PORTABLELIB
         /// <summary>
         /// Function to get the message stream task

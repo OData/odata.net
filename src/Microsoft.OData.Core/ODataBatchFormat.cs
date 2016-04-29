@@ -89,7 +89,8 @@ namespace Microsoft.OData
                 messageInfo.IsResponse,
                 /*synchronous*/ true,
                 messageInfo.Model,
-                messageInfo.UrlResolver);
+                messageInfo.UrlResolver,
+                messageInfo.Container);
         }
 
 #if PORTABLELIB
@@ -158,7 +159,8 @@ namespace Microsoft.OData
                         messageInfo.IsResponse,
                         /*synchronous*/ false,
                         messageInfo.Model,
-                        messageInfo.UrlResolver));
+                        messageInfo.UrlResolver,
+                        messageInfo.Container));
         }
 #endif
 

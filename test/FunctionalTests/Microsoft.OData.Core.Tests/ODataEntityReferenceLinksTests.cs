@@ -430,7 +430,8 @@ namespace Microsoft.OData.Tests
                 writingResponse,
                 synchronous,
                 EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
 
         private ODataJsonLightEntityReferenceLinkDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool isIeee754Compatible = false)

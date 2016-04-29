@@ -172,7 +172,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 writingResponse,
                 synchronous,
                 EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
     }
 }

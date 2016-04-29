@@ -435,7 +435,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*writingResponse*/ true,
                 /*synchronous*/ true,
                 this.model,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
     }
 }

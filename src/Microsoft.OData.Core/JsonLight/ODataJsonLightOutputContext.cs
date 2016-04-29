@@ -42,12 +42,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="textWriter">The text writer to write to.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <param name="model">The model to use.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         internal ODataJsonLightOutputContext(
             ODataFormat format,
             TextWriter textWriter,
             ODataMessageWriterSettings messageWriterSettings,
-            IEdmModel model)
-            : base(format, textWriter, messageWriterSettings, model)
+            IEdmModel model,
+            IServiceProvider container)
+            : base(format, textWriter, messageWriterSettings, model, container)
         {
             Debug.Assert(!this.WritingResponse, "Expecting WritingResponse to always be false for this constructor, so no need to validate the MetadataDocumentUri on the writer settings.");
             Debug.Assert(textWriter != null, "textWriter != null");
@@ -68,8 +70,19 @@ namespace Microsoft.OData.JsonLight
         /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
-        internal ODataJsonLightOutputContext(ODataFormat format, Stream messageStream, ODataMediaType mediaType, Encoding encoding, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
-            : base(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver)
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
+        internal ODataJsonLightOutputContext(
+            ODataFormat format,
+            Stream messageStream,
+            ODataMediaType mediaType,
+            Encoding encoding,
+            ODataMessageWriterSettings messageWriterSettings,
+            bool writingResponse,
+            bool synchronous,
+            IEdmModel model,
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : base(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver, container)
         {
             Debug.Assert(messageStream != null, "messageStream != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");

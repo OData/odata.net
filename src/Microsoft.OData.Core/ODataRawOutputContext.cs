@@ -54,6 +54,7 @@ namespace Microsoft.OData
         /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         internal ODataRawOutputContext(
             ODataFormat format,
             Stream messageStream,
@@ -62,8 +63,9 @@ namespace Microsoft.OData
             bool writingResponse,
             bool synchronous,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, container)
         {
             Debug.Assert(messageStream != null, "messageStream != null");
 

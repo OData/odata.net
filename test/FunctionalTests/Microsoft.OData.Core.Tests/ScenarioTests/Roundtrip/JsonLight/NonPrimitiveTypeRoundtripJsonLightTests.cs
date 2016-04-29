@@ -191,7 +191,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 /*writingResponse*/ false,
                 /*synchronous*/ true,
                 model,
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 var jsonLightWriter = new ODataJsonLightWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
                 jsonLightWriter.WriteStart(entry);
