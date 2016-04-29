@@ -57,25 +57,25 @@ namespace Microsoft.OData.Tests.UriParser
 
             #region Enum Types
             var colorType = new EdmEnumType("Fully.Qualified.Namespace", "ColorPattern", EdmPrimitiveTypeKind.Int64, true);
-            colorType.AddMember("Red", new EdmIntegerConstant(1L));
-            colorType.AddMember("Blue", new EdmIntegerConstant(2L));
-            colorType.AddMember("Yellow", new EdmIntegerConstant(4L));
-            colorType.AddMember("Solid", new EdmIntegerConstant(8L));
-            colorType.AddMember("Striped", new EdmIntegerConstant(16L));
-            colorType.AddMember("SolidRed", new EdmIntegerConstant(9L));
-            colorType.AddMember("SolidBlue", new EdmIntegerConstant(10L));
-            colorType.AddMember("SolidYellow", new EdmIntegerConstant(12L));
-            colorType.AddMember("RedBlueStriped", new EdmIntegerConstant(19L));
-            colorType.AddMember("RedYellowStriped", new EdmIntegerConstant(21L));
-            colorType.AddMember("BlueYellowStriped", new EdmIntegerConstant(22L));
+            colorType.AddMember("Red", new EdmEnumMemberValue(1L));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(2L));
+            colorType.AddMember("Yellow", new EdmEnumMemberValue(4L));
+            colorType.AddMember("Solid", new EdmEnumMemberValue(8L));
+            colorType.AddMember("Striped", new EdmEnumMemberValue(16L));
+            colorType.AddMember("SolidRed", new EdmEnumMemberValue(9L));
+            colorType.AddMember("SolidBlue", new EdmEnumMemberValue(10L));
+            colorType.AddMember("SolidYellow", new EdmEnumMemberValue(12L));
+            colorType.AddMember("RedBlueStriped", new EdmEnumMemberValue(19L));
+            colorType.AddMember("RedYellowStriped", new EdmEnumMemberValue(21L));
+            colorType.AddMember("BlueYellowStriped", new EdmEnumMemberValue(22L));
             model.AddElement(colorType);
             var colorTypeReference = new EdmEnumTypeReference(colorType, false);
             var nullableColorTypeReference = new EdmEnumTypeReference(colorType, true);
 
             var NonFlagShapeType = new EdmEnumType("Fully.Qualified.Namespace", "NonFlagShape", EdmPrimitiveTypeKind.SByte, false);
-            NonFlagShapeType.AddMember("Rectangle", new EdmIntegerConstant(1));
-            NonFlagShapeType.AddMember("Triangle", new EdmIntegerConstant(2));
-            NonFlagShapeType.AddMember("foursquare", new EdmIntegerConstant(3));
+            NonFlagShapeType.AddMember("Rectangle", new EdmEnumMemberValue(1));
+            NonFlagShapeType.AddMember("Triangle", new EdmEnumMemberValue(2));
+            NonFlagShapeType.AddMember("foursquare", new EdmEnumMemberValue(3));
             model.AddElement(NonFlagShapeType);
             #endregion
 

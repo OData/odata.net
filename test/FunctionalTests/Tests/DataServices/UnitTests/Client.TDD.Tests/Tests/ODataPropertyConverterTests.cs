@@ -56,9 +56,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.serverComplexTypeName = "Server.NS.HomeAddress";
 
             var colorType = new EdmEnumType("Server.NS", "Color");
-            colorType.AddMember(new EdmEnumMember(colorType, "Red", new EdmIntegerConstant(1)));
-            colorType.AddMember(new EdmEnumMember(colorType, "Blue", new EdmIntegerConstant(2)));
-            colorType.AddMember(new EdmEnumMember(colorType, "Green", new EdmIntegerConstant(3)));
+            colorType.AddMember(new EdmEnumMember(colorType, "Red", new EdmEnumMemberValue(1)));
+            colorType.AddMember(new EdmEnumMember(colorType, "Blue", new EdmEnumMemberValue(2)));
+            colorType.AddMember(new EdmEnumMember(colorType, "Green", new EdmEnumMemberValue(3)));
             this.serverEntityType.AddStructuralProperty("Color", new EdmEnumTypeReference(colorType, false));
 
             this.serverEntityType.AddStructuralProperty("Nicknames", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));

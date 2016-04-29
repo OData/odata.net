@@ -240,7 +240,7 @@ namespace EdmLibTests.FunctionalTests
         public void ParseEnumTypeInParallel()
         {
             var color = new EdmEnumType("ns", "color");
-            color.AddMember("White", new EdmIntegerConstant(0));
+            color.AddMember("White", new EdmEnumMemberValue(0));
             int errorCount = 0;
             Parallel.ForEach(
                 Enumerable.Range(0, 20),

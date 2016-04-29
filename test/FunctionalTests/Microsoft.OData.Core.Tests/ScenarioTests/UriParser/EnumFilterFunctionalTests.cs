@@ -44,11 +44,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             this.userModel = new EdmModel();
 
             var enumType = new EdmEnumType("NS", "Color", EdmPrimitiveTypeKind.Int32, false);
-            var red = new EdmEnumMember(enumType, "Red", new EdmIntegerConstant(1));
+            var red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
             enumType.AddMember(red);
-            enumType.AddMember("Green", new EdmIntegerConstant(2));
-            enumType.AddMember("Blue", new EdmIntegerConstant(3));
-            enumType.AddMember("White", new EdmIntegerConstant(-10));
+            enumType.AddMember("Green", new EdmEnumMemberValue(2));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(3));
+            enumType.AddMember("White", new EdmEnumMemberValue(-10));
 
             // add to model
             this.userModel.AddElement(enumType);
@@ -60,10 +60,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // enum with flags
             var enumFlagsType = new EdmEnumType("NS", "ColorFlags", EdmPrimitiveTypeKind.Int64, true);
-            enumFlagsType.AddMember("Red", new EdmIntegerConstant(1L));
-            enumFlagsType.AddMember("Green", new EdmIntegerConstant(2L));
-            enumFlagsType.AddMember("Blue", new EdmIntegerConstant(4L));
-            enumFlagsType.AddMember("GreenRed", new EdmIntegerConstant(3L));
+            enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1L));
+            enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2L));
+            enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4L));
+            enumFlagsType.AddMember("GreenRed", new EdmEnumMemberValue(3L));
 
             // add to model
             this.userModel.AddElement(enumFlagsType);

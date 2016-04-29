@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// </summary>
     public class EdmEnumValue : EdmValue, IEdmEnumValue
     {
-        private readonly IEdmPrimitiveValue value;
+        private readonly IEdmEnumMemberValue value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEnumValue"/> class. 
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         /// <param name="type">A reference to the enumeration type that describes this value.</param>
         /// <param name="value">The underlying type value.</param>
-        public EdmEnumValue(IEdmEnumTypeReference type, IEdmPrimitiveValue value)
+        public EdmEnumValue(IEdmEnumTypeReference type, IEdmEnumMemberValue value)
             : base(type)
         {
             this.value = value;
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Gets the underlying type value of the enumeration type.
         /// </summary>
-        public IEdmPrimitiveValue Value
+        public IEdmEnumMemberValue Value
         {
             get { return this.value; }
         }

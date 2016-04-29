@@ -45,8 +45,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             addressType.AddProperty(new EdmStructuralProperty(addressType, "Street", EdmCoreModel.Instance.GetString(isNullable: true)));
             addressType.AddProperty(new EdmStructuralProperty(addressType, "Zipcode", EdmCoreModel.Instance.GetInt32(isNullable: true)));
             var stateEnumType = new EdmEnumType("ns", "StateEnum", isFlags: true);
-            stateEnumType.AddMember("IL", new EdmIntegerConstant(1));
-            stateEnumType.AddMember("WA", new EdmIntegerConstant(2));
+            stateEnumType.AddMember("IL", new EdmEnumMemberValue(1));
+            stateEnumType.AddMember("WA", new EdmEnumMemberValue(2));
             addressType.AddProperty(new EdmStructuralProperty(addressType, "State", new EdmEnumTypeReference(stateEnumType, true)));
             
             EdmComplexType derivedAddressType = new EdmComplexType("ns", "DerivedAddress", addressType, false);

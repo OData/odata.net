@@ -9,6 +9,7 @@
 
 namespace Microsoft.OData.Edm {
     using System;
+    using System.Resources;
 
     /// <summary>
     ///    Strongly-typed and parameterized string resources.
@@ -730,10 +731,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The type of the value of enum member '{0}' must match the underlying type of the parent enum."
+        /// A string like "The value of enum member '{0}' exceeds the range of its underlying type."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType, p0);
+        internal static string EdmModel_Validator_Semantic_EnumMemberValueOutOfRange(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EnumMemberValueOutOfRange, p0);
         }
 
         /// <summary>
@@ -1559,11 +1560,11 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The enumeration member value exceeds the range of its data type 'http://www.w3.org/2001/XMLSchema:long'."
+        /// A string like "The enumeration member must have a value."
         /// </summary>
-        internal static string CsdlSemantics_EnumMemberValueOutOfRange {
+        internal static string CsdlSemantics_EnumMemberMustHaveValue {
             get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlSemantics_EnumMemberValueOutOfRange);
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlSemantics_EnumMemberMustHaveValue);
             }
         }
 

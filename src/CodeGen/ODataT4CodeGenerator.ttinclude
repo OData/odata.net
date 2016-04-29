@@ -2164,7 +2164,7 @@ public abstract class ODataClientTemplate : TemplateBase
             string value = string.Empty;
             if (member.Value != null)
             {
-                IEdmIntegerValue integerValue = member.Value as IEdmIntegerValue;
+                IEdmEnumMemberValue integerValue = member.Value as IEdmEnumMemberValue;
                 if (integerValue != null)
                 {
                     value = " = " + integerValue.Value.ToString(CultureInfo.InvariantCulture);

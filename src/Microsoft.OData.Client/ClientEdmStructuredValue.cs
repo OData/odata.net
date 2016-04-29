@@ -156,7 +156,7 @@ namespace Microsoft.OData.Client
             if (edmPropertyType.IsEnum())
             {
                 // Need to handle underlying type(Int16, Int32, Int64)
-                return new EdmEnumValue(edmPropertyType as IEdmEnumTypeReference, new EdmIntegerConstant(Convert.ToInt64(propertyValue, CultureInfo.InvariantCulture)));
+                return new EdmEnumValue(edmPropertyType as IEdmEnumTypeReference, new EdmEnumMemberValue(Convert.ToInt64(propertyValue, CultureInfo.InvariantCulture)));
             }
 
             var primitiveType = edmPropertyType as IEdmPrimitiveTypeReference;

@@ -2344,14 +2344,14 @@ namespace EdmLibTests.FunctionalUtilities
         {
             EdmModel model = new EdmModel();
             EdmEnumType colors = new EdmEnumType("Foo", "Colors", EdmPrimitiveTypeKind.Int64, false);
-            colors.AddMember("Red", new EdmIntegerConstant(1));
-            colors.AddMember("Blue", new EdmIntegerConstant(2));
-            colors.AddMember("Green", new EdmIntegerConstant(3));
-            colors.AddMember("Orange", new EdmIntegerConstant(4));
+            colors.AddMember("Red", new EdmEnumMemberValue(1));
+            colors.AddMember("Blue", new EdmEnumMemberValue(2));
+            colors.AddMember("Green", new EdmEnumMemberValue(3));
+            colors.AddMember("Orange", new EdmEnumMemberValue(4));
 
             EdmEnumType gender = new EdmEnumType("Foo", "Gender", EdmPrimitiveTypeKind.Int64, true);
-            gender.AddMember("Male", new EdmIntegerConstant(1));
-            gender.AddMember("Female", new EdmIntegerConstant(2));
+            gender.AddMember("Male", new EdmEnumMemberValue(1));
+            gender.AddMember("Female", new EdmEnumMemberValue(2));
 
             model.AddElement(gender);
             model.AddElement(colors);
@@ -2363,14 +2363,14 @@ namespace EdmLibTests.FunctionalUtilities
         {
             EdmModel model = new EdmModel();
             EdmEnumType colors = new EdmEnumType("Foo", "Colors", EdmPrimitiveTypeKind.Byte, false);
-            colors.AddMember("Red", new EdmIntegerConstant(1));
-            colors.AddMember("Blue", new EdmIntegerConstant(2));
-            colors.AddMember("Green", new EdmIntegerConstant(3));
-            colors.AddMember("Orange", new EdmIntegerConstant(4));
+            colors.AddMember("Red", new EdmEnumMemberValue(1));
+            colors.AddMember("Blue", new EdmEnumMemberValue(2));
+            colors.AddMember("Green", new EdmEnumMemberValue(3));
+            colors.AddMember("Orange", new EdmEnumMemberValue(4));
 
             EdmEnumType gender = new EdmEnumType("Foo", "Gender", EdmPrimitiveTypeKind.Byte, true);
-            gender.AddMember("Male", new EdmStringConstant("m"));
-            gender.AddMember("Female", new EdmStringConstant("f"));
+            gender.AddMember("Male", new EdmEnumMemberValue(512L));
+            gender.AddMember("Female", new EdmEnumMemberValue(512L));
 
             model.AddElement(gender);
             return model;

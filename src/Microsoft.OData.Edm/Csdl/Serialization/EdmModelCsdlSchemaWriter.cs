@@ -221,7 +221,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             bool? isExplicit = member.IsValueExplicit(this.model);
             if (!isExplicit.HasValue || isExplicit.Value)
             {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Value, member.Value, EdmValueWriter.PrimitiveValueAsXml);
+                this.xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Value, EdmValueWriter.LongAsXml(member.Value.Value));
             }
         }
 

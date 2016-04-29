@@ -1914,46 +1914,34 @@ namespace EdmLibTests.FunctionalTests
         public void EvaluateEnumExpressionOfSingleValue()
         {
             var color = new EdmEnumType("Ns", "Color");
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(0));
-            color.AddMember("White", new EdmIntegerConstant(1));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(0));
+            color.AddMember("White", new EdmEnumMemberValue(1));
             var enumExpression = new EdmEnumMemberExpression(blue);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);
-            (value.Value as EdmIntegerConstant).Value.Should().Be(0);
+            value.Value.Value.Should().Be(0);
         }
 
         [TestMethod]
         public void EvaluateEnumExpressionOfMultiValues()
         {
             var color = new EdmEnumType("Ns", "Color", true);
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(1));
-            var white = color.AddMember("White", new EdmIntegerConstant(2));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
+            var white = color.AddMember("White", new EdmEnumMemberValue(2));
             var enumExpression = new EdmEnumMemberExpression(blue, white);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);
-            (value.Value as EdmIntegerConstant).Value.Should().Be(3);
+            value.Value.Value.Should().Be(3);
         }
 
         [TestMethod]
         public void EvaluateEnumExpressionOfMultiValuesWithoutFlagsShouldThrow()
         {
             var color = new EdmEnumType("Ns", "Color");
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(1));
-            var white = color.AddMember("White", new EdmIntegerConstant(2));
-            var enumExpression = new EdmEnumMemberExpression(blue, white);
-            EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
-            Action action = () => evaluator.Evaluate(enumExpression);
-            action.ShouldThrow<InvalidOperationException>().WithMessage("Type Ns.Color cannot be assigned with multi-values.");
-        }
-
-        [TestMethod]
-        public void EvaluateEnumExpressionOfMultiValuesWithStringUnderlyingTypeShouldThrow()
-        {
-            var color = new EdmEnumType("Ns", "Color", EdmPrimitiveTypeKind.String, true);
-            var blue = color.AddMember("Blue", new EdmStringConstant("1"));
-            var white = color.AddMember("White", new EdmStringConstant("2"));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
+            var white = color.AddMember("White", new EdmEnumMemberValue(2));
             var enumExpression = new EdmEnumMemberExpression(blue, white);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             Action action = () => evaluator.Evaluate(enumExpression);
@@ -1964,13 +1952,13 @@ namespace EdmLibTests.FunctionalTests
         public void EvaluateEnumReferenceExpression()
         {
             var color = new EdmEnumType("Ns", "Color", true);
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(1));
-            color.AddMember("White", new EdmIntegerConstant(2));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
+            color.AddMember("White", new EdmEnumMemberValue(2));
             var enumReferenceExpression = new EdmEnumMemberReferenceExpression(blue);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumReferenceExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);
-            value.Value.As<EdmIntegerConstant>().Value.Should().Be(1);
+            value.Value.Value.Should().Be(1);
         }
 
         private sealed class MutableStructuredValue : IEdmStructuredValue

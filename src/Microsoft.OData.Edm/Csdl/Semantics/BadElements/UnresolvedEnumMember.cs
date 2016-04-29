@@ -6,7 +6,6 @@
 
 using System;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -16,8 +15,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly IEdmEnumType declaringType;
 
         // Value cache.
-        private readonly Cache<UnresolvedEnumMember, IEdmPrimitiveValue> value = new Cache<UnresolvedEnumMember, IEdmPrimitiveValue>();
-        private static readonly Func<UnresolvedEnumMember, IEdmPrimitiveValue> ComputeValueFunc = (me) => me.ComputeValue();
+        private readonly Cache<UnresolvedEnumMember, IEdmEnumMemberValue> value = new Cache<UnresolvedEnumMember, IEdmEnumMemberValue>();
+        private static readonly Func<UnresolvedEnumMember, IEdmEnumMemberValue> ComputeValueFunc = (me) => me.ComputeValue();
 
         public UnresolvedEnumMember(string name, IEdmEnumType declaringType, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEnumMember, Edm.Strings.Bad_UnresolvedEnumMember(name)) })
@@ -31,7 +30,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.name; }
         }
 
-        public IEdmPrimitiveValue Value
+        public IEdmEnumMemberValue Value
         {
             get { return this.value.GetValue(this, ComputeValueFunc, null); }
         }
@@ -41,9 +40,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.declaringType; }
         }
 
-        private IEdmPrimitiveValue ComputeValue()
+        private IEdmEnumMemberValue ComputeValue()
         {
-            return new EdmIntegerConstant(0);
+            return new EdmEnumMemberValue(0);
         }
     }
 }

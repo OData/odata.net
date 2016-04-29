@@ -104,7 +104,7 @@ EdmModel_Validator_Semantic_PrecisionOutOfRange=Precision cannot be negative.
 EdmModel_Validator_Semantic_StringMaxLengthOutOfRange=The max length facet specifies the maximum length of an instance of the string type. For unicode equal to 'true', the max length can range from 1 to 2^30, or if 'false', 1 to 2^31.
 EdmModel_Validator_Semantic_MaxLengthOutOfRange=Max length can range from 1 to 2^31.
 EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode=A property with a fixed concurrency mode cannot be of type '{0}'. The property type must be a primitive type.
-EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType=The type of the value of enum member '{0}' must match the underlying type of the parent enum.
+EdmModel_Validator_Semantic_EnumMemberValueOutOfRange=The value of enum member '{0}' exceeds the range of its underlying type.
 EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined=Each member name of an enum type must be unique. Enum member name '{0}' is already defined.
 EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly=Only entity types can be open types.
 EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull=The string reference is invalid because if 'IsUnbounded' is true 'MaxLength' must be null.
@@ -220,7 +220,7 @@ CsdlParser_InvalidEnumMemberPath='{0}' is not a valid enum member path.
 CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType=The 'Nullable' attribute cannot be specified for a navigation property with collection type.
 CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer=Metadata document cannot have more than one entity container.
 CsdlSemantics_ReferentialConstraintMismatch= There was a mismatch in the principal and dependent ends of the referential constraint.
-CsdlSemantics_EnumMemberValueOutOfRange=The enumeration member value exceeds the range of its data type 'http://www.w3.org/2001/XMLSchema:long'.
+CsdlSemantics_EnumMemberMustHaveValue=The enumeration member must have a value.
 CsdlSemantics_ImpossibleAnnotationsTarget=The annotation target '{0}' could not be resolved because it cannot refer to an annotatable element.
 CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than once.
 

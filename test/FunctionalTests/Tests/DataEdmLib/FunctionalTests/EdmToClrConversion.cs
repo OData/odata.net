@@ -208,12 +208,12 @@ namespace EdmLibTests.FunctionalTests
             EdmToClrConverter c = new EdmToClrConverter();
 
             EdmEnumType e32 = new EdmEnumType("", "");
-            var r32 = e32.AddMember("Red", new EdmIntegerConstant(10));
-            e32.AddMember("Blue", new EdmIntegerConstant(20));
+            var r32 = e32.AddMember("Red", new EdmEnumMemberValue(10));
+            e32.AddMember("Blue", new EdmEnumMemberValue(20));
 
             EdmEnumValue evRed = new EdmEnumValue(new EdmEnumTypeReference(e32, false), r32);
-            EdmEnumValue ev20 = new EdmEnumValue(new EdmEnumTypeReference(e32, false), new EdmIntegerConstant(20));
-            EdmEnumValue ev30 = new EdmEnumValue(new EdmEnumTypeReference(e32, false), new EdmIntegerConstant(30));
+            EdmEnumValue ev20 = new EdmEnumValue(new EdmEnumTypeReference(e32, false), new EdmEnumMemberValue(20));
+            EdmEnumValue ev30 = new EdmEnumValue(new EdmEnumTypeReference(e32, false), new EdmEnumMemberValue(30));
 
             Assert.AreEqual(RedBlue.Red, c.AsClrValue<RedBlue>(evRed), "c.AsClrValue<RedBlue>(evRed)");
             Assert.AreEqual(RedBlue.Blue, c.AsClrValue<RedBlue>(ev20), "c.AsClrValue<RedBlue>(ev20)");
@@ -228,10 +228,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(RedBlueLong.Red, c.AsClrValue<RedBlueLong>(evRed), "c.AsClrValue<RedBlueLong>(evRed)");
             Assert.AreEqual(RedBlueLong.Blue, c.AsClrValue<RedBlueLong>(ev20), "c.AsClrValue<RedBlueLong>(ev20)");
             Assert.AreEqual((RedBlueLong)30, c.AsClrValue<RedBlueLong>(ev30), "c.AsClrValue<RedBlueLong>(ev30)");
-
-            Assert.AreEqual(RedBlueByte.Red, c.AsClrValue<RedBlueByte>(new EdmIntegerConstant(10)), "c.AsClrValue<RedBlueByte>(new EdmIntegerConstant(10))");
-            Assert.AreEqual(RedBlueByte.Blue, c.AsClrValue<RedBlueByte>(new EdmIntegerConstant(20)), "c.AsClrValue<RedBlueByte>(new EdmIntegerConstant(20))");
-            Assert.AreEqual((RedBlueByte)30, c.AsClrValue<RedBlueByte>(new EdmIntegerConstant(30)), "c.AsClrValue<RedBlueByte>(new EdmIntegerConstant(30))");
 
             Assert.AreEqual(RedBlueLong.Red, c.AsClrValue(evRed, typeof(RedBlueLong)), "c.AsClrValue(evRed, typeof(RedBlueLong))");
             Assert.AreEqual(RedBlueLong.Blue, c.AsClrValue(ev20, typeof(RedBlueLong)), "c.AsClrValue(ev20, typeof(RedBlueLong))");

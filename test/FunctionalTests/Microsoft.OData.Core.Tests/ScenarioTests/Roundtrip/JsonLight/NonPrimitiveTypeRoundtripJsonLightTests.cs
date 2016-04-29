@@ -57,9 +57,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
             // enum with flags
             var enumFlagsType = new EdmEnumType(MyNameSpace, "ColorFlags", isFlags: true);
-            enumFlagsType.AddMember("Red", new EdmIntegerConstant(1));
-            enumFlagsType.AddMember("Green", new EdmIntegerConstant(2));
-            enumFlagsType.AddMember("Blue", new EdmIntegerConstant(4));
+            enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1));
+            enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2));
+            enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4));
             studentInfo.AddStructuralProperty("ClothesColors", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEnumTypeReference(enumFlagsType, true))));
 
             EdmCollectionTypeReference hobbiesCollection = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false)));

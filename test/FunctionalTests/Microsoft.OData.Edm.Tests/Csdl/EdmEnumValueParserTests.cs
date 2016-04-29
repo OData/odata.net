@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -20,8 +18,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberOfOneValueShouldBeTrue()
         {
             var enumType = new EdmEnumType("Ns", "Color");
-            var blue = enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("White", new EdmIntegerConstant(1));
+            var blue = enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("White", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "  Ns.Color/Blue  ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -34,8 +32,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberOfInvalidStringsShouldBeFalse()
         {
             var enumType = new EdmEnumType("Ns", "Color");
-            enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("White", new EdmIntegerConstant(1));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("White", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "       ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -63,8 +61,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberOfInvalidPathShouldBeFalse()
         {
             var enumType = new EdmEnumType("Ns", "Color");
-            enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("White", new EdmIntegerConstant(1));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("White", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "Ns.Color//Blue";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -76,8 +74,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberOfInvalidEnumTypeShouldBeTrue()
         {
             var enumType = new EdmEnumType("Ns", "Color");
-            enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("White", new EdmIntegerConstant(1));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("White", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "Ns.Colors/Blue";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -91,8 +89,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberOfInvalidEnumMemberShouldBeFalse()
         {
             var enumType = new EdmEnumType("Ns", "Color");
-            enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("White", new EdmIntegerConstant(1));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("White", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "Ns.Color/Green";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -104,8 +102,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberWithFlagsOfTwoValuesShouldBeTrue()
         {
             var enumType = new EdmEnumType("Ns", "Permission", true);
-            var read = enumType.AddMember("Read", new EdmIntegerConstant(0));
-            var write = enumType.AddMember("Write", new EdmIntegerConstant(1));
+            var read = enumType.AddMember("Read", new EdmEnumMemberValue(0));
+            var write = enumType.AddMember("Write", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = " Ns.Permission/Read   Ns.Permission/Write ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -117,37 +115,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
-        public void TryParseEnumMemberWithUnderlyingTypeNotIntegerOfTwoValuesShouldBeFalse()
-        {
-            var enumType = new EdmEnumType("Ns", "Permission", EdmPrimitiveTypeKind.String, true);
-            enumType.AddMember("Read", new EdmStringConstant("1"));
-            enumType.AddMember("Write", new EdmStringConstant("2"));
-            var complexType = new EdmComplexType("Ns", "Address");
-            string enumPath = "Ns.Permission/Read Ns.Permission/Write";
-            List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
-            IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
-        }
-
-        [Fact]
-        public void TryParseEnumMemberOfTwoValuesWithInvalidEnumTypeShouldBeFalse()
-        {
-            var enumType = new EdmEnumType("Ns", "Permission", EdmPrimitiveTypeKind.String, true);
-            enumType.AddMember("Read", new EdmStringConstant("1"));
-            enumType.AddMember("Write", new EdmStringConstant("2"));
-            var complexType = new EdmComplexType("Ns", "Address");
-            string enumPath = "Ns.Permission/Read Ns.Permissions/Write";
-            List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
-            IEnumerable<IEdmEnumMember> parsedMember;
-            EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember).Should().BeFalse();
-        }
-
-        [Fact]
         public void TryParseEnumMemberWithoutFlagsOfTwoValueShouldBeFalse()
         {
             var enumType = new EdmEnumType("Ns", "Permission");
-            enumType.AddMember("Read", new EdmIntegerConstant(0));
-            enumType.AddMember("Write", new EdmIntegerConstant(1));
+            enumType.AddMember("Read", new EdmEnumMemberValue(0));
+            enumType.AddMember("Write", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "Ns.Permission/Read Ns.Permission/Write";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
@@ -159,9 +131,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseEnumMemberWithFlagsOfMultiValueShouldBeTrue()
         {
             var enumType = new EdmEnumType("Ns", "Permission", true);
-            var read = enumType.AddMember("Read", new EdmIntegerConstant(1));
-            var write = enumType.AddMember("Write", new EdmIntegerConstant(2));
-            var readwrite = enumType.AddMember("ReadWrite", new EdmIntegerConstant(3));
+            var read = enumType.AddMember("Read", new EdmEnumMemberValue(1));
+            var write = enumType.AddMember("Write", new EdmEnumMemberValue(2));
+            var readwrite = enumType.AddMember("ReadWrite", new EdmEnumMemberValue(3));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "Ns.Permission/Read  Ns.Permission/Write  Ns.Permission/ReadWrite";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };

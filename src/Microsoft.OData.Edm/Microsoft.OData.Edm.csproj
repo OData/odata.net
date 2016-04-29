@@ -42,10 +42,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs" />
-    <Compile Include="Schema\EdmPathExpression.cs" />
-    <Compile Include="Schema\Interfaces\IEdmExpression.cs" />
-    <Compile Include="Schema\Interfaces\IEdmPathExpression.cs" />
-    <Compile Include="Schema\TimeOfDay.cs" />
     <Compile Include="PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />
     <Compile Include="Csdl\CsdlLocation.cs" />
     <Compile Include="Csdl\EdmParseException.cs" />
@@ -170,6 +166,10 @@
     <Compile Include="Schema\Interfaces\IEdmReferentialConstraint.cs" />
     <Compile Include="Schema\Interfaces\IEdmSingleton.cs" />
     <Compile Include="Schema\Interfaces\IEdmUnknownEntitySet.cs" />
+    <Compile Include="Schema\Interfaces\IEdmExpression.cs" />
+    <Compile Include="Schema\Interfaces\IEdmPathExpression.cs" />
+    <Compile Include="Schema\Interfaces\IEdmEnumMemberValue.cs" />
+    <Compile Include="Schema\TimeOfDay.cs" />
     <Compile Include="ExtensionMethods\EnumHelper.cs" />
     <Compile Include="PrimitiveValueConverters\IPrimitiveValueConverter.cs" />
     <Compile Include="Schema\AmbiguousSingletonBinding.cs" />
@@ -184,6 +184,8 @@
     <Compile Include="Schema\EdmReference.cs" />
     <Compile Include="Schema\EdmSingleton.cs" />
     <Compile Include="Schema\EdmUnknownEntitySet.cs" />
+    <Compile Include="Schema\EdmPathExpression.cs" />
+    <Compile Include="Schema\EdmEnumMemberValue.cs" />
     <Compile Include="Memoizer.cs" />
     <Compile Include="Schema\EdmFunctionImport.cs" />
     <Compile Include="Schema\EdmActionImport.cs" />
@@ -212,13 +214,12 @@
     <Compile Include="Schema\BadEntitySet.cs" />
     <Compile Include="Schema\BadEntityType.cs" />
     <Compile Include="Schema\BadEntityTypeReference.cs" />
-    <Compile Include="Schema\BadEnumMember.cs" />
     <Compile Include="Schema\BadEnumType.cs" />
     <Compile Include="Schema\BadLabeledExpression.cs" />
     <Compile Include="Schema\BadNamedStructuredType.cs" />
     <Compile Include="Schema\BadPrimitiveType.cs" />
     <Compile Include="Schema\BadPrimitiveTypeReference.cs" />
-    <Compile Include="Schema\BadPrimitiveValue.cs" />
+    <Compile Include="Schema\BadEdmEnumMemberValue.cs" />
     <Compile Include="Schema\BadProperty.cs" />
     <Compile Include="Schema\BadNavigationProperty.cs" />
     <Compile Include="Schema\BadSpatialTypeReference.cs" />

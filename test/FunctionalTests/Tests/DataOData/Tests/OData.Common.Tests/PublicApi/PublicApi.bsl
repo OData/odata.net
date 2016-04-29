@@ -743,7 +743,11 @@ public interface Microsoft.OData.Edm.IEdmEntityTypeReference : IEdmElement, IEdm
 
 public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public abstract get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public abstract get; }
+	Microsoft.OData.Edm.IEdmEnumMemberValue Value  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.IEdmEnumMemberValue : IEdmElement {
+	long Value  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.IEdmEnumType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
@@ -2238,10 +2242,16 @@ public class Microsoft.OData.Edm.EdmEntityTypeReference : Microsoft.OData.Edm.Ed
 }
 
 public class Microsoft.OData.Edm.EdmEnumMember : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement, IEdmVocabularyAnnotatable {
-	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
+	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.IEdmEnumMemberValue value)
 
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEnumMemberValue Value  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmEnumMemberValue : IEdmElement, IEdmEnumMemberValue {
+	public EdmEnumMemberValue (long value)
+
+	long Value  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.EdmEnumType : Microsoft.OData.Edm.EdmType, IEdmElement, IEdmEnumType, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
@@ -2259,7 +2269,7 @@ public class Microsoft.OData.Edm.EdmEnumType : Microsoft.OData.Edm.EdmType, IEdm
 	Microsoft.OData.Edm.IEdmPrimitiveType UnderlyingType  { public virtual get; }
 
 	public void AddMember (Microsoft.OData.Edm.IEdmEnumMember member)
-	public Microsoft.OData.Edm.EdmEnumMember AddMember (string name, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
+	public Microsoft.OData.Edm.EdmEnumMember AddMember (string name, Microsoft.OData.Edm.IEdmEnumMemberValue value)
 }
 
 public class Microsoft.OData.Edm.EdmEnumTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmEnumTypeReference, IEdmTypeReference {
@@ -2665,8 +2675,8 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	EntitySetCanOnlyHaveSingleNavigationPropertyWithContainment = 343
 	EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet = 223
 	EntitySetTypeMustBeCollectionOfEntityType = 370
-	EnumMemberTypeMustMatchEnumUnderlyingType = 292
-	EnumMemberValueOutOfRange = 206
+	EnumMemberMustHaveValue = 206
+	EnumMemberValueOutOfRange = 292
 	EnumMustHaveIntegerUnderlyingType = 351
 	ExpressionNotValidForTheAssertedType = 314
 	ExpressionPrimitiveKindNotValidForAssertedType = 312
@@ -3131,7 +3141,7 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmEnumMemberReferenceExpress
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmEnumValue : IEdmElement, IEdmPrimitiveValue, IEdmValue {
-	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public abstract get; }
+	Microsoft.OData.Edm.IEdmEnumMemberValue Value  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmFloatingConstantExpression : IEdmElement, IEdmExpression, IEdmFloatingValue, IEdmPrimitiveValue, IEdmValue {
@@ -3432,9 +3442,9 @@ public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberReferenceExpression :
 
 public class Microsoft.OData.Edm.Vocabularies.EdmEnumValue : Microsoft.OData.Edm.Vocabularies.EdmValue, IEdmElement, IEdmDelayedValue, IEdmEnumValue, IEdmPrimitiveValue, IEdmValue {
 	public EdmEnumValue (Microsoft.OData.Edm.IEdmEnumTypeReference type, Microsoft.OData.Edm.IEdmEnumMember member)
-	public EdmEnumValue (Microsoft.OData.Edm.IEdmEnumTypeReference type, Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue value)
+	public EdmEnumValue (Microsoft.OData.Edm.IEdmEnumTypeReference type, Microsoft.OData.Edm.IEdmEnumMemberValue value)
 
-	Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue Value  { public virtual get; }
+	Microsoft.OData.Edm.IEdmEnumMemberValue Value  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
 }
 

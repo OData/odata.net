@@ -494,7 +494,7 @@ namespace Microsoft.OData.Client
 #endif
                             {
                                 object memberValue = Enum.Parse(enumTypeTmp, tmp.Name, false);
-                                enumType.AddMember(new EdmEnumMember(enumType, tmp.Name, new EdmIntegerConstant((long)Convert.ChangeType(memberValue, typeof(long), CultureInfo.InvariantCulture.NumberFormat))));
+                                enumType.AddMember(new EdmEnumMember(enumType, tmp.Name, new EdmEnumMemberValue((long)Convert.ChangeType(memberValue, typeof(long), CultureInfo.InvariantCulture.NumberFormat))));
                             }
                         };
 

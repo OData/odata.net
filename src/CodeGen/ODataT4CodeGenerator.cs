@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client.Design.T4
     using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using System.Text;
     using System.Net;
-
+    
     /// <summary>
     /// Class to produce the template output
     /// </summary>
@@ -2268,7 +2268,7 @@ public abstract class ODataClientTemplate : TemplateBase
             string value = string.Empty;
             if (member.Value != null)
             {
-                IEdmIntegerValue integerValue = member.Value as IEdmIntegerValue;
+                IEdmEnumMemberValue integerValue = member.Value as IEdmEnumMemberValue;
                 if (integerValue != null)
                 {
                     value = " = " + integerValue.Value.ToString(CultureInfo.InvariantCulture);
@@ -2826,14 +2826,14 @@ internal static class Utils
     }
 
     /// <summary>
-    /// Gets the value expression to initualize the property with.
+    /// Gets the value expression to initialize the property with.
     /// </summary>
     /// <param name="property">The property in question.</param>
     /// <param name="useDataServiceCollection">true to use the DataServicCollection type for entity collections and the ObservableCollection type for non-entity collections,
     /// false to use Collection for collections.</param>
     /// <param name="clientTemplate">ODataClientTemplate instance that call this method.</param>
     /// <param name="context">CodeGenerationContext instance in the clientTemplate.</param>
-    /// <returns>The value expression to initualize the property with.</returns>
+    /// <returns>The value expression to initialize the property with.</returns>
     internal static string GetPropertyInitializationValue(IEdmProperty property, bool useDataServiceCollection, ODataClientTemplate clientTemplate, CodeGenerationContext context)
     {
         IEdmTypeReference edmTypeReference = property.Type;
@@ -3193,7 +3193,7 @@ public sealed class ODataClientCSharpTemplate : ODataClientTemplate
     internal override string BodyOperationParameterConstructor { get { return "new global::Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
     internal override string BaseEntityType { get { return " : global::Microsoft.OData.Client.BaseEntityType"; } }
     internal override string OverloadsModifier { get { return "new "; } }
-    internal override string ODataVersion { get { return "global::Microsoft.OData.Core.ODataVersion.V4"; } }
+    internal override string ODataVersion { get { return "global::Microsoft.OData.ODataVersion.V4"; } }
     internal override string ParameterDeclarationTemplate { get { return "{0} {1}"; } }
     internal override string DictionaryItemConstructor { get { return "{{ {0}, {1} }}"; } }
     internal override HashSet<string> LanguageKeywords { get {
@@ -5127,7 +5127,7 @@ public sealed class ODataClientVBTemplate : ODataClientTemplate
     internal override string BodyOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
     internal override string BaseEntityType { get { return "\r\n        Inherits Global.Microsoft.OData.Client.BaseEntityType"; } }
     internal override string OverloadsModifier { get { return "Overloads "; } }
-    internal override string ODataVersion { get { return "Global.Microsoft.OData.Core.ODataVersion.V4"; } }
+    internal override string ODataVersion { get { return "Global.Microsoft.OData.ODataVersion.V4"; } }
     internal override string ParameterDeclarationTemplate { get { return "{1} As {0}"; } }
     internal override string DictionaryItemConstructor { get { return "{{ {0}, {1} }}"; } }
     internal override HashSet<string> LanguageKeywords { get { 

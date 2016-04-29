@@ -2341,15 +2341,15 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsFalse(personType.Properties().ElementAt(2).Type.AsEnum().IsNullable, "Person.c2.Type.Nullable");
             Assert.IsTrue(personType.Properties().ElementAt(3).Type.AsEnum().IsNullable, "Person.c3.Type.Nullable");
 
-            Assert.AreEqual(((IEdmIntegerValue)color2Type.Members.ElementAt(0).Value).Value, 5, "Correct value");
-            Assert.AreEqual(((IEdmIntegerValue)color2Type.Members.ElementAt(1).Value).Value, 6, "Correct value");
-            Assert.AreEqual(((IEdmIntegerValue)color2Type.Members.ElementAt(2).Value).Value, 10, "Correct value");
-            Assert.AreEqual(((IEdmIntegerValue)color2Type.Members.ElementAt(3).Value).Value, 11, "Correct value");
+            Assert.AreEqual((color2Type.Members.ElementAt(0).Value).Value, 5, "Correct value");
+            Assert.AreEqual((color2Type.Members.ElementAt(1).Value).Value, 6, "Correct value");
+            Assert.AreEqual((color2Type.Members.ElementAt(2).Value).Value, 10, "Correct value");
+            Assert.AreEqual((color2Type.Members.ElementAt(3).Value).Value, 11, "Correct value");
 
-            Assert.AreEqual(((IEdmIntegerValue)colorType.Members.ElementAt(0).Value).Value, 10, "Correct value");
-            Assert.AreEqual(((IEdmIntegerValue)colorType.Members.ElementAt(1).Value).Value, 11, "Correct value");
-            Assert.AreEqual(((IEdmIntegerValue)colorType.Members.ElementAt(2).Value).Value, 5, "Correct value");
-            Assert.AreEqual(((IEdmIntegerValue)colorType.Members.ElementAt(3).Value).Value, 6, "Correct value");
+            Assert.AreEqual((colorType.Members.ElementAt(0).Value).Value, 10, "Correct value");
+            Assert.AreEqual((colorType.Members.ElementAt(1).Value).Value, 11, "Correct value");
+            Assert.AreEqual((colorType.Members.ElementAt(2).Value).Value, 5, "Correct value");
+            Assert.AreEqual((colorType.Members.ElementAt(3).Value).Value, 6, "Correct value");
         }
 
         [TestMethod]
@@ -2373,16 +2373,13 @@ namespace EdmLibTests.FunctionalTests
 
             bool valid = model.Validate(out errors);
             Assert.IsFalse(valid, "valid");
-            Assert.AreEqual(2, errors.Count(), "two validation errors expected");
-            Assert.AreEqual(EdmErrorCode.EnumMemberValueOutOfRange, errors.ElementAt(0).ErrorCode, "EnumMemberValueOutOfRange expected");
-            Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(1).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
+            Assert.AreEqual(1, errors.Count(), "one validation errors expected");
+            Assert.AreEqual(EdmErrorCode.EnumMemberMustHaveValue, errors.ElementAt(0).ErrorCode, "EnumMemberMustHaveValue expected");
             Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
-            Assert.IsTrue(errors.ElementAt(1).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
 
             IEdmEnumMember enumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
             Assert.AreEqual(model.FindType("foo.Color"), enumMemeber.DeclaringType, "Enum member has correct type.");
             Assert.IsTrue(enumMemeber.Value.IsBad(), "Enum member value is bad.");
-            Assert.AreEqual(EdmPrimitiveTypeKind.Int64, enumMemeber.Value.Type.PrimitiveKind(), "Enum member bad value has correct type.");
         }
 
         [TestMethod]
@@ -2406,16 +2403,43 @@ namespace EdmLibTests.FunctionalTests
 
             bool valid = model.Validate(out errors);
             Assert.IsFalse(valid, "valid");
-            Assert.AreEqual(2, errors.Count(), "two validation errors expected");
-            Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(0).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
-            Assert.AreEqual(EdmErrorCode.IntegerConstantValueOutOfRange, errors.ElementAt(1).ErrorCode, "IntegerConstantValueOutOfRange expected");
+            Assert.AreEqual(1, errors.Count(), "one validation errors expected");
+            Assert.AreEqual(EdmErrorCode.EnumMemberValueOutOfRange, errors.ElementAt(0).ErrorCode, "EnumMemberValueOutOfRange expected");
             Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
-            Assert.IsTrue(errors.ElementAt(1).ErrorLocation is ObjectLocation, "error location");
 
             IEdmEnumMember enumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
             Assert.AreEqual(model.FindType("foo.Color"), enumMemeber.DeclaringType, "Enum member has correct type.");
             Assert.IsFalse(enumMemeber.Value.IsBad(), "Enum member value is good.");
-            Assert.AreEqual(EdmPrimitiveTypeKind.Int32, enumMemeber.Value.Type.PrimitiveKind(), "Enum member value has correct type.");
+        }
+
+        [TestMethod]
+        public void TestEnumTypeParsingSetDefaultValues()
+        {
+            const string csdl =
+@"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EnumType Name=""Color"" UnderlyingType=""Edm.Int32"" >
+      <Member Name=""Red""/>
+      <Member Name=""Green""/>
+      <Member Name=""Blue"" Value=""5""/>
+      <Member Name=""Yellow""/>
+    </EnumType>
+</Schema>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.AreEqual(0, errors.Count(), "No errors");
+
+            bool valid = model.Validate(out errors);
+            Assert.IsTrue(valid, "valid");
+            Assert.AreEqual(0, errors.Count(), "no validation errors");
+
+            IEdmEnumType enumType = ((IEdmEnumType)model.FindType("foo.Color"));
+            Assert.AreEqual((enumType.Members.ElementAt(0).Value).Value, 0, "Correct value");
+            Assert.AreEqual((enumType.Members.ElementAt(1).Value).Value, 1, "Correct value");
+            Assert.AreEqual((enumType.Members.ElementAt(2).Value).Value, 5, "Correct value");
+            Assert.AreEqual((enumType.Members.ElementAt(3).Value).Value, 6, "Correct value");
         }
 
         [TestMethod]
@@ -2436,6 +2460,10 @@ namespace EdmLibTests.FunctionalTests
       <Member Name=""Blue""/>
       <Member Name=""Yellow""/>
     </EnumType>
+    <EnumType Name=""Permission"" UnderlyingType=""Edm.String"">
+      <Member Name=""Read""/>
+      <Member Name=""Write""/>
+    </EnumType>
 </Schema>";
 
             IEdmModel model;
@@ -2446,9 +2474,13 @@ namespace EdmLibTests.FunctionalTests
 
             bool valid = model.Validate(out errors);
             Assert.IsFalse(valid, "valid");
-            Assert.AreEqual(5, errors.Count(), "one validation error expected");
-            Assert.AreEqual(EdmErrorCode.BadUnresolvedPrimitiveType, errors.First().ErrorCode, "BadUnresolvedPrimitiveType expected");
-            Assert.IsTrue(errors.First().ErrorLocation.ToString().Contains("(9, 6)"), "error location");
+            Assert.AreEqual(4, errors.Count(), "one validation error expected");
+
+            Assert.AreEqual(EdmErrorCode.BadUnresolvedPrimitiveType, errors.ElementAt(0).ErrorCode, "BadUnresolvedPrimitiveType expected");
+            Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(9, 6)"), "error location");
+
+            Assert.AreEqual(EdmErrorCode.EnumMustHaveIntegerUnderlyingType, errors.ElementAt(1).ErrorCode, "EnumMustHaveIntegerUnderlyingType expected");
+            Assert.IsTrue(errors.ElementAt(1).ErrorLocation.ToString().Contains("(15, 6)"), "error location");
         }
 
         [TestMethod]

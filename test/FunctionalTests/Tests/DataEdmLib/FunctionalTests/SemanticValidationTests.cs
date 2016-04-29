@@ -78,7 +78,8 @@ namespace EdmLibTests.FunctionalTests
                 typeof(IEdmDateValue),
                 typeof(IEdmDateConstantExpression),
                 typeof(IEdmTimeOfDayValue),
-                typeof(IEdmTimeOfDayConstantExpression)
+                typeof(IEdmTimeOfDayConstantExpression),
+                typeof(IEdmEnumMemberValue)
             };
 
             foreach (Type skip in skips)
@@ -94,7 +95,8 @@ namespace EdmLibTests.FunctionalTests
                     skip != typeof(IEdmFloatingValue) &&
                     skip != typeof(IEdmIntegerValue) &&
                     skip != typeof(IEdmDirectValueAnnotationBinding) &&
-                    skip != typeof(IEdmTimeOfDayValue)
+                    skip != typeof(IEdmTimeOfDayValue) &&
+                    skip != typeof(IEdmEnumMemberValue)
                     )
                 {
                     Assert.AreEqual(0, skip.GetProperties().Length, "It is not safe to skip interfaces with properties.");
@@ -1133,7 +1135,7 @@ namespace EdmLibTests.FunctionalTests
                 "AmbiguousEntitySetBinding", "AmbiguousPropertyBinding", "AmbiguousTypeBinding",
                 "AmbiguousValueTermBinding", "BadComplexType", "BadElement",
                 "BadEntityContainer", "BadEntityReferenceType", "BadEntitySet",
-                "BadEntityType", "BadEnumMember",
+                "BadEntityType", "BadEdmEnumMemberValue",
                 "BadEnumType", "BadNamedStructuredType", "BadPrimitiveType",
                 "BadProperty",
                 "BadStructuredType",
@@ -1262,8 +1264,8 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors() 
             {
-                {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType},
-                {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType},
+                {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberValueOutOfRange },
+                {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberValueOutOfRange },
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithMismatchedEnumMemberTypes(), expectedErrors);
         }

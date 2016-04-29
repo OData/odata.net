@@ -549,9 +549,9 @@ namespace Microsoft.OData.Edm.Validation
         // EdmAssociationEnd_EntityTypeMustNotBeNull = 205,
 
         /// <summary>
-        /// The value for an enumeration type member is ouf of range.
+        /// The enumeration member must have a value.
         /// </summary>
-        EnumMemberValueOutOfRange = 206,
+        EnumMemberMustHaveValue = 206,
 
         // EdmFunctionImport_ReturnTypeMustBeCollectionType = 210,
         // EdmModel_NameIsNotAllowed = 211,
@@ -879,9 +879,9 @@ namespace Microsoft.OData.Edm.Validation
         InvalidIfExpressionIncorrectNumberOfOperands = 290,
 
         /// <summary>
-        /// The type of an enum member value must match the underlying of the parent enum.
+        /// The enum member value is out of range of its underlying type.
         /// </summary>
-        EnumMemberTypeMustMatchEnumUnderlyingType = 292,
+        EnumMemberValueOutOfRange = 292,
 
         /// <summary>
         /// The IsType expression is invalid because it does not have 1 element.

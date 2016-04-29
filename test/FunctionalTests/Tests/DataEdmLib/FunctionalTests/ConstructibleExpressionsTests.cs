@@ -543,7 +543,7 @@ namespace EdmLibTests.FunctionalTests
         public void EdmEnumMemberReferenceExpression()
         {
             var et = new EdmEnumType("NS", "Spicy");
-            var em = new EdmEnumMember(et, "Hot", new EdmIntegerConstant(5));
+            var em = new EdmEnumMember(et, "Hot", new EdmEnumMemberValue(5));
             var e = new EdmEnumMemberReferenceExpression(em);
             Assert.AreEqual(EdmExpressionKind.EnumMemberReference, e.ExpressionKind, "e.ExpressionKind");
             Assert.AreEqual("Hot", e.ReferencedEnumMember.Name, "e.ReferencedEnumMember");

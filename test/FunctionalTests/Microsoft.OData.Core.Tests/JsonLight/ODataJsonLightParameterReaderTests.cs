@@ -477,8 +477,8 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
             var enumType = this.referencedModel.EnumType("Color");
-            enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("Red", new EdmIntegerConstant(1));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("Red", new EdmEnumMemberValue(1));
             this.action.AddParameter("feed", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
             this.action.AddParameter("enum", new EdmEnumTypeReference(enumType, false));
             string payload = "{\"feed\":[{\"ID\":1}],\"enum\":\"Blue\"}";

@@ -128,11 +128,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             this.model.AddElement(companyDivisionType);
 
             var accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
-            accessLevelType.AddMember("None", new EdmIntegerConstant(0));
-            accessLevelType.AddMember("Read", new EdmIntegerConstant(1));
-            accessLevelType.AddMember("Write", new EdmIntegerConstant(2));
-            accessLevelType.AddMember("Execute", new EdmIntegerConstant(4));
-            accessLevelType.AddMember("ReadWrite", new EdmIntegerConstant(3));
+            accessLevelType.AddMember("None", new EdmEnumMemberValue(0));
+            accessLevelType.AddMember("Read", new EdmEnumMemberValue(1));
+            accessLevelType.AddMember("Write", new EdmEnumMemberValue(2));
+            accessLevelType.AddMember("Execute", new EdmEnumMemberValue(4));
+            accessLevelType.AddMember("ReadWrite", new EdmEnumMemberValue(3));
             this.model.AddElement(accessLevelType);
 
             personType = new EdmEntityType(TestNameSpace, "Person", null, false, /*IsOpen*/ true);

@@ -48,24 +48,24 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             #region EnumType
             var accessLevelType = new EdmEnumType(ns, "AccessLevel", isFlags: true);
-            accessLevelType.AddMember("None", new EdmIntegerConstant(0));
-            accessLevelType.AddMember("Read", new EdmIntegerConstant(1));
-            accessLevelType.AddMember("Write", new EdmIntegerConstant(2));
-            accessLevelType.AddMember("Execute", new EdmIntegerConstant(4));
-            accessLevelType.AddMember("ReadWrite", new EdmIntegerConstant(3));
+            accessLevelType.AddMember("None", new EdmEnumMemberValue(0));
+            accessLevelType.AddMember("Read", new EdmEnumMemberValue(1));
+            accessLevelType.AddMember("Write", new EdmEnumMemberValue(2));
+            accessLevelType.AddMember("Execute", new EdmEnumMemberValue(4));
+            accessLevelType.AddMember("ReadWrite", new EdmEnumMemberValue(3));
             model.AddElement(accessLevelType);
 
             var colorType = new EdmEnumType(ns, "Color", isFlags: false);
-            colorType.AddMember("Red", new EdmIntegerConstant(1));
-            colorType.AddMember("Green", new EdmIntegerConstant(2));
-            colorType.AddMember("Blue", new EdmIntegerConstant(4));
+            colorType.AddMember("Red", new EdmEnumMemberValue(1));
+            colorType.AddMember("Green", new EdmEnumMemberValue(2));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(4));
             model.AddElement(colorType);
 
             var companyCategory = new EdmEnumType(ns, "CompanyCategory", isFlags: false);
-            companyCategory.AddMember("IT", new EdmIntegerConstant(0));
-            companyCategory.AddMember("Communication", new EdmIntegerConstant(1));
-            companyCategory.AddMember("Electronics", new EdmIntegerConstant(2));
-            companyCategory.AddMember("Others", new EdmIntegerConstant(4));
+            companyCategory.AddMember("IT", new EdmEnumMemberValue(0));
+            companyCategory.AddMember("Communication", new EdmEnumMemberValue(1));
+            companyCategory.AddMember("Electronics", new EdmEnumMemberValue(2));
+            companyCategory.AddMember("Others", new EdmEnumMemberValue(4));
             model.AddElement(companyCategory);
             #endregion
 

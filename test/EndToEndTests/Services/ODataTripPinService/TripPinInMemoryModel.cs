@@ -21,9 +21,9 @@ namespace Microsoft.OData.SampleService.Models.TripPin
             model.AddElement(defaultContainer);
 
             var genderType = new EdmEnumType(ns, "PersonGender", isFlags: false);
-            genderType.AddMember("Male", new EdmIntegerConstant(0));
-            genderType.AddMember("Female", new EdmIntegerConstant(1));
-            genderType.AddMember("Unknown", new EdmIntegerConstant(2));
+            genderType.AddMember("Male", new EdmEnumMemberValue(0));
+            genderType.AddMember("Female", new EdmEnumMemberValue(1));
+            genderType.AddMember("Unknown", new EdmEnumMemberValue(2));
             model.AddElement(genderType);
 
             var cityType = new EdmComplexType(ns, "City");

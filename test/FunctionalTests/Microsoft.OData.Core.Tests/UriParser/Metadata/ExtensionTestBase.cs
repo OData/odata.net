@@ -189,8 +189,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
 
             EdmEnumType colorType = new EdmEnumType("TestNS", "Color");
             Color = colorType;
-            colorType.AddMember("Red", new EdmIntegerConstant(1L));
-            colorType.AddMember("Blue", new EdmIntegerConstant(2L));
+            colorType.AddMember("Red", new EdmEnumMemberValue(1L));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(2L));
             model.AddElement(colorType);
             var moonType = new EdmEntityType("TestNS", "Moon");
             MoonType = moonType;

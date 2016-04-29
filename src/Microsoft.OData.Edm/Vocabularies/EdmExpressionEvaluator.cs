@@ -678,7 +678,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     }
                     else
                     {
-                        if (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntergeType(enumType))
+                        if (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType))
                         {
                             throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Type {0} cannot be assigned with multi-values.", enumType.FullName()));
                         }
@@ -686,11 +686,11 @@ namespace Microsoft.OData.Edm.Vocabularies
                         long result = 0;
                         foreach (var enumMember in enumMembers)
                         {
-                            long value = (enumMember.Value as EdmIntegerConstant).Value;
+                            long value = enumMember.Value.Value;
                             result |= value;
                         }
 
-                        return new EdmEnumValue(enumTypeReference, new EdmIntegerConstant(result));
+                        return new EdmEnumValue(enumTypeReference, new EdmEnumMemberValue(result));
                     }
 
                 case EdmExpressionKind.EnumMemberReference:

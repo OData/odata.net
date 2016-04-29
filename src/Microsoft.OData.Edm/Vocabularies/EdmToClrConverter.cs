@@ -615,27 +615,87 @@ namespace Microsoft.OData.Edm.Vocabularies
                 // A CLR enum type will report some primitive type code, so we get here.
                 // If this is the case and the value is of an edm enumeration type, we want to unbox the primitive type value,
                 // otherwise assume the edm value is primitive and let it fail inside the converter if it's not.
-                Type underlyingType = null;
                 bool isEnum = clrType.IsEnum();
                 if (isEnum)
                 {
-                    underlyingType = Enum.GetUnderlyingType(clrType);
+                    Type underlyingType = Enum.GetUnderlyingType(clrType);
                     IEdmEnumValue edmEnumValue = edmValue as IEdmEnumValue;
+
+                    object clrValue = null;
                     if (edmEnumValue != null)
                     {
-                        edmValue = edmEnumValue.Value;
+                        EdmEnumMemberValue memberValue = edmEnumValue.Value as EdmEnumMemberValue;
+                        if (memberValue != null
+                            && !TryConvertEnumType(underlyingType, memberValue.Value, out clrValue))
+                        {
+                            throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(underlyingType));
+                        }
                     }
-                }
+                    else if (!TryConvertAsNonGuidPrimitiveType(underlyingType, edmValue, out clrValue))
+                    {
+                        throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(underlyingType));
+                    }
 
-                object clrValue;
-                if (!TryConvertAsNonGuidPrimitiveType(underlyingType ?? clrType, edmValue, out clrValue))
+                    // In case of enums, because the converter returns a primitive type value we want to convert it to the CLR enum type.
+                    return convertEnumValues ? this.GetEnumValue(clrValue, clrType) : clrValue;
+                }
+                
+                object nonEnumclrValue = null;
+                if (!TryConvertAsNonGuidPrimitiveType(clrType, edmValue, out nonEnumclrValue))
                 {
-                    throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(clrType.FullName));
+                        throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(clrType));
                 }
 
-                // In case of enums, because the converter returns a primitive type value we want to convert it to the CLR enum type.
-                return (isEnum && convertEnumValues) ? this.GetEnumValue(clrValue, clrType) : clrValue;
+                return nonEnumclrValue;
             }
+        }
+
+        private static bool TryConvertEnumType(Type type, long enumValue, out object clrValue)
+        {
+            if (type == typeof(SByte))
+            {
+                clrValue = (SByte)(enumValue);
+                return true;
+            }
+
+            if (type == typeof(Byte))
+            {
+                clrValue = (Byte)(enumValue);
+                return true;
+            }
+
+            if (type == typeof(Int16))
+            {
+                clrValue = (Int16)(enumValue);
+                return true;
+            }
+
+            if (type == typeof(UInt16))
+            {
+                clrValue = (UInt16)(enumValue);
+                return true;
+            }
+
+            if (type == typeof(Int32))
+            {
+                clrValue = (Int32)(enumValue);
+                return true;
+            }
+
+            if (type == typeof(UInt32))
+            {
+                clrValue = (UInt32)(enumValue);
+                return true;
+            }
+
+            if (type == typeof(Int64))
+            {
+                clrValue = (Int64)(enumValue);
+                return true;
+            }
+
+            clrValue = null;
+            return false;
         }
 
         private object AsListOfT(IEdmValue edmValue, Type clrType)
@@ -660,12 +720,12 @@ namespace Microsoft.OData.Edm.Vocabularies
             {
                 return enumerableConverter.Invoke(null, new object[] { this.AsIEnumerable(edmValue, elementType) });
             }
-            catch (TargetInvocationException targetInvokationException)
+            catch (TargetInvocationException targetInvocationException)
             {
-                // Unwrap the target invokation exception that masks an interesting invalid cast exception.
-                if (targetInvokationException.InnerException != null && targetInvokationException.InnerException is InvalidCastException)
+                // Unwrap the target invocation exception that masks an interesting invalid cast exception.
+                if (targetInvocationException.InnerException != null && targetInvocationException.InnerException is InvalidCastException)
                 {
-                    throw targetInvokationException.InnerException;
+                    throw targetInvocationException.InnerException;
                 }
                 else
                 {
@@ -689,12 +749,12 @@ namespace Microsoft.OData.Edm.Vocabularies
             {
                 return enumTypeConverter.Invoke(null, new object[] { clrValue });
             }
-            catch (TargetInvocationException targetInvokationException)
+            catch (TargetInvocationException targetInvocationException)
             {
-                // Unwrap the target invokation exception that masks an interesting invalid cast exception.
-                if (targetInvokationException.InnerException != null && targetInvokationException.InnerException is InvalidCastException)
+                // Unwrap the target invocation exception that masks an interesting invalid cast exception.
+                if (targetInvocationException.InnerException != null && targetInvocationException.InnerException is InvalidCastException)
                 {
-                    throw targetInvokationException.InnerException;
+                    throw targetInvocationException.InnerException;
                 }
                 else
                 {

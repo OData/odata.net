@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
-
 namespace Microsoft.OData.Edm
 {
     /// <summary>
@@ -14,7 +12,7 @@ namespace Microsoft.OData.Edm
     public class EdmEnumMember : EdmNamedElement, IEdmEnumMember
     {
         private readonly IEdmEnumType declaringType;
-        private IEdmPrimitiveValue value;
+        private IEdmEnumMemberValue value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEnumMember"/> class.
@@ -22,7 +20,7 @@ namespace Microsoft.OData.Edm
         /// <param name="declaringType">The type that declares this member.</param>
         /// <param name="name">Name of this enumeration member.</param>
         /// <param name="value">Value of this enumeration member.</param>
-        public EdmEnumMember(IEdmEnumType declaringType, string name, IEdmPrimitiveValue value)
+        public EdmEnumMember(IEdmEnumType declaringType, string name, IEdmEnumMemberValue value)
             : base(name)
         {
             EdmUtil.CheckArgumentNull(declaringType, "declaringType");
@@ -43,7 +41,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the value of this enumeration type member.
         /// </summary>
-        public IEdmPrimitiveValue Value
+        public IEdmEnumMemberValue Value
         {
             get { return this.value; }
         }

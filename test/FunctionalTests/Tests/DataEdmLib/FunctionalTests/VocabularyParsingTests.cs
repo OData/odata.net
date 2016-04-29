@@ -1787,9 +1787,9 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(personType);
             var entitySet = container.AddEntitySet("People", personType);
             var permissionType = new EdmEnumType("Ns", "Permissions", true);
-            var read = permissionType.AddMember("Read", new EdmIntegerConstant(1));
-            var write = permissionType.AddMember("Write", new EdmIntegerConstant(2));
-            var delete = permissionType.AddMember("Delete", new EdmIntegerConstant(4));
+            var read = permissionType.AddMember("Read", new EdmEnumMemberValue(1));
+            var write = permissionType.AddMember("Write", new EdmEnumMemberValue(2));
+            var delete = permissionType.AddMember("Delete", new EdmEnumMemberValue(4));
             model.AddElement(permissionType);
 
             var enumTerm = new EdmTerm("Ns", "Permission", new EdmEnumTypeReference(permissionType, false));
@@ -1929,16 +1929,16 @@ namespace EdmLibTests.FunctionalTests
             var parsedEntitySetAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
 
             Assert.AreEqual(1, parsedIdAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedIdAnnotationValue.Single().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedIdAnnotationValue.Single().Value.Value);
 
             Assert.AreEqual(2, parsedStructuralAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedStructuralAnnotationValue.First().Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(2, (parsedStructuralAnnotationValue.Last().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedStructuralAnnotationValue.First().Value.Value);
+            Assert.AreEqual(2, parsedStructuralAnnotationValue.Last().Value.Value);
 
             Assert.AreEqual(3, parsedEntitySetAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedEntitySetAnnotationValue.First().Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(2, (parsedEntitySetAnnotationValue.ElementAt(1).Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(4, (parsedEntitySetAnnotationValue.Last().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedEntitySetAnnotationValue.First().Value.Value);
+            Assert.AreEqual(2, parsedEntitySetAnnotationValue.ElementAt(1).Value.Value);
+            Assert.AreEqual(4, parsedEntitySetAnnotationValue.Last().Value.Value);
 
             var peopleAnnotations = parsedModel.FindVocabularyAnnotations(parsedModel.FindDeclaredEntitySet("People"));
             Assert.AreEqual(2, peopleAnnotations.Count());
@@ -2017,9 +2017,9 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("'Ns.Permissions/Read Ns.Permissions/Modify' is not a valid enum member path.", parsedStructuralAnnotationErrors.Last().ErrorMessage);
 
             Assert.AreEqual(3, parsedEntitySetAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedEntitySetAnnotationValue.First().Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(2, (parsedEntitySetAnnotationValue.ElementAt(1).Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(4, (parsedEntitySetAnnotationValue.Last().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedEntitySetAnnotationValue.First().Value.Value);
+            Assert.AreEqual(2, parsedEntitySetAnnotationValue.ElementAt(1).Value.Value);
+            Assert.AreEqual(4, parsedEntitySetAnnotationValue.Last().Value.Value);
         }
 
         [TestMethod]
@@ -2078,9 +2078,9 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(personType);
             var entitySet = container.AddEntitySet("People", personType);
             var permissionType = new EdmEnumType("Ns", "Permissions", true);
-            var read = permissionType.AddMember("Read", new EdmIntegerConstant(1));
-            var write = permissionType.AddMember("Write", new EdmIntegerConstant(2));
-            var delete = permissionType.AddMember("Delete", new EdmIntegerConstant(4));
+            var read = permissionType.AddMember("Read", new EdmEnumMemberValue(1));
+            var write = permissionType.AddMember("Write", new EdmEnumMemberValue(2));
+            var delete = permissionType.AddMember("Delete", new EdmEnumMemberValue(4));
             model.AddElement(permissionType);
 
             var enumTerm = new EdmTerm("Ns", "Permission", new EdmEnumTypeReference(permissionType, false));
@@ -2574,7 +2574,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, container.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
             EdmEnumType popularity = new EdmEnumType("DefaultNamespace", "Popularity", EdmPrimitiveTypeKind.String, false);
-            EdmEnumMember very = popularity.AddMember("Very", new EdmStringConstant("3"));
+            EdmEnumMember very = popularity.AddMember("Very", new EdmEnumMemberValue(3));
             model.AddElement(popularity);
 
             EdmTerm popularityTerm = new EdmTerm("DefaultNamespace", "PopularityTerm", new EdmEnumTypeReference(popularity, false));
@@ -2877,13 +2877,13 @@ namespace EdmLibTests.FunctionalTests
             personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
             var colorType = new EdmEnumType("TestNS2", "Color", true);
             edmModel.AddElement(colorType);
-            colorType.AddMember("Cyan", new EdmIntegerConstant(1));
-            colorType.AddMember("Blue", new EdmIntegerConstant(2));
+            colorType.AddMember("Cyan", new EdmEnumMemberValue(1));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(2));
             var outColorTerm = new EdmTerm("TestNS", "OutColor", new EdmEnumTypeReference(colorType, true));
             edmModel.AddElement(outColorTerm);
             var exp = new EdmEnumMemberExpression(
-                new EdmEnumMember(colorType, "Blue", new EdmIntegerConstant(2)),
-                new EdmEnumMember(colorType, "Cyan", new EdmIntegerConstant(1))
+                new EdmEnumMember(colorType, "Blue", new EdmEnumMemberValue(2)),
+                new EdmEnumMember(colorType, "Cyan", new EdmEnumMemberValue(1))
             );
 
             var annotation = new EdmAnnotation(personType, outColorTerm, exp);
@@ -3178,23 +3178,11 @@ namespace EdmLibTests.FunctionalTests
                     var enumReferenceExpression = expression as IEdmEnumMemberReferenceExpression;
                     if (null != enumReferenceExpression)
                     {
-                        if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == EdmValueKind.String)
-                        {
-                            var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmStringConstant;
+                        var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmEnumMemberValue;
 
-                            if (null != enumValue)
-                            {
-                                annotationValues.Add(new PropertyValue(enumValue.Value));
-                            }
-                        }
-                        else if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == EdmValueKind.Integer)
+                        if (null != enumValue)
                         {
-                            var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmIntegerConstant;
-
-                            if (null != enumValue)
-                            {
-                                annotationValues.Add(new PropertyValue(enumValue.Value.ToString()));
-                            }
+                            annotationValues.Add(new PropertyValue(enumValue.Value.ToString()));
                         }
                     }
                     break;

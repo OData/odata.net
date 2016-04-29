@@ -1130,15 +1130,15 @@ namespace EdmLibTests.FunctionalTests
         {
             EdmModel model = new EdmModel();
             EdmEnumType colors = new EdmEnumType("Foo", "Colors");
-            var red = new EdmEnumMember(colors, "Red", new EdmIntegerConstant(1));
+            var red = new EdmEnumMember(colors, "Red", new EdmEnumMemberValue(1));
             colors.AddMember(red);
-            colors.AddMember("Blue", new EdmIntegerConstant(2));
-            colors.AddMember("Green", new EdmIntegerConstant(3));
-            colors.AddMember("Orange", new EdmIntegerConstant(4));
+            colors.AddMember("Blue", new EdmEnumMemberValue(2));
+            colors.AddMember("Green", new EdmEnumMemberValue(3));
+            colors.AddMember("Orange", new EdmEnumMemberValue(4));
 
             EdmEnumType gender = new EdmEnumType("Foo", "Gender", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), true);
-            gender.AddMember("Male", new EdmIntegerConstant(1));
-            gender.AddMember("Female", new EdmIntegerConstant(2));
+            gender.AddMember("Male", new EdmEnumMemberValue(1));
+            gender.AddMember("Female", new EdmEnumMemberValue(2));
 
             Assert.AreEqual(colors.Members.Count(), 4, "Correct number of members");
             Assert.AreEqual(gender.Members.Count(), 2, "Correct number of members");
@@ -1152,9 +1152,9 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(gender.IsFlags, true, "correct treat as bits");
 
             Assert.AreEqual(gender.Members.First().Name, "Male", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.First().Value).Value, 1, "Correct member value");
+            Assert.AreEqual((gender.Members.First().Value.Value), 1, "Correct member value");
             Assert.AreEqual(gender.Members.ElementAt(1).Name, "Female", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.ElementAt(1).Value).Value, 2, "Correct member value");
+            Assert.AreEqual((gender.Members.ElementAt(1).Value.Value), 2, "Correct member value");
 
             model.AddElement(colors);
             model.AddElement(gender);
@@ -1214,9 +1214,9 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(gender.IsFlags, true, "correct treat as bits");
 
             Assert.AreEqual(gender.Members.ElementAt(1).Name, "ÁËìôťŽš", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.ElementAt(1).Value).Value, 1, "Correct member value");
+            Assert.AreEqual((gender.Members.ElementAt(1).Value).Value, 1, "Correct member value");
             Assert.AreEqual(gender.Members.ElementAt(0).Name, "Female", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.ElementAt(0).Value).Value, 2, "Correct member value");
+            Assert.AreEqual((gender.Members.ElementAt(0).Value).Value, 2, "Correct member value");
 
             var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
             new ConstructiveApiCsdlXElementComparer().Compare(expectCsdls.ToList(), actualCsdls.ToList());
@@ -1519,26 +1519,6 @@ namespace EdmLibTests.FunctionalTests
             var entityContainer = new EdmEntityContainer("NS", "Container");
             var badElement = new CustomEntityContainerElement(entityContainer, "Element", EdmContainerElementKind.None);
             this.VerifyThrowsException(typeof(InvalidOperationException), () => entityContainer.AddElement(badElement));
-        }
-
-        [TestMethod]
-        public void TestBadUnresolvedTypeUsingEnumValueModel()
-        {
-            var model = new EdmModel();
-
-            var enumType = new EdmEnumType("NS", "Enum");
-            var enumMember = new EdmEnumMember(enumType, "foo", new EdmIntegerConstant(2));
-            var enumTypeRef = new EdmEnumTypeReference(enumType, true);
-            enumType.AddMember(new EdmEnumMember(enumType, "bar", new EdmEnumValue(enumTypeRef, enumMember)));
-            var valueTerm = new EdmTerm("NS", "Note", enumTypeRef);
-            model.AddElement(valueTerm);
-
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.BadUnresolvedType }
-            };
-            this.VerifySemanticValidation(model, expectedErrors);
-            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]

@@ -42,9 +42,9 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             #region EnumType
 
             var customerLevelType = new EdmEnumType(ns, "CustomerLevel");
-            customerLevelType.AddMember("Common", new EdmIntegerConstant(0));
-            customerLevelType.AddMember("Silver", new EdmIntegerConstant(1));
-            customerLevelType.AddMember("Gold", new EdmIntegerConstant(2));
+            customerLevelType.AddMember("Common", new EdmEnumMemberValue(0));
+            customerLevelType.AddMember("Silver", new EdmEnumMemberValue(1));
+            customerLevelType.AddMember("Gold", new EdmEnumMemberValue(2));
             model.AddElement(customerLevelType);
 
             #endregion

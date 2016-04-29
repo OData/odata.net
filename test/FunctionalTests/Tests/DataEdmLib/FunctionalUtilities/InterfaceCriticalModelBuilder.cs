@@ -252,7 +252,7 @@ namespace EdmLibTests.FunctionalUtilities
             var model = new EdmModel();
 
             var enumType = new EdmEnumType("NS", "Enum");
-            enumType.AddMember(new CustomEnumMember(null, "foo", new EdmIntegerConstant(5)));
+            enumType.AddMember(new CustomEnumMember(null, "foo", new EdmEnumMemberValue(5)));
             var enumTypeRef = new EdmEnumTypeReference(enumType, true);
             var valueTerm = new EdmTerm("NS", "Note", enumTypeRef);
             model.AddElement(valueTerm);
@@ -267,7 +267,7 @@ namespace EdmLibTests.FunctionalUtilities
             var enumType = new EdmEnumType("NS", "Enum");
             var enumMember = new CustomEnumMember(enumType, "foo", null);
             var enumTypeRef = new EdmEnumTypeReference(enumType, true);
-            enumType.AddMember(new EdmEnumMember(enumType, "bar", new EdmEnumValue(enumTypeRef, enumMember)));
+            enumType.AddMember(enumMember);
             var valueTerm = new EdmTerm("NS", "Note", enumTypeRef);
             model.AddElement(valueTerm);
 
@@ -656,9 +656,9 @@ namespace EdmLibTests.FunctionalUtilities
         private sealed class CustomEnumMember : EdmNamedElement, IEdmEnumMember
         {
             private readonly IEdmEnumType declaringType;
-            private IEdmPrimitiveValue value;
+            private IEdmEnumMemberValue value;
 
-            public CustomEnumMember(IEdmEnumType declaringType, string name, IEdmPrimitiveValue value)
+            public CustomEnumMember(IEdmEnumType declaringType, string name, IEdmEnumMemberValue value)
                 : base(name)
             {
                 this.declaringType = declaringType;
@@ -670,7 +670,7 @@ namespace EdmLibTests.FunctionalUtilities
                 get { return this.declaringType; }
             }
 
-            public IEdmPrimitiveValue Value
+            public IEdmEnumMemberValue Value
             {
                 get { return this.value; }
             }

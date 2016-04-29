@@ -699,13 +699,17 @@ namespace Microsoft.OData.Edm.Validation
                {
                    IEnumerable<EdmError> discoveredErrors;
                    if (!context.IsBad(enumMember.DeclaringType) &&
-                       !context.IsBad(enumMember.DeclaringType.UnderlyingType) &&
-                       !enumMember.Value.TryCastPrimitiveAsType(enumMember.DeclaringType.UnderlyingType.GetPrimitiveTypeReference(false), out discoveredErrors))
+                       !context.IsBad(enumMember.DeclaringType.UnderlyingType))
                    {
-                       context.AddError(
+                       IEdmPrimitiveValue enumValue = new EdmIntegerConstant(enumMember.Value.Value);
+
+                       if (!enumValue.TryCastPrimitiveAsType(enumMember.DeclaringType.UnderlyingType.GetPrimitiveTypeReference(false), out discoveredErrors))
+                       {
+                           context.AddError(
                            enumMember.Location(),
-                           EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType,
-                           Strings.EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType(enumMember.Name));
+                           EdmErrorCode.EnumMemberValueOutOfRange,
+                           Strings.EdmModel_Validator_Semantic_EnumMemberValueOutOfRange(enumMember.Name));
+                       }
                    }
                });
 

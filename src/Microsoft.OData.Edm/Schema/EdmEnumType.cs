@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
@@ -143,7 +142,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the member.</param>
         /// <param name="value">Value of the member.</param>
         /// <returns>Created member.</returns>
-        public EdmEnumMember AddMember(string name, IEdmPrimitiveValue value)
+        public EdmEnumMember AddMember(string name, IEdmEnumMemberValue value)
         {
             EdmEnumMember member = new EdmEnumMember(this, name, value);
             this.AddMember(member);

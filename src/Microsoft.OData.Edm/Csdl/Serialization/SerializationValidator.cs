@@ -173,7 +173,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone:
                 case EdmErrorCode.BinaryValueCannotHaveEmptyValue:
                 case EdmErrorCode.EnumMustHaveIntegerUnderlyingType:
-                case EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType:
+                case EdmErrorCode.EnumMemberValueOutOfRange:
                     return true;
             }
 

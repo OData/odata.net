@@ -313,7 +313,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             model.AddElement(complexType2);
 
             EdmEnumType enumType1 = new EdmEnumType(defaultNamespaceName, "enumType1");
-            enumType1.AddMember(new EdmEnumMember(enumType1, "enumType1_value1", new EdmIntegerConstant(coreModel.GetInt64(false), 6)));
+            enumType1.AddMember(new EdmEnumMember(enumType1, "enumType1_value1", new EdmEnumMemberValue(6)));
             model.AddElement(enumType1);
 
             var functionImport_MultipleNullableParameters = container.AddFunctionAndFunctionImport(model, "FunctionImport_MultipleNullableParameters", coreModel.GetString(false) /*returnType*/, null /*entitySet*/, false /*composable*/, false /*bindable*/);

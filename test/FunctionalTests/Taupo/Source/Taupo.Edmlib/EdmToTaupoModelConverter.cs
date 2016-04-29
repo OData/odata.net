@@ -336,24 +336,13 @@ namespace Microsoft.Test.Taupo.Edmlib
 
                 if (edmEnumMember.Value != null)
                 {
-                    taupoEnumMember.Value = this.ConvertToClrObject(edmEnumMember.Value);
+                    taupoEnumMember.Value = edmEnumMember.Value.Value;
                 }
 
                 taupoEnumType.Add(taupoEnumMember);
             }
 
             return taupoEnumType;
-        }
-
-        private object ConvertToClrObject(IEdmPrimitiveValue edmPrimitiveValue)
-        {
-            IEdmIntegerValue integralValue = edmPrimitiveValue as IEdmIntegerValue;
-            if (integralValue != null)
-            {
-                return integralValue.Value; 
-            }
-
-            throw new NotSupportedException("This method supports only integral types.");
         }
 
         private Type ConvertToClrType(IEdmPrimitiveType edmPrimitiveType)

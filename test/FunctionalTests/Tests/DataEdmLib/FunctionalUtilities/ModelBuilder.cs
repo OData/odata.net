@@ -461,13 +461,13 @@ namespace EdmLibTests.FunctionalUtilities
         public static IEdmModel ModelWithDefaultEnumEdm()
         {
             var defaultEnum = new EdmEnumType("NS1", "Color", EdmPrimitiveTypeKind.Int32, false);
-            defaultEnum.AddMember("Red", new EdmIntegerConstant(0));
-            defaultEnum.AddMember("Orange", new EdmIntegerConstant(1));
-            defaultEnum.AddMember("Yellow", new EdmIntegerConstant(2));
-            defaultEnum.AddMember("Green", new EdmIntegerConstant(3));
-            defaultEnum.AddMember("Cyan", new EdmIntegerConstant(4));
-            defaultEnum.AddMember("Blue", new EdmIntegerConstant(5));
-            defaultEnum.AddMember("Purple", new EdmIntegerConstant(6));
+            defaultEnum.AddMember("Red", new EdmEnumMemberValue(0));
+            defaultEnum.AddMember("Orange", new EdmEnumMemberValue(1));
+            defaultEnum.AddMember("Yellow", new EdmEnumMemberValue(2));
+            defaultEnum.AddMember("Green", new EdmEnumMemberValue(3));
+            defaultEnum.AddMember("Cyan", new EdmEnumMemberValue(4));
+            defaultEnum.AddMember("Blue", new EdmEnumMemberValue(5));
+            defaultEnum.AddMember("Purple", new EdmEnumMemberValue(6));
 
             return ModelWithEnumEdm(defaultEnum);
         }

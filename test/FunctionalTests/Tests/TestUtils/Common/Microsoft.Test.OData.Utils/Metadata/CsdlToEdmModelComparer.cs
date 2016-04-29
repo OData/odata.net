@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                     ExceptionUtilities.CheckObjectNotNull(modelMember, "Failed to find enum member " + memberName);
 
                     // Member value defaults to the position in the list of members
-                    var modelMemberValue = modelMember.Value as EdmIntegerConstant;
+                    var modelMemberValue = modelMember.Value;
                     CompareLongAttribute(enumMemberElement, "Value", modelMemberValue.Value, memberCount++);
                 }
             }

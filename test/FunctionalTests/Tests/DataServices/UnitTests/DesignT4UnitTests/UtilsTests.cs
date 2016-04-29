@@ -302,8 +302,8 @@ namespace Microsoft.OData.Service.Design.UnitTests
         public void GetClrTypeNameShouldReturnICollectionStructureTemplateForCollectionOfEnumType()
         {
             EdmEnumType gender = new EdmEnumType("Namespace", "Gender", EdmPrimitiveTypeKind.Byte, true);
-            gender.AddMember("Male", new EdmIntegerConstant(1));
-            gender.AddMember("Female", new EdmIntegerConstant(2));
+            gender.AddMember("Male", new EdmEnumMemberValue(1));
+            gender.AddMember("Female", new EdmEnumMemberValue(2));
 
             IEdmTypeReference elementTypeReference = new EdmTypeReferenceForTest(gender, false);
             IEdmCollectionType collectionType = new EdmCollectionType(elementTypeReference);

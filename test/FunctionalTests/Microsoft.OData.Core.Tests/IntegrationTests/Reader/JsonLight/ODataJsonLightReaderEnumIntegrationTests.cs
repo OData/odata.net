@@ -42,17 +42,17 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             // enum without flags
             var enumType = new EdmEnumType("NS", "Color");
-            var red = new EdmEnumMember(enumType, "Red", new EdmIntegerConstant(1));
+            var red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
             enumType.AddMember(red);
-            enumType.AddMember("Green", new EdmIntegerConstant(2));
-            enumType.AddMember("Blue", new EdmIntegerConstant(3));
+            enumType.AddMember("Green", new EdmEnumMemberValue(2));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(3));
             tmpModel.AddElement(enumType);
 
             // enum with flags
             var enumFlagsType = new EdmEnumType("NS", "ColorFlags", isFlags: true);
-            enumFlagsType.AddMember("Red", new EdmIntegerConstant(1));
-            enumFlagsType.AddMember("Green", new EdmIntegerConstant(2));
-            enumFlagsType.AddMember("Blue", new EdmIntegerConstant(4));
+            enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1));
+            enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2));
+            enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4));
             tmpModel.AddElement(enumFlagsType);
 
             this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: true, baseType: null);

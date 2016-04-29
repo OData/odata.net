@@ -31,7 +31,7 @@ namespace EdmLibTests.StubEdm
         /// <summary>
         /// Gets or sets the value
         /// </summary>
-        public IEdmPrimitiveValue Value { get; set; }
+        public IEdmEnumMemberValue Value { get; set; }
 
         /// <summary>
         /// Gets or sets the declaring type

@@ -20,8 +20,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly CsdlEnumMember member;
         private readonly CsdlSemanticsEnumTypeDefinition declaringType;
 
-        private readonly Cache<CsdlSemanticsEnumMember, IEdmPrimitiveValue> valueCache = new Cache<CsdlSemanticsEnumMember, IEdmPrimitiveValue>();
-        private static readonly Func<CsdlSemanticsEnumMember, IEdmPrimitiveValue> ComputeValueFunc = (me) => me.ComputeValue();
+        private readonly Cache<CsdlSemanticsEnumMember, IEdmEnumMemberValue> valueCache = new Cache<CsdlSemanticsEnumMember, IEdmEnumMemberValue>();
+        private static readonly Func<CsdlSemanticsEnumMember, IEdmEnumMemberValue> ComputeValueFunc = (me) => me.ComputeValue();
 
         public CsdlSemanticsEnumMember(CsdlSemanticsEnumTypeDefinition declaringType, CsdlEnumMember member)
             : base(member)
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.declaringType; }
         }
 
-        public IEdmPrimitiveValue Value
+        public IEdmEnumMemberValue Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
@@ -60,20 +60,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return this.Model.WrapInlineVocabularyAnnotations(this, this.declaringType.Context);
         }
 
-        private IEdmPrimitiveValue ComputeValue()
+        private IEdmEnumMemberValue ComputeValue()
         {
             if (this.member.Value == null)
             {
-                return new BadPrimitiveValue(
-                    new EdmPrimitiveTypeReference(this.DeclaringType.UnderlyingType, false),
+                return new BadEdmEnumMemberValue(
                     new EdmError[]
                     {
-                        new EdmError(member.Location ?? this.Location, EdmErrorCode.EnumMemberValueOutOfRange, Edm.Strings.CsdlSemantics_EnumMemberValueOutOfRange)
+                        new EdmError(member.Location ?? this.Location, EdmErrorCode.EnumMemberMustHaveValue, Edm.Strings.CsdlSemantics_EnumMemberMustHaveValue)
                     });
             }
             else
             {
-                return new EdmIntegerConstant(new EdmPrimitiveTypeReference(this.DeclaringType.UnderlyingType, false), this.member.Value.Value);
+                return new EdmEnumMemberValue(this.member.Value.Value);
             }
         }
     }

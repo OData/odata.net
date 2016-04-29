@@ -9,15 +9,16 @@
 
 namespace Microsoft.OData.Edm {
     using System;
-    using System.ComponentModel;
     using System.Globalization;
     using System.Reflection;
     using System.Resources;
 #if !PORTABLELIB
     using System.Security.Permissions;
 #endif
+    using System.Text;
     using System.Threading;
 
+    using System.ComponentModel;
 #if !PORTABLELIB
     [AttributeUsage(AttributeTargets.All)]
     internal sealed class EntityResDescriptionAttribute : DescriptionAttribute {
@@ -165,7 +166,7 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_StringMaxLengthOutOfRange = "EdmModel_Validator_Semantic_StringMaxLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_MaxLengthOutOfRange = "EdmModel_Validator_Semantic_MaxLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode = "EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode";
-        internal const string EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType = "EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType";
+        internal const string EdmModel_Validator_Semantic_EnumMemberValueOutOfRange = "EdmModel_Validator_Semantic_EnumMemberValueOutOfRange";
         internal const string EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined = "EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined";
         internal const string EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly = "EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly";
         internal const string EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = "EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull";
@@ -274,7 +275,7 @@ namespace Microsoft.OData.Edm {
         internal const string CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType = "CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType";
         internal const string CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer = "CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer";
         internal const string CsdlSemantics_ReferentialConstraintMismatch = "CsdlSemantics_ReferentialConstraintMismatch";
-        internal const string CsdlSemantics_EnumMemberValueOutOfRange = "CsdlSemantics_EnumMemberValueOutOfRange";
+        internal const string CsdlSemantics_EnumMemberMustHaveValue = "CsdlSemantics_EnumMemberMustHaveValue";
         internal const string CsdlSemantics_ImpossibleAnnotationsTarget = "CsdlSemantics_ImpossibleAnnotationsTarget";
         internal const string CsdlSemantics_DuplicateAlias = "CsdlSemantics_DuplicateAlias";
         internal const string EdmxParser_EdmxVersionMismatch = "EdmxParser_EdmxVersionMismatch";

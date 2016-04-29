@@ -1,19 +1,19 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IEdmEnumValue.cs" company="Microsoft">
+// <copyright file="IEdmEnumMemberValue.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.Vocabularies
+namespace Microsoft.OData.Edm
 {
     /// <summary>
-    /// Represents an EDM enumeration type value.
+    /// The EdmEnumMemberValue interface.
     /// </summary>
-    public interface IEdmEnumValue : IEdmPrimitiveValue
+    public interface IEdmEnumMemberValue : IEdmElement
     {
         /// <summary>
-        /// Gets the underlying type value of the enumeration type.
+        /// The value of enum member
         /// </summary>
-        IEdmEnumMemberValue Value { get; }
+        long Value { get; }
     }
 }

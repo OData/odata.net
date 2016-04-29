@@ -187,10 +187,10 @@ namespace EdmLibTests.FunctionalTests
         public void RoundTripEnumsWithFlagsandUnderlyingInt64()
         {
             var directionType = new EdmEnumType("NS1", "Direction", EdmPrimitiveTypeKind.Int64, isFlags: true);
-            directionType.AddMember("East", new EdmIntegerConstant(0L));
-            directionType.AddMember("West", new EdmIntegerConstant(1L));
-            directionType.AddMember("South", new EdmIntegerConstant(2L));
-            directionType.AddMember("North", new EdmIntegerConstant(3L));
+            directionType.AddMember("East", new EdmEnumMemberValue(0L));
+            directionType.AddMember("West", new EdmEnumMemberValue(1L));
+            directionType.AddMember("South", new EdmEnumMemberValue(2L));
+            directionType.AddMember("North", new EdmEnumMemberValue(3L));
 
             this.BasicRoundtripTest(ModelBuilder.ModelWithEnumEdm(directionType));
         }
@@ -200,10 +200,10 @@ namespace EdmLibTests.FunctionalTests
         public void RoundTripEnumsWithValues()
         {
             var directionType = new EdmEnumType("NS1", "Direction");
-            directionType.AddMember("East", new EdmIntegerConstant(100L));
-            directionType.AddMember("West", new EdmIntegerConstant(1L));
-            directionType.AddMember("South", new EdmIntegerConstant(-2L));
-            directionType.AddMember("North", new EdmIntegerConstant(3L));
+            directionType.AddMember("East", new EdmEnumMemberValue(100L));
+            directionType.AddMember("West", new EdmEnumMemberValue(1L));
+            directionType.AddMember("South", new EdmEnumMemberValue(-2L));
+            directionType.AddMember("North", new EdmEnumMemberValue(3L));
 
             this.BasicRoundtripTest(ModelBuilder.ModelWithEnumEdm(directionType));
         }
@@ -224,7 +224,7 @@ namespace EdmLibTests.FunctionalTests
             var enumTypes = underlyingTypes.Select(t =>
             {
                 var enumType = new EdmEnumType("NS1", "Direction" + counter++, t, false);
-                enumType.AddMember("East", new EdmIntegerConstant(0L));
+                enumType.AddMember("East", new EdmEnumMemberValue(0L));
                 return (IEdmEnumType)enumType;
             });
 

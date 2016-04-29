@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the value of this enumeration type member.
         /// </summary>
-        IEdmPrimitiveValue Value { get; }
+        IEdmEnumMemberValue Value { get; }
 
         /// <summary>
         /// Gets the type that this member belongs to.

@@ -292,7 +292,7 @@ namespace EdmLibTests.FunctionalTests
         public void TestEnumType()
         {
             var enumType = new EdmEnumType("", "", EdmCoreModel.Instance.GetInt32(true).PrimitiveDefinition(), true);
-            var enumMember = enumType.AddMember("foo", new EdmIntegerConstant(10));
+            var enumMember = enumType.AddMember("foo", new EdmEnumMemberValue(10));
             var constant = new EdmEnumValue(new EdmEnumTypeReference(enumType, false), enumMember);
             Assert.AreEqual(EdmValueKind.Enum, constant.ValueKind, "Invalid value kind.");
 

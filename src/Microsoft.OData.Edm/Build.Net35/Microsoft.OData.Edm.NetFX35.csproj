@@ -764,6 +764,9 @@
     <Compile Include="..\Schema\BadDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\BadDecimalTypeReference.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\BadEdmEnumMemberValue.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadEdmEnumMemberValue.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\BadElement.cs">
       <Link>Microsoft\OData\Edm\Schema\BadElement.cs</Link>
     </Compile>
@@ -782,9 +785,6 @@
     <Compile Include="..\Schema\BadEntityTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\BadEntityTypeReference.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\BadEnumMember.cs">
-      <Link>Microsoft\OData\Edm\Schema\BadEnumMember.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\BadEnumType.cs">
       <Link>Microsoft\OData\Edm\Schema\BadEnumType.cs</Link>
     </Compile>
@@ -802,9 +802,6 @@
     </Compile>
     <Compile Include="..\Schema\BadPrimitiveTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\BadPrimitiveTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\BadPrimitiveValue.cs">
-      <Link>Microsoft\OData\Edm\Schema\BadPrimitiveValue.cs</Link>
     </Compile>
     <Compile Include="..\Schema\BadProperty.cs">
       <Link>Microsoft\OData\Edm\Schema\BadProperty.cs</Link>
@@ -904,6 +901,9 @@
     </Compile>
     <Compile Include="..\Schema\EdmEnumMember.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmEnumMemberValue.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmEnumMemberValue.cs</Link>
     </Compile>
     <Compile Include="..\Schema\EdmEnumType.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmEnumType.cs</Link>
@@ -1069,6 +1069,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmEnumMember.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmEnumMemberValue.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumMemberValue.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmEnumType.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmEnumType.cs</Link>
