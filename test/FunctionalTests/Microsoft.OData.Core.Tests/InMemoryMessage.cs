@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Microsoft.OData.Tests
 {
-    public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage,  IDisposable
+    public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IContainerProvider, IDisposable
     {
         private readonly Dictionary<string, string> headers;
 
@@ -31,6 +31,8 @@ namespace Microsoft.OData.Tests
         public string Method { get; set; }
 
         public Stream Stream { get; set; }
+
+        public IServiceProvider Container { get; set; }
 
         public string GetHeader(string headerName)
         {

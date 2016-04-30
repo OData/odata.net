@@ -1563,11 +1563,17 @@
     <Compile Include="..\IWriterValidator.cs">
       <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
     </Compile>
+    <Compile Include="..\Json\IJsonWriterFactory.cs">
+      <Link>Microsoft\OData\Core\Json\IJsonWriterFactory.cs</Link>
+    </Compile>
     <Compile Include="..\ODataEdmPropertyAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataEdmPropertyAnnotation.cs</Link>
     </Compile>
     <Compile Include="..\ODataNullValueBehaviorKind.cs">
       <Link>Microsoft\OData\Core\ODataNullValueBehaviorKind.cs</Link>
+    </Compile>
+    <Compile Include="..\ServiceProviderExtensions.cs">
+      <Link>Microsoft\OData\Core\ServiceProviderExtensions.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>

@@ -188,7 +188,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     typeof(bool),
                     typeof(bool),
                     typeof(Microsoft.OData.Edm.IEdmModel),
-                    typeof(IODataUrlResolver)
+                    typeof(IODataUrlResolver),
+                    typeof(IServiceProvider)
                 },
                 ODataFormat.Batch,
                 (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
@@ -197,7 +198,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 response,
                 /*synchronous*/true,
                 /*model*/null,
-                /*urlResolver*/null);
+                /*urlResolver*/null,
+                /*container*/null);
             object listener = ReflectionUtils.CreateInstance(
                 typeof(ODataBatchWriter),
                 new Type[] { odataRawOutputContextType, typeof(string) },

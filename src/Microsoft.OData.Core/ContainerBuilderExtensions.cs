@@ -6,6 +6,8 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.OData.Json;
+using Microsoft.OData.JsonLight;
 
 namespace Microsoft.OData
 {
@@ -100,6 +102,8 @@ namespace Microsoft.OData
         public static IContainerBuilder AddDefaultODataServices(this IContainerBuilder builder)
         {
             Debug.Assert(builder != null, "builder != null");
+
+            builder.AddService<IJsonWriterFactory, DefaultJsonWriterFactory>(ServiceLifetime.Singleton);
 
             return builder;
         }
