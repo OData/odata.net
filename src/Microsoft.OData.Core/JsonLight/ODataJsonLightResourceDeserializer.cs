@@ -231,14 +231,7 @@ namespace Microsoft.OData.JsonLight
                     ODataJsonLightReaderUtils.EnsureInstance(ref mediaResource);
                     this.SetEntryMediaResource(resourceState, mediaResource);
                 }
-
-                // By default validate media resource
-                // In WCF DS Server mode, validate media resource in JSON Light (here)
-                // In WCF DS Client mode, do not validate media resource.
-
-                // Client doesn't validate default media resource against metadata.
-                // Server doesn't validate default media resource when reading Verbose JSON against the model
-                // So it doesn't fail if the model says the entity should have an MR, but the payload doesn't and vice versa.
+                
                 bool validateMediaResource = this.UseDefaultFormatBehavior || this.UseServerFormatBehavior;
                 ValidationUtils.ValidateEntryMetadataResource(resource, entityType, this.Model, validateMediaResource);
             }

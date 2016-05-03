@@ -109,7 +109,7 @@ namespace Microsoft.OData
                 if (this.duplicatePropertyNamesChecker == null)
                 {
                     this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        this.outputContext.MessageWriterSettings.WriterBehavior.AllowDuplicatePropertyNames,
+                        this.outputContext.MessageWriterSettings.AllowDuplicatePropertyNames,
                         this.outputContext.WritingResponse,
                         !this.outputContext.MessageWriterSettings.EnableFullValidation);
                 }

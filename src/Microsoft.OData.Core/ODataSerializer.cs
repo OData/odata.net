@@ -37,28 +37,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseServerFormatBehavior
-        {
-            get
-            {
-                return this.outputContext.UseServerFormatBehavior;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.outputContext.UseDefaultFormatBehavior;
-            }
-        }
-
-        /// <summary>
         /// The message writer settings.
         /// </summary>
         internal ODataMessageWriterSettings MessageWriterSettings
@@ -108,7 +86,7 @@ namespace Microsoft.OData
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return new DuplicatePropertyNamesChecker(this.MessageWriterSettings.WriterBehavior.AllowDuplicatePropertyNames, this.WritingResponse, !this.MessageWriterSettings.EnableFullValidation);
+            return new DuplicatePropertyNamesChecker(this.MessageWriterSettings.AllowDuplicatePropertyNames, this.WritingResponse, !this.MessageWriterSettings.EnableFullValidation);
         }
     }
 }

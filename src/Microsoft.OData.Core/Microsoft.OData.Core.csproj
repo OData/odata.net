@@ -319,7 +319,6 @@
     <Compile Include="ODataVersion.cs" />
     <Compile Include="ODataVersionCache.cs" />
     <Compile Include="ODataWriter.cs" />
-    <Compile Include="ODataWriterBehavior.cs" />
     <Compile Include="ODataWriterCore.cs" />
     <Compile Include="PrimitiveConverter.cs" />
     <Compile Include="ProjectedPropertiesAnnotation.cs" />

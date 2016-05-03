@@ -413,13 +413,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected property type or null if we don't have any.</param>
         /// <param name="propertyName">The name of the property.</param>
-        /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
+        /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
         /// <param name="model">The model to use to get the OData version.</param>
-        internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataWriterBehavior writerBehavior, IEdmModel model)
+        internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataMessageWriterSettings writerSettings, IEdmModel model)
         {
-            Debug.Assert(writerBehavior != null, "writerBehavior != null");
+            Debug.Assert(writerSettings != null, "writerSettings != null");
             Debug.Assert(model != null, "For null validation, model is required.");
-            
+
             if (expectedPropertyTypeReference != null)
             {
                 if (expectedPropertyTypeReference.IsNonEntityCollectionType())
@@ -429,9 +429,7 @@ namespace Microsoft.OData
 
                 if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind())
                 {
-                    // WCF DS allows null values for non-nullable primitive types, so we need to check for a knob which enables this behavior.
-                    // See the description of ODataWriterBehavior.AllowNullValuesForNonNullablePrimitiveTypes for more details.
-                    if (!expectedPropertyTypeReference.IsNullable && !writerBehavior.AllowNullValuesForNonNullablePrimitiveTypes)
+                    if (!expectedPropertyTypeReference.IsNullable && !writerSettings.AllowNullValuesForNonNullablePrimitiveTypes)
                     {
                         throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                     }

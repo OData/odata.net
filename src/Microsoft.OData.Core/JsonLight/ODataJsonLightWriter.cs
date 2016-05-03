@@ -231,10 +231,10 @@ namespace Microsoft.OData.JsonLight
 
             if (this.IsTopLevel)
             {
-                    // Write odata.context
-                    this.jsonLightResourceSerializer.WriteResourceContextUri(resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
+                // Write odata.context
+                this.jsonLightResourceSerializer.WriteResourceContextUri(resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
             }
-            
+
             // Write the metadata
             this.jsonLightResourceSerializer.WriteResourceStartMetadataProperties(resourceScope);
             this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
@@ -478,7 +478,7 @@ namespace Microsoft.OData.JsonLight
                 if (containedEntitySet != null)
                 {
                     ODataContextUrlInfo info = ODataContextUrlInfo.Create(
-                                                this.CurrentScope.NavigationSource,                                                
+                                                this.CurrentScope.NavigationSource,
                                                 (this.CurrentScope.ResourceType).FullName(),
                                                 containedEntitySet.NavigationProperty.Type.TypeKind() != EdmTypeKind.Collection,
                                                 this.CurrentScope.ODataUri);
@@ -594,10 +594,9 @@ namespace Microsoft.OData.JsonLight
                 entityType,
                 skipWriting,
                 this.jsonLightOutputContext.WritingResponse,
-                this.jsonLightOutputContext.MessageWriterSettings.WriterBehavior,
+                this.jsonLightOutputContext.MessageWriterSettings,
                 selectedProperties,
-                odataUri,
-                this.jsonLightOutputContext.MessageWriterSettings.EnableFullValidation);
+                odataUri);
         }
 
         /// <summary>
@@ -803,12 +802,11 @@ namespace Microsoft.OData.JsonLight
             /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="writingResponse">true if we are writing a response, false if it's a request.</param>
-            /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
+            /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            /// <param name="enableValidation">Enable validation or not.</param>
-            internal JsonLightResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool enableValidation)
-                : base(resource, serializationInfo, navigationSource, entityType, skipWriting, writingResponse, writerBehavior, selectedProperties, odataUri, enableValidation)
+            internal JsonLightResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(resource, serializationInfo, navigationSource, entityType, skipWriting, writingResponse, writerSettings, selectedProperties, odataUri)
             {
             }
 

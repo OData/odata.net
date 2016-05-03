@@ -116,15 +116,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void ApplyCommonSettingsUsesODataServerBehavior()
-        {
-            var testSubject = new ODataMessageWriterSettings();
-            testSubject.EnableDefaultBehavior();
-            MessageWriterBuilder.ApplyCommonSettings(testSubject, new Uri("http://www.example.com"), VersionUtil.Version4Dot0, this.dataServiceSimulator, this.responseMessageSimulator);
-            testSubject.WriterBehavior.ShouldHave().AllProperties().EqualTo(ODataWriterBehavior.CreateODataServerBehavior());
-        }
-
-        [TestMethod]
         public void ApplyCommonSettingsShouldDisableMessageStreamDisposalForTopLevel()
         {
             // AstoriaResponseMessage is only used for representing top-level responses, not individual parts of a batched response.

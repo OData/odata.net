@@ -183,6 +183,19 @@ namespace Microsoft.OData.Tests
         {
             this.settings.SelectExpandClause.Should().Be(null);
         }
+
+        [Fact]
+        public void AllowDuplicatePropertyNamesShouldBeFalseByDefault()
+        {
+            this.settings.AllowDuplicatePropertyNames.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AllowNullValuesForNonNullablePrimitiveTypesShouldBeFalseByDefault()
+        {
+            this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeFalse();
+        }
+
         #endregion Default settings tests
 
         #region Copy constructor tests
@@ -362,7 +375,9 @@ namespace Microsoft.OData.Tests
                     MaxNestingDepth = maxNestingDepth,
                 },
                 AutoComputePayloadMetadataInJson = true,
-                UseKeyAsSegment = true
+                UseKeyAsSegment = true,
+                AllowDuplicatePropertyNames = true,
+                AllowNullValuesForNonNullablePrimitiveTypes = true
             };
 
             this.settings.BaseUri.Should().BeSameAs(baseUri);
@@ -375,6 +390,8 @@ namespace Microsoft.OData.Tests
             this.settings.DisableMessageStreamDisposal.Should().BeTrue();
             this.settings.AutoComputePayloadMetadataInJson.Should().BeTrue();
             this.settings.UseKeyAsSegment.Should().BeTrue();
+            this.settings.AllowDuplicatePropertyNames.Should().BeTrue();
+            this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeTrue();
         }
 
         [Fact]
@@ -470,34 +487,5 @@ namespace Microsoft.OData.Tests
             copyOfSettings.AcceptableCharsets.Should().Be("utf8");
         }
         #endregion Set content type tests
-
-        #region Set behavior tests
-        [Fact]
-        public void SetBehaviorTest()
-        {
-            this.settings.EnableWcfDataServicesClientBehavior();
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient, /*apiBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient, false, false);
-
-            this.settings.EnableODataServerBehavior();
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.ODataServer, /*apiBehaviorKind*/ODataBehaviorKind.ODataServer, true, true);
-
-            this.settings.EnableDefaultBehavior();
-            this.AssertWriterBehavior(/*formatBehaviorKind*/ODataBehaviorKind.Default, /*apiBehaviorKind*/ODataBehaviorKind.Default, false, false);
-        }
-
-        private void AssertWriterBehavior(
-            ODataBehaviorKind formatBehaviorKind,
-            ODataBehaviorKind apiBehaviorKind,
-            bool allowNullValuesForNonNullablePrimitiveTypes,
-            bool allowDuplicatePropertyNames)
-        {
-            var writerBehavior = this.settings.WriterBehavior;
-
-            formatBehaviorKind.Should().Be(writerBehavior.FormatBehaviorKind);
-            apiBehaviorKind.Should().Be(writerBehavior.ApiBehaviorKind);
-            allowNullValuesForNonNullablePrimitiveTypes.Should().Be(writerBehavior.AllowNullValuesForNonNullablePrimitiveTypes);
-            allowDuplicatePropertyNames.Should().Be(writerBehavior.AllowDuplicatePropertyNames);
-        }
-        #endregion Set behavior tests
     }
 }

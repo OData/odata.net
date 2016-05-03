@@ -9,7 +9,6 @@ namespace Microsoft.OData
     #region Namespaces
     using System;
     using Microsoft.OData.UriParser;
-
     #endregion Namespaces
 
     /// <summary>
@@ -44,12 +43,6 @@ namespace Microsoft.OData
         private bool? useFormat;
 
         /// <summary>
-        /// An instance representing any knobs that control the behavior of the writers
-        /// inside and outside of WCF Data Services.
-        /// </summary>
-        private ODataWriterBehavior writerBehavior;
-
-        /// <summary>
         /// Func to evaluate whether an annotation should be writen by the writer. The func should return true if the annotation should
         /// be writen and false if the annotation should be skipped.
         /// </summary>
@@ -68,8 +61,6 @@ namespace Microsoft.OData
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
-            // Create the default writer behavior
-            this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
             this.EnableFullValidation = true;
         }
 
@@ -93,10 +84,10 @@ namespace Microsoft.OData
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.ODataUri = other.ODataUri;
 
-            // NOTE: writer behavior is immutable; copy by reference is ok.
-            this.writerBehavior = other.writerBehavior;
             this.EnableFullValidation = other.EnableFullValidation;
             this.ODataSimplified = other.ODataSimplified;
+            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
+            this.AllowNullValuesForNonNullablePrimitiveTypes = other.AllowNullValuesForNonNullablePrimitiveTypes;
         }
 
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
@@ -169,6 +160,42 @@ namespace Microsoft.OData
         public bool EnableFullValidation { get; set; }
 
         /// <summary>
+        /// If set to true, allows the writers to write duplicate properties of entries and complex values (i.e., properties that have the same name). Defaults to 'false'.
+        /// </summary>
+        /// <remarks>
+        /// Independently of this setting duplicate property names are never allowed if one of the duplicate property names refers to
+        /// a named stream property, an association link or a collection.
+        /// </remarks>
+        public bool AllowDuplicatePropertyNames { get; set; }
+
+        /// <summary>
+        /// If set to true, the writers will allow writing null values even if the metadata specifies a non-nullable primitive type. Default to 'false'
+        /// </summary>
+        public bool AllowNullValuesForNonNullablePrimitiveTypes { get; set; }
+
+        /// <summary>
+        /// The media type resolver to use when interpreting the content type.
+        /// </summary>
+        public ODataMediaTypeResolver MediaTypeResolver
+        {
+            get
+            {
+                if (this.mediaTypeResolver == null)
+                {
+                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver();
+                }
+
+                return this.mediaTypeResolver;
+            }
+
+            set
+            {
+                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
+                this.mediaTypeResolver = value;
+            }
+        }
+
+        /// <summary>
         /// Whether OData Simplified is enabled.
         /// </summary>
         public bool ODataSimplified { get; set; }
@@ -198,18 +225,6 @@ namespace Microsoft.OData
             get
             {
                 return this.acceptCharSets;
-            }
-        }
-
-        /// <summary>
-        /// The writer behavior that holds all the knobs needed to make the writer
-        /// behave differently inside and outside of WCF Data Services.
-        /// </summary>
-        internal ODataWriterBehavior WriterBehavior
-        {
-            get
-            {
-                return this.writerBehavior;
             }
         }
 
@@ -324,25 +339,6 @@ namespace Microsoft.OData
             this.acceptMediaTypes = null;
             this.format = payloadFormat;
             this.useFormat = true;
-        }
-
-        /// <summary>Enables the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> default behavior.</summary>
-        public void EnableDefaultBehavior()
-        {
-            this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
-        }
-
-        /// <summary>Specifies whether the WCF data services server behavior is enabled.</summary>
-        public void EnableODataServerBehavior()
-        {
-            // We have to reset the ATOM resource XML customization since in the server behavior no atom resource customization is used.
-            this.writerBehavior = ODataWriterBehavior.CreateODataServerBehavior();
-        }
-
-        /// <summary>Enables the WCF data services client behavior.</summary>
-        public void EnableWcfDataServicesClientBehavior()
-        {
-            this.writerBehavior = ODataWriterBehavior.CreateWcfDataServicesClientBehavior();
         }
 
         /// <summary>Sets the URI of the metadata document.</summary>

@@ -844,9 +844,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriter.cs">
       <Link>Microsoft\OData\Core\ODataWriter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriterBehavior.cs">
-      <Link>Microsoft\OData\Core\ODataWriterBehavior.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriterCore.cs">
       <Link>Microsoft\OData\Core\ODataWriterCore.cs</Link>
     </Compile>

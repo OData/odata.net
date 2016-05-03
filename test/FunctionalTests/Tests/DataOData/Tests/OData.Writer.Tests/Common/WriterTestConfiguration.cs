@@ -84,10 +84,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 case TestODataBehaviorKind.Default:
                     break;
                 case TestODataBehaviorKind.WcfDataServicesClient:
-                    testConfiguration.MessageWriterSettings.EnableWcfDataServicesClientBehavior();
+                    testConfiguration.MessageWriterSettings.AllowDuplicatePropertyNames = false;
+                    testConfiguration.MessageWriterSettings.AllowNullValuesForNonNullablePrimitiveTypes = false;
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageWriterSettings.EnableODataServerBehavior();
+                    testConfiguration.MessageWriterSettings.AllowDuplicatePropertyNames = true;
+                    testConfiguration.MessageWriterSettings.AllowNullValuesForNonNullablePrimitiveTypes = true;
                     break;
             }
 

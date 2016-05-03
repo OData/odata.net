@@ -155,16 +155,14 @@ namespace Microsoft.OData
         /// Validates a null collection item against the expected type.
         /// </summary>
         /// <param name="expectedItemType">The expected item type or null if no expected item type exists.</param>
-        /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
-        internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType, ODataWriterBehavior writerBehavior)
+        /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
+        internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType, ODataMessageWriterSettings writerSettings)
         {
             if (expectedItemType != null)
             {
                 if (expectedItemType.IsODataPrimitiveTypeKind())
                 {
-                    // WCF DS allows null values for non-nullable primitive types, so we need to check for a knob which enables this behavior.
-                    // See the description of ODataWriterBehavior.AllowNullValuesForNonNullablePrimitiveTypes for more details.
-                    if (!expectedItemType.IsNullable && !writerBehavior.AllowNullValuesForNonNullablePrimitiveTypes)
+                    if (!expectedItemType.IsNullable && !writerSettings.AllowNullValuesForNonNullablePrimitiveTypes)
                     {
                         throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
                     }

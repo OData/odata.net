@@ -766,13 +766,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type of the resource.</param>
         protected virtual void ValidateEntryMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            // By default validate media resource
-            // In WCF DS Server mode, validate media resource (in writers)
-            // In WCF DS Client mode, do not validate media resource
-            // Client doesn't validate default media resource against metadata.
-            //   Server doesn't validate default media resource when reading JSON against model.
-            bool validateMediaResource = this.outputContext.UseDefaultFormatBehavior || this.outputContext.UseServerFormatBehavior;
-            ValidationUtils.ValidateEntryMetadataResource(resource, entityType, this.outputContext.Model, validateMediaResource);
+            outputContext.WriterValidator.ValidateEntryMetadataResource(resource, entityType, this.outputContext.Model);
         }
 
         /// <summary>
@@ -1951,18 +1945,17 @@ namespace Microsoft.OData
             /// <param name="entityType">The entity type for the entries in the resourceSet to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="writingResponse">true if we are writing a response, false if it's a request.</param>
-            /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
+            /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            /// <param name="enableValidation">Enable validation or not.</param>
-            internal ResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool enableValidation = true)
+            internal ResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(WriterState.Resource, resource, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
-                Debug.Assert(writerBehavior != null, "writerBehavior != null");
+                Debug.Assert(writerSettings != null, "writerBehavior != null");
 
                 if (resource != null)
                 {
-                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerBehavior.AllowDuplicatePropertyNames, writingResponse, !enableValidation);
+                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerSettings.AllowDuplicatePropertyNames, writingResponse, !writerSettings.EnableFullValidation);
                 }
 
                 this.serializationInfo = serializationInfo;

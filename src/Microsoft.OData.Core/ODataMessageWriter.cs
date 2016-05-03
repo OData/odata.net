@@ -743,13 +743,6 @@ namespace Microsoft.OData
                 // Set the OData-Version
                 ODataUtilsInternal.SetODataVersion(this.message, this.settings);
             }
-
-            // If the version is set to >= 3.0 we must not have a format behavior other than the default behavior.
-            // Custom format behaviors for the WCF DS client and server are only supported in versions < 3.0
-            if (this.settings.WriterBehavior.FormatBehaviorKind != ODataBehaviorKind.Default)
-            {
-                this.settings.WriterBehavior.UseDefaultFormatBehavior();
-            }
         }
 
         /// <summary>

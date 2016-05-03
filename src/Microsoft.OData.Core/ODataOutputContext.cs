@@ -188,50 +188,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if the WCF DS client compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseClientFormatBehavior
-        {
-            get
-            {
-                return this.messageWriterSettings.WriterBehavior.FormatBehaviorKind == ODataBehaviorKind.WcfDataServicesClient;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseServerFormatBehavior
-        {
-            get
-            {
-                return this.messageWriterSettings.WriterBehavior.FormatBehaviorKind == ODataBehaviorKind.ODataServer;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.messageWriterSettings.WriterBehavior.FormatBehaviorKind == ODataBehaviorKind.Default;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS server compatibility API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseServerApiBehavior
-        {
-            get
-            {
-                return this.messageWriterSettings.WriterBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer;
-            }
-        }
-
-        /// <summary>
         /// IDisposable.Dispose() implementation to cleanup unmanaged resources of the context.
         /// </summary>
         public void Dispose()

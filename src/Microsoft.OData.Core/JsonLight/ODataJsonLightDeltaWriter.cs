@@ -752,8 +752,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            bool validateMediaResource = this.jsonLightOutputContext.UseDefaultFormatBehavior || this.jsonLightOutputContext.UseServerFormatBehavior;
-            ValidationUtils.ValidateEntryMetadataResource(resource, entityType, this.jsonLightOutputContext.Model, validateMediaResource);
+            this.jsonLightOutputContext.WriterValidator.ValidateEntryMetadataResource(resource, entityType, this.jsonLightOutputContext.Model);
         }
 
         #endregion
@@ -1588,7 +1587,7 @@ namespace Microsoft.OData.JsonLight
                 this.GetResourceSerializationInfo(resource),
                 navigationSource,
                 entityType,
-                this.jsonLightOutputContext.MessageWriterSettings.WriterBehavior,
+                this.jsonLightOutputContext.MessageWriterSettings,
                 selectedProperties,
                 odataUri);
         }
@@ -1611,7 +1610,6 @@ namespace Microsoft.OData.JsonLight
                 this.GetLinkSerializationInfo(link),
                 navigationSource,
                 entityType,
-                this.jsonLightOutputContext.MessageWriterSettings.WriterBehavior,
                 selectedProperties,
                 odataUri);
         }
@@ -1934,10 +1932,10 @@ namespace Microsoft.OData.JsonLight
             /// <param name="serializationInfo">The serialization info for the current resource.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-            /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
+            /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            protected DeltaResourceScope(WriterState state, ODataItem resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected DeltaResourceScope(WriterState state, ODataItem resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(state, resource, navigationSource, entityType, selectedProperties, odataUri)
             {
                 Debug.Assert(resource != null, "resource != null");
@@ -1945,9 +1943,9 @@ namespace Microsoft.OData.JsonLight
                     state == WriterState.DeltaResource && resource is ODataResource ||
                     state == WriterState.DeltaDeletedEntry && resource is ODataDeltaDeletedEntry,
                     "resource must be either DeltaResource or DeltaDeletedEntry.");
-                Debug.Assert(writerBehavior != null, "writerBehavior != null");
+                Debug.Assert(writerSettings != null, "writerSettings != null");
 
-                this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerBehavior.AllowDuplicatePropertyNames, /*writingResponse*/ true);
+                this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerSettings.AllowDuplicatePropertyNames, /*writingResponse*/ true);
                 this.serializationInfo = serializationInfo;
             }
 
@@ -2115,10 +2113,9 @@ namespace Microsoft.OData.JsonLight
             /// <param name="serializationInfo">The serialization info for the current resource.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-            /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            protected DeltaLinkScope(WriterState state, ODataItem link, ODataDeltaSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected DeltaLinkScope(WriterState state, ODataItem link, ODataDeltaSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(state, link, navigationSource, entityType, selectedProperties, odataUri)
             {
                 Debug.Assert(link != null, "link != null");
@@ -2126,7 +2123,6 @@ namespace Microsoft.OData.JsonLight
                     state == WriterState.DeltaLink && link is ODataDeltaLink ||
                     state == WriterState.DeltaDeletedLink && link is ODataDeltaDeletedLink,
                     "link must be either DeltaLink or DeltaDeletedLink.");
-                Debug.Assert(writerBehavior != null, "writerBehavior != null");
 
                 this.serializationInfo = DeltaConverter.ToResourceSerializationInfo(serializationInfo);
             }
@@ -2190,11 +2186,11 @@ namespace Microsoft.OData.JsonLight
             /// <param name="serializationInfo">The serialization info for the current resource.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-            /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
+            /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public JsonLightDeltaResourceScope(WriterState state, ODataItem resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(state, resource, serializationInfo, navigationSource, entityType, writerBehavior, selectedProperties, odataUri)
+            public JsonLightDeltaResourceScope(WriterState state, ODataItem resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(state, resource, serializationInfo, navigationSource, entityType, writerSettings, selectedProperties, odataUri)
             {
             }
 
@@ -2408,11 +2404,10 @@ namespace Microsoft.OData.JsonLight
             /// <param name="serializationInfo">The serialization info for the current resource.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-            /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataDeltaSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(state, link, serializationInfo, navigationSource, entityType, writerBehavior, selectedProperties, odataUri)
+            public JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataDeltaSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(state, link, serializationInfo, navigationSource, entityType, selectedProperties, odataUri)
             {
             }
         }

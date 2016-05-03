@@ -319,7 +319,7 @@ namespace Microsoft.OData.JsonLight
             IEdmTypeReference propertyTypeReference,
             bool isTopLevel)
         {
-            this.WriterValidator.ValidateNullPropertyValue(propertyTypeReference, property.Name, this.MessageWriterSettings.WriterBehavior, this.Model);
+            this.WriterValidator.ValidateNullPropertyValue(propertyTypeReference, property.Name, this.MessageWriterSettings, this.Model);
 
             if (isTopLevel)
             {

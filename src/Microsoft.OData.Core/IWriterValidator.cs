@@ -138,10 +138,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected property type or null if we don't have any.</param>
         /// <param name="propertyName">The name of the property.</param>
-        /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
+        /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> the settings of the writer.</param>
         /// <param name="model">The model to use to get the OData version.</param>
         void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference,
-            string propertyName, ODataWriterBehavior writerBehavior, IEdmModel model);
+            string propertyName, ODataMessageWriterSettings writerSettings, IEdmModel model);
 
         /// <summary>
         /// Validates that an open property value is supported.
@@ -198,5 +198,14 @@ namespace Microsoft.OData
         /// <param name="typeReference">The type reference to validate.</param>
         /// <returns>The <see cref="IEdmCollectionTypeReference"/> instance representing the collection passed as <paramref name="typeReference"/>.</returns>
         IEdmCollectionTypeReference ValidateCollectionType(IEdmTypeReference typeReference);
+
+        /// <summary>
+        /// Validates that the specified <paramref name="resource"/> is a valid resource as per the specified type.
+        /// </summary>
+        /// <param name="resource">The resource to validate.</param>
+        /// <param name="resourceType">Optional entity type to validate the resource against.</param>
+        /// <param name="model">Model containing the entity type.</param>
+        /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
+        void ValidateEntryMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model);
     }
 }
