@@ -363,35 +363,35 @@ namespace Microsoft.OData.Tests
 
             this.settings = new ODataMessageWriterSettings()
             {
+                AllowDuplicatePropertyNames = true,
+                AllowNullValuesForNonNullablePrimitiveTypes = true
+                AutoComputePayloadMetadataInJson = true,
                 BaseUri = baseUri,
                 CheckCharacters = true,
-                Indent = true,
-                Version = version,
                 DisableMessageStreamDisposal = true,
+                Indent = true,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = maxPartsPerBatch,
                     MaxOperationsPerChangeset = maxOperationsPerChangeset,
                     MaxNestingDepth = maxNestingDepth,
                 },
-                AutoComputePayloadMetadataInJson = true,
                 UseKeyAsSegment = true,
-                AllowDuplicatePropertyNames = true,
-                AllowNullValuesForNonNullablePrimitiveTypes = true
+                Version = version,
             };
 
+            this.settings.AllowDuplicatePropertyNames.Should().BeTrue();
+            this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeTrue();
+            this.settings.AutoComputePayloadMetadataInJson.Should().BeTrue();
             this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.CheckCharacters.Should().BeTrue();
+            this.settings.DisableMessageStreamDisposal.Should().BeTrue();
             this.settings.Indent.Should().BeTrue();
             this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(maxPartsPerBatch);
             this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);
             this.settings.MessageQuotas.MaxNestingDepth.Should().Be(maxNestingDepth);
-            this.settings.Version.Should().Be(version);
-            this.settings.DisableMessageStreamDisposal.Should().BeTrue();
-            this.settings.AutoComputePayloadMetadataInJson.Should().BeTrue();
             this.settings.UseKeyAsSegment.Should().BeTrue();
-            this.settings.AllowDuplicatePropertyNames.Should().BeTrue();
-            this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeTrue();
+            this.settings.Version.Should().Be(version);
         }
 
         [Fact]

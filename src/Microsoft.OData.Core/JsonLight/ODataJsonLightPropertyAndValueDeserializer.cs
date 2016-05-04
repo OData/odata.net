@@ -1223,7 +1223,7 @@ namespace Microsoft.OData.JsonLight
                     this.Model,
                     expectedPropertyType,
                     payloadTypeName,
-                    this.MessageReaderSettings.ReaderBehavior,
+                    this.MessageReaderSettings.ClientCustomTypeResolver,
                     out typeKind);
 
                 if (actualWirePropertyTypeReference != null)

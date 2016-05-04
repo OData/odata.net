@@ -299,7 +299,6 @@
     <Compile Include="ODataRawOutputContext.cs" />
     <Compile Include="ODataRawValueFormat.cs" />
     <Compile Include="ODataReader.cs" />
-    <Compile Include="ODataReaderBehavior.cs" />
     <Compile Include="ODataReaderCore.cs" />
     <Compile Include="ODataReaderCoreAsync.cs" />
     <Compile Include="ODataReaderState.cs" />

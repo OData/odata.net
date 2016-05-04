@@ -25,15 +25,15 @@ namespace Microsoft.OData.Metadata
         private readonly IEdmModel model;
 
         /// <summary>Reader behavior if the caller is a reader, null if no reader behavior is available.</summary>
-        private readonly ODataReaderBehavior readerBehavior;
+        private readonly Func<IEdmType, string, IEdmType> clientCustomTypeResolver;
 
         /// <summary>Creates a new entity set element type resolver with all the information needed when resolving for reading scenarios.</summary>
         /// <param name="model">The model to use or null if no model is available.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        public EdmTypeReaderResolver(IEdmModel model, ODataReaderBehavior readerBehavior)
+        public EdmTypeReaderResolver(IEdmModel model, Func<IEdmType, string, IEdmType> clientCustomTypeResolver)
         {
             this.model = model;
-            this.readerBehavior = readerBehavior;
+            this.clientCustomTypeResolver = clientCustomTypeResolver;
         }
 
         /// <summary>Returns the entity type of the given navigation source.</summary>
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Metadata
         internal override IEdmEntityType GetElementType(IEdmNavigationSource navigationSource)
         {
             IEdmEntityType entityType = navigationSource.EntityType();
-            
+
             if (entityType == null)
             {
                 return null;
@@ -108,10 +108,8 @@ namespace Microsoft.OData.Metadata
         private IEdmTypeReference ResolveTypeReference(IEdmTypeReference typeReferenceToResolve)
         {
             Debug.Assert(typeReferenceToResolve != null, "typeReferenceToResolve != null");
-            Debug.Assert(this.readerBehavior != null, "readerBehavior != null");
 
-            Func<IEdmType, string, IEdmType> customTypeResolver = this.readerBehavior.TypeResolver;
-            if (customTypeResolver == null)
+            if (clientCustomTypeResolver == null)
             {
                 return typeReferenceToResolve;
             }
@@ -128,15 +126,11 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(typeToResolve != null, "typeToResolve != null");
             Debug.Assert(this.model != null, "model != null");
-            Debug.Assert(this.readerBehavior != null, "readerBehavior != null");
 
-            Func<IEdmType, string, IEdmType> customTypeResolver = this.readerBehavior.TypeResolver;
-            if (customTypeResolver == null)
+            if (clientCustomTypeResolver == null)
             {
                 return typeToResolve;
             }
-
-            Debug.Assert(this.readerBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient, "Custom type resolver can only be specified in WCF DS Client behavior.");
             EdmTypeKind typeKind;
 
             // MetadataUtils.ResolveTypeName() does not allow entity collection types however both operationImport.ReturnType and operationParameter.Type can be of entity collection types.
@@ -146,11 +140,11 @@ namespace Microsoft.OData.Metadata
             if (collectionTypeToResolve != null && collectionTypeToResolve.ElementType.IsEntity())
             {
                 IEdmTypeReference itemTypeReferenceToResolve = collectionTypeToResolve.ElementType;
-                IEdmType resolvedItemType = MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, itemTypeReferenceToResolve.FullName(), customTypeResolver, out typeKind);
+                IEdmType resolvedItemType = MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, itemTypeReferenceToResolve.FullName(), clientCustomTypeResolver, out typeKind);
                 return new EdmCollectionType(resolvedItemType.ToTypeReference(itemTypeReferenceToResolve.IsNullable));
             }
 
-            return MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, typeToResolve.FullTypeName(), customTypeResolver, out typeKind);
+            return MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, typeToResolve.FullTypeName(), clientCustomTypeResolver, out typeKind);
         }
     }
 }

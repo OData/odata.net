@@ -32,28 +32,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseServerFormatBehavior
-        {
-            get
-            {
-                return this.inputContext.UseServerFormatBehavior;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.inputContext.UseDefaultFormatBehavior;
-            }
-        }
-
-        /// <summary>
         /// The message reader settings.
         /// </summary>
         internal ODataMessageReaderSettings MessageReaderSettings

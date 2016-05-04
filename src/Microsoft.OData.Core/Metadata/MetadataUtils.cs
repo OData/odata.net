@@ -80,7 +80,7 @@ namespace Microsoft.OData.Metadata
         /// <param name="model">The model to use.</param>
         /// <param name="expectedType">The expected type for the type name being resolved, or null if none is available.</param>
         /// <param name="typeName">The name of the type to resolve.</param>
-        /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
+        /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
         /// <param name="typeKind">The type kind of the type, if it could be determined. This will be None if we couldn't tell. It might be filled
         /// even if the method returns null, for example for Collection types with item types which are not recognized.</param>
         /// <returns>The <see cref="IEdmType"/> representing the type specified by the <paramref name="typeName"/>;
@@ -89,15 +89,10 @@ namespace Microsoft.OData.Metadata
             IEdmModel model,
             IEdmType expectedType,
             string typeName,
-            ODataReaderBehavior readerBehavior,
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             out EdmTypeKind typeKind)
         {
-            Func<IEdmType, string, IEdmType> customTypeResolver = readerBehavior == null ? null : readerBehavior.TypeResolver;
-            Debug.Assert(
-                customTypeResolver == null || readerBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
-                "Custom type resolver can only be specified in WCF DS Client behavior.");
-
-            return ResolveTypeName(model, expectedType, typeName, customTypeResolver, out typeKind);
+            return ResolveTypeName(model, expectedType, typeName, clientCustomTypeResolver, out typeKind);
         }
 
         /// <summary>

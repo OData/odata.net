@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void CalculateBindableOperationsForEntityTypeWithoutTypeResolver()
         {
             var bindingType = this.model.FindType("TestModel.Movie");
-            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, ODataReaderBehavior.DefaultBehavior));
+            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, null));
             Assert.Equal(1, bindableOperations.Length);
             foreach (var operation in bindableOperations)
             {
@@ -31,8 +31,8 @@ namespace Microsoft.OData.Tests.Metadata
         public void CalculateBindableOperationsForDerivedEntityTypeWithoutTypeResolver()
         {
             var bindingType = this.model.FindType("TestModel.TVMovie");
-            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, ODataReaderBehavior.DefaultBehavior));
-            
+            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, null));
+
             Assert.Equal(2, bindableOperations.Length);
             Assert.True(bindableOperations.Count(o => o.Name == "Rate") == 1);
             Assert.True(bindableOperations.Count(o => o.Name == "ChangeChannel") == 1);
@@ -41,8 +41,8 @@ namespace Microsoft.OData.Tests.Metadata
         [Fact]
         public void CalculateBindableOperationsForEntityCollectionTypeWithoutTypeResolver()
         {
-            var bindingType = new EdmCollectionType(this.model.FindType("TestModel.Movie").ToTypeReference(nullable:false));
-            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, ODataReaderBehavior.DefaultBehavior));
+            var bindingType = new EdmCollectionType(this.model.FindType("TestModel.Movie").ToTypeReference(nullable: false));
+            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, null));
             Assert.Equal(2, bindableOperations.Length);
             foreach (var operation in bindableOperations)
             {
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.Metadata
             {
                 return tvMovieType;
             }
-            
+
             return expectedType;
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void CalculateBindableOperationsForEntityTypeWithTypeResolver()
         {
             var bindingType = this.model.FindType("TestModel.Movie");
-            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, ODataReaderBehavior.CreateWcfDataServicesClientBehavior(this.NameToTypeResolver)));
+            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, this.NameToTypeResolver));
             Assert.Equal(1, bindableOperations.Length);
             foreach (var operation in bindableOperations)
             {
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void CalculateBindableOperationsForDerivedEntityTypeWithTypeResolver()
         {
             var bindingType = this.model.FindType("TestModel.TVMovie");
-            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, ODataReaderBehavior.CreateWcfDataServicesClientBehavior(this.NameToTypeResolver)));
+            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, this.NameToTypeResolver));
 
             Assert.Equal(2, bindableOperations.Length);
             Assert.True(bindableOperations.Count(o => o.Name == "Rate") == 1);
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.Metadata
         public void CalculateBindableOperationsForEntityCollectionTypeWithTypeResolver()
         {
             var bindingType = new EdmCollectionType(this.model.FindType("TestModel.Movie").ToTypeReference(nullable: false));
-            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, ODataReaderBehavior.CreateWcfDataServicesClientBehavior(this.NameToTypeResolver)));
+            var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, this.NameToTypeResolver));
             Assert.Equal(2, bindableOperations.Length);
             foreach (var operation in bindableOperations)
             {
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Tests.Metadata
         private static IEdmModel BuildModel()
         {
             EdmModel model = new EdmModel();
-            
+
             var movieType = new EdmEntityType("TestModel", "Movie");
             EdmStructuralProperty idProperty = new EdmStructuralProperty(movieType, "Id", EdmCoreModel.Instance.GetInt32(false));
             movieType.AddProperty(idProperty);
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.Metadata
             var tvMovieType = new EdmEntityType("TestModel", "TVMovie", movieType);
             tvMovieType.AddProperty(new EdmStructuralProperty(tvMovieType, "Channel", EdmCoreModel.Instance.GetString(false)));
             model.AddElement(tvMovieType);
-            
+
             EdmEntityContainer defaultContainer = new EdmEntityContainer("TestModel", "Default");
             defaultContainer.AddEntitySet("Movies", movieType);
             model.AddElement(defaultContainer);
@@ -155,13 +155,13 @@ namespace Microsoft.OData.Tests.Metadata
             changeChannelAction1.AddParameter("movie", tvMovieType.ToTypeReference());
             changeChannelAction1.AddParameter("channel", EdmCoreModel.Instance.GetString(false));
             model.AddElement(changeChannelAction1);
-            
+
             EdmAction checkoutAction = new EdmAction("TestModel", "Checkout", EdmCoreModel.Instance.GetInt32(false) /*returnType*/, false /*isBound*/, null /*entitySetPath*/);
             checkoutAction.AddParameter("movie", movieType.ToTypeReference());
             checkoutAction.AddParameter("duration", EdmCoreModel.Instance.GetInt32(false));
             model.AddElement(checkoutAction);
-            
-            var movieCollectionTypeReference = (new EdmCollectionType(movieType.ToTypeReference(nullable: false))).ToTypeReference(nullable:false);
+
+            var movieCollectionTypeReference = (new EdmCollectionType(movieType.ToTypeReference(nullable: false))).ToTypeReference(nullable: false);
 
             EdmAction checkoutMultiple1Action = new EdmAction("TestModel", "CheckoutMultiple", EdmCoreModel.Instance.GetInt32(false), false /*isBound*/, null /*entitySetPath*/);
             checkoutMultiple1Action.AddParameter("movies", movieCollectionTypeReference);
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.Metadata
             rateMultiple2Action.AddParameter("movies", movieCollectionTypeReference);
             rateMultiple2Action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
             model.AddElement(rateMultiple2Action);
-            
+
             return model;
         }
     }

@@ -53,9 +53,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             model.AddElement(container);
             if (addAnnotation)
             {
-                model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));                
+                model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
             }
-            
+
             EdmEntityType entityType = new EdmEntityType("Fake", "FakeType");
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             model.AddElement(entityType);
@@ -65,15 +65,15 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             var metadataContext = new ODataMetadataContext(
                 true,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified,
-                new EdmTypeReaderResolver(model, ODataReaderBehavior.DefaultBehavior),
+                null,
+                new EdmTypeReaderResolver(model, null),
                 model,
                 new Uri("http://temp.org/$metadata"),
                 null /*requestUri*/);
 
-            var thing = new ODataResource {Properties = new[] {new ODataProperty {Name = "Id", Value = 1}}};
+            var thing = new ODataResource { Properties = new[] { new ODataProperty { Name = "Id", Value = 1 } } };
             thing.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
-            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*")}, useKeyAsSegment);
+            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*") }, useKeyAsSegment);
             return thing;
         }
     }

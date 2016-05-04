@@ -231,9 +231,8 @@ namespace Microsoft.OData.JsonLight
                     ODataJsonLightReaderUtils.EnsureInstance(ref mediaResource);
                     this.SetEntryMediaResource(resourceState, mediaResource);
                 }
-                
-                bool validateMediaResource = this.UseDefaultFormatBehavior || this.UseServerFormatBehavior;
-                ValidationUtils.ValidateEntryMetadataResource(resource, entityType, this.Model, validateMediaResource);
+
+                ValidationUtils.ValidateEntryMetadataResource(resource, entityType, this.Model, this.MessageReaderSettings.EnableFullValidation);
             }
         }
 
@@ -1020,7 +1019,7 @@ namespace Microsoft.OData.JsonLight
 
             return ODataJsonLightReaderNestedResourceInfo.CreateCollectionEntityReferenceLinksInfo(nestedResourceInfo, navigationProperty, entityReferenceLinksList, isExpanded);
         }
-        
+
         /// <summary>
         /// Adds a new property to a resource.
         /// </summary>

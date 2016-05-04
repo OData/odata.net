@@ -206,7 +206,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     if (allowDuplicateProperties)
                     {
-                        testConfiguration.MessageReaderSettings.EnableODataServerBehavior();
+                        testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                        testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
+                        testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
+                        // EnableReadingEntryContentInEntryStartState == true
+
                     }
 
                     // Create a descriptor with the first property

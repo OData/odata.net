@@ -123,10 +123,9 @@ namespace Microsoft.OData.JsonLight
                 // Under the client knob, the model we're given is really a facade, which doesn't flow open-type information into the combined types.
                 // However, we need to answer this question for materializing operations which were left out of the payload.
                 // To get around this, the client sets a callback in the ReaderBehavior to answer the question.
-                Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified = this.MessageReaderSettings.ReaderBehavior.OperationsBoundToEntityTypeMustBeContainerQualified;
                 return this.metadataContext ?? (this.metadataContext = new ODataMetadataContext(
                     this.ReadingResponse,
-                    operationsBoundToEntityTypeMustBeContainerQualified,
+                    null,
                     this.JsonLightInputContext.EdmTypeResolver,
                     this.Model,
                     this.MetadataDocumentUri,
@@ -251,7 +250,7 @@ namespace Microsoft.OData.JsonLight
                     this.Model,
                     contextUriAnnotationValue,
                     payloadKind,
-                    this.MessageReaderSettings.ReaderBehavior,
+                    this.MessageReaderSettings.ClientCustomTypeResolver,
                     this.JsonLightInputContext.ReadingResponse);
             }
 
@@ -302,7 +301,7 @@ namespace Microsoft.OData.JsonLight
                             this.Model,
                             contextUriAnnotationValue,
                             payloadKind,
-                            this.MessageReaderSettings.ReaderBehavior,
+                            this.MessageReaderSettings.ClientCustomTypeResolver,
                             this.JsonLightInputContext.ReadingResponse);
                     }
 

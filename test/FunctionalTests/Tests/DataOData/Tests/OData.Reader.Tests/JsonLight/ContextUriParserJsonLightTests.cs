@@ -865,7 +865,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         testCase.Model ?? this.testModel,
                         testCase.ContextUri,
                         testCase.PayloadKind,
-                        ODataReaderBehavior.DefaultBehavior,
+                        null,
                         true);
 
                     this.CompareContextUriParseResults(testCase.ExpectedResult, parseResult, testCase.ResourcePath);

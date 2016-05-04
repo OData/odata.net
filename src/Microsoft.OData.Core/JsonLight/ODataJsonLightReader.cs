@@ -652,10 +652,9 @@ namespace Microsoft.OData.JsonLight
                 // There's nothing to read, so move to the end resource state
                 this.EndEntry();
             }
-            else if (this.jsonLightInputContext.UseServerApiBehavior)
+            else if (this.jsonLightInputContext.MessageReaderSettings.EnableReadingEntryContentInEntryStartState == false)
             {
-                // In WCF DS Server mode we don't read ahead but report the resource right after type name.
-                // So we need to read the resource content now.
+                // As entry content has not been read during entry start state. Should read here
                 ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = this.jsonLightResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
                 if (navigationLinkInfo != null)
                 {
@@ -1054,7 +1053,7 @@ namespace Microsoft.OData.JsonLight
                             this.jsonLightResourceDeserializer.Model,
                             contextUriStr,
                             ODataPayloadKind.Resource,
-                            this.jsonLightResourceDeserializer.MessageReaderSettings.ReaderBehavior,
+                            this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
                             this.jsonLightInputContext.ReadingResponse);
                     if (this.jsonLightInputContext.ReadingResponse && parseResult != null)
                     {
@@ -1087,8 +1086,8 @@ namespace Microsoft.OData.JsonLight
                 this.CurrentResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentNavigationSource, this.CurrentEntityType));
             }
 
-            // In WCF DS Server mode we must not read ahead and report the type name only.
-            if (this.jsonLightInputContext.UseServerApiBehavior)
+            // If not reading entry context currently, report the type name only and return now.
+            if (!this.jsonLightInputContext.MessageReaderSettings.EnableReadingEntryContentInEntryStartState)
             {
                 this.CurrentResourceState.FirstNestedResourceInfo = null;
             }
@@ -1233,7 +1232,7 @@ namespace Microsoft.OData.JsonLight
                         this.jsonLightResourceDeserializer.Model,
                         UriUtils.UriToString(readerNestedResourceInfo.NestedResourceInfo.ContextUrl),
                         readerNestedResourceInfo.NestedResourceInfo.IsCollection.GetValueOrDefault() ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource,
-                        this.jsonLightResourceDeserializer.MessageReaderSettings.ReaderBehavior,
+                        this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
                         this.jsonLightResourceDeserializer.JsonLightInputContext.ReadingResponse).Path;
                 odataUri = new ODataUri()
                 {

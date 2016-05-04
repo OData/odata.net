@@ -15,12 +15,6 @@ namespace Microsoft.OData
     public sealed class ODataMessageReaderSettings : ODataMessageReaderSettingsBase
     {
         /// <summary>
-        /// A instance representing any knobs that control the behavior of the readers
-        /// inside and outside of WCF Data Services.
-        /// </summary>
-        private ODataReaderBehavior readerBehavior;
-
-        /// <summary>
         /// The base uri used in payload.
         /// </summary>
         private Uri baseUri;
@@ -29,15 +23,16 @@ namespace Microsoft.OData
         public ODataMessageReaderSettings()
             : base()
         {
+            this.AllowDuplicatePropertyNames = false;
+            this.ClientCustomTypeResolver = null;
             this.DisablePrimitiveTypeConversion = false;
             this.DisableMessageStreamDisposal = false;
-            this.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None;
-
-            // Create the default reader behavior
-            this.readerBehavior = ODataReaderBehavior.DefaultBehavior;
-
-            this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
             this.EnableFullValidation = true;
+            this.EnableLaxMetadataValidation = false;
+            this.EnableReadingEntryContentInEntryStartState = true;
+            this.ODataSimplified = false;
+            this.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None;
+            this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class.</summary>
@@ -47,18 +42,33 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
+            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
             this.BaseUri = other.BaseUri;
+            this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
             this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
             this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
-            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
-            this.MaxProtocolVersion = other.MaxProtocolVersion;
-
-            // NOTE: reader behavior is immutable; copy by reference is ok.
-            this.readerBehavior = other.ReaderBehavior;
             this.EnableFullValidation = other.EnableFullValidation;
+            this.EnableLaxMetadataValidation = other.EnableLaxMetadataValidation;
+            this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;
+            this.MaxProtocolVersion = other.MaxProtocolVersion;
+            this.ODataSimplified = other.ODataSimplified;
+            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.ODataSimplified = other.ODataSimplified;
+
+            this.mediaTypeResolver = other.mediaTypeResolver;
         }
+
+        /// <summary>
+        /// If set to true, allows the writers to write duplicate properties of entries and 
+        /// complex values (i.e., properties that have the same name). Defaults to 'false'.
+        /// </summary>
+        /// <remarks>
+        /// Independently of this setting duplicate property names are never allowed if one 
+        /// of the duplicate property names refers to a named stream property, 
+        /// an association link or a collection.
+        /// </remarks>
+        public bool AllowDuplicatePropertyNames { get; set; }
 
         /// <summary>
         /// Gets or sets the document base URI (used as base for all relative URIs). If this is set, it must be an absolute URI.
@@ -82,9 +92,91 @@ namespace Microsoft.OData
             }
         }
 
+        /// <summary>
+        /// Custom type resolver used by the Client.
+        /// </summary>
+        public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver { get; set; }
+
         /// <summary>Gets or sets a value that indicates whether not to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
         /// <returns>true if primitive values and report values are not converted; false if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is false.</returns>
         public bool DisablePrimitiveTypeConversion { get; set; }
+
+        /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
+        /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
+        public bool DisableMessageStreamDisposal { get; set; }
+
+        /// <summary>
+        /// If set to true, all the validation would be enabled. Else some validation will be skipped.
+        /// Default to true.
+        /// </summary>
+        public bool EnableFullValidation { get; set; }
+
+        /// <summary>
+        /// false - metadata validation is strict, the input must exactly match against the model.
+        /// true - metadata validation is lax, the input doesn't have to match the model in all cases.
+        /// This property has effect only if the metadata model is specified.
+        /// </summary>
+        /// <remarks>
+        /// Strict metadata validation:
+        ///   Primitive values: The wire type must be convertible to the expected type.
+        ///   Complex values: The wire type must resolve against the model and it must exactly match the expected type.
+        ///   Entities: The wire type must resolve against the model and it must be assignable to the expected type.
+        ///   Collections: The wire type must exactly match the expected type.
+        ///   If no expected type is available we use the payload type.
+        /// Lax metadata validation:
+        ///   Primitive values: If expected type is available, we ignore the wire type.
+        ///   Complex values: The wire type is used if the model defines it. If the model doesn't define such a type, the expected type is used.
+        ///     If the wire type is not equal to the expected type, but it's assignable, we fail because we don't support complex type inheritance.
+        ///     If the wire type if not assignable we use the expected type.
+        ///   Entities: same as complex values except that if the payload type is assignable we use the payload type. This allows derived entity types.
+        ///   Collections: If expected type is available, we ignore the wire type, except we fail if the item type is a derived complex type.
+        ///   If no expected type is available we use the payload type and it must resolve against the model.
+        /// If DisablePrimitiveTypeConversion is on, the rules for primitive values don't apply
+        ///   and the primitive values are always read with the type from the wire.
+        /// </remarks>
+        public bool EnableLaxMetadataValidation { get; set; }
+
+        /// <summary>
+        /// Whether reader read the entry content in entry start state. The default value is false
+        /// </summary>
+        public bool EnableReadingEntryContentInEntryStartState { get; set; }
+
+        /// <summary>Gets or sets the maximum OData protocol version the reader should accept and understand.</summary>
+        /// <returns>The maximum OData protocol version the reader should accept and understand.</returns>
+        /// <remarks>
+        /// If the payload to be read has higher OData-Version than the value specified for this property
+        /// the reader will fail.
+        /// Reader will also not report features which require higher version than specified for this property.
+        /// It may either ignore such features in the payload or fail on them.
+        /// </remarks>
+        public ODataVersion MaxProtocolVersion { get; set; }
+
+        /// <summary>
+        /// The media type resolver to use when interpreting the incoming content type.
+        /// </summary>
+        public ODataMediaTypeResolver MediaTypeResolver
+        {
+            get
+            {
+                if (this.mediaTypeResolver == null)
+                {
+                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver();
+                }
+
+                return this.mediaTypeResolver;
+            }
+
+            set
+            {
+                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
+                this.mediaTypeResolver = value;
+            }
+        }
+
+        /// <summary>
+        /// Whether OData Simplified is enabled.
+        /// </summary>
+        public bool ODataSimplified { get; set; }
 
         /// <summary>Gets or sets the behavior the reader should use when it finds undeclared property.</summary>
         /// <returns>The behavior the reader should use when it finds undeclared property.</returns>
@@ -165,26 +257,6 @@ namespace Microsoft.OData
         /// </remarks>
         public ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
-        /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
-        public bool DisableMessageStreamDisposal { get; set; }
-
-        /// <summary>Gets or sets the maximum OData protocol version the reader should accept and understand.</summary>
-        /// <returns>The maximum OData protocol version the reader should accept and understand.</returns>
-        /// <remarks>
-        /// If the payload to be read has higher OData-Version than the value specified for this property
-        /// the reader will fail.
-        /// Reader will also not report features which require higher version than specified for this property.
-        /// It may either ignore such features in the payload or fail on them.
-        /// </remarks>
-        public ODataVersion MaxProtocolVersion { get; set; }
-
-        /// <summary>
-        /// If set to true, all the validation would be enabled. Else some validation will be skipped.
-        /// Default to true.
-        /// </summary>
-        public bool EnableFullValidation { get; set; }
-
         /// <summary>
         /// Gets or sets a value that indicates whether the reader should put key values in their own URI segment when automatically building URIs.
         /// If this value is false, automatically-generated URLs will take the form "../EntitySet('KeyValue')/..".
@@ -234,12 +306,13 @@ namespace Microsoft.OData
         /// <summary>
         /// The reader behavior that holds all the knobs needed to make the reader
         /// behave differently inside and outside of WCF Data Services.
+        /// Whether or not to ignore any undeclared value properties in the payload. Computed from the UndeclaredPropertyBehaviorKinds enum property.
         /// </summary>
-        internal ODataReaderBehavior ReaderBehavior
+        internal bool IgnoreUndeclaredValueProperties
         {
             get
             {
-                return this.readerBehavior;
+                return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
             }
         }
 
@@ -252,44 +325,6 @@ namespace Microsoft.OData
             {
                 return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty);
             }
-        }
-
-        /// <summary>
-        /// Whether or not to ignore any undeclared value properties in the payload. Computed from the UndeclaredPropertyBehaviorKinds enum property.
-        /// </summary>
-        internal bool IgnoreUndeclaredValueProperties
-        {
-            get
-            {
-                return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
-            }
-        }
-
-        /// <summary>Enables the default behavior.</summary>
-        public void EnableDefaultBehavior()
-        {
-            // We have to reset the ATOM resource XML customization since in the default behavior no atom resource customization is used.
-            this.readerBehavior = ODataReaderBehavior.DefaultBehavior;
-        }
-
-        /// <summary>Specifies whether the OData server behavior is enabled.</summary>
-        public void EnableODataServerBehavior()
-        {
-            // We have to reset the ATOM resource XML customization since in the server behavior no atom resource customization is used.
-            this.readerBehavior = ODataReaderBehavior.CreateWcfDataServicesServerBehavior();
-        }
-
-        /// <summary>
-        /// Enables the same behavior that the WCF Data Services client has. Also, lets the user set the values for custom data namespace and type scheme.
-        /// </summary>
-        /// <param name="typeResolver">Custom type resolver which takes both expected type and type name.
-        /// This function is used instead of the IEdmModel.FindType if it's specified.
-        /// The first parameter to the function is the expected type (the type inferred from the parent property or specified by the external caller).
-        /// The second parameter is the type name from the payload.
-        /// The function should return the resolved type, or null if no such type was found.</param>
-        public void EnableWcfDataServicesClientBehavior(Func<IEdmType, string, IEdmType> typeResolver)
-        {
-            this.readerBehavior = ODataReaderBehavior.CreateWcfDataServicesClientBehavior(typeResolver);
         }
 
         /// <summary>

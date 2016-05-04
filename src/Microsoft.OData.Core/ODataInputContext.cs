@@ -76,8 +76,9 @@ namespace Microsoft.OData
             this.synchronous = !messageInfo.IsAsync;
             this.model = messageInfo.Model ?? EdmCoreModel.Instance;
             this.urlResolver = messageInfo.UrlResolver;
-            this.container = messageInfo.Container;
-            this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ReaderBehavior);
+            this.container = messageInfo.Container;            
+            this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
+
             this.payloadValueConverter = this.model.GetPayloadValueConverter();
         }
 
@@ -166,61 +167,6 @@ namespace Microsoft.OData
             get
             {
                 return this.payloadValueConverter;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseServerFormatBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.ODataServer;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.Default;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS client compatibility API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseClientApiBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS server compatibility API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseServerApiBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer;
-            }
-        }
-
-        /// <summary>
-        /// true if the default API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseDefaultApiBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.Default;
             }
         }
 
@@ -589,7 +535,7 @@ namespace Microsoft.OData
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return new DuplicatePropertyNamesChecker(this.MessageReaderSettings.ReaderBehavior.AllowDuplicatePropertyNames, this.ReadingResponse, !this.messageReaderSettings.EnableFullValidation);
+            return new DuplicatePropertyNamesChecker(this.MessageReaderSettings.AllowDuplicatePropertyNames, this.ReadingResponse, !this.messageReaderSettings.EnableFullValidation);
         }
 
         /// <summary>

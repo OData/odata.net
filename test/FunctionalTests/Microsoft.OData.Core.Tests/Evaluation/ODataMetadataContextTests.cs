@@ -28,8 +28,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             ODataMetadataContext context = new ODataMetadataContext(
                 true /*readingResponse*/,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified, 
-                new EdmTypeReaderResolver(this.edmModel, ODataReaderBehavior.DefaultBehavior), 
+                null,
+                new EdmTypeReaderResolver(this.edmModel, null),
                 this.edmModel,
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
@@ -44,14 +44,14 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             ODataMetadataContext context = new ODataMetadataContext(
                 true /*readingResponse*/,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified,
-                new EdmTypeReaderResolver(this.edmModel, ODataReaderBehavior.DefaultBehavior),
+                null,
+                new EdmTypeReaderResolver(this.edmModel, null),
                 this.edmModel,
                 new Uri("http://myservice.svc/$metadata", UriKind.Absolute),
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*")}, null);
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*") }, null);
             action.ShouldNotThrow();
         }
 
@@ -60,11 +60,11 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var closedType = new EdmEntityType("NS", "Type1");
             var openType = new EdmEntityType("NS", "Type2", null, false, true);
-            
+
             ODataMetadataContext context = new ODataMetadataContext(
                 true /*readingResponse*/,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified,
-                new EdmTypeReaderResolver(this.edmModel, ODataReaderBehavior.DefaultBehavior),
+                null,
+                new EdmTypeReaderResolver(this.edmModel, null),
                 this.edmModel,
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);

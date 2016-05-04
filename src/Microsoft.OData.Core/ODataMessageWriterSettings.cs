@@ -29,6 +29,11 @@ namespace Microsoft.OData
         private string acceptMediaTypes;
 
         /// <summary>
+        /// The base uri used in payload.
+        /// </summary>
+        private Uri baseUri;
+
+        /// <summary>
         /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader' 
         /// fields and uses the default values for the respective format. If null is specified
         /// the default format and the default media type will be picked depending on the writer these settings are used with.
@@ -36,11 +41,14 @@ namespace Microsoft.OData
         private ODataFormat format;
 
         /// <summary>
-        /// true if the Format property should be used to compute the media type; 
-        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
-        /// null if neither the format nor the acceptable media types/charsets have been set.
+        /// Media type resolver used for this writer.
         /// </summary>
-        private bool? useFormat;
+        private ODataMediaTypeResolver mediaTypeResolver;
+
+        /// <summary>
+        /// The parse result of request Uri
+        /// </summary>
+        private ODataUri odataUri;
 
         /// <summary>
         /// Func to evaluate whether an annotation should be writen by the writer. The func should return true if the annotation should
@@ -49,19 +57,21 @@ namespace Microsoft.OData
         private Func<string, bool> shouldIncludeAnnotation;
 
         /// <summary>
-        /// The parse result of request Uri
+        /// true if the Format property should be used to compute the media type; 
+        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
+        /// null if neither the format nor the acceptable media types/charsets have been set.
         /// </summary>
-        private ODataUri odataUri;
-
-        /// <summary>
-        /// The base uri used in payload.
-        /// </summary>
-        private Uri baseUri;
+        private bool? useFormat;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
+            this.AllowDuplicatePropertyNames = false;
+            this.AllowNullValuesForNonNullablePrimitiveTypes = false;
+            this.AutoComputePayloadMetadataInJson = false;
+            this.DisableMessageStreamDisposal = false;
             this.EnableFullValidation = true;
+            this.ODataSimplified = false;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with specified settings.</summary>
@@ -73,26 +83,49 @@ namespace Microsoft.OData
 
             this.acceptCharSets = other.acceptCharSets;
             this.acceptMediaTypes = other.acceptMediaTypes;
-            this.BaseUri = other.BaseUri;
-            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
             this.format = other.format;
-            this.useFormat = other.useFormat;
-            this.Version = other.Version;
-            this.JsonPCallback = other.JsonPCallback;
+            this.mediaTypeResolver = other.mediaTypeResolver;
             this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
-            this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
-            this.UseKeyAsSegment = other.UseKeyAsSegment;
-            this.ODataUri = other.ODataUri;
+            this.useFormat = other.useFormat;
 
             this.EnableFullValidation = other.EnableFullValidation;
             this.ODataSimplified = other.ODataSimplified;
             this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
             this.AllowNullValuesForNonNullablePrimitiveTypes = other.AllowNullValuesForNonNullablePrimitiveTypes;
+            this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
+            this.BaseUri = other.BaseUri;
+            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
+            this.EnableFullValidation = other.EnableFullValidation;
+            this.JsonPCallback = other.JsonPCallback;
+            this.ODataUri = other.ODataUri;
+            this.ODataSimplified = other.ODataSimplified;
+            this.UseKeyAsSegment = other.UseKeyAsSegment;
+            this.Version = other.Version;
         }
 
-        /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
-        /// <returns>The OData protocol version to be used for writing payloads.</returns>
-        public ODataVersion? Version { get; set; }
+        /// <summary>
+        /// If set to true, allows the writers to write duplicate properties of entries and complex values (i.e., properties that have the same name). Defaults to 'false'.
+        /// </summary>
+        /// <remarks>
+        /// Independently of this setting duplicate property names are never allowed if one of the duplicate property names refers to
+        /// a named stream property, an association link or a collection.
+        /// </remarks>
+        public bool AllowDuplicatePropertyNames { get; set; }
+
+        /// <summary>
+        /// If set to true, the writers will allow writing null values even if the metadata specifies a non-nullable primitive type. Default to 'false'
+        /// </summary>
+        public bool AllowNullValuesForNonNullablePrimitiveTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the writer should automatically generate or omit metadata in JSON payloads based on the metadata level.
+        /// </summary>
+        /// <remarks>
+        /// Payload metadata includes the type names of entries and property values as well as any information that may be computed automatically, such as edit links.
+        /// If, for example, ODataResource.EditLink is not specified, then it will be automatically computed and written out in full metadata mode.
+        /// If ODataResource.EditLink is specified, then that value will be considered an "override" of the default computed edit link, and will be written out in full and minimal metadata modes. It will not be written in no metadata mode.
+        /// </remarks>
+        public bool AutoComputePayloadMetadataInJson { get; set; }
 
         /// <summary>Gets or sets the document base URI which is used as base for all relative URIs. </summary>
         /// <returns>The document base URI which is used as base for all relative URIs.</returns>
@@ -113,45 +146,9 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>
-        /// The OData Uri of an incoming request.  Call <see cref="ODataUriParser"/>'s methods,
-        /// and assign properties (e.g., <see cref="ODataPath"/>) to <see cref="ODataUri"/>.
-        /// </summary>
-        public ODataUri ODataUri
-        {
-            get { return this.odataUri ?? (this.odataUri = new ODataUri()); }
-            set { this.odataUri = value; }
-        }
-
         /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
         /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
         public bool DisableMessageStreamDisposal { get; set; }
-
-        /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
-        /// <returns>The callback function used to wrap the response from server.</returns>
-        /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
-        /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
-        public string JsonPCallback { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the writer should automatically generate or omit metadata in JSON payloads based on the metadata level.
-        /// </summary>
-        /// <remarks>
-        /// Payload metadata includes the type names of entries and property values as well as any information that may be computed automatically, such as edit links.
-        /// If, for example, ODataResource.EditLink is not specified, then it will be automatically computed and written out in full metadata mode.
-        /// If ODataResource.EditLink is specified, then that value will be considered an "override" of the default computed edit link, and will be written out in full and minimal metadata modes. It will not be written in no metadata mode.
-        /// </remarks>
-        public bool AutoComputePayloadMetadataInJson { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the writer should put key values in their own URI segment when automatically building URIs.
-        /// If this value is false, automatically-generated URLs will take the form "../EntitySet('KeyValue')/..".
-        /// If this value is true, automatically-generated URLs will take the form "../EntitySet/KeyValue/..".
-        /// If this value is not set (null), decision will be made based on the "Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" vocabulary
-        /// annotation on the IEdmEntityContainer, if available. The default behavior is to put key values inside parentheses and not a distinct URL segments.
-        /// This setting only applies to URLs that are automatically generated by the <see cref="ODataMessageWriter" /> and does not modify URLs explicitly provided by the user.
-        /// </summary>
-        public bool? UseKeyAsSegment { get; set; }
 
         /// <summary>
         /// If set to true, all the validation would be enabled. Else some validation will be skipped.
@@ -159,19 +156,11 @@ namespace Microsoft.OData
         /// </summary>
         public bool EnableFullValidation { get; set; }
 
-        /// <summary>
-        /// If set to true, allows the writers to write duplicate properties of entries and complex values (i.e., properties that have the same name). Defaults to 'false'.
-        /// </summary>
-        /// <remarks>
-        /// Independently of this setting duplicate property names are never allowed if one of the duplicate property names refers to
-        /// a named stream property, an association link or a collection.
-        /// </remarks>
-        public bool AllowDuplicatePropertyNames { get; set; }
-
-        /// <summary>
-        /// If set to true, the writers will allow writing null values even if the metadata specifies a non-nullable primitive type. Default to 'false'
-        /// </summary>
-        public bool AllowNullValuesForNonNullablePrimitiveTypes { get; set; }
+        /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
+        /// <returns>The callback function used to wrap the response from server.</returns>
+        /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
+        /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
+        public string JsonPCallback { get; set; }
 
         /// <summary>
         /// The media type resolver to use when interpreting the content type.
@@ -199,6 +188,30 @@ namespace Microsoft.OData
         /// Whether OData Simplified is enabled.
         /// </summary>
         public bool ODataSimplified { get; set; }
+
+        /// <summary>
+        /// The OData Uri of an incoming request.  Call <see cref="ODataUriParser"/>'s methods,
+        /// and assign properties (e.g., <see cref="ODataPath"/>) to <see cref="ODataUri"/>.
+        /// </summary>
+        public ODataUri ODataUri
+        {
+            get { return this.odataUri ?? (this.odataUri = new ODataUri()); }
+            set { this.odataUri = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the writer should put key values in their own URI segment when automatically building URIs.
+        /// If this value is false, automatically-generated URLs will take the form "../EntitySet('KeyValue')/..".
+        /// If this value is true, automatically-generated URLs will take the form "../EntitySet/KeyValue/..".
+        /// If this value is not set (null), decision will be made based on the "Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" vocabulary
+        /// annotation on the IEdmEntityContainer, if available. The default behavior is to put key values inside parentheses and not a distinct URL segments.
+        /// This setting only applies to URLs that are automatically generated by the <see cref="ODataMessageWriter" /> and does not modify URLs explicitly provided by the user.
+        /// </summary>
+        public bool? UseKeyAsSegment { get; set; }
+
+        /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
+        /// <returns>The OData protocol version to be used for writing payloads.</returns>
+        public ODataVersion? Version { get; set; }
 
         /// <summary>
         /// The acceptable media types used to determine the content type of the message.
@@ -242,15 +255,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if the Format property should be used to compute the media type; 
-        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
-        /// null if neither the format nor the acceptable media types/charsets have been set.
+        /// Gets the value indicating whether the payload represents an individual property
         /// </summary>
-        internal bool? UseFormat
+        internal bool IsIndividualProperty
         {
             get
             {
-                return this.useFormat;
+                return this.ODataUri.Path != null && this.ODataUri.Path.IsIndividualProperty();
             }
         }
 
@@ -262,6 +273,19 @@ namespace Microsoft.OData
             get
             {
                 return this.ODataUri.MetadataDocumentUri;
+            }
+        }
+
+        /// <summary>
+        /// true if the Format property should be used to compute the media type; 
+        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
+        /// null if neither the format nor the acceptable media types/charsets have been set.
+        /// </summary>
+        internal bool? UseFormat
+        {
+            get
+            {
+                return this.useFormat;
             }
         }
 
@@ -286,17 +310,6 @@ namespace Microsoft.OData
                 return this.SelectExpandClause != null
                     ? SelectedPropertiesNode.Create(this.SelectExpandClause)
                     : SelectedPropertiesNode.EntireSubtree;
-            }
-        }
-
-        /// <summary>
-        /// Gets the value indicating whether the payload represents an individual property
-        /// </summary>
-        internal bool IsIndividualProperty
-        {
-            get
-            {
-                return this.ODataUri.Path != null && this.ODataUri.Path.IsIndividualProperty();
             }
         }
 

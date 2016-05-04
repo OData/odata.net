@@ -123,7 +123,7 @@ namespace Microsoft.OData
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
 
             this.model = model ?? EdmCoreModel.Instance;
-            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ReaderBehavior);
+            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
         }
 
         /// <summary>Creates a new <see cref="T:System.Data.OData.ODataMessageReader" /> for the given response message.</summary>
@@ -165,7 +165,7 @@ namespace Microsoft.OData
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
 
             this.model = model ?? EdmCoreModel.Instance;
-            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ReaderBehavior);
+            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter
             // to the reader settings if it's not already set, so that we would only read annotations that satisfy the filter.
@@ -197,12 +197,6 @@ namespace Microsoft.OData
         /// </remarks>
         public IEnumerable<ODataPayloadKindDetectionResult> DetectPayloadKind()
         {
-            // We don't support payload kind detection in WCF DS server mode
-            if (this.settings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer)
-            {
-                throw new ODataException(Strings.ODataMessageReader_PayloadKindDetectionInServerMode);
-            }
-
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType;
             if (this.TryGetSinglePayloadKindResultFromContentType(out payloadKindsFromContentType))
             {
@@ -264,12 +258,6 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Need to a return a task of an enumerable.")]
         public Task<IEnumerable<ODataPayloadKindDetectionResult>> DetectPayloadKindAsync()
         {
-            // We don't support payload kind detection in WCF DS server mode
-            if (this.settings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer)
-            {
-                throw new ODataException(Strings.ODataMessageReader_PayloadKindDetectionInServerMode);
-            }
-
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType;
             if (this.TryGetSinglePayloadKindResultFromContentType(out payloadKindsFromContentType))
             {

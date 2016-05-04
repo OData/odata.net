@@ -21,10 +21,18 @@ namespace Microsoft.OData.Tests
         public void DefaultValuesTest()
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            Assert.True(settings.BaseUri == null, "BaseUri should be null by default.");
+
+            Assert.False(settings.AllowDuplicatePropertyNames, "The AllowDuplicatePropertyNames should be false by default");
+            Assert.Null(settings.BaseUri);
             Assert.False(settings.CheckCharacters, "The CheckCharacters should be off by default.");
+            Assert.Null(settings.ClientCustomTypeResolver);
             Assert.False(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion should be false by default.");
             Assert.False(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal should be false by default.");
+            Assert.True(settings.EnableFullValidation, "The EnableFullValidation should be true by default");
+            Assert.False(settings.EnableLaxMetadataValidation, "The EnableLaxMetadataValidation should be false by default");
+            Assert.True(settings.EnableReadingEntryContentInEntryStartState, "The EnableReadingEntryContentInEntryStartState should be true by default");
+            Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
+            Assert.Null(settings.UseKeyAsSegment);
             Assert.True(ODataUndeclaredPropertyBehaviorKinds.None == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds should be Default by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
@@ -41,10 +49,16 @@ namespace Microsoft.OData.Tests
 
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings
             {
+                AllowDuplicatePropertyNames = true,
                 BaseUri = baseUri,
                 CheckCharacters = true,
                 DisablePrimitiveTypeConversion = true,
                 DisableMessageStreamDisposal = true,
+                EnableFullValidation = false,
+                EnableLaxMetadataValidation = true,
+                EnableReadingEntryContentInEntryStartState = false,
+                ODataSimplified = true,
+                UseKeyAsSegment = true,
                 UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty,
                 MaxProtocolVersion = ODataVersion.V4,
                 MessageQuotas = new ODataMessageQuotas
@@ -56,10 +70,16 @@ namespace Microsoft.OData.Tests
                 },
             };
 
+            Assert.True(settings.AllowDuplicatePropertyNames, "The AllowDuplicatePropertyNames was not correctly remembered");
             Assert.True(baseUri.Equals(settings.BaseUri), "The BaseUri was not correctly remembered.");
             Assert.True(settings.CheckCharacters, "The CheckCharacters should be on when set.");
             Assert.True(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion was not correctly remembered.");
             Assert.True(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal was not correctly remembered.");
+            Assert.False(settings.EnableFullValidation, "The EnableFullValidation was not correctly remembered");
+            Assert.True(settings.EnableLaxMetadataValidation, "The EnableLaxMetadataValidation was not correctly remembered");
+            Assert.False(settings.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState was not correctly remebered");
+            Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
+            Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
             Assert.True(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
@@ -144,64 +164,6 @@ namespace Microsoft.OData.Tests
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = 0 } };
             test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(Strings.ExceptionUtils_CheckLongPositive("0") + "\r\nParameter name: MaxReceivedMessageSize");
         }
-
-        // These tests and helpers are disabled on Silverlight and Phone because they  
-        // use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
-        [Fact]
-        public void SetBehaviorTest()
-        {
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-
-            settings.EnableWcfDataServicesClientBehavior(null);
-            this.CompareReaderBehavior(
-                settings,
-                /*formatBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient,
-                /*apiBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient,
-                true,
-                /*typeResolver*/ null);
-
-            Func<IEdmType, string, IEdmType> customTypeResolver = (expectedType, typeName) => expectedType;
-            settings.EnableWcfDataServicesClientBehavior(customTypeResolver);
-            this.CompareReaderBehavior(
-                settings,
-                /*formatBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient,
-                /*apiBehaviorKind*/ODataBehaviorKind.WcfDataServicesClient,
-                true,
-                customTypeResolver);
-
-            settings.EnableODataServerBehavior();
-            this.CompareReaderBehavior(
-                settings,
-                /*formatBehaviorKind*/ODataBehaviorKind.ODataServer,
-                /*apiBehaviorKind*/ODataBehaviorKind.ODataServer,
-                true,
-                /*typeResolver*/ null);
-
-            settings.EnableDefaultBehavior();
-            this.CompareReaderBehavior(
-                settings,
-                /*formatBehaviorKind*/ODataBehaviorKind.Default,
-                /*apiBehaviorKind*/ODataBehaviorKind.Default,
-                false,
-                /*typeResolver*/ null);
-        }
-
-        private void CompareReaderBehavior(
-            ODataMessageReaderSettings settings,
-            ODataBehaviorKind formatBehaviorKind,
-            ODataBehaviorKind apiBehaviorKind,
-            bool allowDuplicatePropertyNames,
-            Func<IEdmType, string, IEdmType> typeResolver)
-        {
-            ODataReaderBehavior readerBehavior = settings.ReaderBehavior;
-
-            Assert.True(formatBehaviorKind == readerBehavior.FormatBehaviorKind, "Reader format behavior kinds don't match.");
-            Assert.True(apiBehaviorKind == readerBehavior.ApiBehaviorKind, "Reader API behavior kinds don't match.");
-            Assert.True(allowDuplicatePropertyNames == readerBehavior.AllowDuplicatePropertyNames, "AllowDuplicatePropertyNames values don't match.");
-            Assert.True(typeResolver == readerBehavior.TypeResolver, "TypeResolver values don't match.");
-        }
-#endif
 
         private void CompareMessageReaderSettings(ODataMessageReaderSettings expected, ODataMessageReaderSettings actual)
         {

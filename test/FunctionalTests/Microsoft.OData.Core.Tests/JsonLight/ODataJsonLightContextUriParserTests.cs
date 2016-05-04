@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 if (payloadKind != ODataPayloadKind.Property && payloadKind != ODataPayloadKind.Unsupported)
                 {
-                    Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, payloadKind, ODataReaderBehavior.DefaultBehavior, true);
+                    Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, payloadKind, null, true);
                     parseContextUri.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(ContextUriForNullProperty, payloadKind.ToString()));
                 }
             }
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ParseNullPropertyContextUriShouldReturnPropertyWhenExpectedPayloadKindIsProperty()
         {
-            var parseResult = ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, ODataPayloadKind.Property, ODataReaderBehavior.DefaultBehavior, true);
+            var parseResult = ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, ODataPayloadKind.Property, null, true);
             parseResult.DetectedPayloadKinds.Single().Should().Be(ODataPayloadKind.Property);
             parseResult.IsNullProperty.Should().BeTrue();
         }
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ParseNullPropertyContextUriShouldReturnPropertyWhenExpectedPayloadKindIsUnsupported()
         {
-            var parseResult = ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, ODataPayloadKind.Unsupported, ODataReaderBehavior.DefaultBehavior, true);
+            var parseResult = ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, ODataPayloadKind.Unsupported, null, true);
             parseResult.DetectedPayloadKinds.Single().Should().Be(ODataPayloadKind.Property);
             parseResult.IsNullProperty.Should().BeTrue();
         }
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ParseRelativeContextUrlShouldThrowException()
         {
             string relativeUrl = "$metadata#R";
-            Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), relativeUrl, ODataPayloadKind.Unsupported, ODataReaderBehavior.DefaultBehavior, true);
+            Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), relativeUrl, ODataPayloadKind.Unsupported, null, true);
             parseContextUri.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(relativeUrl));
         }
     }

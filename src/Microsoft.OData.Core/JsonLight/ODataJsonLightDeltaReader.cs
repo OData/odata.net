@@ -667,7 +667,7 @@ namespace Microsoft.OData.JsonLight
             this.PreReadAtStartImplementation(out duplicatePropertyNamesChecker);
 
             return this.jsonLightResourceDeserializer.ReadPayloadStartAsync(
-                ODataPayloadKind.ResourceSet, 
+                ODataPayloadKind.ResourceSet,
                 duplicatePropertyNamesChecker,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
@@ -759,7 +759,7 @@ namespace Microsoft.OData.JsonLight
 
             // Read top-level resource set annotations.
             this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllResourceSetProperties*/isReordering);
-            
+
             // Enter DeltaResourceSetStart state.
             this.ReadDeltaResourceSetStart(resourceSet, selectedProperties);
 
@@ -781,7 +781,7 @@ namespace Microsoft.OData.JsonLight
         private bool ReadAtDeltaResourceSetStartImplementationSynchronously()
         {
             Debug.Assert(this.State == ODataDeltaReaderState.DeltaResourceSetStart, "this.State == ODataDeltaReaderState.DeltaResourceSetStart");
-            
+
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
             // figure out whether the resource set contains entries or not
@@ -1138,7 +1138,7 @@ namespace Microsoft.OData.JsonLight
                         this.jsonLightInputContext.Model,
                         contextUri,
                         ODataPayloadKind.Delta,
-                        ODataReaderBehavior.DefaultBehavior,
+                        /*clientCustomTypeResolver*/null,
                         /*needParseFragment*/true);
                 deltaKind = contextUriParseResult.DeltaKind;
                 entityTypeFromContextUri = contextUriParseResult.EdmType as IEdmEntityType;

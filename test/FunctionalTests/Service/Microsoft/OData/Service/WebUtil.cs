@@ -1258,7 +1258,10 @@ namespace Microsoft.OData.Service
 
             if (enableODataServerBehavior)
             {
-                messageReaderSettings.EnableODataServerBehavior();
+                messageReaderSettings.AllowDuplicatePropertyNames = true;
+                messageReaderSettings.ClientCustomTypeResolver = null;
+                messageReaderSettings.EnableLaxMetadataValidation = true;
+                // EnableReadingEntryContentInEntryStartState == true
             }
 
             return messageReaderSettings;

@@ -42,8 +42,9 @@ namespace Microsoft.OData.Client
                 resolveWireTypeName = null;
             }
 
-            settings.EnableWcfDataServicesClientBehavior(resolveWireTypeName);
-
+            settings.AllowDuplicatePropertyNames = true;
+            settings.ClientCustomTypeResolver = resolveWireTypeName;
+            settings.EnableLaxMetadataValidation = true;
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
             settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
             settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;

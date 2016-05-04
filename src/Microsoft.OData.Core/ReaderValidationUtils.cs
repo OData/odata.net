@@ -300,7 +300,7 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The payload type name to resolve.</param>
         /// <param name="expectedTypeKind">The default payload type kind, this is used when the resolution is not possible,
         /// but the type name is not empty. (Should be either Complex or Entity).</param>
-        /// <param name="readerBehavior">Reader behavior to use for compatibility.</param>
+        /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
         /// <param name="payloadTypeKind">This is set to the detected payload type kind, or None if the type was not specified.</param>
         /// <returns>The resolved type. This may be null if either no user-specified model is specified, or the type name is not recognized by the model.</returns>
         /// <remarks>The method detects the payload kind even if the model does not recognize the type. It figures out primitive and collection types always,
@@ -310,7 +310,7 @@ namespace Microsoft.OData
             IEdmTypeReference expectedTypeReference,
             string payloadTypeName,
             EdmTypeKind expectedTypeKind,
-            ODataReaderBehavior readerBehavior,
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             out EdmTypeKind payloadTypeKind)
         {
             if (payloadTypeName == null)
@@ -330,7 +330,7 @@ namespace Microsoft.OData
                 model,
                 expectedTypeReference == null ? null : expectedTypeReference.Definition,
                 payloadTypeName,
-                readerBehavior,
+                clientCustomTypeResolver,
                 out payloadTypeKind);
             if (payloadTypeKind == EdmTypeKind.None)
             {
@@ -389,7 +389,7 @@ namespace Microsoft.OData
                 expectedTypeReference,
                 payloadTypeName,
                 EdmTypeKind.Complex,
-                messageReaderSettings.ReaderBehavior,
+                messageReaderSettings.ClientCustomTypeResolver,
                 out payloadTypeKind);
 
             // Compute the target type kind based on the expected type, the payload type kind
@@ -475,7 +475,7 @@ namespace Microsoft.OData
                 "The payload type kind must match the payload type if that is available.");
             Debug.Assert(payloadType == null || payloadTypeName != null, "If we have a payload type, we must have its name as well.");
 
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadType != null;
+            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ClientCustomTypeResolver != null && payloadType != null;
 
             if (expectedTypeReference != null && !useExpectedTypeOnlyForTypeResolution)
             {
@@ -490,7 +490,7 @@ namespace Microsoft.OData
             // - If the DisablePrimitiveTypeConversion == true, the lax/strict mode doesn't matter and we will read the payload value on its own.
             //     In this case we require the payload value to always be a primitive type (so type kinds must match), but it may not be convertible
             //     to the expected type, it will still be reported to the caller. 
-            if (payloadTypeKind != EdmTypeKind.None && (messageReaderSettings.DisablePrimitiveTypeConversion || !messageReaderSettings.DisableStrictMetadataValidation))
+            if (payloadTypeKind != EdmTypeKind.None && (messageReaderSettings.DisablePrimitiveTypeConversion || !messageReaderSettings.EnableLaxMetadataValidation))
             {
                 // Make sure that the type kinds match.
                 ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, payloadTypeName);
@@ -516,7 +516,7 @@ namespace Microsoft.OData
 
             // The server ignores the payload type when expected type is specified
             // The server is going to use lax mode everywhere so this is not an issue.
-            if (messageReaderSettings.DisableStrictMetadataValidation)
+            if (messageReaderSettings.EnableLaxMetadataValidation)
             {
                 // Lax validation logic
                 // Always use the expected type, the payload type is ignored.
@@ -591,14 +591,14 @@ namespace Microsoft.OData
                 "The payload type kind must match the payload type if that is available.");
             Debug.Assert(payloadType == null || payloadTypeName != null, "If we have a payload type, we must have its name as well.");
 
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadType != null;
+            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ClientCustomTypeResolver != null && payloadType != null;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
                 ValidateTypeSupported(expectedTypeReference);
 
                 // We should validate that the payload type resolved before anything else to produce reasonable error messages
                 // Otherwise we might report errors which are somewhat confusing (like "Type '' is Complex but Collection was expected.").
-                if (model.IsUserModel() && (expectedTypeReference == null || !messageReaderSettings.DisableStrictMetadataValidation))
+                if (model.IsUserModel() && (expectedTypeReference == null || !messageReaderSettings.EnableLaxMetadataValidation))
                 {
                     // When using a type resolver (i.e., useExpectedTypeOnlyForTypeResolution == true) then we don't have to
                     // call this method because the contract with the type resolver is to always resolve the type name and thus
@@ -614,7 +614,7 @@ namespace Microsoft.OData
 
             // In lax mode don't cross check kinds of types (we would just use the expected type) unless we expect
             // an open property of a specific kind (e.g. top level complex property for PUT requests)
-            if (payloadTypeKind != EdmTypeKind.None && (!messageReaderSettings.DisableStrictMetadataValidation || expectedTypeReference == null))
+            if (payloadTypeKind != EdmTypeKind.None && (!messageReaderSettings.EnableLaxMetadataValidation || expectedTypeReference == null))
             {
                 // Make sure that the type kinds match.
                 ValidationUtils.ValidateTypeKind(payloadTypeKind, expectedTypeKind, payloadTypeName);
@@ -636,7 +636,7 @@ namespace Microsoft.OData
                     payloadType);
             }
 
-            if (messageReaderSettings.DisableStrictMetadataValidation)
+            if (messageReaderSettings.EnableLaxMetadataValidation)
             {
                 return ResolveAndValidateTargetTypeStrictValidationDisabled(
                     expectedTypeKind,
@@ -1105,7 +1105,7 @@ namespace Microsoft.OData
 
             // If we have a type resolver, we always use the type returned by the resolver
             // and use the expected type only for the resolution.
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadTypeKind != EdmTypeKind.None;
+            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ClientCustomTypeResolver != null && payloadTypeKind != EdmTypeKind.None;
 
             // Determine the target type kind
             // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
@@ -1127,11 +1127,6 @@ namespace Microsoft.OData
             {
                 if (payloadTypeKind != EdmTypeKind.None)
                 {
-                    Debug.Assert(
-                        messageReaderSettings.ReaderBehavior.TypeResolver == null
-                        || messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
-                        "A custom type resolver is only supported in the client format behavior.");
-
                     // If we have a type kind based on the type name, use it.
                     if (!forEntityValue)
                     {
@@ -1197,7 +1192,7 @@ namespace Microsoft.OData
         {
             // If we have a type resolver, we always use the type returned by the resolver
             // and use the expected type only for the resolution.
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadTypeKind != EdmTypeKind.None;
+            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ClientCustomTypeResolver != null && payloadTypeKind != EdmTypeKind.None;
 
             // Type kind validation must happen when
             // - In strict mode
@@ -1205,7 +1200,7 @@ namespace Microsoft.OData
             // In lax mode we don't want to validate type kinds, but the DisablePrimitiveTypeConversion overrides the lax mode behavior.
             // If there's no expected type, then there's nothing to validate against (open property).
             return expectedValueTypeReference != null &&
-                (!messageReaderSettings.DisableStrictMetadataValidation ||
+                (!messageReaderSettings.EnableLaxMetadataValidation ||
                 useExpectedTypeOnlyForTypeResolution ||
                 (expectedValueTypeReference.IsODataPrimitiveTypeKind() && messageReaderSettings.DisablePrimitiveTypeConversion));
         }

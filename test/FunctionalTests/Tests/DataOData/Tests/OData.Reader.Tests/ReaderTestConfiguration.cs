@@ -29,8 +29,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="readerRequest">True if the test is reading a request. Otherwise false if it's reading a response.</param>
         /// <param name="synchronous">True if the test should be ran using synchronous API. Otherwise false if it should be ran using asynchronous APIs.</param>
         /// <param name="version">The OData protocol version to be used for reading the payload.</param>
-        public ReaderTestConfiguration(ODataFormat format, ODataMessageReaderSettings messageReaderSettings, bool IsRequest, bool synchronous,ODataVersion version = ODataVersion.V4)
-            :base(format, version, IsRequest, TestODataBehaviorKind.Default)
+        public ReaderTestConfiguration(ODataFormat format, ODataMessageReaderSettings messageReaderSettings, bool IsRequest, bool synchronous, ODataVersion version = ODataVersion.V4)
+            : base(format, version, IsRequest, TestODataBehaviorKind.Default)
         {
             Debug.Assert(messageReaderSettings != null, "readerSettings != null");
 
@@ -55,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         /// <param name="other">The <see cref="ReaderTestConfiguration"/> instance used to initialize the new instance.</param>
         public ReaderTestConfiguration(ReaderTestConfiguration other)
-            :this(other, other.RunBehaviorKind)
+            : this(other, other.RunBehaviorKind)
         {
         }
 
@@ -97,10 +97,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 case TestODataBehaviorKind.Default:
                     break;
                 case TestODataBehaviorKind.WcfDataServicesClient:
-                    testConfiguration.MessageReaderSettings.EnableWcfDataServicesClientBehavior(null);
+                    testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                    testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
+                    testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageReaderSettings.EnableODataServerBehavior();
+                    testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                    testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
+                    testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
+                    // EnableReadingEntryContentInEntryStartState == true
                     break;
             }
 
