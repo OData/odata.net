@@ -12,15 +12,10 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
     public class VCardMediaTypeResolver : ODataMediaTypeResolver
     {
-        private static readonly VCardMediaTypeResolver instance = new VCardMediaTypeResolver();
         private readonly ODataMediaTypeFormat[] mediaTypeFormats = new ODataMediaTypeFormat[]
         {
             new ODataMediaTypeFormat(new ODataMediaType("text", "x-vCard"), new VCardFormat())
         };
-
-        private VCardMediaTypeResolver() { }
-
-        public static VCardMediaTypeResolver Instance { get { return instance; } }
 
         public override IEnumerable<ODataMediaTypeFormat> GetMediaTypeFormats(ODataPayloadKind payloadKind)
         {

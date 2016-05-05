@@ -41,6 +41,9 @@ namespace Microsoft.OData
         /// <summary>The optional dependency injection container to get related services for message writing.</summary>
         private readonly IServiceProvider container;
 
+        /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
+        private readonly ODataMediaTypeResolver mediaTypeResolver;
+
         /// <summary>Flag to ensure that only a single write method is called on the message writer.</summary>
         private bool writeMethodCalled;
 
@@ -104,6 +107,7 @@ namespace Microsoft.OData
             this.writingResponse = false;
             this.urlResolver = requestMessage as IODataUrlResolver;
             this.container = GetContainer(requestMessage);
+            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
@@ -143,6 +147,7 @@ namespace Microsoft.OData
             this.writingResponse = true;
             this.urlResolver = responseMessage as IODataUrlResolver;
             this.container = GetContainer(responseMessage);
+            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
@@ -773,7 +778,7 @@ namespace Microsoft.OData
             if (!string.IsNullOrEmpty(contentType))
             {
                 ODataPayloadKind computedPayloadKind;
-                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.settings.MediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
+                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.mediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
                 Debug.Assert(this.writerPayloadKind == computedPayloadKind, "The payload kinds must always match.");
 
                 if (this.settings.HasJsonPaddingFunction())
@@ -790,7 +795,7 @@ namespace Microsoft.OData
             {
                 // Determine the content type and format from the settings. Note that if neither format nor accept headers have been specified in the settings
                 // we fall back to a default (of null accept headers).
-                this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.settings.MediaTypeResolver, out this.mediaType, out this.encoding);
+                this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.mediaTypeResolver, out this.mediaType, out this.encoding);
 
                 if (this.writerPayloadKind == ODataPayloadKind.Batch)
                 {

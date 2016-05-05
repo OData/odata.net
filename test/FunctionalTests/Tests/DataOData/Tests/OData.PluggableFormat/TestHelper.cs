@@ -98,16 +98,15 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public static ODataMessageReader CreateMessageReader(
            Stream stream,
+           IServiceProvider container,
            string contenttype = "application/json",
-           ODataMediaTypeResolver resolver = null,
            IEdmModel model = null,
            bool isResponse = false)
         {
-            var message = new InMemoryMessage { Stream = stream };
+            var message = new InMemoryMessage { Stream = stream, Container = container };
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageReaderSettings()
             {
-                MediaTypeResolver = resolver ?? new ODataMediaTypeResolver(),
                 ShouldIncludeAnnotation = st => true,
             };
 
@@ -123,16 +122,15 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public static ODataMessageWriter CreateMessageWriter(
            Stream stream,
+           IServiceProvider container,
            string contenttype = "application/json",
-           ODataMediaTypeResolver resolver = null,
            IEdmModel model = null,
            bool isResponse = true)
         {
-            var message = new InMemoryMessage { Stream = stream };
+            var message = new InMemoryMessage { Stream = stream, Container = container };
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageWriterSettings
             {
-                MediaTypeResolver = resolver ?? new ODataMediaTypeResolver(),
                 DisableMessageStreamDisposal = true,
                 Indent = true,
             };
@@ -149,15 +147,15 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public static string GetToplevelPropertyPayloadString(
             object value,
-            string contenttype = "application/json",
-            ODataMediaTypeResolver resolver = null)
+            IServiceProvider container,
+            string contenttype = "application/json")
         {
             Stream stream = null;
 
             try
             {
                 stream = new MemoryStream();
-                using (var omw = CreateMessageWriter(stream, contenttype, resolver, null, false))
+                using (var omw = CreateMessageWriter(stream, container, contenttype, null, false))
                 {
                     omw.WriteProperty(new ODataProperty { Name = "fa", Value = value });
                 }

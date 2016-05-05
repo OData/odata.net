@@ -48,6 +48,9 @@ namespace Microsoft.OData
         /// <summary>The resolver to use when determining an entity set's element type.</summary>
         private readonly EdmTypeResolver edmTypeResolver;
 
+        /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
+        private readonly ODataMediaTypeResolver mediaTypeResolver;
+
         /// <summary>Flag to ensure that only a single read method is called on the message reader.</summary>
         private bool readMethodCalled;
 
@@ -110,6 +113,7 @@ namespace Microsoft.OData
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = requestMessage as IODataUrlResolver;
             this.container = GetContainer(requestMessage);
+            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
 
             // Validate OData version against request message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -151,6 +155,7 @@ namespace Microsoft.OData
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = responseMessage as IODataUrlResolver;
             this.container = GetContainer(responseMessage);
+            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
 
             // Validate OData version against response message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -835,7 +840,7 @@ namespace Microsoft.OData
 
             // Set the format, encoding and payload kind.
             string contentTypeHeader = this.GetContentTypeHeader(payloadKinds);
-            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.settings.MediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
+            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.mediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
         }
 
         /// <summary>
@@ -1259,7 +1264,7 @@ namespace Microsoft.OData
             }
 
             string contentTypeHeader = this.GetContentTypeHeader();
-            IList<ODataPayloadKindDetectionResult> payloadKindsFromContentType = MediaTypeUtils.GetPayloadKindsForContentType(contentTypeHeader, this.settings.MediaTypeResolver, out this.contentType, out this.encoding);
+            IList<ODataPayloadKindDetectionResult> payloadKindsFromContentType = MediaTypeUtils.GetPayloadKindsForContentType(contentTypeHeader, this.mediaTypeResolver, out this.contentType, out this.encoding);
             payloadKindResults = payloadKindsFromContentType.Where(r => ODataUtilsInternal.IsPayloadKindSupported(r.PayloadKind, !this.readingResponse));
 
             if (payloadKindResults.Count() > 1)

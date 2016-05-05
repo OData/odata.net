@@ -7,8 +7,8 @@
 #if ENABLE_AVRO
 namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 {
+    using System;
     using System.Collections.Generic;
-    using System.Data.Metadata.Edm;
     using System.IO;
     using System.Linq;
     using Microsoft.Hadoop.Avro;
@@ -82,6 +82,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         private static IEdmAction AddProduct;
         private static IEdmAction GetMaxId;
 
+        private static IServiceProvider container;
+
         static ODataAvroScenarioTests()
         {
             var type = new EdmEntityType("Microsoft.Test.OData.PluggableFormat.Avro.Test", "Product");
@@ -103,6 +105,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             action = new EdmAction("Microsoft.Test.OData.PluggableFormat.Avro.Test", "GetMaxId", EdmCoreModel.Instance.GetInt32(false));
             action.AddParameter("Products", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(EntryType, false))));
             GetMaxId = action;
+
+            var builder = new TestContainerBuilder();
+            builder.AddDefaultODataServices();
+            builder.AddService<ODataMediaTypeResolver, AvroMediaTypeResolver>(ServiceLifetime.Singleton);
+            container = builder.BuildContainer();
         }
 
         [TestMethod]
@@ -110,7 +117,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         {
             MemoryStream ms = new MemoryStream();
 
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 var entryWriter = omw.CreateODataResourceWriter(null, EntryType);
                 entryWriter.WriteStart(entry0);
@@ -160,7 +167,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             ODataResource entry = null;
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary"))
             {
                 var reader = omr.CreateODataResourceReader();
                 while (reader.Read())
@@ -195,7 +202,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var entries = new List<ODataResource>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary"))
             {
                 var reader = omr.CreateODataResourceSetReader();
                 while (reader.Read())
@@ -219,7 +226,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         {
             MemoryStream ms = new MemoryStream();
 
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 var entryWriter = omw.CreateODataResourceSetWriter(null, EntryType);
                 entryWriter.WriteStart(new ODataResourceSet());
@@ -273,7 +280,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var values = new List<string>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary"))
             {
                 var reader = omr.CreateODataCollectionReader();
                 while (reader.Read())
@@ -294,7 +301,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         public void TestWriteCollection()
         {
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 var cw = omw.CreateODataCollectionWriter();
                 cw.WriteStart(new ODataCollectionStart());
@@ -328,7 +335,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             };
 
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 omw.WriteProperty(prop);
             }
@@ -359,7 +366,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         public void TestWriteParameter()
         {
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel(), false))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary", new EdmModel(), false))
             {
                 var opw = omw.CreateODataParameterWriter(AddProduct);
                 var ew = opw.CreateResourceWriter("Product");
@@ -400,7 +407,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         public void TestWriteParameterWithFeed()
         {
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel(), false))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary", new EdmModel(), false))
             {
                 var opw = omw.CreateODataParameterWriter(GetMaxId);
                 var ew = opw.CreateResourceSetWriter("Products");
@@ -455,7 +462,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var result = new Dictionary<string, object>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel()))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary", new EdmModel()))
             {
                 var reader = omr.CreateODataParameterReader(AddProduct);
                 while (reader.Read())
@@ -498,7 +505,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var result = new Dictionary<string, object>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel()))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary", new EdmModel()))
             {
                 var reader = omr.CreateODataParameterReader(GetMaxId);
                 while (reader.Read())
@@ -555,7 +562,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             };
 
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 omw.WriteError(odataError, false);
             }
@@ -588,7 +595,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             ODataError error = null;
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel(), true))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary", new EdmModel(), true))
             {
                 error = omr.ReadError();
             }

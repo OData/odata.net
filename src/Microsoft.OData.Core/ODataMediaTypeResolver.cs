@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -162,17 +164,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Accesses the default media type resolver.
-        /// </summary>
-        internal static ODataMediaTypeResolver DefaultMediaTypeResolver
-        {
-            get
-            {
-                return MediaTypeResolver;
-            }
-        }
-
-        /// <summary>
         /// Gets the supported media types and formats for the given payload kind.
         /// </summary>
         /// <param name="payloadKind">The payload kind to get media types for.</param>
@@ -182,13 +173,14 @@ namespace Microsoft.OData
             return this.mediaTypesForPayloadKind[(int)payloadKind];
         }
 
-        /// <summary>
-        /// Creates a new media type resolver for writers with the mappings for the specified version.
-        /// </summary>
-        /// <returns>A new media type resolver for readers with the mappings for the specified version and behavior kind.</returns>
-        internal static ODataMediaTypeResolver GetMediaTypeResolver()
+        internal static ODataMediaTypeResolver FromContainerOrDefault(IServiceProvider container)
         {
-            return MediaTypeResolver;
+            if (container == null)
+            {
+                return MediaTypeResolver;
+            }
+
+            return container.GetRequiredService<ODataMediaTypeResolver>();
         }
 
         /// <summary>

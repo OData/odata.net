@@ -42,6 +42,9 @@ namespace Microsoft.OData
         /// <summary>The buffer used by the batch reader stream to scan for boundary strings.</summary>
         private readonly ODataBatchReaderStreamBuffer batchBuffer;
 
+        /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
+        private readonly ODataMediaTypeResolver mediaTypeResolver;
+
         /// <summary>The encoding to use to read from the batch stream.</summary>
         private Encoding batchEncoding;
 
@@ -80,6 +83,8 @@ namespace Microsoft.OData
             // When we allocate a batch reader stream we will in almost all cases also call ReadLine
             // (to read the headers of the parts); so allocating it here.
             this.lineBuffer = new byte[LineBufferLength];
+
+            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(inputContext.Container);
         }
 
         /// <summary>
@@ -790,7 +795,7 @@ namespace Microsoft.OData
             MediaTypeUtils.GetFormatFromContentType(
                 contentType,
                 new ODataPayloadKind[] { ODataPayloadKind.Batch },
-                ODataMediaTypeResolver.DefaultMediaTypeResolver,
+                this.mediaTypeResolver,
                 out mediaType,
                 out this.changesetEncoding,
                 out readerPayloadKind,

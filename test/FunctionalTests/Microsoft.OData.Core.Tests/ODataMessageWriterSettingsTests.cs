@@ -336,15 +336,6 @@ namespace Microsoft.OData.Tests
             newSetting.SelectExpandClause.GetSelectExpandPaths(out select, out expand);
             select.Should().Be("*");
         }
-
-        [Fact]
-        public void CopyConstructorShouldCopyMediaTypeResolver()
-        {
-            var resolver = new ODataMediaTypeResolver();
-            this.settings.MediaTypeResolver = resolver;
-            var newSetting = new ODataMessageWriterSettings(this.settings);
-            newSetting.MediaTypeResolver.Should().Be(resolver);
-        }
         #endregion Copy constructor tests
 
         #region Property getters and setters tests

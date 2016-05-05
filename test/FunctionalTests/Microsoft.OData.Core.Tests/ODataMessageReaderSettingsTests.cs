@@ -257,15 +257,5 @@ namespace Microsoft.OData.Tests
             var copy = new ODataMessageReaderSettings(testSubject);
             copy.ShouldIncludeAnnotation.Should().BeSameAs(testSubject.ShouldIncludeAnnotation);
         }
-
-        [Fact]
-        public void CopyConstructorShouldCopyMediaTypeResolver()
-        {
-            var resolver = new ODataMediaTypeResolver();
-            ODataMessageReaderSettings testSubject = new ODataMessageReaderSettings();
-            testSubject.MediaTypeResolver = resolver;
-            var copy = new ODataMessageReaderSettings(testSubject);
-            copy.MediaTypeResolver.Should().Be(resolver);
-        }
     }
 }

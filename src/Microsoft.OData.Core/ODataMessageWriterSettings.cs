@@ -65,11 +65,6 @@ namespace Microsoft.OData
         /// </summary>
         private Uri payloadBaseUri;
 
-        /// <summary>
-        /// Media type resolver used for this writer.
-        /// </summary>
-        private ODataMediaTypeResolver mediaTypeResolver;
-
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
@@ -101,7 +96,6 @@ namespace Microsoft.OData
             // NOTE: writer behavior is immutable; copy by reference is ok.
             this.writerBehavior = other.writerBehavior;
             this.EnableFullValidation = other.EnableFullValidation;
-            this.mediaTypeResolver = other.mediaTypeResolver;
             this.ODataSimplified = other.ODataSimplified;
         }
 
@@ -173,28 +167,6 @@ namespace Microsoft.OData
         /// Default to true.
         /// </summary>
         public bool EnableFullValidation { get; set; }
-
-        /// <summary>
-        /// The media type resolver to use when interpreting the content type.
-        /// </summary>
-        public ODataMediaTypeResolver MediaTypeResolver
-        {
-            get
-            {
-                if (this.mediaTypeResolver == null)
-                {
-                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver();
-                }
-
-                return this.mediaTypeResolver;
-            }
-
-            set
-            {
-                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
-                this.mediaTypeResolver = value;
-            }
-        }
 
         /// <summary>
         /// Whether OData Simplified is enabled.
