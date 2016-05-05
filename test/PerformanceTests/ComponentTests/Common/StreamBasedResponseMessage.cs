@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Performance
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Microsoft.OData.Performance
     /// <summary>
     /// An OData Response Message backed by a Stream.
     /// </summary>
-    public class StreamBasedResponseMessage : IODataResponseMessageAsync
+    public class StreamBasedResponseMessage : IODataResponseMessageAsync, IContainerProvider
     {
         private readonly Stream _stream;
         private readonly IDictionary<string, string> _headers;
@@ -64,5 +65,7 @@ namespace Microsoft.OData.Performance
         {
             return _stream;
         }
+
+        public IServiceProvider Container { get; set; }
     }
 }

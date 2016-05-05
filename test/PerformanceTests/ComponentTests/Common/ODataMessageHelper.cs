@@ -10,6 +10,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Performance.Common;
 
     /// <summary>
     /// Helper class to create ODataMessageReader and ODataMessageWriter
@@ -17,6 +18,7 @@ namespace Microsoft.OData.Performance
     public static class ODataMessageHelper
     {
         private static readonly Uri BaseUri = new Uri("http://odata.org/Perf.svc");
+        private static IServiceProvider container;
         private const string ContentType = "application/json;odata.metadata=minimal;odata.streaming=true;";
         private const bool DisablePrimitiveTypeConversion = false;
         private const bool CheckCharacters = false;
@@ -26,6 +28,25 @@ namespace Microsoft.OData.Performance
         private const int MaxOperationsPerChangeset = 16;
         private const int MaxNestingDepth = 16;
         private const ODataVersion Version = ODataVersion.V4;
+
+        #region Container
+        /// <summary>
+        /// Gets the shared DI container
+        /// </summary>
+        /// <returns>Instance of the DI container</returns>
+        private static IServiceProvider GetSharedContainer()
+        {
+            if (container == null)
+            {
+                var builder = new TestContainerBuilder();
+                builder.AddDefaultODataServices();
+                container = builder.BuildContainer();
+            }
+
+            return container;
+        }
+
+        #endregion
 
         #region Reader
         /// <summary>
@@ -69,12 +90,14 @@ namespace Microsoft.OData.Performance
             if (messageKind == ODataMessageKind.Request)
             {
                 var message = new StreamBasedRequestMessage(messageStream);
+                message.Container = GetSharedContainer();
                 message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
                 return new ODataMessageReader(message, settings, model);
             }
             else
             {
                 var message = new StreamBasedResponseMessage(messageStream);
+                message.Container = GetSharedContainer();
                 message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
                 return new ODataMessageReader(message, settings, model);
             }
@@ -90,6 +113,7 @@ namespace Microsoft.OData.Performance
         {
             var settings = CreateMessageReaderSettings(true);
             var message = new StreamBasedRequestMessage(messageStream);
+            message.Container = GetSharedContainer();
             message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
             return new ODataMessageReader(message, settings, model);
         }
@@ -139,9 +163,10 @@ namespace Microsoft.OData.Performance
 
             if (messageKind == ODataMessageKind.Request)
             {
-                return new ODataMessageWriter(new StreamBasedRequestMessage(stream), settings, model);
+                return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { Container = GetSharedContainer() }, settings, model);
             }
-            return new ODataMessageWriter(new StreamBasedResponseMessage(stream), settings, model);
+
+            return new ODataMessageWriter(new StreamBasedResponseMessage(stream) { Container = GetSharedContainer() }, settings, model);
         }
 
         /// <summary>
@@ -153,7 +178,7 @@ namespace Microsoft.OData.Performance
         public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model)
         {
             var settings = CreateMessageWriterSettings(true);
-            return new ODataMessageWriter(new StreamBasedRequestMessage(stream), settings, model);
+            return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { Container = GetSharedContainer() }, settings, model);
         }
         #endregion
     }
