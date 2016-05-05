@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             // Writing binary literal
             var builder = new StringBuilder();
-            var writer = new JsonWriter(new StringWriter(builder), false /*indent*/, ODataFormat.Json, isIeee754Compatible: true);
+            var writer = new JsonWriter(new StringWriter(builder), false /*indent*/, isIeee754Compatible: true);
             writer.WritePrimitiveValue(byteArray);
 
             // Json literals is surrounded with quotes, so we need to add quotes to the encoded string. 
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             Assert.Equal(Uri.EscapeDataString(encodedByteArr), keyAsSegmentFormattedByteArray);
 
             // Parsing binary literal
-            var jsonReader = new JsonReader(new StringReader(builder.ToString()), ODataFormat.Json, isIeee754Compatible:true);
+            var jsonReader = new JsonReader(new StringReader(builder.ToString()), isIeee754Compatible:true);
             jsonReader.Read();
             Assert.Equal(encodedByteArr, jsonReader.Value);
 

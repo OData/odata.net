@@ -11,9 +11,9 @@ namespace Microsoft.OData.Json
 
     /// <summary>
     /// Interface for a class that can write arbitrary JSON.
-    /// Internally we want the interface for mocks.
     /// </summary>
-    internal interface IJsonWriter
+    [CLSCompliant(false)]
+    public interface IJsonWriter
     {
         /// <summary>
         /// Start the padding function scope.

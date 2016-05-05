@@ -43,13 +43,10 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">Writer to which text needs to be written.</param>
         /// <param name="indent">If the output should be indented or not.</param>
-        /// <param name="jsonFormat">The json-based format to use when writing.</param>
         /// <param name="isIeee754Compatible">if it is IEEE754Compatible</param>
-        internal JsonWriter(TextWriter writer, bool indent, ODataFormat jsonFormat, bool isIeee754Compatible)
+        internal JsonWriter(TextWriter writer, bool indent, bool isIeee754Compatible)
         {
-            Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format.");
-
-            if (indent == true)
+            if (indent)
             {
                 this.writer = new IndentedTextWriter(writer);
             }

@@ -6,13 +6,10 @@
 
 namespace Microsoft.OData.Json
 {
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary>
     /// Enumeration of all JSON node type.
     /// </summary>
-    internal enum JsonNodeType
+    public enum JsonNodeType
     {
         /// <summary>
         /// No node - invalid value.

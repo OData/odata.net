@@ -20,7 +20,7 @@ namespace Microsoft.OData.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-    internal class JsonReader
+    internal class JsonReader : IJsonReader
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -114,12 +114,10 @@ namespace Microsoft.OData.Json
         /// Constructor.
         /// </summary>
         /// <param name="reader">The text reader to read input characters from.</param>
-        /// <param name="jsonFormat">The specific JSON-based format expected by the reader.</param>
         /// <param name="isIeee754Compatible">If it is isIeee754Compatible</param>
-        public JsonReader(TextReader reader, ODataFormat jsonFormat, bool isIeee754Compatible)
+        public JsonReader(TextReader reader, bool isIeee754Compatible)
         {
             Debug.Assert(reader != null, "reader != null");
-            Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format to create a JsonReader");
 
             this.nodeType = JsonNodeType.None;
             this.nodeValue = null;
@@ -129,7 +127,7 @@ namespace Microsoft.OData.Json
             this.tokenStartIndex = 0;
             this.endOfInputReached = false;
             this.isIeee754Compatible = isIeee754Compatible;
-            this.allowAnnotations = jsonFormat == ODataFormat.Json;
+            this.allowAnnotations = true;
             this.scopes = new Stack<Scope>();
             this.scopes.Push(new Scope(ScopeType.Root));
         }

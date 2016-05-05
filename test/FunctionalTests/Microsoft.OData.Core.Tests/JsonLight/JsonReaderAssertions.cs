@@ -11,9 +11,9 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonReaderAssertions
     {
-        private JsonReader jsonReader;
+        private IJsonReader jsonReader;
 
-        internal JsonReaderAssertions(JsonReader jsonReader)
+        internal JsonReaderAssertions(IJsonReader jsonReader)
         {
             this.jsonReader = jsonReader;
         }

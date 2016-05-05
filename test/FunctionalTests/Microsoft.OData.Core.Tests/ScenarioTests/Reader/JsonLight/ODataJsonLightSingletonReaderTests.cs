@@ -408,7 +408,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 this.userModel,
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
@@ -438,7 +439,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 this.userModel,
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())

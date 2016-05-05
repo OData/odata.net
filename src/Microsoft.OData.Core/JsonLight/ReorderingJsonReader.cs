@@ -17,18 +17,18 @@ namespace Microsoft.OData.JsonLight
     /// <summary>
     /// Reader for the JSON Lite format that supports look-ahead and re-ordering of payloads.
     /// </summary>
+    /// <remarks>TODO: not sure if this class could be implemented as a decorator as well.</remarks>
     internal sealed class ReorderingJsonReader : BufferingJsonReader
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">The text reader to read input characters from.</param>
+        /// <param name="innerReader">The inner JSON reader.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of recursive internalexception objects to allow when reading in-stream errors.</param>
-        /// <param name="isIeee754Comaptible">isIeee754Comaptible</param>
-        internal ReorderingJsonReader(TextReader reader, int maxInnerErrorDepth, bool isIeee754Comaptible)
-            : base(reader, JsonLightConstants.ODataErrorPropertyName, maxInnerErrorDepth, ODataFormat.Json, isIeee754Comaptible)
+        internal ReorderingJsonReader(IJsonReader innerReader, int maxInnerErrorDepth)
+            : base(innerReader, JsonLightConstants.ODataErrorPropertyName, maxInnerErrorDepth)
         {
-            Debug.Assert(reader != null, "reader != null");
+            Debug.Assert(innerReader != null, "innerReader != null");
         }
 
         /// <summary>

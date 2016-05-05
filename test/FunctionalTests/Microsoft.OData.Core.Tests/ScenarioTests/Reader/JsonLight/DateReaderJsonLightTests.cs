@@ -75,7 +75,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 model,
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();

@@ -474,7 +474,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 model ?? new EdmModel(),
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())

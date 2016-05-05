@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.Json
 
         private JsonReader CreateJsonLightReader(string jsonValue)
         {
-            JsonReader reader = new JsonReader(new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)), ODataFormat.Json, isIeee754Compatible: false);
+            JsonReader reader = new JsonReader(new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)), isIeee754Compatible: false);
             reader.Read();
             reader.ReadStartObject();
             reader.ReadPropertyName();

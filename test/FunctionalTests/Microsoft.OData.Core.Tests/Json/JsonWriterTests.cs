@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.Json
         public JsonWriterTests()
         {
             this.builder = new StringBuilder();
-            this.writer = new JsonWriter(new StringWriter(builder), false /*indent*/, ODataFormat.Json, isIeee754Compatible: true);
+            this.writer = new JsonWriter(new StringWriter(builder), false /*indent*/, isIeee754Compatible: true);
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Tests.Json
 
         private void VerifyWriterPrimitiveValueWithIeee754Compatible<T>(T parameter, string expected, bool isIeee754Compatible)
         {
-            this.writer = new JsonWriter(new StringWriter(builder), false, ODataFormat.Json, isIeee754Compatible);
+            this.writer = new JsonWriter(new StringWriter(builder), false, isIeee754Compatible);
             this.writer.WritePrimitiveValue(parameter);
             this.builder.ToString().Should().Be(expected);
         }

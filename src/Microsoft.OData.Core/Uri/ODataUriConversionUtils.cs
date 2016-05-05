@@ -85,7 +85,8 @@ namespace Microsoft.OData
                     false /*readingResponse*/,
                     true /*synchronous*/,
                     model,
-                    null /*urlResolver*/))
+                    null /*urlResolver*/,
+                    null /*container*/))
                 {
                     ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 

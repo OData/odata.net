@@ -3876,6 +3876,10 @@ public interface Microsoft.OData.IContainerBuilder {
 	System.IServiceProvider BuildContainer ()
 }
 
+public interface Microsoft.OData.IContainerProvider {
+	System.IServiceProvider Container  { public abstract get; }
+}
+
 public interface Microsoft.OData.IODataRequestMessage {
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public abstract get; }
 	string Method  { public abstract get; public abstract set; }
@@ -3996,7 +4000,7 @@ public abstract class Microsoft.OData.ODataFormat {
 }
 
 public abstract class Microsoft.OData.ODataInputContext : IDisposable {
-	protected ODataInputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings, bool readingResponse, bool synchronous, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.IODataUrlResolver urlResolver)
+	protected ODataInputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings, bool readingResponse, bool synchronous, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.IODataUrlResolver urlResolver, System.IServiceProvider container)
 
 	Microsoft.OData.ODataMessageReaderSettings MessageReaderSettings  { public get; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
@@ -4072,7 +4076,7 @@ public abstract class Microsoft.OData.ODataOperation : Microsoft.OData.ODataAnno
 }
 
 public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
-	protected ODataOutputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.IODataUrlResolver urlResolver)
+	protected ODataOutputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.IODataUrlResolver urlResolver, System.IServiceProvider container)
 
 	Microsoft.OData.ODataMessageWriterSettings MessageWriterSettings  { public get; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
@@ -4660,6 +4664,7 @@ public sealed class Microsoft.OData.ODataMediaTypeFormat {
 public sealed class Microsoft.OData.ODataMessageInfo {
 	public ODataMessageInfo ()
 
+	System.IServiceProvider Container  { public get; }
 	System.Text.Encoding Encoding  { public get; }
 	System.Func`1[[System.IO.Stream]] GetMessageStream  { public get; }
 	System.Func`1[[System.Threading.Tasks.Task`1[[System.IO.Stream]]]] GetMessageStreamAsync  { public get; }
@@ -4980,6 +4985,68 @@ public sealed class Microsoft.OData.SerializationTypeNameAnnotation {
 	public SerializationTypeNameAnnotation ()
 
 	string TypeName  { public get; public set; }
+}
+
+public enum Microsoft.OData.Json.JsonNodeType : int {
+	EndArray = 4
+	EndObject = 2
+	EndOfInput = 7
+	None = 0
+	PrimitiveValue = 6
+	Property = 5
+	StartArray = 3
+	StartObject = 1
+}
+
+public interface Microsoft.OData.Json.IJsonReader {
+	bool IsIeee754Compatible  { public abstract get; }
+	Microsoft.OData.Json.JsonNodeType NodeType  { public abstract get; }
+	object Value  { public abstract get; }
+
+	bool Read ()
+}
+
+public interface Microsoft.OData.Json.IJsonReaderFactory {
+	Microsoft.OData.Json.IJsonReader CreateJsonReader (System.IO.TextReader textReader, bool isIeee754Compatible)
+}
+
+[
+CLSCompliantAttribute(),
+]
+public interface Microsoft.OData.Json.IJsonWriter {
+	void EndArrayScope ()
+	void EndObjectScope ()
+	void EndPaddingFunctionScope ()
+	void Flush ()
+	void StartArrayScope ()
+	void StartObjectScope ()
+	void StartPaddingFunctionScope ()
+	void WriteName (string name)
+	void WritePaddingFunctionName (string functionName)
+	void WriteRawValue (string rawValue)
+	void WriteValue (Microsoft.OData.Edm.Date value)
+	void WriteValue (Microsoft.OData.Edm.TimeOfDay value)
+	void WriteValue (bool value)
+	void WriteValue (byte value)
+	void WriteValue (byte[] value)
+	void WriteValue (System.DateTimeOffset value)
+	void WriteValue (decimal value)
+	void WriteValue (double value)
+	void WriteValue (System.Guid value)
+	void WriteValue (short value)
+	void WriteValue (int value)
+	void WriteValue (long value)
+	void WriteValue (System.SByte value)
+	void WriteValue (float value)
+	void WriteValue (string value)
+	void WriteValue (System.TimeSpan value)
+}
+
+[
+CLSCompliantAttribute(),
+]
+public interface Microsoft.OData.Json.IJsonWriterFactory {
+	Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool indent, bool isIeee754Compatible)
 }
 
 public enum Microsoft.OData.UriParser.BinaryOperatorKind : int {

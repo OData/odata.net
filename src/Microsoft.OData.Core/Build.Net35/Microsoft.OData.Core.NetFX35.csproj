@@ -1563,6 +1563,12 @@
     <Compile Include="..\IWriterValidator.cs">
       <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
     </Compile>
+    <Compile Include="..\Json\IJsonReader.cs">
+      <Link>Microsoft\OData\Core\Json\IJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonReaderFactory.cs">
+      <Link>Microsoft\OData\Core\Json\IJsonReaderFactory.cs</Link>
+    </Compile>
     <Compile Include="..\Json\IJsonWriterFactory.cs">
       <Link>Microsoft\OData\Core\Json\IJsonWriterFactory.cs</Link>
     </Compile>

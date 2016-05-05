@@ -29,7 +29,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, /*container*/null)
         {
             this.stream = messageStream;
 

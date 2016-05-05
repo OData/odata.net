@@ -40,6 +40,9 @@ namespace Microsoft.OData
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs read from the payload.</summary>
         private readonly IODataUrlResolver urlResolver;
 
+        /// <summary>The optional dependency injection container to get related services for message reading.</summary>
+        private readonly IServiceProvider container;
+
         /// <summary>The model to use.</summary>
         private readonly IEdmModel model;
 
@@ -61,13 +64,15 @@ namespace Microsoft.OData
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
         protected ODataInputContext(
             ODataFormat format,
             ODataMessageReaderSettings messageReaderSettings,
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
         {
             ExceptionUtils.CheckArgumentNotNull(format, "format");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
@@ -78,6 +83,7 @@ namespace Microsoft.OData
             this.synchronous = synchronous;
             this.model = model ?? EdmCoreModel.Instance;
             this.urlResolver = urlResolver;
+            this.container = container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ReaderBehavior);
             this.payloadValueConverter = this.model.GetPayloadValueConverter();
         }
@@ -134,6 +140,17 @@ namespace Microsoft.OData
             get
             {
                 return this.urlResolver;
+            }
+        }
+
+        /// <summary>
+        /// The optional dependency injection container to get related services for message reading.
+        /// </summary>
+        internal IServiceProvider Container
+        {
+            get
+            {
+                return this.container;
             }
         }
 

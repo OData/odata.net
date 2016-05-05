@@ -103,6 +103,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(builder != null, "builder != null");
 
+            builder.AddService<IJsonReaderFactory, DefaultJsonReaderFactory>(ServiceLifetime.Singleton);
             builder.AddService<IJsonWriterFactory, DefaultJsonWriterFactory>(ServiceLifetime.Singleton);
 
             return builder;

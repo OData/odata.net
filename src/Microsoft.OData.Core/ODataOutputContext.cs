@@ -146,7 +146,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The optional dependency injection container to get related services for message writing.
         /// </summary>
-        public IServiceProvider Container
+        internal IServiceProvider Container
         {
             get
             {

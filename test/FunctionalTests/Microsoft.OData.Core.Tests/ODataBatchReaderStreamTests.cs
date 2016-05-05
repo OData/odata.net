@@ -73,7 +73,8 @@ Second line";
                 true, 
                 null, 
                 null, 
-                ODataPayloadKind.Batch);
+                ODataPayloadKind.Batch,
+                null);
             var batchStream = new ODataBatchReaderStream(inputContext, "batch_862fb28e-dc50-4af1-aad5-9608647761d1", Encoding.UTF8);
             return batchStream;
         }

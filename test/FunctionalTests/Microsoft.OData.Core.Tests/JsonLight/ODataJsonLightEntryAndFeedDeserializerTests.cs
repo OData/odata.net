@@ -554,7 +554,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 EdmModel,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
 
         private ODataJsonLightResourceDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool isIeee754Compatible = false)

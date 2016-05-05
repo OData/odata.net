@@ -70,7 +70,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 new EdmModel(),
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Microsoft.OData
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal ODataMetadataInputContext(
             ODataFormat format,
@@ -47,8 +48,9 @@ namespace Microsoft.OData
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
         {
             Debug.Assert(messageStream != null, "stream != null");
 

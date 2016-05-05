@@ -48,6 +48,7 @@ namespace Microsoft.OData
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
         /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal ODataRawInputContext(
             ODataFormat format,
@@ -58,8 +59,9 @@ namespace Microsoft.OData
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver,
-            ODataPayloadKind readerPayloadKind)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            ODataPayloadKind readerPayloadKind,
+            IServiceProvider container)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
         {
             Debug.Assert(messageStream != null, "stream != null");
             Debug.Assert(readerPayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");

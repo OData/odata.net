@@ -17,7 +17,7 @@ namespace Microsoft.OData.Json
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is a StartObject node.
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
-        internal static void ReadStartObject(this JsonReader jsonReader)
+        internal static void ReadStartObject(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Json
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is an EndObject node.
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
-        internal static void ReadEndObject(this JsonReader jsonReader)
+        internal static void ReadEndObject(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Json
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is an StartArray node.
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
-        internal static void ReadStartArray(this JsonReader jsonReader)
+        internal static void ReadStartArray(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Json
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is an EndArray node.
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
-        internal static void ReadEndArray(this JsonReader jsonReader)
+        internal static void ReadEndArray(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The property name of the current property node.</returns>
-        internal static string GetPropertyName(this JsonReader jsonReader)
+        internal static string GetPropertyName(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.Property, "jsonReader.NodeType == JsonNodeType.Property");
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The property name of the property node read.</returns>
-        internal static string ReadPropertyName(this JsonReader jsonReader)
+        internal static string ReadPropertyName(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The primitive value read from the reader.</returns>
-        internal static object ReadPrimitiveValue(this JsonReader jsonReader)
+        internal static object ReadPrimitiveValue(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The string value read from the reader; throws an exception if no string value could be read.</returns>
-        internal static string ReadStringValue(this JsonReader jsonReader)
+        internal static string ReadStringValue(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <param name="propertyName">The name of the property for which to read the string; used in error messages only.</param>
         /// <returns>The string value read from the reader; throws an exception if no string value could be read.</returns>
-        internal static string ReadStringValue(this JsonReader jsonReader, string propertyName)
+        internal static string ReadStringValue(this IJsonReader jsonReader, string propertyName)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The double value read from the reader; throws an exception if no double value could be read.</returns>
-        internal static double? ReadDoubleValue(this JsonReader jsonReader)
+        internal static double? ReadDoubleValue(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition: JsonNodeType.PrimitiveValue, JsonNodeType.StartArray or JsonNodeType.StartObject
         /// Post-Condition: JsonNodeType.PrimitiveValue, JsonNodeType.EndArray or JsonNodeType.EndObject
         /// </remarks>
-        internal static void SkipValue(this JsonReader jsonReader)
+        internal static void SkipValue(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The node type of the node that reader is positioned on after reading.</returns>
-        internal static JsonNodeType ReadNext(this JsonReader jsonReader)
+        internal static JsonNodeType ReadNext(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -235,7 +235,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The reader to inspect.</param>
         /// <returns>true if the reader is on PrimitiveValue, StartObject or StartArray node, false otherwise.</returns>
-        internal static bool IsOnValueNode(this JsonReader jsonReader)
+        internal static bool IsOnValueNode(this IJsonReader jsonReader)
         {
             JsonNodeType nodeType = jsonReader.NodeType;
             return nodeType == JsonNodeType.PrimitiveValue || nodeType == JsonNodeType.StartObject || nodeType == JsonNodeType.StartArray;
@@ -281,7 +281,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <param name="expectedNodeType">The expected <see cref="JsonNodeType"/> of the read node.</param>
-        private static void ReadNext(this JsonReader jsonReader, JsonNodeType expectedNodeType)
+        private static void ReadNext(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(expectedNodeType != JsonNodeType.None, "expectedNodeType != JsonNodeType.None");
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to use.</param>
         /// <param name="expectedNodeType">The expected node type.</param>
-        private static void ValidateNodeType(this JsonReader jsonReader, JsonNodeType expectedNodeType)
+        private static void ValidateNodeType(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(expectedNodeType != JsonNodeType.None, "expectedNodeType != JsonNodeType.None");

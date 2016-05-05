@@ -93,7 +93,9 @@ namespace Microsoft.OData.Tests.JsonLight
         /// <returns>The created json reader.</returns>
         private static ReorderingJsonReader CreateReorderingReaderPositionedOnFirstProperty(string json)
         {
-            var reader = new ReorderingJsonReader(new StringReader(json), maxInnerErrorDepth: 0, isIeee754Comaptible: true);
+            var stringReader = new StringReader(json);
+            var innerReader = new JsonReader(stringReader, isIeee754Compatible: true);
+            var reader = new ReorderingJsonReader(innerReader, maxInnerErrorDepth: 0);
 
             reader.NodeType.Should().Be(JsonNodeType.None);
             reader.Read();

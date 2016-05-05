@@ -76,7 +76,8 @@ namespace Microsoft.OData
                 messageInfo.IsResponse,
                 /*synchronous*/ true,
                 messageInfo.Model,
-                messageInfo.UrlResolver);
+                messageInfo.UrlResolver,
+                messageInfo.Container);
         }
 
         /// <summary>

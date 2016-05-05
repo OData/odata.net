@@ -42,6 +42,9 @@ namespace Microsoft.OData
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs read from the payload.</summary>
         private readonly IODataUrlResolver urlResolver;
 
+        /// <summary>The optional dependency injection container to get related services for message reading.</summary>
+        private readonly IServiceProvider container;
+
         /// <summary>The resolver to use when determining an entity set's element type.</summary>
         private readonly EdmTypeResolver edmTypeResolver;
 
@@ -106,6 +109,7 @@ namespace Microsoft.OData
             this.readingResponse = false;
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = requestMessage as IODataUrlResolver;
+            this.container = GetContainer(requestMessage);
 
             // Validate OData version against request message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -146,6 +150,7 @@ namespace Microsoft.OData
             this.readingResponse = true;
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = responseMessage as IODataUrlResolver;
+            this.container = GetContainer(responseMessage);
 
             // Validate OData version against response message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -807,6 +812,17 @@ namespace Microsoft.OData
             return this.format;
         }
 
+        private static IServiceProvider GetContainer<T>(T message)
+            where T : class
+        {
+#if PORTABLELIB
+            var containerProvider = message as IContainerProvider;
+            return containerProvider == null ? null : containerProvider.Container;
+#else
+            return null;
+#endif
+        }
+
         /// <summary>
         /// Processes the content type header of the message to determine the format of the payload, the encoding, and the payload kind.
         /// </summary>
@@ -1222,6 +1238,7 @@ namespace Microsoft.OData
                         Model = this.model,
                         UrlResolver = this.urlResolver,
                         PayloadKind = this.readerPayloadKind,
+                        Container = this.container
                     },
                     this.settings);
 
@@ -1357,6 +1374,7 @@ namespace Microsoft.OData
                     Model = this.model,
                     UrlResolver = this.urlResolver,
                     PayloadKind = this.readerPayloadKind,
+                    Container = this.container
                 },
                 this.settings)
                 .FollowOnSuccessWithTask(

@@ -1905,7 +1905,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The JSON reader to read the operations value from.
             /// </summary>
-            public JsonReader JsonReader
+            public IJsonReader JsonReader
             {
                 get
                 {

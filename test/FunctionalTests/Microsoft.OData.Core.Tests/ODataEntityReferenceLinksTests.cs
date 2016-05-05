@@ -455,7 +455,8 @@ namespace Microsoft.OData.Tests
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 EdmModel,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
     }
 }

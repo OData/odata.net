@@ -73,7 +73,8 @@ namespace Microsoft.OData.Json
                 messageInfo.IsResponse,
                 /*synchronous*/ true,
                 messageInfo.Model,
-                messageInfo.UrlResolver);
+                messageInfo.UrlResolver,
+                messageInfo.Container);
         }
 
         /// <summary>
@@ -150,7 +151,8 @@ namespace Microsoft.OData.Json
                         messageInfo.IsResponse,
                         /*synchronous*/ false,
                         messageInfo.Model,
-                        messageInfo.UrlResolver));
+                        messageInfo.UrlResolver,
+                        messageInfo.Container));
         }
 
         /// <summary>
@@ -203,7 +205,8 @@ namespace Microsoft.OData.Json
                 readingResponse,
                 /*synchronous*/ true,
                 detectionInfo.Model,
-                /*urlResolver*/ null))
+                /*urlResolver*/ null,
+                /*container*/ null))
             {
                 return jsonLightInputContext.DetectPayloadKind(detectionInfo);
             }
@@ -231,7 +234,8 @@ namespace Microsoft.OData.Json
                 readingResponse,
                 /*synchronous*/ false,
                 detectionInfo.Model,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
 
             return jsonLightInputContext.DetectPayloadKindAsync(detectionInfo)
                 .FollowAlwaysWith(t =>

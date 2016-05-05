@@ -36,7 +36,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
         internal static ISpatial ReadSpatialValue(
-            BufferingJsonReader jsonReader,
+            IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
             IEdmPrimitiveTypeReference expectedValueTypeReference,
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Json
         /// <remarks>If the method detects a null value it will read it (position the reader after the null value); 
         /// otherwise the reader does not move.</remarks>
         internal static bool TryReadNullValue(
-            BufferingJsonReader jsonReader, 
+            IJsonReader jsonReader, 
             ODataInputContext inputContext,
             IEdmTypeReference expectedTypeReference, 
             bool validateNullValue, 
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Json
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <returns>an instance of IDictionary containing the spatial value.</returns>
-        private static IDictionary<string, object> ReadObjectValue(JsonReader jsonReader, bool insideJsonObjectValue, ODataInputContext inputContext, int recursionDepth)
+        private static IDictionary<string, object> ReadObjectValue(IJsonReader jsonReader, bool insideJsonObjectValue, ODataInputContext inputContext, int recursionDepth)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject, "insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject");
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Json
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <returns>a list of json objects.</returns>
-        private static IEnumerable<object> ReadArrayValue(JsonReader jsonReader, ODataInputContext inputContext, int recursionDepth)
+        private static IEnumerable<object> ReadArrayValue(IJsonReader jsonReader, ODataInputContext inputContext, int recursionDepth)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.StartArray, "jsonReader.NodeType == JsonNodeType.StartArray");

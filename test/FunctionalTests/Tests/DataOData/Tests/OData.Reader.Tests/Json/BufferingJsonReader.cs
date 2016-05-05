@@ -26,6 +26,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         /// </summary>
         private static Type BufferingJsonReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.BufferingJsonReader");
 
+        /// <summary>
+        /// The type of the JsonReader from the product.
+        /// </summary>
+        private static Type JsonReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.JsonReader");
+
         /// <summary>A flag indicating whether the reader is currently buffering or not.</summary>
         private bool isBuffering;
 
@@ -39,10 +44,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         /// <param name="textReader">The text reader to read the input from.</param>
         /// <param name="maxInnerErrorDepth">The maximumum number of recursive internalexception objects to allow when reading in-stream errors.</param>
         /// <param name="assert">Optional assertion handler to use to verify the behavior of the reader.</param>
-        /// <param name="jsonFormat">The json-based format to expect for this reader.</param>
         /// <param name="isIeee754Compatible">If it is IEEE754Compatible</param>
-        public BufferingJsonReader(TextReader textReader, int maxInnerErrorDepth, AssertionHandler assert, ODataFormat jsonFormat, bool isIeee754Compatible)
-            : this(ReflectionUtils.CreateInstance(BufferingJsonReaderType, textReader, JsonConstants.ODataErrorName, maxInnerErrorDepth, jsonFormat, isIeee754Compatible), assert)
+        public BufferingJsonReader(TextReader textReader, int maxInnerErrorDepth, AssertionHandler assert, bool isIeee754Compatible)
+            : this(ReflectionUtils.CreateInstance(BufferingJsonReaderType,
+                ReflectionUtils.CreateInstance(JsonReaderType, textReader, isIeee754Compatible),
+                JsonConstants.ODataErrorName, maxInnerErrorDepth), assert)
         {
         }
 

@@ -65,7 +65,8 @@ namespace Microsoft.OData
                 /*synchronous*/ true,
                 messageInfo.Model,
                 messageInfo.UrlResolver,
-                messageInfo.PayloadKind);
+                messageInfo.PayloadKind,
+                messageInfo.Container);
         }
 
         /// <summary>
@@ -133,7 +134,8 @@ namespace Microsoft.OData
                         /*synchronous*/ false,
                         messageInfo.Model,
                         messageInfo.UrlResolver,
-                        messageInfo.PayloadKind));
+                        messageInfo.PayloadKind,
+                        messageInfo.Container));
         }
 
         /// <summary>

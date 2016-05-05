@@ -1089,10 +1089,11 @@ namespace Microsoft.OData.Tests.JsonLight
                 /*readingResponse*/ true,
                 /*synchronous*/ true,
                 model,
-                /*urlResolver*/ null);
+                /*urlResolver*/ null,
+                /*container*/ null);
         }
 
-        private object ReadODataTypePropertyAnnotation(JsonReader jsonReader, string name)
+        private object ReadODataTypePropertyAnnotation(IJsonReader jsonReader, string name)
         {
             name.Should().Be(ODataAnnotationNames.ODataType, "we found a property annotation in the odata namespace with unexpected name.");
             return jsonReader.ReadStringValue();
@@ -1102,8 +1103,8 @@ namespace Microsoft.OData.Tests.JsonLight
             string jsonInput,
             ODataJsonLightDeserializer.PropertyParsingResult expectedPropertyParsingResult,
             string expectedName,
-            Action<JsonReader, DuplicatePropertyNamesChecker> additionalVerification = null,
-            Func<JsonReader, string, object> readPropertyAnnotationValue = null,
+            Action<IJsonReader, DuplicatePropertyNamesChecker> additionalVerification = null,
+            Func<IJsonReader, string, object> readPropertyAnnotationValue = null,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null)
         {
             if (duplicatePropertyNamesChecker == null)

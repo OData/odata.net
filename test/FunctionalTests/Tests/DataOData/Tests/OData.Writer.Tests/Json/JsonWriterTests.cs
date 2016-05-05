@@ -141,12 +141,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 new bool[] { false, true },
-                new ODataFormat[] { ODataFormat.Json},
-                (testCase, indent, format) =>
+                (testCase, indent) =>
                 {
                     var variables = new Dictionary<string, string>() { { "NL", indent ? Environment.NewLine : string.Empty } };
                     StringWriter stringWriter = new StringWriter();
-                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent, format);
+                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent);
                     testCase.Write(jsonWriter);
                     jsonWriter.Flush();
                     string actualOutput = stringWriter.GetStringBuilder().ToString();
@@ -191,11 +190,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             this.CombinatorialEngineProvider.RunCombinations(
                 valuesTestCases,
                 new bool[] { false, true },
-                new ODataFormat[] { ODataFormat.Json},
-                (testCase, indent, format) =>
+                (testCase, indent) =>
                 {
                     StringWriter stringWriter = new StringWriter();
-                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent, format);
+                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent);
                     jsonWriter.StartObjectScope();
                     jsonWriter.WriteName("propname");
                     testCase.Write(jsonWriter);
@@ -220,11 +218,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             this.CombinatorialEngineProvider.RunCombinations(
                 valuesTestCases,
                 new bool[] { false, true },
-                new ODataFormat[] { ODataFormat.Json},
-                (testCase, indent, format) =>
+                (testCase, indent) =>
                 {
                     StringWriter stringWriter = new StringWriter();
-                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent, format);
+                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent);
                     jsonWriter.StartArrayScope();
                     testCase.Write(jsonWriter);
                     jsonWriter.EndArrayScope();
@@ -250,9 +247,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             Type JsonWriterType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.JsonWriter");
             private object jsonWriter;
 
-            public JsonWriterTestWrapper(TextWriter writer, bool indent, ODataFormat format)
+            public JsonWriterTestWrapper(TextWriter writer, bool indent)
             {
-                this.jsonWriter = ReflectionUtils.CreateInstance(JsonWriterType, writer, indent, format, false);
+                this.jsonWriter = ReflectionUtils.CreateInstance(JsonWriterType, writer, indent, false);
             }
 
             public void WriteObjectValue(object value)

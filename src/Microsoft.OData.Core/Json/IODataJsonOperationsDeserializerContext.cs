@@ -18,7 +18,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// The JSON reader to read the operations value from.
         /// </summary>
-        JsonReader JsonReader { get; }
+        IJsonReader JsonReader { get; }
 
         /// <summary>
         /// Given a URI from the payload, this method will try to make it absolute, or fail otherwise.

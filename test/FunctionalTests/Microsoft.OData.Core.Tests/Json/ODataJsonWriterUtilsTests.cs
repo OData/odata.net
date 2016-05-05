@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.Json
         public ODataJsonWriterUtilsTests()
         {
             this.stringWriter = new StringWriter();
-            this.jsonWriter = new JsonWriter(this.stringWriter, /*indent*/ false, ODataFormat.Json, isIeee754Compatible: true);
+            this.jsonWriter = new JsonWriter(this.stringWriter, /*indent*/ false, isIeee754Compatible: true);
             this.settings = new ODataMessageWriterSettings();
         }
 

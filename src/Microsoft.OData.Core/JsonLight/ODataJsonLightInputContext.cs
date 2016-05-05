@@ -53,6 +53,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
         internal ODataJsonLightInputContext(
             ODataFormat format,
             Stream messageStream,
@@ -62,33 +63,36 @@ namespace Microsoft.OData.JsonLight
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
         {
         }
 
         /// <summary>Constructor.</summary>
         /// <param name="format">The format for this input context.</param>
-        /// <param name="reader">The reader to use.</param>
+        /// <param name="textReader">The text reader to use.</param>
         /// <param name="contentType">The content type of the message to read.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
         /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal ODataJsonLightInputContext(
             ODataFormat format,
-            TextReader reader,
+            TextReader textReader,
             ODataMediaType contentType,
             ODataMessageReaderSettings messageReaderSettings,
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
         {
-            Debug.Assert(reader != null, "reader != null");
+            Debug.Assert(textReader != null, "reader != null");
             Debug.Assert(contentType != null, "contentType != null");
 
             try
@@ -99,35 +103,34 @@ namespace Microsoft.OData.JsonLight
             catch (ArgumentNullException)
             {
                 // Dispose the message stream if we failed to create the input context.
-                reader.Dispose();
+                textReader.Dispose();
                 throw;
             }
 
             try
             {
-                this.textReader = reader;
+                this.textReader = textReader;
+                var innerReader = CreateJsonReader(container, textReader, contentType.HasIeee754CompatibleSetToTrue());
 
                 if (contentType.HasStreamingSetToTrue())
                 {
                     this.jsonReader = new BufferingJsonReader(
-                        this.textReader,
+                        innerReader,
                         JsonLightConstants.ODataErrorPropertyName,
-                        messageReaderSettings.MessageQuotas.MaxNestingDepth,
-                        ODataFormat.Json,
-                        contentType.HasIeee754CompatibleSetToTrue());
+                        messageReaderSettings.MessageQuotas.MaxNestingDepth);
                 }
                 else
                 {
                     // If we have a non-streaming Json Light content type we need to use the re-ordering Json reader
-                    this.jsonReader = new ReorderingJsonReader(this.textReader, messageReaderSettings.MessageQuotas.MaxNestingDepth, contentType.HasIeee754CompatibleSetToTrue());
+                    this.jsonReader = new ReorderingJsonReader(innerReader, messageReaderSettings.MessageQuotas.MaxNestingDepth);
                 }
             }
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && reader != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e) && textReader != null)
                 {
-                    reader.Dispose();
+                    textReader.Dispose();
                 }
 
                 throw;
@@ -538,6 +541,20 @@ namespace Microsoft.OData.JsonLight
 
                 throw;
             }
+        }
+
+        private static IJsonReader CreateJsonReader(IServiceProvider container, TextReader textReader, bool isIeee754Compatible)
+        {
+            if (container == null)
+            {
+                return new JsonReader(textReader, isIeee754Compatible);
+            }
+
+            var jsonReaderFactory = container.GetRequiredService<IJsonReaderFactory>();
+            var jsonReader = jsonReaderFactory.CreateJsonReader(textReader, isIeee754Compatible);
+            Debug.Assert(jsonReader != null, "jsonWriter != null");
+
+            return jsonReader;
         }
 
         /// <summary>

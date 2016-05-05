@@ -58,7 +58,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(textWriter != null, "textWriter != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(container, this.textWriter, messageWriterSettings.Indent, format, true /*isIeee754Compatible*/);
+            this.jsonWriter = CreateJsonWriter(container, this.textWriter, messageWriterSettings.Indent, true /*isIeee754Compatible*/);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Json
                 
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(container, this.textWriter, messageWriterSettings.Indent, format, isIeee754Compatible);
+                this.jsonWriter = CreateJsonWriter(container, this.textWriter, messageWriterSettings.Indent, isIeee754Compatible);
             }
             catch (Exception e)
             {
@@ -222,15 +222,15 @@ namespace Microsoft.OData.Json
             base.Dispose(disposing);
         }
 
-        private static IJsonWriter CreateJsonWriter(IServiceProvider container, TextWriter textWriter, bool indent, ODataFormat jsonFormat, bool isIeee754Compatible)
+        private static IJsonWriter CreateJsonWriter(IServiceProvider container, TextWriter textWriter, bool indent, bool isIeee754Compatible)
         {
             if (container == null)
             {
-                return new JsonWriter(textWriter, indent, jsonFormat, isIeee754Compatible);
+                return new JsonWriter(textWriter, indent, isIeee754Compatible);
             }
 
             var jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
-            var jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, indent, jsonFormat, isIeee754Compatible);
+            var jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, indent, isIeee754Compatible);
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
 
             return jsonWriter;

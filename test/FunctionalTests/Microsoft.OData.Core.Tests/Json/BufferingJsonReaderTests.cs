@@ -20,8 +20,9 @@ namespace Microsoft.OData.Tests.Json
             const string payload =
                 @"{""code"":"""",""message"":"""",""target"":""any target"","
                 + @"""details"":[{""code"":""500"",""target"":""another target"",""message"":""any msg""}]}";
-            var reader = new StringReader(payload);
-            var jsonReader = new BufferingJsonReader(reader, "any", 0, ODataFormat.Json, false);
+            var stringReader = new StringReader(payload);
+            var innerReader = new JsonReader(stringReader, false);
+            var jsonReader = new BufferingJsonReader(innerReader, "any", 0);
             ODataError error;
 
             // Act

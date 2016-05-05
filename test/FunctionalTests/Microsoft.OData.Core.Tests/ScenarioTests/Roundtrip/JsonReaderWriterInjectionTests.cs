@@ -1,36 +1,50 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonWriterInjectionTests.cs" company="Microsoft">
+// <copyright file="JsonReaderWriterInjectionTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
-namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
-    public class JsonWriterInjectionTests
+    public class JsonReaderWriterInjectionTests
     {
         [Fact]
         public void UseDefaultJsonWriter()
         {
-            RunTest(null, "{\"@odata.context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\"}");
+            RunWriterTest(null, "{\"@odata.context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\"}");
         }
 
         [Fact]
         public void InjectCustomJsonWriter()
         {
-            RunTest(builder => builder.AddService<IJsonWriterFactory, TestJsonWriterFactory>(ServiceLifetime.Transient),
+            RunWriterTest(builder => builder.AddService<IJsonWriterFactory, TestJsonWriterFactory>(ServiceLifetime.Transient),
                 "<\"@context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\",>");
         }
 
-        private static void RunTest(Action<IContainerBuilder> action, string expectedOutput)
+        [Fact]
+        public void UseDefaultJsonReader()
         {
-            var entry = new ODataResource
+            RunReaderTest(null, "{\"@odata.context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\"}");
+        }
+
+        [Fact]
+        public void InjectCustomJsonReader()
+        {
+            RunReaderTest(builder => builder.AddService<IJsonReaderFactory, TestJsonReaderFactory>(ServiceLifetime.Transient),
+                "<\"@context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\",>");
+        }
+
+        private static void RunWriterTest(Action<IContainerBuilder> action, string expectedOutput)
+        {
+            var resource = new ODataResource
             {
                 Properties = new[]
                 {
@@ -42,8 +56,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
             var container = BuildContainer(action);
-            var output = GetWriterOutput(entry, model, entitySet, entityType, container);
+            var output = GetWriterOutput(resource, model, entitySet, entityType, container);
             Assert.Equal(expectedOutput, output);
+        }
+
+        private static void RunReaderTest(Action<IContainerBuilder> action, string messageContent)
+        {
+            var model = BuildModel();
+            var entitySet = model.FindDeclaredEntitySet("People");
+            var entityType = model.GetEntityType("NS.Person");
+            var container = BuildContainer(action);
+            var resource = GetReadedResource(messageContent, model, entitySet, entityType, container);
+            var propertyList = resource.Properties.ToList();
+            Assert.Equal("PersonId", propertyList[0].Name);
+            Assert.Equal(999, propertyList[0].Value);
+            Assert.Equal("Name", propertyList[1].Name);
+            Assert.Equal("Jack", propertyList[1].Value);
         }
 
         private static EdmModel BuildModel()
@@ -84,7 +112,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Stream = outputStream,
                 Container = container
             };
-            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.SetHeader("Content-Type", "application/json");
             var settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(new Uri("http://test"));
 
@@ -98,11 +126,43 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             }
         }
 
+        private static ODataResource GetReadedResource(string messageContent, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType, IServiceProvider container)
+        {
+            var outputStream = new MemoryStream();
+            var writer = new StreamWriter(outputStream);
+            writer.Write(messageContent);
+            writer.Flush();
+            outputStream.Seek(0, SeekOrigin.Begin);
+
+            IODataResponseMessage message = new InMemoryMessage
+            {
+                Stream = outputStream,
+                Container = container
+            };
+            message.SetHeader("Content-Type", "application/json");
+
+            var settings = new ODataMessageReaderSettings { ODataSimplified = true };
+            using (var messageReader = new ODataMessageReader(message, settings, model))
+            {
+                var reader = messageReader.CreateODataResourceReader(entitySet, entityType);
+                Assert.True(reader.Read());
+                return reader.Item as ODataResource;
+            }
+        }
+
         private class TestJsonWriterFactory : IJsonWriterFactory
         {
-            public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool indent, ODataFormat jsonFormat, bool isIeee754Compatible)
+            public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool indent, bool isIeee754Compatible)
             {
                 return new TestJsonWriter(textWriter);
+            }
+        }
+
+        private class TestJsonReaderFactory : IJsonReaderFactory
+        {
+            public IJsonReader CreateJsonReader(TextReader textReader, bool isIeee754Compatible)
+            {
+                return new TestJsonReader();
             }
         }
 
@@ -248,6 +308,76 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             public void Flush()
             {
                 this.textWriter.Flush();
+            }
+        }
+
+        private class TestJsonReader : IJsonReader
+        {
+            private int callCount;
+            private object value;
+            private JsonNodeType nodeType = JsonNodeType.None;
+
+            public object Value
+            {
+                get { return this.value; }
+            }
+
+            public JsonNodeType NodeType
+            {
+                get { return this.nodeType; }
+            }
+
+            public bool IsIeee754Compatible
+            {
+                get { return true; }
+            }
+
+            public bool Read()
+            {
+                switch (callCount)
+                {
+                    case 0:
+                        value = null;
+                        nodeType = JsonNodeType.StartObject;
+                        break;
+                    case 1:
+                        value = "@context";
+                        nodeType = JsonNodeType.Property;
+                        break;
+                    case 2:
+                        value = "http://test/$metadata#People/$entity";
+                        nodeType = JsonNodeType.PrimitiveValue;
+                        break;
+                    case 3:
+                        value = "PersonId";
+                        nodeType = JsonNodeType.Property;
+                        break;
+                    case 4:
+                        value = 999;
+                        nodeType = JsonNodeType.PrimitiveValue;
+                        break;
+                    case 5:
+                        value = "Name";
+                        nodeType = JsonNodeType.Property;
+                        break;
+                    case 6:
+                        value = "Jack";
+                        nodeType = JsonNodeType.PrimitiveValue;
+                        break;
+                    case 7:
+                        value = null;
+                        nodeType = JsonNodeType.EndObject;
+                        break;
+                    case 8:
+                        value = null;
+                        nodeType = JsonNodeType.EndOfInput;
+                        return false;
+                    default:
+                        return false;
+                }
+
+                ++callCount;
+                return true;
             }
         }
     }
