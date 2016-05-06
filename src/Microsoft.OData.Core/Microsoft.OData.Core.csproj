@@ -557,6 +557,7 @@
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitor.cs" />
     <Compile Include="UriUtils.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="ValidationUtils.cs" />
     <Compile Include="ValidatorFactory.cs" />
     <Compile Include="WriterUtils.cs" />

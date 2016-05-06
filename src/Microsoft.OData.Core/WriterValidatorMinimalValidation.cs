@@ -43,13 +43,13 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</param>
-        /// <param name="throwOnMissingProperty">Whether throw exception on missing property.</param>
+        /// <param name="messageValidationSetting">The IMessageValidationSetting object.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</returns>
         public IEdmProperty ValidatePropertyDefined(
             string propertyName,
             IEdmStructuredType owningStructuredType,
-            bool throwOnMissingProperty = true)
+            IMessageValidationSetting messageValidationSetting)
         {
             if (owningStructuredType == null)
             {
@@ -69,7 +69,7 @@ namespace Microsoft.OData
         /// or null if no metadata is available.</returns>
         public IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType)
         {
-            return (IEdmNavigationProperty)ValidatePropertyDefined(propertyName, owningEntityType);
+            return (IEdmNavigationProperty)ValidatePropertyDefined(propertyName, owningEntityType, null);
         }
 
         /// <summary>

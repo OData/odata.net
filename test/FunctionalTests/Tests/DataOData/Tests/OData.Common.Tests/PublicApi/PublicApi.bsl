@@ -3877,6 +3877,7 @@ public enum Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds : int {
 	IgnoreUndeclaredValueProperty = 1
 	None = 0
 	ReportUndeclaredLinkProperty = 2
+	SupportUndeclaredValueProperty = 4
 }
 
 public enum Microsoft.OData.ODataVersion : int {
@@ -4732,7 +4733,7 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 	public System.Threading.Tasks.Task`1[[System.Object]] ReadValueAsync (Microsoft.OData.Edm.IEdmTypeReference expectedTypeReference)
 }
 
-public sealed class Microsoft.OData.ODataMessageReaderSettings {
+public sealed class Microsoft.OData.ODataMessageReaderSettings : IMessageValidationSetting {
 	public ODataMessageReaderSettings ()
 	public ODataMessageReaderSettings (Microsoft.OData.ODataMessageReaderSettings other)
 
@@ -4742,14 +4743,14 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool DisablePrimitiveTypeConversion  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
-	bool EnableFullValidation  { public get; public set; }
+	bool EnableFullValidation  { public virtual get; public virtual set; }
 	bool EnableLaxMetadataValidation  { public get; public set; }
 	bool EnableReadingEntryContentInEntryStartState  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
-	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public get; public set; }
+	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 }
 
@@ -4801,7 +4802,7 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 	public System.Threading.Tasks.Task WriteValueAsync (object value)
 }
 
-public sealed class Microsoft.OData.ODataMessageWriterSettings {
+public sealed class Microsoft.OData.ODataMessageWriterSettings : IMessageValidationSetting {
 	public ODataMessageWriterSettings ()
 	public ODataMessageWriterSettings (Microsoft.OData.ODataMessageWriterSettings other)
 
@@ -4811,12 +4812,13 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	System.Uri BaseUri  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
-	bool EnableFullValidation  { public get; public set; }
+	bool EnableFullValidation  { public virtual get; public virtual set; }
 	bool EnableIndentation  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
+	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 

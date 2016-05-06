@@ -6,8 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
-    using System;
     using System.Diagnostics;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>
@@ -60,10 +60,30 @@ namespace Microsoft.OData.Client
             get { return this.mergeOption; }
         }
 
-        /// <summary>Whether to ignore extra properties in the response payload.</summary>
-        internal bool IgnoreMissingProperties
+        /// <summary>Gets the value of UndeclaredPropertyBehaviorKinds.</summary>
+        internal ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds
         {
-            get { return this.Context.IgnoreMissingProperties; }
+            get
+            {
+                return this.Context.IgnoreMissingProperties
+                    ?
+                    ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty
+                    :
+                    ODataUndeclaredPropertyBehaviorKinds.None;
+            }
+        }
+
+        /// <summary>True if materializer should ignore undeclared value property. 
+        /// False if materializer should throw exception on that.</summary>
+        internal bool ShouldMaterializerIgnoreUndeclaredValueProperty
+        {
+            get
+            {
+                return this.UndeclaredPropertyBehaviorKinds.HasFlag(
+                            ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
+                    || this.UndeclaredPropertyBehaviorKinds.HasFlag(
+                            ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+            }
         }
 
         /// <summary>Returns the instance of entity tracker class which tracks all the entities and links for the context.</summary>
@@ -143,9 +163,9 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">Entity whose property is being loaded.</param>
         /// <param name="property">Property which is being loaded.</param>
         internal LoadPropertyResponseInfo(
-            RequestInfo requestInfo, 
-            MergeOption mergeOption, 
-            EntityDescriptor entityDescriptor, 
+            RequestInfo requestInfo,
+            MergeOption mergeOption,
+            EntityDescriptor entityDescriptor,
             ClientPropertyAnnotation property)
             : base(requestInfo, mergeOption)
         {

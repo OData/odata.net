@@ -178,6 +178,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\IPrimitiveTypeConverter.cs">
       <Link>Microsoft\OData\Core\IPrimitiveTypeConverter.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\IMessageValidationSetting.cs">
+      <Link>Microsoft\OData\Core\IMessageValidationSetting.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\InstanceAnnotationWriteTracker.cs">
       <Link>Microsoft\OData\Core\InstanceAnnotationWriteTracker.cs</Link>
     </Compile>

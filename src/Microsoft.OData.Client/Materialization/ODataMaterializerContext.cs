@@ -37,7 +37,10 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         public bool IgnoreMissingProperties
         {
-            get { return this.ResponseInfo.IgnoreMissingProperties; }
+            get
+            {
+                return this.ResponseInfo.ShouldMaterializerIgnoreUndeclaredValueProperty;
+            }
         }
 
         /// <summary>
