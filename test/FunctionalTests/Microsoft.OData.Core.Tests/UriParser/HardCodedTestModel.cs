@@ -368,6 +368,10 @@ namespace Microsoft.OData.Core.Tests.UriParser
             FullyQualifiedNamespacePet6.AddKeys(FullyQualifiedNamespacePet6.AddStructuralProperty("ID", FullyQualifiedNamespaceIdTypeReference));
             FullyQualifiedNamespacePet6.AddStructuralProperty("Color", EdmPrimitiveTypeKind.String);
             model.AddElement(FullyQualifiedNamespacePet6);
+
+            // entity type with enum as key
+            var fullyQualifiedNamespaceShape = new EdmEntityType("Fully.Qualified.Namespace", "Shape", null, false, false);
+            fullyQualifiedNamespaceShape.AddKeys(fullyQualifiedNamespaceShape.AddStructuralProperty("Color", colorTypeReference));
             #endregion
 
             #region Operations
@@ -666,6 +670,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullyQualifiedNamespaceContextPet6Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet6Set", FullyQualifiedNamespacePet6);
             var FullyQualifiedNamespaceContextChimera = FullyQualifiedNamespaceContext.AddEntitySet("Chimeras", FullyQualifiedNamespaceChimera);
 
+            FullyQualifiedNamespaceContext.AddEntitySet("Shapes", fullyQualifiedNamespaceShape);
+
             FullyQualifiedNamespaceContextPeople.AddNavigationTarget(FullyQualifiedNamespacePerson_MyDog, FullyQualifiedNamespaceContextDogs);
             FullyQualifiedNamespaceContextPeople.AddNavigationTarget(FullyQualifiedNamespacePerson_MyRelatedDogs, FullyQualifiedNamespaceContextDogs);
             FullyQualifiedNamespaceContextPeople.AddNavigationTarget(FullyQualifiedNamespacePerson_MyLions, FullyQualifiedNamespaceContextLions);
@@ -813,6 +819,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
           <NavigationPropertyBinding Path=""FastestOwner"" Target=""People"" />
           <NavigationPropertyBinding Path=""LionsISaw"" Target=""Lions"" />
         </EntitySet>
+        <EntitySet Name=""Shapes"" EntityType=""Fully.Qualified.Namespace.Shape"" />
         <EntitySet Name=""Lions"" EntityType=""Fully.Qualified.Namespace.Lion"">
           <NavigationPropertyBinding Path=""Friends"" Target=""Lions"" />
         </EntitySet>
@@ -1002,6 +1009,12 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <NavigationProperty Name=""FastestOwner"" Type=""Fully.Qualified.Namespace.Person"" />
         <NavigationProperty Name=""LionWhoAteMe"" Type=""Fully.Qualified.Namespace.Lion"" Nullable=""false"" Partner=""DogThatIAte"" />
         <NavigationProperty Name=""LionsISaw"" Type=""Collection(Fully.Qualified.Namespace.Lion)"" Nullable=""false"" Partner=""DogsSeenMe"" />
+      </EntityType>
+      <EntityType Name=""Shape"">
+        <Key>
+          <PropertyRef Name=""Color"" />
+        </Key>
+        <Property Name=""Color"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""false"" />
       </EntityType>
       <ComplexType Name=""Heartbeat"">
         <Property Name=""Frequency"" Type=""Edm.Double"" />
