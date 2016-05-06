@@ -262,7 +262,7 @@ namespace Microsoft.OData.Tests
             var result1 = TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal", ODataVersion.V4);
             var result2 = TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal", ODataVersion.V4);
             var result3 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4);
-            var result4 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.FromContainerOrDefault(null));
+            var result4 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver(null));
 
             result1.Should().BeJsonLight().And.SpecifyDefaultMetadata();
             result2.Should().BeJsonLight().And.SpecifyDefaultMetadata();
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Tests
             Encoding encoding;
             ODataPayloadKind payloadKind;
             string batchBoundary;
-            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.FromContainerOrDefault(null), out mediaType, out encoding, out payloadKind, out batchBoundary);
+            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind, out batchBoundary);
             mediaType.Should().NotBeNull();
             format.Should().NotBeNull();
             return new TestMediaTypeWithFormat { MediaType = mediaType, Format = format };
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Tests
 
             ODataMediaType mediaType;
             Encoding encoding;
-            var format = MediaTypeUtils.GetContentTypeFromSettings(settings, ODataPayloadKind.Resource, ODataMediaTypeResolver.FromContainerOrDefault(null), out mediaType, out encoding);
+            var format = MediaTypeUtils.GetContentTypeFromSettings(settings, ODataPayloadKind.Resource, ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding);
             mediaType.Should().NotBeNull();
             format.Should().NotBeNull();
             return new TestMediaTypeWithFormat { MediaType = mediaType, Format = format };

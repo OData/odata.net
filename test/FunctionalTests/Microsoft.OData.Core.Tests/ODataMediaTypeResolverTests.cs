@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TestJsonMediaType()
         {
-            var resolver = ODataMediaTypeResolver.FromContainerOrDefault(null);
+            var resolver = ODataMediaTypeResolver.GetMediaTypeResolver(null);
             foreach (var payloadKind in Enum.GetValues(typeof(ODataPayloadKind)).Cast<ODataPayloadKind>())
             {
                 if (payloadKind == ODataPayloadKind.Unsupported)
