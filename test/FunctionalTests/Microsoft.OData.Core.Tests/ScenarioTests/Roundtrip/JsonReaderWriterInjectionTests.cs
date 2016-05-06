@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
+using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
@@ -55,7 +56,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = BuildContainer(action);
+            var container = ContainerBuilderHelper.BuildContainer(action);
             var output = GetWriterOutput(resource, model, entitySet, entityType, container);
             Assert.Equal(expectedOutput, output);
         }
@@ -65,7 +66,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = BuildContainer(action);
+            var container = ContainerBuilderHelper.BuildContainer(action);
             var resource = GetReadedResource(messageContent, model, entitySet, entityType, container);
             var propertyList = resource.Properties.ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
@@ -88,20 +89,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             model.AddElement(container);
 
             return model;
-        }
-
-        private static IServiceProvider BuildContainer(Action<IContainerBuilder> action)
-        {
-            IContainerBuilder builder = new TestContainerBuilder();
-
-            builder.AddDefaultODataServices();
-
-            if (action != null)
-            {
-                action(builder);
-            }
-
-            return builder.BuildContainer();
         }
 
         private static string GetWriterOutput(ODataResource entry, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType, IServiceProvider container)

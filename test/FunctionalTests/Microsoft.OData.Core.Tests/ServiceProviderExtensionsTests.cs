@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests

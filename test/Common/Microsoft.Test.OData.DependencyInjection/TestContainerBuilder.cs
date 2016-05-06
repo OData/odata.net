@@ -4,13 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.OData.PluggableFormat
-{
-    using System;
-    using System.Diagnostics;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.OData;
+using System;
+using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData;
+using ServiceLifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime;
 
+namespace Microsoft.Test.OData.DependencyInjection
+{
     public class TestContainerBuilder : IContainerBuilder
     {
         private readonly IServiceCollection services = new ServiceCollection();
@@ -48,17 +49,17 @@ namespace Microsoft.Test.OData.PluggableFormat
             return services.BuildServiceProvider();
         }
 
-        private static Extensions.DependencyInjection.ServiceLifetime TranslateServiceLifetime(
+        private static ServiceLifetime TranslateServiceLifetime(
             Microsoft.OData.ServiceLifetime lifetime)
         {
             switch (lifetime)
             {
                 case Microsoft.OData.ServiceLifetime.Scoped:
-                    return Extensions.DependencyInjection.ServiceLifetime.Scoped;
+                    return ServiceLifetime.Scoped;
                 case Microsoft.OData.ServiceLifetime.Singleton:
-                    return Extensions.DependencyInjection.ServiceLifetime.Singleton;
+                    return ServiceLifetime.Singleton;
                 default:
-                    return Extensions.DependencyInjection.ServiceLifetime.Transient;
+                    return ServiceLifetime.Transient;
             }
         }
     }

@@ -46,14 +46,6 @@
       <HintPath>..\..\..\sln\packages\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Extensions.DependencyInjection">
-      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.DependencyInjection.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
@@ -79,7 +71,6 @@
     <Compile Include="AnnotationFilterTests.cs" />
     <Compile Include="ArgumentValidationUtils.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonReaderWriterInjectionTests.cs" />
-    <Compile Include="TestContainerBuilder.cs" />
     <Compile Include="ServiceProviderExtensionsTests.cs" />
     <Compile Include="ContainerBuilderExtensionsTests.cs" />
     <Compile Include="DummyRequestMessage.cs" />
@@ -426,6 +417,10 @@
     <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
       <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
       <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj">
+      <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
+      <Name>Microsoft.Test.OData.DependencyInjection</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj">
       <Project>{9037ff4a-4636-41aa-bfa2-0930ef1563ee}</Project>
