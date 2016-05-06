@@ -4748,7 +4748,6 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings : Microsoft.OData
 	bool DisablePrimitiveTypeConversion  { public get; public set; }
 	bool EnableFullValidation  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
-	Microsoft.OData.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
 	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public get; public set; }
@@ -4815,7 +4814,6 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings : Microsoft.OData
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool EnableFullValidation  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
-	Microsoft.OData.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }

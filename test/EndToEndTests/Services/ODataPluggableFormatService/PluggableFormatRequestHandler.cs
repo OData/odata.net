@@ -69,14 +69,6 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
             return base.DispatchHandler();
         }
-
-        protected override ODataMessageWriterSettings GetWriterSettings()
-        {
-            var settings = base.GetWriterSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
-
-            return settings;
-        }
     }
 
     internal class PluggableFormatOperationHandler : OperationHandler
@@ -84,27 +76,12 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         public PluggableFormatOperationHandler(RequestHandler other, HttpMethod httpMethod)
             : base(other, httpMethod)
         { }
-
-        protected override ODataMessageReaderSettings GetReaderSettings()
-        {
-            var settings = base.GetReaderSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
-            return settings;
-        }
     }
 
     internal class PluggableFormatQueryHandler : QueryHandler
     {
         public PluggableFormatQueryHandler(RequestHandler other)
             : base(other) { }
-
-        protected override ODataMessageWriterSettings GetWriterSettings()
-        {
-            var settings = base.GetWriterSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
-
-            return settings;
-        }
     }
 
     internal class PluggableFormatErrorHandler : ErrorHandler
@@ -117,7 +94,6 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         protected override ODataMessageWriterSettings GetWriterSettings()
         {
             var settings = base.GetWriterSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
             settings.SetContentType(string.IsNullOrEmpty(this.QueryContext.FormatOption) ? this.RequestAcceptHeader : this.QueryContext.FormatOption, Encoding.UTF8.WebName);
             return settings;
         }

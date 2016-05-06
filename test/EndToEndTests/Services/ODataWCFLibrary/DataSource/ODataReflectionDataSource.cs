@@ -29,6 +29,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
         private IODataOperationProvider operationProvider;
         [NonSerialized]
         private IEdmModel model;
+        [NonSerialized]
+        private IServiceProvider container;
 
         public virtual IEdmModel Model
         {
@@ -72,6 +74,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
             {
                 if (value == null) throw new ArgumentNullException("value");
                 this.streamProvider = value;
+            }
+        }
+
+        public IServiceProvider Container
+        {
+            get { return this.container; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                this.container = value;
             }
         }
 

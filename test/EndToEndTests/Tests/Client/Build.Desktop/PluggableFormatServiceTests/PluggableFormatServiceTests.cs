@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.Test.OData.PluggableFormat.VCard;
+
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
     using System;
@@ -15,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 #if ENABLE_AVRO
     using Microsoft.Test.OData.PluggableFormat.Avro;
 #endif
-    using Microsoft.Test.OData.PluggableFormat.VCard;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.PluggableFormatServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -70,10 +72,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
             {
                 BaseUri = ServiceBaseUri,
-                MediaTypeResolver = VCardMediaTypeResolver.Instance,
             };
 
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(31)/BusinessCard", UriKind.Absolute));
+            SetVCardMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "text/x-vCard");
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
@@ -94,6 +96,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void QueryAvroEntity()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(31)", UriKind.Absolute));
+            SetAvroMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
@@ -142,6 +145,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void QueryAvroFeed()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products", UriKind.Absolute));
+            SetAvroMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
@@ -225,6 +229,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             IEdmOperation action = model.FindDeclaredOperations("Microsoft.Test.OData.Services.PluggableFormat.AddProduct").Single();
 
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products/Microsoft.Test.OData.Services.PluggableFormat.AddProduct", UriKind.Absolute));
+            SetAvroMediaTypeResolver(requestMessage);
             requestMessage.Method = "POST";
             using (var mw = new ODataMessageWriter(requestMessage, GetAvroWriterSettings(), model))
             {
@@ -246,6 +251,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(204, responseMessage.StatusCode);
 
             requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(1)", UriKind.Absolute));
+            SetAvroMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "avro/binary");
             responseMessage = requestMessage.GetResponse();
             ODataResource entry = null;
@@ -265,21 +271,29 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.IsTrue(TestHelper.EntryEqual(product1, entry));
         }
 
+        private static void SetAvroMediaTypeResolver(HttpWebRequestMessage requestMessage)
+        {
+            requestMessage.Container = ContainerBuilderHelper.BuildContainer(builder =>
+                builder.AddService<ODataMediaTypeResolver, AvroMediaTypeResolver>(ServiceLifetime.Singleton));
+        }
+
+        private static void SetVCardMediaTypeResolver(HttpWebRequestMessage requestMessage)
+        {
+            requestMessage.Container = ContainerBuilderHelper.BuildContainer(builder =>
+                builder.AddService<ODataMediaTypeResolver, VCardMediaTypeResolver>(ServiceLifetime.Singleton));
+        }
+
         private ODataMessageReaderSettings GetAvroReaderSettings()
         {
             return new ODataMessageReaderSettings()
             {
                 BaseUri = ServiceBaseUri,
-                MediaTypeResolver = AvroMediaTypeResolver.Instance,
             };
         }
 
         private ODataMessageWriterSettings GetAvroWriterSettings()
         {
-            var settings = new ODataMessageWriterSettings()
-            {
-                MediaTypeResolver = AvroMediaTypeResolver.Instance,
-            };
+            var settings = new ODataMessageWriterSettings();
 
             settings.SetContentType(AvroFormat.Avro);
             return settings;

@@ -16,15 +16,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
     public class PluggableFormatResolver : ODataMediaTypeResolver
     {
-        private static readonly PluggableFormatResolver instance = new PluggableFormatResolver();
         private readonly ODataMediaTypeFormat[] vcardFormats = { new ODataMediaTypeFormat(new ODataMediaType("text", "x-vCard"), new VCardFormat()) };
 #if ENABLE_AVRO
         private readonly ODataMediaTypeFormat[] avroFormats = { new ODataMediaTypeFormat(new ODataMediaType("avro", "binary"), AvroFormat.Avro) };
 #endif
-
-        private PluggableFormatResolver() { }
-
-        public static PluggableFormatResolver Instance { get { return instance; } }
 
         public override IEnumerable<ODataMediaTypeFormat> GetMediaTypeFormats(ODataPayloadKind payloadKind)
         {

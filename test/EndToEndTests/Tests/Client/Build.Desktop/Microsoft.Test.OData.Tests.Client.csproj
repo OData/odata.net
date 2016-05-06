@@ -55,6 +55,10 @@
       <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
       <Name>Microsoft.OData.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj">
+      <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
+      <Name>Microsoft.Test.OData.DependencyInjection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
       <Project>{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}</Project>
       <Name>Microsoft.Test.OData.Framework</Name>

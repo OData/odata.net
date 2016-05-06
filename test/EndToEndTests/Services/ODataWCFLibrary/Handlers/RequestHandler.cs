@@ -215,12 +215,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         protected virtual IODataRequestMessage CreateRequestMessage(Stream messageBody)
         {
-            return new ODataRequestMessage(messageBody, this.RequestHeaders, this.RequestUri, this.HttpMethod.ToString());
+            return new ODataRequestMessage(messageBody, this.RequestHeaders, this.RequestUri, this.HttpMethod.ToString())
+            {
+                Container = DataSource.Container
+            };
         }
 
         protected virtual IODataResponseMessage CreateResponseMessage(Stream stream)
         {
-            return new ODataResponseMessage(stream, 200);
+            return new ODataResponseMessage(stream, 200)
+            {
+                Container = DataSource.Container
+            };
         }
 
         protected virtual ODataMessageReader CreateMessageReader(IODataRequestMessage message)
