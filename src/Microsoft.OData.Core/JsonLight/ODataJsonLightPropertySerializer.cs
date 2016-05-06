@@ -180,13 +180,10 @@ namespace Microsoft.OData.JsonLight
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
 
             WriteInstanceAnnotation(property, isTopLevel);
-
-            bool throwOnMissingProperty = this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation && !this.WritingResponse;
-            IEdmProperty edmProperty = this.WriterValidator.ValidatePropertyDefined(
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,
                 owningType,
-                throwOnMissingProperty);
-
+                this.JsonLightOutputContext.MessageWriterSettings);
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
 
             ODataValue value = property.ODataValue;

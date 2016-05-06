@@ -12,7 +12,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Configuration settings for OData message readers.
     /// </summary>
-    public sealed class ODataMessageReaderSettings
+    public sealed class ODataMessageReaderSettings : IMessageValidationSetting
     {
         /// <summary>
         /// The base uri used in payload.

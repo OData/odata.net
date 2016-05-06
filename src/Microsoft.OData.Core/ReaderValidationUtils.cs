@@ -179,14 +179,12 @@ namespace Microsoft.OData
             IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (messageReaderSettings.IgnoreUndeclaredValueProperties)
-                {
-                    ignoreProperty = true;
-                }
-                else
+                if (messageReaderSettings.ShouldThrowOnUndeclaredProperty())
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
                 }
+
+                ignoreProperty = true;
             }
 
             return property;
