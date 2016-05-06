@@ -236,6 +236,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if the conversion was successful.</returns>
         private bool TryConvertValue(IEdmTypeReference typeReference, string valueText, out object convertedValue)
         {
+            UriTemplateExpression expression;
+            if (this.enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(valueText, typeReference, out expression))
+            {
+                convertedValue = expression;
+                return true;
+            }
+
             if (typeReference.IsEnum())
             {
                 QueryNode enumNode = null;
@@ -250,13 +257,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             IEdmPrimitiveTypeReference primitiveType = typeReference.AsPrimitive();
-            UriTemplateExpression expression;
-            if (this.enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(valueText, primitiveType, out expression))
-            {
-                convertedValue = expression;
-                return true;
-            }
-
             Type primitiveClrType = EdmLibraryExtensions.GetPrimitiveClrType((IEdmPrimitiveType)primitiveType.Definition, primitiveType.IsNullable);
             LiteralParser literalParser = LiteralParser.ForKeys(this.keysAsSegment);
             return literalParser.TryParseLiteral(primitiveClrType, valueText, out convertedValue);
