@@ -84,7 +84,7 @@ namespace Microsoft.OData
             // (to read the headers of the parts); so allocating it here.
             this.lineBuffer = new byte[LineBufferLength];
 
-            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(inputContext.Container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(inputContext.Container);
         }
 
         /// <summary>

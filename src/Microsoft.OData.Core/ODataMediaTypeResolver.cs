@@ -5,14 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OData
 {
-    #region Namespaces
-    using System.Collections.Generic;
-    using System.Linq;
-    #endregion Namespaces
-
     /// <summary>
     /// Class with the responsibility of resolving media types (MIME types) into formats and payload kinds.
     /// </summary>
@@ -173,7 +170,7 @@ namespace Microsoft.OData
             return this.mediaTypesForPayloadKind[(int)payloadKind];
         }
 
-        internal static ODataMediaTypeResolver FromContainerOrDefault(IServiceProvider container)
+        internal static ODataMediaTypeResolver GetMediaTypeResolver(IServiceProvider container)
         {
             if (container == null)
             {

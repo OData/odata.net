@@ -113,7 +113,7 @@ namespace Microsoft.OData
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = requestMessage as IODataUrlResolver;
             this.container = GetContainer(requestMessage);
-            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against request message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -155,7 +155,7 @@ namespace Microsoft.OData
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = responseMessage as IODataUrlResolver;
             this.container = GetContainer(responseMessage);
-            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against response message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);

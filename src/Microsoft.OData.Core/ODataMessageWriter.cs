@@ -107,7 +107,7 @@ namespace Microsoft.OData
             this.writingResponse = false;
             this.urlResolver = requestMessage as IODataUrlResolver;
             this.container = GetContainer(requestMessage);
-            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
@@ -147,7 +147,7 @@ namespace Microsoft.OData
             this.writingResponse = true;
             this.urlResolver = responseMessage as IODataUrlResolver;
             this.container = GetContainer(responseMessage);
-            this.mediaTypeResolver = ODataMediaTypeResolver.FromContainerOrDefault(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);

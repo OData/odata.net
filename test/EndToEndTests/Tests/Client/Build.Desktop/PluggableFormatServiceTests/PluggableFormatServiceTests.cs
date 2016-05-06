@@ -4,25 +4,24 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.OData.PluggableFormat;
+#if ENABLE_AVRO
+using Microsoft.Test.OData.PluggableFormat.Avro;
+#endif
 using Microsoft.Test.OData.PluggableFormat.VCard;
+using Microsoft.Test.OData.DependencyInjection;
+using Microsoft.Test.OData.Services.TestServices;
+using Microsoft.Test.OData.Services.TestServices.PluggableFormatServiceReference;
+using Microsoft.Test.OData.Tests.Client.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData;
-    using Microsoft.OData.Edm;
-    using Microsoft.Test.OData.PluggableFormat;
-#if ENABLE_AVRO
-    using Microsoft.Test.OData.PluggableFormat.Avro;
-#endif
-    using Microsoft.Test.OData.DependencyInjection;
-    using Microsoft.Test.OData.Services.TestServices;
-    using Microsoft.Test.OData.Services.TestServices.PluggableFormatServiceReference;
-    using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
