@@ -61,17 +61,18 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataJsonLightInputContext GetInputContext(string payload)
         {
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = JsonLightUtils.JsonLightStreamingMediaType,
+                IsSynchronous = true,
+                Model = new EdmModel(),
+                TextReader = new StringReader(payload)
+            };
+
             return new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                new MemoryStream(Encoding.UTF8.GetBytes(payload)),
-                JsonLightUtils.JsonLightStreamingMediaType,
-                Encoding.UTF8,
-                new ODataMessageReaderSettings(),
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                new EdmModel(),
-                /*urlResolver*/ null,
-                /*container*/ null);
+                messageInfo,
+                new ODataMessageReaderSettings());
         }
     }
 }

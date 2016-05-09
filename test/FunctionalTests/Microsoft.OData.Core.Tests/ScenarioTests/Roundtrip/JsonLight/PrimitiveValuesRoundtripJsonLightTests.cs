@@ -639,14 +639,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             MemoryStream stream = new MemoryStream();
 
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = version };
+            var settings = new ODataMessageWriterSettings { Version = version };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test/"));
 
-            ODataMediaType mediaType = isIeee754Compatible
+            var mediaType = isIeee754Compatible
                 ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("IEEE754Compatible", "true"))
                 : new ODataMediaType("application", "json");
 
-            using (ODataJsonLightOutputContext outputContext = new ODataJsonLightOutputContext(
+            using (var outputContext = new ODataJsonLightOutputContext(
                 ODataFormat.Json,
                 new NonDisposingStream(stream),
                 mediaType,
@@ -658,26 +658,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 /*urlResolver*/ null,
                 /*container*/ null))
             {
-                ODataJsonLightValueSerializer serializer = new ODataJsonLightValueSerializer(outputContext);
+                var serializer = new ODataJsonLightValueSerializer(outputContext);
                 serializer.WritePrimitiveValue(clrValue, typeReference);
             }
 
             stream.Position = 0;
 
-            object actualValue;
-            using (ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                mediaType,
-                Encoding.UTF8,
-                new ODataMessageReaderSettings(),
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                this.model,
-                /*urlResolver*/ null,
-                /*container*/ null))
+            var messageInfo = new ODataMessageInfo
             {
-                ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                MediaType = mediaType,
+                IsSynchronous = true,
+                Model = this.model,
+                MessageStream = stream
+            };
+
+            object actualValue;
+            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
+            {
+                var deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();
                 actualValue = deserializer.ReadNonEntityValue(
                     /*payloadTypeName*/ null,

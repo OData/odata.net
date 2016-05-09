@@ -44,75 +44,22 @@ namespace Microsoft.OData.JsonLight
         private BufferingJsonReader jsonReader;
 
         /// <summary>Constructor.</summary>
-        /// <param name="format">The format for this input context.</param>
-        /// <param name="messageStream">The stream to read data from.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="encoding">The encoding to use to read the input.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
-        internal ODataJsonLightInputContext(
-            ODataFormat format,
-            Stream messageStream,
-            ODataMediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
-            : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
+        public ODataJsonLightInputContext(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(ODataFormat.Json, messageInfo, messageReaderSettings)
         {
-        }
-
-        /// <summary>Constructor.</summary>
-        /// <param name="format">The format for this input context.</param>
-        /// <param name="textReader">The text reader to use.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        internal ODataJsonLightInputContext(
-            ODataFormat format,
-            TextReader textReader,
-            ODataMediaType contentType,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
-        {
-            Debug.Assert(textReader != null, "reader != null");
-            Debug.Assert(contentType != null, "contentType != null");
+            Debug.Assert((messageInfo.MessageStream != null) ^ (messageInfo.TextReader != null),
+                "Only one of MessageStream and TextReader can be set");
+            Debug.Assert(messageInfo.MediaType != null, "messageInfo.MediaType != null");
 
             try
             {
-                ExceptionUtils.CheckArgumentNotNull(format, "format");
-                ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
-            }
-            catch (ArgumentNullException)
-            {
-                // Dispose the message stream if we failed to create the input context.
-                textReader.Dispose();
-                throw;
-            }
-
-            try
-            {
-                this.textReader = textReader;
-                var innerReader = CreateJsonReader(container, textReader, contentType.HasIeee754CompatibleSetToTrue());
-
-                if (contentType.HasStreamingSetToTrue())
+                this.textReader = messageInfo.TextReader ?? CreateTextReaderForMessageStreamConstructor(messageInfo.MessageStream, messageInfo.Encoding);
+                var innerReader = CreateJsonReader(messageInfo.Container, this.textReader, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                if (messageInfo.MediaType.HasStreamingSetToTrue())
                 {
                     this.jsonReader = new BufferingJsonReader(
                         innerReader,
@@ -128,9 +75,9 @@ namespace Microsoft.OData.JsonLight
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && textReader != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e) && this.textReader != null)
                 {
-                    textReader.Dispose();
+                    this.textReader.Dispose();
                 }
 
                 throw;
@@ -139,13 +86,13 @@ namespace Microsoft.OData.JsonLight
             // dont know how to get MetadataDocumentUri uri here, messageReaderSettings do not have one
             // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
             // the uri here is used here to create the FullMetadataLevel can pass null in
-            this.metadataLevel = JsonLight.JsonLightMetadataLevel.Create(contentType, null, model, readingResponse);
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, messageInfo.Model, messageInfo.IsResponse);
         }
 
         /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
-        internal JsonLightMetadataLevel MetadataLevel
+        public JsonLightMetadataLevel MetadataLevel
         {
             get
             {
@@ -156,7 +103,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Returns the <see cref="BufferingJsonReader"/> which is to be used to read the content of the message.
         /// </summary>
-        internal BufferingJsonReader JsonReader
+        public BufferingJsonReader JsonReader
         {
             get
             {
@@ -346,6 +293,36 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
+        /// Detects the payload kind(s) from the message stream.
+        /// </summary>
+        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
+        public IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
+        {
+            Debug.Assert(detectionInfo != null, "detectionInfo != null");
+            this.VerifyCanDetectPayloadKind();
+
+            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
+            return payloadKindDetectionDeserializer.DetectPayloadKind(detectionInfo);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Detects the payload kind(s) from the message stream.
+        /// </summary>
+        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
+        public Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
+        {
+            Debug.Assert(detectionInfo != null, "detectionInfo != null");
+            this.VerifyCanDetectPayloadKind();
+
+            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
+            return payloadKindDetectionDeserializer.DetectPayloadKindAsync(detectionInfo);
+        }
+#endif
+
+        /// <summary>
         /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
@@ -457,36 +434,6 @@ namespace Microsoft.OData.JsonLight
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
-        }
-#endif
-
-        /// <summary>
-        /// Detects the payload kind(s) from the message stream.
-        /// </summary>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        internal IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
-        {
-            Debug.Assert(detectionInfo != null, "detectionInfo != null");
-            this.VerifyCanDetectPayloadKind();
-
-            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
-            return payloadKindDetectionDeserializer.DetectPayloadKind(detectionInfo);
-        }
-
-#if PORTABLELIB
-        /// <summary>
-        /// Detects the payload kind(s) from the message stream.
-        /// </summary>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        internal Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
-        {
-            Debug.Assert(detectionInfo != null, "detectionInfo != null");
-            this.VerifyCanDetectPayloadKind();
-
-            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
-            return payloadKindDetectionDeserializer.DetectPayloadKindAsync(detectionInfo);
         }
 #endif
 

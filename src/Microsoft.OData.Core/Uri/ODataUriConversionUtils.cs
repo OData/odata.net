@@ -77,16 +77,21 @@ namespace Microsoft.OData
 
             using (StringReader reader = new StringReader(value))
             {
-                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(
-                    ODataFormat.Json,
-                    reader,
-                    new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
-                    settings,
-                    false /*readingResponse*/,
-                    true /*synchronous*/,
-                    model,
-                    null /*urlResolver*/,
-                    null /*container*/))
+                ODataMessageInfo messageInfo = new ODataMessageInfo
+                {
+                    MediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
+                    Model = model,
+                    IsResponse = false,
+                    IsSynchronous = true,
+                    TextReader = reader,
+                    MessageStream = null,
+                    GetMessageStream = null,
+#if PORTABLELIB
+                    GetMessageStreamAsync = null,
+#endif
+                };
+
+                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(messageInfo, settings))
                 {
                     ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 

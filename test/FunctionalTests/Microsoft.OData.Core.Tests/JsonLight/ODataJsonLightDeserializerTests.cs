@@ -1080,17 +1080,16 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, IEdmModel model)
         {
-            return new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                new MemoryStream(Encoding.UTF8.GetBytes(payload)),
-                JsonLightUtils.JsonLightStreamingMediaType,
-                Encoding.UTF8,
-                this.messageReaderSettings,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                model,
-                /*urlResolver*/ null,
-                /*container*/ null);
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = JsonLightUtils.JsonLightStreamingMediaType,
+                IsSynchronous = true,
+                Model = model,
+                TextReader = new StringReader(payload)
+            };
+
+            return new ODataJsonLightInputContext(messageInfo, this.messageReaderSettings);
         }
 
         private object ReadODataTypePropertyAnnotation(IJsonReader jsonReader, string name)

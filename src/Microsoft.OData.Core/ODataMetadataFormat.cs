@@ -68,16 +68,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataMetadataInputContext(
-                this,
-                messageInfo.GetMessageStream(),
-                messageInfo.Encoding,
-                messageReaderSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.Container);
+            return new ODataMetadataInputContext(messageInfo.ComputeStreamFunc(), messageReaderSettings);
         }
 
         /// <summary>

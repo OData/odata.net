@@ -541,21 +541,22 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool shouldReadAndValidateCustomInstanceAnnotations, bool isIeee754Compatible)
         {
-            ODataMediaType mediaType = isIeee754Compatible
+            var mediaType = isIeee754Compatible
                 ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("IEEE754Compatible", "true"))
                 : new ODataMediaType("application", "json");
 
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = mediaType,
+                IsSynchronous = true,
+                Model = EdmModel,
+                TextReader = new StringReader(payload)
+            };
+
             return new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                new MemoryStream(Encoding.UTF8.GetBytes(payload)),
-                mediaType,
-                Encoding.UTF8,
-                shouldReadAndValidateCustomInstanceAnnotations ? MessageReaderSettingsReadAndValidateCustomInstanceAnnotations : MessageReaderSettingsIgnoreInstanceAnnotations,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                EdmModel,
-                /*urlResolver*/ null,
-                /*container*/ null);
+                messageInfo,
+                shouldReadAndValidateCustomInstanceAnnotations ? MessageReaderSettingsReadAndValidateCustomInstanceAnnotations : MessageReaderSettingsIgnoreInstanceAnnotations);
         }
 
         private ODataJsonLightResourceDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool shouldReadAndValidateCustomInstanceAnnotations = true, bool isIeee754Compatible = false)

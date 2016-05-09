@@ -63,18 +63,18 @@ Second line";
 
         private static ODataBatchReaderStream CreateBatchReaderStream(string inputString)
         {
-            var underlyingStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString));
+            var messageInfo = new ODataMessageInfo
+            {
+                Encoding = Encoding.UTF8,
+                IsResponse = false,
+                IsSynchronous = true,
+                PayloadKind = ODataPayloadKind.Batch,
+                MessageStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString))
+            };
             var inputContext = new ODataRawInputContext(
                 ODataFormat.Batch, 
-                underlyingStream, 
-                Encoding.UTF8, 
-                new ODataMessageReaderSettings(),
-                false, 
-                true, 
-                null, 
-                null, 
-                ODataPayloadKind.Batch,
-                null);
+                messageInfo,
+                new ODataMessageReaderSettings());
             var batchStream = new ODataBatchReaderStream(inputContext, "batch_862fb28e-dc50-4af1-aad5-9608647761d1", Encoding.UTF8);
             return batchStream;
         }

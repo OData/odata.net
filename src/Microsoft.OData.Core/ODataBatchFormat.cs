@@ -58,15 +58,8 @@ namespace Microsoft.OData
 
             return new ODataRawInputContext(
                 this,
-                messageInfo.GetMessageStream(),
-                messageInfo.Encoding,
-                messageReaderSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.PayloadKind,
-                messageInfo.Container);
+                messageInfo.ComputeStreamFunc(),
+                messageReaderSettings);
         }
 
         /// <summary>
@@ -123,19 +116,12 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return messageInfo.GetMessageStreamAsync()
+            return messageInfo.ComputeStreamFuncAsync()
                 .FollowOnSuccessWith(
-                    (streamTask) => (ODataInputContext)new ODataRawInputContext(
+                    messageInfoTask => (ODataInputContext)new ODataRawInputContext(
                         this,
-                        streamTask.Result,
-                        messageInfo.Encoding,
-                        messageReaderSettings,
-                        messageInfo.IsResponse,
-                        /*synchronous*/ false,
-                        messageInfo.Model,
-                        messageInfo.UrlResolver,
-                        messageInfo.PayloadKind,
-                        messageInfo.Container));
+                        messageInfoTask.Result,
+                        messageReaderSettings));
         }
 
         /// <summary>

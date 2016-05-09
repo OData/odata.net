@@ -395,21 +395,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
         private ODataResource ReadSingleton(string payload, bool odataSimplified = false)
         {
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsSynchronous = true,
+                Model = this.userModel,
+                TextReader = new StringReader(payload)
+            };
 
-            using (ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                this.userModel,
-                /*urlResolver*/ null,
-                /*container*/ null))
+            using (var inputContext = new ODataJsonLightInputContext(messageInfo, settings))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
@@ -426,21 +423,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
         private ODataNestedResourceInfo ReadSingletonNavigationLink(string payload)
         {
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsSynchronous = true,
+                Model = this.userModel,
+                TextReader = new StringReader(payload)
+            };
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-
-            using (ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                this.userModel,
-                /*urlResolver*/ null,
-                /*container*/ null))
+            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())

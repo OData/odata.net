@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     {
         private Stream stream;
 
-        internal ODataAvroInputContext(
+        public ODataAvroInputContext(
             ODataFormat format,
             Stream messageStream,
             ODataMediaType contentType,
@@ -29,7 +29,16 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, /*container*/null)
+            : base(format,
+                new ODataMessageInfo
+                {
+                    MediaType = contentType,
+                    Encoding = encoding,
+                    IsResponse = readingResponse,
+                    IsSynchronous = synchronous,
+                    Model = model,
+                    UrlResolver = urlResolver
+                }, messageReaderSettings)
         {
             this.stream = messageStream;
 

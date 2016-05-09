@@ -1578,6 +1578,9 @@
     <Compile Include="..\ODataEdmPropertyAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataEdmPropertyAnnotation.cs</Link>
     </Compile>
+    <Compile Include="..\ODataMessageInfoExtensions.cs">
+      <Link>Microsoft\OData\Core\ODataMessageInfoExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\ODataNullValueBehaviorKind.cs">
       <Link>Microsoft\OData\Core\ODataNullValueBehaviorKind.cs</Link>
     </Compile>

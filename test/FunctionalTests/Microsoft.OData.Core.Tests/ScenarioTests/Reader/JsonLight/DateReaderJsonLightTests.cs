@@ -64,19 +64,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             IEdmModel model = new EdmModel();
             IEdmPrimitiveTypeReference typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)model.FindType(edmTypeName), true);
 
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = JsonLightUtils.JsonLightStreamingMediaType,
+                IsSynchronous = true,
+                Model = new EdmModel(),
+                TextReader = new StringReader(payload)
+            };
+
             object actualValue;
-            using (ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                JsonLightUtils.JsonLightStreamingMediaType,
-                Encoding.UTF8,
-                new ODataMessageReaderSettings(),
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                model,
-                /*urlResolver*/ null,
-                /*container*/ null))
+            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
             {
                 ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();

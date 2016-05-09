@@ -4006,7 +4006,7 @@ public abstract class Microsoft.OData.ODataFormat {
 }
 
 public abstract class Microsoft.OData.ODataInputContext : IDisposable {
-	protected ODataInputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings, bool readingResponse, bool synchronous, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.IODataUrlResolver urlResolver, System.IServiceProvider container)
+	protected ODataInputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings)
 
 	Microsoft.OData.ODataMessageReaderSettings MessageReaderSettings  { public get; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
@@ -4672,14 +4672,15 @@ public sealed class Microsoft.OData.ODataMediaTypeFormat {
 public sealed class Microsoft.OData.ODataMessageInfo {
 	public ODataMessageInfo ()
 
-	System.IServiceProvider Container  { public get; }
-	System.Text.Encoding Encoding  { public get; }
-	System.Func`1[[System.IO.Stream]] GetMessageStream  { public get; }
-	System.Func`1[[System.Threading.Tasks.Task`1[[System.IO.Stream]]]] GetMessageStreamAsync  { public get; }
-	bool IsResponse  { public get; }
-	Microsoft.OData.ODataMediaType MediaType  { public get; }
-	Microsoft.OData.Edm.IEdmModel Model  { public get; }
-	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; }
+	System.IServiceProvider Container  { public get; public set; }
+	System.Text.Encoding Encoding  { public get; public set; }
+	System.Func`1[[System.IO.Stream]] GetMessageStream  { public get; public set; }
+	System.Func`1[[System.Threading.Tasks.Task`1[[System.IO.Stream]]]] GetMessageStreamAsync  { public get; public set; }
+	bool IsResponse  { public get; public set; }
+	bool IsSynchronous  { public get; public set; }
+	Microsoft.OData.ODataMediaType MediaType  { public get; public set; }
+	Microsoft.OData.Edm.IEdmModel Model  { public get; public set; }
+	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.ODataMessageQuotas {

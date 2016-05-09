@@ -221,6 +221,7 @@ namespace Microsoft.OData
                         Encoding = this.encoding,
                         GetMessageStream = this.message.GetStream,
                         IsResponse = this.readingResponse,
+                        IsSynchronous = true,
                         MediaType = this.contentType,
                         Model = this.model
                     };
@@ -1235,10 +1236,8 @@ namespace Microsoft.OData
                     {
                         Encoding = this.encoding,
                         GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                        GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
                         IsResponse = this.readingResponse,
+                        IsSynchronous = true,
                         MediaType = this.contentType,
                         Model = this.model,
                         UrlResolver = this.urlResolver,
@@ -1324,6 +1323,7 @@ namespace Microsoft.OData
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.readingResponse,
+                    IsSynchronous = false,
                     MediaType = this.contentType,
                     Model = this.model,
                 };
@@ -1375,6 +1375,7 @@ namespace Microsoft.OData
                     GetMessageStreamAsync = this.message.GetStreamAsync,
 #endif
                     IsResponse = this.readingResponse,
+                    IsSynchronous = false,
                     MediaType = this.contentType,
                     Model = this.model,
                     UrlResolver = this.urlResolver,

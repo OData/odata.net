@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
@@ -459,23 +458,22 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool odataSimplified = false)
         {
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var settings = new ODataMessageReaderSettings
+            {
+                ShouldIncludeAnnotation = s => true,
+                ODataSimplified = odataSimplified
+            };
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            settings.ShouldIncludeAnnotation = s => true;
-            settings.ODataSimplified = odataSimplified;
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsSynchronous = true,
+                Model = model ?? new EdmModel(),
+                TextReader = new StringReader(payload)
+            };
 
-            using (var inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                model ?? new EdmModel(),
-                /*urlResolver*/ null,
-                /*container*/ null))
+            using (var inputContext = new ODataJsonLightInputContext(messageInfo, settings))
             {
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())

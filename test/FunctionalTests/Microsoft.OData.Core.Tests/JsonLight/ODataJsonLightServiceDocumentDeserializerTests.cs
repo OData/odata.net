@@ -159,19 +159,17 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataJsonLightServiceDocumentDeserializer CreateODataJsonServiceDocumentDeserializer(MemoryStream stream, IODataUrlResolver urlResolver = null)
         {
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsSynchronous = true,
+                Model = new EdmModel(),
+                UrlResolver = urlResolver,
+                TextReader = new StreamReader(stream)
+            };
 
-            ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                true /*readingResponse*/,
-                true /*sync*/,
-                new EdmModel() /*edmModel*/,
-                urlResolver,
-                null /*container*/);
+            var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings());
             return new ODataJsonLightServiceDocumentDeserializer(inputContext);
         }
 

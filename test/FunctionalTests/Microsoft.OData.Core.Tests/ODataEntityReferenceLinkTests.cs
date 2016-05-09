@@ -253,20 +253,22 @@ namespace Microsoft.OData.Tests
 
         private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool isIeee754Compatible)
         {
-            ODataMediaType mediaType = isIeee754Compatible
+            var mediaType = isIeee754Compatible
                 ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("IEEE754Compatible", "true"))
                 : new ODataMediaType("application", "json", new KeyValuePair<string, string>("odata.streaming", "true"));
+
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = mediaType,
+                IsSynchronous = true,
+                Model = EdmModel,
+                TextReader = new StringReader(payload)
+            };
+
             return new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                new MemoryStream(Encoding.UTF8.GetBytes(payload)),
-                mediaType,
-                Encoding.UTF8,
-                MessageReaderSettingsReadAndValidateCustomInstanceAnnotations,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                EdmModel,
-                /*urlResolver*/ null,
-                /*container*/ null);
+                messageInfo,
+                MessageReaderSettingsReadAndValidateCustomInstanceAnnotations);
         }
     }
 }

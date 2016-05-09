@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Xml;
 using Microsoft.OData.Metadata;
@@ -30,37 +29,20 @@ namespace Microsoft.OData
         private BufferingXmlReader xmlReader;
 
         /// <summary>Constructor.</summary>
-        /// <param name="format">The format for this input context.</param>
-        /// <param name="messageStream">The stream to read data from.</param>
-        /// <param name="encoding">The encoding to use to read the input.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message reading.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        internal ODataMetadataInputContext(
-            ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
+        public ODataMetadataInputContext(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(ODataFormat.Metadata, messageInfo, messageReaderSettings)
         {
-            Debug.Assert(messageStream != null, "stream != null");
-
-            ExceptionUtils.CheckArgumentNotNull(format, "format");
-            ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
 
             try
             {
                 // Which encoding do we use when reading XML payloads
-                this.baseXmlReader = ODataMetadataReaderUtils.CreateXmlReader(messageStream, encoding, messageReaderSettings);
+                this.baseXmlReader = ODataMetadataReaderUtils.CreateXmlReader(messageInfo.MessageStream, messageInfo.Encoding, messageReaderSettings);
 
                 // We use the buffering reader here only for in-stream error detection (not for buffering).
                 this.xmlReader = new BufferingXmlReader(
@@ -73,9 +55,9 @@ namespace Microsoft.OData
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    messageStream.Dispose();
+                    messageInfo.MessageStream.Dispose();
                 }
 
                 throw;

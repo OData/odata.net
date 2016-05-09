@@ -40,47 +40,30 @@ namespace Microsoft.OData
 
         /// <summary>Constructor.</summary>
         /// <param name="format">The format for this input context.</param>
-        /// <param name="messageStream">The stream to read data from.</param>
-        /// <param name="encoding">The encoding to use to read the input.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        internal ODataRawInputContext(
+        public ODataRawInputContext(
             ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            ODataPayloadKind readerPayloadKind,
-            IServiceProvider container)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver, container)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(format, messageInfo, messageReaderSettings)
         {
-            Debug.Assert(messageStream != null, "stream != null");
-            Debug.Assert(readerPayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");
-
-            ExceptionUtils.CheckArgumentNotNull(format, "format");
-            ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
+            Debug.Assert(messageInfo.PayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");
 
             try
             {
-                this.stream = messageStream;
-                this.encoding = encoding;
-                this.readerPayloadKind = readerPayloadKind;
+                this.stream = messageInfo.MessageStream;
+                this.encoding = messageInfo.Encoding;
+                this.readerPayloadKind = messageInfo.PayloadKind;
             }
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    messageStream.Dispose();
+                    messageInfo.MessageStream.Dispose();
                 }
 
                 throw;
@@ -90,7 +73,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The stream of the raw input context.
         /// </summary>
-        internal Stream Stream
+        public Stream Stream
         {
             get
             {

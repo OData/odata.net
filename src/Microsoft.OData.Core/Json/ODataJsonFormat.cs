@@ -41,7 +41,7 @@ namespace Microsoft.OData.Json
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return this.DetectPayloadKindImplementation(
+            return DetectPayloadKindImplementation(
                     messageInfo.GetMessageStream(),
                     messageInfo.IsResponse,
                     new ODataPayloadKindDetectionInfo(
@@ -64,17 +64,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataJsonLightInputContext(
-                this,
-                messageInfo.GetMessageStream(),
-                messageInfo.MediaType,
-                messageInfo.Encoding,
-                messageReaderSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.Container);
+            return new ODataJsonLightInputContext(messageInfo.ComputeStreamFunc(), messageReaderSettings);
         }
 
         /// <summary>
@@ -117,7 +107,7 @@ namespace Microsoft.OData.Json
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return messageInfo.GetMessageStreamAsync()
-                 .FollowOnSuccessWithTask(streamTask => this.DetectPayloadKindImplementationAsync(
+                 .FollowOnSuccessWithTask(streamTask => DetectPayloadKindImplementationAsync(
                     streamTask.Result,
                      /*readingResponse*/ messageInfo.IsResponse,
                     new ODataPayloadKindDetectionInfo(
@@ -140,19 +130,11 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return messageInfo.GetMessageStreamAsync()
+            return messageInfo.ComputeStreamFuncAsync()
                 .FollowOnSuccessWith(
-                    (streamTask) => (ODataInputContext)new ODataJsonLightInputContext(
-                        this,
-                        streamTask.Result,
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        messageReaderSettings,
-                        messageInfo.IsResponse,
-                        /*synchronous*/ false,
-                        messageInfo.Model,
-                        messageInfo.UrlResolver,
-                        messageInfo.Container));
+                    messageInfoTask => (ODataInputContext)new ODataJsonLightInputContext(
+                        messageInfoTask.Result,
+                        messageReaderSettings));
         }
 
         /// <summary>
@@ -191,22 +173,22 @@ namespace Microsoft.OData.Json
         /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
         /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        private IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(
+        private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(
             Stream messageStream,
             bool readingResponse,
             ODataPayloadKindDetectionInfo detectionInfo)
         {
+            ODataMessageInfo messageInfo = new ODataMessageInfo
+            {
+                Encoding = detectionInfo.GetEncoding(),
+                IsResponse = readingResponse,
+                IsSynchronous = true,
+                MediaType = detectionInfo.ContentType,
+                Model = detectionInfo.Model,
+                MessageStream = messageStream
+            };
             using (ODataJsonLightInputContext jsonLightInputContext = new ODataJsonLightInputContext(
-                this,
-                messageStream,
-                detectionInfo.ContentType,
-                detectionInfo.GetEncoding(),
-                detectionInfo.MessageReaderSettings,
-                readingResponse,
-                /*synchronous*/ true,
-                detectionInfo.Model,
-                /*urlResolver*/ null,
-                /*container*/ null))
+                messageInfo, detectionInfo.MessageReaderSettings))
             {
                 return jsonLightInputContext.DetectPayloadKind(detectionInfo);
             }
@@ -220,23 +202,23 @@ namespace Microsoft.OData.Json
         /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
         /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        private Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindImplementationAsync(
+        private static Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindImplementationAsync(
             Stream messageStream,
             bool readingResponse,
             ODataPayloadKindDetectionInfo detectionInfo)
         {
+            ODataMessageInfo messageInfo = new ODataMessageInfo
+            {
+                Encoding = detectionInfo.GetEncoding(),
+                IsResponse = readingResponse,
+                IsSynchronous = false,
+                MediaType = detectionInfo.ContentType,
+                Model = detectionInfo.Model,
+                MessageStream = messageStream
+            };
             ODataJsonLightInputContext jsonLightInputContext = new ODataJsonLightInputContext(
-                this,
-                messageStream,
-                detectionInfo.ContentType,
-                detectionInfo.GetEncoding(),
-                detectionInfo.MessageReaderSettings,
-                readingResponse,
-                /*synchronous*/ false,
-                detectionInfo.Model,
-                /*urlResolver*/ null,
-                /*container*/ null);
-
+                messageInfo,
+                detectionInfo.MessageReaderSettings);
             return jsonLightInputContext.DetectPayloadKindAsync(detectionInfo)
                 .FollowAlwaysWith(t =>
                     {
