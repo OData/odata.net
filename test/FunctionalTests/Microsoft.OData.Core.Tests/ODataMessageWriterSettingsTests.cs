@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests
             this.settings = new ODataMessageWriterSettings()
             {
                 AllowDuplicatePropertyNames = true,
-                AllowNullValuesForNonNullablePrimitiveTypes = true
+                AllowNullValuesForNonNullablePrimitiveTypes = true,
                 AutoComputePayloadMetadataInJson = true,
                 BaseUri = baseUri,
                 CheckCharacters = true,

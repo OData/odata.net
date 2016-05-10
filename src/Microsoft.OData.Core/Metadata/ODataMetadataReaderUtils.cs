@@ -54,7 +54,7 @@ namespace Microsoft.OData.Metadata
         private static XmlReaderSettings CreateXmlReaderSettings(ODataMessageReaderSettings messageReaderSettings)
         {
             XmlReaderSettings settings = new XmlReaderSettings();
-            settings.CheckCharacters = messageReaderSettings.CheckCharacters;
+            settings.CheckCharacters = messageReaderSettings.EnableCharactersCheck;
             settings.ConformanceLevel = ConformanceLevel.Document;
             settings.CloseInput = true;
 

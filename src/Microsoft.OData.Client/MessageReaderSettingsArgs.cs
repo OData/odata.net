@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// Initializes a new instance of the <see cref="MessageReaderSettingsArgs"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public MessageReaderSettingsArgs(ODataMessageReaderSettingsBase settings)
+        public MessageReaderSettingsArgs(ODataMessageReaderSettings settings)
         {
             WebUtil.CheckArgumentNull(settings, "settings");
 
@@ -27,6 +27,6 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the settings.
         /// </summary>
-        public ODataMessageReaderSettingsBase Settings { get; private set; }
+        public ODataMessageReaderSettings Settings { get; private set; }
     }
 }

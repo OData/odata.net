@@ -209,13 +209,13 @@ namespace Microsoft.OData.Client
         /// Executes actions that configure reader settings.
         /// </summary>
         /// <param name="readerSettings">The reader settings.</param>
-        internal void ExecuteReaderSettingsConfiguration(ODataMessageReaderSettingsBase readerSettings)
+        internal void ExecuteReaderSettingsConfiguration(ODataMessageReaderSettings readerSettings)
         {
             Debug.Assert(readerSettings != null, "readerSettings != null");
 
             if (this.messageReaderSettingsConfigurationActions.Count > 0)
             {
-                MessageReaderSettingsArgs args = new MessageReaderSettingsArgs(new DataServiceClientMessageReaderSettingsShim(readerSettings));
+                MessageReaderSettingsArgs args = new MessageReaderSettingsArgs(readerSettings);
                 foreach (Action<MessageReaderSettingsArgs> readerSettingsConfigurationAction in this.messageReaderSettingsConfigurationActions)
                 {
                     readerSettingsConfigurationAction(args);

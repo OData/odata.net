@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             return string.Format("DisablePrimitiveTypeConversion: {0}, CheckCharacters: {1}, DisableMessageStreamDisposal: {2}",
                 messageReaderSettings.DisablePrimitiveTypeConversion,
-                messageReaderSettings.CheckCharacters,
+                messageReaderSettings.EnableCharactersCheck,
                 messageReaderSettings.DisableMessageStreamDisposal);
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="urlResolver">Url resolver to add to the test message created.</param>
         /// <returns>Newly created test message.</returns>
         public static TestMessage CreateInputMessageFromStream(
-            TestStream messageContent, 
+            TestStream messageContent,
             ReaderTestConfiguration testConfiguration,
             ODataPayloadKind? payloadKind,
             string customContentTypeHeader,
@@ -159,7 +159,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <returns>The test wrapper for the newly created message reader.</returns>
         public static ODataMessageReaderTestWrapper CreateMessageReader(
             TestMessage message,
-            IEdmModel model, 
+            IEdmModel model,
             ReaderTestConfiguration testConfiguration)
         {
             ODataMessageReader messageReader;
@@ -183,9 +183,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="testConfiguration">The test configuration to use.</param>
         /// <returns>The payload to use for testing.</returns>
         public static byte[] GetPayload(
-            ReaderTestConfiguration testConfiguration, 
-            List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>> payloadNormalizers, 
-            PayloadReaderTestDescriptor.Settings settings, 
+            ReaderTestConfiguration testConfiguration,
+            List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>> payloadNormalizers,
+            PayloadReaderTestDescriptor.Settings settings,
             ODataPayloadElement payloadElement)
         {
             IPayloadSerializer payloadSerializer = null;
@@ -323,13 +323,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="settings">The test descriptor settings</param>
         /// <param name="applyPayloadTransformations">Whether or not to apply payload transformations</param>
         /// <returns>The message for the test</returns>
-        public static TestMessage CreateInputMessage(ReaderTestConfiguration testConfiguration, 
+        public static TestMessage CreateInputMessage(ReaderTestConfiguration testConfiguration,
             PayloadReaderTestDescriptor readerTestDescriptor,
-            PayloadReaderTestDescriptor.Settings settings, 
+            PayloadReaderTestDescriptor.Settings settings,
             bool? applyPayloadTransformations)
         {
             TestMessage testMessage;
-            bool originalApplyTransformValue = false;           
+            bool originalApplyTransformValue = false;
             var odataTransformFactory = settings.PayloadTransformFactory as ODataLibPayloadTransformFactory;
 
             try
@@ -364,8 +364,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 }
 
                 testMessage = TestReaderUtils.CreateInputMessageFromStream(
-                    messageStream, 
-                    testConfiguration, 
+                    messageStream,
+                    testConfiguration,
                     readerTestDescriptor.PayloadElement.GetPayloadKindFromPayloadElement(),
                     readerTestDescriptor.PayloadElement.GetCustomContentTypeHeader(), readerTestDescriptor.UrlResolver);
 

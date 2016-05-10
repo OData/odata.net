@@ -12,21 +12,24 @@ namespace Microsoft.OData
     /// <summary>
     /// Configuration settings for OData message readers.
     /// </summary>
-    public sealed class ODataMessageReaderSettings : ODataMessageReaderSettingsBase
+    public sealed class ODataMessageReaderSettings
     {
         /// <summary>
         /// The base uri used in payload.
         /// </summary>
         private Uri baseUri;
 
+        /// <summary> Quotas to use for limiting resource consumption when reading an OData message. </summary>
+        private ODataMessageQuotas messageQuotas;
+
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class with default values.</summary>
         public ODataMessageReaderSettings()
-            : base()
         {
             this.AllowDuplicatePropertyNames = false;
             this.ClientCustomTypeResolver = null;
             this.DisablePrimitiveTypeConversion = false;
             this.DisableMessageStreamDisposal = false;
+            this.EnableCharactersCheck = false;
             this.EnableFullValidation = true;
             this.EnableLaxMetadataValidation = false;
             this.EnableReadingEntryContentInEntryStartState = true;
@@ -38,7 +41,6 @@ namespace Microsoft.OData
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class.</summary>
         /// <param name="other">The other message reader settings.</param>
         public ODataMessageReaderSettings(ODataMessageReaderSettings other)
-            : base(other)
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
@@ -47,16 +49,18 @@ namespace Microsoft.OData
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
             this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
             this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
+            this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.EnableFullValidation = other.EnableFullValidation;
             this.EnableLaxMetadataValidation = other.EnableLaxMetadataValidation;
             this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;
+            this.mediaTypeResolver = other.mediaTypeResolver;
+            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.MaxProtocolVersion = other.MaxProtocolVersion;
             this.ODataSimplified = other.ODataSimplified;
+            this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
             this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
-            this.ODataSimplified = other.ODataSimplified;
-
-            this.mediaTypeResolver = other.mediaTypeResolver;
+            this.ODataSimplified = other.ODataSimplified;            
         }
 
         /// <summary>
@@ -104,6 +108,11 @@ namespace Microsoft.OData
         /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
         /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
         public bool DisableMessageStreamDisposal { get; set; }
+
+        /// <summary>
+        /// Flag to control whether the reader should check for valid Xml characters or not.
+        /// </summary>
+        public bool EnableCharactersCheck { get; set; }
 
         /// <summary>
         /// If set to true, all the validation would be enabled. Else some validation will be skipped.
@@ -174,9 +183,36 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Quotas to use for limiting resource consumption when reading an OData message.
+        /// </summary>
+        public ODataMessageQuotas MessageQuotas
+        {
+            get
+            {
+                if (this.messageQuotas == null)
+                {
+                    this.messageQuotas = new ODataMessageQuotas();
+                }
+
+                return this.messageQuotas;
+            }
+
+            set
+            {
+                this.messageQuotas = value;
+            }
+        }
+
+        /// <summary>
         /// Whether OData Simplified is enabled.
         /// </summary>
         public bool ODataSimplified { get; set; }
+
+        /// <summary>
+        /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
+        /// be read and false if the annotation should be skipped. A null value indicates that all annotations should be skipped.
+        /// </summary>
+        public Func<string, bool> ShouldIncludeAnnotation { get; set; }
 
         /// <summary>Gets or sets the behavior the reader should use when it finds undeclared property.</summary>
         /// <returns>The behavior the reader should use when it finds undeclared property.</returns>
