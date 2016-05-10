@@ -42,7 +42,7 @@ namespace Microsoft.OData.Json
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return DetectPayloadKindImplementation(
-                    messageInfo.GetMessageStream(),
+                    messageInfo.MessageStream,
                     messageInfo.IsResponse,
                     new ODataPayloadKindDetectionInfo(
                         messageInfo.MediaType,
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataJsonLightInputContext(messageInfo.ComputeStreamFunc(), messageReaderSettings);
+            return new ODataJsonLightInputContext(messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Json
 
             return new ODataJsonLightOutputContext(
                 this,
-                messageInfo.GetMessageStream(),
+                messageInfo.MessageStream,
                 messageInfo.MediaType,
                 messageInfo.Encoding,
                 messageWriterSettings,
@@ -106,15 +106,14 @@ namespace Microsoft.OData.Json
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return messageInfo.GetMessageStreamAsync()
-                 .FollowOnSuccessWithTask(streamTask => DetectPayloadKindImplementationAsync(
-                    streamTask.Result,
-                     /*readingResponse*/ messageInfo.IsResponse,
-                    new ODataPayloadKindDetectionInfo(
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        settings,
-                        messageInfo.Model)));
+            return DetectPayloadKindImplementationAsync(
+                messageInfo.MessageStream,
+                /*readingResponse*/ messageInfo.IsResponse,
+                new ODataPayloadKindDetectionInfo(
+                    messageInfo.MediaType,
+                    messageInfo.Encoding,
+                    settings,
+                    messageInfo.Model));
         }
 
         /// <summary>
@@ -130,11 +129,8 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return messageInfo.ComputeStreamFuncAsync()
-                .FollowOnSuccessWith(
-                    messageInfoTask => (ODataInputContext)new ODataJsonLightInputContext(
-                        messageInfoTask.Result,
-                        messageReaderSettings));
+            return Task.FromResult<ODataInputContext>(
+                new ODataJsonLightInputContext(messageInfo, messageReaderSettings));
         }
 
         /// <summary>
@@ -150,19 +146,18 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return messageInfo.GetMessageStreamAsync()
-                .FollowOnSuccessWith(
-                    (streamTask) => (ODataOutputContext)new ODataJsonLightOutputContext(
-                        this,
-                        streamTask.Result,
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        messageWriterSettings,
-                        messageInfo.IsResponse,
-                        /*synchronous*/ false,
-                        messageInfo.Model,
-                        messageInfo.UrlResolver,
-                        messageInfo.Container));
+            return Task.FromResult<ODataOutputContext>(
+                new ODataJsonLightOutputContext(
+                    this,
+                    messageInfo.MessageStream,
+                    messageInfo.MediaType,
+                    messageInfo.Encoding,
+                    messageWriterSettings,
+                    messageInfo.IsResponse,
+                    /*synchronous*/ false,
+                    messageInfo.Model,
+                    messageInfo.UrlResolver,
+                    messageInfo.Container));
         }
 #endif
 

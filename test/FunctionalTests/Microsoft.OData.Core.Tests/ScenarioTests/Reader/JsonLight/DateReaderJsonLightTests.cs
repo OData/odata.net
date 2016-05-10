@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.JsonLight;
@@ -70,13 +69,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
                 IsSynchronous = true,
                 Model = new EdmModel(),
-                TextReader = new StringReader(payload)
             };
 
             object actualValue;
-            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
+            using (var inputContext = new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, new ODataMessageReaderSettings()))
             {
-                ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
+                var deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();
                 actualValue = deserializer.ReadNonEntityValue(
                     /*payloadTypeName*/ null,

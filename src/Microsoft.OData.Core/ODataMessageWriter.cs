@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Text;
 #if PORTABLELIB
     using System.Threading.Tasks;
@@ -1153,20 +1154,17 @@ namespace Microsoft.OData
             }
         }
 
-        private ODataMessageInfo CreateMessageInfo()
+        private ODataMessageInfo CreateMessageInfo(Stream messageStream)
         {
             return new ODataMessageInfo
             {
                 Encoding = this.encoding,
-                GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
                 IsResponse = this.writingResponse,
                 MediaType = this.mediaType,
                 Model = this.model,
                 UrlResolver = this.urlResolver,
-                Container = this.container
+                Container = this.container,
+                MessageStream = messageStream
             };
         }
 
@@ -1188,7 +1186,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.CreateMessageInfo(),
+                this.CreateMessageInfo(this.message.GetStream()),
                 this.settings);
             writeAction(this.outputContext);
         }
@@ -1213,7 +1211,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.CreateMessageInfo(),
+                this.CreateMessageInfo(this.message.GetStream()),
                 this.settings);
             return writeFunc(this.outputContext);
         }
@@ -1238,12 +1236,13 @@ namespace Microsoft.OData
             }
 
             // Create the output context
-            return this.format.CreateOutputContextAsync(
-                this.CreateMessageInfo(),
-                this.settings)
-
+            return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
-                    (createOutputContextTask) =>
+                    streamTask => this.format.CreateOutputContextAsync(
+                        this.CreateMessageInfo(streamTask.Result),
+                        this.settings))
+                .FollowOnSuccessWithTask(
+                    createOutputContextTask =>
                     {
                         this.outputContext = createOutputContextTask.Result;
                         return writeAsyncAction(this.outputContext);
@@ -1270,12 +1269,13 @@ namespace Microsoft.OData
             }
 
             // Create the output context
-            return this.format.CreateOutputContextAsync(
-                this.CreateMessageInfo(),
-                this.settings)
-
+            return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
-                    (createOutputContextTask) =>
+                    streamTask => this.format.CreateOutputContextAsync(
+                        this.CreateMessageInfo(streamTask.Result),
+                        this.settings))
+                .FollowOnSuccessWithTask(
+                    createOutputContextTask =>
                     {
                         this.outputContext = createOutputContextTask.Result;
                         return writeFunc(this.outputContext);

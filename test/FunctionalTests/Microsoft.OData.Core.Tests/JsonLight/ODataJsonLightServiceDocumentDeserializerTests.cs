@@ -161,12 +161,13 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var messageInfo = new ODataMessageInfo
             {
+                Encoding = Encoding.UTF8,
                 IsResponse = true,
                 MediaType = new ODataMediaType("application", "json"),
                 IsSynchronous = true,
                 Model = new EdmModel(),
                 UrlResolver = urlResolver,
-                TextReader = new StreamReader(stream)
+                MessageStream = stream
             };
 
             var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings());

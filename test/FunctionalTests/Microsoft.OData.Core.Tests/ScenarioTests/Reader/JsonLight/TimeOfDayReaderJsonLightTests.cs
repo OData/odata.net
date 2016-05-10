@@ -72,11 +72,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
                 IsSynchronous = true,
                 Model = model,
-                TextReader = new StringReader(payload)
             };
 
             object actualValue;
-            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
+            using (var inputContext = new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, new ODataMessageReaderSettings()))
             {
                 ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();

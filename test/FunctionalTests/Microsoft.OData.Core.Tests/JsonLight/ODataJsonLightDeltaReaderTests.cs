@@ -470,10 +470,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsSynchronous = true,
                 Model = model ?? new EdmModel(),
-                TextReader = new StringReader(payload)
             };
 
-            using (var inputContext = new ODataJsonLightInputContext(messageInfo, settings))
+            using (var inputContext = new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, settings))
             {
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())

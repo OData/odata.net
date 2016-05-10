@@ -67,10 +67,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
                 IsSynchronous = true,
                 Model = new EdmModel(),
-                TextReader = new StringReader(payload)
             };
 
             return new ODataJsonLightInputContext(
+                new StringReader(payload),
                 messageInfo,
                 new ODataMessageReaderSettings());
         }

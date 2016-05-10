@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
@@ -403,10 +402,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsSynchronous = true,
                 Model = this.userModel,
-                TextReader = new StringReader(payload)
             };
 
-            using (var inputContext = new ODataJsonLightInputContext(messageInfo, settings))
+            using (var inputContext = new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, settings))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
@@ -429,10 +428,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsSynchronous = true,
                 Model = this.userModel,
-                TextReader = new StringReader(payload)
             };
 
-            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
+            using (var inputContext = new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, new ODataMessageReaderSettings()))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())

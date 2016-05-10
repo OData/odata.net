@@ -551,10 +551,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = mediaType,
                 IsSynchronous = true,
                 Model = EdmModel,
-                TextReader = new StringReader(payload)
             };
 
             return new ODataJsonLightInputContext(
+                new StringReader(payload),
                 messageInfo,
                 shouldReadAndValidateCustomInstanceAnnotations ? MessageReaderSettingsReadAndValidateCustomInstanceAnnotations : MessageReaderSettingsIgnoreInstanceAnnotations);
         }

@@ -49,15 +49,25 @@ namespace Microsoft.OData.JsonLight
         public ODataJsonLightInputContext(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings messageReaderSettings)
+            : this(CreateTextReaderForMessageStreamConstructor(messageInfo.MessageStream, messageInfo.Encoding), messageInfo, messageReaderSettings)
+        {
+        }
+
+        /// <summary>Constructor.</summary>
+        /// <param name="textReader">The text reader to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
+        internal ODataJsonLightInputContext(
+            TextReader textReader,
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
             : base(ODataFormat.Json, messageInfo, messageReaderSettings)
         {
-            Debug.Assert((messageInfo.MessageStream != null) ^ (messageInfo.TextReader != null),
-                "Only one of MessageStream and TextReader can be set");
             Debug.Assert(messageInfo.MediaType != null, "messageInfo.MediaType != null");
 
             try
             {
-                this.textReader = messageInfo.TextReader ?? CreateTextReaderForMessageStreamConstructor(messageInfo.MessageStream, messageInfo.Encoding);
+                this.textReader = textReader;
                 var innerReader = CreateJsonReader(messageInfo.Container, this.textReader, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
                 if (messageInfo.MediaType.HasStreamingSetToTrue())
                 {
@@ -88,6 +98,7 @@ namespace Microsoft.OData.JsonLight
             // the uri here is used here to create the FullMetadataLevel can pass null in
             this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, messageInfo.Model, messageInfo.IsResponse);
         }
+
 
         /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.

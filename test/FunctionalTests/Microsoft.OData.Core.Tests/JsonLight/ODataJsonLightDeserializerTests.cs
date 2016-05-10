@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
@@ -1086,10 +1085,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
                 IsSynchronous = true,
                 Model = model,
-                TextReader = new StringReader(payload)
             };
 
-            return new ODataJsonLightInputContext(messageInfo, this.messageReaderSettings);
+            return new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, this.messageReaderSettings);
         }
 
         private object ReadODataTypePropertyAnnotation(IJsonReader jsonReader, string name)

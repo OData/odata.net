@@ -46,7 +46,7 @@ namespace Microsoft.OData
             // Metadata is not supported in requests!
             return messageInfo.IsResponse
                 ? DetectPayloadKindImplementation(
-                    messageInfo.GetMessageStream(),
+                    messageInfo.MessageStream,
                     new ODataPayloadKindDetectionInfo(
                         messageInfo.MediaType,
                         messageInfo.Encoding,
@@ -68,7 +68,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataMetadataInputContext(messageInfo.ComputeStreamFunc(), messageReaderSettings);
+            return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Microsoft.OData
 
             return new ODataMetadataOutputContext(
                 this,
-                messageInfo.GetMessageStream(),
+                messageInfo.MessageStream,
                 messageInfo.Encoding,
                 messageWriterSettings,
                 messageInfo.IsResponse,
@@ -110,14 +110,13 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return messageInfo.IsResponse
-                ? messageInfo.GetMessageStreamAsync()
-                    .FollowOnSuccessWith(streamTask => DetectPayloadKindImplementation(
-                            streamTask.Result,
-                            new ODataPayloadKindDetectionInfo(
-                                messageInfo.MediaType,
-                                messageInfo.Encoding,
-                                settings,
-                                messageInfo.Model)))
+                ? Task.FromResult(DetectPayloadKindImplementation(
+                    messageInfo.MessageStream,
+                    new ODataPayloadKindDetectionInfo(
+                        messageInfo.MediaType,
+                        messageInfo.Encoding,
+                        settings,
+                        messageInfo.Model)))
                 : TaskUtils.GetCompletedTask(Enumerable.Empty<ODataPayloadKind>());
         }
 

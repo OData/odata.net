@@ -83,15 +83,10 @@ namespace Microsoft.OData
                     Model = model,
                     IsResponse = false,
                     IsSynchronous = true,
-                    TextReader = reader,
                     MessageStream = null,
-                    GetMessageStream = null,
-#if PORTABLELIB
-                    GetMessageStreamAsync = null,
-#endif
                 };
 
-                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(messageInfo, settings))
+                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(reader, messageInfo, settings))
                 {
                     ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 

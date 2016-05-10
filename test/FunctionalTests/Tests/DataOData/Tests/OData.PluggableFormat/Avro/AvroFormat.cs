@@ -26,12 +26,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public override ODataInputContext CreateInputContext(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings)
         {
-            return new ODataAvroInputContext(this, messageInfo.GetMessageStream(), messageInfo.MediaType, messageInfo.Encoding, messageReaderSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
+            return new ODataAvroInputContext(this, messageInfo.MessageStream, messageInfo.MediaType, messageInfo.Encoding, messageReaderSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
         }
 
         public override ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)
         {
-            return new ODataAvroOutputContext(this, messageInfo.GetMessageStream(), messageInfo.Encoding, messageWriterSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
+            return new ODataAvroOutputContext(this, messageInfo.MessageStream, messageInfo.Encoding, messageWriterSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
         }
 
         public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings)

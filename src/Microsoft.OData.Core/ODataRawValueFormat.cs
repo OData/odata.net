@@ -56,10 +56,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataRawInputContext(
-                this,
-                messageInfo.ComputeStreamFunc(),
-                messageReaderSettings);
+            return new ODataRawInputContext(this, messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -77,7 +74,7 @@ namespace Microsoft.OData
 
             return new ODataRawOutputContext(
                 this,
-                messageInfo.GetMessageStream(),
+                messageInfo.MessageStream,
                 messageInfo.Encoding,
                 messageWriterSettings,
                 messageInfo.IsResponse,
@@ -116,12 +113,8 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return messageInfo.ComputeStreamFuncAsync()
-                .FollowOnSuccessWith(
-                    messageInfoTask => (ODataInputContext)new ODataRawInputContext(
-                        this,
-                        messageInfoTask.Result,
-                        messageReaderSettings));
+            return Task.FromResult<ODataInputContext>(
+                new ODataRawInputContext(this, messageInfo, messageReaderSettings));
         }
 
         /// <summary>
@@ -137,18 +130,17 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "message");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return messageInfo.GetMessageStreamAsync()
-                .FollowOnSuccessWith(
-                    (streamTask) => (ODataOutputContext)new ODataRawOutputContext(
-                        this,
-                        streamTask.Result,
-                        messageInfo.Encoding,
-                        messageWriterSettings,
-                        messageInfo.IsResponse,
-                        /*synchronous*/ false,
-                        messageInfo.Model,
-                        messageInfo.UrlResolver,
-                        messageInfo.Container));
+            return Task.FromResult<ODataOutputContext>(
+                new ODataRawOutputContext(
+                    this,
+                    messageInfo.MessageStream,
+                    messageInfo.Encoding,
+                    messageWriterSettings,
+                    messageInfo.IsResponse,
+                    /*synchronous*/ false,
+                    messageInfo.Model,
+                    messageInfo.UrlResolver,
+                    messageInfo.Container));
         }
 #endif
 

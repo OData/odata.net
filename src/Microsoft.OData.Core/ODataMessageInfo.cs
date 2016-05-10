@@ -9,9 +9,6 @@ namespace Microsoft.OData
     using System;
     using System.IO;
     using System.Text;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -35,11 +32,6 @@ namespace Microsoft.OData
         public bool IsResponse { get; set; }
 
         /// <summary>
-        /// Function to get the message stream
-        /// </summary>
-        public Func<Stream> GetMessageStream { get; set; }
-
-        /// <summary>
         /// The optional URL resolver to perform custom URL resolution for URLs read from the payload.
         /// </summary>
         public IODataUrlResolver UrlResolver { get; set; }
@@ -49,32 +41,19 @@ namespace Microsoft.OData
         /// </summary>
         public IServiceProvider Container { get; set; }
 
-#if PORTABLELIB
-        /// <summary>
-        /// Function to get the message stream task
-        /// </summary>
-        public Func<Task<Stream>> GetMessageStreamAsync { get; set; }
-#endif
-
         /// <summary>
         /// Whether the message should be read or written synchronously.
         /// </summary>
         public bool IsSynchronous { get; set; }
 
         /// <summary>
+        /// The message stream created by GetMessageStream or GetMessageAsync.
+        /// </summary>
+        public Stream MessageStream { get; set; }
+
+        /// <summary>
         /// The payload kind for the message, currently used by <see cref="ODataRawInputContext"/> only.
         /// </summary>
         internal ODataPayloadKind PayloadKind { get; set; }
-
-        /// <summary>
-        /// The message stream created by GetMessageStream or GetMessageAsync.
-        /// </summary>
-        internal Stream MessageStream { get; set; }
-
-        /// <summary>
-        /// The text reader to read input.
-        /// </summary>
-        /// <remarks>The text reader overrides Encoding and MessageStream.</remarks>
-        internal TextReader TextReader { get; set; }
     }
 }

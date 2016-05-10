@@ -219,7 +219,7 @@ namespace Microsoft.OData
                     ODataMessageInfo messageInfo = new ODataMessageInfo()
                     {
                         Encoding = this.encoding,
-                        GetMessageStream = this.message.GetStream,
+                        MessageStream = this.message.GetStream(),
                         IsResponse = this.readingResponse,
                         IsSynchronous = true,
                         MediaType = this.contentType,
@@ -1235,7 +1235,7 @@ namespace Microsoft.OData
                     new ODataMessageInfo()
                     {
                         Encoding = this.encoding,
-                        GetMessageStream = this.message.GetStream,
+                        MessageStream = this.message.GetStream(),
                         IsResponse = this.readingResponse,
                         IsSynchronous = true,
                         MediaType = this.contentType,
@@ -1315,22 +1315,21 @@ namespace Microsoft.OData
 
             foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
             {
-                ODataMessageInfo messageInfo = new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.readingResponse,
-                    IsSynchronous = false,
-                    MediaType = this.contentType,
-                    Model = this.model,
-                };
-
                 // Call the payload kind detection code on the format
                 Task<IEnumerable<ODataPayloadKind>> detectionResult =
-                    payloadKindGroup.Key.DetectPayloadKindAsync(messageInfo, this.settings);
+                    this.message.GetStreamAsync()
+                        .FollowOnSuccessWithTask(streamTask => 
+                            payloadKindGroup.Key.DetectPayloadKindAsync(
+                            new ODataMessageInfo
+                            {
+                                Encoding = this.encoding,
+                                IsResponse = this.readingResponse,
+                                IsSynchronous = false,
+                                MediaType = this.contentType,
+                                Model = this.model,
+                                MessageStream = streamTask.Result
+                            },
+                            this.settings));
 
                 yield return detectionResult
                     .FollowOnSuccessWith(
@@ -1366,29 +1365,28 @@ namespace Microsoft.OData
             this.ProcessContentType(payloadKinds);
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
-            return this.format.CreateInputContextAsync(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if PORTABLELIB
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.readingResponse,
-                    IsSynchronous = false,
-                    MediaType = this.contentType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                    PayloadKind = this.readerPayloadKind,
-                    Container = this.container
-                },
-                this.settings)
+            return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
-                (createInputContextTask) =>
-                {
-                    this.inputContext = createInputContextTask.Result;
-                    return readFunc(this.inputContext);
-                });
+                    streamTask => this.format.CreateInputContextAsync(
+                        new ODataMessageInfo
+                        {
+                            Encoding = this.encoding,
+                            MessageStream = streamTask.Result,
+                            IsResponse = this.readingResponse,
+                            IsSynchronous = false,
+                            MediaType = this.contentType,
+                            Model = this.model,
+                            UrlResolver = this.urlResolver,
+                            PayloadKind = this.readerPayloadKind,
+                            Container = this.container
+                        },
+                        this.settings))
+                .FollowOnSuccessWithTask(
+                    createInputContextTask =>
+                    {
+                        this.inputContext = createInputContextTask.Result;
+                        return readFunc(this.inputContext);
+                    });
         }
 #endif
     }
