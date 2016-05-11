@@ -1007,7 +1007,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
             if (uri != null)
             {
@@ -1024,18 +1024,19 @@ namespace Microsoft.OData.Tests.JsonLight
                 parameters = new List<KeyValuePair<string, string>>();
             }
 
-            ODataMediaType mediaType = new ODataMediaType("application", "json", parameters);
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                mediaType,
-                Encoding.UTF8,
-                settings,
-                /*writingResponse*/ true,
-                /*synchronous*/ true,
-                userModel ?? EdmCoreModel.Instance,
-                /*urlResolver*/ null,
-                /*container*/ null);
+            var mediaType = new ODataMediaType("application", "json", parameters);
+
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = mediaType,
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = userModel ?? EdmCoreModel.Instance
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
 
         #endregion

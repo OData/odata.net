@@ -53,122 +53,71 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="format">The format for this output context.</param>
-        /// <param name="textWriter">The text writer to write to.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         public ODataJsonLightOutputContext(
-            ODataFormat format,
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
+            : base(ODataFormat.Json, messageInfo, messageWriterSettings)
+        {
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
+            Debug.Assert(messageInfo.MediaType != null, "messageInfo.MediaType != null");
+            
+            try
+            {
+                this.messageOutputStream = messageInfo.MessageStream;
+
+                Stream outputStream;
+                if (this.Synchronous)
+                {
+                    outputStream = this.messageOutputStream;
+                }
+                else
+                {
+                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+                    outputStream = this.asynchronousOutputStream;
+                }
+
+                this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
+
+                // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
+                // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
+                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageWriterSettings.Indent, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+            }
+            catch (Exception e)
+            {
+                // Dispose the message stream if we failed to create the input context.
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    this.messageOutputStream.Dispose();
+                }
+
+                throw;
+            }
+
+            Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri;
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, metadataDocumentUri, this.Model, this.WritingResponse);
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="textWriter">The text writer to write to.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
+        internal ODataJsonLightOutputContext(
             TextWriter textWriter,
-            ODataMessageWriterSettings messageWriterSettings,
-            IEdmModel model,
-            IServiceProvider container)
-            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/, container)
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
+            : base(ODataFormat.Json, messageInfo, messageWriterSettings)
         {
             Debug.Assert(!this.WritingResponse, "Expecting WritingResponse to always be false for this constructor, so no need to validate the MetadataDocumentUri on the writer settings.");
             Debug.Assert(textWriter != null, "textWriter != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(container, textWriter, messageWriterSettings.Indent, true /*isIeee754Compatible*/);
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, messageWriterSettings.Indent, true /*isIeee754Compatible*/);
             this.metadataLevel = new JsonMinimalMetadataLevel();
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="format">The format for this output context.</param>
-        /// <param name="messageStream">The message stream to write the payload to.</param>
-        /// <param name="mediaType">The specific media type being written.</param>
-        /// <param name="encoding">The encoding to use for the payload.</param>
-        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
-        public ODataJsonLightOutputContext(
-            ODataFormat format,
-            Stream messageStream,
-            ODataMediaType mediaType,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
-            : this(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver, container)
-        {
-            Debug.Assert(messageStream != null, "messageStream != null");
-            Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
-            Debug.Assert(mediaType != null, "mediaType != null");
-
-            Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri;
-            this.metadataLevel = JsonLightMetadataLevel.Create(mediaType, metadataDocumentUri, model, writingResponse);
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="format">The format for this output context.</param>
-        /// <param name="messageStream">The message stream to write the payload to.</param>
-        /// <param name="encoding">The encoding to use for the payload.</param>
-        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
-        /// <param name="isIeee754Compatible">true if it is IEEE754Compatible</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        private ODataJsonLightOutputContext(
-            ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            bool isIeee754Compatible,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, container)
-        {
-            Debug.Assert(messageStream != null, "messageStream != null");
-
-            try
-            {
-                this.messageOutputStream = messageStream;
-
-                Stream outputStream;
-                if (synchronous)
-                {
-                    outputStream = messageStream;
-                }
-                else
-                {
-                    this.asynchronousOutputStream = new AsyncBufferedStream(messageStream);
-                    outputStream = this.asynchronousOutputStream;
-                }
-
-                this.textWriter = new StreamWriter(outputStream, encoding);
-                
-                // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
-                // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(container, this.textWriter, messageWriterSettings.Indent, isIeee754Compatible);
-            }
-            catch (Exception e)
-            {
-                // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
-                {
-                    messageStream.Dispose();
-                }
-
-                throw;
-            }
         }
 
         /// <summary>

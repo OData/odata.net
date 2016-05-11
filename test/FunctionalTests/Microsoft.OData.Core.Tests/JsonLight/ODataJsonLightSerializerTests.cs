@@ -328,9 +328,18 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 settings.SetServiceDocumentUri(new Uri("http://example.com"));
             }
-            ODataMediaType mediaType = nometadata ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("odata", "none")) : new ODataMediaType("application", "json");
-            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel(model);
-            var context = new ODataJsonLightOutputContext(ODataFormat.Json, stream, mediaType, Encoding.Default, settings, true, true, mainModel, null, null);
+            var mediaType = nometadata ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("odata", "none")) : new ODataMediaType("application", "json");
+            var mainModel = TestUtils.WrapReferencedModelsToMainModel(model);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = stream,
+                MediaType = mediaType,
+                Encoding = Encoding.Default,
+                IsResponse = true,
+                IsAsync = false,
+                Model = mainModel,
+            };
+            var context = new ODataJsonLightOutputContext(messageInfo, settings);
             return new ODataJsonLightSerializer(context, setMetadataDocumentUri);
         }
     }

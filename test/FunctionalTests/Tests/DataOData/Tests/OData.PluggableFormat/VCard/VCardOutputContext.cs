@@ -26,7 +26,15 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, /*container*/null)
+            : base(format,
+                new ODataMessageInfo
+                {
+                    Encoding = encoding,
+                    IsAsync = !synchronous,
+                    IsResponse = writingResponse,
+                    Model = model,
+                    UrlResolver = urlResolver
+                }, messageWriterSettings)
         {
             this.writer = new VCardWriter(new StreamWriter(messageStream, encoding));
             this.outputStream = messageStream;

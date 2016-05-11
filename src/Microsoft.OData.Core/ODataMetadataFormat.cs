@@ -84,16 +84,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataMetadataOutputContext(
-                this,
-                messageInfo.MessageStream,
-                messageInfo.Encoding,
-                messageWriterSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.Container);
+            return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
         }
 
 #if PORTABLELIB

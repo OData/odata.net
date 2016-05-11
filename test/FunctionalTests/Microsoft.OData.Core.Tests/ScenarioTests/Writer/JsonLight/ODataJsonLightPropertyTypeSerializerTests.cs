@@ -390,20 +390,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
         private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*writingResponse*/ true,
-                /*synchronous*/ true,
-                this.model,
-                /*urlResolver*/ null,
-                /*container*/ null);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = this.model
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
         #endregion
     }

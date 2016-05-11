@@ -1136,23 +1136,23 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, IEdmModel userModel = null, Uri serviceDocumentUri = null)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             if (serviceDocumentUri != null)
             {
                 settings.SetServiceDocumentUri(serviceDocumentUri);
             }
-                
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                /*synchronous*/ true,
-                userModel ?? EdmCoreModel.Instance,
-                /*urlResolver*/ null,
-                /*container*/ null);
+
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = false,
+                Model = userModel ?? EdmCoreModel.Instance
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

@@ -179,20 +179,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var properties = new[] { new ODataProperty { Name = propertyName, Value = value } };
             var entry = new ODataResource() { TypeName = "NS.Student", Properties = properties };
 
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
 
-            using (var outputContext = new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*writingResponse*/ false,
-                /*synchronous*/ true,
-                model,
-                /*urlResolver*/ null,
-                /*container*/ null))
+            var messageInfoForWriter = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = false,
+                IsAsync = false,
+                Model = model
+            };
+
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+
+            using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
             {
                 var jsonLightWriter = new ODataJsonLightWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
                 jsonLightWriter.WriteStart(entry);
@@ -202,7 +203,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             stream.Position = 0;
             object actualValue = null;
 
-            var messageInfo = new ODataMessageInfo
+            var messageInfoForReader = new ODataMessageInfo
             {
                 Encoding = Encoding.UTF8,
                 IsResponse = false,
@@ -212,7 +213,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 MessageStream = stream
             };
 
-            using (var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings()))
+            using (var inputContext = new ODataJsonLightInputContext(messageInfoForReader, new ODataMessageReaderSettings()))
             {
                 var jsonLightReader = new ODataJsonLightReader(inputContext, this.studentSet, this.studentInfo, /*readingFeed*/ false);
                 while (jsonLightReader.Read())

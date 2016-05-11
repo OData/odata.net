@@ -31,42 +31,28 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="format">The format for this output context.</param>
-        /// <param name="messageStream">The message stream to write the payload to.</param>
-        /// <param name="encoding">The encoding to use for the payload.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal ODataMetadataOutputContext(
-            ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, container)
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
+            : base(ODataFormat.Metadata, messageInfo, messageWriterSettings)
         {
-            Debug.Assert(messageStream != null, "messageStream != null");
-            Debug.Assert(synchronous, "Metadata output context is only supported in synchronous operations.");
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
+            Debug.Assert(!messageInfo.IsAsync, "Metadata output context is only supported in synchronous operations.");
 
             try
             {
-                this.messageOutputStream = messageStream;
-                this.xmlWriter = ODataMetadataWriterUtils.CreateXmlWriter(messageStream, messageWriterSettings, encoding);
+                this.messageOutputStream = messageInfo.MessageStream;
+                this.xmlWriter = ODataMetadataWriterUtils.CreateXmlWriter(this.messageOutputStream, messageWriterSettings, messageInfo.Encoding);
             }
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the output context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    messageStream.Dispose();
+                    this.messageOutputStream.Dispose();
                 }
 
                 throw;

@@ -57,31 +57,23 @@ namespace Microsoft.OData
         /// Constructor.
         /// </summary>
         /// <param name="format">The format for this output context.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
-        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
         protected ODataOutputContext(
             ODataFormat format,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            IServiceProvider container)
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             ExceptionUtils.CheckArgumentNotNull(format, "format");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
             this.format = format;
             this.messageWriterSettings = messageWriterSettings;
-            this.writingResponse = writingResponse;
-            this.synchronous = synchronous;
-            this.model = model ?? EdmCoreModel.Instance;
-            this.urlResolver = urlResolver;
-            this.container = container;
+            this.writingResponse = messageInfo.IsResponse;
+            this.synchronous = !messageInfo.IsAsync;
+            this.model = messageInfo.Model ?? EdmCoreModel.Instance;
+            this.urlResolver = messageInfo.UrlResolver;
+            this.container = messageInfo.Container;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = this.model.GetPayloadValueConverter();
             this.writerValidator = ValidatorFactory.CreateWriterValidator(messageWriterSettings.EnableFullValidation);

@@ -194,23 +194,23 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             IEdmModel model = new EdmModel();
 
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = false,
+                Model = TestUtils.WrapReferencedModelsToMainModel(model)
+            };
+
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             if (setMetadataDocumentUri)
             {
                 settings.SetServiceDocumentUri(this.serviceDocumentUri);
             }
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                /*synchronous*/ true,
-                TestUtils.WrapReferencedModelsToMainModel(model),
-                /*urlResolver*/ null,
-                /*container*/ null);
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
 
         private string SerializeJsonFragment(Action<ODataJsonLightResourceSerializer> writeWithSerializer)

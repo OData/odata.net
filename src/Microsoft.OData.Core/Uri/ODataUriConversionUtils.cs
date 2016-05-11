@@ -527,7 +527,15 @@ namespace Microsoft.OData
             // Calling dispose since it's the right thing to do, but when created from a custom-built TextWriter
             // the output context Dispose will not actually dispose anything, it will just cleanup itself.
             // TODO: URI parser will also support DI container in the future but set the container to null at this moment.
-            using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, textWriter, messageWriterSettings, model, /*container*/null))
+            ODataMessageInfo messageInfo = new ODataMessageInfo
+            {
+                Model = model,
+                IsAsync = false,
+                IsResponse = false
+            };
+
+            using (ODataJsonLightOutputContext jsonOutputContext =
+                new ODataJsonLightOutputContext(textWriter, messageInfo, messageWriterSettings))
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
                 writeValue(jsonLightValueSerializer);
@@ -553,8 +561,19 @@ namespace Microsoft.OData
 
                 ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);
 
+                ODataMessageInfo messageInfo = new ODataMessageInfo
+                {
+                    MessageStream = stream,
+                    Encoding = Encoding.UTF8,
+                    IsAsync = false,
+                    IsResponse = false,
+                    MediaType = mediaType,
+                    Model = model
+                };
+
                 // TODO: URI parser will also support DI container in the future but set the container to null at this moment.
-                using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, stream, mediaType, Encoding.UTF8, messageWriterSettings, false, true, model, null, null))
+                using (ODataJsonLightOutputContext jsonOutputContext =
+                    new ODataJsonLightOutputContext(messageInfo, messageWriterSettings))
                 {
                     writeAction(jsonOutputContext);
                     stream.Position = 0;

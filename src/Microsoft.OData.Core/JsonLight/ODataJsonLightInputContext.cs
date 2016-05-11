@@ -49,7 +49,7 @@ namespace Microsoft.OData.JsonLight
         public ODataJsonLightInputContext(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings messageReaderSettings)
-            : this(CreateTextReaderForMessageStreamConstructor(messageInfo.MessageStream, messageInfo.Encoding), messageInfo, messageReaderSettings)
+            : this(CreateTextReader(messageInfo.MessageStream, messageInfo.Encoding), messageInfo, messageReaderSettings)
         {
         }
 
@@ -68,7 +68,7 @@ namespace Microsoft.OData.JsonLight
             try
             {
                 this.textReader = textReader;
-                var innerReader = CreateJsonReader(messageInfo.Container, this.textReader, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                var innerReader = CreateJsonReader(this.Container, this.textReader, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
                 if (messageInfo.MediaType.HasStreamingSetToTrue())
                 {
                     this.jsonReader = new BufferingJsonReader(
@@ -96,7 +96,7 @@ namespace Microsoft.OData.JsonLight
             // dont know how to get MetadataDocumentUri uri here, messageReaderSettings do not have one
             // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
             // the uri here is used here to create the FullMetadataLevel can pass null in
-            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, messageInfo.Model, messageInfo.IsResponse);
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, this.Model, this.ReadingResponse);
         }
 
 
@@ -481,9 +481,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <returns>The newly created text reader.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        private static TextReader CreateTextReaderForMessageStreamConstructor(Stream messageStream, Encoding encoding)
+        private static TextReader CreateTextReader(Stream messageStream, Encoding encoding)
         {
-            Debug.Assert(messageStream != null, "stream != null");
+            Debug.Assert(messageStream != null, "messageStream != null");
 
             try
             {

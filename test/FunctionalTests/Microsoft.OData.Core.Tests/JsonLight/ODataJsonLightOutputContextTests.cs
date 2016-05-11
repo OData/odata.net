@@ -265,21 +265,21 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = !synchronous,
+                Model = EdmCoreModel.Instance
+            };
+
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                synchronous,
-                EdmCoreModel.Instance,
-                /*urlResolver*/ null,
-                /*container*/ null);
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

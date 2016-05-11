@@ -188,7 +188,14 @@ namespace Microsoft.OData.Tests
         internal class TestODataOutputContext : ODataOutputContext
         {
             public TestODataOutputContext(ODataFormat format, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
-                :base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, /*container*/null)
+                :base(format,
+                    new ODataMessageInfo
+                    {
+                        IsAsync = !synchronous,
+                        IsResponse = writingResponse,
+                        Model = model,
+                        UrlResolver = urlResolver
+                    }, messageWriterSettings)
             {
             }
         }

@@ -4082,7 +4082,7 @@ public abstract class Microsoft.OData.ODataOperation : Microsoft.OData.ODataAnno
 }
 
 public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
-	protected ODataOutputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.IODataUrlResolver urlResolver, System.IServiceProvider container)
+	protected ODataOutputContext (Microsoft.OData.ODataFormat format, Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings)
 
 	Microsoft.OData.ODataMessageWriterSettings MessageWriterSettings  { public get; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }

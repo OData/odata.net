@@ -72,16 +72,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataRawOutputContext(
-                this,
-                messageInfo.MessageStream,
-                messageInfo.Encoding,
-                messageWriterSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.Container);
+            return new ODataRawOutputContext(this, messageInfo, messageWriterSettings);
         }
 
 #if PORTABLELIB
@@ -131,16 +122,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
             return Task.FromResult<ODataOutputContext>(
-                new ODataRawOutputContext(
-                    this,
-                    messageInfo.MessageStream,
-                    messageInfo.Encoding,
-                    messageWriterSettings,
-                    messageInfo.IsResponse,
-                    /*synchronous*/ false,
-                    messageInfo.Model,
-                    messageInfo.UrlResolver,
-                    messageInfo.Container));
+                new ODataRawOutputContext(this, messageInfo, messageWriterSettings));
         }
 #endif
 

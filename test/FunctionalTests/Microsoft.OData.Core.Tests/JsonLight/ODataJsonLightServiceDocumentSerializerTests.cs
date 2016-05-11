@@ -117,8 +117,18 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var model = new EdmModel();
             var messageWriterSettings = new ODataMessageWriterSettings();
-            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel(model);
-            var jsonLightOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, memoryStream, new ODataMediaType("application", "json") /*mediaType*/, Encoding.UTF8, messageWriterSettings, false /*WritingResponse*/, true /*sync*/, mainModel, urlResolver, /*container*/null);
+            var mainModel = TestUtils.WrapReferencedModelsToMainModel(model);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = memoryStream,
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = false,
+                IsAsync = false,
+                Model = mainModel,
+                UrlResolver = urlResolver
+            };
+            var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, messageWriterSettings);
             return new ODataJsonLightServiceDocumentSerializer(jsonLightOutputContext);
         }
 

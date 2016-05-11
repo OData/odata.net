@@ -177,29 +177,24 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             object message = response
                 ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject
                 : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject;
+            ODataMessageInfo messageInfo = new ODataMessageInfo
+            {
+                MessageStream = (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
+                Encoding = Encoding.UTF8,
+                IsResponse = response,
+                IsAsync = false
+            };
             Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.ODataRawOutputContext");
             object rawOutputContext = ReflectionUtils.CreateInstance(odataRawOutputContextType,
                 new Type[]
                 {
                     typeof(ODataFormat),
-                    typeof(Stream),
-                    typeof(Encoding),
+                    typeof(ODataMessageInfo),
                     typeof(ODataMessageWriterSettings),
-                    typeof(bool),
-                    typeof(bool),
-                    typeof(Microsoft.OData.Edm.IEdmModel),
-                    typeof(IODataUrlResolver),
-                    typeof(IServiceProvider)
                 },
                 ODataFormat.Batch,
-                (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
-                Encoding.UTF8,
-                settings,
-                response,
-                /*synchronous*/true,
-                /*model*/null,
-                /*urlResolver*/null,
-                /*container*/null);
+                messageInfo,
+                settings);
             object listener = ReflectionUtils.CreateInstance(
                 typeof(ODataBatchWriter),
                 new Type[] { odataRawOutputContextType, typeof(string) },

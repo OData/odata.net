@@ -715,11 +715,9 @@ namespace Microsoft.OData.Tests.Json
         {
             var stringWriter = new StringWriter();
             var outputContext = new ODataJsonLightOutputContext(
-                ODataFormat.Json,
                 stringWriter,
-                new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") },
-                model,
-                /*container*/null);
+                new ODataMessageInfo { Model = model, IsResponse = false, IsAsync = false },
+                new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") });
 
             var valueSerializer = new ODataJsonLightValueSerializer(outputContext);
 

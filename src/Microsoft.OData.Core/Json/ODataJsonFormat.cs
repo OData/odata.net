@@ -80,17 +80,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataJsonLightOutputContext(
-                this,
-                messageInfo.MessageStream,
-                messageInfo.MediaType,
-                messageInfo.Encoding,
-                messageWriterSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.Container);
+            return new ODataJsonLightOutputContext(messageInfo, messageWriterSettings);
         }
 
 #if PORTABLELIB
@@ -147,17 +137,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
             return Task.FromResult<ODataOutputContext>(
-                new ODataJsonLightOutputContext(
-                    this,
-                    messageInfo.MessageStream,
-                    messageInfo.MediaType,
-                    messageInfo.Encoding,
-                    messageWriterSettings,
-                    messageInfo.IsResponse,
-                    /*synchronous*/ false,
-                    messageInfo.Model,
-                    messageInfo.UrlResolver,
-                    messageInfo.Container));
+                new ODataJsonLightOutputContext(messageInfo, messageWriterSettings));
         }
 #endif
 
