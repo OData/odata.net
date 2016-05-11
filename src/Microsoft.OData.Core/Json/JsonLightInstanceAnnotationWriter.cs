@@ -188,7 +188,7 @@ namespace Microsoft.OData
             }
 
             this.WriteInstanceAnnotationName(propertyName, name);
-            this.valueSerializer.WritePrimitiveValue(primitiveValue.Value, expectedType);
+            this.valueSerializer.WritePrimitiveValue(primitiveValue.Value, typeFromPrimitiveValue, expectedType);
         }
 
         /// <summary>

@@ -33,8 +33,8 @@ namespace Microsoft.OData.Json
         private readonly Stack<Scope> scopes;
 
         /// <summary>
-        /// If it is IEEE754Compatible, write quoted string for INT64 and decimal to prevent dota loss;
-        /// otherwise keep number without quots.
+        /// If it is IEEE754Compatible, write quoted string for INT64 and decimal to prevent data loss;
+        /// otherwise keep number without quotes.
         /// </summary>
         private readonly bool isIeee754Compatible;
 
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Json
         {
             this.WriteValueSeparator();
 
-            // if it is IEEE754Compatible, write numbers with quots; otherwise, write numbers directly.
+            // if it is IEEE754Compatible, write numbers with quotes; otherwise, write numbers directly.
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture));
@@ -271,7 +271,7 @@ namespace Microsoft.OData.Json
         {
             this.WriteValueSeparator();
 
-            // if it is not IEEE754Compatible, write numbers directly without quots;
+            // if it is not IEEE754Compatible, write numbers directly without quotes;
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture));

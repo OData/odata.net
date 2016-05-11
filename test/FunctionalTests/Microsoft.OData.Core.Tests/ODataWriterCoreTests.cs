@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
             var entry = new ODataResource() { TypeName = "DefaultNamespace.Person" };
-            var entityType = coreWriter.ValidateResourceType2(entry);
+            var entityType = coreWriter.GetEntityType2(entry);
             entityType.Should().BeSameAs(model.FindDeclaredType("DefaultNamespace.Person"));
         }
 
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
             var entry = new ODataResource();
-            var entityType = coreWriter.ValidateResourceType2(entry);
+            var entityType = coreWriter.GetEntityType2(entry);
             entityType.Should().BeSameAs(objectType);
         }
 
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, peopleSet, null, false);
 
             var entry = new ODataResource();
-            var entityType = coreWriter.ValidateResourceType2(entry);
+            var entityType = coreWriter.GetEntityType2(entry);
             entityType.Should().BeSameAs(personType);
         }
 
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, null, null, false);
 
             var entry = new ODataResource();
-            Action test = () => coreWriter.ValidateResourceType2(entry);
+            Action test = () => coreWriter.GetEntityType2(entry);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
         }
@@ -102,9 +102,9 @@ namespace Microsoft.OData.Tests
             {
             }
 
-            public IEdmStructuredType ValidateResourceType2(ODataResource entry)
+            public IEdmStructuredType GetEntityType2(ODataResource entry)
             {
-                return this.ValidateResourceType(entry);
+                return this.GetResourceType(entry);
             }
 
             #region Non-implemented abstract methods

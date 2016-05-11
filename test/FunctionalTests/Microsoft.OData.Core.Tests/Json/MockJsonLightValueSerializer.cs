@@ -66,6 +66,11 @@ namespace Microsoft.OData.Tests.Json
             this.WritePrimitiveVerifier(value, expectedTypeReference);
         }
 
+        public void WritePrimitiveValue(object value, IEdmTypeReference actualTypeReference, IEdmTypeReference expectedTypeReference)
+        {
+            this.WritePrimitiveValue(value, expectedTypeReference);
+        }
+
         public void WriteUntypedValue(ODataUntypedValue value)
         {
             this.WritePrimitiveVerifier.Should().NotBeNull("WriteUntypedValue was called.");

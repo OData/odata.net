@@ -46,7 +46,7 @@ namespace Microsoft.OData.Edm
     }
 
     /// <summary>
-    /// Common base interface for all named children of EDM schemata.
+    /// Common base interface for all named children of EDM schema.
     /// </summary>
     public interface IEdmSchemaElement : IEdmNamedElement, IEdmVocabularyAnnotatable
     {

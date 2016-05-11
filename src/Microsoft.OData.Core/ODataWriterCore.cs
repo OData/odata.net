@@ -774,7 +774,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resource">The resource to get the type for.</param>
         /// <returns>The validated structured type.</returns>
-        protected IEdmStructuredType ValidateResourceType(ODataResource resource)
+        protected IEdmStructuredType GetResourceType(ODataResource resource)
         {
             if (resource.TypeName == null && this.CurrentScope.ResourceType != null)
             {
@@ -880,7 +880,7 @@ namespace Microsoft.OData
                     if (resource != null)
                     {
                         ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-                        IEdmEntityType resourceType = this.ValidateResourceType(resource) as IEdmEntityType;
+                        IEdmEntityType resourceType = this.GetResourceType(resource) as IEdmEntityType;
                         resourceScope.ResourceTypeFromMetadata = resourceScope.ResourceType;
 
                         NestedResourceInfoScope parentNestedResourceInfoScope = this.ParentNestedResourceInfoScope;

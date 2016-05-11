@@ -60,6 +60,8 @@ namespace Microsoft.OData.JsonLight
             IEdmTypeReference typeReferenceFromValue,
             bool isOpenProperty)
         {
+            string fullTypeNameFromValue = null;
+
             SerializationTypeNameAnnotation typeNameAnnotation = value.GetAnnotation<SerializationTypeNameAnnotation>();
             if (typeNameAnnotation != null)
             {
@@ -68,10 +70,18 @@ namespace Microsoft.OData.JsonLight
 
             if (typeReferenceFromValue != null)
             {
+                fullTypeNameFromValue = typeReferenceFromValue.FullName();
+
                 // Write type name when the type in the payload is more derived than the type from metadata.
-                if (typeReferenceFromMetadata != null && typeReferenceFromMetadata.Definition.AsActualType().FullTypeName() != typeReferenceFromValue.FullName())
+                if (typeReferenceFromMetadata != null && typeReferenceFromMetadata.Definition.AsActualType().FullTypeName() != fullTypeNameFromValue)
                 {
-                    return typeReferenceFromValue.FullName();
+                    return fullTypeNameFromValue;
+                }
+
+                // Do not write type name when the type is native json type.
+                if (typeReferenceFromValue.IsPrimitive() && JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)value, typeReferenceFromValue.AsPrimitive()))
+                {
+                    return null;
                 }
 
                 // Note: When writing derived complexType value in a payload, we don't have the expected type. 
@@ -80,14 +90,8 @@ namespace Microsoft.OData.JsonLight
                 {
                     if ((typeReferenceFromValue as IEdmComplexTypeReference).ComplexDefinition().BaseType != null)
                     {
-                        return typeReferenceFromValue.FullName();
+                        return fullTypeNameFromValue;
                     }
-                }
-
-                // Do not write type name when the type is native json type.
-                if (typeReferenceFromValue.IsPrimitive() && JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)value, typeReferenceFromValue.AsPrimitive()))
-                {
-                    return null;
                 }
             }
 
@@ -97,7 +101,7 @@ namespace Microsoft.OData.JsonLight
                 return null;
             }
 
-            return GetTypeNameFromValue(value);
+            return fullTypeNameFromValue != null ? fullTypeNameFromValue : GetTypeNameFromValue(value);
         }
     }
 }

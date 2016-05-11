@@ -27,7 +27,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        internal ResourceSetWithoutExpectedTypeValidator()
+        public ResourceSetWithoutExpectedTypeValidator()
         {
         }
 

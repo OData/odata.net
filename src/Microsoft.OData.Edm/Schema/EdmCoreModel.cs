@@ -644,17 +644,19 @@ namespace Microsoft.OData.Edm
 
         #region Core model types and type references
 
-        private sealed class EdmValidCoreModelPrimitiveType : EdmType, IEdmPrimitiveType, IEdmValidCoreModelElement
+        internal sealed class EdmValidCoreModelPrimitiveType : EdmType, IEdmPrimitiveType, IEdmValidCoreModelElement
         {
             private readonly string namespaceName;
             private readonly string name;
             private readonly EdmPrimitiveTypeKind primitiveKind;
+            private readonly string fullName;
 
             public EdmValidCoreModelPrimitiveType(string namespaceName, string name, EdmPrimitiveTypeKind primitiveKind)
             {
                 this.namespaceName = namespaceName ?? string.Empty;
                 this.name = name ?? string.Empty;
                 this.primitiveKind = primitiveKind;
+                this.fullName = this.namespaceName + "." + this.name;
             }
 
             public string Name
@@ -683,6 +685,11 @@ namespace Microsoft.OData.Edm
             public EdmSchemaElementKind SchemaElementKind
             {
                 get { return EdmSchemaElementKind.TypeDefinition; }
+            }
+
+            public string FullName
+            {
+                get { return this.fullName; }
             }
         }
 

@@ -256,7 +256,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">If writing top level property.</param>
         private void WriteInstanceAnnotation(ODataProperty property, bool isTopLevel)
         {
-            if (property.InstanceAnnotations.Any())
+            if (property.InstanceAnnotations.Count != 0)
             {
                 if (isTopLevel)
                 {
@@ -455,7 +455,7 @@ namespace Microsoft.OData.JsonLight
 
             this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
             this.JsonWriter.WriteName(wirePropertyName);
-            this.JsonLightValueSerializer.WritePrimitiveValue(primitiveValue.Value, propertyTypeReference);
+            this.JsonLightValueSerializer.WritePrimitiveValue(primitiveValue.Value, typeFromValue, propertyTypeReference);
         }
 
         /// <summary>

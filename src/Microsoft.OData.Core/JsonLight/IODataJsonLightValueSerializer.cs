@@ -84,6 +84,17 @@ namespace Microsoft.OData.JsonLight
             IEdmTypeReference expectedTypeReference);
 
         /// <summary>
+        /// Writes a primitive value.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="actualTypeReference">The actual type reference of the primitive value.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the primitive value.</param>
+        void WritePrimitiveValue(
+            object value,
+            IEdmTypeReference actualTypeReference,
+            IEdmTypeReference expectedTypeReference);
+
+        /// <summary>
         /// Writes an untyped value.
         /// </summary>
         /// <param name="value">The untyped value to write.</param>

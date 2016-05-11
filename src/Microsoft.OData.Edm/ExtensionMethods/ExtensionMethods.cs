@@ -1251,6 +1251,7 @@ namespace Microsoft.OData.Edm
         #endregion
 
         #region IEdmSchemaElement
+
         /// <summary>
         /// Gets the full name of the element.
         /// </summary>
@@ -1259,7 +1260,18 @@ namespace Microsoft.OData.Edm
         public static string FullName(this IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
-            return (element.Namespace ?? String.Empty) + "." + (element.Name ?? String.Empty);
+            if (element.Name == null)
+            {
+                return string.Empty;
+            }
+            else if (element.Namespace == null)
+            {
+                return element.Name;
+            }
+            else
+            {
+                return element.Namespace + "." + element.Name;
+            }
         }
 
         /// <summary>
@@ -1364,6 +1376,13 @@ namespace Microsoft.OData.Edm
         public static string FullTypeName(this IEdmType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+
+            var primitiveType = type as EdmCoreModel.EdmValidCoreModelPrimitiveType;
+            if (primitiveType != null)
+            {
+                return primitiveType.FullName;
+            }
+
             var namedDefinition = type as IEdmSchemaElement;
             var collectionType = type as IEdmCollectionType;
             if (collectionType == null)

@@ -350,18 +350,35 @@ namespace Microsoft.OData.JsonLight
             object value,
             IEdmTypeReference expectedTypeReference)
         {
+            this.WritePrimitiveValue(value, null, expectedTypeReference);
+        }
+
+        /// <summary>
+        /// Writes a primitive value.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="actualTypeReference">The actual type reference of the primitive value.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the primitive value.</param>
+        public void WritePrimitiveValue(
+            object value,
+            IEdmTypeReference actualTypeReference,
+            IEdmTypeReference expectedTypeReference)
+        {
             Debug.Assert(value != null, "value != null");
 
-            // Try convert primitive values from their actual CLR types to their underlying CLR types.
-            value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value, expectedTypeReference);
+            if (actualTypeReference == null)
+            {
+                // Try convert primitive values from their actual CLR types to their underlying CLR types.
+                value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value, expectedTypeReference);
+                actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
+            }
 
-            IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
             ODataPayloadValueConverter converter = this.JsonLightOutputContext.PayloadValueConverter;
 
             // Skip validation if user has set custom PayloadValueConverter
             if (expectedTypeReference != null && converter.GetType() == typeof(ODataPayloadValueConverter))
             {
-                this.WriterValidator.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference);
+                this.WriterValidator.ValidateIsExpectedPrimitiveType(value, (IEdmPrimitiveTypeReference)actualTypeReference, expectedTypeReference);
             }
 
             value = converter.ConvertToPayloadValue(value, expectedTypeReference);
