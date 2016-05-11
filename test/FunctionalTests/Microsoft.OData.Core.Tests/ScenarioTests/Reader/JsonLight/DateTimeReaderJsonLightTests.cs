@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             {
                 IsResponse = true,
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = model,
             };
 

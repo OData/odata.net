@@ -1154,12 +1154,13 @@ namespace Microsoft.OData
             }
         }
 
-        private ODataMessageInfo CreateMessageInfo(Stream messageStream)
+        private ODataMessageInfo CreateMessageInfo(Stream messageStream, bool isAsync)
         {
             return new ODataMessageInfo
             {
                 Encoding = this.encoding,
                 IsResponse = this.writingResponse,
+                IsAsync = isAsync,
                 MediaType = this.mediaType,
                 Model = this.model,
                 UrlResolver = this.urlResolver,
@@ -1186,7 +1187,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.CreateMessageInfo(this.message.GetStream()),
+                this.CreateMessageInfo(this.message.GetStream(), false),
                 this.settings);
             writeAction(this.outputContext);
         }
@@ -1211,7 +1212,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.CreateMessageInfo(this.message.GetStream()),
+                this.CreateMessageInfo(this.message.GetStream(), false),
                 this.settings);
             return writeFunc(this.outputContext);
         }
@@ -1239,7 +1240,7 @@ namespace Microsoft.OData
             return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
                     streamTask => this.format.CreateOutputContextAsync(
-                        this.CreateMessageInfo(streamTask.Result),
+                        this.CreateMessageInfo(streamTask.Result, true),
                         this.settings))
                 .FollowOnSuccessWithTask(
                     createOutputContextTask =>
@@ -1272,7 +1273,7 @@ namespace Microsoft.OData
             return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
                     streamTask => this.format.CreateOutputContextAsync(
-                        this.CreateMessageInfo(streamTask.Result),
+                        this.CreateMessageInfo(streamTask.Result, true),
                         this.settings))
                 .FollowOnSuccessWithTask(
                     createOutputContextTask =>

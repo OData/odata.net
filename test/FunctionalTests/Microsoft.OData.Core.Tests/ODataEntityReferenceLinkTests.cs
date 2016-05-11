@@ -261,7 +261,7 @@ namespace Microsoft.OData.Tests
             {
                 IsResponse = true,
                 MediaType = mediaType,
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = EdmModel,
             };
 

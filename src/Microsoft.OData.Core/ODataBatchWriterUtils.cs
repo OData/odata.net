@@ -211,7 +211,7 @@ namespace Microsoft.OData
                     case BatchPayloadUriOption.RelativeResourcePath:
                         Debug.Assert(baseUri != null, "baseUri != null");
                         string baseUriString = UriUtils.UriToString(baseUri);
-                        Debug.Assert(absoluteUriString.StartsWith(baseUriString), "absoluteUriString.StartsWith(baseUriString)");
+                        Debug.Assert(absoluteUriString.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");
                         string relativeResourcePath = absoluteUriString.Substring(baseUriString.Length);
                         writer.WriteLine("{0} {1} {2}", httpMethod, relativeResourcePath, ODataConstants.HttpVersionInBatching);
                         break;

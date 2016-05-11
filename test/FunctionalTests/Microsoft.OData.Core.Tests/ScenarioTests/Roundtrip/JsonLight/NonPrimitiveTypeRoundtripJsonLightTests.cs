@@ -207,7 +207,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 Encoding = Encoding.UTF8,
                 IsResponse = false,
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = model,
                 MessageStream = stream
             };

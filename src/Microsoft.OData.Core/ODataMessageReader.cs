@@ -216,12 +216,12 @@ namespace Microsoft.OData
 
                 foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
                 {
-                    ODataMessageInfo messageInfo = new ODataMessageInfo()
+                    ODataMessageInfo messageInfo = new ODataMessageInfo
                     {
                         Encoding = this.encoding,
                         MessageStream = this.message.GetStream(),
                         IsResponse = this.readingResponse,
-                        IsSynchronous = true,
+                        IsAsync = false,
                         MediaType = this.contentType,
                         Model = this.model
                     };
@@ -1232,12 +1232,12 @@ namespace Microsoft.OData
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
             this.inputContext = this.format.CreateInputContext(
-                    new ODataMessageInfo()
+                    new ODataMessageInfo
                     {
                         Encoding = this.encoding,
                         MessageStream = this.message.GetStream(),
                         IsResponse = this.readingResponse,
-                        IsSynchronous = true,
+                        IsAsync = false,
                         MediaType = this.contentType,
                         Model = this.model,
                         UrlResolver = this.urlResolver,
@@ -1324,7 +1324,7 @@ namespace Microsoft.OData
                             {
                                 Encoding = this.encoding,
                                 IsResponse = this.readingResponse,
-                                IsSynchronous = false,
+                                IsAsync = true,
                                 MediaType = this.contentType,
                                 Model = this.model,
                                 MessageStream = streamTask.Result
@@ -1373,7 +1373,7 @@ namespace Microsoft.OData
                             Encoding = this.encoding,
                             MessageStream = streamTask.Result,
                             IsResponse = this.readingResponse,
-                            IsSynchronous = false,
+                            IsAsync = true,
                             MediaType = this.contentType,
                             Model = this.model,
                             UrlResolver = this.urlResolver,

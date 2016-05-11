@@ -4674,8 +4674,8 @@ public sealed class Microsoft.OData.ODataMessageInfo {
 
 	System.IServiceProvider Container  { public get; public set; }
 	System.Text.Encoding Encoding  { public get; public set; }
+	bool IsAsync  { public get; public set; }
 	bool IsResponse  { public get; public set; }
-	bool IsSynchronous  { public get; public set; }
 	Microsoft.OData.ODataMediaType MediaType  { public get; public set; }
 	System.IO.Stream MessageStream  { public get; public set; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; public set; }

@@ -669,7 +669,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 Encoding = Encoding.UTF8,
                 IsResponse = true,
                 MediaType = mediaType,
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = this.model,
                 MessageStream = stream
             };

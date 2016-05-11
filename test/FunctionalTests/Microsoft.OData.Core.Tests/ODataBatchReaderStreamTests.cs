@@ -67,7 +67,7 @@ Second line";
             {
                 Encoding = Encoding.UTF8,
                 IsResponse = false,
-                IsSynchronous = true,
+                IsAsync = false,
                 PayloadKind = ODataPayloadKind.Batch,
                 MessageStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString))
             };

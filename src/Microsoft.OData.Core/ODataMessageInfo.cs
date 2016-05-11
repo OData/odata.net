@@ -42,9 +42,9 @@ namespace Microsoft.OData
         public IServiceProvider Container { get; set; }
 
         /// <summary>
-        /// Whether the message should be read or written synchronously.
+        /// Whether the message should be read or written asynchronously.
         /// </summary>
-        public bool IsSynchronous { get; set; }
+        public bool IsAsync { get; set; }
 
         /// <summary>
         /// The message stream created by GetMessageStream or GetMessageAsync.

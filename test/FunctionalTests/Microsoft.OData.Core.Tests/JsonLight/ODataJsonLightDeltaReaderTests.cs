@@ -468,7 +468,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 IsResponse = true,
                 MediaType = new ODataMediaType("application", "json"),
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = model ?? new EdmModel(),
             };
 

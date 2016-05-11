@@ -177,7 +177,7 @@ namespace Microsoft.OData.Json
             {
                 Encoding = detectionInfo.GetEncoding(),
                 IsResponse = readingResponse,
-                IsSynchronous = true,
+                IsAsync = false,
                 MediaType = detectionInfo.ContentType,
                 Model = detectionInfo.Model,
                 MessageStream = messageStream
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Json
             {
                 Encoding = detectionInfo.GetEncoding(),
                 IsResponse = readingResponse,
-                IsSynchronous = false,
+                IsAsync = true,
                 MediaType = detectionInfo.ContentType,
                 Model = detectionInfo.Model,
                 MessageStream = messageStream

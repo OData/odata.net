@@ -73,7 +73,7 @@ namespace Microsoft.OData
             this.format = format;
             this.messageReaderSettings = messageReaderSettings;
             this.readingResponse = messageInfo.IsResponse;
-            this.synchronous = messageInfo.IsSynchronous;
+            this.synchronous = !messageInfo.IsAsync;
             this.model = messageInfo.Model ?? EdmCoreModel.Instance;
             this.urlResolver = messageInfo.UrlResolver;
             this.container = messageInfo.Container;

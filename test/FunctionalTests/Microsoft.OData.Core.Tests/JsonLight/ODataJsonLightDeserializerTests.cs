@@ -1083,7 +1083,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 IsResponse = true,
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = model,
             };
 

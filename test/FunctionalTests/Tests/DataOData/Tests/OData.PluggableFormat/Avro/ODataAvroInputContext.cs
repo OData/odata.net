@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                     MediaType = contentType,
                     Encoding = encoding,
                     IsResponse = readingResponse,
-                    IsSynchronous = synchronous,
+                    IsAsync = !synchronous,
                     Model = model,
                     UrlResolver = urlResolver
                 }, messageReaderSettings)

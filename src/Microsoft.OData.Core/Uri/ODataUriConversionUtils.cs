@@ -82,7 +82,7 @@ namespace Microsoft.OData
                     MediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
                     Model = model,
                     IsResponse = false,
-                    IsSynchronous = true,
+                    IsAsync = false,
                     MessageStream = null,
                 };
 

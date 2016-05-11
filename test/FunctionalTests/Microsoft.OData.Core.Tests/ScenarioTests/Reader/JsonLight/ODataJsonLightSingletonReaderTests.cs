@@ -400,7 +400,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             {
                 IsResponse = true,
                 MediaType = new ODataMediaType("application", "json"),
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = this.userModel,
             };
 
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             {
                 IsResponse = true,
                 MediaType = new ODataMediaType("application", "json"),
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = this.userModel,
             };
 

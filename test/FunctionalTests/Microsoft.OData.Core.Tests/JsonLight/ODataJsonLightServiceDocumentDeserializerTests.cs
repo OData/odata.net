@@ -164,7 +164,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Encoding = Encoding.UTF8,
                 IsResponse = true,
                 MediaType = new ODataMediaType("application", "json"),
-                IsSynchronous = true,
+                IsAsync = false,
                 Model = new EdmModel(),
                 UrlResolver = urlResolver,
                 MessageStream = stream
