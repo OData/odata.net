@@ -7,9 +7,9 @@
 namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
-
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
 #if PORTABLELIB
@@ -17,18 +17,33 @@ namespace Microsoft.OData.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
-
     #endregion Namespaces
 
     /// <summary>
     /// JsonLight format output context.
     /// </summary>
-    internal sealed class ODataJsonLightOutputContext : ODataJsonOutputContextBase
+    internal sealed class ODataJsonLightOutputContext : ODataOutputContext
     {
         /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
         private readonly JsonLightMetadataLevel metadataLevel;
+
+        /// <summary>An in-stream error listener to notify when in-stream error is to be written. Or null if we don't need to notify anybody.</summary>
+        private IODataOutputInStreamErrorListener outputInStreamErrorListener;
+
+        /// <summary>The message output stream.</summary>
+        private Stream messageOutputStream;
+
+        /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
+        private AsyncBufferedStream asynchronousOutputStream;
+
+        /// <summary>The text writer created for the output stream.</summary>
+        private TextWriter textWriter;
+
+        /// <summary>The JSON writer to write to.</summary>
+        /// <remarks>This field is also used to determine if the output context has been disposed already.</remarks>
+        private IJsonWriter jsonWriter;
 
         /// <summary>
         /// The oracle to use to determine the type name to write for entries and values.
@@ -43,18 +58,20 @@ namespace Microsoft.OData.JsonLight
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
-        internal ODataJsonLightOutputContext(
+        public ODataJsonLightOutputContext(
             ODataFormat format,
             TextWriter textWriter,
             ODataMessageWriterSettings messageWriterSettings,
             IEdmModel model,
             IServiceProvider container)
-            : base(format, textWriter, messageWriterSettings, model, container)
+            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/, container)
         {
             Debug.Assert(!this.WritingResponse, "Expecting WritingResponse to always be false for this constructor, so no need to validate the MetadataDocumentUri on the writer settings.");
             Debug.Assert(textWriter != null, "textWriter != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
+            this.textWriter = textWriter;
+            this.jsonWriter = CreateJsonWriter(container, textWriter, messageWriterSettings.Indent, true /*isIeee754Compatible*/);
             this.metadataLevel = new JsonMinimalMetadataLevel();
         }
 
@@ -71,7 +88,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
-        internal ODataJsonLightOutputContext(
+        public ODataJsonLightOutputContext(
             ODataFormat format,
             Stream messageStream,
             ODataMediaType mediaType,
@@ -82,19 +99,94 @@ namespace Microsoft.OData.JsonLight
             IEdmModel model,
             IODataUrlResolver urlResolver,
             IServiceProvider container)
-            : base(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver, container)
+            : this(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver, container)
         {
             Debug.Assert(messageStream != null, "messageStream != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
             Debug.Assert(mediaType != null, "mediaType != null");
+
             Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri;
             this.metadataLevel = JsonLightMetadataLevel.Create(mediaType, metadataDocumentUri, model, writingResponse);
         }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="format">The format for this output context.</param>
+        /// <param name="messageStream">The message stream to write the payload to.</param>
+        /// <param name="encoding">The encoding to use for the payload.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
+        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
+        /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
+        /// <param name="isIeee754Compatible">true if it is IEEE754Compatible</param>
+        /// <param name="model">The model to use.</param>
+        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
+        /// <param name="container">The optional dependency injection container to get related services for message writing.</param>
+        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
+        private ODataJsonLightOutputContext(
+            ODataFormat format,
+            Stream messageStream,
+            Encoding encoding,
+            ODataMessageWriterSettings messageWriterSettings,
+            bool writingResponse,
+            bool synchronous,
+            bool isIeee754Compatible,
+            IEdmModel model,
+            IODataUrlResolver urlResolver,
+            IServiceProvider container)
+            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver, container)
+        {
+            Debug.Assert(messageStream != null, "messageStream != null");
+
+            try
+            {
+                this.messageOutputStream = messageStream;
+
+                Stream outputStream;
+                if (synchronous)
+                {
+                    outputStream = messageStream;
+                }
+                else
+                {
+                    this.asynchronousOutputStream = new AsyncBufferedStream(messageStream);
+                    outputStream = this.asynchronousOutputStream;
+                }
+
+                this.textWriter = new StreamWriter(outputStream, encoding);
+                
+                // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
+                // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
+                this.jsonWriter = CreateJsonWriter(container, this.textWriter, messageWriterSettings.Indent, isIeee754Compatible);
+            }
+            catch (Exception e)
+            {
+                // Dispose the message stream if we failed to create the input context.
+                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
+                {
+                    messageStream.Dispose();
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Returns the <see cref="JsonWriter"/> which is to be used to write the content of the message.
+        /// </summary>
+        public IJsonWriter JsonWriter
+        {
+            get
+            {
+                Debug.Assert(this.jsonWriter != null, "Trying to get JsonWriter while none is available.");
+                return this.jsonWriter;
+            }
+        }
+
+        /// <summary>
         /// Returns the oracle to use when determining the type name to write for entries and values.
         /// </summary>
-        internal JsonLightTypeNameOracle TypeNameOracle
+        public JsonLightTypeNameOracle TypeNameOracle
         {
             get
             {
@@ -110,7 +202,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
-        internal JsonLightMetadataLevel MetadataLevel
+        public JsonLightMetadataLevel MetadataLevel
         {
             get
             {
@@ -320,6 +412,56 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
+        /// Check if the object has been disposed; called from all public API methods. Throws an ObjectDisposedException if the object
+        /// has already been disposed.
+        /// </summary>
+        public void VerifyNotDisposed()
+        {
+            if (this.messageOutputStream == null)
+            {
+                throw new ObjectDisposedException(this.GetType().FullName);
+            }
+        }
+
+        /// <summary>
+        /// Synchronously flush the writer.
+        /// </summary>
+        public void Flush()
+        {
+            this.AssertSynchronous();
+
+            // JsonWriter.Flush will call the underlying TextWriter.Flush.
+            // The TextWriter.Flush (which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
+            // In the synchronous case the underlying stream is the message stream itself, which will then Flush as well.
+            this.jsonWriter.Flush();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously flush the writer.
+        /// </summary>
+        /// <returns>Task which represents the pending flush operation.</returns>
+        /// <remarks>The method should not throw directly if the flush operation itself fails, it should instead return a faulted task.</remarks>
+        public Task FlushAsync()
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
+                () =>
+                {
+                    // JsonWriter.Flush will call the underlying TextWriter.Flush.
+                    // The TextWriter.Flush (Which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
+                    // In the async case the underlying stream is the async buffered stream, which ignores Flush call.
+                    this.jsonWriter.Flush();
+
+                    Debug.Assert(this.asynchronousOutputStream != null, "In async writing we must have the async buffered stream.");
+                    return this.asynchronousOutputStream.FlushAsync();
+                })
+                .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync());
+        }
+#endif
+
+        /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
         /// <param name="error">The error to write.</param>
@@ -504,7 +646,56 @@ namespace Microsoft.OData.JsonLight
         }
 #endif
 
-        //// Raw value is not supported by JsonLight.
+        /// <summary>
+        /// Perform the actual cleanup work.
+        /// </summary>
+        /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "textWriter", Justification = "We don't dispose the jsonWriter or textWriter, instead we dispose the underlying stream directly.")]
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                if (this.messageOutputStream != null)
+                {
+                    // JsonWriter.Flush will call the underlying TextWriter.Flush.
+                    // The TextWriter.Flush (Which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
+                    this.jsonWriter.Flush();
+
+                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
+                    if (this.asynchronousOutputStream != null)
+                    {
+                        this.asynchronousOutputStream.FlushSync();
+                        this.asynchronousOutputStream.Dispose();
+                    }
+
+                    // Dipose the message stream (note that we OWN this stream, so we always dispose it).
+                    this.messageOutputStream.Dispose();
+                }
+            }
+            finally
+            {
+                this.messageOutputStream = null;
+                this.asynchronousOutputStream = null;
+                this.textWriter = null;
+                this.jsonWriter = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private static IJsonWriter CreateJsonWriter(IServiceProvider container, TextWriter textWriter, bool indent, bool isIeee754Compatible)
+        {
+            if (container == null)
+            {
+                return new JsonWriter(textWriter, indent, isIeee754Compatible);
+            }
+
+            var jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
+            var jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, indent, isIeee754Compatible);
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+
+            return jsonWriter;
+        }
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set.

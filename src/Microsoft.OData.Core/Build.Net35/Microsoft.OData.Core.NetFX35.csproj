@@ -379,9 +379,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\NonIndentedTextWriter.cs">
       <Link>Microsoft\OData\Core\Json\NonIndentedTextWriter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\ODataJsonOutputContextBase.cs">
-      <Link>Microsoft\OData\Core\Json\ODataJsonOutputContextBase.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\ODataJsonReaderCoreUtils.cs">
       <Link>Microsoft\OData\Core\Json\ODataJsonReaderCoreUtils.cs</Link>
     </Compile>

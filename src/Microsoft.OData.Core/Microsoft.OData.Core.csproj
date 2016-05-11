@@ -172,7 +172,6 @@
     <Compile Include="Json\JsonWriter.cs" />
     <Compile Include="Json\JsonWriterExtensions.cs" />
     <Compile Include="Json\NonIndentedTextWriter.cs" />
-    <Compile Include="Json\ODataJsonOutputContextBase.cs" />
     <Compile Include="Json\ODataJsonReaderCoreUtils.cs" />
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
