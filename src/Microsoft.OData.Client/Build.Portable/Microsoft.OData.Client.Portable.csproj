@@ -281,12 +281,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ConventionalODataEntityMetadataBuilder.cs">
       <Link>ConventionalODataEntityMetadataBuilder.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceClientMessageWriterSettingsShim.cs">
-      <Link>DataServiceClientMessageWriterSettingsShim.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceClientMessageReaderSettingsShim.cs">
-      <Link>DataServiceClientMessageReaderSettingsShim.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceQuerySingleOfT.cs">
       <Link>DataServiceQuerySingleOfT.cs</Link>
     </Compile>

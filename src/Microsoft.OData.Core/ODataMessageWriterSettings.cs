@@ -14,7 +14,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Configuration settings for OData message writers.
     /// </summary>
-    public sealed class ODataMessageWriterSettings : ODataMessageWriterSettingsBase
+    public sealed class ODataMessageWriterSettings
     {
         /// <summary>
         /// The acceptable charsets used to the determine the encoding of the message.
@@ -40,10 +40,8 @@ namespace Microsoft.OData
         /// </summary>
         private ODataFormat format;
 
-        /// <summary>
-        /// Media type resolver used for this writer.
-        /// </summary>
-        private ODataMediaTypeResolver mediaTypeResolver;
+        /// <summary>Quotas to use for limiting resource consumption when writing an OData message.</summary>
+        private ODataMessageQuotas messageQuotas;
 
         /// <summary>
         /// The parse result of request Uri
@@ -70,36 +68,36 @@ namespace Microsoft.OData
             this.AllowNullValuesForNonNullablePrimitiveTypes = false;
             this.AutoComputePayloadMetadataInJson = false;
             this.DisableMessageStreamDisposal = false;
+            this.EnableCharactersCheck = false;
             this.EnableFullValidation = true;
+            this.EnableIndentation = false;
             this.ODataSimplified = false;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with specified settings.</summary>
         /// <param name="other">The specified settings.</param>
         public ODataMessageWriterSettings(ODataMessageWriterSettings other)
-            : base(other)
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
             this.acceptCharSets = other.acceptCharSets;
             this.acceptMediaTypes = other.acceptMediaTypes;
-            this.format = other.format;
-            this.mediaTypeResolver = other.mediaTypeResolver;
-            this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
-            this.useFormat = other.useFormat;
-
-            this.EnableFullValidation = other.EnableFullValidation;
-            this.ODataSimplified = other.ODataSimplified;
             this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
             this.AllowNullValuesForNonNullablePrimitiveTypes = other.AllowNullValuesForNonNullablePrimitiveTypes;
             this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
             this.BaseUri = other.BaseUri;
             this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
+            this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.EnableFullValidation = other.EnableFullValidation;
+            this.EnableIndentation = other.EnableIndentation;
+            this.format = other.format;
             this.JsonPCallback = other.JsonPCallback;
+            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.ODataUri = other.ODataUri;
             this.ODataSimplified = other.ODataSimplified;
+            this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
+            this.useFormat = other.useFormat;
             this.Version = other.Version;
         }
 
@@ -151,10 +149,20 @@ namespace Microsoft.OData
         public bool DisableMessageStreamDisposal { get; set; }
 
         /// <summary>
+        /// Flag to control whether the writer should check for valid Xml characters or not.
+        /// </summary>
+        public bool EnableCharactersCheck { get; set; }
+
+        /// <summary>
         /// If set to true, all the validation would be enabled. Else some validation will be skipped.
         /// Default to true.
         /// </summary>
         public bool EnableFullValidation { get; set; }
+
+        /// <summary>
+        /// Flag to control whether the writer should use indentation or not.
+        /// </summary>
+        public bool EnableIndentation { get; set; }
 
         /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
         /// <returns>The callback function used to wrap the response from server.</returns>
@@ -163,24 +171,23 @@ namespace Microsoft.OData
         public string JsonPCallback { get; set; }
 
         /// <summary>
-        /// The media type resolver to use when interpreting the content type.
+        /// Quotas to use for limiting resource consumption when writing an OData message.
         /// </summary>
-        public ODataMediaTypeResolver MediaTypeResolver
+        public ODataMessageQuotas MessageQuotas
         {
             get
             {
-                if (this.mediaTypeResolver == null)
+                if (this.messageQuotas == null)
                 {
-                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver();
+                    this.messageQuotas = new ODataMessageQuotas();
                 }
 
-                return this.mediaTypeResolver;
+                return this.messageQuotas;
             }
 
             set
             {
-                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
-                this.mediaTypeResolver = value;
+                this.messageQuotas = value;
             }
         }
 

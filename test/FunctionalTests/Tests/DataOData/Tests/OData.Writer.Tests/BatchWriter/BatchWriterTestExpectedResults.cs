@@ -113,7 +113,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         {
             string expectedContent = null;
 
-            bool indent = testConfiguration.MessageWriterSettings.Indent;
+            bool indent = testConfiguration.MessageWriterSettings.EnableIndentation;
             var variables = TestWriterUtils.GetPayloadVariablesForTestConfiguration(testConfiguration);
 
             Func<string, string> normalizer = null;

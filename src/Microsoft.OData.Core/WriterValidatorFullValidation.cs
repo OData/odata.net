@@ -310,7 +310,7 @@ namespace Microsoft.OData
         /// <param name="resourceType">Optional entity type to validate the resource against.</param>
         /// <param name="model">Model containing the entity type.</param>
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
-        public void ValidateEntryMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
+        public void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
         {
             ValidationUtils.ValidateEntryMetadataResource(resource, resourceType, model, true);
         }

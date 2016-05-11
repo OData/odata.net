@@ -766,7 +766,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type of the resource.</param>
         protected virtual void ValidateEntryMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            outputContext.WriterValidator.ValidateEntryMetadataResource(resource, entityType, this.outputContext.Model);
+            outputContext.WriterValidator.ValidateMetadataResource(resource, entityType, this.outputContext.Model);
         }
 
         /// <summary>
@@ -1955,7 +1955,10 @@ namespace Microsoft.OData
 
                 if (resource != null)
                 {
-                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerSettings.AllowDuplicatePropertyNames, writingResponse, !writerSettings.EnableFullValidation);
+                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
+                        writerSettings.AllowDuplicatePropertyNames, 
+                        writingResponse, 
+                        !writerSettings.EnableFullValidation);
                 }
 
                 this.serializationInfo = serializationInfo;

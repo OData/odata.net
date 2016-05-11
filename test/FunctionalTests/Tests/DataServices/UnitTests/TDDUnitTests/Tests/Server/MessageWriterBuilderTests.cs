@@ -13,10 +13,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData;    
+    using Microsoft.OData;
     using Microsoft.OData.Client;
-	using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Caching;
     using Microsoft.OData.Service.Providers;
@@ -78,14 +77,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void CreatedSettingsShouldHaveIndentTurnedOff()
         {
             var settings = MessageWriterBuilder.CreateMessageWriterSettings();
-            settings.Indent.Should().BeFalse();
+            settings.EnableIndentation.Should().BeFalse();
         }
 
         [TestMethod]
         public void CreatedSettingsShouldHaveCheckCharactersTurnedOff()
         {
             var settings = MessageWriterBuilder.CreateMessageWriterSettings();
-            settings.CheckCharacters.Should().BeFalse();
+            settings.EnableCharactersCheck.Should().BeFalse();
         }
 
         [TestMethod]

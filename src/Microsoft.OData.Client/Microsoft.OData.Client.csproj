@@ -220,7 +220,6 @@
     <Compile Include="Common.cs" />
     <Compile Include="ContentStream.cs" />
     <Compile Include="ConventionalODataEntityMetadataBuilder.cs" />
-    <Compile Include="DataServiceClientMessageWriterSettingsShim.cs" />
     <Compile Include="DataServiceQuerySingleOfT.cs" />
     <Compile Include="Materialization\EnumValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\InstanceAnnotationMaterializationPolicy.cs" />

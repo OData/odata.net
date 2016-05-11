@@ -78,7 +78,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <returns>Humanly readable description of <paramref name="messageReaderSettings"/>, used for debugging.</returns>
         public static string ToDebugString(this ODataMessageReaderSettings messageReaderSettings)
         {
-            return string.Format("DisablePrimitiveTypeConversion: {0}, CheckCharacters: {1}, DisableMessageStreamDisposal: {2}",
+            return string.Format("DisablePrimitiveTypeConversion: {0}, EnableCharactersCheck: {1}, DisableMessageStreamDisposal: {2}",
                 messageReaderSettings.DisablePrimitiveTypeConversion,
                 messageReaderSettings.EnableCharactersCheck,
                 messageReaderSettings.DisableMessageStreamDisposal);

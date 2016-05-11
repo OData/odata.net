@@ -674,7 +674,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback expectedResultCallback =
                 (testConfig) =>
                 {
-                    if (testConfig.MessageWriterSettings.CheckCharacters)
+                    if (testConfig.MessageWriterSettings.EnableCharactersCheck)
                     {
                         return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
@@ -707,7 +707,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger);
 
                     WriterTestConfiguration otherTestConfiguration = testConfiguration.Clone();
-                    otherTestConfiguration.MessageWriterSettings.CheckCharacters = !testConfiguration.MessageWriterSettings.CheckCharacters;
+                    otherTestConfiguration.MessageWriterSettings.EnableCharactersCheck = !testConfiguration.MessageWriterSettings.EnableCharactersCheck;
                     testDescriptor.RunTopLevelPropertyPayload(otherTestConfiguration, baselineLogger: this.Logger);
                 });
         }

@@ -708,9 +708,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // NOTE intentionally not copying acceptable media types, acceptable char sets, format and useFormat
                         BaseUri = settings.BaseUri,
-                        CheckCharacters = settings.CheckCharacters,
+                        EnableCharactersCheck = settings.EnableCharactersCheck,
                         DisableMessageStreamDisposal = settings.DisableMessageStreamDisposal,
-                        Indent = settings.Indent,
+                        EnableIndentation = settings.EnableIndentation,
                         MessageQuotas = new ODataMessageQuotas(settings.MessageQuotas),
                         Version = settings.Version
                     };

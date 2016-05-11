@@ -967,11 +967,7 @@ public abstract class Microsoft.OData.Edm.EdmModelBase : Microsoft.OData.Edm.Edm
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] VocabularyAnnotations  { public virtual get; }
 
 	protected void AddReferencedModel (Microsoft.OData.Edm.IEdmModel model)
-	[
-	IteratorStateMachineAttribute(),
-	]
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (Microsoft.OData.Edm.IEdmType bindingType)
-
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredBoundOperations (string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] FindDeclaredOperations (string qualifiedName)
 	public virtual Microsoft.OData.Edm.IEdmSchemaType FindDeclaredType (string qualifiedName)
@@ -1611,7 +1607,6 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 
 	[
 	ExtensionAttribute(),
-	IteratorStateMachineAttribute(),
 	]
 	public static IEnumerable`1 FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, string termName, string qualifier)
 
@@ -1877,7 +1872,6 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 
 	[
 	ExtensionAttribute(),
-	IteratorStateMachineAttribute(),
 	]
 	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmProperty]] Properties (Microsoft.OData.Edm.IEdmStructuredType type)
 
@@ -3021,9 +3015,6 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRuleSet : IEnumerab
 	public ValidationRuleSet (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.ValidationRule]] baseSet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.ValidationRule]] newRules)
 
 	public static Microsoft.OData.Edm.Validation.ValidationRuleSet GetEdmModelRuleSet (System.Version version)
-	[
-	IteratorStateMachineAttribute(),
-	]
 	public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.Edm.Validation.ValidationRule]] GetEnumerator ()
 }
 
@@ -3414,11 +3405,7 @@ public class Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationsManager :
 	public virtual object GetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName)
 	public virtual object[] GetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 	protected virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetAttachedAnnotations (Microsoft.OData.Edm.IEdmElement element)
-	[
-	IteratorStateMachineAttribute(),
-	]
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation]] GetDirectValueAnnotations (Microsoft.OData.Edm.IEdmElement element)
-
 	public virtual void SetAnnotationValue (Microsoft.OData.Edm.IEdmElement element, string namespaceName, string localName, object value)
 	public virtual void SetAnnotationValues (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotationBinding]] annotations)
 }
@@ -4026,11 +4013,6 @@ public abstract class Microsoft.OData.ODataInputContext : IDisposable {
 	bool ReadingResponse  { public get; }
 	bool Synchronous  { public get; }
 	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; }
-	bool UseClientApiBehavior  { protected get; }
-	bool UseDefaultApiBehavior  { protected get; }
-	bool UseDefaultFormatBehavior  { protected get; }
-	bool UseServerApiBehavior  { protected get; }
-	bool UseServerFormatBehavior  { protected get; }
 
 	internal virtual Microsoft.OData.ODataAsynchronousReader CreateAsynchronousReader ()
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousReader]] CreateAsynchronousReaderAsync ()
@@ -4067,24 +4049,6 @@ public abstract class Microsoft.OData.ODataItem : Microsoft.OData.ODataAnnotatab
 	protected ODataItem ()
 }
 
-public abstract class Microsoft.OData.ODataMessageReaderSettingsBase {
-	protected ODataMessageReaderSettingsBase ()
-	protected ODataMessageReaderSettingsBase (Microsoft.OData.ODataMessageReaderSettingsBase other)
-
-	bool CheckCharacters  { public virtual get; public virtual set; }
-	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public virtual get; public virtual set; }
-	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public virtual get; public virtual set; }
-}
-
-public abstract class Microsoft.OData.ODataMessageWriterSettingsBase {
-	protected ODataMessageWriterSettingsBase ()
-	protected ODataMessageWriterSettingsBase (Microsoft.OData.ODataMessageWriterSettingsBase other)
-
-	bool CheckCharacters  { public virtual get; public virtual set; }
-	bool Indent  { public virtual get; public virtual set; }
-	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public virtual get; public virtual set; }
-}
-
 public abstract class Microsoft.OData.ODataOperation : Microsoft.OData.ODataAnnotatable {
 	protected ODataOperation ()
 
@@ -4100,10 +4064,6 @@ public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
 	bool Synchronous  { public get; }
 	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; }
-	bool UseClientFormatBehavior  { protected get; }
-	bool UseDefaultFormatBehavior  { protected get; }
-	bool UseServerApiBehavior  { protected get; }
-	bool UseServerFormatBehavior  { protected get; }
 	bool WritingResponse  { public get; }
 
 	internal virtual Microsoft.OData.ODataAsynchronousWriter CreateODataAsynchronousWriter ()
@@ -4759,23 +4719,25 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 	public System.Threading.Tasks.Task`1[[System.Object]] ReadValueAsync (Microsoft.OData.Edm.IEdmTypeReference expectedTypeReference)
 }
 
-public sealed class Microsoft.OData.ODataMessageReaderSettings : Microsoft.OData.ODataMessageReaderSettingsBase {
+public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	public ODataMessageReaderSettings ()
 	public ODataMessageReaderSettings (Microsoft.OData.ODataMessageReaderSettings other)
 
+	bool AllowDuplicatePropertyNames  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
+	System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] ClientCustomTypeResolver  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool DisablePrimitiveTypeConversion  { public get; public set; }
+	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableFullValidation  { public get; public set; }
+	bool EnableLaxMetadataValidation  { public get; public set; }
+	bool EnableReadingEntryContentInEntryStartState  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
+	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
-	System.Uri PayloadBaseUri  { public get; public set; }
+	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
-
-	public void EnableDefaultBehavior ()
-	public void EnableODataServerBehavior ()
-	public void EnableWcfDataServicesClientBehavior (System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] typeResolver)
 }
 
 public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
@@ -4826,23 +4788,25 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 	public System.Threading.Tasks.Task WriteValueAsync (object value)
 }
 
-public sealed class Microsoft.OData.ODataMessageWriterSettings : Microsoft.OData.ODataMessageWriterSettingsBase {
+public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	public ODataMessageWriterSettings ()
 	public ODataMessageWriterSettings (Microsoft.OData.ODataMessageWriterSettings other)
 
+	bool AllowDuplicatePropertyNames  { public get; public set; }
+	bool AllowNullValuesForNonNullablePrimitiveTypes  { public get; public set; }
 	bool AutoComputePayloadMetadataInJson  { public get; public set; }
+	System.Uri BaseUri  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
+	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableFullValidation  { public get; public set; }
+	bool EnableIndentation  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
+	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
-	System.Uri PayloadBaseUri  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
-	public void EnableDefaultBehavior ()
-	public void EnableODataServerBehavior ()
-	public void EnableWcfDataServicesClientBehavior ()
 	public void SetContentType (Microsoft.OData.ODataFormat payloadFormat)
 	public void SetContentType (string acceptableMediaTypes, string acceptableCharSets)
 }
@@ -6617,15 +6581,15 @@ public class Microsoft.OData.Client.InvokeResponse : Microsoft.OData.Client.Oper
 }
 
 public class Microsoft.OData.Client.MessageReaderSettingsArgs {
-	public MessageReaderSettingsArgs (Microsoft.OData.ODataMessageReaderSettingsBase settings)
+	public MessageReaderSettingsArgs (Microsoft.OData.ODataMessageReaderSettings settings)
 
-	Microsoft.OData.ODataMessageReaderSettingsBase Settings  { public get; }
+	Microsoft.OData.ODataMessageReaderSettings Settings  { public get; }
 }
 
 public class Microsoft.OData.Client.MessageWriterSettingsArgs {
-	public MessageWriterSettingsArgs (Microsoft.OData.ODataMessageWriterSettingsBase settings)
+	public MessageWriterSettingsArgs (Microsoft.OData.ODataMessageWriterSettings settings)
 
-	Microsoft.OData.ODataMessageWriterSettingsBase Settings  { public get; }
+	Microsoft.OData.ODataMessageWriterSettings Settings  { public get; }
 }
 
 public class Microsoft.OData.Client.QueryOperationResponse : Microsoft.OData.Client.OperationResponse, IEnumerable {

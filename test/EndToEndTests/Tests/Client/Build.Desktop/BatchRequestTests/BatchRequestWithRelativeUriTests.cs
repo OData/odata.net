@@ -48,7 +48,7 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
         private void BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption option)
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             var accountType = Model.FindDeclaredType(NameSpacePrefix + "Account") as IEdmEntityType;

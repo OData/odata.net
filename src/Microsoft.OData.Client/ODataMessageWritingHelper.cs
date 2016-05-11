@@ -37,8 +37,8 @@ namespace Microsoft.OData.Client
         {
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
             {
-                CheckCharacters = false,
-                Indent = false,
+                EnableCharactersCheck = false,
+                EnableIndentation = false,
                 ODataSimplified = odataSimplified,
 
                 // For operations inside batch, we need to dispose the stream. For top level requests,

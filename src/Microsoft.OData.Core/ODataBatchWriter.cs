@@ -650,7 +650,7 @@ namespace Microsoft.OData
 
             // write the headers and request line
             ODataBatchWriterUtils.WriteRequestPreamble(this.rawOutputContext.TextWriter, method, uri,
-                this.rawOutputContext.MessageWriterSettings.PayloadBaseUri, changeSetBoundary != null, contentId,
+                this.rawOutputContext.MessageWriterSettings.BaseUri, changeSetBoundary != null, contentId,
                 payloadUriOption);
 
             return this.CurrentOperationRequestMessage;

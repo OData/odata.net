@@ -752,7 +752,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            this.jsonLightOutputContext.WriterValidator.ValidateEntryMetadataResource(resource, entityType, this.jsonLightOutputContext.Model);
+            this.jsonLightOutputContext.WriterValidator.ValidateMetadataResource(resource, entityType, this.jsonLightOutputContext.Model);
         }
 
         #endregion

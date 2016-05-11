@@ -11,7 +11,6 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Text;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -62,7 +61,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
             Debug.Assert(messageInfo.MediaType != null, "messageInfo.MediaType != null");
-            
+
             try
             {
                 this.messageOutputStream = messageInfo.MessageStream;
@@ -82,7 +81,7 @@ namespace Microsoft.OData.JsonLight
 
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageWriterSettings.Indent, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageWriterSettings.EnableIndentation, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
             }
             catch (Exception e)
             {
@@ -116,7 +115,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, messageWriterSettings.Indent, true /*isIeee754Compatible*/);
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, messageWriterSettings.EnableIndentation, true /*isIeee754Compatible*/);
             this.metadataLevel = new JsonMinimalMetadataLevel();
         }
 

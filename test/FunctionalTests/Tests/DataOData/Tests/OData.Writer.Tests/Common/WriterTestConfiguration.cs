@@ -55,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 "Format: {0}, Version: {1}, WriterSettings.Indent: {2}, WriterSettings.DisableMessageStreamDisposal: {3}, IsRequest: {4}, Synchronous: {5}",
                 this.Format,
                 this.Version.ToString(),
-                this.MessageWriterSettings.Indent.ToString(),
+                this.MessageWriterSettings.EnableIndentation.ToString(),
                 this.MessageWriterSettings.DisableMessageStreamDisposal.ToString(),
                 this.IsRequest,
                 this.Synchronous);

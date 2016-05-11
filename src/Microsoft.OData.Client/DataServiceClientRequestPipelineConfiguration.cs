@@ -168,13 +168,13 @@ namespace Microsoft.OData.Client
         /// Called when [create message writer settings configurations].
         /// </summary>
         /// <param name="writerSettings">The writer settings.</param>
-        internal void ExecuteWriterSettingsConfiguration(ODataMessageWriterSettingsBase writerSettings)
+        internal void ExecuteWriterSettingsConfiguration(ODataMessageWriterSettings writerSettings)
         {
             Debug.Assert(writerSettings != null, "writerSettings != null");
 
             if (this.messageWriterSettingsConfigurationActions.Count > 0)
             {
-                MessageWriterSettingsArgs args = new MessageWriterSettingsArgs(new DataServiceClientMessageWriterSettingsShim(writerSettings));
+                MessageWriterSettingsArgs args = new MessageWriterSettingsArgs(writerSettings);
                 foreach (Action<MessageWriterSettingsArgs> configureWriterSettings in this.messageWriterSettingsConfigurationActions)
                 {
                     configureWriterSettings(args);

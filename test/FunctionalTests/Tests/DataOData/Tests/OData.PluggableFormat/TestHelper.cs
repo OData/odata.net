@@ -132,7 +132,7 @@ namespace Microsoft.Test.OData.PluggableFormat
             var messageSettings = new ODataMessageWriterSettings
             {
                 DisableMessageStreamDisposal = true,
-                Indent = true,
+                EnableIndentation = true,
             };
 
             if (isResponse)

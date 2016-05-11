@@ -410,7 +410,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 var jsonExpectedResults = new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                 {
-                    Json = expectedJson.ToText(/*writingJsonLight*/ true, testConfiguration.MessageWriterSettings.Indent),
+                    Json = expectedJson.ToText(/*writingJsonLight*/ true, testConfiguration.MessageWriterSettings.EnableIndentation),
                     FragmentExtractor = (result) =>
                     {
                         // Everything except association links

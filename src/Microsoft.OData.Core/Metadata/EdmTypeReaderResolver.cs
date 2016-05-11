@@ -29,7 +29,7 @@ namespace Microsoft.OData.Metadata
 
         /// <summary>Creates a new entity set element type resolver with all the information needed when resolving for reading scenarios.</summary>
         /// <param name="model">The model to use or null if no model is available.</param>
-        /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
+        /// <param name="clientCustomTypeResolver">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
         public EdmTypeReaderResolver(IEdmModel model, Func<IEdmType, string, IEdmType> clientCustomTypeResolver)
         {
             this.model = model;
@@ -131,6 +131,7 @@ namespace Microsoft.OData.Metadata
             {
                 return typeToResolve;
             }
+
             EdmTypeKind typeKind;
 
             // MetadataUtils.ResolveTypeName() does not allow entity collection types however both operationImport.ReturnType and operationParameter.Type can be of entity collection types.

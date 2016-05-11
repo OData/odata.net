@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
             requestMessage.SetHeader("Content-Type", batchContentType);
 
-            using (var messageWriter = new ODataMessageWriter(requestMessage, new ODataMessageWriterSettings{ PayloadBaseUri = new Uri(serviceDocumentUri) }))
+            using (var messageWriter = new ODataMessageWriter(requestMessage, new ODataMessageWriterSettings { BaseUri = new Uri(serviceDocumentUri) }))
             {
                 var batchWriter = messageWriter.CreateODataBatchWriter();
 
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", batchContentType);
 
-            using (var messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings{ BaseUri = new Uri(serviceDocumentUri) }, this.userModel))
+            using (var messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings { BaseUri = new Uri(serviceDocumentUri) }, this.userModel))
             {
                 var responseStream = new MemoryStream();
 

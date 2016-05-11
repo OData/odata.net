@@ -103,13 +103,13 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void CheckCharactersShouldBeFalseByDefault()
         {
-            this.settings.CheckCharacters.Should().BeFalse();
+            this.settings.EnableCharactersCheck.Should().BeFalse();
         }
 
         [Fact]
         public void IndentShouldBeFalseByDefault()
         {
-            this.settings.Indent.Should().BeFalse();
+            this.settings.EnableIndentation.Should().BeFalse();
         }
 
         [Fact]
@@ -210,8 +210,8 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void CopyConstructorShouldCopyCheckCharacters()
         {
-            this.settings.CheckCharacters = true;
-            (new ODataMessageWriterSettings(this.settings)).CheckCharacters.Should().BeTrue();
+            this.settings.EnableCharactersCheck = true;
+            (new ODataMessageWriterSettings(this.settings)).EnableCharactersCheck.Should().BeTrue();
         }
 
         [Fact]
@@ -224,8 +224,8 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void CopyConstructorShouldCopyIndent()
         {
-            this.settings.Indent = true;
-            (new ODataMessageWriterSettings(this.settings)).Indent.Should().BeTrue();
+            this.settings.EnableIndentation = true;
+            (new ODataMessageWriterSettings(this.settings)).EnableIndentation.Should().BeTrue();
         }
 
         [Fact]
@@ -367,9 +367,9 @@ namespace Microsoft.OData.Tests
                 AllowNullValuesForNonNullablePrimitiveTypes = true,
                 AutoComputePayloadMetadataInJson = true,
                 BaseUri = baseUri,
-                CheckCharacters = true,
+                EnableCharactersCheck = true,
                 DisableMessageStreamDisposal = true,
-                Indent = true,
+                EnableIndentation = true,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = maxPartsPerBatch,
@@ -384,9 +384,9 @@ namespace Microsoft.OData.Tests
             this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeTrue();
             this.settings.AutoComputePayloadMetadataInJson.Should().BeTrue();
             this.settings.BaseUri.Should().BeSameAs(baseUri);
-            this.settings.CheckCharacters.Should().BeTrue();
+            this.settings.EnableCharactersCheck.Should().BeTrue();
             this.settings.DisableMessageStreamDisposal.Should().BeTrue();
-            this.settings.Indent.Should().BeTrue();
+            this.settings.EnableIndentation.Should().BeTrue();
             this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(maxPartsPerBatch);
             this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);
             this.settings.MessageQuotas.MaxNestingDepth.Should().Be(maxNestingDepth);

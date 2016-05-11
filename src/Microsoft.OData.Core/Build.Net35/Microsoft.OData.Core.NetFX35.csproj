@@ -520,9 +520,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriterUtils.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriterUtils.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBehaviorKind.cs">
-      <Link>Microsoft\OData\Core\ODataBehaviorKind.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionReader.cs">
       <Link>Microsoft\OData\Core\ODataCollectionReader.cs</Link>
     </Compile>
@@ -682,17 +679,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageReaderSettings.cs">
       <Link>Microsoft\OData\Core\ODataMessageReaderSettings.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageReaderSettingsBase.cs">
-      <Link>Microsoft\OData\Core\ODataMessageReaderSettingsBase.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageWriter.cs">
       <Link>Microsoft\OData\Core\ODataMessageWriter.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageWriterSettings.cs">
       <Link>Microsoft\OData\Core\ODataMessageWriterSettings.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageWriterSettingsBase.cs">
-      <Link>Microsoft\OData\Core\ODataMessageWriterSettingsBase.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMetadataFormat.cs">
       <Link>Microsoft\OData\Core\ODataMetadataFormat.cs</Link>
@@ -780,9 +771,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReader.cs">
       <Link>Microsoft\OData\Core\ODataReader.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReaderBehavior.cs">
-      <Link>Microsoft\OData\Core\ODataReaderBehavior.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReaderCore.cs">
       <Link>Microsoft\OData\Core\ODataReaderCore.cs</Link>

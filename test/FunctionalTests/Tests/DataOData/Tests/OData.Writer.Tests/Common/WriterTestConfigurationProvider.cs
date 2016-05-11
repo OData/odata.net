@@ -350,7 +350,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     (config, indent) =>
                     {
                         ODataMessageWriterSettings settings = config.MessageWriterSettings.Clone();
-                        settings.Indent = indent;
+                        settings.EnableIndentation = indent;
                         configurations.Add(new WriterTestConfiguration(config.Format,
                             settings,
                             config.IsRequest,
@@ -365,7 +365,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 foreach (var config in configurationsWithDefaultSettings)
                 {
                     ODataMessageWriterSettings settings = config.MessageWriterSettings.Clone();
-                    settings.Indent = primes.Contains(i++);
+                    settings.EnableIndentation = primes.Contains(i++);
                     configurations.Add(new WriterTestConfiguration(config.Format,
                         settings,
                         config.IsRequest,

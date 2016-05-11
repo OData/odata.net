@@ -214,7 +214,6 @@
     <Compile Include="ODataBatchUtils.cs" />
     <Compile Include="ODataBatchWriter.cs" />
     <Compile Include="ODataBatchWriterUtils.cs" />
-    <Compile Include="ODataBehaviorKind.cs" />
     <Compile Include="ODataCollectionReader.cs" />
     <Compile Include="ODataCollectionReaderCore.cs" />
     <Compile Include="ODataCollectionReaderCoreAsync.cs" />
@@ -270,7 +269,6 @@
     <Compile Include="ODataMessageReaderSettings.cs" />
     <Compile Include="ODataMessageWriter.cs" />
     <Compile Include="ODataMessageWriterSettings.cs" />
-    <Compile Include="ODataMessageWriterSettingsBase.cs" />
     <Compile Include="ODataMetadataFormat.cs" />
     <Compile Include="ODataMetadataInputContext.cs" />
     <Compile Include="ODataMetadataOutputContext.cs" />

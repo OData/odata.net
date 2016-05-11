@@ -58,14 +58,14 @@ namespace Microsoft.OData.Metadata
         private static XmlWriterSettings CreateXmlWriterSettings(ODataMessageWriterSettings messageWriterSettings, Encoding encoding)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
-            settings.CheckCharacters = messageWriterSettings.CheckCharacters;
+            settings.CheckCharacters = messageWriterSettings.EnableCharactersCheck;
             settings.ConformanceLevel = ConformanceLevel.Document;
             settings.OmitXmlDeclaration = false;
             settings.Encoding = encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
             settings.NewLineHandling = NewLineHandling.Entitize;
 
             // COMPAT 1: ATOM XML indentation - WCFDS always indents the XML, but we will allow users to specify if the indentation is desirable
-            settings.Indent = messageWriterSettings.Indent;
+            settings.Indent = messageWriterSettings.EnableIndentation;
 
             // we do not want to close the underlying stream when the OData writer is closed since we don't own the stream.
             settings.CloseOutput = false;

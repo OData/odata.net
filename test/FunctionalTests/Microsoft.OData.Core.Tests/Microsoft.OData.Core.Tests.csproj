@@ -158,7 +158,6 @@
     <Compile Include="ODataMessageExtensionsTests.cs" />
     <Compile Include="ODataMessageReaderSettingsTests.cs" />
     <Compile Include="ODataMessageReaderTests.cs" />
-    <Compile Include="ODataMessageWriterSettingsBaseTests.cs" />
     <Compile Include="ODataMessageWriterSettingsTests.cs" />
     <Compile Include="ODataMessageWriterTests.cs" />
     <Compile Include="ODataNavigationLinkTests.cs" />

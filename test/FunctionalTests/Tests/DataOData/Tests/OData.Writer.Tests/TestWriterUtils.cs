@@ -1178,7 +1178,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>The variables for the given test configuration.</returns>
         internal static Dictionary<string, string> GetPayloadVariablesForTestConfiguration(WriterTestConfiguration testConfiguration)
         {
-            bool indent = testConfiguration.MessageWriterSettings.Indent;
+            bool indent = testConfiguration.MessageWriterSettings.EnableIndentation;
             // a data wrapper is required for all responses
             bool requiresDataWrapper = !testConfiguration.IsRequest;
             // for v3 responses a results wrapper is injected as well
@@ -1577,7 +1577,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             // TODO: More involved JSON comparison. We could parse the expected JSON into the JsonValue and compare the trees here
             // For now just compare the strings as they are; we trim the leading/trailing whitespace here again since the fragment extractor
             // trims it in some cases but not in others. For comparison we strip leading/trailing whitespace from the expected and actual results.
-            string observedJsonText = observedJson.ToText(testConfiguration.Format == ODataFormat.Json, testConfiguration.MessageWriterSettings.Indent).Trim();
+            string observedJsonText = observedJson.ToText(testConfiguration.Format == ODataFormat.Json, testConfiguration.MessageWriterSettings.EnableIndentation).Trim();
             return CompareJsonStrings(expectedJsonString, observedJsonText, out error);
         }
 
@@ -1817,8 +1817,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
 
             public ODataVersion? Version { get { return this.settings.Version; } }
-            public bool Indent { get { return this.settings.Indent; } }
-            public bool CheckCharacters { get { return this.settings.CheckCharacters; } }
+            public bool Indent { get { return this.settings.EnableIndentation; } }
+            public bool CheckCharacters { get { return this.settings.EnableCharactersCheck; } }
             public Uri BaseUri { get { return this.settings.BaseUri; } }
             public string AcceptableMediaTypes { get { return (string)ReflectionUtils.GetProperty(this.settings, "AcceptableMediaTypes"); } }
             public string AcceptableCharsets { get { return (string)ReflectionUtils.GetProperty(this.settings, "AcceptableCharsets"); } }
