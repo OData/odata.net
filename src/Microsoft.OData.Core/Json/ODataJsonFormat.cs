@@ -41,14 +41,7 @@ namespace Microsoft.OData.Json
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return DetectPayloadKindImplementation(
-                    messageInfo.MessageStream,
-                    messageInfo.IsResponse,
-                    new ODataPayloadKindDetectionInfo(
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        settings,
-                        messageInfo.Model));
+            return DetectPayloadKindImplementation(messageInfo, settings);
         }
 
         /// <summary>
@@ -96,14 +89,7 @@ namespace Microsoft.OData.Json
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return DetectPayloadKindImplementationAsync(
-                messageInfo.MessageStream,
-                /*readingResponse*/ messageInfo.IsResponse,
-                new ODataPayloadKindDetectionInfo(
-                    messageInfo.MediaType,
-                    messageInfo.Encoding,
-                    settings,
-                    messageInfo.Model));
+            return DetectPayloadKindImplementationAsync(messageInfo, settings);
         }
 
         /// <summary>
@@ -144,26 +130,16 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>
-        /// <param name="messageStream">The message stream to read from for payload kind detection.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(
-            Stream messageStream,
-            bool readingResponse,
-            ODataPayloadKindDetectionInfo detectionInfo)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings settings)
         {
-            ODataMessageInfo messageInfo = new ODataMessageInfo
-            {
-                Encoding = detectionInfo.GetEncoding(),
-                IsResponse = readingResponse,
-                IsAsync = false,
-                MediaType = detectionInfo.ContentType,
-                Model = detectionInfo.Model,
-                MessageStream = messageStream
-            };
-            using (ODataJsonLightInputContext jsonLightInputContext = new ODataJsonLightInputContext(
-                messageInfo, detectionInfo.MessageReaderSettings))
+            var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
+            messageInfo.Encoding = detectionInfo.GetEncoding();
+            using (var jsonLightInputContext = new ODataJsonLightInputContext(messageInfo, settings))
             {
                 return jsonLightInputContext.DetectPayloadKind(detectionInfo);
             }
@@ -173,27 +149,16 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>
-        /// <param name="messageStream">The message stream to read from for payload kind detection.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         private static Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindImplementationAsync(
-            Stream messageStream,
-            bool readingResponse,
-            ODataPayloadKindDetectionInfo detectionInfo)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings settings)
         {
-            ODataMessageInfo messageInfo = new ODataMessageInfo
-            {
-                Encoding = detectionInfo.GetEncoding(),
-                IsResponse = readingResponse,
-                IsAsync = true,
-                MediaType = detectionInfo.ContentType,
-                Model = detectionInfo.Model,
-                MessageStream = messageStream
-            };
-            ODataJsonLightInputContext jsonLightInputContext = new ODataJsonLightInputContext(
-                messageInfo,
-                detectionInfo.MessageReaderSettings);
+            var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
+            messageInfo.Encoding = detectionInfo.GetEncoding();
+            var jsonLightInputContext = new ODataJsonLightInputContext(messageInfo, settings);
             return jsonLightInputContext.DetectPayloadKindAsync(detectionInfo)
                 .FollowAlwaysWith(t =>
                     {

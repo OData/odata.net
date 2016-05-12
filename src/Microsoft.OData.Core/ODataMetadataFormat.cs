@@ -45,13 +45,7 @@ namespace Microsoft.OData
 
             // Metadata is not supported in requests!
             return messageInfo.IsResponse
-                ? DetectPayloadKindImplementation(
-                    messageInfo.MessageStream,
-                    new ODataPayloadKindDetectionInfo(
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        settings,
-                        messageInfo.Model))
+                ? DetectPayloadKindImplementation(messageInfo, settings)
                 : Enumerable.Empty<ODataPayloadKind>();
         }
 
@@ -101,13 +95,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return messageInfo.IsResponse
-                ? Task.FromResult(DetectPayloadKindImplementation(
-                    messageInfo.MessageStream,
-                    new ODataPayloadKindDetectionInfo(
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        settings,
-                        messageInfo.Model)))
+                ? Task.FromResult(DetectPayloadKindImplementation(messageInfo, settings))
                 : TaskUtils.GetCompletedTask(Enumerable.Empty<ODataPayloadKind>());
         }
 
@@ -147,14 +135,18 @@ namespace Microsoft.OData
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>
-        /// <param name="messageStream">The message stream to read from for payload kind detection.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>An enumerable of zero or one payload kinds depending on whether the metadata payload kind was detected or not.</returns>
-        private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(Stream messageStream, ODataPayloadKindDetectionInfo detectionInfo)
+        private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings settings)
         {
+            var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
             try
             {
-                using (XmlReader reader = ODataMetadataReaderUtils.CreateXmlReader(messageStream, detectionInfo.GetEncoding(), detectionInfo.MessageReaderSettings))
+                using (var reader = ODataMetadataReaderUtils.CreateXmlReader(
+                    messageInfo.MessageStream, detectionInfo.GetEncoding(), detectionInfo.MessageReaderSettings))
                 {
                     if (reader.TryReadToNextElement()
                         && string.CompareOrdinal(EdmConstants.EdmxName, reader.LocalName) == 0

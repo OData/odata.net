@@ -36,23 +36,19 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="contentType">The parsed content type as <see cref="ODataMediaType"/>.</param>
-        /// <param name="encoding">The encoding from the content type or the default encoding from <see cref="ODataMediaType" />.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">The <see cref="ODataMessageReaderSettings"/> being used for reading the message.</param>
-        /// <param name="model">The <see cref="IEdmModel"/> for the payload.</param>
         internal ODataPayloadKindDetectionInfo(
-            ODataMediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings, 
-            IEdmModel model)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
         {
-            ExceptionUtils.CheckArgumentNotNull(contentType, "contentType");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo.MediaType, "messageInfo.MediaType");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "readerSettings");
 
-            this.contentType = contentType;
-            this.encoding = encoding;
+            this.contentType = messageInfo.MediaType;
+            this.encoding = messageInfo.Encoding;
             this.messageReaderSettings = messageReaderSettings;
-            this.model = model;
+            this.model = messageInfo.Model;
         }
 
         /// <summary>
