@@ -349,22 +349,22 @@ namespace Microsoft.OData.Edm.Csdl
                 return referencedAstModels;
             }
 
-            foreach (var tmp in this.edmReferences)
+            foreach (var edmReference in this.edmReferences)
             {
-                if (!tmp.Includes.Any() && !tmp.IncludeAnnotations.Any())
+                if (!edmReference.Includes.Any() && !edmReference.IncludeAnnotations.Any())
                 {
                     this.RaiseError(EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement, Strings.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
                     continue;
                 }
 
-                if (tmp.Uri != null && (tmp.Uri.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
-                    tmp.Uri.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
-                    tmp.Uri.EndsWith(AlternateKeysVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
+                if (edmReference.Uri != null && (edmReference.Uri.OriginalString.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
+                    edmReference.Uri.OriginalString.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
+                    edmReference.Uri.OriginalString.EndsWith(AlternateKeysVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
                 {
                     continue;
                 }
 
-                XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(new Uri(tmp.Uri, UriKind.RelativeOrAbsolute));
+                XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(edmReference.Uri);
                 if (referencedXmlReader == null)
                 {
                     this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, Strings.EdmxParser_UnresolvedReferenceUriInEdmxReference);
@@ -373,7 +373,7 @@ namespace Microsoft.OData.Edm.Csdl
 
                 // recursively use EdmxReader to parse sub edm:
                 EdmxReader referencedEdmxReader = new EdmxReader(referencedXmlReader, /*getReferencedModelReaderFunc*/ null);
-                referencedEdmxReader.source = tmp.Uri;
+                referencedEdmxReader.source = edmReference.Uri != null ? edmReference.Uri.OriginalString : null;
                 referencedEdmxReader.ignoreUnexpectedAttributesAndElements = this.ignoreUnexpectedAttributesAndElements;
                 Version referencedEdmxVersion;
                 CsdlModel referencedAstModel;
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Edm.Csdl
                         this.errors.Add(null);
                     }
 
-                    referencedAstModel.AddParentModelReferences(tmp);
+                    referencedAstModel.AddParentModelReferences(edmReference);
                     referencedAstModels.Add(referencedAstModel);
                 }
 
@@ -590,7 +590,7 @@ namespace Microsoft.OData.Edm.Csdl
         private void ParseReferenceElement()
         {
             // read 'Uri' attribute
-            EdmReference result = new EdmReference(this.GetAttributeValue(null, CsdlConstants.Attribute_Uri));
+            EdmReference result = new EdmReference(new Uri(this.GetAttributeValue(null, CsdlConstants.Attribute_Uri), UriKind.RelativeOrAbsolute));
             if (this.reader.IsEmptyElement)
             {
                 this.reader.Read();

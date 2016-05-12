@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
@@ -13,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public class EdmReference : IEdmReference
     {
-        private string uri;
+        private Uri uri;
         private List<IEdmInclude> includes = new List<IEdmInclude>();
         private List<IEdmIncludeAnnotations> includeAnnotations = new List<IEdmIncludeAnnotations>();
 
@@ -21,7 +22,7 @@ namespace Microsoft.OData.Edm
         /// Constructor.
         /// </summary>
         /// <param name="uri">The Uri to load referenced model.</param>
-        public EdmReference(string uri)
+        public EdmReference(Uri uri)
         {
             this.uri = uri;
         }
@@ -29,7 +30,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the Uri to load referenced model.
         /// </summary>
-        public string Uri
+        public Uri Uri
         {
             get
             {

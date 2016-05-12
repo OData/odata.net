@@ -867,7 +867,7 @@ public interface Microsoft.OData.Edm.IEdmProperty : IEdmElement, IEdmNamedElemen
 public interface Microsoft.OData.Edm.IEdmReference : IEdmElement {
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmIncludeAnnotations]] IncludeAnnotations  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmInclude]] Includes  { public abstract get; }
-	string Uri  { public abstract get; }
+	System.Uri Uri  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.IEdmReferentialConstraint {
@@ -2354,11 +2354,11 @@ public class Microsoft.OData.Edm.EdmPrimitiveTypeReference : Microsoft.OData.Edm
 }
 
 public class Microsoft.OData.Edm.EdmReference : IEdmElement, IEdmReference {
-	public EdmReference (string uri)
+	public EdmReference (System.Uri uri)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmIncludeAnnotations]] IncludeAnnotations  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmInclude]] Includes  { public virtual get; }
-	string Uri  { public virtual get; }
+	System.Uri Uri  { public virtual get; }
 
 	public void AddInclude (Microsoft.OData.Edm.IEdmInclude edmInclude)
 	public void AddIncludeAnnotations (Microsoft.OData.Edm.IEdmIncludeAnnotations edmIncludeAnnotations)

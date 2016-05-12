@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -222,6 +223,18 @@ namespace Microsoft.OData.Edm.Csdl
         internal static string GuidAsXml(Guid g)
         {
             return XmlConvert.ToString(g);
+        }
+
+        /// <summary>
+        /// Converts the Uri to a String.
+        /// </summary>
+        /// <param name="uri">The value to convert.</param>
+        /// <returns>A string representation of the Uri.</returns>
+        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of OriginalString is safe in this context")]
+        internal static string UriAsXml(Uri uri)
+        {
+            Debug.Assert(uri != null, "uri != null");
+            return uri.OriginalString;
         }
     }
 }

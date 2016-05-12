@@ -221,9 +221,13 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("VPCT", references[0].Includes.First().Alias);
             Assert.AreEqual("NS.Ref1", references[0].Includes.First().Namespace);
 
+            // verify Uri in EdmReference
+            string uriString = "http://addedUrl/addedEdm.xml";
+            EdmReference newReference = new EdmReference(new Uri(uriString));
+            Assert.AreEqual(uriString, EdmValueWriter.UriAsXml(newReference.Uri));
+
             // verify writing edmx:Reference
             // add a new <edmx:reference>
-            EdmReference newReference = new EdmReference("http://addedUrl/addedEdm.xml");
             newReference.AddInclude(new EdmInclude("adhoc_Alias", "adhoc_Namespace"));
             List<IEdmReference> newReferences = new List<IEdmReference>();
             newReferences.AddRange(references);

@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             // e.g. <edmx:Reference Uri="http://host/schema/VipCustomer.xml">
             this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Reference, this.edmxNamespace);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.UriAsXml);
         }
 
         internal void WriteIncludeElement(IEdmInclude include)

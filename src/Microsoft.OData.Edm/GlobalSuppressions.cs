@@ -239,9 +239,6 @@
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmValue.#Microsoft.OData.Edm.Vocabularies.IEdmDelayedValue.Value")]
 
-// Already public APIs thus cannot be changed.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Scope = "member", Target = "Microsoft.OData.Edm.IEdmReference.#Uri")]
-
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntitySetReferenceExpression.#bindingContext")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEnumMemberExpression.#bindingContext")]
@@ -257,7 +254,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#IsFunction(Microsoft.OData.Edm.IEdmOperation)")]
 
 // Already public APIs thus cannot be changed.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Scope = "member", Target = "Microsoft.OData.Edm.EdmReference.#.ctor(System.String)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.TryCreateObjectInstance.#Invoke(Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue,System.Type,Microsoft.OData.Edm.Vocabularies.EdmToClrConverter,System.Object&,System.Boolean&)")]
 
 // By design.

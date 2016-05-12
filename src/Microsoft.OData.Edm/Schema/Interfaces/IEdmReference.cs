@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
@@ -16,7 +17,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Uri
         /// </summary>
-        string Uri { get; }
+        Uri Uri { get; }
 
         /// <summary>
         /// The Includes information.
