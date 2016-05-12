@@ -363,15 +363,18 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
         private ODataAvroOutputContext CreateOutputContext(Stream stream)
         {
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = stream,
+                Encoding = Encoding.UTF8,
+                IsAsync = false,
+                IsResponse = true,
+            };
+
             return new ODataAvroOutputContext(
-              AvroFormat.Avro,
-              stream,
-              Encoding.UTF8,
-              new ODataMessageWriterSettings(),
-              true,
-                /*synchronous*/ true,
-                /* model */ null,
-                /*urlResolver*/ null);
+                AvroFormat.Avro,
+                messageInfo,
+                new ODataMessageWriterSettings());
         }
     }
 }

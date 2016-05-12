@@ -8,9 +8,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 {
     using System;
     using System.IO;
-    using System.Text;
     using Microsoft.OData;
-    using Microsoft.OData.Edm;
 
     internal class VCardOutputContext : ODataOutputContext
     {
@@ -19,25 +17,12 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
         internal VCardOutputContext(
             ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format,
-                new ODataMessageInfo
-                {
-                    Encoding = encoding,
-                    IsAsync = !synchronous,
-                    IsResponse = writingResponse,
-                    Model = model,
-                    UrlResolver = urlResolver
-                }, messageWriterSettings)
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
+            : base(format, messageInfo, messageWriterSettings)
         {
-            this.writer = new VCardWriter(new StreamWriter(messageStream, encoding));
-            this.outputStream = messageStream;
+            this.writer = new VCardWriter(new StreamWriter(messageInfo.MessageStream, messageInfo.Encoding));
+            this.outputStream = messageInfo.MessageStream;
         }
 
         public override void WriteProperty(ODataProperty property)

@@ -9,7 +9,6 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
     using System.Collections.Generic;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.Test.OData.PluggableFormat;
     using Microsoft.Test.OData.Services.ODataWCFService;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
@@ -22,8 +21,6 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         public PluggableFormatServiceDataSource()
         {
             this.OperationProvider = new PluggableFormatOperationProvider<PluggableFormatServiceDataSource>();
-            this.Container = ContainerBuilderHelper.BuildContainer(builder =>
-                builder.AddService<ODataMediaTypeResolver, PluggableFormatResolver>(ServiceLifetime.Singleton));
         }
 
         #region Entity Set Resources
@@ -119,6 +116,11 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         protected override IEdmModel CreateModel()
         {
             return TestHelper.GetModel("Microsoft.Test.OData.Services.PluggableFormat.Csdl.PluggableFormat.xml");
+        }
+
+        protected override void ConfigureContainer(IContainerBuilder builder)
+        {
+            builder.AddService<ODataMediaTypeResolver, PluggableFormatResolver>(ServiceLifetime.Singleton);
         }
     }
 }

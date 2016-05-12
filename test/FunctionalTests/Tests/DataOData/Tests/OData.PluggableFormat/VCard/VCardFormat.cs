@@ -19,12 +19,12 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
         public override ODataInputContext CreateInputContext(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings)
         {
-            return new VCardInputContext(this, messageInfo.MessageStream, messageInfo.MediaType, messageInfo.Encoding, messageReaderSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
+            return new VCardInputContext(this, messageInfo, messageReaderSettings);
         }
 
         public override ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)
         {
-            return new VCardOutputContext(this, messageInfo.MessageStream, messageInfo.Encoding, messageWriterSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
+            return new VCardOutputContext(this, messageInfo, messageWriterSettings);
         }
 
         public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings)
@@ -34,17 +34,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
         public override Task<ODataInputContext> CreateInputContextAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings)
         {
-            return Task.FromResult<ODataInputContext>(
-                new VCardInputContext(
-                    this,
-                    messageInfo.MessageStream,
-                    messageInfo.MediaType,
-                    messageInfo.Encoding,
-                    messageReaderSettings,
-                    messageInfo.IsResponse,
-                    /*sync*/ false,
-                    messageInfo.Model,
-                    messageInfo.UrlResolver));
+            return Task.FromResult<ODataInputContext>(new VCardInputContext(this, messageInfo, messageReaderSettings));
         }
 
         public override Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)

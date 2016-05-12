@@ -78,6 +78,9 @@ namespace Microsoft.OData
         /// <remarks>This is either set via the SetHeadersForPayload method or implicitly when one of the write (or writer creation) methods is called.</remarks>
         private ODataMediaType mediaType;
 
+        /// <summary>The context information for the message.</summary>
+        private ODataMessageInfo messageInfo;
+
         /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage)
@@ -1154,19 +1157,30 @@ namespace Microsoft.OData
             }
         }
 
-        private ODataMessageInfo CreateMessageInfo(Stream messageStream, bool isAsync)
+        private ODataMessageInfo GetOrCreateMessageInfo(Stream messageStream, bool isAsync)
         {
-            return new ODataMessageInfo
+            if (this.messageInfo == null)
             {
-                Encoding = this.encoding,
-                IsResponse = this.writingResponse,
-                IsAsync = isAsync,
-                MediaType = this.mediaType,
-                Model = this.model,
-                UrlResolver = this.urlResolver,
-                Container = this.container,
-                MessageStream = messageStream
-            };
+                if (this.container == null)
+                {
+                    this.messageInfo = new ODataMessageInfo();
+                }
+                else
+                {
+                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
+                }
+
+                this.messageInfo.Encoding = this.encoding;
+                this.messageInfo.IsResponse = this.writingResponse;
+                this.messageInfo.IsAsync = isAsync;
+                this.messageInfo.MediaType = this.mediaType;
+                this.messageInfo.Model = this.model;
+                this.messageInfo.UrlResolver = this.urlResolver;
+                this.messageInfo.Container = this.container;
+                this.messageInfo.MessageStream = messageStream;
+            }
+
+            return this.messageInfo;
         }
 
         /// <summary>
@@ -1187,7 +1201,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.CreateMessageInfo(this.message.GetStream(), false),
+                this.GetOrCreateMessageInfo(this.message.GetStream(), false),
                 this.settings);
             writeAction(this.outputContext);
         }
@@ -1212,7 +1226,7 @@ namespace Microsoft.OData
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.CreateMessageInfo(this.message.GetStream(), false),
+                this.GetOrCreateMessageInfo(this.message.GetStream(), false),
                 this.settings);
             return writeFunc(this.outputContext);
         }
@@ -1240,7 +1254,7 @@ namespace Microsoft.OData
             return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
                     streamTask => this.format.CreateOutputContextAsync(
-                        this.CreateMessageInfo(streamTask.Result, true),
+                        this.GetOrCreateMessageInfo(streamTask.Result, true),
                         this.settings))
                 .FollowOnSuccessWithTask(
                     createOutputContextTask =>
@@ -1273,7 +1287,7 @@ namespace Microsoft.OData
             return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
                     streamTask => this.format.CreateOutputContextAsync(
-                        this.CreateMessageInfo(streamTask.Result, true),
+                        this.GetOrCreateMessageInfo(streamTask.Result, true),
                         this.settings))
                 .FollowOnSuccessWithTask(
                     createOutputContextTask =>

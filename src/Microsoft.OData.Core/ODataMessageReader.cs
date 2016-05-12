@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
     using System.Text;
 #if PORTABLELIB
@@ -79,6 +80,9 @@ namespace Microsoft.OData
         /// <summary>The batch boundary string if the payload to be read is a batch request or response.</summary>
         /// <remarks>This is set implicitly when the CreateBatchReader method is called.</remarks>
         private string batchBoundary;
+
+        /// <summary>The context information for the message.</summary>
+        private ODataMessageInfo messageInfo;
 
         /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given request message.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
@@ -216,15 +220,7 @@ namespace Microsoft.OData
 
                 foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
                 {
-                    ODataMessageInfo messageInfo = new ODataMessageInfo
-                    {
-                        Encoding = this.encoding,
-                        MessageStream = this.message.GetStream(),
-                        IsResponse = this.readingResponse,
-                        IsAsync = false,
-                        MediaType = this.contentType,
-                        Model = this.model
-                    };
+                    ODataMessageInfo messageInfo = this.GetOrCreateMessageInfo(this.message.GetStream(), false);
 
                     // Call the payload kind detection code on the format
                     IEnumerable<ODataPayloadKind> detectionResult = payloadKindGroup.Key.DetectPayloadKind(messageInfo, this.settings);
@@ -829,6 +825,33 @@ namespace Microsoft.OData
 #endif
         }
 
+        private ODataMessageInfo GetOrCreateMessageInfo(Stream messageStream, bool isAsync)
+        {
+            if (this.messageInfo == null)
+            {
+                if (this.container == null)
+                {
+                    this.messageInfo = new ODataMessageInfo();
+                }
+                else
+                {
+                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
+                }
+
+                this.messageInfo.Encoding = this.encoding;
+                this.messageInfo.IsResponse = this.readingResponse;
+                this.messageInfo.IsAsync = isAsync;
+                this.messageInfo.MediaType = this.contentType;
+                this.messageInfo.Model = this.model;
+                this.messageInfo.UrlResolver = this.urlResolver;
+                this.messageInfo.Container = this.container;
+                this.messageInfo.MessageStream = messageStream;
+                this.messageInfo.PayloadKind = this.readerPayloadKind;
+            }
+
+            return this.messageInfo;
+        }
+
         /// <summary>
         /// Processes the content type header of the message to determine the format of the payload, the encoding, and the payload kind.
         /// </summary>
@@ -1232,18 +1255,7 @@ namespace Microsoft.OData
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
             this.inputContext = this.format.CreateInputContext(
-                    new ODataMessageInfo
-                    {
-                        Encoding = this.encoding,
-                        MessageStream = this.message.GetStream(),
-                        IsResponse = this.readingResponse,
-                        IsAsync = false,
-                        MediaType = this.contentType,
-                        Model = this.model,
-                        UrlResolver = this.urlResolver,
-                        PayloadKind = this.readerPayloadKind,
-                        Container = this.container
-                    },
+                    this.GetOrCreateMessageInfo(this.message.GetStream(), false),
                     this.settings);
 
             return readFunc(this.inputContext);
@@ -1320,15 +1332,7 @@ namespace Microsoft.OData
                     this.message.GetStreamAsync()
                         .FollowOnSuccessWithTask(streamTask => 
                             payloadKindGroup.Key.DetectPayloadKindAsync(
-                            new ODataMessageInfo
-                            {
-                                Encoding = this.encoding,
-                                IsResponse = this.readingResponse,
-                                IsAsync = true,
-                                MediaType = this.contentType,
-                                Model = this.model,
-                                MessageStream = streamTask.Result
-                            },
+                            this.GetOrCreateMessageInfo(streamTask.Result, true),
                             this.settings));
 
                 yield return detectionResult
@@ -1368,18 +1372,7 @@ namespace Microsoft.OData
             return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
                     streamTask => this.format.CreateInputContextAsync(
-                        new ODataMessageInfo
-                        {
-                            Encoding = this.encoding,
-                            MessageStream = streamTask.Result,
-                            IsResponse = this.readingResponse,
-                            IsAsync = true,
-                            MediaType = this.contentType,
-                            Model = this.model,
-                            UrlResolver = this.urlResolver,
-                            PayloadKind = this.readerPayloadKind,
-                            Container = this.container
-                        },
+                        this.GetOrCreateMessageInfo(streamTask.Result, true),
                         this.settings))
                 .FollowOnSuccessWithTask(
                     createInputContextTask =>

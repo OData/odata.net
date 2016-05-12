@@ -106,6 +106,7 @@ namespace Microsoft.OData
             builder.AddService<IJsonReaderFactory, DefaultJsonReaderFactory>(ServiceLifetime.Singleton);
             builder.AddService<IJsonWriterFactory, DefaultJsonWriterFactory>(ServiceLifetime.Singleton);
             builder.AddService(ServiceLifetime.Singleton, sp => ODataMediaTypeResolver.GetMediaTypeResolver(null));
+            builder.AddService<ODataMessageInfo>(ServiceLifetime.Scoped);
 
             return builder;
         }

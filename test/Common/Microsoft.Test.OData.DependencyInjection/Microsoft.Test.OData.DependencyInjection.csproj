@@ -37,7 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContainerBuilderHelper.cs" />
+    <Compile Include="ServiceProviderExtensions.cs" />
     <Compile Include="TestContainerBuilder.cs" />
+    <Compile Include="ServiceScopeWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

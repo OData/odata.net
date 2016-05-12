@@ -9,7 +9,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System;
     using System.IO;
-    using System.Text;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
     using Microsoft.OData;
@@ -21,26 +20,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public ODataAvroInputContext(
             ODataFormat format,
-            Stream messageStream,
-            ODataMediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format,
-                new ODataMessageInfo
-                {
-                    MediaType = contentType,
-                    Encoding = encoding,
-                    IsResponse = readingResponse,
-                    IsAsync = !synchronous,
-                    Model = model,
-                    UrlResolver = urlResolver
-                }, messageReaderSettings)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(format, messageInfo, messageReaderSettings)
         {
-            this.stream = messageStream;
+            this.stream = messageInfo.MessageStream;
 
             MemoryStream st = new MemoryStream();
             stream.CopyTo(st);

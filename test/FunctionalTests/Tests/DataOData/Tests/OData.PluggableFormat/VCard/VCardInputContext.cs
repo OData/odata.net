@@ -23,28 +23,14 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
         private Stream stream;
 
-        public VCardInputContext(ODataFormat format,
-            Stream messageStream,
-            ODataMediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format,
-                new ODataMessageInfo
-                {
-                    MediaType = contentType,
-                    Encoding = encoding,
-                    IsResponse = readingResponse,
-                    IsAsync = !synchronous,
-                    Model = model,
-                    UrlResolver = urlResolver
-                }, messageReaderSettings)
+        public VCardInputContext(
+            ODataFormat format,
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(format, messageInfo, messageReaderSettings)
         {
-            this.stream = messageStream;
-            this.reader = new VCardReader(new StreamReader(messageStream, encoding));
+            this.stream = messageInfo.MessageStream;
+            this.reader = new VCardReader(new StreamReader(messageInfo.MessageStream, messageInfo.Encoding));
             this.throwExceptionOnDuplicatedPropertyNames = false;
         }
 

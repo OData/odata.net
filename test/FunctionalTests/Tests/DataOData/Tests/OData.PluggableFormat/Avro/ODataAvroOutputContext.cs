@@ -8,7 +8,6 @@
 namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.IO;
-    using System.Text;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
 
@@ -19,24 +18,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         internal ODataAvroOutputContext(
              ODataFormat format,
-             Stream messageStream,
-             Encoding encoding,
-             ODataMessageWriterSettings messageWriterSettings,
-             bool writingResponse,
-             bool synchronous,
-             IEdmModel model,
-             IODataUrlResolver urlResolver)
-            : base(format,
-                new ODataMessageInfo
-                {
-                    Encoding = encoding,
-                    IsAsync = !synchronous,
-                    IsResponse = writingResponse,
-                    Model = model,
-                    UrlResolver = urlResolver
-                }, messageWriterSettings)
+             ODataMessageInfo messageInfo,
+             ODataMessageWriterSettings messageWriterSettings)
+            : base(format, messageInfo, messageWriterSettings)
         {
-            this.outputStream = messageStream;
+            this.outputStream = messageInfo.MessageStream;
             this.AvroWriter = new AvroWriter(new StreamWrapper(outputStream));
         }
 

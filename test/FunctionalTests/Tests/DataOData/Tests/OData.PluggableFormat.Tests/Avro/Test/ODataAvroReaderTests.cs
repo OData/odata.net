@@ -405,16 +405,19 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
         private ODataAvroInputContext CreateODataInputContext(Stream stream)
         {
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = stream,
+                MediaType = new ODataMediaType("avro", "binary"),
+                Encoding = Encoding.UTF8,
+                IsAsync = false,
+                IsResponse = true,
+            };
+
             return new ODataAvroInputContext(
                 AvroFormat.Avro,
-                stream,
-                new ODataMediaType("avro", "binary"),
-                Encoding.UTF8,
-                new ODataMessageReaderSettings(),
-                true,
-                /*synchronous*/ true,
-                /* model */ null,
-                /*urlResolver*/ null);
+                messageInfo,
+                new ODataMessageReaderSettings());
         }
     }
 }

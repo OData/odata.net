@@ -11,6 +11,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
     using System.Text;
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.Test.OData.Services.ODataWCFService;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Handlers;
@@ -36,6 +37,9 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
         public override Stream Process(Stream requestStream)
         {
+            ServiceScopeWrapper serviceScope = this.RootContainer.CreateServiceScope();
+            this.RequestContainer = serviceScope.ServiceProvider;
+
             try
             {
                 RequestHandler handler = this.DispatchHandler();
@@ -51,6 +55,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
             {
                 ErrorHandler handler = new PluggableFormatErrorHandler(this, e);
                 return handler.Process(null);
+            }
+            finally
+            {
+                serviceScope.Dispose();
             }
         }
     }

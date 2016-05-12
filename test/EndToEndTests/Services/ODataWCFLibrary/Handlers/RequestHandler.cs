@@ -33,6 +33,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             this.RequestUri = Utility.RebuildUri(OperationContext.Current.RequestContext.RequestMessage.Properties.Via);
 
             this.DataSource = dataSource;
+            this.RootContainer = this.DataSource.Container;
+            this.RequestContainer = null;
 
             this.RequestAcceptHeader = WebOperationContext.Current.IncomingRequest.Accept;
             this.RequestHeaders = WebOperationContext.Current.IncomingRequest.Headers.ToDictionary();
@@ -61,6 +63,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
 
             this.DataSource = other.DataSource;
+            this.RootContainer = other.RootContainer;
+            this.RequestContainer = other.RequestContainer;
 
             if (headers == null)
             {
@@ -102,6 +106,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             get;
             private set;
+        }
+
+        public IServiceProvider RootContainer
+        {
+            get;
+            private set;
+        }
+
+        public IServiceProvider RequestContainer
+        {
+            get;
+            protected set;
         }
 
         /// <summary>
@@ -217,7 +233,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             return new ODataRequestMessage(messageBody, this.RequestHeaders, this.RequestUri, this.HttpMethod.ToString())
             {
-                Container = DataSource.Container
+                Container = this.RequestContainer
             };
         }
 
@@ -225,7 +241,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             return new ODataResponseMessage(stream, 200)
             {
-                Container = DataSource.Container
+                Container = this.RequestContainer
             };
         }
 
