@@ -49,13 +49,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 ODataParameterReader reader = ParameterReaderTests.CreateODataParameterReader(model, functionImport, testConfiguration, "{ \"\" : \"foo\" }");
                 this.Assert.ExpectedException(
                     () => reader.Read(),
-                    ODataExpectedExceptions.ODataException("JsonReader_InvalidPropertyNameOrUnexpectedComma", ""), this.ExceptionVerifier);
+                    ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidPropertyNameOrUnexpectedComma", ""), this.ExceptionVerifier);
                 this.Assert.AreEqual(ODataParameterReaderState.Exception, reader.State, "Reader should be in 'Exception' state.");
 
                 reader = ParameterReaderTests.CreateODataParameterReader(model, functionImport, testConfiguration, "{ : \"foo\" }");
                 this.Assert.ExpectedException(
                     () => reader.Read(),
-                    ODataExpectedExceptions.ODataException("JsonReader_InvalidPropertyNameOrUnexpectedComma", ""), this.ExceptionVerifier);
+                    ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidPropertyNameOrUnexpectedComma", ""), this.ExceptionVerifier);
                 this.Assert.AreEqual(ODataParameterReaderState.Exception, reader.State, "Reader should be in 'Exception' state.");
 
                 reader = ParameterReaderTests.CreateODataParameterReader(model, functionImport, testConfiguration, "{ null : \"foo\" }");

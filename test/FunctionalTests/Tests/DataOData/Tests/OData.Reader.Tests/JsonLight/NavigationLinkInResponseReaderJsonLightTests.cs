@@ -556,13 +556,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid navigation link - number",
                     Json = propertyName => "\"" + JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataNavigationLinkUrlAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataNavigationLinkUrlAnnotationName)
                 },
                 new InvalidNavigationLinkAnnotationValueTestCase
                 {
                     DebugDescription = "Invalid navigation link - array",
                     Json = propertyName => "\"" + JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":[]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
                 },
                 new InvalidNavigationLinkAnnotationValueTestCase
                 {
@@ -574,13 +574,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid association link - boolean",
                     Json = propertyName => "\"" + JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":true",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "True", JsonLightConstants.ODataAssociationLinkUrlAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "True", JsonLightConstants.ODataAssociationLinkUrlAnnotationName)
                 },
                 new InvalidNavigationLinkAnnotationValueTestCase
                 {
                     DebugDescription = "Invalid association link - array",
                     Json = propertyName => "\"" + JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":[]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
                 },
                 new InvalidNavigationLinkAnnotationValueTestCase
                 {
@@ -592,13 +592,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid next link - number",
                     Json = propertyName => "\"" + JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataNextLinkAnnotationName) + "\":42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataNextLinkAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataNextLinkAnnotationName)
                 },
                 new InvalidNavigationLinkAnnotationValueTestCase
                 {
                     DebugDescription = "Invalid next link - array",
                     Json = propertyName => "\"" + JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataNextLinkAnnotationName) + "\":[]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
                 },
             };
 

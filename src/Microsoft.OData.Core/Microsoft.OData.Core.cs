@@ -7,8 +7,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
-{
+namespace Microsoft.OData.Core {
     using System;
     using System.Globalization;
     using System.Reflection;
@@ -69,8 +68,7 @@ namespace Microsoft.OData.Core
     ///
     ///        string s = TextRes.GetString(TextRes.MyIdenfitier);
     /// </summary>
-    internal sealed class TextRes
-    {
+    internal sealed class TextRes {
         internal const string ExceptionUtils_ArgumentStringEmpty = "ExceptionUtils_ArgumentStringEmpty";
         internal const string ODataRequestMessage_AsyncNotAvailable = "ODataRequestMessage_AsyncNotAvailable";
         internal const string ODataRequestMessage_StreamTaskIsNull = "ODataRequestMessage_StreamTaskIsNull";
@@ -548,7 +546,7 @@ namespace Microsoft.OData.Core
         internal const string ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue = "ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue";
         internal const string ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue = "ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue";
         internal const string ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty = "ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty";
-        internal const string ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload = "ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload";        
+        internal const string ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload = "ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload";
         internal const string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue = "ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue";
         internal const string ODataJsonLightReaderUtils_AnnotationWithNullValue = "ODataJsonLightReaderUtils_AnnotationWithNullValue";
         internal const string ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation = "ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation";
@@ -871,56 +869,47 @@ namespace Microsoft.OData.Core
         internal const string JsonReaderExtensions_CannotReadValueAsString = "JsonReaderExtensions_CannotReadValueAsString";
         internal const string JsonReaderExtensions_CannotReadValueAsDouble = "JsonReaderExtensions_CannotReadValueAsDouble";
         internal const string JsonReaderExtensions_UnexpectedInstanceAnnotationName = "JsonReaderExtensions_UnexpectedInstanceAnnotationName";
+        internal const string JsonReaderExtensions_ErrorContext = "JsonReaderExtensions_ErrorContext";
 
         static TextRes loader = null;
         ResourceManager resources;
 
-        internal TextRes()
-        {
+        internal TextRes() {
 #if !DNXCORE50
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetTypeInfo().Assembly);
 #endif
         }
-
-        private static TextRes GetLoader()
-        {
-            if (loader == null)
-            {
+        
+        private static TextRes GetLoader() {
+            if (loader == null) {
                 TextRes sr = new TextRes();
                 Interlocked.CompareExchange(ref loader, sr, null);
             }
             return loader;
         }
 
-        private static CultureInfo Culture
-        {
+        private static CultureInfo Culture {
             get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-
-        public static ResourceManager Resources
-        {
-            get
-            {
+        
+        public static ResourceManager Resources {
+            get {
                 return GetLoader().resources;
             }
         }
-
-        public static string GetString(string name, params object[] args)
-        {
+        
+        public static string GetString(string name, params object[] args) {
             TextRes sys = GetLoader();
             if (sys == null)
                 return null;
             string res = sys.resources.GetString(name, TextRes.Culture);
 
-            if (args != null && args.Length > 0)
-            {
-                for (int i = 0; i < args.Length; i++)
-                {
+            if (args != null && args.Length > 0) {
+                for (int i = 0; i < args.Length; i ++) {
                     String value = args[i] as String;
-                    if (value != null && value.Length > 1024)
-                    {
+                    if (value != null && value.Length > 1024) {
                         args[i] = value.Substring(0, 1024 - 3) + "...";
                     }
                 }
@@ -931,16 +920,14 @@ namespace Microsoft.OData.Core
             }
         }
 
-        public static string GetString(string name)
-        {
+        public static string GetString(string name) {
             TextRes sys = GetLoader();
             if (sys == null)
                 return null;
             return sys.resources.GetString(name, TextRes.Culture);
         }
-
-        public static string GetString(string name, out bool usedFallback)
-        {
+        
+        public static string GetString(string name, out bool usedFallback) {
             // always false for this version of gensr
             usedFallback = false;
             return GetString(name);

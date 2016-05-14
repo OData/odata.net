@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataMediaEditLinkAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataMediaEditLinkAnnotationName),
                     OnlyResponse = true,
                 },
                 new StreamPropertyTestCase
@@ -161,7 +161,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaReadLinkAnnotationName) + "\":true",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "True", JsonLightConstants.ODataMediaReadLinkAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "True", JsonLightConstants.ODataMediaReadLinkAnnotationName),
                     OnlyResponse = true,
                 },
                 new StreamPropertyTestCase
@@ -179,7 +179,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaETagAnnotationName) + "\":[]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                     OnlyResponse = true,
                 },
                 new StreamPropertyTestCase
@@ -197,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaContentTypeAnnotationName) + "\":{}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                     OnlyResponse = true,
                 },
                 new StreamPropertyTestCase

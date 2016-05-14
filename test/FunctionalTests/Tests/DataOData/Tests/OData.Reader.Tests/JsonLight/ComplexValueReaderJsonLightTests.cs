@@ -145,14 +145,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         Description = "Primitive value as complex - should fail.",
                         Json = "42",
                         ExpectedPayload = PayloadBuilder.ComplexValue("TestModel.ComplexType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                        ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                     },
                     new
                     {
                         Description = "Array value as complex - should fail.",
                         Json = "[]",
                         ExpectedPayload = PayloadBuilder.ComplexValue("TestModel.ComplexType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
+                        ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
                     },
                     new
                     {
