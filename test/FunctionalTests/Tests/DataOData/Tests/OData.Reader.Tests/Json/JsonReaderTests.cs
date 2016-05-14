@@ -104,60 +104,60 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"some",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedEndOfString"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedEndOfString"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\'some",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedEndOfString"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedEndOfString"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"some\\\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedEndOfString"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedEndOfString"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\'some\\\'",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedEndOfString"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedEndOfString"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnrecognizedEscapeSequence", "\\"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnrecognizedEscapeSequence", "\\"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\g\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnrecognizedEscapeSequence", "\\g"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnrecognizedEscapeSequence", "\\g"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\u\"",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnrecognizedEscapeSequence", "\\uXXXX"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnrecognizedEscapeSequence", "\\uXXXX"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\u123",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnrecognizedEscapeSequence", "\\uXXXX"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnrecognizedEscapeSequence", "\\uXXXX"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\uzzzz\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnrecognizedEscapeSequence", "\\uzzzz"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnrecognizedEscapeSequence", "\\uzzzz"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\u-123",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnrecognizedEscapeSequence", "\\u-123"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnrecognizedEscapeSequence", "\\u-123"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"aa\\u0020",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedEndOfString"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedEndOfString"),
                 },
             };
 
@@ -241,30 +241,30 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "42-3",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_InvalidNumberFormat", "42-3"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidNumberFormat", "42-3"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "42..3",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_InvalidNumberFormat", "42..3"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidNumberFormat", "42..3"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "4e3e3",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_InvalidNumberFormat", "4e3e3"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidNumberFormat", "4e3e3"),
                 },
                 // Number is only up to the first non-number character
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "42a",
                     DisablePayloadCombinations = true,  // We need this since the error is different when inside an array or so.
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MultipleTopLevelValues"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MultipleTopLevelValues"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "42   4",
                     DisablePayloadCombinations = true,  // We need this since the error is different when inside an array or so.
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MultipleTopLevelValues"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MultipleTopLevelValues"),
                 },
             };
 
@@ -304,42 +304,42 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 {
                     JsonText = "[,",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_EndOfInputWithOpenScope"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_EndOfInputWithOpenScope"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^,^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Array"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^42^,^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Array"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^,^42^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Array"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^,^,^42^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Array"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^42^^43^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Array"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^42[]^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Array"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "[^{}42^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Array"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Array"),
                 },
             };
 
@@ -379,42 +379,42 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 {
                     JsonText = "{,",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_EndOfInputWithOpenScope"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_EndOfInputWithOpenScope"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^,^}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Object"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^\"foo\"^:^42^,^}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Object"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^,^\"foo\"^:^42^}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Object"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^,^,^\"foo\"^:^42^}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Object"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^\"foo\"^:^42^^\"bar\"^:^43^}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Object"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^\"foo\"^:^42^\"bar\"^:^43^}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Object"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{^\"foo\"^:^{}^\"bar\"^:^43^]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Object"),
                 },
             };
 
@@ -503,50 +503,50 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"\"^:^42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_InvalidPropertyNameOrUnexpectedComma", string.Empty),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidPropertyNameOrUnexpectedComma", string.Empty),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\'\'^:^42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_InvalidPropertyNameOrUnexpectedComma", string.Empty),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidPropertyNameOrUnexpectedComma", string.Empty),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "^:^42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_InvalidPropertyNameOrUnexpectedComma", string.Empty),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_InvalidPropertyNameOrUnexpectedComma", string.Empty),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"foo\"^42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingColon", "foo"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingColon", "foo"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{\"foo\"",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingColon", "foo"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingColon", "foo"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{\"foo\"  ",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingColon", "foo"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingColon", "foo"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"foo\"^,^42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingColon", "foo"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingColon", "foo"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "\"foo\"^:^,^42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_UnexpectedComma", "Property"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_UnexpectedComma", "Property"),
                 },
                 new JsonReaderTestCaseDescriptor
                 {
                     JsonText = "{\"foo\":",
                     DisablePayloadCombinations = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_EndOfInputWithOpenScope"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_EndOfInputWithOpenScope"),
                 },
             };
 

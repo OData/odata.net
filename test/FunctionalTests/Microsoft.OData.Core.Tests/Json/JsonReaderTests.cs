@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Core.Json;
@@ -74,6 +75,46 @@ namespace Microsoft.OData.Core.Tests.Json
             this.CreateJsonLightReader("\"\\/Date(628318530718)\\/\"").ReadPrimitiveValue().Should().BeOfType<String>();
         }
 
+        [Fact]
+        public void ExceptionForSyntaxErrorShouldIncludeContext()
+        {
+            var reader = CreateJsonReaderForInvalidJson(@"[1,2 ""oops""]");
+            reader.ReadPrimitiveValue();
+
+            ODataException e = Assert.Throws<ODataException>(() => reader.ReadPrimitiveValue());
+            Assert.Contains("Error found near: [1,2  <---", e.Message);
+        }
+
+        [Fact]
+        public void CanCaptureParsingContextSmallerThanDefaultSize()
+        {
+            var reader = CreateJsonReaderForInvalidJson(@"[1,2 ""oops""]");
+            reader.ReadPrimitiveValue();
+
+            const string ExpectedContext = @"[1,2";
+            Assert.Contains(ExpectedContext, reader.CaptureParsingContext(maxContextLength: ExpectedContext.Length + 1));
+        }
+
+        [Fact]
+        public void CanCaptureParsingContextEqualToDefaultSize()
+        {
+            var reader = CreateJsonReaderForInvalidJson(@"[1,2 ""oops""]");
+            reader.ReadPrimitiveValue();
+
+            const string ExpectedContext = @"[1,2";
+            Assert.Contains(ExpectedContext, reader.CaptureParsingContext(maxContextLength: ExpectedContext.Length));
+        }
+
+        [Fact]
+        public void CanCaptureParsingContextGreaterThanDefaultSize()
+        {
+            var reader = CreateJsonReaderForInvalidJson(@"[1,2 ""oops""]");
+            reader.ReadPrimitiveValue();
+
+            const string ExpectedContext = @"1,2";
+            Assert.Contains(ExpectedContext, reader.CaptureParsingContext(maxContextLength: ExpectedContext.Length));
+        }
+
         private JsonReader CreateJsonLightReader(string jsonValue)
         {
             JsonReader reader = new JsonReader(new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)), ODataFormat.Json, isIeee754Compatible: false);
@@ -81,6 +122,15 @@ namespace Microsoft.OData.Core.Tests.Json
             reader.ReadStartObject();
             reader.ReadPropertyName();
             reader.NodeType.Should().Be(JsonNodeType.PrimitiveValue);
+
+            return reader;
+        }
+
+        private JsonReader CreateJsonReaderForInvalidJson(string badJson)
+        {
+            var reader = new JsonReader(new StringReader(badJson), ODataFormat.Json, isIeee754Compatible: false);
+            reader.Read();
+            reader.ReadStartArray();
 
             return reader;
         }

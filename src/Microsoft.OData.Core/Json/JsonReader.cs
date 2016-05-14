@@ -279,13 +279,13 @@ namespace Microsoft.OData.Core.Json
                 case ScopeType.Root:
                     if (commaFound)
                     {
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Root));
+                        throw CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Root));
                     }
 
                     if (currentScope.ValueCount > 0)
                     {
                         // We already found the top-level value, so fail
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_MultipleTopLevelValues);
+                        throw CreateException(Strings.JsonReader_MultipleTopLevelValues);
                     }
 
                     // We expect a "value" - start array, start object or primitive value
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Core.Json
                 case ScopeType.Array:
                     if (commaFound && currentScope.ValueCount == 0)
                     {
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
+                        throw CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
                     }
 
                     // We might see end of array here
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Core.Json
                         // End of array is only valid when there was no comma before it.
                         if (commaFound)
                         {
-                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
+                            throw CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
                         }
 
                         this.PopScope();
@@ -316,7 +316,7 @@ namespace Microsoft.OData.Core.Json
 
                     if (!commaFound && currentScope.ValueCount > 0)
                     {
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_MissingComma(ScopeType.Array));
+                        throw CreateException(Strings.JsonReader_MissingComma(ScopeType.Array));
                     }
 
                     // We expect element which is a "value" - start array, start object or primitive value
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Core.Json
                 case ScopeType.Object:
                     if (commaFound && currentScope.ValueCount == 0)
                     {
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
+                        throw CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
                     }
 
                     // We might see end of object here
@@ -337,7 +337,7 @@ namespace Microsoft.OData.Core.Json
                         // End of object is only valid when there was no comma before it.
                         if (commaFound)
                         {
-                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
+                            throw CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
                         }
 
                         this.PopScope();
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Core.Json
                     {
                         if (!commaFound && currentScope.ValueCount > 0)
                         {
-                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_MissingComma(ScopeType.Object));
+                            throw CreateException(Strings.JsonReader_MissingComma(ScopeType.Object));
                         }
 
                         // We expect a property here
@@ -359,7 +359,7 @@ namespace Microsoft.OData.Core.Json
                 case ScopeType.Property:
                     if (commaFound)
                     {
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Property));
+                        throw CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Property));
                     }
 
                     // We expect the property value, which is a "value" - start array, start object or primitive value
@@ -368,9 +368,9 @@ namespace Microsoft.OData.Core.Json
 
                 default:
 #if SPATIAL
-                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_InternalError);
+                    throw CreateException(Strings.JsonReader_InternalError);
 #else
-                    throw JsonReaderExtensions.CreateException(Strings.General_InternalError(InternalErrorCodes.JsonReader_Read));
+                    throw CreateException(Strings.General_InternalError(InternalErrorCodes.JsonReader_Read));
 #endif
             }
 
@@ -379,6 +379,19 @@ namespace Microsoft.OData.Core.Json
                 "Read should never go back to None and EndOfInput should be reported by directly returning.");
 
             return true;
+        }
+
+        /// <summary>
+        /// Extracts text before and including the current token for use in an error message.
+        /// </summary>
+        /// <param name="maxContextLength">The maximum number of characters to include in the parsing context.</param>
+        /// <returns>Text from the character buffer.</returns>
+        internal string CaptureParsingContext(int maxContextLength = 100)
+        {
+            int startIndex = Math.Max(0, this.tokenStartIndex - maxContextLength);
+            int actualLength = this.tokenStartIndex - startIndex;
+
+            return new String(this.characterBuffer, startIndex, actualLength);
         }
 
         /// <summary>
@@ -459,7 +472,7 @@ namespace Microsoft.OData.Core.Json
                     else
                     {
                         // Unknown token - fail.
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedToken);
+                        throw CreateException(Strings.JsonReader_UnrecognizedToken);
                     }
             }
 
@@ -485,13 +498,13 @@ namespace Microsoft.OData.Core.Json
             if (string.IsNullOrEmpty((string)this.nodeValue))
             {
                 // The name can't be empty.
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_InvalidPropertyNameOrUnexpectedComma((string)this.nodeValue));
+                throw CreateException(Strings.JsonReader_InvalidPropertyNameOrUnexpectedComma((string)this.nodeValue));
             }
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
                 // We need the colon character after the property name
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_MissingColon((string)this.nodeValue));
+                throw CreateException(Strings.JsonReader_MissingColon((string)this.nodeValue));
             }
 
             // Consume the colon.
@@ -581,7 +594,7 @@ namespace Microsoft.OData.Core.Json
                     // Escape sequence - we need at least two characters, the backslash and the one character after it.
                     if (!this.EnsureAvailableCharacters(2))
                     {
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\"));
+                        throw CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\"));
                     }
 
                     // To simplify the code, consume the character after the \ as well, since that is the start of the escape sequence.
@@ -617,20 +630,20 @@ namespace Microsoft.OData.Core.Json
                             // We need 4 hex characters
                             if (!this.EnsureAvailableCharacters(4))
                             {
-                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                                throw CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
                             }
 
                             string unicodeHexValue = this.ConsumeTokenToString(4);
                             int characterValue;
                             if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
                             {
-                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
+                                throw CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
                             }
 
                             valueBuilder.Append((char)characterValue);
                             break;
                         default:
-                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
+                            throw CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
                     }
                 }
                 else if (character == openingQuoteCharacter)
@@ -657,7 +670,7 @@ namespace Microsoft.OData.Core.Json
                 }
             }
 
-            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedEndOfString);
+            throw CreateException(Strings.JsonReader_UnexpectedEndOfString);
         }
 
         /// <summary>
@@ -676,7 +689,7 @@ namespace Microsoft.OData.Core.Json
 
             if (!string.Equals(token, JsonConstants.JsonNullLiteral))
             {
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedToken(token));
+                throw CreateException(Strings.JsonReader_UnexpectedToken(token));
             }
 
             return null;
@@ -706,7 +719,7 @@ namespace Microsoft.OData.Core.Json
                 return true;
             }
 
-            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedToken(token));
+            throw CreateException(Strings.JsonReader_UnexpectedToken(token));
         }
 
         /// <summary>
@@ -766,7 +779,7 @@ namespace Microsoft.OData.Core.Json
                 return doubleValue;
             }
             
-            throw JsonReaderExtensions.CreateException(Strings.JsonReader_InvalidNumberFormat(numberString));
+            throw CreateException(Strings.JsonReader_InvalidNumberFormat(numberString));
         }
 
         /// <summary>
@@ -822,7 +835,7 @@ namespace Microsoft.OData.Core.Json
             if (this.scopes.Count > 1)
             {
                 // Not all open scopes were closed.
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+                throw CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
             }
 
             Debug.Assert(
@@ -1017,6 +1030,11 @@ namespace Microsoft.OData.Core.Json
 
             this.storedCharacterCount += readCount;
             return true;
+        }
+
+        private ODataException CreateException(string exceptionMessage)
+        {
+            return JsonReaderExtensions.CreateException(exceptionMessage, this.CaptureParsingContext());
         }
 
         /// <summary>

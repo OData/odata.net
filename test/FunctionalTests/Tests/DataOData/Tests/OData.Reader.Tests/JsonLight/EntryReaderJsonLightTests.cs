@@ -280,17 +280,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new InvalidEntryInstanceAnnotationValue 
                 { 
                     Json = "42", 
-                    ExpectedException = annotationName => ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", annotationName)
+                    ExpectedException = annotationName => ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", annotationName)
                 },
                 new InvalidEntryInstanceAnnotationValue 
                 { 
                     Json = "{}", 
-                    ExpectedException = annotationName => ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
+                    ExpectedException = annotationName => ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
                 },
                 new InvalidEntryInstanceAnnotationValue 
                 { 
                     Json = "[]", 
-                    ExpectedException = annotationName => ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
+                    ExpectedException = annotationName => ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
                 },
             };
 

@@ -110,55 +110,55 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "invalid top-level JSON node (an array)",
                     Json = "[]",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid top-level JSON node (a primitive value)",
                     Json = "42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value of 'value' property (a primitive value)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": 42 }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "PrimitiveValue")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value of 'value' property (an object value)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": { } }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "StartObject")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "StartObject")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (a nested array value)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ [] ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (integer value)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ 42 ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (boolean value)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ true ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (string value)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ \"string\" ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (null)",
                     Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ null ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 #endregion incorrect json structure
             };

@@ -130,7 +130,9 @@ namespace Microsoft.OData.Core.Json
                 return stringValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsString(value));
+            throw CreateException(
+                Strings.JsonReaderExtensions_CannotReadValueAsString(value), 
+                jsonReader.CaptureParsingContext());
         }
 
         /// <summary>
@@ -150,7 +152,9 @@ namespace Microsoft.OData.Core.Json
                 return stringValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(value, propertyName));
+            throw CreateException(
+                Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(value, propertyName),
+                jsonReader.CaptureParsingContext());
         }
 
         /// <summary>
@@ -181,7 +185,9 @@ namespace Microsoft.OData.Core.Json
                 return (double)decimalValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsDouble(value));
+            throw CreateException(
+                Strings.JsonReaderExtensions_CannotReadValueAsDouble(value), 
+                jsonReader.CaptureParsingContext());
         }
 
         /// <summary>
@@ -284,6 +290,7 @@ namespace Microsoft.OData.Core.Json
         /// Allows the code in this class to be shared between ODataLib and the common spatial library.
         /// </summary>
         /// <param name="exceptionMessage">String to use for the exception message.</param>
+        /// <param name="parsingContext">String containing an excerpt of the JSON that caused the error.</param>
         /// <returns>Exception to be thrown.</returns>
 #if SPATIAL
         internal static FormatException CreateException(string exceptionMessage)
@@ -291,9 +298,9 @@ namespace Microsoft.OData.Core.Json
             return new FormatException(exceptionMessage);
         }
 #else
-        internal static ODataException CreateException(string exceptionMessage)
+        internal static ODataException CreateException(string exceptionMessage, string parsingContext)
         {
-            return new ODataException(exceptionMessage);
+            return new ODataException(Strings.JsonReaderExtensions_ErrorContext(exceptionMessage, parsingContext));
         }
 #endif
 
@@ -323,7 +330,9 @@ namespace Microsoft.OData.Core.Json
 
             if (jsonReader.NodeType != expectedNodeType)
             {
-                throw CreateException(Strings.JsonReaderExtensions_UnexpectedNodeDetected(expectedNodeType, jsonReader.NodeType));
+                throw CreateException(
+                    Strings.JsonReaderExtensions_UnexpectedNodeDetected(expectedNodeType, jsonReader.NodeType), 
+                    jsonReader.CaptureParsingContext());
             }
         }
     }

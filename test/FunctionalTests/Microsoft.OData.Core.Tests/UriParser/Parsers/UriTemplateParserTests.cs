@@ -193,7 +193,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(1)/Fully.Qualified.Namespace.HasHat(onCat={why555})"));
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.JsonReader_MissingColon("why555"));
+            action.ShouldThrow<ODataException>().Match(e => e.Message.StartsWith(Strings.JsonReader_MissingColon("why555")));
         }
 
         [Fact]

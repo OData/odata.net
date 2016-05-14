@@ -36,6 +36,21 @@ namespace Microsoft.Test.Taupo.OData.Common
         }
 
         /// <summary>
+        /// Creates an ExpectedException for ODataException typed exceptions where the message does not 
+        /// need to be an exact match.
+        /// </summary>
+        /// <param name="resourceKey">The resource key to look up the expected message.</param>
+        /// <param name="messageArguments">Arguments for the expected exception message.</param>
+        /// <returns>An ExpectedException for this expected ODataException.</returns>
+        public static ExpectedException ODataExceptionContains(string resourceKey, params string[] messageArguments)
+        {
+            return new ExpectedException(
+                typeof(ODataException), 
+                GetResourceVerifier(DataFxAssemblyRef.OData).CreateExpectedError(resourceKey, messageArguments),
+                exactMessageMatch: false);
+        }
+
+        /// <summary>
         /// Creates an ExpectedException for ODataContentTypeException typed exceptions.
         /// </summary>
         /// <param name="resourceKey">The resource key to look up the expected message.</param>
