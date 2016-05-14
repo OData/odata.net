@@ -90,7 +90,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)")
                             .JsonRepresentation("42"))
                         .ExpectedProperty(owningType, "PrimitiveCollection"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "PrimitiveValue")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -100,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)")
                             .JsonRepresentation("{}"))
                         .ExpectedProperty(owningType, "PrimitiveCollection"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName", "StartArray", "StartObject", "value")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName", "StartArray", "StartObject", "value")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

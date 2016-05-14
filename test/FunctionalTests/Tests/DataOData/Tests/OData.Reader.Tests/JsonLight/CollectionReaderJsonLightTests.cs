@@ -75,7 +75,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadEdmModel = model,
                     PayloadElement = primitiveCollection.DeepCopy().JsonRepresentation("null")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadEdmModel = model,
                     PayloadElement = primitiveCollection.DeepCopy().JsonRepresentation("42")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -91,7 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadEdmModel = model,
                     PayloadElement = primitiveCollection.DeepCopy().JsonRepresentation("[]")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

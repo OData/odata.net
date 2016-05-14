@@ -780,7 +780,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 new ConvertFromUriLiteralTestCase()
                 {
                     Parameter = "{\"property1\":123.456abc}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReader_MissingComma", "Object"),
                 });
             #endregion
 
@@ -958,7 +958,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             const string text = "{5}";
 
             Action convertFrom = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            convertFrom.ShouldThrow<ODataException>().WithMessage("Invalid JSON. A colon character ':' is expected after the property name '5', but none was found.");
+            convertFrom.ShouldThrow<ODataException>().Match(e => e.Message.StartsWith("Invalid JSON. A colon character ':' is expected after the property name '5', but none was found."));
         }
 
         #endregion

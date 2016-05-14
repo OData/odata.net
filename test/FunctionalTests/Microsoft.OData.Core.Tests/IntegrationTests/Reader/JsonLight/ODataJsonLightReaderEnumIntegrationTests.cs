@@ -389,7 +389,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":2}";
             ODataEntry entry = null;
             Action parse = () => ReadReqeustEntryPayload(this.userModel, payload, "application/json;odata.metadata=minimal", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
-            parse.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
+            parse.ShouldThrow<ODataException>().Match(e => e.Message.StartsWith(Microsoft.OData.Core.Strings.JsonReaderExtensions_CannotReadValueAsString("2")));
         }
         #endregion
 

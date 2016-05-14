@@ -278,130 +278,130 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": null }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": 42 }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": [ ] }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray"),
                        },
 
                        // invalid property values for message property
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"message\": [ ] }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"message\": 42 }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", "message"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", "message"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"message\": {} }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
 
                        // invalid property values for innererror value property
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": 42 }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": [ ] }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray"),
                        },
 
                        // invalid property values for message property on innererror value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"message\": { } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"message\": [ ] } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
 
                        // invalid property values for stacktrace property on innererror value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"stacktrace\": { } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"stacktrace\": [ ] } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
 
                        // invalid property values for type name property on innererror value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"type\": { } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"type\": [ ] } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
 
                        // invalid property values for internal exception property on innererror value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": 42 }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": [ ] } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray"),
                        },
 
                        // invalid property values for message property on internal exception property value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": { \"message\": { } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": { \"message\": [ ] } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
 
                        // invalid property values for stacktrace property on internal exception property value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": { \"stacktrace\": { } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": { \"stacktrace\": [ ] } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
 
                        // invalid property values for type name property on internal exception property value
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": { \"type\": { } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"innererror\": { \"internalexception\": { \"type\": [ ] } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
+                           ExpectedException = ODataExpectedExceptions.ODataExceptionContains("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                        },
                        #endregion Invalid property values
                    };
