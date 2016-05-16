@@ -218,6 +218,12 @@ namespace Microsoft.OData
         /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
         private static void ValidateNavigationSource(ODataContextUrlInfo contextUrlInfo)
         {
+            // For ComplexProperty, we will skip this validation
+            if (contextUrlInfo.IsComplexOrComplexCollection)
+            {
+                return;
+            }
+
             // For navigation property without navigation target, navigation path should be null so
             // validate its navigation source (should be the name of the navigation property) which
             // at least requires EdmUnknownEntitySet to be present; otherwise validate its navigation

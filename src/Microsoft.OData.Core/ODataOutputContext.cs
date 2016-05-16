@@ -200,10 +200,10 @@ namespace Microsoft.OData
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public virtual ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }

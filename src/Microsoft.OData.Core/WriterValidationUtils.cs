@@ -139,7 +139,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resourceType">The <see cref="IEdmEntityType"/> of the resource.</param>
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        internal static void ValidateResourceInExpandedLink(IEdmEntityType resourceType, IEdmEntityType parentNavigationPropertyType)
+        internal static void ValidateResourceInExpandedLink(IEdmStructuredType resourceType, IEdmStructuredType parentNavigationPropertyType)
         {
             if (parentNavigationPropertyType == null)
             {

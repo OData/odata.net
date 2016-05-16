@@ -55,10 +55,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Validates a resource in an expanded link to make sure the entity types match.
         /// </summary>
-        /// <param name="resourceEntityType">The <see cref="IEdmEntityType"/> of the resource.</param>
-        /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        void ValidateResourceInExpandedLink(IEdmEntityType resourceEntityType,
-            IEdmEntityType parentNavigationPropertyType);
+        /// <param name="resourceType">The <see cref="IEdmStructuredType"/> of the resource.</param>
+        /// <param name="parentPropertyType">The type of the parent navigation property or complex property or complex collection property.</param>
+        void ValidateResourceInNestedResourceInfo(IEdmStructuredType resourceType,
+            IEdmStructuredType parentPropertyType);
 
         /// <summary>
         /// Validates that an <see cref="ODataOperation"/> can be written.

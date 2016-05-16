@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(true))
             {
-                var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, entityType: this.GetBaseType());
+                var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, resourceType: this.GetBaseType());
                 writer.WriteStart(resourceCollection);
                 writer.WriteStart(entry);
                 writer.WriteEnd(); // entry
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(false))
             {
-                var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, entityType: this.GetBaseType());
+                var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, resourceType: this.GetBaseType());
                 writer.WriteStart(resourceCollection);
                 writer.WriteStart(entry);
                 writer.WriteEnd(); // entry

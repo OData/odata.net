@@ -46,6 +46,9 @@ namespace Microsoft.OData
         /// <summary>Whether target is unknown entity set</summary>
         internal bool IsUnknownEntitySet { get; set; }
 
+        /// <summary>Whether the type of the target is complex or collection of complex</summary>
+        internal bool IsComplexOrComplexCollection { get; set; }
+
         /// <summary>Name of navigation path used for building context Url</summary>
         internal string NavigationPath
         {
@@ -203,6 +206,7 @@ namespace Microsoft.OData
 
             return new ODataContextUrlInfo()
             {
+                IsComplexOrComplexCollection = typeContext.ExpectedResourceType is IEdmComplexType,
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,

@@ -78,6 +78,16 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// The expected resource type.
+        /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
+        /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
+        /// </summary>
+        public virtual IEdmStructuredType ExpectedResourceType
+        {
+            get { return null; }
+        }
+
+        /// <summary>
         /// The flag we use to identify if the current resource is from a collection type or not.
         /// </summary>
         public virtual bool IsFromCollection
@@ -119,9 +129,12 @@ namespace Microsoft.OData
                 return new ODataResourceTypeContextWithoutModel(serializationInfo);
             }
 
-            if (navigationSource != null && model.IsUserModel())
+            // If we are creating an ODataResourceTypeContext for an item in Navigation Source(e.g. an entity set)
+            // or we are creating it for a complex item, we will create an ODataResourceTypeContextWithModel.
+            if (((navigationSource != null || expectedResourceType != null && expectedResourceType.IsODataComplexTypeKind()) && model.IsUserModel()))
             {
-                Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
+                Debug.Assert(navigationSource == null || navigationSourceEntityType != null, "navigationSource == null || navigationSourceEntityType != null");
+
                 Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
                 return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType, model);
             }
@@ -220,6 +233,16 @@ namespace Microsoft.OData
             }
 
             /// <summary>
+            /// The expected resource type.
+            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
+            /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
+            /// </summary>
+            public override IEdmStructuredType ExpectedResourceType
+            {
+                get { return null; }
+            }
+
+            /// <summary>
             /// true if the resource is an MLE, false otherwise.
             /// </summary>
             public override bool IsMediaLinkEntry
@@ -261,12 +284,12 @@ namespace Microsoft.OData
             private readonly IEdmModel model;
 
             /// <summary>
-            /// The navigation source of the resource set or resource.
+            /// The navigation source of the entity set or entity.
             /// </summary>
             private readonly IEdmNavigationSource navigationSource;
 
             /// <summary>
-            /// The entity type of the navigation source of the resource set or resource.
+            /// The entity type of the navigation source of the entity set or entity.
             /// </summary>
             private readonly IEdmEntityType navigationSourceEntityType;
 
@@ -298,6 +321,16 @@ namespace Microsoft.OData
             private readonly bool isFromCollection = false;
 
             /// <summary>
+            /// The full type name of the navigation source of the entity set or entity.
+            /// </summary>
+            private string navigationSourceFullTypeName;
+
+            /// <summary>
+            /// The entity type name of the navigation source of the entity set or entity.
+            /// </summary>
+            private string navigationSourceEntityTypeName;
+
+            /// <summary>
             /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
             /// </summary>
             /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
@@ -308,8 +341,10 @@ namespace Microsoft.OData
                 : base(/*throwIfMissingTypeInfo*/false)
             {
                 Debug.Assert(model != null, "model != null");
-                Debug.Assert(navigationSource != null, "navigationSource != null");
-                Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
+                Debug.Assert(navigationSource != null
+                    && navigationSourceEntityType != null
+                    || expectedResourceType.IsODataComplexTypeKind(),
+                    "navigationSource != null && navigationSourceEntityType != null || expectedResourceType.IsODataComplexTypeKind()");
                 Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
 
                 this.navigationSource = navigationSource;
@@ -335,7 +370,7 @@ namespace Microsoft.OData
                     }
                 }
 
-                this.navigationSourceName = this.navigationSource.Name;
+                this.navigationSourceName = this.navigationSource == null ? null : this.navigationSource.Name;
                 var entityType = this.expectedResourceType as IEdmEntityType;
                 this.isMediaLinkEntry = entityType == null ? false : entityType.HasStream;
                 this.lazyUrlConvention = new SimpleLazy<UrlConvention>(() => UrlConvention.ForModel(this.model));
@@ -354,7 +389,15 @@ namespace Microsoft.OData
             /// </summary>
             public override string NavigationSourceEntityTypeName
             {
-                get { return this.navigationSourceEntityType.FullName(); }
+                get
+                {
+                    if (navigationSourceEntityType != null)
+                    {
+                        this.navigationSourceEntityTypeName = navigationSourceEntityType.FullName();
+                    }
+
+                    return this.navigationSourceEntityTypeName;
+                }
             }
 
             /// <summary>
@@ -362,7 +405,15 @@ namespace Microsoft.OData
             /// </summary>
             public override string NavigationSourceFullTypeName
             {
-                get { return this.navigationSource.Type.FullTypeName(); }
+                get
+                {
+                    if (this.navigationSource != null)
+                    {
+                        this.navigationSourceFullTypeName = this.navigationSource.Type.FullTypeName();
+                    }
+
+                    return this.navigationSourceFullTypeName;
+                }
             }
 
             /// <summary>
@@ -381,6 +432,16 @@ namespace Microsoft.OData
             public override string ExpectedResourceTypeName
             {
                 get { return this.expectedResourceType.FullTypeName(); }
+            }
+
+            /// <summary>
+            /// The expected resource type.
+            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
+            /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
+            /// </summary>
+            public override IEdmStructuredType ExpectedResourceType
+            {
+                get { return this.expectedResourceType; }
             }
 
             /// <summary>

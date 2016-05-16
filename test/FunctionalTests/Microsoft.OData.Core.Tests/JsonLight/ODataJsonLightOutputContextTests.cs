@@ -84,13 +84,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ShouldBeAbleToCreateResourceSetWriterForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet:null, entityType:null), "", writingResponse: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet:null, resourceType:null), "", writingResponse: false);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateResourceSetWriterForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet: null, entityType: null), "", writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet: null, resourceType: null), "", writingResponse: true);
         }
 
         [Fact]

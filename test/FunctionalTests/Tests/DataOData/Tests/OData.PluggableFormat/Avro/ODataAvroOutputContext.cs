@@ -31,7 +31,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, resourceType), false);
         }
 
-        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType resourceType)
+        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, resourceType, true), true);
         }

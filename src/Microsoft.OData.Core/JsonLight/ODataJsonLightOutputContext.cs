@@ -174,13 +174,13 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.AssertSynchronous();
 
-            return this.CreateODataResourceSetWriterImplementation(entitySet, entityType);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType);
         }
 
 #if PORTABLELIB
@@ -649,11 +649,11 @@ namespace Microsoft.OData.JsonLight
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingResourceSet*/true);
+            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true);
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }

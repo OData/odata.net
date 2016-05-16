@@ -206,13 +206,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.ResourceSet,
-                (context) => context.CreateODataResourceSetWriter(entitySet, entityType));
+                (context) => context.CreateODataResourceSetWriter(entitySet, resourceType));
         }
 
 #if PORTABLELIB

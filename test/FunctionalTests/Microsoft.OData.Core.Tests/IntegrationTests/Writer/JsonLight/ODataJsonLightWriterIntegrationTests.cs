@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             const string expected = "{\"@odata.id\":\"http://test.org/EntitySet('1')\"}";
-            var actual = WriteJsonLightEntry(true, null, false, new ODataResource() {Id = new Uri("http://test.org/EntitySet('1')")}, entitySet, entityType);
+            var actual = WriteJsonLightEntry(true, null, false, new ODataResource() { Id = new Uri("http://test.org/EntitySet('1')") }, entitySet, entityType);
             actual.Should().Be(expected);
         }
 
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 specifySet: true,
                 odataEntry: entry,
                 entitySet: containedEntitySet,
-                entityType: containedEntitySet.Type as IEdmEntityType,
+                resourceType: containedEntitySet.Type as IEdmEntityType,
                 odataUri: odataUri);
             actual.Should().Contain("\"@odata.id\":\"FakeSet('parent')/nav('son')\"");
         }
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 specifySet: true,
                 odataEntry: entry,
                 entitySet: containedEntitySet,
-                entityType: containedEntitySet.Type as IEdmEntityType,
+                resourceType: containedEntitySet.Type as IEdmEntityType,
                 odataUri: null);
             writeContainedEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataMetadataBuilder_MissingODataUri);
         }
@@ -185,13 +185,201 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             actual.Should().NotContain("\"@odata.readLink\"");
         }
 
+        [Fact]
+        public void WriteEntityWithComplexProperty()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = AddAndGetComplexType(model);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            entityType.AddStructuralProperty("ComplexP", new EdmComplexTypeReference(complexType, false));
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "ComplexP" };
+            ODataResource nestedRes = new ODataResource() { Properties = new[] { new ODataProperty { Name = "P1", Value = "cv" } } };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: false,
+                serviceDocumentUri: new Uri("http://temp.org/"),
+                specifySet: true,
+                odataEntry: null,
+                entitySet: entitySet,
+                resourceType: entityType,
+                odataUri: odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteStart(nestedResInfo);
+                    writer.WriteStart(nestedRes);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
+            var expected = "{\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\",\"@odata.id\":\"FakeSet('son')\",\"@odata.editLink\":\"FakeSet('son')\",\"Key\":\"son\",\"ComplexP\":{\"P1\":\"cv\"}}";
+
+            Assert.Equal(expected, actual);
+
+        }
+
+        [Fact]
+        public void WriteEntityWithColletionOfComplexProperty()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = AddAndGetComplexType(model);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            entityType.AddStructuralProperty("CollectionOfComplexP",
+                new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complexType, true))));
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')/");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResource entry = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "parent" }, } };
+
+            ODataNestedResourceInfo nestedResourceInfoForCollectionP = new ODataNestedResourceInfo
+            {
+                IsCollection = true,
+                Name = "CollectionOfComplexP"
+            };
+
+            ODataResourceSet collectionP = new ODataResourceSet();
+            ODataResource complexP = new ODataResource()
+            {
+                Properties = new[] { new ODataProperty { Name = "P1", Value = "complexValue" }, }
+            };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: false,
+                serviceDocumentUri: new Uri("http://temp.org/"),
+                specifySet: true,
+                odataEntry: null,
+                entitySet: entitySet,
+                resourceType: entityType,
+                odataUri: odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(nestedResourceInfoForCollectionP);
+                    writer.WriteStart(collectionP);
+                    writer.WriteStart(complexP);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
+            var expected = "{" +
+  "\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\"," +
+  "\"@odata.id\":\"FakeSet('parent')\"," +
+  "\"@odata.editLink\":\"FakeSet('parent')\"," +
+  "\"Key\":\"parent\"," +
+  "\"CollectionOfComplexP\":" +
+  "[" +
+    "{" +
+      "\"P1\":\"complexValue\"" +
+    "}" +
+  "]" +
+"}";
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void WriteTopLevelComplexProperty()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = AddAndGetComplexType(model);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            entityType.AddStructuralProperty("ComplexP", new EdmComplexTypeReference(complexType, false));
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')/ComplexP");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResource nestedRes = new ODataResource() { Properties = new[] { new ODataProperty { Name = "P1", Value = "cv" } } };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: false,
+                serviceDocumentUri: new Uri("http://temp.org/"),
+                specifySet: false,
+                odataEntry: null,
+                entitySet: null,
+                resourceType: complexType,
+                odataUri: odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(nestedRes);
+                    writer.WriteEnd();
+                });
+
+            var expected = "{\"@odata.context\":\"http://temp.org/$metadata#FakeSet('parent')/ComplexP\",\"P1\":\"cv\"}";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void WriteTopLevelComplexCollectionProperty()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = AddAndGetComplexType(model);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            var collectionOfComplexType = new EdmCollectionType(new EdmComplexTypeReference(complexType, true));
+            entityType.AddStructuralProperty("CollectionOfComplexP",
+                new EdmCollectionTypeReference(collectionOfComplexType));
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')/CollectionOfComplexP");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResourceSet collectionP = new ODataResourceSet();
+            ODataResource complexP = new ODataResource()
+            {
+                Properties = new[] { new ODataProperty { Name = "P1", Value = "complexValue" }, }
+            };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: false,
+                serviceDocumentUri: new Uri("http://temp.org/"),
+                specifySet: false,
+                odataEntry: null,
+                entitySet: null,
+                resourceType: complexType,
+                odataUri: odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(collectionP);
+                    writer.WriteStart(complexP);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                },
+                isResourceSet: true);
+
+            var expected = "{" +
+  "\"@odata.context\":\"http://temp.org/$metadata#FakeSet('parent')/CollectionOfComplexP\"," +
+  "\"value\":" +
+  "[" +
+    "{" +
+      "\"P1\":\"complexValue\"" +
+    "}" +
+  "]" +
+"}";
+            actual.Should().Be(expected);
+        }
+
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet, ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType)
         {
-            return WriteJsonLightEntry(isRequest, serviceDocumentUri, specifySet, odataEntry, entitySet, entityType, odataUri: null);
+            return WriteJsonLightEntry(isRequest, serviceDocumentUri, specifySet, odataEntry, entitySet, entityType, odataUri: null, writeAction: null, isResourceSet: false);
         }
 
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet,
-            ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType, ODataUri odataUri)
+            ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmStructuredType resourceType, ODataUri odataUri, Action<ODataWriter> writeAction = null, bool isResourceSet = false)
         {
             var model = new EdmModel();
             model.AddElement(new EdmEntityContainer("Fake", "Container_sub"));
@@ -215,10 +403,27 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, TestUtils.WrapReferencedModelsToMainModel("Fake", "Container", model));
             }
 
-            var entryWriter = messageWriter.CreateODataResourceWriter(specifySet ? entitySet : null, entityType);
-            entryWriter.WriteStart(odataEntry);
-            entryWriter.WriteEnd();
-            entryWriter.Flush();
+            ODataWriter writer = null;
+            if (isResourceSet)
+            {
+                writer = messageWriter.CreateODataResourceSetWriter(entitySet as IEdmEntitySetBase, resourceType);
+            }
+            else
+            {
+                writer = messageWriter.CreateODataResourceWriter(specifySet ? entitySet : null, resourceType);
+            }
+
+            if (writeAction != null)
+            {
+                writeAction(writer);
+            }
+            else if (!isResourceSet)
+            {
+                writer.WriteStart(odataEntry);
+                writer.WriteEnd();
+            }
+
+            writer.Flush();
 
             var actual = Encoding.UTF8.GetString(stream.ToArray());
             return actual;
@@ -259,6 +464,27 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             EdmEntityType type = new EdmEntityType("Fake", "Type");
             type.AddKeys(type.AddStructuralProperty("Key", EdmPrimitiveTypeKind.String));
+            return type;
+        }
+
+        private static EdmEntityType AddAndGetEntityType(EdmModel model)
+        {
+            var type = GetEntityType();
+            model.AddElement(type);
+            return type;
+        }
+
+        private static EdmComplexType GetComplexType()
+        {
+            EdmComplexType type = new EdmComplexType("Fake", "ComplexType");
+            type.AddStructuralProperty("P1", EdmPrimitiveTypeKind.String);
+            return type;
+        }
+
+        private static EdmComplexType AddAndGetComplexType(EdmModel model)
+        {
+            var type = GetComplexType();
+            model.AddElement(type);
             return type;
         }
 

@@ -735,14 +735,21 @@ namespace Microsoft.OData
         /// <param name="writerState">The writer state for the new scope.</param>
         /// <param name="navLink">The nested resource info for the new scope.</param>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resourceSet to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The resource type for the items in the resourceSet to be written (or null if the resource set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created nested resource info scope.</returns>
-        protected virtual NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        protected virtual NestedResourceInfoScope CreateNestedResourceInfoScope(
+            WriterState writerState,
+            ODataNestedResourceInfo navLink,
+            IEdmNavigationSource navigationSource,
+            IEdmStructuredType resourceType,
+            bool skipWriting,
+            SelectedPropertiesNode selectedProperties,
+            ODataUri odataUri)
         {
-            return new NestedResourceInfoScope(writerState, navLink, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
+            return new NestedResourceInfoScope(writerState, navLink, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -880,14 +887,14 @@ namespace Microsoft.OData
                     if (resource != null)
                     {
                         ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-                        IEdmEntityType resourceType = this.GetResourceType(resource) as IEdmEntityType;
+                        IEdmStructuredType resourceType = this.GetResourceType(resource);
                         resourceScope.ResourceTypeFromMetadata = resourceScope.ResourceType;
 
                         NestedResourceInfoScope parentNestedResourceInfoScope = this.ParentNestedResourceInfoScope;
                         if (parentNestedResourceInfoScope != null)
                         {
-                            // Validate the consistency of resource types in the expanded resourceSet/resource
-                            this.WriterValidator.ValidateResourceInExpandedLink(resourceType, parentNestedResourceInfoScope.ResourceType as IEdmEntityType);
+                            // Validate the consistency of resource types in the nested resourceSet/resource
+                            this.WriterValidator.ValidateResourceInNestedResourceInfo(resourceType, parentNestedResourceInfoScope.ResourceType);
                             resourceScope.ResourceTypeFromMetadata = parentNestedResourceInfoScope.ResourceType;
                         }
                         else if (this.CurrentResourceSetValidator != null)
@@ -898,9 +905,17 @@ namespace Microsoft.OData
 
                         resourceScope.ResourceType = resourceType;
 
-                        this.PrepareResourceForWriteStart(resource, resourceScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse), resourceScope.SelectedProperties);
+                        // For Complex resource, we don't prepare the ODataResourceMetadataBuilder, then it will use NoOpResourceMetadataBuilder
+                        var entityType = resourceType as IEdmEntityType;
+                        if (resourceType == null || entityType != null)
+                        {
+                            this.PrepareResourceForWriteStart(
+                                resource,
+                                resourceScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse),
+                                resourceScope.SelectedProperties);
 
-                        this.ValidateMediaResource(resource, resourceType);
+                            this.ValidateMediaResource(resource, entityType);
+                        }
                     }
 
                     this.StartResource(resource);
@@ -1157,14 +1172,25 @@ namespace Microsoft.OData
                 {
                     if (this.ParentResourceType != null)
                     {
-                        IEdmNavigationProperty navigationProperty =
-                             this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind);
-                        if (navigationProperty != null)
+                        IEdmStructuralProperty complexProperty = this.ParentResourceType.FindProperty(currentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                        if (complexProperty != null)
                         {
-                            this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
+                            this.CurrentScope.ResourceType = complexProperty.ToStructuredType();
                             IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
 
-                            this.CurrentScope.NavigationSource = parentNavigationSource == null ? null : parentNavigationSource.FindNavigationTarget(navigationProperty);
+                            this.CurrentScope.NavigationSource = parentNavigationSource;
+                        }
+                        else
+                        {
+                            IEdmNavigationProperty navigationProperty =
+                                 this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind);
+                            if (navigationProperty != null)
+                            {
+                                this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
+                                IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
+
+                                this.CurrentScope.NavigationSource = parentNavigationSource == null ? null : parentNavigationSource.FindNavigationTarget(navigationProperty);
+                            }
                         }
                     }
                 });
@@ -1192,11 +1218,14 @@ namespace Microsoft.OData
                     {
                         this.InterceptException(() =>
                         {
-                            this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(
-                                    currentNestedResourceInfo,
-                                    contentPayloadKind != ODataPayloadKind.EntityReferenceLink,
-                                    contentPayloadKind == ODataPayloadKind.ResourceSet);
-                            this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
+                            if (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType())
+                            {
+                                this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(
+                                        currentNestedResourceInfo,
+                                        contentPayloadKind != ODataPayloadKind.EntityReferenceLink,
+                                        contentPayloadKind == ODataPayloadKind.ResourceSet);
+                                this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
+                            }
                         });
                     }
                 }
@@ -1539,7 +1568,7 @@ namespace Microsoft.OData
         /// <param name="state">The writer state of the scope to create.</param>
         /// <param name="item">The item attached to the scope to create.</param>
         /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the navigationSource base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The OdataUri info of this scope.</param>
@@ -1567,7 +1596,7 @@ namespace Microsoft.OData
                     break;
                 case WriterState.NestedResourceInfo:            // fall through
                 case WriterState.NestedResourceInfoWithContent:
-                    scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, resourceType as IEdmEntityType, skipWriting, selectedProperties, odataUri);
+                    scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
                     break;
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
@@ -2039,7 +2068,7 @@ namespace Microsoft.OData
                         this.serializationInfo,
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
-                        this.ResourceTypeFromMetadata,
+                        this.ResourceTypeFromMetadata ?? this.ResourceType,
                         model,
                         writingResponse);
                 }
