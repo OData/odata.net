@@ -145,48 +145,48 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
-        protected override ODataReader CreateResourceReader(IEdmEntityType expectedEntityType)
+        /// <param name="expectedResourceType">Expected resource type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
+        protected override ODataReader CreateResourceReader(IEdmStructuredType expectedResourceType)
         {
-            return this.CreateResourceReaderSynchronously(expectedEntityType);
+            return this.CreateResourceReaderSynchronously(expectedResourceType);
         }
 
 #if PORTABLELIB
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
+        /// <param name="expectedResourceType">Expected entity type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected override Task<ODataReader> CreateResourceReaderAsync(IEdmEntityType expectedEntityType)
+        protected override Task<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType)
         {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceReaderSynchronously(expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceReaderSynchronously(expectedResourceType));
         }
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected resource set element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.</returns>
-        protected override ODataReader CreateResourceSetReader(IEdmEntityType expectedEntityType)
+        /// <param name="expectedResourceType">Expected resource set element type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
+        protected override ODataReader CreateResourceSetReader(IEdmStructuredType expectedResourceType)
         {
-            return this.CreateResourceSetReaderSynchronously(expectedEntityType);
+            return this.CreateResourceSetReaderSynchronously(expectedResourceType);
         }
 
 #if PORTABLELIB
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
+        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected resource set element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.</returns>
+        /// <param name="expectedResourceType">Expected resource set element type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected override Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntityType expectedEntityType)
+        protected override Task<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
         {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceSetReaderSynchronously(expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceSetReaderSynchronously(expectedResourceType));
         }
 #endif
 
@@ -268,25 +268,25 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
-        private ODataReader CreateResourceReaderSynchronously(IEdmEntityType expectedEntityType)
+        /// <param name="expectedResourceType">Expected entity type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
+        private ODataReader CreateResourceReaderSynchronously(IEdmStructuredType expectedResourceType)
         {
-            Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-            return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedEntityType, false /*readingResourceSet*/, true /*readingParameter*/, false /*readingDelta*/, this /*IODataReaderListener*/);
+            Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
+            return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedResourceType, false /*readingResourceSet*/, true /*readingParameter*/, false /*readingDelta*/, this /*IODataReaderListener*/);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected resource set element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.</returns>
-        private ODataReader CreateResourceSetReaderSynchronously(IEdmEntityType expectedEntityType)
+        /// <param name="expectedResourceType">Expected resource set element type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
+        private ODataReader CreateResourceSetReaderSynchronously(IEdmStructuredType expectedResourceType)
         {
-            Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-            return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedEntityType, true /*readingResourceSet*/, true /*readingParameter*/, false /*readingDelta*/, this /*IODataReaderListener*/);
+            Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
+            return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedResourceType, true /*readingResourceSet*/, true /*readingParameter*/, false /*readingDelta*/, this /*IODataReaderListener*/);
         }
 
         /// <summary>

@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = EntityTypeName,
+                ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
                 UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 IsFromCollection = false,
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = DerivedEntityTypeName,
+                ExpectedResourceTypeName = DerivedEntityTypeName,
                 IsMediaLinkEntry = true,
                 UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 IsFromCollection = false
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = EntityTypeName,
+                ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
                 UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = EntityTypeName,
+                ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
                 UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
@@ -1103,7 +1103,7 @@ namespace Microsoft.OData.Tests.Evaluation
             {
                 NavigationSourceName = "Boss",
                 NavigationSourceEntityTypeName = "BossType",
-                ExpectedEntityTypeName = "BossType",
+                ExpectedResourceTypeName = "BossType",
                 UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.Singleton,
             };
@@ -1192,7 +1192,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
         public string NavigationSourceFullTypeName { get; set; }
 
-        public string ExpectedEntityTypeName { get; set; }
+        public string ExpectedResourceTypeName { get; set; }
 
         public bool IsMediaLinkEntry { get; set; }
 

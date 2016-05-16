@@ -137,8 +137,8 @@ namespace Microsoft.OData
             this.subReaderState = SubReaderState.Active;
             Debug.Assert(this.Name != null, "this.Name != null");
             Debug.Assert(this.Value == null, "this.Value == null");
-            IEdmEntityType expectedEntityType = (IEdmEntityType)this.GetParameterTypeReference(this.Name).Definition;
-            return this.CreateResourceReader(expectedEntityType);
+            IEdmStructuredType expectedResourceType = (IEdmStructuredType)this.GetParameterTypeReference(this.Name).Definition;
+            return this.CreateResourceReader(expectedResourceType);
         }
 
         /// <summary>
@@ -155,8 +155,8 @@ namespace Microsoft.OData
             this.subReaderState = SubReaderState.Active;
             Debug.Assert(this.Name != null, "this.Name != null");
             Debug.Assert(this.Value == null, "this.Value == null");
-            IEdmEntityType expectedEntityType = (IEdmEntityType)((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType.Definition;
-            return this.CreateResourceSetReader(expectedEntityType);
+            IEdmStructuredType expectedResourceType = (IEdmStructuredType)((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType.Definition;
+            return this.CreateResourceSetReader(expectedResourceType);
         }
 
         /// <summary>
@@ -392,18 +392,18 @@ this.State == ODataParameterReaderState.Collection,
         protected abstract bool ReadNextParameterImplementation();
 
         /// <summary>
-        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected entity type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedEntityType"/>.</returns>
-        protected abstract ODataReader CreateResourceReader(IEdmEntityType expectedEntityType);
+        /// <param name="expectedResourceType">Expected entity type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
+        protected abstract ODataReader CreateResourceReader(IEdmStructuredType expectedResourceType);
 
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.
+        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
-        /// <param name="expectedEntityType">Expected resource set element type to read.</param>
-        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedEntityType"/>.</returns>
-        protected abstract ODataReader CreateResourceSetReader(IEdmEntityType expectedEntityType);
+        /// <param name="expectedResourceType">Expected resource set element type to read.</param>
+        /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
+        protected abstract ODataReader CreateResourceSetReader(IEdmStructuredType expectedResourceType);
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.

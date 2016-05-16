@@ -206,7 +206,7 @@ namespace Microsoft.OData
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,
-                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
+                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName ? null : typeContext.ExpectedResourceTypeName,
                 TypeName = typeContext.NavigationSourceFullTypeName,
                 IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 odataUri = odataUri
@@ -229,7 +229,7 @@ namespace Microsoft.OData
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,
-                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
+                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName ? null : typeContext.ExpectedResourceTypeName,
                 TypeName = typeContext.NavigationSourceEntityTypeName,
                 IncludeFragmentItemSelector = kind == ODataDeltaKind.Resource && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 DeltaKind = kind,

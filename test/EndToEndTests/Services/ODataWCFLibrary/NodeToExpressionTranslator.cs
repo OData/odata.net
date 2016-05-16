@@ -267,18 +267,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             // collection of entity
             if (nodeIn.TypeReference != null && nodeIn.TypeReference.IsCollection() &&
-                (nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType.IsEntity())
+                (nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType.IsStructured())
             {
                 return Expression.Constant(ParseEntityCollection(nodeIn));
             }
 
             // the value is entity or entity reference.
-            if (nodeIn.TypeReference != null && nodeIn.TypeReference.IsEntity())
+            if (nodeIn.TypeReference != null && (nodeIn.TypeReference.IsStructured()))
             {
                 return Expression.Constant(ParseEntity(nodeIn));
             }
             // the value is complex or collection.
-            if (nodeIn.Value is ODataComplexValue || nodeIn.Value is ODataCollectionValue || nodeIn.Value is ODataResource)
+            if (nodeIn.Value is ODataCollectionValue || nodeIn.Value is ODataResource)
             {
 
                 object value = ODataObjectModelConverter.ConvertPropertyValue(nodeIn.Value);
@@ -935,7 +935,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 Stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nodeIn.LiteralText)),
             };
 
-            var entityType = (nodeIn.TypeReference as IEdmEntityTypeReference).Definition as IEdmEntityType;
+            var resourceType = (nodeIn.TypeReference as IEdmStructuredTypeReference).Definition as IEdmStructuredType;
 
             using (
                 ODataMessageReader reader = new ODataMessageReader(message as IODataRequestMessage, settings,
@@ -950,9 +950,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     return target;
                 }
 
+                var entityType = resourceType as IEdmEntityType;
+
                 var entryReader = reader.CreateODataResourceReader(
-                    new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
-                    entityType);
+                    entityType == null ? null : new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
+                    resourceType);
                 ODataResource entry = null;
                 while (entryReader.Read())
                 {
@@ -979,9 +981,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 Stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nodeIn.LiteralText)),
             };
 
-            var entityType =
-                ((nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType as IEdmEntityTypeReference)
-                    .Definition as IEdmEntityType;
+            var resourceType =
+                ((nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType as IEdmStructuredTypeReference)
+                    .Definition as IEdmStructuredType;
             object list = null;
             MethodInfo addMethod = null;
             using (
@@ -1011,9 +1013,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     return list;
                 }
 
+                var entityType = resourceType as IEdmEntityType;
                 var feedReader = reader.CreateODataResourceSetReader(
-                    new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
-                    entityType);
+                    entityType == null ? null : new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
+                    resourceType);
                 ODataResource entry = null;
                 while (feedReader.Read())
                 {

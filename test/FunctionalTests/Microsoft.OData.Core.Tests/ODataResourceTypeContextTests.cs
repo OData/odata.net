@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeContextWithSerializationInfoShouldReturnExpectedEntityTypeName()
         {
-            TypeContextWithoutModel.ExpectedEntityTypeName.Should().Be("ns.MyVipCustomer");
+            TypeContextWithoutModel.ExpectedResourceTypeName.Should().Be("ns.MyVipCustomer");
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeContextWithMetadataShouldReturnExpectedEntityTypeName()
         {
-            TypeContextWithModel.ExpectedEntityTypeName.Should().Be("ns.VipCustomer");
+            TypeContextWithModel.ExpectedResourceTypeName.Should().Be("ns.VipCustomer");
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BaseTypeContextThatThrowsShouldReturnNullExpectedEntityTypeName()
         {
-            BaseTypeContextThatThrows.ExpectedEntityTypeName.Should().BeNull();
+            BaseTypeContextThatThrows.ExpectedResourceTypeName.Should().BeNull();
         }
 
         [Fact]
@@ -212,7 +212,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BaseTypeContextThatWillNotThrowShouldReturnNullExpectedEntityTypeName()
         {
-            BaseTypeContextThatWillNotThrow.ExpectedEntityTypeName.Should().BeNull();
+            BaseTypeContextThatWillNotThrow.ExpectedResourceTypeName.Should().BeNull();
         }
 
         [Fact]
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeContextWithEdmUnknowEntitySetShouldReturnExpectedEntityTypeName()
         {
-            TypeContextWithEdmUnknowEntitySet.ExpectedEntityTypeName.Should().Be("ns.MyVipCustomer");
+            TypeContextWithEdmUnknowEntitySet.ExpectedResourceTypeName.Should().Be("ns.MyVipCustomer");
         }
 
         [Fact]

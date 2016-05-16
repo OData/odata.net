@@ -567,7 +567,7 @@ namespace Microsoft.OData.Evaluation
                 // A cast segment if the navigation property is defined on a type derived from the entity
                 // type declared for the entity set
                 IODataResourceTypeContext typeContext = parent.resourceMetadataContext.TypeContext;
-                if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedEntityTypeName)
+                if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedResourceTypeName)
                 {
                     // Do not append type cast if we know that the navigation property is in base type, not in derived type.
                     ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;

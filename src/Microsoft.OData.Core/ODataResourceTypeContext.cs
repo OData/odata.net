@@ -72,7 +72,7 @@ namespace Microsoft.OData
         /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
         /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
         /// </summary>
-        public virtual string ExpectedEntityTypeName
+        public virtual string ExpectedResourceTypeName
         {
             get { return null; }
         }
@@ -214,7 +214,7 @@ namespace Microsoft.OData
             /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected entity type is Namespace.VIP_Person.
             /// (The entity set element type name in this example may be Person, and the actual entity type of a particular entity might be a type more derived than VIP_Person)
             /// </summary>
-            public override string ExpectedEntityTypeName
+            public override string ExpectedResourceTypeName
             {
                 get { return this.serializationInfo.ExpectedTypeName; }
             }
@@ -378,7 +378,7 @@ namespace Microsoft.OData
             /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
             /// (The entity set element type name in this example may be Person, and the actual resource type of a particular resource might be a type more derived than VIP_Person)
             /// </summary>
-            public override string ExpectedEntityTypeName
+            public override string ExpectedResourceTypeName
             {
                 get { return this.expectedResourceType.FullTypeName(); }
             }

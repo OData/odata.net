@@ -106,7 +106,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).As<IEdmFunction>();
-                    aliasNodes["@address"].As<ConstantNode>().Value.ShouldBeODataComplexValue();
+                    aliasNodes["@address"].As<ConstantNode>().Value.Should().Be("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
                 });
         }
 
@@ -119,8 +119,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).As<IEdmFunction>();
-                    aliasNodes["@addresses"].As<ConstantNode>().Value.ShouldBeODataCollectionValue().
-                        And.ItemsShouldBeAssignableTo<ODataComplexValue>().And.Count().Should().Be(2);
+                    var value = aliasNodes["@addresses"].As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
                 });
         }
 

@@ -213,6 +213,14 @@ namespace Microsoft.OData.Metadata
             return typeReference.Definition.IsEntityCollectionType();
         }
 
+        internal static bool IsStructuredCollectionType(this IEdmTypeReference typeReference)
+        {
+            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
+
+            return typeReference.Definition.IsStructuredCollectionType();
+        }
+
         /// <summary>
         /// Checks whether a type refers to a OData collection value type of non-entity elements.
         /// </summary>
@@ -247,6 +255,29 @@ namespace Microsoft.OData.Metadata
 
             // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
             if (collectionType == null || (collectionType.ElementType != null && collectionType.ElementType.TypeKind() != EdmTypeKind.Entity))
+            {
+                return false;
+            }
+
+            Debug.Assert(collectionType.TypeKind == EdmTypeKind.Collection, "Expected collection type kind.");
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether a type refers to a OData collection value type of entity elements.
+        /// </summary>
+        /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="type"/> is an entity OData collection value type; otherwise false.</returns>
+        internal static bool IsStructuredCollectionType(this IEdmType type)
+        {
+            Debug.Assert(type != null, "type != null");
+
+            IEdmCollectionType collectionType = type as IEdmCollectionType;
+
+            // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
+            if (collectionType == null
+                || (collectionType.ElementType != null
+                    && (collectionType.ElementType.TypeKind() != EdmTypeKind.Entity && collectionType.ElementType.TypeKind() != EdmTypeKind.Complex)))
             {
                 return false;
             }

@@ -115,7 +115,7 @@ namespace Microsoft.OData.UriParser
                 if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
                 {
                     object result = valueStr;
-                    if (!parameterType.IsEntity() && !parameterType.IsEntityCollectionType())
+                    if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())
                     {
                         result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
                     }
