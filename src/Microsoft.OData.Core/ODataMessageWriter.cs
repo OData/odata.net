@@ -183,7 +183,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataAsyncWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Asynchronous,
-                null /* verifyHeaders */,
                 context => context.CreateODataAsynchronousWriter());
         }
 
@@ -215,7 +214,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.ResourceSet,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataResourceSetWriter(entitySet, entityType));
         }
 
@@ -227,7 +225,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataAsyncWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Asynchronous,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataAsynchronousWriterAsync());
         }
 
@@ -259,7 +256,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.ResourceSet,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataResourceSetWriterAsync(entitySet, entityType));
         }
 #endif
@@ -275,7 +271,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataDeltaWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.ResourceSet,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataDeltaWriter(entitySet, entityType));
         }
 
@@ -291,7 +286,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.ResourceSet,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
         }
 #endif
@@ -324,7 +318,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Resource,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataResourceWriter(navigationSource, resourceType));
         }
 
@@ -357,7 +350,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Resource,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataResourceWriterAsync(navigationSource, resourceType));
         }
 #endif
@@ -379,7 +371,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataCollectionWriter(itemTypeReference);
             return this.WriteToOutput(
                 ODataPayloadKind.Collection,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataCollectionWriter(itemTypeReference));
         }
 
@@ -401,7 +392,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataCollectionWriter(itemTypeReference);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Collection,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataCollectionWriterAsync(itemTypeReference));
         }
 #endif
@@ -413,7 +403,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Batch,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataBatchWriter(this.batchBoundary));
         }
 
@@ -425,7 +414,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Batch,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataBatchWriterAsync(this.batchBoundary));
         }
 #endif
@@ -440,7 +428,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataParameterWriter(operation);
             return this.WriteToOutput(
                 ODataPayloadKind.Parameter,
-                null,
                 (context) => context.CreateODataParameterWriter(operation));
         }
 
@@ -455,7 +442,6 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataParameterWriter(operation);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Parameter,
-                null,
                 (context) => context.CreateODataParameterWriterAsync(operation));
         }
 #endif
@@ -467,7 +453,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteServiceDocument(serviceDocument);
             this.WriteToOutput(
                 ODataPayloadKind.ServiceDocument,
-                null /* verifyHeaders */,
                 (context) => context.WriteServiceDocument(serviceDocument));
         }
 
@@ -480,7 +465,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteServiceDocument(serviceDocument);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.ServiceDocument,
-                null /* verifyHeaders */,
                 (context) => context.WriteServiceDocumentAsync(serviceDocument));
         }
 #endif
@@ -492,7 +476,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteProperty(property);
             this.WriteToOutput(
                 ODataPayloadKind.Property,
-                null /* verifyHeaders */,
                 (context) => context.WriteProperty(property));
         }
 
@@ -505,7 +488,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteProperty(property);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Property,
-                null /* verifyHeaders */,
                 (context) => context.WritePropertyAsync(property));
         }
 #endif
@@ -525,7 +507,6 @@ namespace Microsoft.OData
                 this.VerifyCanWriteTopLevelError(error);
                 this.WriteToOutput(
                     ODataPayloadKind.Error,
-                    null /* verifyHeaders */,
                     (context) => context.WriteError(error, includeDebugInformation));
                 return;
             }
@@ -552,7 +533,6 @@ namespace Microsoft.OData
                 this.VerifyCanWriteTopLevelError(error);
                 return this.WriteToOutputAsync(
                     ODataPayloadKind.Error,
-                    null /* verifyHeaders */,
                     (context) => context.WriteErrorAsync(error, includeDebugInformation));
             }
 
@@ -569,7 +549,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteEntityReferenceLinks(links);
             this.WriteToOutput(
                 ODataPayloadKind.EntityReferenceLinks,
-                null,
                 (context) => context.WriteEntityReferenceLinks(links));
         }
 
@@ -582,7 +561,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteEntityReferenceLinks(links);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.EntityReferenceLinks,
-                null,
                 (context) => context.WriteEntityReferenceLinksAsync(links));
         }
 #endif
@@ -594,7 +572,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteEntityReferenceLink(link);
             this.WriteToOutput(
                 ODataPayloadKind.EntityReferenceLink,
-                null /* verifyHeaders */,
                 (context) => context.WriteEntityReferenceLink(link));
         }
 
@@ -607,7 +584,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteEntityReferenceLink(link);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.EntityReferenceLink,
-                null /* verifyHeaders */,
                 (context) => context.WriteEntityReferenceLinkAsync(link));
         }
 #endif
@@ -619,7 +595,6 @@ namespace Microsoft.OData
             ODataPayloadKind payloadKind = this.VerifyCanWriteValue(value);
             this.WriteToOutput(
                 payloadKind,
-                null /* verifyHeaders */,
                 (context) => context.WriteValue(value));
         }
 
@@ -632,7 +607,6 @@ namespace Microsoft.OData
             ODataPayloadKind payloadKind = this.VerifyCanWriteValue(value);
             return this.WriteToOutputAsync(
                 payloadKind,
-                null /* verifyHeaders */,
                 (context) => context.WriteValueAsync(value));
         }
 #endif
@@ -643,7 +617,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteMetadataDocument();
             this.WriteToOutput(
                 ODataPayloadKind.MetadataDocument,
-                null /* verifyHeaders */,
                 (context) => context.WriteMetadataDocument());
         }
 
@@ -1180,17 +1153,11 @@ namespace Microsoft.OData
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeAction">The write operation to invoke on the output.</param>
-        private void WriteToOutput(ODataPayloadKind payloadKind, Action verifyHeaders, Action<ODataOutputContext> writeAction)
+        private void WriteToOutput(ODataPayloadKind payloadKind, Action<ODataOutputContext> writeAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
-
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
@@ -1204,18 +1171,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <typeparam name="TResult">The type of the result of the write operation.</typeparam>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>The result of the write operation.</returns>
-        private TResult WriteToOutput<TResult>(ODataPayloadKind payloadKind, Action verifyHeaders, Func<ODataOutputContext, TResult> writeFunc)
+        private TResult WriteToOutput<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, TResult> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
-
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
@@ -1229,19 +1190,13 @@ namespace Microsoft.OData
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeAsyncAction">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
-        private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Action verifyHeaders, Func<ODataOutputContext, Task> writeAsyncAction)
+        private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
-
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
 
             // Create the output context
             return this.message.GetStreamAsync()
@@ -1262,19 +1217,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <typeparam name="TResult">The type of the result of the write operation.</typeparam>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
-        private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Action verifyHeaders, Func<ODataOutputContext, Task<TResult>> writeFunc)
+        private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
-
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
 
             // Create the output context
             return this.message.GetStreamAsync()
