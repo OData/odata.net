@@ -39,7 +39,7 @@ namespace Microsoft.OData.Performance
                     {
                         ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings()
                         {
-                            PayloadBaseUri = serviceFixture.ServiceBaseUri
+                            BaseUri = serviceFixture.ServiceBaseUri
                         };
                         writerSettings.ODataUri = new ODataUri() {ServiceRoot = serviceFixture.ServiceBaseUri};
                         var requestMessage =
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Performance
                 {
                     for (int i = 0; i < RequestsPerIteration; i++)
                     {
-                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = serviceFixture.ServiceBaseUri };
                         writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
                         var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
                         requestMessage.Method = "DELETE";
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Performance
                 {
                     for (int i = 0; i < RequestsPerIteration; i++)
                     {
-                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = serviceFixture.ServiceBaseUri };
                         writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
                         var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + PersonIdBase + ")", UriKind.Absolute));
                         requestMessage.Method = "PUT";
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Performance
                 {
                     for (int i = 0; i < RequestsPerIteration; i++)
                     {
-                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = serviceFixture.ServiceBaseUri };
                         writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
                         var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
                         requestMessage.Method = "PATCH";
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Performance
 
         private void ResetDataSource()
         {
-            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = serviceFixture.ServiceBaseUri };
             writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "ResetDataSource", UriKind.Absolute));
             requestMessage.Method = "POST";

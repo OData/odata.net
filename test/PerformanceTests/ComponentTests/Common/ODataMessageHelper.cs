@@ -59,7 +59,7 @@ namespace Microsoft.OData.Performance
             var settings = new ODataMessageReaderSettings
             {
                 BaseUri = BaseUri,
-                CheckCharacters = CheckCharacters,
+                EnableCharactersCheck = CheckCharacters,
                 DisableMessageStreamDisposal = DisableMessageStreamDisposal,
                 DisablePrimitiveTypeConversion = DisablePrimitiveTypeConversion,
                 EnableFullValidation = isFullValidation,
@@ -129,9 +129,9 @@ namespace Microsoft.OData.Performance
         {
             var settings = new ODataMessageWriterSettings
             {
-                PayloadBaseUri = BaseUri,
-                CheckCharacters = CheckCharacters,
-                Indent = Indent,
+                BaseUri = BaseUri,
+                EnableCharactersCheck = CheckCharacters,
+                EnableIndentation = Indent,
                 DisableMessageStreamDisposal = DisableMessageStreamDisposal,
                 Version = Version,
                 EnableFullValidation = isFullValidation,
