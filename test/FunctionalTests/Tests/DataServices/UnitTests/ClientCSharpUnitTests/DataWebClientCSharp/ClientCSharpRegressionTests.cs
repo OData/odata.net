@@ -1068,7 +1068,7 @@ namespace AstoriaUnitTests.Tests
                     //context.EnableAtom = true;
                     //context.Format.UseAtom();
 
-                    context.IgnoreMissingProperties = true;
+                    context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                     bool innerException = true;
                     try
                     {
@@ -1501,7 +1501,7 @@ namespace AstoriaUnitTests.Tests
             // The context does not need to return usable results. It is created with a dummy URI so
             // that there is actually time to cancel the request. It should not return promptly.
             var context = new Microsoft.OData.Client.DataServiceContext(new Uri("http://123.32.52.1"));
-            context.IgnoreMissingProperties = true;
+            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             Uri uri = new Uri("foo", UriKind.Relative);
 
             IAsyncResult result = context.BeginExecute<string>(uri, (_) => { }, null);
@@ -1851,7 +1851,7 @@ namespace AstoriaUnitTests.Tests
             DataServiceContext ctx = new DataServiceContext(uri);
             //ctx.EnableAtom = true;
             //ctx.Format.UseAtom();
-            ctx.IgnoreMissingProperties = true;
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
             var customer = ctx.CreateQuery<Customer<T>>("Customers").FirstOrDefault();
 

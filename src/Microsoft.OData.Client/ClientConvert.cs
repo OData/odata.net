@@ -109,7 +109,7 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-        
+
         /// <summary>
         /// Convert from primitive value to an xml payload string. 
         /// </summary>
@@ -118,6 +118,7 @@ namespace Microsoft.OData.Client
         internal static string ToString(object propertyValue)
         {
             Debug.Assert(null != propertyValue, "null should be handled by caller");
+            Debug.Assert(!(propertyValue is ODataUntypedValue), "!(propertyValue is ODataUntypedValue)");
 
             PrimitiveType primitiveType;
             if (PrimitiveType.TryGetPrimitiveType(propertyValue.GetType(), out primitiveType) && primitiveType.TypeConverter != null)

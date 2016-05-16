@@ -32,6 +32,7 @@ namespace Microsoft.OData.Tests.ObjectModelTests
             typeof(ODataContentTypeException),
             typeof(ODataMediaTypeResolver),
             typeof(ODataPayloadValueConverter),
+            typeof(ODataUntypedValue),
         };
 
         // List of types explicitly allowed to be not-sealed.

@@ -68,6 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of constructor of ODataMessageReader in regard to argument validation.")]
         public void MessageReaderConstructorArgumentValidationTest()
         {
@@ -90,13 +91,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     // Verify the None UndeclaredPropertyBehaviorKinds works on both request and response.
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None }),
+                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None}),
                         null,
                         this.ExceptionVerifier);
 
                     // Verify the IgnoreUndeclaredValueProperty UndeclaredPropertyBehaviorKinds fails on requests.
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty }),
+                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty }),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
                         this.ExceptionVerifier);
 
@@ -108,7 +109,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     // Verify the IgnoreUndeclaredValueProperty | ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty }),
+                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty }),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
                         this.ExceptionVerifier);
                 });

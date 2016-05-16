@@ -278,7 +278,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 IEdmType expectedEdmType = model.GetOrCreateEdmType(expectedType);
-                ClientPropertyAnnotation property = model.GetClientTypeAnnotation(expectedEdmType).GetProperty(propertyName, false);
+                ClientPropertyAnnotation property = model.GetClientTypeAnnotation(expectedEdmType).GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
                 atomProperty = ODataEntityMaterializer.GetPropertyOrThrow(properties, propertyName);
                 EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.Link);
                 if (atomProperty.Feed != null)
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 string propertyName = segment.Member;
-                property = entryType.GetProperty(propertyName, false);
+                property = entryType.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
 
                 // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
                 // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
@@ -444,7 +444,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 // We get here if we have an entity member init in the projection. For example Select(p => new MyEmployee { Manager = (p as Employee).Manager }).
                 // The entry.ActualType in the example would be MyEmployee and the Manager property always exist on it or else the linq statement would not compile.
-                var property = entry.ActualType.GetProperty(propertyName, materializer.MaterializerContext.IgnoreMissingProperties);
+                var property = entry.ActualType.GetProperty(propertyName, materializer.MaterializerContext.UndeclaredPropertyBehavior);
                 Debug.Assert(property != null, "property != null");
 
                 // NOTE:
@@ -615,7 +615,7 @@ namespace Microsoft.OData.Client.Materialization
                 // (p as Employee).Manager
                 // The property might not be defined on the expectedType but is always defined on the TypeAs type which is a more derived type.
                 expectedType = segment.SourceTypeAs ?? expectedType;
-                ClientPropertyAnnotation property = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(expectedType)).GetProperty(propertyName, false);
+                ClientPropertyAnnotation property = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(expectedType)).GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
                 if (property.IsStreamLinkProperty)
                 {
                     // projecting a DataServiceStreamLink property
@@ -1040,7 +1040,7 @@ namespace Microsoft.OData.Client.Materialization
             Type type = collection.GetType();
             PropertyInfo countProp = type.GetPublicProperties(true).SingleOrDefault(property => property.Name == "Count");
             PropertyInfo isTrackingProp = type.GetNonPublicProperties(true, false /*declaredOnly*/).SingleOrDefault(property => property.Name == "IsTracking");
-            
+
             if (countProp == null)
             {
                 return false;

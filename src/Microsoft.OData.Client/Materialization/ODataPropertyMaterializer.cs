@@ -102,7 +102,15 @@ namespace Microsoft.OData.Client.Materialization
             else
             {
                 Debug.Assert(this.MaterializerContext.Model.GetOrCreateEdmType(underlyingExpectedType).ToEdmTypeReference(false).IsPrimitive(), "expectedType must be primitive type");
-                this.currentValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(property.Value, this.ExpectedType);
+                object value = property.Value;
+                ODataUntypedValue untypedVal = value as ODataUntypedValue;
+                if ((untypedVal != null)
+                    && this.MaterializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                {
+                    value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                }
+
+                this.currentValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(value, this.ExpectedType);
             }
         }
     }

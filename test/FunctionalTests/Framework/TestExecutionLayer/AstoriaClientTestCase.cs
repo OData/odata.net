@@ -311,11 +311,10 @@ namespace System.Data.Test.Astoria
         public MergeOption mergeOption { get; set; }
         protected WebDataCtxWrapper CreateContext(ResourceType resourceType, Workspace workspace)
         {
-
             CurrentContext = new WebDataCtxWrapper(new Uri(workspace.ServiceUri));
             CurrentContext.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             CurrentContext.MergeOption = mergeOption;
-            CurrentContext.IgnoreMissingProperties = true;
+            //CurrentContext.UndeclaredPropertyBehaviorType = UndeclaredPropertyBehavior.Support;
             CurrentContext.UnderlyingContext.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(CurrentContext_SendingRequest);
             return CurrentContext;
         }
@@ -330,7 +329,7 @@ namespace System.Data.Test.Astoria
                 return clrType.FullName.Replace("SDPV2", "").Replace("V2", "");
             };
             CurrentContext.MergeOption = mergeOption;
-            CurrentContext.IgnoreMissingProperties = true;
+            //CurrentContext.UndeclaredPropertyBehaviorType = UndeclaredPropertyBehavior.Support;
             CurrentContext.UnderlyingContext.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(CurrentContext_SendingRequest);
             return CurrentContext;
         }
@@ -341,7 +340,7 @@ namespace System.Data.Test.Astoria
             var CurrentContext = new WebDataCtxWrapper(new Uri(workspace.ServiceUri));
             CurrentContext.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             CurrentContext.MergeOption = mergeOption;
-            CurrentContext.IgnoreMissingProperties = true;
+            //CurrentContext.UndeclaredPropertyBehaviorType = UndeclaredPropertyBehavior.Support;
             CurrentContext.UnderlyingContext.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(CurrentContext_SendingRequest);
             return CurrentContext;
         }

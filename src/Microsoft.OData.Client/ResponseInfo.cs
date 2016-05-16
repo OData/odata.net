@@ -65,27 +65,19 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return this.Context.IgnoreMissingProperties
-                    ?
-                    ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty
-                    :
-                    ODataUndeclaredPropertyBehaviorKinds.None;
+                if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                {
+                    return ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+                }
+                else
+                {
+                    Debug.Assert(this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException,
+                        "this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException");
+                    return ODataUndeclaredPropertyBehaviorKinds.None;
+                }
             }
         }
-
-        /// <summary>True if materializer should ignore undeclared value property. 
-        /// False if materializer should throw exception on that.</summary>
-        internal bool ShouldMaterializerIgnoreUndeclaredValueProperty
-        {
-            get
-            {
-                return this.UndeclaredPropertyBehaviorKinds.HasFlag(
-                            ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
-                    || this.UndeclaredPropertyBehaviorKinds.HasFlag(
-                            ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
-            }
-        }
-
+        
         /// <summary>Returns the instance of entity tracker class which tracks all the entities and links for the context.</summary>
         internal EntityTracker EntityTracker
         {

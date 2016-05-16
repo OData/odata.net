@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 Properties = new[]
                 {
-                    new ODataProperty { Name = "PersonId", Value = 999 }, 
+                    new ODataProperty { Name = "PersonId", Value = 999 },
                     new ODataProperty { Name = "Name", Value = "Jack" }
                 }
             };
@@ -307,6 +307,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             public object Value
             {
                 get { return this.value; }
+            }
+
+            public string RawValue
+            {
+                get { return "\"" + this.value + "\""; }
             }
 
             public JsonNodeType NodeType

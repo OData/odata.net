@@ -1306,7 +1306,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             Trace.WriteLine("Cast to narrow type")
             ReadOnlyTestContext.ClearBaselineIncludes()
             ReadOnlyTestContext.AddBaselineIncludes(GetType(Team), "HomeStadium")
-            context.IgnoreMissingProperties = True
+            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
 
             Dim query10 = (From t As Team In context.CreateQuery(Of Team)("Teams")
                            Where t.TeamID = 1
@@ -1551,7 +1551,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         If GetType(EntityType) = GetType(INPCTypeWithoutID) Then
             ' Ignore missing properties here because we're reusing a test payload that has an ID but this type doesn't have a matching property
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
         End If
 
         dsc.Load(ctx.CreateQuery(Of EntityType)("Entities"))

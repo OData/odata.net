@@ -113,8 +113,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
         private static void QueryEntityInstanceExecuteAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
-            contextWrapper.Context.IgnoreMissingProperties = true;
-
+            // contextWrapper.Context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             contextWrapper.Configurations.ResponsePipeline
                 .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
@@ -145,8 +144,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
         private static void QueryEntityInstanceBatchAsync(DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
-            contextWrapper.Context.IgnoreMissingProperties = true;
-
+            // contextWrapper.Context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             contextWrapper.Configurations.ResponsePipeline
                 .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
@@ -210,8 +208,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             for (int i = 0; i < 1; i++)
             {
                 var context = this.CreateWrappedContext<DefaultContainer>().Context;
-                context.IgnoreMissingProperties = true;
-
+                ///context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                 string mimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
                 context.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
                 context.Configurations.ResponsePipeline.OnEntryEnded(PipelineEventsTestsHelper.ModifyEntryId_Reading);

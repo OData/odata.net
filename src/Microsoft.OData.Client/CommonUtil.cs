@@ -11,8 +11,11 @@ namespace Microsoft.OData.Service
 #endif
 {
     using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Linq;
     using System.Threading;
-    
+
     /// <summary>
     /// Common defintions and functions for ALL product assemblies
     /// </summary>
@@ -30,6 +33,20 @@ namespace Microsoft.OData.Service
         /// <summary>Type of ThreadAbortException.</summary>
         private static readonly Type ThreadAbortType = typeof(ThreadAbortException);
 #endif
+
+        public static object ParseJsonToPrimitiveValue(string rawValue)
+        {
+            Debug.Assert(rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0,
+                  "rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format(CultureInfo.InvariantCulture, "[{0}]", rawValue), ODataVersion.V4);
+            foreach (object item in collectionValue.Items)
+            {
+                return item;
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Determines whether the specified exception can be caught and 
@@ -51,10 +68,10 @@ namespace Microsoft.OData.Service
             Type type = e.GetType();
             return (
 #if !PORTABLELIB
-                    (type != ThreadAbortType) &&
+(type != ThreadAbortType) &&
                     (type != StackOverflowType) &&
 #endif
-                    (type != OutOfMemoryType));
+ (type != OutOfMemoryType));
         }
     }
 }

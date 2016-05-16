@@ -807,13 +807,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
                 {
-                    Parameter = new ODataComplexValue() { TypeName = "TestModel.Address", Properties = new ODataProperty[2] { new ODataProperty() { Name = "Street1", Value = "street1" }, new ODataProperty() { Name = "Zip", Value = 98052 } } },
-                    Model = edmModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "Street1", "TestModel.Address"),
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
                     Parameter = new ODataComplexValue()
                     {
                         TypeName = "TestModel.Address",

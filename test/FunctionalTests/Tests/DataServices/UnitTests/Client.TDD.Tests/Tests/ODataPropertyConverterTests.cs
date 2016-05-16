@@ -45,7 +45,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.serverEntityTypeName = "Server.NS.ServerEntityType";
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            
+
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
@@ -89,11 +89,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                                        };
             this.entity = new TestClientEntityType
             {
-                Id = 1, 
-                Name = "foo", 
-                Number = 1.23f, 
+                Id = 1,
+                Name = "foo",
+                Number = 1.23f,
                 Address = new Address(),
-                OpenAddress = new Address(), 
+                OpenAddress = new Address(),
                 Nicknames = new string[0],
                 OtherAddresses = new[] { new Address() },
                 Color = 0
@@ -166,7 +166,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void DerivedComplexPropertyDefinedOnTheServerShouldHaveDerivedTypeAnnotation()
         {
-            var property = this.clientTypeAnnotation.GetProperty("Address", false);
+            var property = this.clientTypeAnnotation.GetProperty("Address", UndeclaredPropertyBehavior.ThrowException);
             var results = this.testSubject.PopulateProperties(this.entityWithDerivedComplexProperty, this.serverEntityTypeName, new[] { property });
             results.Should().HaveCount(1);
 
@@ -202,7 +202,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void DerivedComplexInsideCollectionPropertyShouldNotThrow()
         {
-            var property = this.clientTypeAnnotation.GetProperty("OtherAddresses", false);
+            var property = this.clientTypeAnnotation.GetProperty("OtherAddresses", UndeclaredPropertyBehavior.ThrowException);
             var results = this.testSubject.PopulateProperties(this.entityWithDerivedComplexInCollection, this.serverEntityTypeName, new[] { property });
             var value = results.Single().ODataValue;
             value.Should().BeCollection();
@@ -212,7 +212,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         private ODataValue ConvertSinglePropertyValue(string propertyName)
         {
-            var property = this.clientTypeAnnotation.GetProperty(propertyName, false);
+            var property = this.clientTypeAnnotation.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
             var results = this.testSubject.PopulateProperties(this.entity, this.serverEntityTypeName, new[] { property });
             results.Should().HaveCount(1);
             var odataProperty = results.Single();

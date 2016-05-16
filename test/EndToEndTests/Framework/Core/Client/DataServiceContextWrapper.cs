@@ -80,14 +80,14 @@ namespace Microsoft.Test.OData.Framework.Client
             get { return this.wrappedInstance.Format; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the DataServiceContext.IgnoreMissingProperties property is set.
-        /// </summary>
-        public bool IgnoreMissingProperties
-        {
-            get { return this.wrappedInstance.IgnoreMissingProperties; }
-            set { this.wrappedInstance.IgnoreMissingProperties = value; }
-        }
+        ///// <summary>
+        ///// Gets or sets a value indicating whether the DataServiceContext.IgnoreMissingProperties property is set.
+        ///// </summary>
+        //public UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        //{
+        //    get { return this.wrappedInstance.UndeclaredPropertyBehavior; }
+        //    set { this.wrappedInstance.UndeclaredPropertyBehavior = value; }
+        //}
 
         /// <summary>
         /// Gets or sets a value indicating whether the DataServiceContext.IgnoreResourceNotFoundException property is set.

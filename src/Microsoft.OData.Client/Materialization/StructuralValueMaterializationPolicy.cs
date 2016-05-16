@@ -117,6 +117,13 @@ namespace Microsoft.OData.Client.Materialization
             if (!property.HasMaterializedValue())
             {
                 object value = property.Value;
+                ODataUntypedValue untypedVal = value as ODataUntypedValue;
+                if ((untypedVal != null)
+                    && this.MaterializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                {
+                    value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                }
+
                 object materializedValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(value, type);
                 property.SetMaterializedValue(materializedValue);
             }
@@ -150,7 +157,7 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(instance != null, "instance != null");
 
-            var prop = type.GetProperty(property.Name, this.MaterializerContext.IgnoreMissingProperties);
+            var prop = type.GetProperty(property.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
             if (prop == null)
             {
                 return;
@@ -247,7 +254,7 @@ namespace Microsoft.OData.Client.Materialization
                         needToSet = true;
                     }
 
-                    this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.IgnoreMissingProperties);
+                    this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
                     this.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
 
                     if (needToSet)
@@ -280,14 +287,14 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="actualType">Actual type for properties being materialized.</param>
         /// <param name="values">List of values to materialize.</param>
-        /// <param name="ignoreMissingProperties">
-        /// Whether properties missing from the client types should be ignored.
+        /// <param name="undeclaredPropertyBehavior">
+        /// Whether properties missing from the client types should be supported or throw exception.
         /// </param>
         /// <remarks>
         /// Values are materialized in-place withi each <see cref="ODataProperty"/>
         /// instance.
         /// </remarks>
-        internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataProperty> values, bool ignoreMissingProperties)
+        internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataProperty> values, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             Debug.Assert(actualType != null, "actualType != null");
             Debug.Assert(values != null, "values != null");
@@ -301,7 +308,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 string propertyName = odataProperty.Name;
 
-                var property = actualType.GetProperty(propertyName, ignoreMissingProperties); // may throw
+                var property = actualType.GetProperty(propertyName, undeclaredPropertyBehavior); // may throw
                 if (property == null)
                 {
                     continue;

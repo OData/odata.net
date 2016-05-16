@@ -66,9 +66,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public static ODataUndeclaredPropertyBehaviorKinds[] ODataUndeclaredPropertyBehaviorKindsCombinations = new[]
             {
                 ODataUndeclaredPropertyBehaviorKinds.None,
-                ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty,
+                ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
                 ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
-                ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty
+                ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty
             };
 
         /// <summary>

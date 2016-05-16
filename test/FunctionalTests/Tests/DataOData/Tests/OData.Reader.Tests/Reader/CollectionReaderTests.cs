@@ -81,12 +81,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadElement = new ComplexInstanceCollection(
-                        PayloadBuilder.ComplexValue().Property("Name", PayloadBuilder.PrimitiveValue("Vienna")),
-                        PayloadBuilder.ComplexValue().Property("Street", PayloadBuilder.PrimitiveValue("Am Euro Platz")))
+                        PayloadBuilder.ComplexValue("TestModel.CityType").Property("Name", PayloadBuilder.PrimitiveValue("Vienna")),
+                        PayloadBuilder.ComplexValue("TestModel.CityType").Property("Street", PayloadBuilder.PrimitiveValue("Am Euro Platz")))
                         .ExpectedFunctionImport(citiesFunctionImport)
                         .CollectionName(null),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "Street", "TestModel.CityType"),
                 },
             };
 

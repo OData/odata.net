@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_NoLoadWithInsertEnd);
             }
 
-            ClientPropertyAnnotation property = type.GetProperty(this.propertyName, false);
+            ClientPropertyAnnotation property = type.GetProperty(this.propertyName, UndeclaredPropertyBehavior.ThrowException);
             Type elementType = property.EntityCollectionItemType ?? property.NullablePropertyType;
             try
             {
@@ -116,9 +116,9 @@ namespace Microsoft.OData.Client
             Debug.Assert(type.IsEntityType, "Must be entity type to be contained.");
 
             return this.RequestInfo.GetDeserializationInfoForLoadProperty(
-                null, 
-                context.GetEntityDescriptor(this.entity), 
-                type.GetProperty(this.propertyName, false));
+                null,
+                context.GetEntityDescriptor(this.entity),
+                type.GetProperty(this.propertyName, UndeclaredPropertyBehavior.ThrowException));
         }
 
         /// <summary>
@@ -203,9 +203,9 @@ namespace Microsoft.OData.Client
                     Debug.Assert(materializer != null, "materializer != null -- otherwise GetMaterializer() returned null rather than empty");
 
                     // when SetLink to null, we cannot get materializer because have no-content response.
-                    if (materializer.IsNoContentResponse() 
-                        && property.GetValue(entity) != null 
-                        && context.MergeOption != MergeOption.AppendOnly 
+                    if (materializer.IsNoContentResponse()
+                        && property.GetValue(entity) != null
+                        && context.MergeOption != MergeOption.AppendOnly
                         && context.MergeOption != MergeOption.NoTracking)
                     {
                         property.SetValue(this.entity, null, propertyName, false);

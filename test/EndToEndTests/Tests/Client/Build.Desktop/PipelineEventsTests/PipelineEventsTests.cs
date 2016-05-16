@@ -101,8 +101,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
         private static void QueryEntityInstance(DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
-            contextWrapper.Context.IgnoreMissingProperties = true;
-
+            // contextWrapper.Context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             contextWrapper.Configurations.ResponsePipeline
                 .OnEntryEnded(PipelineEventsTestsHelper.AddRemovePropertySpecialEmployeeEntry_Reading)
                 .OnEntityMaterialized(PipelineEventsTestsHelper.AddEnumPropertySpecialEmployeeEntity_Materialized)
@@ -169,8 +168,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 this.CreateContext,
                 (contextWrapper) =>
                 {
-                    contextWrapper.Context.IgnoreMissingProperties = true;
-
+                    // contextWrapper.Context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                     contextWrapper.Configurations.ResponsePipeline.OnEntryEnded(PipelineEventsTestsHelper.ModifyTypeName_Reading);
                     contextWrapper.Configurations.RequestPipeline.OnEntryEnding(PipelineEventsTestsHelper.ModifyTypeName_Writing);
                     contextWrapper.Context.ResolveType = new Func<string, Type>(this.ResolveTypeFromTypeName);
@@ -239,7 +237,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
         private static void LoadPropertyTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
-            contextWrapper.Context.IgnoreMissingProperties = true;
+            // contextWrapper.Context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             SpecialEmployee specialEmployee =
                 contextWrapper.Execute<SpecialEmployee>(new Uri("Person(-10)", UriKind.Relative)).Single();
 

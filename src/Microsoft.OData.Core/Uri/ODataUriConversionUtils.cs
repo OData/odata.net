@@ -73,7 +73,7 @@ namespace Microsoft.OData
         /// <returns>An ODataComplexValue or ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
         internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings() { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty };
 
             using (StringReader reader = new StringReader(value))
             {
@@ -122,7 +122,7 @@ namespace Microsoft.OData
         internal static object VerifyAndCoerceUriPrimitiveLiteral(
             object primitiveValue,
             string literalValue,
-            IEdmModel model, 
+            IEdmModel model,
             IEdmTypeReference expectedTypeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(primitiveValue, "primitiveValue");
@@ -222,7 +222,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
-                model, 
+                model,
                 context =>
             {
                 ODataWriter writer = context.CreateODataResourceWriter(null, null);
@@ -243,7 +243,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
-                model, 
+                model,
                 context =>
             {
                 ODataWriter writer = context.CreateODataResourceSetWriter(null, null);
@@ -467,7 +467,7 @@ namespace Microsoft.OData
                         return Convert.ToDecimal((Double)primitiveValue);
                 }
             }
-            
+
             if (primitiveValue is Decimal)
             {
                 switch (targetPrimitiveKind)

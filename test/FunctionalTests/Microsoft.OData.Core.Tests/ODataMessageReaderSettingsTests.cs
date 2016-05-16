@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
             Assert.Null(settings.UseKeyAsSegment);
-            Assert.True(ODataUndeclaredPropertyBehaviorKinds.None == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds should be Default by default.");
+            Assert.True(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds should be Default by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests
                 EnableReadingEntryContentInEntryStartState = false,
                 ODataSimplified = true,
                 UseKeyAsSegment = true,
-                UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty,
+                UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
                 MaxProtocolVersion = ODataVersion.V4,
                 MessageQuotas = new ODataMessageQuotas
                 {
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState was not correctly remebered");
             Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
             Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
-            Assert.True(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds was not correctly remembered.");
+            Assert.True(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
             Assert.True(3 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be 3");
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests
 
             // Compare original and settings created from copy constructor after setting rest of the values 
             settings.DisableMessageStreamDisposal = true;
-            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty;
+            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
             settings.MaxProtocolVersion = ODataVersion.V4;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;

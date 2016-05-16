@@ -36,6 +36,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.ComplexValues"), Variation(Description = "Verifies correct reading of complex values with fully specified metadata.")]
         public void ComplexValueWithMetadataTest()
         {

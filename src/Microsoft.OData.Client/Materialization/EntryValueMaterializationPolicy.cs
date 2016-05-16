@@ -573,13 +573,13 @@ namespace Microsoft.OData.Client.Materialization
             // Note that even if ShouldUpdateFromPayload is false, we will still be creating
             // nested instances (but not their links), so they show up in the data context
             // entries. This keeps this code compatible with V1 behavior.
-            this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.IgnoreMissingProperties);
+            this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
 
             if (entry.NestedResourceInfos != null)
             {
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
-                    var prop = actualType.GetProperty(link.Name, true);
+                    var prop = actualType.GetProperty(link.Name, UndeclaredPropertyBehavior.Support);
                     if (prop != null)
                     {
                         ValidatePropertyMatch(prop, link, this.MaterializerContext.Model, true /*performEntityCheck*/);
@@ -595,7 +595,7 @@ namespace Microsoft.OData.Client.Materialization
                         continue;
                     }
 
-                    var prop = actualType.GetProperty(link.Name, this.MaterializerContext.IgnoreMissingProperties);
+                    var prop = actualType.GetProperty(link.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
 
                     if (prop == null)
                     {
@@ -648,7 +648,7 @@ namespace Microsoft.OData.Client.Materialization
                     continue;
                 }
 
-                var prop = actualType.GetProperty(e.Name, this.MaterializerContext.IgnoreMissingProperties);
+                var prop = actualType.GetProperty(e.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
                 if (prop == null)
                 {
                     continue;

@@ -435,7 +435,7 @@ namespace System.Data.Test.Astoria
                     else
                         throw new Exception(responseMessage.Exception);
                 }
-            }           
+            }
             #endregion
 
             if (responseMessage.ReturnValue == "Passed!")
@@ -801,16 +801,16 @@ namespace System.Data.Test.Astoria
                 if (t.GetCustomAttributes(typeof(System.Runtime.Serialization.DataContractAttribute), false).Count() > 0 && t.FullName.Contains("ArubaClient."))
                     known.Add(t);
             }
-           /* foreach (Type t in typeof(NorthwindV2.Orders).Assembly.GetTypes())
-            {
-                if (t.FullName.Contains("NorthwindV2.Orders"))
-                    known.Add(t);
-            }
-            foreach (Type t in typeof(NorthwindV2.Customers).Assembly.GetTypes())
-            {
-                if (t.FullName.Contains("NorthwindV2.Customers"))
-                    known.Add(t);
-            }           */    
+            /* foreach (Type t in typeof(NorthwindV2.Orders).Assembly.GetTypes())
+             {
+                 if (t.FullName.Contains("NorthwindV2.Orders"))
+                     known.Add(t);
+             }
+             foreach (Type t in typeof(NorthwindV2.Customers).Assembly.GetTypes())
+             {
+                 if (t.FullName.Contains("NorthwindV2.Customers"))
+                     known.Add(t);
+             }           */
 
             object clientType = null;
             try
@@ -907,12 +907,12 @@ namespace System.Data.Test.Astoria
             {
                 string sSource = String.Empty;
                 string sTarget = String.Empty;
-                
+
                 sSource = SilverlightRemote.WriteObject(source);
                 sTarget = SilverlightRemote.WriteObject(target);
 
                 object retValue = SilverlightRemote.Remoter.InvokeSend(this.instance, "AddRelatedObject",
-                     new string[] { sSource, sourceProperty, sTarget, source == null ? "" : source.GetType().FullName, target == null ? "" : target.GetType().FullName });                               
+                     new string[] { sSource, sourceProperty, sTarget, source == null ? "" : source.GetType().FullName, target == null ? "" : target.GetType().FullName });
             }
             else
             {
@@ -1261,7 +1261,7 @@ namespace System.Data.Test.Astoria
         public DataServiceContext UnderlyingContext
         {
             get { return _DataServiceContext; }
-     	    set { _DataServiceContext = value; }
+            set { _DataServiceContext = value; }
 
         }
 
@@ -1334,10 +1334,10 @@ namespace System.Data.Test.Astoria
             {
                 int enuminstance = (int)SilverlightRemote.Remoter.InvokeSend(this.instance, "Execute", new string[] { requestURI == null ? "TryNull" : requestURI.ToString(), entityType.ToString() });
                 Type enumerableType = typeof(EnumerableWrapper<>).MakeGenericType(entityType);
-                IEnumerable enumWrapper = (IEnumerable) Activator.CreateInstance(enumerableType, new object [] { enuminstance });
+                IEnumerable enumWrapper = (IEnumerable)Activator.CreateInstance(enumerableType, new object[] { enuminstance });
                 PropertyInfo typeHintProperty = enumerableType.GetProperty("TypeHint");
-                typeHintProperty.SetValue(enumWrapper, entityType.FullName, null);                
-                return enumWrapper;                
+                typeHintProperty.SetValue(enumWrapper, entityType.FullName, null);
+                return enumWrapper;
             }
             else
             {
@@ -1938,7 +1938,7 @@ namespace System.Data.Test.Astoria
             {
                 string sParent = (parent == null) ? "TryNull" : SilverlightRemote.WriteObject(parent);
                 string sChild = (child == null) ? "TryNull" : SilverlightRemote.WriteObject(child);
-             
+
                 object retValue = SilverlightRemote.Remoter.InvokeSend(this.instance, "SetLink", new string[] { parentProperty, sParent, parent != null ? parent.GetType().FullName : "", sChild, child != null ? child.GetType().FullName : "" });
             }
             else
@@ -2071,8 +2071,8 @@ namespace System.Data.Test.Astoria
             if (AstoriaTestProperties.IsRemoteClient)
             {
                 string clientEntity = SilverlightRemote.WriteObject(DataEntity);
-                string sEntity = (string)SilverlightRemote.Remoter.InvokeSend(this.instance, "RehydrateEntity", new string[] { DataEntity.GetType().FullName , 
-                    clientEntity 
+                string sEntity = (string)SilverlightRemote.Remoter.InvokeSend(this.instance, "RehydrateEntity", new string[] { DataEntity.GetType().FullName ,
+                    clientEntity
                 });
                 sDataEntity = SilverlightRemote.ReadObject(DataEntity.GetType().FullName, sEntity);
             }
@@ -2186,10 +2186,10 @@ namespace System.Data.Test.Astoria
             if (SilverlightRemote.HasRemote)
             {
                 string eEntity = SilverlightRemote.WriteObject(entity);
-                string sEntity = (string)SilverlightRemote.Remoter.InvokeSend(this.instance, "TryGetUri", 
+                string sEntity = (string)SilverlightRemote.Remoter.InvokeSend(this.instance, "TryGetUri",
                     new string[] { (entity == null) ? "" : entity.GetType().FullName, eEntity });
                 resourceUri = new Uri(sEntity, UriKind.RelativeOrAbsolute);
-                return true;                
+                return true;
             }
             else
             {
@@ -2349,25 +2349,25 @@ namespace System.Data.Test.Astoria
             }
         }
 
-        public bool IgnoreMissingProperties
-        {
-            get
-            {
-                if (SilverlightRemote.HasRemote)
-                {
-                    return ((bool)SilverlightRemote.Remoter.InvokeSend(this.instance, "IgnoreMissingProperties", "0"));
-                }
-                else
-                {
-                    return this._DataServiceContext.IgnoreMissingProperties;
-                }
-            }
-            set
-            {
-                if (!SilverlightRemote.HasRemote)
-                    this._DataServiceContext.IgnoreMissingProperties = value;
-            }
-        }
+        //public UndeclaredPropertyBehavior UndeclaredPropertyBehaviorType
+        //{
+        //    get
+        //    {
+        //        if (SilverlightRemote.HasRemote)
+        //        {
+        //            return ((UndeclaredPropertyBehavior)SilverlightRemote.Remoter.InvokeSend(this.instance, "UndeclaredPropertyBehavior", "Support"));
+        //        }
+        //        else
+        //        {
+        //            return this._DataServiceContext.UndeclaredPropertyBehavior;
+        //        }
+        //    }
+        //    set
+        //    {
+        //        if (!SilverlightRemote.HasRemote)
+        //            this._DataServiceContext.UndeclaredPropertyBehavior = value;
+        //    }
+        //}
 
         //Events
 
@@ -2483,7 +2483,7 @@ namespace System.Data.Test.Astoria
     /// 
     public class EntityDescriptorWrapper : DescriptorWrapper
     {
-        private object entity;       
+        private object entity;
 
         public EntityDescriptorWrapper() { }
 
@@ -2507,9 +2507,9 @@ namespace System.Data.Test.Astoria
         public String ServerTypeName { get; set; }
 
         public Uri SelfLink { get; set; }
-        public Uri EditLink { get; set; } 
+        public Uri EditLink { get; set; }
     }
-    
+
     ///// <summary>
     ///// Wrapper for LinkDescriptor
     ///// </summary>
@@ -2585,7 +2585,7 @@ namespace System.Data.Test.Astoria
     /// Wrapper for IEnumerable<T>
     /// </summary>
     public class EnumerableWrapper<T> : IEnumerable<T>
-    {       
+    {
         public int _instance;
         public string TypeHint { get; set; }
 
@@ -2891,21 +2891,21 @@ namespace LinqExtensions
             return entitySetQuery;
         }
 
-        public static DataServiceQuery Skip(this  DataServiceQuery dsEntityQuery, int topValue, bool dummyFieldToAvoidCollision)
+        public static DataServiceQuery Skip(this DataServiceQuery dsEntityQuery, int topValue, bool dummyFieldToAvoidCollision)
         {
             Type[] typeArgs = new Type[] { dsEntityQuery.ElementType };
             Expression topValueExpression = Expression.Constant(topValue);
             var result = Expression.Call(typeof(Queryable), "Skip", typeArgs, dsEntityQuery.Expression, topValueExpression);
             return (DataServiceQuery)dsEntityQuery.Provider.CreateQuery(result);
         }
-        public static DataServiceQuery Take(this  DataServiceQuery dsEntityQuery, int topValue, bool dummyFieldToAvoidCollision)
+        public static DataServiceQuery Take(this DataServiceQuery dsEntityQuery, int topValue, bool dummyFieldToAvoidCollision)
         {
             Type[] typeArgs = new Type[] { dsEntityQuery.ElementType };
             Expression topValueExpression = Expression.Constant(topValue);
             var result = Expression.Call(typeof(Queryable), "Take", typeArgs, dsEntityQuery.Expression, topValueExpression);
             return (DataServiceQuery)dsEntityQuery.Provider.CreateQuery(result);
         }
-        public static DataServiceQuery OfType(this  DataServiceQuery dsEntityQuery, Type typeToCheck)
+        public static DataServiceQuery OfType(this DataServiceQuery dsEntityQuery, Type typeToCheck)
         {
             Type[] typeArgs = new Type[] { dsEntityQuery.ElementType };
             Expression queryExpression = Expression.Call(typeof(Queryable), "OfType", typeArgs, dsEntityQuery.Expression);
@@ -2996,7 +2996,7 @@ namespace LinqExtensions
             BuildLamdaExpression(Expression condition, System.Linq.Expressions.ParameterExpression parameterExpression, Type entityType, Type returnType)
         {
             var genericFunc = LambdaExpression.GetFuncType(entityType, returnType);
-            var lambdaExpression = Expression.Lambda(condition, parameterExpression); 
+            var lambdaExpression = Expression.Lambda(condition, parameterExpression);
             return lambdaExpression;
         }
         private static DataServiceQuery ThenbyCore(DataServiceQuery entitySetQuery, List<string> oderByFields

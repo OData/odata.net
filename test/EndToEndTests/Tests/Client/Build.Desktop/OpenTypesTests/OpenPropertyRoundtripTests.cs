@@ -188,7 +188,7 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
         private DataServiceContextWrapper<DefaultContainer> CreateContext()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
-            context.IgnoreMissingProperties = true;
+            ///context.UndeclaredPropertyBehavior = Microsoft.OData.Client.UndeclaredPropertyBehavior.Support;
             return context;
         }
 

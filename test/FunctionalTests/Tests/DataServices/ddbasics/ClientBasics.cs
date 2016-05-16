@@ -1724,7 +1724,7 @@ namespace AstoriaUnitTests
                     ctx.ResolveName = ResolveName;
                     ctx.ResolveType = ResolveType;
 
-                    ctx.IgnoreMissingProperties = true;
+                    ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                     DataServiceCollection<ArubaBinding.Config> configCollection = new DataServiceCollection<ArubaBinding.Config>(ctx.Execute<ArubaBinding.Config>(new Uri("ConfigSet", UriKind.Relative)));
 
                     ArubaBinding.Config config = new ArubaBinding.Config();
@@ -2099,7 +2099,7 @@ namespace AstoriaUnitTests
                         //ctx.Format.UseAtom();
                         ctx.AddAndUpdateResponsePreference = addAndUpdateResponsePreference;
                         ctx.MergeOption = MergeOption.OverwriteChanges;
-                        ctx.IgnoreMissingProperties = true;
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
                         ctx.ResolveName += (t) => t == clientCustomerType ? "OpenTypesNamespace.Customer" :
                            (t == typeof(OpenCustomerWithBirthday) ? "OpenTypesNamespace.CustomerWithBirthday" : "OpenTypesNamespace.Address");
@@ -2647,7 +2647,7 @@ namespace AstoriaUnitTests
 
                     //// Explicitly project all properties
                     new TestCaseInfo() {
-                        Query = ctx => { ctx.IgnoreMissingProperties = true; return from c in ctx.CreateQuery<NarrowCustomerWithStream>("Customers") where c.ID == 1 select new { c, c.BestFriend }; },
+                        Query = ctx => { ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support; return from c in ctx.CreateQuery<NarrowCustomerWithStream>("Customers") where c.ID == 1 select new { c, c.BestFriend }; },
                         QueryString = "Customers(1)?$expand=BestFriend",
                         Validate = c => { },
                         ExpectedCustomerQueryInterceptorCalls = 2,
@@ -2656,7 +2656,7 @@ namespace AstoriaUnitTests
 
                     //// V1 expand
                     new TestCaseInfo() {
-                        Query = ctx => { ctx.IgnoreMissingProperties = true; return ctx.CreateQuery<NarrowCustomerWithStream>("Customers").Expand("BestFriend").Where(c => c.ID == 0); },
+                        Query = ctx => { ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support; return ctx.CreateQuery<NarrowCustomerWithStream>("Customers").Expand("BestFriend").Where(c => c.ID == 0); },
                         QueryString = "Customers(0)?$expand=BestFriend",
                         Validate = c => {
                             Assert.AreEqual(0, ((NarrowCustomerWithStream)c).ID);
@@ -2793,7 +2793,7 @@ namespace AstoriaUnitTests
                     DataServiceContext ctx = new DataServiceContext(baseUri);
                     //ctx.EnableAtom = true;
                     //ctx.Format.UseAtom();
-                    ctx.IgnoreMissingProperties = true;
+                    ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
                     // This TypeResolver is needed because the server sends a media resource on "CustomerBlob" types
                     // and ODataLib validation will try to validate that.
