@@ -5791,6 +5791,7 @@ public sealed class Microsoft.OData.UriParser.OpenPropertySegment : Microsoft.OD
 public sealed class Microsoft.OData.UriParser.OperationImportSegment : Microsoft.OData.UriParser.ODataPathSegment {
 	public OperationImportSegment (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
 	public OperationImportSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] operationImports, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public OperationImportSegment (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmEntitySetBase entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OperationSegmentParameter]] parameters)
 	public OperationImportSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] operationImports, Microsoft.OData.Edm.IEdmEntitySetBase entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OperationSegmentParameter]] parameters)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
@@ -5805,6 +5806,7 @@ public sealed class Microsoft.OData.UriParser.OperationImportSegment : Microsoft
 public sealed class Microsoft.OData.UriParser.OperationSegment : Microsoft.OData.UriParser.ODataPathSegment {
 	public OperationSegment (Microsoft.OData.Edm.IEdmOperation operation, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
 	public OperationSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] operations, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public OperationSegment (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OperationSegmentParameter]] parameters, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
 	public OperationSegment (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] operations, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OperationSegmentParameter]] parameters, Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }

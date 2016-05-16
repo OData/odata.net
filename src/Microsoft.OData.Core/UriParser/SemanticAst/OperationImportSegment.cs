@@ -70,6 +70,18 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Build a segment representing a call to an operation - action, function, or service operation.
         /// </summary>
+        /// <param name="operationImport">A single operation import that this segment will represent.</param>
+        /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
+        /// <param name="parameters">The list of parameters supplied to this segment.</param>
+        public OperationImportSegment(IEdmOperationImport operationImport, IEdmEntitySetBase entitySet, IEnumerable<OperationSegmentParameter> parameters)
+            : this(operationImport, entitySet)
+        {
+            this.parameters = new ReadOnlyCollection<OperationSegmentParameter>(parameters == null ? new List<OperationSegmentParameter>() : parameters.ToList());
+        }
+
+        /// <summary>
+        /// Build a segment representing a call to an operation - action, function, or service operation.
+        /// </summary>
         /// <param name="operationImports">The list of possible FunctionImport overloads for this segment.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operations is null.</exception>
@@ -114,7 +126,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="operationImports">The list of possible FunctionImport overloads for this segment.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
-        /// <param name="parameters">The list of parameters supplied to this segment.</param>        
+        /// <param name="parameters">The list of parameters supplied to this segment.</param>
         public OperationImportSegment(IEnumerable<IEdmOperationImport> operationImports, IEdmEntitySetBase entitySet, IEnumerable<OperationSegmentParameter> parameters)
             : this(operationImports, entitySet)
         {

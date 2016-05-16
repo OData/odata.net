@@ -846,8 +846,7 @@ namespace Microsoft.OData.UriParser
                 targetset = singleImport.GetTargetEntitySet(null, this.configuration.Model);
             }
 
-            // TODO: change constructor to take single import
-            ODataPathSegment segment = new OperationImportSegment(new[] { singleImport }, targetset, resolvedParameters);
+            ODataPathSegment segment = new OperationImportSegment(singleImport, targetset, resolvedParameters);
 
             DetermineEntitySetForSegment(identifier, returnType, segment, targetset, singleImport.Operation);
 
@@ -925,8 +924,7 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset(identifier));
             }
 
-            // TODO: change constructor to take single import
-            ODataPathSegment segment = new OperationSegment(new[] { singleOperation }, resolvedParameters, targetset)
+            ODataPathSegment segment = new OperationSegment(singleOperation, resolvedParameters, targetset)
             {
                 Identifier = identifier
             };

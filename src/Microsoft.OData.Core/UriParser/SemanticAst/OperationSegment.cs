@@ -69,6 +69,18 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Build a segment representing a call to an operation - action, function, or service operation.
         /// </summary>
+        /// <param name="operation">A single operation import that this segment will represent.</param>
+        /// <param name="parameters">The list of parameters supplied to this segment.</param>
+        /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
+        public OperationSegment(IEdmOperation operation, IEnumerable<OperationSegmentParameter> parameters, IEdmEntitySetBase entitySet)
+            : this(operation, entitySet)
+        {
+            this.parameters = new ReadOnlyCollection<OperationSegmentParameter>(parameters == null ? new List<OperationSegmentParameter>() : parameters.ToList());
+        }
+
+        /// <summary>
+        /// Build a segment representing a call to an operation - action, function, or service operation.
+        /// </summary>
         /// <param name="operations">The list of possible operation overloads for this segment.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operations is null.</exception>
