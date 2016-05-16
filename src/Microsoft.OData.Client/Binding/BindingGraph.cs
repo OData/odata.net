@@ -1060,7 +1060,7 @@ namespace Microsoft.OData.Client
                     Debug.Assert(sourceProperty != null, "Source entity property associated with a child collection must be non-null");
 
 #if DEBUG
-                    PropertyInfo propertyInfo = source.GetType().GetProperty(ClientTypeUtil.GetClientPropertyName(source.GetType(), sourceProperty, false));
+                    PropertyInfo propertyInfo = source.GetType().GetProperty(ClientTypeUtil.GetClientPropertyName(source.GetType(), sourceProperty, UndeclaredPropertyBehavior.ThrowException));
                     Debug.Assert(propertyInfo != null, "Unable to get information for the source entity property associated with a child collection");
 #endif
                     sourceEntitySet = this.Parent.EntitySet;
@@ -1097,7 +1097,7 @@ namespace Microsoft.OData.Client
                 Debug.Assert(collectionItemType != null, "Collection item type must be non-null for collection.");
 
 #if DEBUG
-                PropertyInfo propertyInfo = source.GetType().GetProperty(ClientTypeUtil.GetClientPropertyName(source.GetType(), sourceProperty, false));
+                PropertyInfo propertyInfo = source.GetType().GetProperty(ClientTypeUtil.GetClientPropertyName(source.GetType(), sourceProperty, UndeclaredPropertyBehavior.ThrowException));
                 Debug.Assert(propertyInfo != null, "Unable to get information for the source entity property associated with a collection");
 #endif
             }

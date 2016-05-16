@@ -198,7 +198,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
             context.Format.UseJson();
-            context.IgnoreMissingProperties = true;
+            ///context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             context.ResolveType = null;
 
             // We need to be able to restore the type name resolver in cases 

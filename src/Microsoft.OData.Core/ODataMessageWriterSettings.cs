@@ -70,7 +70,7 @@ namespace Microsoft.OData
             this.DisableMessageStreamDisposal = false;
             this.EnableCharactersCheck = false;
             this.EnableFullValidation = true;
-            this.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None;
+            this.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
             this.EnableIndentation = false;
             this.ODataSimplified = false;
         }

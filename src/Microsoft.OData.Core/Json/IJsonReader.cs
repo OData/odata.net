@@ -27,6 +27,11 @@ namespace Microsoft.OData.Json
         object Value { get; }
 
         /// <summary>
+        /// The underlying raw Json string.
+        /// </summary>
+        string RawValue { get; }
+
+        /// <summary>
         /// The type of the last node read.
         /// </summary>
         JsonNodeType NodeType { get; }

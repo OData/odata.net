@@ -138,6 +138,13 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return this.VisitPrimitiveValue(objectModelItem);
             }
 
+            if (objectModelItem is ODataUntypedValue)
+            {
+                object val = ODataObjectModelVisitor.ParseJsonToPrimitiveValue(
+                    (objectModelItem as ODataUntypedValue).RawValue);
+                return this.VisitPrimitiveValue(val);
+            }
+
             return this.VisitUnsupportedValue(objectModelItem);
         }
 
@@ -218,7 +225,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="entityReferenceLink">The entity reference link to visit.</param>
         protected abstract T VisitEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink);
-        
+
         /// <summary>
         /// Visits a stream reference value (named stream).
         /// </summary>

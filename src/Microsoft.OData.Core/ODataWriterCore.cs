@@ -1332,7 +1332,7 @@ namespace Microsoft.OData
                         odataUri = currentScope.ODataUri.Clone();
 
                         IEdmStructuredType currentResourceType = currentScope.ResourceType;
-                        var ComplexProperty = this.WriterValidator.ValidatePropertyDefined(nestedResourceInfo.Name, currentResourceType, false) as IEdmStructuralProperty;
+                        var ComplexProperty = this.WriterValidator.ValidatePropertyDefined(nestedResourceInfo.Name, currentResourceType, this.outputContext.MessageWriterSettings) as IEdmStructuralProperty;
                         if (ComplexProperty == null)
                         {
                             IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
@@ -1965,8 +1965,8 @@ namespace Microsoft.OData
                 if (resource != null)
                 {
                     this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        writerSettings.AllowDuplicatePropertyNames, 
-                        writingResponse, 
+                        writerSettings.AllowDuplicatePropertyNames,
+                        writingResponse,
                         !writerSettings.EnableFullValidation);
                 }
 

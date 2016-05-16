@@ -481,14 +481,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
                 And.Parameters.Single().Value.As<ConstantNode>().Value.ShouldBeODataComplexValue().WithTypeName("Fully.Qualified.Namespace.Address").And.Properties.Should().HaveCount(2);
         }
-
-        [Fact]
-        public void FunctionWithComplexParameterInJsonWithBadPropertiesThrows()
-        {
-            Action parse = () => PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"NotTheRightProperty\":\"wut\"})");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("NotTheRightProperty", "Fully.Qualified.Namespace.Address"));
-        }
-
+        
         [Fact]
         public void FunctionWithCollectionParameterInJsonWorks()
         {

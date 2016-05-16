@@ -455,7 +455,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
                         testConfiguration,
-                        (messageWriter) => messageWriter.WriteProperty(testDescriptor.PayloadItems.Single()),
+                        (messageWriter) =>
+                        {
+                            messageWriter.PrivateSettings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+                            messageWriter.WriteProperty(testDescriptor.PayloadItems.Single());
+                        },
                         this.Assert,
                         baselineLogger: this.Logger);
                 });

@@ -7,6 +7,7 @@
 namespace Microsoft.Test.OData.PluggableFormat.VCard
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using Microsoft.OData;
 
@@ -23,6 +24,19 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
         {
             this.writer = new VCardWriter(new StreamWriter(messageInfo.MessageStream, messageInfo.Encoding));
             this.outputStream = messageInfo.MessageStream;
+        }
+
+        public static object ParseJsonToPrimitiveValue(string rawValue)
+        {
+            Debug.Assert(rawValue != null && rawValue.Length > 0, "");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format("[{0}]", rawValue), ODataVersion.V4);
+            foreach (object item in collectionValue.Items)
+            {
+                return item;
+            }
+
+            return null;
         }
 
         public override void WriteProperty(ODataProperty property)
@@ -55,7 +69,16 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
                     @params += ";" + anns.Name.Substring(6) /*VCARD.*/ + "=" + ((ODataPrimitiveValue)anns.Value).Value;
                 }
 
-                this.writer.WriteItem(null, name, @params, (string)prop.Value);
+                ODataUntypedValue untyped = prop.Value as ODataUntypedValue;
+                if (untyped != null)
+                {
+                    object valueTmp = ParseJsonToPrimitiveValue(untyped.RawValue);
+                    this.writer.WriteItem(null, name, @params, valueTmp as string);
+                }
+                else
+                {
+                    this.writer.WriteItem(null, name, @params, prop.Value as string);
+                }
             }
 
             this.writer.WriteEnd();

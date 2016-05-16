@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     /// <summary>
     /// Static methods for converting CLR objects from the data store into OData objects.
     /// </summary>
-    internal static class ODataObjectModelConverter
+    public static class ODataObjectModelConverter
     {
         /// <summary>
         /// Converts an item from the data store into an ODataEntry.
@@ -189,6 +189,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             }
         }
 
+        public static object ParseJsonToPrimitiveValue(string rawValue)
+        {
+            Debug.Assert(rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0,
+                  "rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format("[{0}]", rawValue), ODataVersion.V4);
+            foreach (object tmp in collectionValue.Items)
+            {
+                return tmp;
+            }
+
+            return null;
+        }
+
         private static IEnumerable<ODataProperty> GetOpenProperties(object instance)
         {
             List<ODataProperty> openProperties = new List<ODataProperty>();
@@ -201,7 +215,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 {
                     foreach (var p in openPropertiesInClr)
                     {
-                        openProperties.Add(CreateODataProperty(p.Value, p.Key));
+                        object primitiveVal = p.Value;
+                        if (p.Value is ODataUntypedValue)
+                        {
+                            primitiveVal = ParseJsonToPrimitiveValue(((ODataUntypedValue)p.Value).RawValue);
+                        }
+
+                        openProperties.Add(CreateODataProperty(primitiveVal, p.Key));
                     }
                 }
             }
@@ -301,7 +321,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             else if (structuredType.IsOpen)
                             {
                                 var instance = value as OpenClrObject;
-                                properties.Add(CreateODataProperty(instance.OpenProperties[p.Name], p.Name));
+                                object val = instance.OpenProperties[p.Name];
+                                val = (val is ODataUntypedValue) ? ParseJsonToPrimitiveValue(((ODataUntypedValue)val).RawValue) : val;
+                                properties.Add(CreateODataProperty(val, p.Name));
                             }
                         }
 

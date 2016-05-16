@@ -192,7 +192,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 Model = model
             };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty };
 
             using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
             {

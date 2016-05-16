@@ -373,7 +373,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 And.Left.ShouldBeCountNode().
                     And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
         }
-       
+
         [Fact]
         public void ParseFilterWithEnumCollectionCount()
         {
@@ -383,7 +383,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 And.Left.ShouldBeCountNode().
                     And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonFavoriteColorsProp());
         }
-        
+
         [Fact]
         public void ParseFilterWithEntityCollectionCount()
         {
@@ -909,14 +909,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress())
                 .And.Parameters.Single().As<NamedFunctionParameterNode>()
                 .Value.As<ConstantNode>().Value.Should().BeOfType<ODataComplexValue>();
-        }
-
-        [Fact]
-        public void FunctionWithComplexParameterInJsonWithBadPropertiesThrows()
-        {
-            const string text = "Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"BadProperty\":666})";
-            Action parse = () => ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("BadProperty", "Fully.Qualified.Namespace.Address"));
         }
 
         [Fact]

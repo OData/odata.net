@@ -30,6 +30,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The converted value if the value can be converted</returns>
         internal object ConvertPrimitiveValue(object value, Type propertyType)
         {
+            Debug.Assert(!(value is ODataUntypedValue), "!(propertyValue is ODataUntypedValue)");
+
             // System.Xml.Linq.XElement and System.Data.Linq.Binaries primitive types are not supported by ODataLib directly,
             // so if the property is of one of those types, we need to convert the value to that type here.
             if (propertyType != null && value != null)

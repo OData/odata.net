@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="materializerContext">The materializer context.</param>
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
-        internal ComplexValueMaterializationPolicy(IODataMaterializerContext materializerContext, DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter) 
+        internal ComplexValueMaterializationPolicy(IODataMaterializerContext materializerContext, DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter)
             : base(materializerContext, lazyPrimitivePropertyConverter)
         {
         }
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             object complexInstance = this.CreateNewInstance(complexType.EdmType.ToEdmTypeReference(true), complexType.ElementType);
-            this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.IgnoreMissingProperties);
+            this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
             this.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
             complexValue.SetMaterializedValue(complexInstance);
 

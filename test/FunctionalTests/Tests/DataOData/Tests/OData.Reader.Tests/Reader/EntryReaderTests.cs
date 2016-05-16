@@ -191,12 +191,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // Add couple of hand-crafted payloads
             testDescriptors = testDescriptors.Concat(new[]
                 {
-                    // Open complex value with undeclared type - must fail
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = PayloadBuilder.ComplexValue("TestModel.NonExistantType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", "TestModel.NonExistantType"),
-                    },
                     // Open complex null value
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
@@ -301,6 +295,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies error cases of undeclared properties in closed entity types with metadata.")]
         public void UndeclaredClosedPropertyTest()
         {
@@ -1295,6 +1290,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 PayloadBuilder.ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.EntitySet(), null, "http://odata.org/associationLink"),
             };
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehaviorKinds setting behaves correctly.")]
         public void UndeclaredPropertyJsonLightTest()
         {
@@ -1343,7 +1339,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 PayloadElement = inEntity.DeepCopy().Property(undeclaredProperty.DeepCopy()),
                                 ExpectedResultPayloadElement = tc => inEntity.DeepCopy().Property(undeclaredProperty.DeepCopy()),
                                 PayloadEdmModel = model,
-                                ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
+                                ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty)
                                                         ? null
                                                         : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.OfficeType")
                             },
@@ -1353,7 +1349,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 PayloadElement = PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()),
                                 ExpectedResultPayloadElement = tc => PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()),
                                 PayloadEdmModel = model,
-                                ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
+                                ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty)
                                                         ? null
                                                         : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityWithMapType")
                             },
@@ -1472,6 +1468,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
         public void UndeclaredPropertyOnOpenTypeTest()
         {
@@ -1501,7 +1498,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", undeclaredProperty is ComplexProperty ? "TestModel.Wrong" : "Collection(TestModel.Wrong)"),
                 }));
 
-            RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
+            RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
         }
 
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
@@ -1546,7 +1543,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.Entity("TestModel.EntityType")),
                                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectValueTypeKind", "TestModel.EntityType", "Entity")
                                 },
+                            };
 
+            this.RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty, tc => tc.Format == ODataFormat.Json);
+        }
+
+        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
+        public void UndeclaredExpandedLinkOnOpenTypeTestInJsonLightException()
+        {
+            var testCases = new[]
+                            {
                                 new PayloadReaderTestDescriptor(this.Settings)
                                 {
                                     PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.Entity("TestModel.EntityType"), "http://odata.org/associationLink"),
@@ -1557,10 +1563,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.EntitySet(), "http://odata.org/associationLink"),
                                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.EntityType")
-                                }
+                                },
                             };
 
-            this.RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty, tc => tc.Format == ODataFormat.Json);
+            this.RunCombinationsForUndeclaredPropertyBehavior(testCases, ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKinds.None, tc => tc.Format == ODataFormat.Json);
         }
 
         private void RunCombinationsForUndeclaredPropertyBehavior(IEnumerable<PayloadReaderTestDescriptor> testCases, ODataUndeclaredPropertyBehaviorKinds behavior, Func<ReaderTestConfiguration, bool> additionalConfigurationFilter = null)

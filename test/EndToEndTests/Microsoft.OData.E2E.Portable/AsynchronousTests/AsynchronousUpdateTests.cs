@@ -34,8 +34,8 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         public void PreferHeader()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            Customer c1 = new Customer {CustomerId = 1, Name = "testName"};
-            
+            Customer c1 = new Customer { CustomerId = 1, Name = "testName" };
+
             context.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent;
             c1.Name = "changedName";
             context.AddToCustomer(c1);
@@ -56,7 +56,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             returnedValue = context.EndSaveChanges(ar2).SingleOrDefault() as ChangeOperationResponse;
             Assert.Equal(200, returnedValue.StatusCode);
-           
+
             this.EnqueueTestComplete();
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             Assert.Equal(10, count);
 
             this.EnqueueTestComplete();
-         }
+        }
 
         /// <summary>
         /// Execute actions with parameter ( Primitive, complex, collection, multiple ) Parms
@@ -80,14 +80,14 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         [Fact]
         public void ActionTestsParams()
         {
-            
+
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            Employee e1 = new Employee {Salary = 300, Name = "bill", PersonId = 1005};
-            Collection<string> specifications = new Collection<string> {"A", "B", "C"};
-            DateTimeOffset purchaseTime = DateTimeOffset.Now;           
-            ComputerDetail cd1 = new ComputerDetail {ComputerDetailId = 101, SpecificationsBag = new ObservableCollection<string>()};
+            Employee e1 = new Employee { Salary = 300, Name = "bill", PersonId = 1005 };
+            Collection<string> specifications = new Collection<string> { "A", "B", "C" };
+            DateTimeOffset purchaseTime = DateTimeOffset.Now;
+            ComputerDetail cd1 = new ComputerDetail { ComputerDetailId = 101, SpecificationsBag = new ObservableCollection<string>() };
             Customer c1 = new Customer { Name = "nill", CustomerId = 1007, Auditing = new AuditInfo { ModifiedBy = "No-one", ModifiedDate = DateTimeOffset.Now, Concurrency = new ConcurrencyInfo { Token = "Test", QueriedDateTime = DateTimeOffset.MinValue } } };
-            AuditInfo a1 = new AuditInfo { ModifiedBy = "some-one", ModifiedDate =  DateTimeOffset.MinValue,Concurrency = new ConcurrencyInfo { Token = "Test", QueriedDateTime = DateTimeOffset.MinValue} };
+            AuditInfo a1 = new AuditInfo { ModifiedBy = "some-one", ModifiedDate = DateTimeOffset.MinValue, Concurrency = new ConcurrencyInfo { Token = "Test", QueriedDateTime = DateTimeOffset.MinValue } };
             context.AddToCustomer(c1);
             context.AddToPerson(e1);
             context.AddToComputerDetail(cd1);
@@ -107,15 +107,15 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var ar22 = context.BeginLoadProperty(cd1, "SpecificationsBag", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar22);
             Assert.Equal(purchaseTime, cd1.PurchaseDate);
-            Assert.Equal(specifications.Aggregate("", (current, item) => current + item),cd1.SpecificationsBag.Aggregate("", (current, item) => current + item));
+            Assert.Equal(specifications.Aggregate("", (current, item) => current + item), cd1.SpecificationsBag.Aggregate("", (current, item) => current + item));
 
             var ar3 = context.BeginExecute(new Uri("Customer(1007)/Microsoft.Test.OData.Services.AstoriaDefaultService.ChangeCustomerAuditInfo", UriKind.Relative), null, null, "POST", new BodyOperationParameter("auditInfo", a1)).EnqueueWait(this);
             context.EndExecute(ar3);
-            var query = (from c in context.Customer where c.CustomerId == c1.CustomerId select c.Auditing ) as DataServiceQuery<AuditInfo>;
+            var query = (from c in context.Customer where c.CustomerId == c1.CustomerId select c.Auditing) as DataServiceQuery<AuditInfo>;
             var ar2222 = query.BeginExecute(null, null).EnqueueWait(this);
             var temp = (query.EndExecute(ar2222) as QueryOperationResponse<AuditInfo>);
             c1.Auditing = temp.SingleOrDefault();
-            Assert.Equal(c1.Auditing.ModifiedBy , "some-one");
+            Assert.Equal(c1.Auditing.ModifiedBy, "some-one");
             Assert.Equal(c1.Auditing.ModifiedDate, DateTimeOffset.MinValue);
             this.EnqueueTestComplete();
         }
@@ -127,8 +127,8 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         public void ActionTestsNoParams()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-          
-            Employee e1 = new Employee {Name = "tim", Salary = 300, Title = "bill",PersonId = 1006 };
+
+            Employee e1 = new Employee { Name = "tim", Salary = 300, Title = "bill", PersonId = 1006 };
             context.AddToPerson(e1);
             var ar0 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar0);
@@ -137,13 +137,13 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             context.EndExecute(ar2);
             var ar21 = context.BeginLoadProperty(e1, "Title", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar21);
-            Assert.Equal("bill[Sacked]",e1.Title );
+            Assert.Equal("bill[Sacked]", e1.Title);
 
             var ar1 = context.BeginExecute<Computer>(new Uri("Computer(-10)" + "/Microsoft.Test.OData.Services.AstoriaDefaultService.GetComputer", UriKind.Relative), null, null, "POST").EnqueueWait(this);
             var comp = context.EndExecute<Computer>(ar1).SingleOrDefault();
             Assert.Equal(-10, comp.ComputerId);
 
-            this.EnqueueTestComplete();        
+            this.EnqueueTestComplete();
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.Format.UseJson();
             const int personId = -6;
-            var query0 = context.Person.Where(p => p.PersonId == personId)  as DataServiceQuery<Person>;
+            var query0 = context.Person.Where(p => p.PersonId == personId) as DataServiceQuery<Person>;
             var ar00 = query0.BeginExecute(null, null).EnqueueWait(this);
             var person = query0.EndExecute(ar00).First();
             var employee = new Employee() { PersonId = 122222, ManagersPersonId = 2222, Salary = 544444444 };
@@ -180,7 +180,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var ar21 = context.BeginLoadProperty(person, "Manager", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar21);
             Assert.Null((person as Employee).Manager);
-            this.EnqueueTestComplete();     
+            this.EnqueueTestComplete();
         }
 
         /// <summary>
@@ -193,9 +193,9 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             context.Format.UseJson();
             const int personId = -4;
 
-            var person = new Person() {PersonId = personId};
+            var person = new Person() { PersonId = personId };
             context.AttachTo("Person", person);
-            var personMetadata = new PersonMetadata {PersonId = 12432};
+            var personMetadata = new PersonMetadata { PersonId = 12432 };
             context.AddToPersonMetadata(personMetadata);
             var ar0 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar0);
@@ -222,7 +222,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.BaseUri = this.ServiceUri;
             context.AddAndUpdateResponsePreference = DataServiceResponsePreference.None;
-            context.IgnoreMissingProperties = true;
+            ///context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             context.IgnoreResourceNotFoundException = true;
             context.MergeOption = MergeOption.OverwriteChanges;
             Customer c1 = new Customer { CustomerId = 1004 };
@@ -301,14 +301,14 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.BaseUri = this.ServiceUri;
             context.AddAndUpdateResponsePreference = DataServiceResponsePreference.None;
-            context.IgnoreMissingProperties = true;
+            ///context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             context.IgnoreResourceNotFoundException = true;
             context.MergeOption = MergeOption.OverwriteChanges;
-            Employee e1 = new Employee {PersonId = 3000};
-            Employee e2 = new Employee {PersonId = 3001};
+            Employee e1 = new Employee { PersonId = 3000 };
+            Employee e2 = new Employee { PersonId = 3001 };
             context.AddToPerson(e1);
             context.AddToPerson(e2);
-           
+
             context.SetLink(e1, "Manager", e2);
             var ar0 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar0);
@@ -318,7 +318,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             context.EndLoadProperty(ar02);
             Assert.NotNull(e1.Manager);
             Assert.Null(e2.Manager);
-           
+
             context.SetLink(e1, "Manager", null);
             var ar1 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar1);
@@ -342,13 +342,13 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.BaseUri = this.ServiceUri;
             context.AddAndUpdateResponsePreference = DataServiceResponsePreference.None;
-            context.IgnoreMissingProperties = true;
+            ///context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             context.IgnoreResourceNotFoundException = true;
             context.MergeOption = MergeOption.OverwriteChanges;
 
-            Customer c1 = new Customer {CustomerId = 1000};
-            Order o1 = new Order {OrderId = 1001};
-            Order o2 = new Order {OrderId = 1002};
+            Customer c1 = new Customer { CustomerId = 1000 };
+            Order o1 = new Order { OrderId = 1001 };
+            Order o2 = new Order { OrderId = 1002 };
 
             context.AddToCustomer(c1);
             var ar0 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -376,14 +376,14 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             context.EndSaveChanges(ar3);
             var ar31 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar31);
-            Assert.Equal(1,c1.Orders.Count);
+            Assert.Equal(1, c1.Orders.Count);
 
             context.DeleteLink(c1, "Orders", o2);
             var ar4 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar4);
             var ar41 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar41);
-            Assert.Equal(0,c1.Orders.Count);
+            Assert.Equal(0, c1.Orders.Count);
 
             this.EnqueueTestComplete();
         }
@@ -403,7 +403,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var people = peopleQuery.EndExecute(ar1);
             var person = people.SingleOrDefault(p => p.PersonId == 1000);
             Assert.Null(person);
-            
+
             // Add
             person = Person.CreatePerson(1000);
             person.Name = "Name1";
@@ -412,31 +412,31 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar2);
             context.Detach(person);
-            
+
             // Verify add
             var ar3 = personQuery.BeginExecute(null, null).EnqueueWait(this);
             person = personQuery.EndExecute(ar3).Single();
             Assert.NotNull(person);
-            
+
             // Update
             person.Name = "Name2";
             context.UpdateObject(person);
             var ar4 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar4);
             context.Detach(person);
-            
+
             // Verify update
             var ar5 = personQuery.BeginExecute(null, null).EnqueueWait(this);
             person = personQuery.EndExecute(ar5).Single();
             Assert.Equal("Name2", person.Name);
             context.Detach(person);
-            
+
             // Delete
             context.AttachTo("Person", person);
             context.DeleteObject(person);
             var ar6 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar6);
-            
+
             // Verify Delete
             context.Detach(person);
             var ar7 = peopleQuery.BeginExecute(null, null).EnqueueWait(this);
@@ -467,7 +467,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var ar2 = query.BeginExecute(null, null).EnqueueWait(this);
             var people = query.EndExecute(ar2).ToList();
             Assert.Equal(numberOfPeople, people.Count);
-            
+
             // Update
             foreach (var person in people)
             {
@@ -477,7 +477,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
 
             var ar3 = context.BeginSaveChanges(SaveChangesOptions.BatchWithSingleChangeset, null, null).EnqueueWait(this);
             context.EndSaveChanges(ar3);
-            
+
             foreach (var person in people)
             {
                 context.Detach(person);
@@ -489,7 +489,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             {
                 Assert.Equal(person.PersonId.ToString(), person.Name);
             }
-            
+
             // Delete
             foreach (var person in people)
             {
@@ -502,7 +502,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             var ar6 = query.BeginExecute(null, null).EnqueueWait(this);
             people = query.EndExecute(ar6).ToList();
             Assert.False(people.Any());
-            
+
             this.EnqueueTestComplete();
         }
 
@@ -519,10 +519,10 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             // Get an image to set at the media entry
             var mediaEntry = this.GetStream();
 
-            context.SetSaveStream(car, mediaEntry, true,"image/png","UnitTestLogo.png");
+            context.SetSaveStream(car, mediaEntry, true, "image/png", "UnitTestLogo.png");
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             var changeOperationResponse = context.EndSaveChanges(ar2).FirstOrDefault() as ChangeOperationResponse;
-           
+
             //gets the stream from the car in context and compares the values to what is in mediaEntry
             var ar3 = context.BeginGetReadStream(car, new DataServiceRequestArgs(), null, null).EnqueueWait(this);
             var receiveStream = context.EndGetReadStream(ar3).Stream;
@@ -533,21 +533,21 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
 
             // When we issue a POST request, the ID and edit-media link are not updated on the client, so we need to get the server values. 
             var carDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
-            
+
             // Cache the current merge option (we reset to the cached value in the finally block). 
             var cachedMergeOption = context.MergeOption;
             context.MergeOption = MergeOption.OverwriteChanges;
-            
+
             // Get the updated entity from the service. 
             var ar4 = context.BeginExecute<Car>(carDescriptor.EditLink, null, null).EnqueueWait(this);
             car = context.EndExecute<Car>(ar4).First();
-            
+
             // Delete
             context.MergeOption = cachedMergeOption;
             context.DeleteObject(car);
             var ar5 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar5);
-            
+
             // Verify Delete
             context.Detach(car);
             var query = context.Car;
@@ -556,7 +556,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             car = cars.SingleOrDefault(c => c.VIN == 1000);
             Assert.Null(car);
 
-           this.EnqueueTestComplete();
+            this.EnqueueTestComplete();
         }
 
         /// <summary>
@@ -576,20 +576,20 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             // Set the Named Stream
             var stream2 = this.GetStream();
             context.SetSaveStream(car, "Photo", stream2, true, "image/png");
-            
+
             // Save changes
             var ar3 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             var changeOperationResponse = context.EndSaveChanges(ar3).FirstOrDefault() as ChangeOperationResponse;
-            
+
             // When we issue a POST request, the ID and edit-media link are not updated on the client, so we need to get the server values. 
             var carDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
             var cachedMergeOption = context.MergeOption;
             context.MergeOption = MergeOption.OverwriteChanges;
-            
+
             // Get the entity 
             var ar4 = context.BeginExecute<Car>(carDescriptor.EditLink, null, null).EnqueueWait(this);
             car = context.EndExecute<Car>(ar4).First();
-            
+
             // Delete
             context.MergeOption = cachedMergeOption;
             context.DeleteObject(car);
@@ -597,7 +597,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             // Save changes
             var ar5 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar5);
-            
+
             // Get all cars
             context.Detach(car);
             var query = context.Car;
@@ -616,7 +616,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         /// <returns>The stream</returns>
         private Stream GetStream()
         {
-            return new MemoryStream(new byte[] {64, 65, 66});
+            return new MemoryStream(new byte[] { 64, 65, 66 });
         }
     }
 }

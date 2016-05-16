@@ -202,15 +202,15 @@ namespace Microsoft.OData
             Debug.Assert(typeContext != null, "typeContext != null");
 
             return new ODataContextUrlInfo()
-                {
-                    isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
-                    IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
-                    navigationSource = typeContext.NavigationSourceName,
-                    TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
-                    TypeName = typeContext.NavigationSourceFullTypeName,
-                    IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
-                    odataUri = odataUri
-                };
+            {
+                isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
+                IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
+                navigationSource = typeContext.NavigationSourceName,
+                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
+                TypeName = typeContext.NavigationSourceFullTypeName,
+                IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
+                odataUri = odataUri
+            };
         }
 
         /// <summary>

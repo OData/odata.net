@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client
             else
             {
                 Debug.Assert(clientTypeAnnotation.EdmType.TypeKind == EdmTypeKind.Entity, "Only complex and entity values supported");
-                
+
                 // TODO: nullable?
                 this.Type = new EdmEntityTypeReference((IEdmEntityType)clientTypeAnnotation.EdmType, true);
             }
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Client
         /// </returns>
         public IEdmPropertyValue FindPropertyValue(string propertyName)
         {
-            var propertyAnnotation = this.typeAnnotation.GetProperty(propertyName, true);
+            var propertyAnnotation = this.typeAnnotation.GetProperty(propertyName, UndeclaredPropertyBehavior.Support);
             if (propertyAnnotation == null)
             {
                 return null;

@@ -8,6 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 {
     #region Namespaces
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Microsoft.Spatial;
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
@@ -19,6 +20,19 @@ namespace Microsoft.Test.Taupo.OData.Common
     /// </summary>
     public class ODataObjectModelVisitor
     {
+        public static object ParseJsonToPrimitiveValue(string rawValue)
+        {
+            Debug.Assert(rawValue != null && rawValue.Length > 0, "");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format("[{0}]", rawValue), ODataVersion.V4);
+            foreach (object item in collectionValue.Items)
+            {
+                return item;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Visits an item in the object model.
         /// </summary>
@@ -176,6 +190,12 @@ namespace Microsoft.Test.Taupo.OData.Common
                 objectModelItem is byte[] || objectModelItem is ISpatial)
             {
                 this.VisitPrimitiveValue(objectModelItem);
+                return;
+            }
+
+            if (objectModelItem is ODataUntypedValue)
+            {
+                this.VisitPrimitiveValue(ParseJsonToPrimitiveValue((objectModelItem as ODataUntypedValue).RawValue));
                 return;
             }
 
@@ -380,7 +400,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         protected virtual void VisitEntitySet(ODataEntitySetInfo entitySetInfo)
         {
         }
-        
+
         /// <summary>
         /// Visits an entity reference link collection.
         /// </summary>
@@ -404,7 +424,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         protected virtual void VisitEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
         {
         }
-        
+
         /// <summary>
         /// Visits a stream reference value (named stream).
         /// </summary>

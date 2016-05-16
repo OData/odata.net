@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\sln\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="..\..\..\sln\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props" Condition="Exists('..\..\..\sln\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -14,7 +15,8 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\sln\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>a0f2c974</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <NoWarn>;0618</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -76,7 +78,7 @@
     <Compile Include="DummyRequestMessage.cs" />
     <Compile Include="DuplicatePropertyNamesCheckerTests.cs" />
     <Compile Include="Evaluation\EdmStructuredValueSimulator.cs" />
-    <Compile Include="Evaluation\NoOpEntityMetadataBuilderTests.cs" />
+    <Compile Include="Evaluation\NoOpResourceMetadataBuilderTests.cs" />
     <Compile Include="Evaluation\NullEntityMetadataBuilderTests.cs" />
     <Compile Include="Evaluation\ODataConventionalEntityMetadataBuilderTests.cs" />
     <Compile Include="Evaluation\ODataConventionalUriBuilderTests.cs" />
@@ -110,7 +112,9 @@
     <Compile Include="JsonLight\ODataJsonLightDeltaWriterTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightDeserializerTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerTests.cs" />
+    <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerUndeclaredTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedSerializerTests.cs" />
+    <Compile Include="JsonLight\ODataJsonLightEntryAndFeedSerializerUndecalredTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightErrorDeserializerTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightOutputContextTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightParameterReaderTests.cs" />
@@ -439,6 +443,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

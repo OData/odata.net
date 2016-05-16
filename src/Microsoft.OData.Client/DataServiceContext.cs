@@ -31,6 +31,21 @@ namespace Microsoft.OData.Client
     using ClientStrings = Microsoft.OData.Client.Strings;
 
     #endregion Namespaces
+    /// <summary>
+    /// Indicates DataServiceContext's behavior on undeclared property in entity/complex value.
+    /// </summary>
+    internal enum UndeclaredPropertyBehavior
+    {
+        /// <summary>
+        /// The default value. Supports undeclared property.
+        /// </summary>
+        Support = 0,
+
+        /// <summary>
+        /// Throw on undeclared property.
+        /// </summary>
+        ThrowException = 1,
+    }
 
     /// <summary>
     /// The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
@@ -97,9 +112,6 @@ namespace Microsoft.OData.Client
         /// <summary>whether to use post-tunneling for PUT/DELETE</summary>
         private bool postTunneling;
 
-        /// <summary>Options when deserializing properties to the target type.</summary>
-        private bool ignoreMissingProperties = true;
-
         /// <summary>Used to specify a strategy to send entity parameter.</summary>
         private EntityParameterSendOption entityParameterSendOption;
 
@@ -111,6 +123,9 @@ namespace Microsoft.OData.Client
 
         /// <summary>Client will ignore 404 resource not found exception and return an empty set when this is set to true</summary>
         private bool ignoreResourceNotFoundException;
+
+        /// <summary>Options that can overwrite ignoreMissingProperties.</summary>
+        private UndeclaredPropertyBehavior undeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
         /// <summary>The URL conventions to use.</summary>
         private DataServiceUrlConventions urlConventions;
@@ -424,17 +439,6 @@ namespace Microsoft.OData.Client
             internal set { this.applyingChanges = value; }
         }
 
-        /// <summary>Gets or sets whether the properties read from the type must be mapped to properties on the client-side type.</summary>
-        /// <returns>A Boolean value that indicates whether the properties read from the type must be mapped to properties on the client-side type.</returns>
-        /// <remarks>
-        /// This also affects responses during SaveChanges.
-        /// </remarks>
-        public bool IgnoreMissingProperties
-        {
-            get { return this.ignoreMissingProperties; }
-            set { this.ignoreMissingProperties = value; }
-        }
-
         /// <summary>Gets or sets a function to override the default type resolution strategy used by the client library when you send entities to a data service.</summary>
         /// <returns>Returns a string that contains the name of the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</returns>
         /// <remarks>
@@ -619,6 +623,14 @@ namespace Microsoft.OData.Client
         /// Whether OData Simplified is enabled.
         /// </summary>
         public bool ODataSimplified { get; set; }
+
+        /// <summary>Gets or sets whether to support undeclared properties.</summary>
+        /// <returns>UndeclaredPropertyBehavior.</returns>
+        internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        {
+            get { return this.undeclaredPropertyBehavior; }
+            set { this.undeclaredPropertyBehavior = value; }
+        }
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
@@ -2121,7 +2133,7 @@ namespace Microsoft.OData.Client
 
             // Validate that the property is valid and exists on the source
             ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
-            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, false);
+            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
             if (property.IsKnownType || !property.IsEntityCollection)
             {
                 throw Error.InvalidOperation(Strings.Context_AddRelatedObjectCollectionOnly);
@@ -2260,7 +2272,7 @@ namespace Microsoft.OData.Client
 
             // Validate that the property is valid and exists on the source
             ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
-            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, false);
+            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
 
             if (property.IsKnownType || property.IsEntityCollection)
             {
@@ -3053,7 +3065,7 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_NoLoadWithInsertEnd);
             }
 
-            ClientPropertyAnnotation property = type.GetProperty(propertyName, false);
+            ClientPropertyAnnotation property = type.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
             Debug.Assert(null != property, "should have thrown if propertyName didn't exist");
 
             bool isContinuation = requestUri != null || continuation != null;
@@ -3145,7 +3157,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
 
             // will throw InvalidOperationException if property doesn't exist
-            ClientPropertyAnnotation property = type.GetProperty(sourceProperty, false);
+            ClientPropertyAnnotation property = type.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
 
             if (property.IsKnownType)
             {

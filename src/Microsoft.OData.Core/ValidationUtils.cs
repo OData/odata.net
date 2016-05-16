@@ -29,9 +29,9 @@ namespace Microsoft.OData
         private const int MaxBoundaryLength = 70;
 
         #region undeclared property setting logic
-        
+
         /// <summary>
-        /// Retuns if undeclared property should be supported.
+        /// Retuns if undeclared property should be supported(read undeclared prmitive value into ODataUntypdValue).
         /// </summary>
         /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
         /// <returns>True if undeclared property should be supported.</returns>
@@ -50,12 +50,8 @@ namespace Microsoft.OData
         internal static bool ShouldThrowOnUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
         {
             // ignore messageValidationSetting.EnableFullValidation
-            // exception can only be thrown when setting is .None / .ReportUndeclaredLinkProperty / ...
-            bool throwErr = !messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
-                                ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
-                   && !messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
+            return !messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
                           ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
-            return throwErr;
         }
         #endregion
 

@@ -34,11 +34,6 @@ namespace Microsoft.OData
             {
                 throw new ODataException(Strings.ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageReaderSettings.BaseUri)));
             }
-
-            if (!readingResponse && messageReaderSettings.UndeclaredPropertyBehaviorKinds != ODataUndeclaredPropertyBehaviorKinds.None)
-            {
-                throw new ODataException(Strings.ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest);
-            }
         }
 
         /// <summary>
@@ -160,16 +155,12 @@ namespace Microsoft.OData
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</param>
         /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        /// <param name="ignoreProperty">true if the property should be completely ignored and not parsed/reported, in this case the return value is null.
-        /// false if the property should be parsed and reported as usual.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidateValuePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings, out bool ignoreProperty)
+        internal static IEdmProperty ValidateValuePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
-
-            ignoreProperty = false;
 
             if (owningStructuredType == null)
             {
@@ -183,8 +174,12 @@ namespace Microsoft.OData
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
                 }
-
-                ignoreProperty = true;
+                else
+                {
+                    Debug.Assert(
+                        messageReaderSettings.ShouldSupportUndeclaredProperty(),
+                        "messageReaderSettings.ShouldSupportUndeclaredProperty()");
+                }
             }
 
             return property;

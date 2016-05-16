@@ -23,7 +23,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [TestMethod]
         public void ComplexWithPrimitiveValueShouldMaterialize()
         {
-            ODataComplexValue pointComplexValue = new ODataComplexValue() {Properties = new ODataProperty[] {new ODataProperty() {Name = "X", Value = 15}, new ODataProperty() {Name = "Y", Value = 18}}};
+            ODataComplexValue pointComplexValue = new ODataComplexValue() { Properties = new ODataProperty[] { new ODataProperty() { Name = "X", Value = 15 }, new ODataProperty() { Name = "Y", Value = 18 } } };
             this.CreatePrimitiveValueMaterializationPolicy().MaterializeComplexTypeProperty(typeof(CollectionValueMaterializationPolicyTests.Point), pointComplexValue);
             pointComplexValue.HasMaterializedValue().Should().BeTrue();
             var point = pointComplexValue.GetMaterializedValue().As<CollectionValueMaterializationPolicyTests.Point>();
@@ -34,9 +34,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [TestMethod]
         public void ApplyNonExistantPropertyWithIgnoreMissingPropertiesShouldNotError()
         {
-            TestMaterializerContext context = new TestMaterializerContext() {IgnoreMissingProperties = true};
+            TestMaterializerContext context = new TestMaterializerContext() { UndeclaredPropertyBehavior = DSClient.UndeclaredPropertyBehavior.Support };
             CollectionValueMaterializationPolicyTests.Point point = new CollectionValueMaterializationPolicyTests.Point();
-            ODataProperty property = new ODataProperty() {Name = "Z", Value = 10};
+            ODataProperty property = new ODataProperty() { Name = "Z", Value = 10 };
 
             this.CreatePrimitiveValueMaterializationPolicy(context).ApplyDataValue(context.ResolveTypeForMaterialization(typeof(CollectionValueMaterializationPolicyTests.Point), null), property, point);
         }
@@ -79,7 +79,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         {
             TestMaterializerContext context = new TestMaterializerContext();
             ComplexTypeWithChildComplexType complexInstance = new ComplexTypeWithChildComplexType();
-            complexInstance.InnerComplexProperty = new DerivedComplexType {DerivedProp = 1};
+            complexInstance.InnerComplexProperty = new DerivedComplexType { DerivedProp = 1 };
 
             //In a true client, a TypeResolver will be used to resolve derived property type.
             context.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
@@ -131,12 +131,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [TestMethod]
         public void ValueShouldBeAppliedRegardlessIfPropertyStartsNullOrNot()
         {
-            foreach (var startingPropertyState in new ChildComplexType[] {null, new ChildComplexType()})
+            foreach (var startingPropertyState in new ChildComplexType[] { null, new ChildComplexType() })
             {
                 TestMaterializerContext context = new TestMaterializerContext();
                 ComplexTypeWithChildComplexType complexInstance = new ComplexTypeWithChildComplexType();
                 complexInstance.InnerComplexProperty = startingPropertyState;
-                ODataProperty property = new ODataProperty() {Name = "InnerComplexProperty", Value = new ODataComplexValue() {Properties = new ODataProperty[] {new ODataProperty() {Name = "Prop", Value = 1}}}};
+                ODataProperty property = new ODataProperty() { Name = "InnerComplexProperty", Value = new ODataComplexValue() { Properties = new ODataProperty[] { new ODataProperty() { Name = "Prop", Value = 1 } } } };
 
                 this.CreatePrimitiveValueMaterializationPolicy(context).ApplyDataValue(context.ResolveTypeForMaterialization(typeof(ComplexTypeWithChildComplexType), null), property, complexInstance);
                 complexInstance.InnerComplexProperty.Prop.Should().Be(1);
@@ -196,7 +196,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             public int Prop { get; set; }
         }
 
-        public class DerivedComplexType: ChildComplexType
+        public class DerivedComplexType : ChildComplexType
         {
             public int DerivedProp { get; set; }
         }

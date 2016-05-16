@@ -65,7 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Navigation and association link",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/associationlink\"",
                     IsLink = true,
@@ -74,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Navigation and association link with custom annotation",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", "custom.annotation") + "\":null," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/associationlink\"",
@@ -84,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Navigation link with another odata.type annotation - should fail",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"",
                     IsLink = true,
@@ -94,7 +94,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Association link with another odata.mediaEditLink annotation - should fail",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/mediaeditlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/associationlink\"",
                     IsLink = true,
@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Expanded feed navigation link",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"," +
                         "\"UndeclaredProperty\":[]",
                     IsLink = true,
@@ -114,7 +114,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Expanded entry navigation link",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/associationlink\"," +
                         "\"UndeclaredProperty\":{}",
                     IsLink = true,
@@ -124,7 +124,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Expanded null entry navigation link",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/associationlink\"," +
                         "\"UndeclaredProperty\":null",
@@ -135,7 +135,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Expanded navigation link with wrong value",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"," +
                         "\"UndeclaredProperty\":42",
                     IsLink = true,
@@ -201,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Everything",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/mediaeditlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaReadLinkAnnotationName) + "\":\"http://odata.org/mediareadlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaContentTypeAnnotationName) + "\":\"media/contenttype\"," +
@@ -212,7 +212,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Everything with custom annotations",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/mediaeditlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaReadLinkAnnotationName) + "\":\"http://odata.org/mediareadlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", "custom.annotation") + "\":\"value\"," +
@@ -225,7 +225,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Stream property with odata.type annotation",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/mediaeditlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Stream\"",
                     IsLink = true,
@@ -235,7 +235,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Stream property with a value",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/mediaeditlink\"," +
                         "\"UndeclaredProperty\":null",
                     IsLink = true,
@@ -263,6 +263,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the reading of undeclared value properties on entry payloads.")]
         public void UndeclaredValuePropertyTests()
         {
@@ -301,7 +302,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Number with type",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Int16\"," +
                         "\"UndeclaredProperty\":42",
                     IsValue = true,
@@ -312,7 +313,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Number with invalid type - should work, the type is ignored",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Unknown\"," +
                         "\"UndeclaredProperty\":42",
                     IsValue = true,
@@ -322,7 +323,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Number with another odata annotation - should fail",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/reference\"," +
                         "\"UndeclaredProperty\":42",
                     IsValue = true,
@@ -332,7 +333,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Property without value and with no recognized annotations - should fail",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", "custom.annotation") + "\":\"value\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType", "UndeclaredProperty")
@@ -340,7 +341,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Property without value and with known annotation - should fail",
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/reference\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType", "UndeclaredProperty")
@@ -398,7 +399,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     expectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType");
                 }
 
-                if (this.IsValue && !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty))
+                if (this.IsValue && !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty))
                 {
                     expectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType");
                 }

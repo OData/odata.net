@@ -153,7 +153,7 @@ namespace System.Data.Test.Astoria
             }
 
             ctx.Configurations.RequestPipeline.OnMessageCreating = this.ctx_OnMessageCreating;
-            ctx.IgnoreMissingProperties = true; //for open types
+            //ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
             Type type = this._resourceTypeToWorkspaceTypeList[container.BaseType];
 
@@ -183,7 +183,7 @@ namespace System.Data.Test.Astoria
                 ctx = new DataServiceContext(new Uri(this.ServiceUri));
             }
 
-            ctx.IgnoreMissingProperties = true; //for open types
+            //ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             ctx.Configurations.RequestPipeline.OnMessageCreating = this.ctx_OnMessageCreating;
 
             return SocketExceptionHandler.Execute<IEnumerable>(() => (IEnumerable)ctx.Execute<T>(new Uri(query)));

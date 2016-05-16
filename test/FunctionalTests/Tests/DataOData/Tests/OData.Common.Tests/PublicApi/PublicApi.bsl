@@ -3874,10 +3874,9 @@ public enum Microsoft.OData.ODataReaderState : int {
 FlagsAttribute(),
 ]
 public enum Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds : int {
-	IgnoreUndeclaredValueProperty = 1
 	None = 0
 	ReportUndeclaredLinkProperty = 2
-	SupportUndeclaredValueProperty = 4
+	SupportUndeclaredValueProperty = 1
 }
 
 public enum Microsoft.OData.ODataVersion : int {
@@ -4998,6 +4997,7 @@ public enum Microsoft.OData.Json.JsonNodeType : int {
 public interface Microsoft.OData.Json.IJsonReader {
 	bool IsIeee754Compatible  { public abstract get; }
 	Microsoft.OData.Json.JsonNodeType NodeType  { public abstract get; }
+	string RawValue  { public abstract get; }
 	object Value  { public abstract get; }
 
 	bool Read ()
@@ -6354,7 +6354,6 @@ public class Microsoft.OData.Client.DataServiceContext {
 	Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public get; public set; }
 	Microsoft.OData.Client.EntityTracker EntityTracker  { public get; public set; }
 	Microsoft.OData.Client.DataServiceClientFormat Format  { public get; }
-	bool IgnoreMissingProperties  { public get; public set; }
 	bool IgnoreResourceNotFoundException  { public get; public set; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public get; }
 	Microsoft.OData.Client.ODataProtocolVersion MaxProtocolVersion  { public get; }

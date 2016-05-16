@@ -33,13 +33,13 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets a value indicating whether to ignore missing properties when materializing values
+        /// Gets a value indicating whether to support missing properties when materializing values or throw exception.
         /// </summary>
-        public bool IgnoreMissingProperties
+        public UndeclaredPropertyBehavior UndeclaredPropertyBehavior
         {
             get
             {
-                return this.ResponseInfo.ShouldMaterializerIgnoreUndeclaredValueProperty;
+                return this.ResponseInfo.Context.UndeclaredPropertyBehavior;
             }
         }
 

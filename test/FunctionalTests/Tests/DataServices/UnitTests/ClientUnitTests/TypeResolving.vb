@@ -1514,7 +1514,7 @@ Partial Public Class ClientModule
             ' AddRelatedObject
             Dim newOrder = New NarrowOrdersWithKey()
             newOrder.ID = 90001
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             ctx.AddRelatedObject(cust, "Orders", newOrder)
             Assert.AreEqual(1, ctx.SaveChanges().Count())
         End Sub
@@ -1549,9 +1549,9 @@ Partial Public Class ClientModule
                 End Try
 
                 ' load property - with ignore missing
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
                 ctx.LoadProperty(cust, "Orders")
-                ctx.IgnoreMissingProperties = False
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
 
                 ' load property with uri
                 Dim custDescriptor = ctx.GetEntityDescriptor(cust)
@@ -1570,12 +1570,12 @@ Partial Public Class ClientModule
                 custs(0).Name = "New Cust"
                 custs.Remove(custs(1))
                 ctx.ResolveName = AddressOf ResolveNameFromType
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
 
                 Try
                     Assert.AreEqual(2, ctx.SaveChanges().Count())
                 Finally
-                    ctx.IgnoreMissingProperties = False
+                    ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
                 End Try
             End Using
         End Sub
@@ -1599,9 +1599,9 @@ Partial Public Class ClientModule
                 newOrder.ID = 90001
                 newOrder.DollarAmount = 20
                 cust.Orders.Add(newOrder)
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
                 Assert.AreEqual(1, ctx.SaveChanges().Count())
-                ctx.IgnoreMissingProperties = False
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
 
                 ' delete
                 cust.Orders.Remove(newOrder)
@@ -1621,7 +1621,7 @@ Partial Public Class ClientModule
                 custs(0).Name = "New Cust"
                 ' user supplied resolver - should be called
                 ctx.ResolveName = AddressOf ResolveNameFromType
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
 
                 Try
                     Assert.AreEqual(1, ctx.SaveChanges().Count())
@@ -1635,7 +1635,7 @@ Partial Public Class ClientModule
                     Assert.AreEqual(0, codeGenResolverCallCount)
 
                 Finally
-                    ctx.IgnoreMissingProperties = False
+                    ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
                 End Try
             End Using
         End Sub
@@ -1724,9 +1724,9 @@ Partial Public Class ClientModule
                 ' restore deleted object
                 ctx.ResolveName = AddressOf ResolveNameFromType
                 ctx.AddObject("Customers", firstDescriptor.Entity)
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
                 Assert.AreEqual(1, ctx.SaveChanges().Count())
-                ctx.IgnoreMissingProperties = False
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             End Using
         End Sub
 

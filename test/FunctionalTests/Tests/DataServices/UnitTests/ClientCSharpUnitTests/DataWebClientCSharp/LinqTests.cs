@@ -6763,7 +6763,7 @@ namespace AstoriaUnitTests.Tests
                 Trace.WriteLine("Cast to narrow type");
                 ReadOnlyTestContext.ClearBaselineIncludes();
                 ReadOnlyTestContext.AddBaselineIncludes(typeof(Team), "HomeStadium");
-                context.IgnoreMissingProperties = true;
+                context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
                 var query10 = (from Team t in context.CreateQuery<Team>("Teams")
                                where t.TeamID == 1

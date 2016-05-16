@@ -5272,7 +5272,7 @@ namespace AstoriaUnitTests.Tests
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
                         //ctx.EnableAtom = true;
                         //ctx.Format.UseAtom();
-                        ctx.IgnoreMissingProperties = true;
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
                         ctx.ResolveName = (type) =>
                         {
@@ -5405,7 +5405,7 @@ namespace AstoriaUnitTests.Tests
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
                         //ctx.EnableAtom = true;
                         //ctx.Format.UseAtom();
-                        ctx.IgnoreMissingProperties = true;
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
                         if (request.DataServiceType == typeof(CustomRowBasedContext))
                         {

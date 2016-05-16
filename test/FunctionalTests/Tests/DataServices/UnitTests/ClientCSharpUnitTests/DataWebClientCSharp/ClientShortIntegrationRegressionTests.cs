@@ -94,7 +94,7 @@ namespace AstoriaUnitTests.Tests
     2
   ]
 }", "4.0");
-            context.IgnoreMissingProperties = true;
+            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             var numbers = context.Execute<int>(new Uri("/GetAddresses", UriKind.Relative), "GET", false).ToList();
             Assert.IsNotNull(numbers);
             numbers.Should().HaveCount(2);
@@ -119,7 +119,7 @@ namespace AstoriaUnitTests.Tests
         {
             // Ignore missing properties
             var context = CreateTransportLayerContext(JsonLightExtraPropertyPayload, "4.0");
-            context.IgnoreMissingProperties = false;
+            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException;
             Action test = ()=> context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             test.ShouldThrow<InvalidOperationException>().WithMessage("The property 'ExtraProperty' does not exist on type 'ODataDemo.Supplier'. Make sure to only use property names that are defined by the type.");
         }

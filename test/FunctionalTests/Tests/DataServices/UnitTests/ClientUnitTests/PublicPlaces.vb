@@ -98,7 +98,7 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub NewNullContextUri()
             Dim baseUri As Uri = Nothing
             CreateContext(baseUri)
@@ -215,13 +215,13 @@ Partial Public Class ClientModule
                 End Try
             Next
 
-            Assert.IsTrue(ctx.IgnoreMissingProperties)
+            Assert.IsTrue(ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support)
 
-            ctx.IgnoreMissingProperties = False
-            Assert.IsFalse(ctx.IgnoreMissingProperties)
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
+            Assert.IsTrue(ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException)
 
-            ctx.IgnoreMissingProperties = True
-            Assert.IsTrue(ctx.IgnoreMissingProperties)
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
+            Assert.IsTrue(ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support)
         End Sub
 
         <TestCategory("Partition2")> <TestMethod()> Public Sub KeyAttributeFailure()

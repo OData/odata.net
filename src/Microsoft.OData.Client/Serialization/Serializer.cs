@@ -368,7 +368,7 @@ namespace Microsoft.OData.Client
                     clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
                 }
 
-                bool isCollection = clientType.GetProperty(grlinks.Key, false).IsEntityCollection;
+                bool isCollection = clientType.GetProperty(grlinks.Key, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
                 bool started = false;
 
                 foreach (LinkDescriptor end in grlinks.Value)
