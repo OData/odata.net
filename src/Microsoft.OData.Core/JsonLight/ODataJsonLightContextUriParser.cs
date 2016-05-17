@@ -137,7 +137,6 @@ namespace Microsoft.OData.JsonLight
 
             // unsupported payload kind indicates that this is during payload kind detection, so we should not fail.
             bool detectedPayloadKindMatchesExpectation = detectedPayloadKind == expectedPayloadKind || expectedPayloadKind == ODataPayloadKind.Unsupported;
-            bool isIndividualProperty = this.parseResult.Path != null && this.parseResult.Path.IsIndividualProperty();
             if (detectedPayloadKind == ODataPayloadKind.ResourceSet && this.parseResult.EdmType.IsODataComplexTypeKind())
             {
                 this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection };
