@@ -112,14 +112,14 @@ namespace Microsoft.OData.Tests
         public void ODataMessageReaderCopyConstructorTest()
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            var copyOfSettings = new ODataMessageReaderSettings(settings);
+            var copyOfSettings = settings.Clone();
             // Compare original and settings created from copy constructor without setting values
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting some values
             settings.BaseUri = new Uri("http://www.odata.org");
             settings.EnableCharactersCheck = true;
-            copyOfSettings = new ODataMessageReaderSettings(settings);
+            copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting rest of the values 
@@ -130,13 +130,13 @@ namespace Microsoft.OData.Tests
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;
             settings.MessageQuotas.MaxNestingDepth = 20;
             settings.MessageQuotas.MaxReceivedMessageSize = 2000;
-            copyOfSettings = new ODataMessageReaderSettings(settings);
+            copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting some values to null and changing some other values
             settings.BaseUri = null;
             settings.EnableCharactersCheck = false;
-            copyOfSettings = new ODataMessageReaderSettings(settings);
+            copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
         }
 
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageReaderSettings testSubject = new ODataMessageReaderSettings();
             testSubject.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("namespace.*");
-            var copy = new ODataMessageReaderSettings(testSubject);
+            var copy = testSubject.Clone();
             copy.ShouldIncludeAnnotation.Should().BeSameAs(testSubject.ShouldIncludeAnnotation);
         }
     }

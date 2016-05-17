@@ -38,30 +38,6 @@ namespace Microsoft.OData
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class.</summary>
-        /// <param name="other">The other message reader settings.</param>
-        public ODataMessageReaderSettings(ODataMessageReaderSettings other)
-        {
-            ExceptionUtils.CheckArgumentNotNull(other, "other");
-
-            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
-            this.BaseUri = other.BaseUri;
-            this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
-            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
-            this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
-            this.EnableCharactersCheck = other.EnableCharactersCheck;
-            this.EnableFullValidation = other.EnableFullValidation;
-            this.EnableLaxMetadataValidation = other.EnableLaxMetadataValidation;
-            this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;
-            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
-            this.MaxProtocolVersion = other.MaxProtocolVersion;
-            this.ODataSimplified = other.ODataSimplified;
-            this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
-            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
-            this.UseKeyAsSegment = other.UseKeyAsSegment;
-            this.ODataSimplified = other.ODataSimplified;
-        }
-
         /// <summary>
         /// If set to true, allows the writers to write duplicate properties of entries and 
         /// complex values (i.e., properties that have the same name). Defaults to 'false'.
@@ -294,6 +270,39 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Creates a shallow copy of this <see cref="ODataMessageReaderSettings"/>.
+        /// </summary>
+        /// <returns>A shallow copy of this <see cref="ODataMessageReaderSettings"/>.</returns>
+        public ODataMessageReaderSettings Clone()
+        {
+            var copy = new ODataMessageReaderSettings();
+            copy.CopyFrom(this);
+            return copy;
+        }
+
+        internal static ODataMessageReaderSettings CreateReaderSettings(
+            IServiceProvider container,
+            ODataMessageReaderSettings prototype)
+        {
+            ODataMessageReaderSettings readerSettings;
+            if (container == null)
+            {
+                readerSettings = new ODataMessageReaderSettings();
+            }
+            else
+            {
+                readerSettings = container.GetRequiredService<ODataMessageReaderSettings>();
+            }
+
+            if (prototype != null)
+            {
+                readerSettings.CopyFrom(prototype);
+            }
+
+            return readerSettings;
+        }
+
+        /// <summary>
         /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should be skipped, false otherwise.
         /// </summary>
         /// <param name="annotationName">The name of the annotation in question.</param>
@@ -301,6 +310,28 @@ namespace Microsoft.OData
         internal bool ShouldSkipAnnotation(string annotationName)
         {
             return this.ShouldIncludeAnnotation == null || !this.ShouldIncludeAnnotation(annotationName);
+        }
+
+        private void CopyFrom(ODataMessageReaderSettings other)
+        {
+            ExceptionUtils.CheckArgumentNotNull(other, "other");
+
+            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
+            this.BaseUri = other.BaseUri;
+            this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
+            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
+            this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
+            this.EnableCharactersCheck = other.EnableCharactersCheck;
+            this.EnableFullValidation = other.EnableFullValidation;
+            this.EnableLaxMetadataValidation = other.EnableLaxMetadataValidation;
+            this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;
+            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
+            this.MaxProtocolVersion = other.MaxProtocolVersion;
+            this.ODataSimplified = other.ODataSimplified;
+            this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
+            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
+            this.UseKeyAsSegment = other.UseKeyAsSegment;
+            this.ODataSimplified = other.ODataSimplified;
         }
     }
 }

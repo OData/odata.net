@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics;
 using Microsoft.OData.Json;
-using Microsoft.OData.JsonLight;
 
 namespace Microsoft.OData
 {
@@ -95,6 +94,22 @@ namespace Microsoft.OData
         #endregion
 
         /// <summary>
+        /// Adds a service prototype of type <typeparamref name="TService"/>.
+        /// </summary>
+        /// <typeparam name="TService">The type of the service prototype to add.</typeparam>
+        /// <param name="builder">The <see cref="IContainerBuilder"/> to add the service to.</param>
+        /// <param name="instance">The service prototype to add.</param>
+        /// <returns>The <see cref="IContainerBuilder"/> instance itself.</returns>
+        public static IContainerBuilder AddServicePrototype<TService>(
+            this IContainerBuilder builder,
+            TService instance)
+        {
+            Debug.Assert(builder != null, "builder != null");
+
+            return builder.AddService(ServiceLifetime.Singleton, sp => new ServicePrototype<TService>(instance));
+        }
+
+        /// <summary>
         /// Adds the default OData services to the <see cref="IContainerBuilder"/>.
         /// </summary>
         /// <param name="builder">The <see cref="IContainerBuilder"/> to add the services to.</param>
@@ -107,6 +122,8 @@ namespace Microsoft.OData
             builder.AddService<IJsonWriterFactory, DefaultJsonWriterFactory>(ServiceLifetime.Singleton);
             builder.AddService(ServiceLifetime.Singleton, sp => ODataMediaTypeResolver.GetMediaTypeResolver(null));
             builder.AddService<ODataMessageInfo>(ServiceLifetime.Scoped);
+            builder.AddServicePrototype(new ODataMessageReaderSettings());
+            builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageReaderSettings>().Clone());
 
             return builder;
         }

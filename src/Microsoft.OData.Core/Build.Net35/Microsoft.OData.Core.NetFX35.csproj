@@ -1566,6 +1566,9 @@
     <Compile Include="..\ODataNullValueBehaviorKind.cs">
       <Link>Microsoft\OData\Core\ODataNullValueBehaviorKind.cs</Link>
     </Compile>
+    <Compile Include="..\ServicePrototype.cs">
+      <Link>Microsoft\OData\Core\ServicePrototype.cs</Link>
+    </Compile>
     <Compile Include="..\ServiceProviderExtensions.cs">
       <Link>Microsoft\OData\Core\ServiceProviderExtensions.cs</Link>
     </Compile>

@@ -90,5 +90,18 @@ namespace Microsoft.OData
             var genericEnumerable = typeof(IEnumerable<>).MakeGenericType(serviceType);
             return (IEnumerable<object>)container.GetRequiredService(genericEnumerable);
         }
+
+        /// <summary>
+        /// Gets the service prototype of type <typeparamref name="TService"/> from the <see cref="IServiceProvider"/>.
+        /// </summary>
+        /// <typeparam name="TService">The type of service prototype to get.</typeparam>
+        /// <param name="container">The <see cref="IServiceProvider"/> to retrieve the services from.</param>
+        /// <returns>The service prototype of type <typeparamref name="TService"/>.</returns>
+        public static TService GetServicePrototype<TService>(this IServiceProvider container)
+        {
+            Debug.Assert(container != null, "container != null");
+
+            return container.GetRequiredService<ServicePrototype<TService>>().Instance;
+        }
     }
 }

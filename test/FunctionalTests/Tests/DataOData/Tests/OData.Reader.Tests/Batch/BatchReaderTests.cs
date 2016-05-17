@@ -624,7 +624,7 @@ POST http://example.org/Products HTTP/1.1
 
             if (maxPartsPerBatch.HasValue || maxOperationsPerChangeset.HasValue)
             {
-                newSettings = new ODataMessageReaderSettings(testConfig.MessageReaderSettings);
+                newSettings = testConfig.MessageReaderSettings.Clone();
 
                 if (maxPartsPerBatch.HasValue)
                 {

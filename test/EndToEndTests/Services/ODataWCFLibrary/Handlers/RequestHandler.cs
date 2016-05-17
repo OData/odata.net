@@ -267,7 +267,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         protected virtual ODataMessageReaderSettings GetReaderSettings()
         {
-            return new ODataMessageReaderSettings();
+            // Let ODataMessageReader get ODataMessageReaderSettings from the container.
+            return null;
         }
 
         protected virtual ODataMessageWriterSettings GetWriterSettings()

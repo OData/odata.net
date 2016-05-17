@@ -34,7 +34,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             container.AddEntitySet("Entities", this.entityType);
 
             this.defaultSettings = new ODataMessageReaderSettings { BaseUri = new Uri("http://serviceRoot/") };
-            this.settingsWithConversionDisabled = new ODataMessageReaderSettings(this.defaultSettings) { DisablePrimitiveTypeConversion = true };
+            this.settingsWithConversionDisabled = this.defaultSettings.Clone();
+            this.settingsWithConversionDisabled.DisablePrimitiveTypeConversion = true;
         }
 
         [Fact]

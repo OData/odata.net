@@ -87,7 +87,7 @@ namespace Microsoft.OData
         /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given request message.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
         public ODataMessageReader(IODataRequestMessage requestMessage)
-            : this(requestMessage, new ODataMessageReaderSettings())
+            : this(requestMessage, null)
         {
         }
 
@@ -109,14 +109,13 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            // Clone the settings here so we can later modify them without changing the settings passed to us by the user
-            this.settings = settings == null ? new ODataMessageReaderSettings() : new ODataMessageReaderSettings(settings);
+            this.container = GetContainer(requestMessage);
+            this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.container, settings);
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ false);
 
             this.readingResponse = false;
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = requestMessage as IODataUrlResolver;
-            this.container = GetContainer(requestMessage);
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against request message.
@@ -129,7 +128,7 @@ namespace Microsoft.OData
         /// <summary>Creates a new <see cref="T:System.Data.OData.ODataMessageReader" /> for the given response message.</summary>
         /// <param name="responseMessage">The response message for which to create the reader.</param>
         public ODataMessageReader(IODataResponseMessage responseMessage)
-            : this(responseMessage, new ODataMessageReaderSettings())
+            : this(responseMessage, null)
         {
         }
 
@@ -151,14 +150,13 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            // Clone the settings here so we can later modify them without changing the settings passed to us by the user
-            this.settings = settings == null ? new ODataMessageReaderSettings() : new ODataMessageReaderSettings(settings);
+            this.container = GetContainer(responseMessage);
+            this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.container, settings);
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ true);
 
             this.readingResponse = true;
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = responseMessage as IODataUrlResolver;
-            this.container = GetContainer(responseMessage);
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against response message.

@@ -327,6 +327,7 @@
     <Compile Include="ReferenceEqualityComparer.cs" />
     <Compile Include="SelectedPropertiesNode.cs" />
     <Compile Include="SerializationTypeNameAnnotation.cs" />
+    <Compile Include="ServicePrototype.cs" />
     <Compile Include="ServiceProviderExtensions.cs" />
     <Compile Include="SimpleLazy.cs" />
     <Compile Include="TaskUtils.cs" />

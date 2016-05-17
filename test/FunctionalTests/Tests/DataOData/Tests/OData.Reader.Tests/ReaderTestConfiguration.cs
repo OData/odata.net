@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         private ReaderTestConfiguration(ReaderTestConfiguration other, TestODataBehaviorKind behaviorKind)
             : base(other.Format, other.Version, other.IsRequest, behaviorKind)
         {
-            this.MessageReaderSettings = new ODataMessageReaderSettings(other.MessageReaderSettings);
+            this.MessageReaderSettings = other.MessageReaderSettings.Clone();
             this.Synchronous = other.Synchronous;
         }
 
