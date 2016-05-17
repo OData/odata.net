@@ -75,34 +75,6 @@ namespace Microsoft.OData
             this.ODataSimplified = false;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with specified settings.</summary>
-        /// <param name="other">The specified settings.</param>
-        public ODataMessageWriterSettings(ODataMessageWriterSettings other)
-        {
-            ExceptionUtils.CheckArgumentNotNull(other, "other");
-
-            this.acceptCharSets = other.acceptCharSets;
-            this.acceptMediaTypes = other.acceptMediaTypes;
-            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
-            this.AllowNullValuesForNonNullablePrimitiveTypes = other.AllowNullValuesForNonNullablePrimitiveTypes;
-            this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
-            this.BaseUri = other.BaseUri;
-            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
-            this.EnableCharactersCheck = other.EnableCharactersCheck;
-            this.EnableFullValidation = other.EnableFullValidation;
-            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
-            this.EnableIndentation = other.EnableIndentation;
-            this.format = other.format;
-            this.JsonPCallback = other.JsonPCallback;
-            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
-            this.ODataUri = other.ODataUri;
-            this.ODataSimplified = other.ODataSimplified;
-            this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
-            this.UseKeyAsSegment = other.UseKeyAsSegment;
-            this.useFormat = other.useFormat;
-            this.Version = other.Version;
-        }
-
         /// <summary>
         /// If set to true, allows the writers to write duplicate properties of entries and complex values (i.e., properties that have the same name). Defaults to 'false'.
         /// </summary>
@@ -344,6 +316,17 @@ namespace Microsoft.OData
             }
         }
 
+        /// <summary>
+        /// Creates a shallow copy of this <see cref="ODataMessageWriterSettings"/>.
+        /// </summary>
+        /// <returns>A shallow copy of this <see cref="ODataMessageWriterSettings"/>.</returns>
+        public ODataMessageWriterSettings Clone()
+        {
+            var copy = new ODataMessageWriterSettings();
+            copy.CopyFrom(this);
+            return copy;
+        }
+
         /// <summary>Sets the acceptable media types and character sets from which the content type will be computed when writing the payload.</summary>
         /// <param name="acceptableMediaTypes">The acceptable media types used to determine the content type of the message. This is a comma separated list of content types as specified in RFC 2616, Section 14.1.</param>
         /// <param name="acceptableCharSets"> The acceptable charsets to use to determine the encoding of the message. This is a comma separated list of charsets as specified in RFC 2616, Section 14.2 </param>
@@ -366,6 +349,28 @@ namespace Microsoft.OData
             this.acceptMediaTypes = null;
             this.format = payloadFormat;
             this.useFormat = true;
+        }
+
+        internal static ODataMessageWriterSettings CreateWriterSettings(
+            IServiceProvider container,
+            ODataMessageWriterSettings other)
+        {
+            ODataMessageWriterSettings writerSettings;
+            if (container == null)
+            {
+                writerSettings = new ODataMessageWriterSettings();
+            }
+            else
+            {
+                writerSettings = container.GetRequiredService<ODataMessageWriterSettings>();
+            }
+
+            if (other != null)
+            {
+                writerSettings.CopyFrom(other);
+            }
+
+            return writerSettings;
         }
 
         /// <summary>Sets the URI of the metadata document.</summary>
@@ -392,6 +397,32 @@ namespace Microsoft.OData
         internal bool ShouldSkipAnnotation(string annotationName)
         {
             return this.ShouldIncludeAnnotation == null || !this.ShouldIncludeAnnotation(annotationName);
+        }
+
+        private void CopyFrom(ODataMessageWriterSettings other)
+        {
+            ExceptionUtils.CheckArgumentNotNull(other, "other");
+
+            this.acceptCharSets = other.acceptCharSets;
+            this.acceptMediaTypes = other.acceptMediaTypes;
+            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
+            this.AllowNullValuesForNonNullablePrimitiveTypes = other.AllowNullValuesForNonNullablePrimitiveTypes;
+            this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
+            this.BaseUri = other.BaseUri;
+            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
+            this.EnableCharactersCheck = other.EnableCharactersCheck;
+            this.EnableFullValidation = other.EnableFullValidation;
+            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
+            this.EnableIndentation = other.EnableIndentation;
+            this.format = other.format;
+            this.JsonPCallback = other.JsonPCallback;
+            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
+            this.ODataUri = other.ODataUri;
+            this.ODataSimplified = other.ODataSimplified;
+            this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
+            this.UseKeyAsSegment = other.UseKeyAsSegment;
+            this.useFormat = other.useFormat;
+            this.Version = other.Version;
         }
     }
 }

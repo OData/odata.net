@@ -1556,7 +1556,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 batchWriter.WriteStartBatch();
                 batchWriter.WriteStartChangeset();
                 var opmessage1 = batchWriter.CreateOperationRequestMessage("PUT", new Uri("http://www.odata.org/Customers"));
-                var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                var messageWriterSettings = config.MessageWriterSettings.Clone();
                 messageWriterSettings.SetContentType(ODataFormat.Json);
                 var messageConfig = new WriterTestConfiguration(ODataFormat.Json, messageWriterSettings, config.IsRequest, config.Synchronous);
 

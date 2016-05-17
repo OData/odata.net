@@ -813,7 +813,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 new Uri("http://odata.org/service"),
                                 td.UrlResolver);
 
-                            ODataMessageWriterSettings batchWriterSettings = new ODataMessageWriterSettings(testConfiguration.MessageWriterSettings);
+                            ODataMessageWriterSettings batchWriterSettings = testConfiguration.MessageWriterSettings.Clone();
                             batchWriterSettings.SetContentType(null);
                             WriterTestConfiguration batchTestConfiguration = new WriterTestConfiguration(
                                 null,

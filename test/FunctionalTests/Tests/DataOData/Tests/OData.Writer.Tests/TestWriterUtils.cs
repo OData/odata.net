@@ -854,7 +854,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 var contentType = changesetOperation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                                 ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, op.Body.RootElement.GetPayloadKindFromPayloadElement());
 
-                                var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                                var messageWriterSettings = config.MessageWriterSettings.Clone();
                                 messageWriterSettings.SetContentType(format);
                                 var messageConfig = new WriterTestConfiguration(format, messageWriterSettings, config.IsRequest, config.Synchronous);
 
@@ -891,7 +891,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             var contentType = operation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                             ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, operation.RootElement.GetPayloadKindFromPayloadElement());
-                            var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                            var messageWriterSettings = config.MessageWriterSettings.Clone();
                             messageWriterSettings.SetContentType(format);
                             var messageConfig = new WriterTestConfiguration(format, messageWriterSettings, config.IsRequest, config.Synchronous);
                             using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(TestWriterUtils.GetStream(message, messageConfig), messageConfig, assert, messageWriterSettings, model))
@@ -922,7 +922,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                             {
                                 var contentType = op.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                                 ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, op.RootElement.GetPayloadKindFromPayloadElement());
-                                var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                                var messageWriterSettings = config.MessageWriterSettings.Clone();
                                 messageWriterSettings.SetContentType(format);
                                 var messageConfig = new WriterTestConfiguration(format, messageWriterSettings, config.IsRequest, config.Synchronous);
 
@@ -1062,16 +1062,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                 testCase.TestDescriptorSettings.ExpectedResultSettings.ExceptionVerifier.VerifyExceptionResult(expectedException, exception);
             }
-        }
-
-        /// <summary>
-        /// Clones the <paramref name="source"/>.
-        /// </summary>
-        /// <param name="source">The message writer settings to clone.</param>
-        /// <returns>The cloned message writer settings.</returns>
-        public static ODataMessageWriterSettings Clone(this ODataMessageWriterSettings source)
-        {
-            return new ODataMessageWriterSettings(source);
         }
 
         /// <summary>

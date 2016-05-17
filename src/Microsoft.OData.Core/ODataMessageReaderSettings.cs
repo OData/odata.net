@@ -282,7 +282,7 @@ namespace Microsoft.OData
 
         internal static ODataMessageReaderSettings CreateReaderSettings(
             IServiceProvider container,
-            ODataMessageReaderSettings prototype)
+            ODataMessageReaderSettings other)
         {
             ODataMessageReaderSettings readerSettings;
             if (container == null)
@@ -294,9 +294,9 @@ namespace Microsoft.OData
                 readerSettings = container.GetRequiredService<ODataMessageReaderSettings>();
             }
 
-            if (prototype != null)
+            if (other != null)
             {
-                readerSettings.CopyFrom(prototype);
+                readerSettings.CopyFrom(other);
             }
 
             return readerSettings;

@@ -4222,6 +4222,11 @@ public sealed class Microsoft.OData.ContainerBuilderExtensions {
 	ExtensionAttribute(),
 	]
 	public static Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.IContainerBuilder builder, Microsoft.OData.ServiceLifetime lifetime, System.Type serviceType)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.IContainerBuilder AddServicePrototype (Microsoft.OData.IContainerBuilder builder, TService instance)
 }
 
 public sealed class Microsoft.OData.ODataConstants {
@@ -4734,7 +4739,6 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 
 public sealed class Microsoft.OData.ODataMessageReaderSettings : IMessageValidationSetting {
 	public ODataMessageReaderSettings ()
-	public ODataMessageReaderSettings (Microsoft.OData.ODataMessageReaderSettings other)
 
 	bool AllowDuplicatePropertyNames  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
@@ -4751,6 +4755,8 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings : IMessageValidat
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
+
+	public Microsoft.OData.ODataMessageReaderSettings Clone ()
 }
 
 public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
@@ -4803,7 +4809,6 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 
 public sealed class Microsoft.OData.ODataMessageWriterSettings : IMessageValidationSetting {
 	public ODataMessageWriterSettings ()
-	public ODataMessageWriterSettings (Microsoft.OData.ODataMessageWriterSettings other)
 
 	bool AllowDuplicatePropertyNames  { public get; public set; }
 	bool AllowNullValuesForNonNullablePrimitiveTypes  { public get; public set; }
@@ -4821,6 +4826,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings : IMessageValidat
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
+	public Microsoft.OData.ODataMessageWriterSettings Clone ()
 	public void SetContentType (Microsoft.OData.ODataFormat payloadFormat)
 	public void SetContentType (string acceptableMediaTypes, string acceptableCharSets)
 }

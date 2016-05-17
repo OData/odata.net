@@ -106,11 +106,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            // Clone the settings here so we can later modify them without changing the settings passed to us by the user
-            this.settings = settings == null ? new ODataMessageWriterSettings() : new ODataMessageWriterSettings(settings);
+            this.container = GetContainer(requestMessage);
+            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
             this.writingResponse = false;
             this.urlResolver = requestMessage as IODataUrlResolver;
-            this.container = GetContainer(requestMessage);
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
@@ -146,11 +145,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            // Clone the settings here so we can later modify them without changing the settings passed to us by the user
-            this.settings = settings == null ? new ODataMessageWriterSettings() : new ODataMessageWriterSettings(settings);
+            this.container = GetContainer(responseMessage);
+            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
             this.writingResponse = true;
             this.urlResolver = responseMessage as IODataUrlResolver;
-            this.container = GetContainer(responseMessage);
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? EdmCoreModel.Instance;
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
