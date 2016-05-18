@@ -280,3 +280,11 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator.#Eval(Microsoft.OData.Edm.IEdmExpression,Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1809:AvoidExcessiveLocals", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator.#Eval(Microsoft.OData.Edm.IEdmExpression,Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames", Scope = "type", Target = "Microsoft.OData.Edm.EdmTypeKind")]
+
+// Unrecognized word: Multi
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiLineString")]

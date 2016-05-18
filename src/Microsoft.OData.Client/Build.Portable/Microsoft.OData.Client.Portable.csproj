@@ -15,25 +15,9 @@
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <EnableLocalization>true</EnableLocalization>
-    <NoStdLib>true</NoStdLib>
-    <ProgramFiles32 Condition="Exists('$(PROGRAMFILES) (x86)')">$(PROGRAMFILES) (x86)</ProgramFiles32>
-    <ProgramFiles32 Condition="$(ProgramFiles32) == ''">$(PROGRAMFILES)</ProgramFiles32>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
-  <!--
-  Setting CodeAnalysisDependentAssemblyPaths explicitly, otherwise dependencies won't
-  be found in the correct order and the FxCop failure will produce a build error.
-  -->
-  <ItemGroup>
-    <CodeAnalysisDependentAssemblyPaths Include="$(ProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\" />
-  </ItemGroup>
-  <ItemGroup>
-    <XTargetOutputFile Include="$(MSBuildThisFile)">
-      <SourceProject>$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj</SourceProject>
-      <TargetPathPrefixName>$(EnlistmentRoot)\src\Microsoft.OData.Client\</TargetPathPrefixName>
-    </XTargetOutputFile>
-  </ItemGroup>
   <!-- References -->
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">

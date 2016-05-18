@@ -21,7 +21,6 @@
     <!-- from Build.Props... but can't reference it at this level -->
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.OData.Edm.StyleCop</StyleCopOverrideSettingsFile>
-    <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">false</CodeAnalysisUseAdditionalODataRules>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <!-- Generated files -->
