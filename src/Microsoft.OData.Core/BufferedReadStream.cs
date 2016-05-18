@@ -83,7 +83,7 @@ namespace Microsoft.OData
         /// </summary>
         public override long Length
         {
-            get 
+            get
             {
                 Debug.Assert(false, "Should never get here.");
                 throw new NotSupportedException();
@@ -218,10 +218,10 @@ namespace Microsoft.OData
             return Task.Factory.Iterate(bufferedReadStream.BufferInputStream())
                 .FollowAlwaysWith((task) => inputStream.Dispose())
                 .FollowOnSuccessWith(
-                    (task) => 
+                    (task) =>
                     {
                         bufferedReadStream.ResetForReading();
-                        return bufferedReadStream; 
+                        return bufferedReadStream;
                     });
         }
 

@@ -151,7 +151,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            // Resolve the type name to the type; if no type name is specified we will use the 
+            // Resolve the type name to the type; if no type name is specified we will use the
             // type inferred from metadata.
             IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeForComplexValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType, this.WriterValidator);
             Debug.Assert(
@@ -213,7 +213,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevelProperty">Whether or not a top-level property is being written.</param>
         /// <param name="isInUri">Whether or not the value is being written for a URI.</param>
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
-        /// <remarks>The current recursion depth is measured by the number of complex and collection values between 
+        /// <remarks>The current recursion depth is measured by the number of complex and collection values between
         /// this one and the top-level payload, not including this one.</remarks>
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
@@ -245,13 +245,13 @@ namespace Microsoft.OData.JsonLight
 
             if (valueTypeReference == null)
             {
-                valueTypeReference = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType, this.WriterValidator);               
+                valueTypeReference = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType, this.WriterValidator);
             }
 
             bool useValueProperty = false;
             if (isInUri)
             {
-                // resolve the type name to the type; if no type name is specified we will use the 
+                // resolve the type name to the type; if no type name is specified we will use the
                 // type inferred from metadata
                 typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, metadataTypeReference, valueTypeReference, isOpenPropertyType);
                 if (!string.IsNullOrEmpty(typeName))

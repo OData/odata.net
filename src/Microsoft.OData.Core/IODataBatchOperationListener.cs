@@ -28,7 +28,7 @@ namespace Microsoft.OData
         /// This method notifies the implementer of this interface that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any async operation that is running in reaction to the 
+        /// A task representing any async operation that is running in reaction to the
         /// status change (or null if no such action is required).
         /// </returns>
         Task BatchOperationContentStreamRequestedAsync();

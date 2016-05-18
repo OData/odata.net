@@ -25,7 +25,7 @@ namespace Microsoft.OData.JsonLight
         /// a bit per property.
         /// </summary>
         /// <remarks>
-        /// We only use a single enumeration for both top-level as well as inner errors. 
+        /// We only use a single enumeration for both top-level as well as inner errors.
         /// This means that some bits are never set for top-level (or inner errors).
         /// </remarks>
         [Flags]

@@ -65,7 +65,7 @@ namespace Microsoft.OData
 
             if (structuredType != null && structuredType.IsOpen)
             {
-                // If no property match was found in the metadata and an error wasn't raised, 
+                // If no property match was found in the metadata and an error wasn't raised,
                 // it is an open property (which is not supported for streams).
                 if (streamEdmProperty == null && !messageReaderSettings.ReportUndeclaredLinkProperties)
                 {
@@ -130,9 +130,9 @@ namespace Microsoft.OData
         /// The structured type can be null if no metadata is available.
         /// </summary>
         /// <param name="propertyName">The name of the property to find.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty FindDefinedProperty(string propertyName, IEdmStructuredType owningStructuredType)
         {
@@ -152,10 +152,10 @@ namespace Microsoft.OData
         /// The structured type can be null if no metadata is available.
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
         /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidateValuePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings)
         {
@@ -203,10 +203,10 @@ namespace Microsoft.OData
         /// The structured type can be null if no metadata is available.
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
         /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidateLinkPropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings)
         {
@@ -483,7 +483,7 @@ namespace Microsoft.OData
             // - In the lax mode the payload type is ignored, so its type kind is not verified in any way
             // - If the DisablePrimitiveTypeConversion == true, the lax/strict mode doesn't matter and we will read the payload value on its own.
             //     In this case we require the payload value to always be a primitive type (so type kinds must match), but it may not be convertible
-            //     to the expected type, it will still be reported to the caller. 
+            //     to the expected type, it will still be reported to the caller.
             if (payloadTypeKind != EdmTypeKind.None && (messageReaderSettings.DisablePrimitiveTypeConversion || !messageReaderSettings.EnableLaxMetadataValidation))
             {
                 // Make sure that the type kinds match.
@@ -533,8 +533,8 @@ namespace Microsoft.OData
                 }
             }
 
-            // Read using the expected type. 
-            // If there was a payload type we verified that it's convertible and thus we can safely read 
+            // Read using the expected type.
+            // If there was a payload type we verified that it's convertible and thus we can safely read
             // the content of the value as the expected type.
             return expectedTypeReference;
         }
@@ -872,8 +872,8 @@ namespace Microsoft.OData
             switch (expectedTypeKind)
             {
                 case EdmTypeKind.Complex:
-                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related 
-                    // in any way. In that case we will just use the expected type because we are in lax mode. 
+                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
+                    // in any way. In that case we will just use the expected type because we are in lax mode.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         // Verify if it's a derived complex type, in all other cases simply use the expected type.
@@ -886,8 +886,8 @@ namespace Microsoft.OData
 
                     break;
                 case EdmTypeKind.Entity:
-                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related 
-                    // in any way. In that case we will just use the expected type because we are in lax mode. 
+                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
+                    // in any way. In that case we will just use the expected type because we are in lax mode.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         // If the type is assignable (equal or derived) we will use the payload type, since we want to allow derived entities
@@ -900,8 +900,8 @@ namespace Microsoft.OData
 
                     break;
                 case EdmTypeKind.Collection:
-                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related 
-                    // in any way. In that case we will just use the expected type because we are in lax mode. 
+                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
+                    // in any way. In that case we will just use the expected type because we are in lax mode.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
@@ -1081,7 +1081,7 @@ namespace Microsoft.OData
             }
 
             // Add the annotation with a null type name so that we know when the payload type is inferred from the expected type.
-            // This is useful when validating a payload that inserts a derived entity (that does not specify a payload type) into the entity set. 
+            // This is useful when validating a payload that inserts a derived entity (that does not specify a payload type) into the entity set.
             if (payloadTypeName == null)
             {
                 return new SerializationTypeNameAnnotation { TypeName = null };

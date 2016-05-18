@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="alias">The alias provided as the parameter value.</param>
         /// <param name="type">The EDM type of the parameter represented by this alias.</param>
-        public ODataUnresolvedFunctionParameterAlias(string alias, IEdmTypeReference type) 
+        public ODataUnresolvedFunctionParameterAlias(string alias, IEdmTypeReference type)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(alias, "alias");
             this.Alias = alias;

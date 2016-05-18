@@ -64,7 +64,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Resolve a primitive value type name 
+        /// Resolve a primitive value type name
         /// </summary>
         /// <param name="primitiveValue">The value to get the type name from.</param>
         /// <returns>A type for primitive value</returns>
@@ -86,7 +86,7 @@ namespace Microsoft.OData
             Debug.Assert(model != null, "model != null");
 
             ValidateIfTypeNameMissing(enumValue.TypeName, model, isOpenPropertyType);
-             
+
             // starting from enum type, we want to skip validation (but still let the above makes sure open type's enum value has .TypeName)
             return null;
         }

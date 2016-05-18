@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Descriptor for the request that the client is receiving the response for.
         /// The descriptor may be null for certain types of requests, like most GET requests
-        /// and the top level $batch request. 
+        /// and the top level $batch request.
         /// </summary>
         public Descriptor Descriptor { get; private set; }
     }

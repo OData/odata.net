@@ -111,7 +111,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Convert from primitive value to an xml payload string. 
+        /// Convert from primitive value to an xml payload string.
         /// </summary>
         /// <param name="propertyValue">incoming object value</param>
         /// <returns>converted value</returns>

@@ -24,7 +24,7 @@ namespace Microsoft.OData.Edm
         Structural,
 
         /// <summary>
-        /// Represents a property implementing <see cref="IEdmNavigationProperty"/>. 
+        /// Represents a property implementing <see cref="IEdmNavigationProperty"/>.
         /// </summary>
         Navigation,
     }

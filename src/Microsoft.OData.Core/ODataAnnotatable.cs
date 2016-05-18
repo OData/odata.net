@@ -132,7 +132,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Replace an existing annotation of type T or add a new one 
+        /// Replace an existing annotation of type T or add a new one
         /// if no annotation of type T exists.
         /// </summary>
         /// <typeparam name="T">The type of the annotation.</typeparam>

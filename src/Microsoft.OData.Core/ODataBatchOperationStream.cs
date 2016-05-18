@@ -13,7 +13,7 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync. 
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
     /// This stream communicates status changes to an IODataBatchOperationListener instance.
     /// </summary>
     internal abstract class ODataBatchOperationStream : Stream

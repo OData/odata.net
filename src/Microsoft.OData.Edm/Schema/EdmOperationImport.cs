@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm
         /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this operation import.</param>
         /// <param name="operation">The operation of the import.</param>
         /// <param name="name">Name of the operation import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this operation import. 
+        /// <param name="entitySet">An entity set containing entities returned by this operation import.
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
         protected EdmOperationImport(
             IEdmEntityContainer container,
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm
         /// Gets the kind of this operation, which is always FunctionImport.
         /// </summary>
         public abstract EdmContainerElementKind ContainerElementKind { get; }
-        
+
         /// <summary>
         /// Gets the container of this operation.
         /// </summary>

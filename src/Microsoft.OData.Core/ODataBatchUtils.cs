@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// returns null. In the default scheme, the method either returns the specified <paramref name="uri"/> if it was absolute,
         /// or it's combination with the <paramref name="baseUri"/> if it was relative.</returns>
         /// <remarks>
-        /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is 
+        /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is
         /// relative and there's no base URI available.
         /// </remarks>
         internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataUrlResolver urlResolver)
@@ -136,8 +136,8 @@ namespace Microsoft.OData
             int numberOfAdditionalBytesNeeded = requiredByteCount - remainingUnusedBytesInBuffer;
             Debug.Assert(numberOfAdditionalBytesNeeded > 0, "Expected a positive number of additional bytes.");
 
-            // NOTE: grow the array only by the exact number of needed bytes; we expect the 
-            //       caller to specify a larger required byte count to grow the array more. 
+            // NOTE: grow the array only by the exact number of needed bytes; we expect the
+            //       caller to specify a larger required byte count to grow the array more.
             byte[] oldBytes = buffer;
             buffer = new byte[buffer.Length + numberOfAdditionalBytesNeeded];
             Buffer.BlockCopy(oldBytes, 0, buffer, 0, numberOfBytesInBuffer);

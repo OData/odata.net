@@ -17,7 +17,7 @@ namespace Microsoft.OData
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Name}")]
     public sealed class ODataNestedResourceInfo : ODataItem
-    {   
+    {
         /// <summary>the metadata builder for this nested resource info.</summary>
         private ODataResourceMetadataBuilder metadataBuilder;
 

@@ -45,7 +45,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(parentNode, "parent");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
-            // TODO: Remove this check. 
+            // TODO: Remove this check.
             // We should verify that the top level of an expression is a bool rather than arbitrarily restrict property types.
             // We can get here if there is a query like $filter=MyCollectionProperty eq 'foo' or something.
             // If it was $filter=MyCollectionProperty/any(...) then we would have gone down the 'NonRootSegment' code path instead of this one
@@ -98,8 +98,8 @@ namespace Microsoft.OData.UriParser
         /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
         internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
         {
-            if (parentNode.TypeReference == null || 
-                parentNode.TypeReference.Definition.IsOpenType() || 
+            if (parentNode.TypeReference == null ||
+                parentNode.TypeReference.Definition.IsOpenType() ||
                 IsAggregatedProperty(endPathToken.Identifier))
             {
                 return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
@@ -169,7 +169,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we 
+        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we
         /// use the implicit parameter from the BindingState as the parent node.
         /// </summary>
         /// <param name="segmentToken">Token to determine the parent node for.</param>

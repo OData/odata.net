@@ -23,7 +23,7 @@ namespace Microsoft.OData
     /// This class also implements the message interface since it is passed to the payload kind
     /// detection logic on the format implementations and manages the buffering read stream.
     /// </remarks>
-    internal sealed class ODataResponseMessage : ODataMessage, 
+    internal sealed class ODataResponseMessage : ODataMessage,
 #if PORTABLELIB
         IODataResponseMessageAsync
 #else

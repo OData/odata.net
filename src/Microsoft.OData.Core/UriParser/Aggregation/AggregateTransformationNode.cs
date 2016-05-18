@@ -31,7 +31,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// </summary>
         public IEnumerable<AggregateExpression> Expressions
         {
-            get 
+            get
             {
                 return expressions;
             }

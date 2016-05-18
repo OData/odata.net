@@ -391,8 +391,8 @@ namespace Microsoft.OData.JsonLight
 
             IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeForEnumValue(this.Model, enumValue, isOpenPropertyType);
 
-            // This is a work around, needTypeOnWire always = true for client side: 
-            // ClientEdmModel's reflection can't know a property is open type even if it is, so here 
+            // This is a work around, needTypeOnWire always = true for client side:
+            // ClientEdmModel's reflection can't know a property is open type even if it is, so here
             // make client side always write 'odata.type' for enum.
             bool needTypeOnWire = string.Equals(this.JsonLightOutputContext.Model.GetType().Name, "ClientEdmModel", StringComparison.OrdinalIgnoreCase);
             string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(

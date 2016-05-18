@@ -49,7 +49,7 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: JsonNodeType.StartArray:  the start of the array of the collection items.
         /// </remarks>
         internal ODataCollectionStart ReadCollectionStart(
-            DuplicatePropertyNamesChecker collectionStartDuplicatePropertyNamesChecker, 
+            DuplicatePropertyNamesChecker collectionStartDuplicatePropertyNamesChecker,
             bool isReadingNestedPayload,
             IEdmTypeReference expectedItemTypeReference,
             out IEdmTypeReference actualItemTypeReference)
@@ -191,8 +191,8 @@ namespace Microsoft.OData.JsonLight
 
             object item = this.ReadNonEntityValue(
                 /*payloadTypeName*/ null,
-                expectedItemTypeReference, 
-                this.duplicatePropertyNamesChecker, 
+                expectedItemTypeReference,
+                this.duplicatePropertyNamesChecker,
                 collectionValidator,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ false,
@@ -221,7 +221,7 @@ namespace Microsoft.OData.JsonLight
 
             if (!isReadingNestedPayload)
             {
-                // Create a new duplicate property names checker object here; we don't have to use the one from reading the 
+                // Create a new duplicate property names checker object here; we don't have to use the one from reading the
                 // collection start since we don't allow any annotations/properties after the collection property.
                 DuplicatePropertyNamesChecker collectionEndDuplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
 

@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 {
     using System.Collections.Generic;
     using Microsoft.OData.UriParser;
-        
+
     internal sealed class GroupByToken : ApplyTransformationToken
     {
         private readonly IEnumerable<EndPathToken> properties;

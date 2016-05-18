@@ -27,7 +27,7 @@ namespace Microsoft.OData.Json
         /// Try and parse spatial type from the json payload.
         /// </summary>
         /// <param name="jsonReader">The JSON reader to read from.</param>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="expectedValueTypeReference">Expected edm property type.</param>
@@ -90,13 +90,13 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         /// <returns>true if a null value could be read from the JSON reader; otherwise false.</returns>
-        /// <remarks>If the method detects a null value it will read it (position the reader after the null value); 
+        /// <remarks>If the method detects a null value it will read it (position the reader after the null value);
         /// otherwise the reader does not move.</remarks>
         internal static bool TryReadNullValue(
-            IJsonReader jsonReader, 
+            IJsonReader jsonReader,
             ODataInputContext inputContext,
-            IEdmTypeReference expectedTypeReference, 
-            bool validateNullValue, 
+            IEdmTypeReference expectedTypeReference,
+            bool validateNullValue,
             string propertyName,
             bool? isDynamicProperty = null)
         {

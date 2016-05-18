@@ -32,14 +32,14 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
-        /// Post-Condition: JsonNodeType.EndOfInput  
+        /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
         internal ODataServiceDocument ReadServiceDocument()
         {
@@ -69,14 +69,14 @@ namespace Microsoft.OData.JsonLight
 
 #if PORTABLELIB
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>A task which returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
-        /// Post-Condition: JsonNodeType.EndOfInput  
+        /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
         internal Task<ODataServiceDocument> ReadServiceDocumentAsync()
         {
@@ -109,8 +109,8 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
@@ -168,7 +168,7 @@ namespace Microsoft.OData.JsonLight
                                     while (this.JsonReader.NodeType != JsonNodeType.EndArray)
                                     {
                                         ODataServiceDocumentElement serviceDocumentElement = this.ReadServiceDocumentElement(resourceCollectionDuplicatePropertyNamesChecker);
-                                        
+
                                         if (serviceDocumentElement != null)
                                         {
                                             serviceDocumentElements[0].Add(serviceDocumentElement);

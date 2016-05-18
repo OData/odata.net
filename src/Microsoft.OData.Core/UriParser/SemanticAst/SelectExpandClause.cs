@@ -22,7 +22,7 @@ namespace Microsoft.OData.UriParser
         private ReadOnlyCollection<SelectItem> selectedItems;
 
         /// <summary>
-        /// Gets a flag indicating that everything at this level has been selected. 
+        /// Gets a flag indicating that everything at this level has been selected.
         /// </summary>
         /// <remarks>
         /// If true, then all structural properties, bound actions and functions, and all navigations in the SelectedItems list have been selected.
@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets a flag indicating that everything at this level has been selected. 
+        /// Gets a flag indicating that everything at this level has been selected.
         /// </summary>
         /// <remarks>
         /// If true, then all structural properties, bound actions and functions, and all navigations in the SelectedItems list have been selected.
@@ -97,7 +97,7 @@ namespace Microsoft.OData.UriParser
                 {
                     newSelectedItems.Add(selectedItem);
                 }
-            }        
+            }
 
             newSelectedItems.Add(itemToAdd);
             this.selectedItems = new ReadOnlyCollection<SelectItem>(newSelectedItems);

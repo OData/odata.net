@@ -39,12 +39,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// If set to true, allows the writers to write duplicate properties of entries and 
+        /// If set to true, allows the writers to write duplicate properties of entries and
         /// complex values (i.e., properties that have the same name). Defaults to 'false'.
         /// </summary>
         /// <remarks>
-        /// Independently of this setting duplicate property names are never allowed if one 
-        /// of the duplicate property names refers to a named stream property, 
+        /// Independently of this setting duplicate property names are never allowed if one
+        /// of the duplicate property names refers to a named stream property,
         /// an association link or a collection.
         /// </remarks>
         public bool AllowDuplicatePropertyNames { get; set; }

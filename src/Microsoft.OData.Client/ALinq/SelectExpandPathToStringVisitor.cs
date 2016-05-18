@@ -96,7 +96,7 @@ namespace Microsoft.OData.Client
                         stringToWrite += firstNonStructuralProperty.Identifier;
                     }
 
-                    firstNonStructuralProperty = firstNonStructuralProperty.NextToken;  
+                    firstNonStructuralProperty = firstNonStructuralProperty.NextToken;
                 }
                 else
                 {

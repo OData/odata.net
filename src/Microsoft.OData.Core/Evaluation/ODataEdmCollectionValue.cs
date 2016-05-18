@@ -39,7 +39,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         public IEnumerable<IEdmDelayedValue> Elements
         {
-            get 
+            get
             {
                 if (this.collectionValue != null)
                 {
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         public override EdmValueKind ValueKind
         {
-            get 
+            get
             {
                 return EdmValueKind.Collection;
             }

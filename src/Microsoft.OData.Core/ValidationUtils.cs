@@ -323,7 +323,7 @@ namespace Microsoft.OData
             Debug.Assert(expectedTypeReference != null, "expectedTypeReference != null");
 
             // Note that valueInstanceType is never a nullable type because GetType() on Nullable variables at runtime will always yield
-            // a Type object that represents the underlying type, not the Nullable type itself. 
+            // a Type object that represents the underlying type, not the Nullable type itself.
             Type valueInstanceType = value.GetType();
             IEdmPrimitiveTypeReference valuePrimitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(valueInstanceType);
             ValidateIsExpectedPrimitiveType(value, valuePrimitiveTypeReference, expectedTypeReference);
@@ -372,11 +372,11 @@ namespace Microsoft.OData
             IEdmType expectedType = expectedTypeReference.Definition;
             IEdmPrimitiveType typeFromValue = (IEdmPrimitiveType)typeReferenceFromValue.Definition;
 
-            // The two primitive types match if they have the same definition and either both or only the 
+            // The two primitive types match if they have the same definition and either both or only the
             // expected type is nullable
-            // NOTE: for strings and binary values we must not check nullability here because the type reference 
+            // NOTE: for strings and binary values we must not check nullability here because the type reference
             //       from the value is always nullable since C# has no way to express non-nullable strings.
-            //       However, this codepath is only hit if the value is not 'null' so we can assign a non-null 
+            //       However, this codepath is only hit if the value is not 'null' so we can assign a non-null
             //       value to both nullable and non-nullable string/binary types.
             bool nullableCompatible = expectedTypeReference.IsNullable == typeReferenceFromValue.IsNullable ||
                 expectedTypeReference.IsNullable && !typeReferenceFromValue.IsNullable ||
@@ -407,7 +407,7 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
             }
 
-            // The resource collection URL must not be null; 
+            // The resource collection URL must not be null;
             if (serviceDocumentElement.Url == null)
             {
                 throw new ODataException(Strings.ValidationUtils_ResourceMustSpecifyUrl);
@@ -425,7 +425,7 @@ namespace Microsoft.OData
         /// <param name="serviceDocumentUrl">The service document url to validate.</param>
         internal static void ValidateServiceDocumentElementUrl(string serviceDocumentUrl)
         {
-            // The service document URL must not be null or empty; 
+            // The service document URL must not be null or empty;
             if (serviceDocumentUrl == null)
             {
                 throw new ODataException(Strings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull);

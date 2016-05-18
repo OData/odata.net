@@ -87,7 +87,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="streamPropertyName">
-        /// The name of the stream property the link is computed for; 
+        /// The name of the stream property the link is computed for;
         /// or null for the default media resource.
         /// </param>
         /// <returns>The edit link for the stream.</returns>
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="streamPropertyName">
-        /// The name of the stream property the link is computed for; 
+        /// The name of the stream property the link is computed for;
         /// or null for the default media resource.
         /// </param>
         /// <returns>The read link for the stream.</returns>

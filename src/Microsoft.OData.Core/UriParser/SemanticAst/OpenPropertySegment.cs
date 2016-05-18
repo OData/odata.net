@@ -45,7 +45,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmType"/> of this <see cref="OpenPropertySegment"/>, which is always null. 
+        /// Gets the <see cref="IEdmType"/> of this <see cref="OpenPropertySegment"/>, which is always null.
         /// The type of open properties is unknown at this time.
         /// </summary>
         public override IEdmType EdmType

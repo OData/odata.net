@@ -207,7 +207,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="links">The <see cref="ODataEntityReferenceLinks"/> to read the annotations for.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the entity reference links scope.</param>
-        /// <param name="forLinksStart">true when parsing the instance annotations before the 'value' property; 
+        /// <param name="forLinksStart">true when parsing the instance annotations before the 'value' property;
         /// false when parsing the instance annotations after the 'value' property.</param>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property               The first property in the payload (or the first property after the context URI in responses)
@@ -344,9 +344,9 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Read an entity reference link.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to check for duplicate properties and 
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to check for duplicate properties and
         /// duplicate annotations; this is a separate instance per entity reference link.</param>
-        /// <param name="topLevel">true if we are reading a singleton entity reference link at the top level; false if we are reading 
+        /// <param name="topLevel">true if we are reading a singleton entity reference link at the top level; false if we are reading
         /// an entity reference link as part of a collection of entity reference links.</param>
         /// <returns>An instance of <see cref="ODataEntityReferenceLink"/> which was read.</returns>
         /// <remarks>

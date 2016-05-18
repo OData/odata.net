@@ -64,7 +64,7 @@ namespace Microsoft.OData.Client
         /// <param name="e">Expression to bind.</param>
         /// <param name="context">The context of the expression used for bind.</param>
         /// <returns>
-        /// The expression with bound nodes (annotated expressions used by 
+        /// The expression with bound nodes (annotated expressions used by
         /// the Expression-to-URI translator).
         /// </returns>
         internal static Expression Bind(Expression e, DataServiceContext context)
@@ -79,13 +79,13 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Checks whether the specified <paramref name="expression"/> is 
+        /// Checks whether the specified <paramref name="expression"/> is
         /// missing necessary key predicates.
         /// </summary>
         /// <param name="expression">Expression to check.</param>
         /// <returns>
-        /// true if the expression is a navigation expression and doesn't 
-        /// have the necessary key predicates on the associated resource 
+        /// true if the expression is a navigation expression and doesn't
+        /// have the necessary key predicates on the associated resource
         /// expression; false otherwise.
         /// </returns>
         internal static bool IsMissingKeyPredicates(Expression expression)
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Client
             // - It is valid to apply a filter to a resource set for which a filter already exists;
             //   such filters are AND'd together.
             //
-            // [Key-predicate that targets a path component AND]* [Key-predicate over input | URI-compatible filter over input]+ 
+            // [Key-predicate that targets a path component AND]* [Key-predicate over input | URI-compatible filter over input]+
 
             List<Expression> conjuncts = new List<Expression>();
             AddConjuncts(le.Body, conjuncts);
@@ -417,7 +417,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Analyzes the specified call to see whether it is recognized as a 
+        /// Analyzes the specified call to see whether it is recognized as a
         /// projection that is satisfied with $select usage.
         /// </summary>
         /// <param name="mce">Call expression to analyze.</param>
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Client
 
                 // Ideally, the projection analyzer would return true/false and an
                 // exception with the explanation of the results if it failed;
-                // however to minimize churn we will use a try/catch on 
+                // however to minimize churn we will use a try/catch on
                 // NotSupportedException instead.
                 ResourceExpression resultWithProjection = resultSelectorSource.CreateCloneWithNewType(mce.Type);
                 bool isProjection;
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Client
                     return false;
                 }
 
-                // Defer validating until after the projection has been analyzed since the lambda could represent a 
+                // Defer validating until after the projection has been analyzed since the lambda could represent a
                 // navigation that we do not want to turn into a projection.
                 ValidationRules.RequireCanProject(source);
                 e = re;
@@ -542,7 +542,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Analyzes the specified method call as a WCF Data 
+        /// Analyzes the specified method call as a WCF Data
         /// Services navigation operation.
         /// </summary>
         /// <param name="mce">Expression to analyze.</param>
@@ -905,8 +905,8 @@ namespace Microsoft.OData.Client
         {
             UnaryExpression ue = e as UnaryExpression;
 
-            // TODO: We are going to allow either of DataServiceQuery or DataServiceOrderedQuery 
-            // to be the type of ResourceExpression in the cast parameter. Although this might be considered 
+            // TODO: We are going to allow either of DataServiceQuery or DataServiceOrderedQuery
+            // to be the type of ResourceExpression in the cast parameter. Although this might be considered
             // overly relaxed we want to avoid causing breaking changes by just having the Ordered version
             if (ue != null && ue.NodeType == ExpressionType.Convert && ue.Type.GetBaseType() == typeof(DataServiceContext))
             {
@@ -1067,7 +1067,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Creates a new resource set as produced by a navigation.</summary>
         /// <param name="type">
-        /// The type of the expression as it appears in the tree (possibly 
+        /// The type of the expression as it appears in the tree (possibly
         /// with transparent scopes).
         /// </param>
         /// <param name="source">The source of the set.</param>
@@ -1099,7 +1099,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Creates a new resource singleton as produced by a navigation.</summary>
         /// <param name="type">
-        /// The type of the expression as it appears in the tree (possibly 
+        /// The type of the expression as it appears in the tree (possibly
         /// with transparent scopes).
         /// </param>
         /// <param name="source">The source of the singleton.</param>
@@ -1251,7 +1251,7 @@ namespace Microsoft.OData.Client
 
             if ((ResourceExpressionType)rse.NodeType == ResourceExpressionType.RootResourceSet || (ResourceExpressionType)rse.NodeType == ResourceExpressionType.RootSingleResource)
             {
-                // Actually, the user may already have composed an expansion, so 
+                // Actually, the user may already have composed an expansion, so
                 // we'll find a query option here.
                 // Debug.Assert(!rse.HasQueryOptions, "!rse.HasQueryOptions");
 
@@ -1544,9 +1544,9 @@ namespace Microsoft.OData.Client
         /// <summary>Use this class to perform pattern-matching over expression trees.</summary>
         /// <remarks>
         /// Following these guidelines simplifies usage:
-        /// 
+        ///
         /// - Return true/false for matches, and interesting matched information in out parameters.
-        /// 
+        ///
         /// - If one of the inputs to be matched undergoes "skipping" for unnecesary converts,
         ///   return the same member as an out parameter. This forces callers to be aware that
         ///   they should use the more precise representation for computation (without having
@@ -1578,7 +1578,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether <paramref name="expression"/> is a lambda of the 
+            /// Checks whether <paramref name="expression"/> is a lambda of the
             /// form (p) => p.member[.member]* (possibly quoted).
             /// </summary>
             /// <param name="expression">Expression to match.</param>
@@ -1802,7 +1802,7 @@ namespace Microsoft.OData.Client
                 // DEVNOTE(pqian):
                 // we must check whether the property access is:
                 // 1. a Key property on the resource's type
-                // 2. bound to the input ref expression    
+                // 2. bound to the input ref expression
                 // (binding to the root IRE means that the property access must be on the lambda's parameter
                 // i.e., e => e.ID, rather than e.OtherProperty.ID), note that "OtherProperty" may be the same type as e.
                 // Call Order: Do not short circuit the get key properties call
@@ -1956,7 +1956,7 @@ namespace Microsoft.OData.Client
             /// a transparent identifier.
             /// </summary>
             /// <param name="input">
-            /// The input expression for the lambda, used to set up the 
+            /// The input expression for the lambda, used to set up the
             /// references from the transparent scope if one is produced.
             /// </param>
             /// <param name="resultSelector">Lambda expression to match.</param>
@@ -1965,27 +1965,27 @@ namespace Microsoft.OData.Client
             /// is true; null otherwise.
             /// </param>
             /// <returns>
-            /// true if <paramref name="input"/> is a selector for a transparent 
+            /// true if <paramref name="input"/> is a selector for a transparent
             /// identifier; false otherwise.
             /// </returns>
             /// <remarks>
             /// Note that C# and VB.NET have different patterns for accumulating
             /// parameters.
-            /// 
+            ///
             /// C# uses a two-member anonymous type with "everything so far"
             /// plus the newly introduced range variable.
-            /// 
+            ///
             /// VB.NET uses an n-member anonymous type by pulling range variables
             /// from a previous anonymous type (or the first range variable),
             /// plus the newly introduced range variable.
-            /// 
+            ///
             /// For additional background, see:
             /// Transparent Identifiers - http://blogs.msdn.com/wesdyer/archive/2006/12/22/transparent-identifiers.aspx
             /// http://msdn.microsoft.com/en-us/library/bb308966.aspx
             /// In particular:
             /// - 26.7.1.4 From, let, where, join and orderby clauses
             /// - 26.7.1.7 Transparent identifiers
-            /// 
+            ///
             /// <paramref name="input"/> is the expression that represents the
             /// navigation resulting from the collector selector in the
             /// SelectMany() call under analysis.
@@ -2100,7 +2100,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether the specified <paramref name="input"/> is a member access 
+            /// Checks whether the specified <paramref name="input"/> is a member access
             /// that references <paramref name="potentialPropertyRef"/>.
             /// </summary>
             /// <param name="input">Expression to check.</param>
@@ -2117,7 +2117,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether the specified <paramref name="input"/> is a member access 
+            /// Checks whether the specified <paramref name="input"/> is a member access
             /// that references <paramref name="potentialPropertyRef"/>.
             /// </summary>
             /// <param name="input">Expression to check.</param>
@@ -2380,7 +2380,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether <paramref name="expression"/> is a check for 
+            /// Checks whether <paramref name="expression"/> is a check for
             /// equality on two expressions.
             /// </summary>
             /// <param name="expression">Expression to match.</param>
@@ -2450,14 +2450,14 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether the <paramref name="argument"/> expression is a 
+            /// Checks whether the <paramref name="argument"/> expression is a
             /// simple access (standalone or member-access'ed) on one of the
             /// parameter <paramref name="expressions"/>.
             /// </summary>
             /// <param name="argument">Argument to match.</param>
             /// <param name="expressions">Candidate parameters.</param>
             /// <returns>
-            /// true if the argument is a parmater or a member from a 
+            /// true if the argument is a parmater or a member from a
             /// parameter; false otherwise.
             /// </returns>
             private static bool ExpressionIsSimpleAccess(Expression argument, ReadOnlyCollection<ParameterExpression> expressions)
@@ -2677,7 +2677,7 @@ namespace Microsoft.OData.Client
                                 }
                                 // DEVNOTE(pqian):
                                 // while the normal projection analyzer does not allow expansions, we must allow it here
-                                // since we do not automatically include the expansions in the URI. Users who wishes to 
+                                // since we do not automatically include the expansions in the URI. Users who wishes to
                                 // project into navigation properties must manually expand those that are been selected.
                                 break;
                             case UriHelper.OPTIONFORMAT:
@@ -2897,7 +2897,7 @@ namespace Microsoft.OData.Client
         }
 
         // TODO: By default, C#/Vb compilers uses declaring type for property expression when
-        // we pass property name while creating the property expression. But its totally fine to use 
+        // we pass property name while creating the property expression. But its totally fine to use
         // property info reflected from any subtype while creating property expressions.
         // The problem is when one creates the property expression from a property info reflected from one
         // of the subtype, then we don't recognize the key properties and instead of generating a key predicate, we generate
@@ -2974,7 +2974,7 @@ namespace Microsoft.OData.Client
             #endregion Private fields
 
             /// <summary>
-            /// Initializes a new <see cref="ExpressionPresenceVisitor"/> that 
+            /// Initializes a new <see cref="ExpressionPresenceVisitor"/> that
             /// searches for the given <paramref name="target"/>.
             /// </summary>
             /// <param name="target">Target expression to look for.</param>
@@ -2985,7 +2985,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether the specified <paramref name="target"/> can 
+            /// Checks whether the specified <paramref name="target"/> can
             /// be found in the given <paramref name="tree"/>.
             /// </summary>
             /// <param name="target">Expression sought.</param>

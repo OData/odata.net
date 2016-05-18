@@ -377,7 +377,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parse a full Uri into its contingent parts with semantic meaning attached to each part. 
+        /// Parse a full Uri into its contingent parts with semantic meaning attached to each part.
         /// See <see cref="ODataUri"/>.
         /// </summary>
         /// <returns>An <see cref="ODataUri"/> representing the full uri.</returns>
@@ -409,7 +409,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses a the fullUri into a semantic <see cref="ODataPath"/> object. 
+        /// Parses a the fullUri into a semantic <see cref="ODataPath"/> object.
         /// </summary>
         /// <remarks>
         /// This is designed to parse the Path of a URL. If it is used to parse paths that are contained

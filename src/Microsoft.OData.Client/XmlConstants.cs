@@ -43,7 +43,7 @@ namespace Microsoft.OData.Service
         internal const string HttpODataMaxVersion = "OData-MaxVersion";
 
         /// <summary>
-        /// 'Prefer' - HTTP request header name for client preferences. 
+        /// 'Prefer' - HTTP request header name for client preferences.
         /// Refer to: http://tools.ietf.org/id/draft-snell-http-prefer-02.txt for details.
         /// </summary>
         internal const string HttpPrefer = "Prefer";

@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     using System;
 
     /// <summary>
-    /// Class responsible for knowing how to create the Geography and Geometry builders for 
+    /// Class responsible for knowing how to create the Geography and Geometry builders for
     /// a particular implemenation of Spatial types
     /// </summary>
     public abstract class SpatialImplementation

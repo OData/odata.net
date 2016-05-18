@@ -209,7 +209,7 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
             if (parentNavLink != null)
             {
-                // Write the property name of an expanded navigation property to start the value. 
+                // Write the property name of an expanded navigation property to start the value.
                 this.jsonWriter.WriteName(parentNavLink.Name);
             }
 
@@ -363,7 +363,7 @@ namespace Microsoft.OData.JsonLight
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet, propertyName);
 
-                    // And then write the property name to start the value. 
+                    // And then write the property name to start the value.
                     this.jsonWriter.WriteName(propertyName);
 
                     // Start array which will hold the entries in the resource set.
@@ -380,7 +380,7 @@ namespace Microsoft.OData.JsonLight
                             this.jsonWriter.EndArrayScope();
                         }
 
-                        // And then write the property name to start the value. 
+                        // And then write the property name to start the value.
                         this.jsonWriter.WriteName(propertyName);
 
                         // Start array which will hold the entries in the resource set.
@@ -438,7 +438,7 @@ namespace Microsoft.OData.JsonLight
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
                     // End the array which holds the entries in the resource set.
-                    // NOTE: in requests we will only write the EndArray of a resource set 
+                    // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapesed into a single array value.
                     this.jsonWriter.EndArrayScope();
@@ -506,14 +506,14 @@ namespace Microsoft.OData.JsonLight
             {
                 JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
 
-                // If we wrote entity reference links for a collection navigation property but no 
+                // If we wrote entity reference links for a collection navigation property but no
                 // resource set afterwards, we have to now close the array of links.
                 if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
                 {
                     this.jsonWriter.EndArrayScope();
                 }
 
-                // In requests, the nested resource info may have multiple entries in multiple resource sets in it; if we 
+                // In requests, the nested resource info may have multiple entries in multiple resource sets in it; if we
                 // wrote at least one resource set, close the resulting array here.
                 if (navigationLinkScope.ResourceSetWritten)
                 {

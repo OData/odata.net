@@ -58,24 +58,24 @@ namespace Microsoft.OData.Client
         #region Internal properties
 
         /// <summary>Parameter expression in the source tree.</summary>
-        internal ParameterExpression Root 
-        { 
-            get; 
-            private set; 
+        internal ParameterExpression Root
+        {
+            get;
+            private set;
         }
 
         /// <summary>Expression to get the entry for <see cref="Root"/> in the target tree.</summary>
-        internal Expression RootEntry 
-        { 
-            get; 
-            private set; 
+        internal Expression RootEntry
+        {
+            get;
+            private set;
         }
 
         /// <summary>Expression to get the expected root type in the target tree.</summary>
-        internal Expression ExpectedRootType 
-        { 
-            get; 
-            private set; 
+        internal Expression ExpectedRootType
+        {
+            get;
+            private set;
         }
 
         #endregion Internal properties

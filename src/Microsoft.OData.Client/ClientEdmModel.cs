@@ -357,7 +357,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Find properties with dynamic MIME type related properties and 
+        /// Find properties with dynamic MIME type related properties and
         /// set the references from each ClientProperty to its related MIME type property
         /// </summary>
         /// <param name="edmStructuredType">Client edm type instance to wire up the mime type properties.</param>

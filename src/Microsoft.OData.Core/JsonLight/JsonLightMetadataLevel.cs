@@ -15,7 +15,7 @@ namespace Microsoft.OData.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Class responsible for logic that varies based on the JSON Light metadata level. 
+    /// Class responsible for logic that varies based on the JSON Light metadata level.
     /// </summary>
     internal abstract class JsonLightMetadataLevel
     {
@@ -27,7 +27,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Creates the appropriate metadata level based on the media type being written.
         /// </summary>
-        /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param> 
+        /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param>
         /// <param name="metadataDocumentUri">The metadata document uri from the writer settings.</param>
         /// <param name="model">The edm model.</param>
         /// <param name="writingResponse">true if we are writing a response, false otherwise.</param>
@@ -79,9 +79,9 @@ namespace Microsoft.OData.JsonLight
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
         /// <param name="autoComputePayloadMetadataInJson">
-        /// If true, the type name to write will vary based on the metadata level. 
-        /// If false, the type name writing rules will always match minimal metadata, 
-        /// regardless of the actual metadata level being written. 
+        /// If true, the type name to write will vary based on the metadata level.
+        /// If false, the type name writing rules will always match minimal metadata,
+        /// regardless of the actual metadata level being written.
         /// This is for backwards compatibility.
         /// </param>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
@@ -89,7 +89,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// Creates the metadata builder for the given resource. If such a builder is set, asking for payload
-        /// metadata properties (like EditLink) of the resource may return a value computed by convention, 
+        /// metadata properties (like EditLink) of the resource may return a value computed by convention,
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
         /// <param name="resource">The resource to create the metadata builder for.</param>
@@ -103,12 +103,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal abstract ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
-            ODataResource resource, 
+            ODataResource resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
-            IEdmStructuredType actualResourceType, 
-            SelectedPropertiesNode selectedProperties, 
-            bool isResponse, 
+            IEdmStructuredType actualResourceType,
+            SelectedPropertiesNode selectedProperties,
+            bool isResponse,
             bool? keyAsSegment,
             ODataUri odataUri);
 

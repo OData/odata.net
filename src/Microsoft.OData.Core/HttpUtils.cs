@@ -613,7 +613,7 @@ namespace Microsoft.OData
                     textIndex++;
                     if (SkipWhitespace(text, ref textIndex))
                     {
-                        // ';' should be a leading separator, but we choose to be a 
+                        // ';' should be a leading separator, but we choose to be a
                         // bit permissive and allow it as a final delimiter as well.
                         break;
                     }

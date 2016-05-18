@@ -17,77 +17,77 @@ namespace Microsoft.OData.Edm.Vocabularies
         None = 0,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmBinaryValue"/>. 
+        /// Represents a value implementing <see cref="IEdmBinaryValue"/>.
         /// </summary>
         Binary,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmBooleanValue"/>. 
+        /// Represents a value implementing <see cref="IEdmBooleanValue"/>.
         /// </summary>
         Boolean,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmCollectionValue"/>. 
+        /// Represents a value implementing <see cref="IEdmCollectionValue"/>.
         /// </summary>
         Collection,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmDateTimeOffsetValue"/>. 
+        /// Represents a value implementing <see cref="IEdmDateTimeOffsetValue"/>.
         /// </summary>
         DateTimeOffset,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmDecimalValue"/>. 
+        /// Represents a value implementing <see cref="IEdmDecimalValue"/>.
         /// </summary>
         Decimal,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmEnumValue"/>. 
+        /// Represents a value implementing <see cref="IEdmEnumValue"/>.
         /// </summary>
         Enum,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmFloatingValue"/>. 
+        /// Represents a value implementing <see cref="IEdmFloatingValue"/>.
         /// </summary>
         Floating,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmGuidValue"/>. 
+        /// Represents a value implementing <see cref="IEdmGuidValue"/>.
         /// </summary>
         Guid,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmIntegerValue"/>. 
+        /// Represents a value implementing <see cref="IEdmIntegerValue"/>.
         /// </summary>
         Integer,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmNullValue"/>. 
+        /// Represents a value implementing <see cref="IEdmNullValue"/>.
         /// </summary>
         Null,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmStringValue"/>. 
+        /// Represents a value implementing <see cref="IEdmStringValue"/>.
         /// </summary>
         String,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmStructuredValue"/>. 
+        /// Represents a value implementing <see cref="IEdmStructuredValue"/>.
         /// </summary>
         Structured,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmDurationValue"/>. 
+        /// Represents a value implementing <see cref="IEdmDurationValue"/>.
         /// </summary>
         Duration,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmDateValue"/>. 
+        /// Represents a value implementing <see cref="IEdmDateValue"/>.
         /// </summary>
         Date,
 
         /// <summary>
-        /// Represents a value implementing <see cref="IEdmTimeOfDayValue"/>. 
+        /// Represents a value implementing <see cref="IEdmTimeOfDayValue"/>.
         /// </summary>
         TimeOfDay,
     }

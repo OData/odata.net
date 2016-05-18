@@ -361,7 +361,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the edit link of a stream value.
         /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for; 
+        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for;
         /// or null for the default media resource.</param>
         /// <returns>
         /// The absolute URI of the edit link for the specified stream property or the default media resource.
@@ -377,7 +377,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the read link of a stream value.
         /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the read link is computed for; 
+        /// <param name="streamPropertyName">The name of the stream property the read link is computed for;
         /// or null for the default media resource.</param>
         /// <returns>
         /// The absolute URI of the read link for the specified stream property or the default media resource.
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Evaluation
                     ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
                     if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.resourceMetadataContext.TypeContext.NavigationSourceName) == null)
                     {
-                        uri = new Uri(UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualResourceTypeName);    
+                        uri = new Uri(UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualResourceTypeName);
                     }
                 }
             }

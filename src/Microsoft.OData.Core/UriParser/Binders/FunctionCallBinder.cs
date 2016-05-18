@@ -104,7 +104,7 @@ namespace Microsoft.OData.UriParser
             if (argumentTypes.All(a => a == null) && argumentCount > 0)
             {
                 // we specifically want to find just the first function that matches the number of arguments, we don't care about
-                // ambiguity here because we're already in an ambiguous case where we don't know what kind of types 
+                // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
                 // those arguments are.
                 signature = signatures.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == argumentCount);
                 if (signature == null)
@@ -113,7 +113,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    // in this case we can't assert the return type, we can only assert that a function exists... so 
+                    // in this case we can't assert the return type, we can only assert that a function exists... so
                     // we need to set the return type to null.
                     signature = new FunctionSignatureWithReturnType(null, signature.ArgumentTypes);
                 }
@@ -343,7 +343,7 @@ namespace Microsoft.OData.UriParser
 
             if (singleValueParent != null && singleValueParent.TypeReference == null)
             {
-                // if the parent exists, but has no type information, then we're in open type land, and we 
+                // if the parent exists, but has no type information, then we're in open type land, and we
                 // shouldn't go any farther.
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
             }

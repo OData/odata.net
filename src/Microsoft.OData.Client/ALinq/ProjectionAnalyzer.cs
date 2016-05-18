@@ -23,7 +23,7 @@ namespace Microsoft.OData.Client
     /// To be writable, must follow these rules:
     /// 1)  Must be known Entity Type
     /// 2)  Must be a true narrowing of the source type.  Subset of properties + no transformations other then casts.
-    /// 
+    ///
     /// To be materializable (read-only), must follow these rules
     /// 1)  No transient object creation. (Entity and non-Entity types)
     /// 2)  No referencing of other DataService queries or contexts.
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Checks whether the specified expression creates a collection. 
+        /// Checks whether the specified expression creates a collection.
         /// </summary>
         /// <param name="e">Expression to check.</param>
         /// <returns>true if given expression is collection producing.</returns>
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Checks whether the specified expression is allowed in a MethodCall. Expressions that
-        /// produce collections are not allowed. The only exception is when collection property 
+        /// produce collections are not allowed. The only exception is when collection property
         /// belongs to an entity e.g. c.Orders.Select(o => o), where we allow c.Orders.
         /// </summary>
         /// <param name="e">Expression to check.</param>
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Client
         #region Private methods.
 
         /// <summary>
-        /// Analyzes the specified expression with an entity-projection or 
+        /// Analyzes the specified expression with an entity-projection or
         /// non-entity-projection analyzer.
         /// </summary>
         /// <param name="mie">Expression to analyze.</param>
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Analyzes the specified <paramref name="lambda"/> for selection and updates 
+        /// Analyzes the specified <paramref name="lambda"/> for selection and updates
         /// <paramref name="resource"/>.
         /// </summary>
         /// <param name="lambda">Lambda expression to analyze.</param>
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(pb != null, "pb != null");
                 Debug.Assert(type != null, "type != null");
-                
+
                 this.builder = pb;
                 this.type = type;
                 this.context = context;
@@ -347,7 +347,7 @@ namespace Microsoft.OData.Client
 
                         MemberExpression lastExpression = lastExpressions[lastExpressions.Length - 1] as MemberExpression;
                         Debug.Assert(
-                            !analysis.MultiplePathsFound, 
+                            !analysis.MultiplePathsFound,
                             "!analysis.MultiplePathsFound -- the initilizer has been visited, and cannot be empty, and expressions that can combine paths should have thrown exception during initializer analysis");
 #if DEBUG
                         Debug.Assert(
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(u != null, "u != null");
 
-                // Perfectly assignable conversions are OK. VB.NET compilers 
+                // Perfectly assignable conversions are OK. VB.NET compilers
                 // inserts these to exactly match method signatures, for example.
                 if (ResourceBinder.PatternRules.MatchConvertToAssignable(u) || (u.NodeType == ExpressionType.TypeAs && this.leafExpressionIsMemberAccess))
                 {
@@ -566,7 +566,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new NotSupportedException(Strings.ALinq_CanOnlyProjectTheLeaf);
                 }
-                
+
                 this.builder.StartNewPath();
                 return p;
             }
@@ -636,7 +636,7 @@ namespace Microsoft.OData.Client
                         throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, u.ToString()));
                     }
                 }
-                
+
                 return base.VisitUnary(u);
             }
 
@@ -648,7 +648,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, b.ToString()));
                 }
-                
+
                 return base.VisitBinary(b);
             }
 
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, b.ToString()));
                 }
-                
+
                 return base.VisitTypeIs(b);
             }
 
@@ -678,7 +678,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, c.ToString()));
                 }
-                
+
                 return base.VisitConditional(c);
             }
 
@@ -710,17 +710,17 @@ namespace Microsoft.OData.Client
 
                 // Only allowed to project entities, also it is ok to do client side projections on complex types.
                 // Details on the fix for "Inconsistency between Count() method call and Count property projection on clr type collections":
-                //     Relax check to only throw if IsCollectionProducingExpression returns true. 
+                //     Relax check to only throw if IsCollectionProducingExpression returns true.
                 //     This enables client side projections (for example "Count") on Clr type collections, like ReadOnlyCollection (which is used in spatial types), ICollection, IList, etc.
                 //     We already allow client side method calls (like Linq extension method "Count()") on clr type collections, so it makes client side projections consistent.
                 //     Note: it will still throw for List<T> (because IsCollectionProducingExpression returns true for List<T>),
-                //           however this is consistent with how we handle MethodCallExpression on clr type collections 
+                //           however this is consistent with how we handle MethodCallExpression on clr type collections
                 //           and changing IsCollectionProducingExpression seems risky at this point as it's used in a lot of places.
                 if (IsCollectionProducingExpression(m.Expression))
                 {
                     throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, m.ToString()));
                 }
-                
+
                 PropertyInfo pi;
                 Expression boundTarget;
                 if (ResourceBinder.PatternRules.MatchNonPrivateReadableProperty(m, out pi, out boundTarget))

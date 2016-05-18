@@ -68,7 +68,7 @@ namespace Microsoft.OData
         /// This enumeration is used to determine what should happen if two properties with the same name are detected on a resource or complex value.
         /// When the first property is found, the initial value is set based on the kind of property found and the general setting to allow or disallow duplicate properties.
         /// When a second property with the same name is found, the duplication kind can be 'upgraded' (e.g., from association link to navigation property), 'ignored' (e.g.
-        /// when finding the association link for an existing navigation property or when duplicate properties are allowed by the settings) or 'fail' 
+        /// when finding the association link for an existing navigation property or when duplicate properties are allowed by the settings) or 'fail'
         /// (e.g., when duplicate properties are not allowed).
         /// </remarks>
         private enum DuplicationKind
@@ -89,7 +89,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Check the <paramref name="property"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
-        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames 
+        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
         /// </summary>
         /// <param name="property">The property to be checked.</param>
@@ -168,7 +168,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Check the <paramref name="nestedResourceInfo"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
-        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames 
+        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
@@ -248,7 +248,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Check the <paramref name="associationLinkName"/> for duplicate property names in a resource or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
-        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames  
+        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
         /// </summary>
         /// <param name="associationLinkName">The name of association link to be checked.</param>

@@ -76,7 +76,7 @@ namespace Microsoft.OData.Service
         /// <returns>Collection element type name or null if not a collection.</returns>
         /// <remarks>
         /// The following rules are used for collection type names:
-        /// - it has to start with "Collection(" and end with ")" - trailing and leading whitespaces make the type not to be recognized as collection. 
+        /// - it has to start with "Collection(" and end with ")" - trailing and leading whitespaces make the type not to be recognized as collection.
         /// - there is to be no characters (including whitespaces) between "Collection" and "(" - otherwise it won't be recognized as collection
         /// - collection item type name has to be a non-empty string - i.e. "Collection()" won't be recognized as collection
         /// - nested collection - e.g. "Collection(Collection(Edm.Int32))" - are not supported - we will throw
@@ -316,7 +316,7 @@ namespace Microsoft.OData.Service
         {
             // NOTE: the size of the input message is only limited by the WCF message size in Astoria
             // In WCF DS client, we never had a limit on any of these. Hence for client, it makes sense
-            // to set these values to some high limit. In WCF DS server, there are bunch of API's to 
+            // to set these values to some high limit. In WCF DS server, there are bunch of API's to
             // cover some of these limits and if we pass the value to ODL, for batch requests, there is
             // a breaking change, since WCF DS server cannot figure out why the exception was thrown and
             // and hence fail way early. For now, the best way is to tell ODL to not impose any limits

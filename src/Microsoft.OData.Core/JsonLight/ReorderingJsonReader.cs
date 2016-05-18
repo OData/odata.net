@@ -223,7 +223,7 @@ namespace Microsoft.OData.JsonLight
         private sealed class BufferedObject
         {
             /// <summary>The cache for properties.</summary>
-            /// <remarks>The key is the property or instance annotation name, 
+            /// <remarks>The key is the property or instance annotation name,
             /// the value are the buffered properties grouped by property name (incl. annotation properties).</remarks>
             private readonly Dictionary<string, object> propertyCache;
 
@@ -450,7 +450,7 @@ namespace Microsoft.OData.JsonLight
             /// <returns>The sorted enumerable of property names.</returns>
             /// <remarks>The sort order is to put odata.context first, then odata.type, odata.id, and odata.etag, followed by all other odata.* instance annotations.
             /// For the rest, we preserve the relative order of custom annotations with regard to the data property.
-            /// Note that we choose the position of the first property annotation in cases where no data property for a set of 
+            /// Note that we choose the position of the first property annotation in cases where no data property for a set of
             /// property annotations exists.</remarks>
             private IEnumerable<string> SortPropertyNames()
             {
@@ -464,7 +464,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     string propertyName = propertyNameWithAnnotation.Key;
 
-                    // First ignore a property annotation if we found a data property for it (since we will use the 
+                    // First ignore a property annotation if we found a data property for it (since we will use the
                     // position of the data property). To keep the property annotations is important for cases
                     // where no data property exists for a set of property annotations.
                     if (propertyNameWithAnnotation.Value != null && this.dataProperties.Contains(propertyName))
@@ -478,7 +478,7 @@ namespace Microsoft.OData.JsonLight
                         this.dataProperties.Add(propertyName);
                     }
 
-                    // Then find the special properties 'odata.context', 'odata.type', 'odata.id', and 'odata.etag' before separating 
+                    // Then find the special properties 'odata.context', 'odata.type', 'odata.id', and 'odata.etag' before separating
                     // the rest into odata.* annotations and regular properties (and custom annotations).
                     if (IsODataContextAnnotation(propertyName))
                     {

@@ -9,7 +9,7 @@ namespace Microsoft.OData
     using System;
 
     /// <summary>
-    /// Represents an added link in delta response. 
+    /// Represents an added link in delta response.
     /// </summary>
     public sealed class ODataDeltaLink : ODataDeltaLinkBase
     {

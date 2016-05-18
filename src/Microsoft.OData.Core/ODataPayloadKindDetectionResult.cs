@@ -34,7 +34,7 @@ namespace Microsoft.OData
 
         /// <summary>Gets the detected payload kind.</summary>
         /// <returns>The detected payload kind.</returns>
-        public ODataPayloadKind PayloadKind 
+        public ODataPayloadKind PayloadKind
         {
             get { return this.payloadKind; }
         }

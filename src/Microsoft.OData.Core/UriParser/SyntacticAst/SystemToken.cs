@@ -12,13 +12,13 @@ namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    
+
     #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing a System token such as $count
     /// </summary>
-    /// 
+    ///
     internal sealed class SystemToken : PathSegmentToken
     {
         /// <summary>

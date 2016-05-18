@@ -68,7 +68,7 @@ namespace Microsoft.OData
         {
             return EmptyInstance.Value;
         }
-        
+
         /// <summary>
         /// This internal method adds <paramref name="itemToAdd"/> to the wrapped source list. From the public's perspective, this enumerable is still readonly.
         /// </summary>

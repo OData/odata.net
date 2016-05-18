@@ -111,7 +111,7 @@ namespace Microsoft.OData.Client
         /// <param name="b">Binary expression to visit.</param>
         /// <returns>(Possibly rewritten) binary expression.</returns>
         /// <remarks>
-        /// This override is introduced because binary expressions are one of 
+        /// This override is introduced because binary expressions are one of
         /// the scopes at which normalization happens.
         /// </remarks>
         internal override Expression VisitBinary(BinaryExpression b)
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Client
         /// <param name="u">Unary expression to visit.</param>
         /// <returns>(Possibly rewritten) unary expression.</returns>
         /// <remarks>
-        /// This override is introduced because unary expressions are one of 
+        /// This override is introduced because unary expressions are one of
         /// the scopes at which normalization happens.
         /// </remarks>
         internal override Expression VisitUnary(UnaryExpression u)
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Rebinds the specified <paramref name="init"/> expression by gathering 
+        /// Rebinds the specified <paramref name="init"/> expression by gathering
         /// annotated paths and returning an expression that calls the
         /// ProjectionGetEntity method.
         /// </summary>
@@ -693,7 +693,7 @@ namespace Microsoft.OData.Client
                     Type memberParentType = assignment.Member.DeclaringType;
 #else
                     Type memberParentType = assignment.Member.ReflectedType;
-#endif                    
+#endif
                     ProjectionPathSegment nestedSegment = new ProjectionPathSegment(
                         entryPath,
                         assignment.Member.Name,
@@ -711,7 +711,7 @@ namespace Microsoft.OData.Client
 
                     e = Expression.Convert(e, typeof(object));
                     ParameterExpression[] parameters =
-                        new ParameterExpression[] 
+                        new ParameterExpression[]
                         {
                             this.materializerExpression,
                             nestedEntryParameter,
@@ -722,12 +722,12 @@ namespace Microsoft.OData.Client
                     Expression[] nestedParams =
                         new Expression[]
                         {
-                            this.materializerExpression, 
+                            this.materializerExpression,
                             nestedEntry,
                             expectedParameterForMembers,
                         };
                     var invokeParameters =
-                        new ParameterExpression[] 
+                        new ParameterExpression[]
                         {
                             this.materializerExpression,
                             (ParameterExpression)entryParameterAtMemberInit,
@@ -741,7 +741,7 @@ namespace Microsoft.OData.Client
                     Expression e = this.Visit(assignment.Expression);
                     e = Expression.Convert(e, typeof(object));
                     ParameterExpression[] parameters =
-                        new ParameterExpression[] 
+                        new ParameterExpression[]
                         {
                             this.materializerExpression,
                             entryParameterForMembers,
@@ -777,7 +777,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates an expression that gets the deepest entry that will be found on the 
+        /// Creates an expression that gets the deepest entry that will be found on the
         /// specified <paramref name="path"/> (for the target tree).
         /// </summary>
         /// <param name="path">Path of expressions to walk.</param>
@@ -920,7 +920,7 @@ namespace Microsoft.OData.Client
                     this.annotations.TryGetValue(visited.Arguments[0], out annotation))
                 {
                     // DataServiceCollection<T>(IEnumerable<T> items)
-                    // -> 
+                    // ->
                     // DataServiceCollection<T>(materializer, null, items, TrackingMode.AutoChangeTracking, null, null, null)
                     rebound = RebindConstructor(
                         constructorInfo,
@@ -952,10 +952,10 @@ namespace Microsoft.OData.Client
                          this.annotations.TryGetValue(visited.Arguments[0], out annotation))
                 {
                     // DataServiceCollection<T>(
-                    //     IEnumerable<T> items, 
-                    //     TrackingMode trackingMode, 
-                    //     string entitySet, 
-                    //     Func<> entityChangedCallback, 
+                    //     IEnumerable<T> items,
+                    //     TrackingMode trackingMode,
+                    //     string entitySet,
+                    //     Func<> entityChangedCallback,
                     //     Func<> entityCollectionChangedCallback)
                     // ->
                     // DataServiceCollection<T>(materializer, null, items, trackingMode,
@@ -976,10 +976,10 @@ namespace Microsoft.OData.Client
                 {
                     // DataServiceCollection<T>(
                     //     DataServiceContext context,
-                    //     IEnumerable<T> items, 
-                    //     TrackingMode trackingMode, 
-                    //     string entitySet, 
-                    //     Func<> entityChangedCallback, 
+                    //     IEnumerable<T> items,
+                    //     TrackingMode trackingMode,
+                    //     string entitySet,
+                    //     Func<> entityChangedCallback,
                     //     Func<> entityCollectionChangedCallback)
                     // ->
                     // DataServiceCollection<T>(materializer, context, items, trackingMode,
@@ -1003,7 +1003,7 @@ namespace Microsoft.OData.Client
                 this.annotations.Add(visited, annotation);
             }
 
-            // Note that we end up just falling through without changing anything for 
+            // Note that we end up just falling through without changing anything for
             // constructors of DataServiceCollection<T> that aren't correlated (i.e. don't take
             // an enumerable in the input).
             return rebound;
@@ -1080,7 +1080,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// All that is necessary here is to rewrite the call to Select() and indicate
         /// that the target type is a given List&lt;T&gt;.
-        /// 
+        ///
         /// TODO: we're not bubbling this all the way to the GetOrCreateCollection method - does it matter?
         /// </remarks>
         private Expression RebindMethodCallForMemberToList(MethodCallExpression call)

@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm
         {
             get { return EdmSchemaElementKind.EntityContainer; }
         }
-        
+
         /// <summary>
         /// Adds an entity container element to this entity container.
         /// </summary>
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(element, "element");
 
             this.containerElements.Add(element);
-            
+
             switch (element.ContainerElementKind)
             {
                 case EdmContainerElementKind.EntitySet:
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">Name of the function import.</param>
         /// <param name="function">The function of the specified function import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this function import. 
+        /// <param name="entitySet">An entity set containing entities returned by this function import.
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
         /// <returns>Created function import.</returns>
         public virtual EdmFunctionImport AddFunctionImport(string name, IEdmFunction function, IEdmExpression entitySet)
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">Name of the function import.</param>
         /// <param name="function">The function of the specified function import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this function import. 
+        /// <param name="entitySet">An entity set containing entities returned by this function import.
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
         /// <param name="includeInServiceDocument">A value indicating whether this function import will be in the service document.</param>
         /// <returns>Created operation import.</returns>
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">Name of the action import.</param>
         /// <param name="action">Action that the action import is importing to the container.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this action import. 
+        /// <param name="entitySet">An entity set containing entities returned by this action import.
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
         /// <returns>Created action import.</returns>
         public virtual EdmActionImport AddActionImport(string name, IEdmAction action, IEdmExpression entitySet)

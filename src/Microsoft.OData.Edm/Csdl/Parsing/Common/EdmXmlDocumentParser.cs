@@ -81,7 +81,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
            where TItem : class
         {
             return Element<TItem>(
-                elementName, 
+                elementName,
                 (element, childValues) =>
                 {
                     BeginItem(element);
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         }
 
         protected abstract void AnnotateItem(object result, XmlElementValueCollection childValues);
-        
+
         protected void EndItem()
         {
             this.elementStack.Pop();

@@ -85,10 +85,10 @@ namespace Microsoft.OData.UriParser
                 // Skip over the base URI segments
 #if !ORCAS
                 // need to calculate the number of segments to skip in the full
-                // uri (so that we can skip over http://blah.com/basePath for example, 
-                // get only the odata specific parts of the path). 
-                // 
-                // because of differences in system.uri between portable lib and 
+                // uri (so that we can skip over http://blah.com/basePath for example,
+                // get only the odata specific parts of the path).
+                //
+                // because of differences in system.uri between portable lib and
                 // the desktop library, we need to handle this differently.
                 // in this case we get the number of segments to skip as simply
                 // then number of tokens in the serviceBaseUri split on slash, with

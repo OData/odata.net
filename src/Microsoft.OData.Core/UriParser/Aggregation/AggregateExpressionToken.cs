@@ -31,7 +31,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             this.method = withVerb;
             this.alias = alias;
         }
-       
+
         public override QueryTokenKind Kind
         {
             get { return QueryTokenKind.AggregateExpression; }
@@ -51,7 +51,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             get { return this.alias; }
         }
-       
+
         /// <summary>
         /// Accept a <see cref="ISyntacticTreeVisitor{T}"/> to walk a tree of <see cref="QueryToken"/>s.
         /// </summary>

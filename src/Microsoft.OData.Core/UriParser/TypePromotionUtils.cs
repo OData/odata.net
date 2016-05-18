@@ -23,8 +23,8 @@ namespace Microsoft.OData.UriParser
     /// Helper methods for promoting argument types of operators and function calls.
     /// </summary>
     /// <remarks>
-    /// Note that the lists of signatures are for matching primitive types to functions. 
-    /// Equality (eq and ne) operators are a bit special since they are also defined for 
+    /// Note that the lists of signatures are for matching primitive types to functions.
+    /// Equality (eq and ne) operators are a bit special since they are also defined for
     /// entity and complex types.
     /// </remarks>
     internal static class TypePromotionUtils

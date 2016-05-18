@@ -17,7 +17,7 @@ namespace Microsoft.Spatial
         /// The implementation that created this instance.
         /// </summary>
         private readonly SpatialImplementation creator;
-        
+
         /// <summary>
         /// Spatial builder
         /// </summary>

@@ -31,7 +31,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         public override EdmValueKind ValueKind
         {
-            get 
+            get
             {
                 return EdmValueKind.Null;
             }

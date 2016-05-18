@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         private readonly IEnumerable<IEdmDelayedValue> elements;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmCollectionValue"/> class. 
+        /// Initializes a new instance of the <see cref="EdmCollectionValue"/> class.
         /// </summary>
         /// <param name="type">A reference to a collection type that describes this collection value</param>
         /// <param name="elements">The collection of values stored in this collection value</param>

@@ -12,7 +12,7 @@ namespace Microsoft.OData
     using Microsoft.OData.UriParser;
 
     /// <summary>
-    /// Build SelectExpandQueryNode to String Representation 
+    /// Build SelectExpandQueryNode to String Representation
     /// </summary>
     internal sealed class SelectExpandClauseToStringBuilder : SelectItemTranslator<string>
     {

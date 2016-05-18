@@ -201,7 +201,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 {
                     node = ((SingleNavigationNode)node).NavigationSource as SingleValueNode;
                 }
-            } 
+            }
             while (node != null && IsPropertyNode(node));
 
             return result;

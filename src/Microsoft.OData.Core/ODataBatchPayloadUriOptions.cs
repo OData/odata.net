@@ -15,7 +15,7 @@ namespace Microsoft.OData
         /// Absolute URI with schema, host, port, and absolute resource path.
         /// </summary>
         /// Example:
-        /// GET https://host:1234/path/service/People(1) HTTP/1.1 
+        /// GET https://host:1234/path/service/People(1) HTTP/1.1
         AbsoluteUri,
 
         /// <summary>

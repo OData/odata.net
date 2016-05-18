@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         private string CreatePropertiesUriSegment(
-            IEnumerable<GroupByPropertyNode> groupByPropertyNodes, 
+            IEnumerable<GroupByPropertyNode> groupByPropertyNodes,
             IEnumerable<AggregateExpression> aggregateExpressions)
         {
             string result = string.Empty;

@@ -323,8 +323,8 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (property.IsKnownType)
                 {
-                    // Note: MaterializeDataValue materializes only properties of primitive types. Materialization specific 
-                    // to complex types and collections is done later. 
+                    // Note: MaterializeDataValue materializes only properties of primitive types. Materialization specific
+                    // to complex types and collections is done later.
                     this.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
                 }
             }

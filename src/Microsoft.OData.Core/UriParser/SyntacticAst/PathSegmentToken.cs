@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a segment in a path.
     /// </summary>
-    /// 
+    ///
     internal abstract class PathSegmentToken : ODataAnnotatable
     {
         /// <summary>

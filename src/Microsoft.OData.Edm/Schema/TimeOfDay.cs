@@ -177,7 +177,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is greater equal to 
+        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is greater equal to
         /// another specified <see cref="Microsoft.OData.Edm.TimeOfDay"/>.
         /// </summary>
         /// <param name="firstOperand">The first time interval to compare.</param>
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is greater than 
+        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is greater than
         /// another specified <see cref="Microsoft.OData.Edm.TimeOfDay"/>.
         /// </summary>
         /// <param name="firstOperand">The first time interval to compare.</param>
@@ -201,7 +201,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is less equal to 
+        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is less equal to
         /// another specified <see cref="Microsoft.OData.Edm.TimeOfDay"/>.
         /// </summary>
         /// <param name="firstOperand">The first time interval to compare.</param>
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is less than 
+        /// Indicates whether a specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> is less than
         /// another specified <see cref="Microsoft.OData.Edm.TimeOfDay"/>.
         /// </summary>
         /// <param name="firstOperand">The first time interval to compare.</param>
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Edm
 
         /// <summary>
         /// Compares the value of this instance to a specified object value
-        /// and returns an bool that indicates whether the specified object is <see cref="Microsoft.OData.Edm.TimeOfDay"/> 
+        /// and returns an bool that indicates whether the specified object is <see cref="Microsoft.OData.Edm.TimeOfDay"/>
         /// and this instance is same as the specified <see cref="Microsoft.OData.Edm.TimeOfDay"/> value.
         /// </summary>
         /// <param name="obj">The object to compare to the current instance</param>
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Edm
         /// the same as, or later than the object if it is a TimeOfDay.
         /// </summary>
         /// <param name="obj">The object to compare to the current instance</param>
-        /// <returns>Value Description Less than zero This instance is earlier than value. 
+        /// <returns>Value Description Less than zero This instance is earlier than value.
         /// Zero This instance is the same as value.
         /// Greater than zero This instance is later than value.</returns>
         public int CompareTo(object obj)
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Edm
         /// the same as, or later than the specified TimeOfDay value.
         /// </summary>
         /// <param name="other">The object to compare to the current instance</param>
-        /// <returns>Value Description Less than zero This instance is earlier than value. 
+        /// <returns>Value Description Less than zero This instance is earlier than value.
         /// Zero This instance is the same as value.
         /// Greater than zero This instance is later than value.</returns>
         public int CompareTo(TimeOfDay other)

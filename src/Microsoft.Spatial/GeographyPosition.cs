@@ -50,7 +50,7 @@ namespace Microsoft.Spatial
             : this(latitude, longitude, null, null)
         {
         }
-        
+
         /// <summary>Gets the latitude portion of a position.</summary>
         /// <returns>The latitude portion of a position.</returns>
         public double Latitude

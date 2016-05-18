@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// The parent entity type for expand option in case expand option is star, get all parent navigation properties
         /// </summary>
         private readonly IEdmStructuredType parentEntityType;
-        
+
         /// <summary>
         /// Max recursion depth. As we recurse, each new instance of this class will have this lowered by 1.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
-        /// to parse over the entirety of $select or $expand. 
+        /// to parse over the entirety of $select or $expand.
         /// </summary>
         private ExpressionLexer lexer;
 
@@ -251,7 +251,7 @@ namespace Microsoft.OData.UriParser
                                 this.lexer.NextToken();
                                 string expandText = this.ReadQueryOption();
 
-                                // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future. 
+                                // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
                                 IEdmStructuredType targetEntityType = null;
                                 if (this.resolver != null && this.parentEntityType != null)
                                 {
@@ -259,7 +259,7 @@ namespace Microsoft.OData.UriParser
 
                                     // it is a navigation property, need to find the type. Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)", find navigation property Trips of Friends, then get Entity type of Trips.
                                     if (parentProperty != null)
-                                    { 
+                                    {
                                         targetEntityType = parentProperty.ToEntityType();
                                     }
                                 }
@@ -307,18 +307,18 @@ namespace Microsoft.OData.UriParser
             long? levelsOption = null;
             bool isRefExpand = (pathToken.Identifier == UriQueryConstants.RefSegment);
 
-            // Based on the specification, 
+            // Based on the specification,
             //   For star in expand, this will be supported,
             //   $expand=*
             //   $expand=EntitySet($expand=* )
-            //   $expand=*/$ref 
+            //   $expand=*/$ref
             //   $expand=*,EntitySet
             //   $expand=EntitySet, *
             //   $expand=*/$ref,EntitySet
             //   Parenthesized set of expand options for star expand option supported are $level per specification.
             //   And this will throw exception,
             //   $expand= * /$count
-            //   Parenthesized set of expand options for star expand option which will also cause exception are $filter, $select, $orderby, $skip, $top, $count, $search, and $expand per specification. 
+            //   Parenthesized set of expand options for star expand option which will also cause exception are $filter, $select, $orderby, $skip, $top, $count, $search, and $expand per specification.
             // And level is not supported with "*/$ref".
 
             // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
@@ -343,8 +343,8 @@ namespace Microsoft.OData.UriParser
                     {
                         case ExpressionConstants.QueryOptionLevels:
                             {
-                                if (!isRefExpand) 
-                                { 
+                                if (!isRefExpand)
+                                {
                                     levelsOption = ResolveLevelOption();
                                 }
                                 else

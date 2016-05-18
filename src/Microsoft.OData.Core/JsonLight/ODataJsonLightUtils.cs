@@ -115,7 +115,7 @@ namespace Microsoft.OData.JsonLight
 
             string metadataReferenceName = operation.FullName();
             bool hasOverload = model.FindDeclaredOperations(operation.FullName()).Take(2).Count() > 1;
-            
+
             if (hasOverload)
             {
                 if (operation is IEdmFunction)

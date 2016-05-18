@@ -34,10 +34,10 @@ namespace Microsoft.OData
         /// The structured type can be null if no metadata is available.
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
         /// <param name="messageValidationSetting">MessageReaderSettings or MessageWriterSettings.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         IEdmProperty ValidatePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, IMessageValidationSetting messageValidationSetting);
 

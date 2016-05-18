@@ -787,7 +787,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>The format of the payload being read by this reader.</returns>
         /// <remarks>
-        /// The format of the payload is determined when starting to read the message; 
+        /// The format of the payload is determined when starting to read the message;
         /// if this method is called before reading has started it will throw.
         /// </remarks>
         internal ODataFormat GetFormat()
@@ -974,7 +974,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Verify arguments for creation of an <see cref="ODataCollectionReader" /> to read a collection of primitive or complex values 
+        /// Verify arguments for creation of an <see cref="ODataCollectionReader" /> to read a collection of primitive or complex values
         /// (as result of a service operation invocation).
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type for the items in the collection.</param>
@@ -1316,7 +1316,7 @@ namespace Microsoft.OData
                 // Call the payload kind detection code on the format
                 Task<IEnumerable<ODataPayloadKind>> detectionResult =
                     this.message.GetStreamAsync()
-                        .FollowOnSuccessWithTask(streamTask => 
+                        .FollowOnSuccessWithTask(streamTask =>
                             payloadKindGroup.Key.DetectPayloadKindAsync(
                             this.GetOrCreateMessageInfo(streamTask.Result, true),
                             this.settings));

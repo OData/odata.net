@@ -39,10 +39,10 @@ namespace Microsoft.OData.Client.Materialization
         public ODataEntriesEntityMaterializer(
             IEnumerable<ODataResource> entries,
             IODataMaterializerContext materializerContext,
-            EntityTrackingAdapter entityTrackingAdapter, 
-            QueryComponents queryComponents, 
-            Type expectedType, 
-            ProjectionPlan materializeEntryPlan, 
+            EntityTrackingAdapter entityTrackingAdapter,
+            QueryComponents queryComponents,
+            Type expectedType,
+            ProjectionPlan materializeEntryPlan,
             ODataFormat format)
             : base(materializerContext, entityTrackingAdapter, queryComponents, expectedType, materializeEntryPlan)
         {

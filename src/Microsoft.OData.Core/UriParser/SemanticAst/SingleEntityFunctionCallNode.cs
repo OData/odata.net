@@ -21,15 +21,15 @@ namespace Microsoft.OData.UriParser
     public sealed class SingleEntityFunctionCallNode : SingleEntityNode
     {
         /// <summary>
-        /// the name of this function 
+        /// the name of this function
         /// </summary>
         private readonly string name;
-        
+
         /// <summary>
         /// the list of functions represented by this node.
         /// </summary>
-        private readonly ReadOnlyCollection<IEdmFunction> functions; 
-        
+        private readonly ReadOnlyCollection<IEdmFunction> functions;
+
         /// <summary>
         /// List of arguments provided to the function.
         /// </summary>

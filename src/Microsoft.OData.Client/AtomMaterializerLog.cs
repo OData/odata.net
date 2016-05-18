@@ -79,9 +79,9 @@ namespace Microsoft.OData.Client
         /// <summary>Whether changes are being tracked.</summary>
         internal bool Tracking
         {
-            get 
-            { 
-                return this.mergeOption != MergeOption.NoTracking; 
+            get
+            {
+                return this.mergeOption != MergeOption.NoTracking;
             }
         }
 
@@ -272,7 +272,7 @@ namespace Microsoft.OData.Client
         /// The target instance is typically the object that we
         /// expect will get refreshed by the response from a POST
         /// method.
-        /// 
+        ///
         /// For example if a create a Customer and POST it to
         /// a service, the response of the POST will return the
         /// re-serialized instance, with (important!) server generated
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Client
         /// <summary>Attempts to resolve an entry from those tracked in the log.</summary>
         /// <param name="entry">Entry to resolve.</param>
         /// <param name="existingEntry">
-        /// After invocation, an existing entry with the same identity as 
+        /// After invocation, an existing entry with the same identity as
         /// <paramref name="entry"/>; possibly null.
         /// </param>
         /// <returns>true if an existing entry was found; false otherwise.</returns>
@@ -340,7 +340,7 @@ namespace Microsoft.OData.Client
         /// added to a collection.
         /// </summary>
         /// <param name="source">
-        /// Instance with the collection to which <paramref name="target"/> 
+        /// Instance with the collection to which <paramref name="target"/>
         /// was added.
         /// </param>
         /// <param name="propertyName">Property name for collection.</param>
@@ -384,11 +384,11 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Invoke this method to notify the log that a link was removed 
+        /// Invoke this method to notify the log that a link was removed
         /// from a collection.
         /// </summary>
         /// <param name="source">
-        /// Instance with the collection from which <paramref name="target"/> 
+        /// Instance with the collection from which <paramref name="target"/>
         /// was removed.
         /// </param>
         /// <param name="propertyName">Property name for collection.</param>

@@ -20,7 +20,7 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// Base class for all input contexts, defines the interface 
+    /// Base class for all input contexts, defines the interface
     /// to be implemented by the specific formats.
     /// </summary>
     public abstract class ODataInputContext : IDisposable
@@ -255,7 +255,7 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Read the property from the input and 
+        /// Read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -268,7 +268,7 @@ namespace Microsoft.OData
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously read the property from the input and 
+        /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -395,8 +395,8 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -407,8 +407,8 @@ namespace Microsoft.OData
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Asynchronously read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -419,8 +419,8 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Read a metadata document. 
-        /// This method reads the metadata document from the input and returns 
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>

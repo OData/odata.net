@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm
         {
             get { return this.type; }
         }
-        
+
         /// <summary>
         /// Gets the type that this property belongs to.
         /// </summary>

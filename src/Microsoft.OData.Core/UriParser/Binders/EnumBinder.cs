@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Try to bind an identifier to a EnumNode
         /// </summary>
-        /// <param name="identifier">the identifier to bind</param> 
+        /// <param name="identifier">the identifier to bind</param>
         /// <param name="typeReference">the enum typeReference</param>
         /// <param name="modelWhenNoTypeReference">the current model when no enum typeReference.</param>
         /// <param name="boundEnum">an enum node .</param>

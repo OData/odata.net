@@ -85,7 +85,7 @@ namespace Microsoft.OData.UriParser
         public override void Visit(NonSystemToken tokenIn)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
-            
+
             // before looking for type segments or paths, handle both of the wildcard cases.
             if (tokenIn.NextToken == null)
             {
@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
                 if (tokenIn == null)
                 {
                     throw new ODataException(ODataErrorStrings.SelectPropertyVisitor_SystemTokenInSelect(firstNonTypeToken.Identifier));
-                }  
+                }
             }
 
             // next, create a segment for the first non-type segment in the path.
@@ -141,7 +141,7 @@ namespace Microsoft.OData.UriParser
                     // no need to go on if the current property is not of complex type or collection of complex type.
                     currentLevelType = lastSegment.EdmType as IEdmStructuredType;
                     var collectionType = lastSegment.EdmType as IEdmCollectionType;
-                    if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex) 
+                    if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex)
                         && (collectionType == null || collectionType.ElementType.TypeKind() != EdmTypeKind.Complex))
                     {
                         break;
@@ -214,7 +214,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            this.expandClauseToDecorate.AddToSelectedItems(selectionItem);         
+            this.expandClauseToDecorate.AddToSelectedItems(selectionItem);
         }
     }
 }

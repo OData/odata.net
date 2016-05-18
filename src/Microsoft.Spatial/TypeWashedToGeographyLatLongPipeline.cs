@@ -15,7 +15,7 @@ namespace Microsoft.Spatial
         /// The pipeline to redirect the calls to
         /// </summary>
         private readonly GeographyPipeline output;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>

@@ -105,7 +105,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="settings">Configuration settings of the OData reader.</param>
-        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
+        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
         /// <remarks>
         /// The stream returned by GetMessageStream of <paramref name="messageInfo"/> could be used for reading for

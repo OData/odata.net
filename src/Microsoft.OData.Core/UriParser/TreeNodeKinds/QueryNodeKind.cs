@@ -115,7 +115,7 @@ namespace Microsoft.OData.UriParser
         EntityCollectionFunctionCall = InternalQueryNodeKind.EntityCollectionFunctionCall,
 
         /// <summary>
-        /// Node that represents a named function parameter. 
+        /// Node that represents a named function parameter.
         /// </summary>
         NamedFunctionParameter = InternalQueryNodeKind.NamedFunctionParameter,
 

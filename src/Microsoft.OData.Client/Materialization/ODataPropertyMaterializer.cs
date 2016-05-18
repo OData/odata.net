@@ -57,7 +57,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 Debug.Assert(WebUtil.IsCLRTypeCollection(underlyingExpectedType, this.MaterializerContext.Model) || (SingleResult.HasValue && !SingleResult.Value), "expected type must be collection or single result must be false");
 
-                // We are here for two cases: 
+                // We are here for two cases:
                 // (1) Something like Execute<ICollection<T>>, in which case the underlyingExpectedType is ICollection<T>
                 // (2) Execute<T> with the bool singleValue = false, in which case underlyingExpectedType is T
                 Type collectionItemType = this.ExpectedType;

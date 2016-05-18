@@ -60,7 +60,7 @@ namespace Microsoft.OData.Client
             /// <param name="value">The value.</param>
             public NullEdmDelayedValue(IEdmValue value)
             {
-                this.Value = value;   
+                this.Value = value;
             }
 
             /// <summary>

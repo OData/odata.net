@@ -75,7 +75,7 @@ namespace Microsoft.OData.JsonLight
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
         /// <param name="autoComputePayloadMetadataInJson">
-        /// If true, the type name to write according to full metadata rules. 
+        /// If true, the type name to write according to full metadata rules.
         /// If false, the type name writing according to minimal metadata rules.
         /// This is for backwards compatibility.
         /// </param>
@@ -92,7 +92,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// Creates the metadata builder for the given resource. If such a builder is set, asking for payload
-        /// metadata properties (like EditLink) of the resource may return a value computed by convention, 
+        /// metadata properties (like EditLink) of the resource may return a value computed by convention,
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
         /// <param name="resource">The resource to create the metadata builder for.</param>
@@ -106,12 +106,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
-            ODataResource resource, 
-            IODataResourceTypeContext typeContext, 
+            ODataResource resource,
+            IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
-            IEdmStructuredType actualResourceType,  
-            SelectedPropertiesNode selectedProperties, 
-            bool isResponse, 
+            IEdmStructuredType actualResourceType,
+            SelectedPropertiesNode selectedProperties,
+            bool isResponse,
             bool? keyAsSegment,
             ODataUri odataUri)
         {
@@ -124,7 +124,7 @@ namespace Microsoft.OData.JsonLight
                 this.model,
                 this.NonNullMetadataDocumentUri,
                 odataUri);
-            
+
             UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(keyAsSegment, typeContext);
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri, urlConvention);
 

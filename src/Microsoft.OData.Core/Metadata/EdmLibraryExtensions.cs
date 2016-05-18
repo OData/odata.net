@@ -190,7 +190,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Filters the type of the bound operations in by the bindingtype inheritance hierarchy to type closest to bindingtype. 
+        /// Filters the type of the bound operations in by the bindingtype inheritance hierarchy to type closest to bindingtype.
         /// </summary>
         /// <param name="operations">The operations.</param>
         /// <param name="bindingType">Type of the binding.</param>
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Checks whether all operation imports have the same return type 
+        /// Checks whether all operation imports have the same return type
         /// </summary>
         /// <param name="operationImports">the list to check</param>
         /// <returns>true if the list of operation imports all have the same return type</returns>
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Checks whether all operations have the same return type 
+        /// Checks whether all operations have the same return type
         /// </summary>
         /// <param name="operations">the list to check</param>
         /// <returns>true if the list of operation imports all have the same return type</returns>
@@ -1629,7 +1629,7 @@ namespace Microsoft.OData.Metadata
                 return structuredType.IsOpen;
             }
 
-            // If its a collection, return whether its element type is open. 
+            // If its a collection, return whether its element type is open.
             // This is because when processing a navigation property, the target type
             // may be a collection type even though a key expression has been applied.
             // This will be cleaned up in a subsequent change.
@@ -2233,7 +2233,7 @@ namespace Microsoft.OData.Metadata
             /// </summary>
             /// <param name="obj">The obj.</param>
             /// <returns>
-            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
             /// </returns>
             public int GetHashCode(IEdmType obj)
             {

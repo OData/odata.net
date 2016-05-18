@@ -358,7 +358,7 @@ namespace Microsoft.OData.Edm {
             resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().GetTypeInfo().Assembly);
 #endif
         }
-        
+
         private static EntityRes GetLoader() {
             if (loader == null) {
                 EntityRes sr = new EntityRes();
@@ -370,13 +370,13 @@ namespace Microsoft.OData.Edm {
         private static CultureInfo Culture {
             get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources {
             get {
                 return GetLoader().resources;
             }
         }
-        
+
         public static string GetString(string name, params object[] args) {
             EntityRes sys = GetLoader();
             if (sys == null)
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Edm {
                 return null;
             return sys.resources.GetString(name, EntityRes.Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback) {
             // always false for this version of gensr
             usedFallback = false;

@@ -26,17 +26,17 @@ namespace Microsoft.OData.Client
     {
         /// <summary>White color means un-visited</summary>
         White,
-        
+
         /// <summary>Gray color means added to queue for DFS</summary>
         Gray,
-        
+
         /// <summary>Black color means already visited hence reachable from root</summary>
         Black
     }
 
     /// <summary>
-    /// The BindingGraph maps objects tracked by the DataServiceContext to vertices in a 
-    /// graph used to manage the information needed for data binding. The objects tracked 
+    /// The BindingGraph maps objects tracked by the DataServiceContext to vertices in a
+    /// graph used to manage the information needed for data binding. The objects tracked
     /// by the BindingGraph are entity type objects and observable entity collections.
     /// </summary>
     internal sealed class BindingGraph
@@ -63,14 +63,14 @@ namespace Microsoft.OData.Client
         /// <returns>true if a new vertex had to be created, false if it already exists</returns>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         public bool AddDataServiceCollection(
-            object source, 
-            string sourceProperty, 
-            object collection, 
+            object source,
+            string sourceProperty,
+            object collection,
             string collectionEntitySet)
         {
             Debug.Assert(collection != null, "'collection' can not be null");
             Debug.Assert(
-                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model), 
+                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model),
                 "Argument 'collection' must be an DataServiceCollection<T> of entity type T");
 
             if (this.graph.ExistsVertex(collection))
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Client
                 collectionVertex.Parent = this.graph.LookupVertex(source);
                 collectionVertex.ParentProperty = sourceProperty;
                 this.graph.AddEdge(source, collection, sourceProperty);
-                
+
                 // Update the observer on the child collection
                 Type entityType = BindingUtils.GetCollectionEntityType(collection.GetType());
                 Debug.Assert(entityType != null, "Collection must at least be inherited from DataServiceCollection<T>");
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(entityType));
                 }
-                
+
                 typeof(BindingGraph)
                     .GetMethod("SetObserver", false /*isPublic*/, false /*isStatic*/)
                     .MakeGenericMethod(entityType)
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client
             }
 
             Debug.Assert(
-                    collectionVertex.Parent != null || collectionVertex.IsRootDataServiceCollection, 
+                    collectionVertex.Parent != null || collectionVertex.IsRootDataServiceCollection,
                     "If parent is null, then collectionVertex should be a root collection");
 
             // Register for collection notifications
@@ -122,10 +122,10 @@ namespace Microsoft.OData.Client
             foreach (var item in collectionItf)
             {
                 this.AddEntity(
-                        source, 
-                        sourceProperty, 
+                        source,
+                        sourceProperty,
                         item,
-                        collectionEntitySet, 
+                        collectionEntitySet,
                         collection);
             }
 
@@ -138,8 +138,8 @@ namespace Microsoft.OData.Client
         /// <param name="collection">Collection being added</param>
         /// <param name="collectionItemType">Type of item in the collection</param>
         public void AddPrimitiveOrComplexCollection(
-            object source, 
-            string sourceProperty, 
+            object source,
+            string sourceProperty,
             object collection,
             Type collectionItemType)
         {
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Client
                 {
                     throw new InvalidOperationException(Strings.DataBinding_NotifyCollectionChangedNotImpl(collection.GetType()));
                 }
-                
+
                 // If the collection contains complex objects, bind to all of the objects in the collection
                 if (!PrimitiveType.IsKnownNullableType(collectionItemType) && !collectionItemType.IsEnum())
                 {
@@ -198,19 +198,19 @@ namespace Microsoft.OData.Client
         /// the navigation properties. The 'source' is a previously processed item - it is the 'parent'
         /// of the target entity.
         /// The code generated EntitySetAttribute is processed by this method.
-        /// A source entity can reference the target entity directly through an entity reference navigation property, 
+        /// A source entity can reference the target entity directly through an entity reference navigation property,
         /// or indirectly through a collection navigation property.
         /// </remarks>
         public bool AddEntity(
-            object source, 
-            string sourceProperty, 
-            object target, 
-            string targetEntitySet, 
+            object source,
+            string sourceProperty,
+            object target,
+            string targetEntitySet,
             object edgeSource)
         {
             Vertex sourceVertex = this.graph.LookupVertex(edgeSource);
             Debug.Assert(sourceVertex != null, "Must have a valid edge source");
-            
+
             Vertex entityVertex = null;
             bool addedNewEntity = false;
 
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Client
                 if (entityVertex == null)
                 {
                     entityVertex = this.graph.AddVertex(target);
-                    
+
                     entityVertex.EntitySet = BindingEntityInfo.GetEntitySet(target, targetEntitySet, this.observer.Context.Model);
 
                     // Register for entity notifications, fail if the entity does not implement INotifyPropertyChanged.
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Client
                     {
                         throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(target.GetType()));
                     }
-                    
+
                     addedNewEntity = true;
                 }
 
@@ -245,9 +245,9 @@ namespace Microsoft.OData.Client
             if (!sourceVertex.IsDataServiceCollection)
             {
                 this.observer.HandleUpdateEntityReference(
-                        source, 
+                        source,
                         sourceProperty,
-                        sourceVertex.EntitySet, 
+                        sourceVertex.EntitySet,
                         target,
                         entityVertex == null ? null : entityVertex.EntitySet);
             }
@@ -255,10 +255,10 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(target != null, "Target must be non-null when adding to collections");
                 this.observer.HandleAddEntity(
-                        source, 
+                        source,
                         sourceProperty,
                         sourceVertex.Parent != null ? sourceVertex.Parent.EntitySet : null,
-                        edgeSource as ICollection, 
+                        edgeSource as ICollection,
                         target,
                         entityVertex.EntitySet);
             }
@@ -288,7 +288,7 @@ namespace Microsoft.OData.Client
 
             Debug.Assert(!vertexToRemove.IsRootDataServiceCollection, "Root collections are never removed");
 
-            // Parent will always be non-null for deletes from collections, this will include 
+            // Parent will always be non-null for deletes from collections, this will include
             // both root and child collections. For root collections, parentProperty will be null.
             Debug.Assert(parent != null, "Parent has to be present.");
 
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client
         {
             Vertex sourceVertex = this.graph.LookupVertex(source);
             Debug.Assert(sourceVertex != null, "Must be tracking the vertex for the collection");
-            
+
             foreach (Edge edge in sourceVertex.OutgoingEdges.ToList())
             {
                 this.graph.RemoveEdge(source, edge.Target.Item, null);
@@ -406,7 +406,7 @@ namespace Microsoft.OData.Client
             {
                 this.graph.ClearEdgesForVertex(this.graph.LookupVertex(entity));
             }
-            
+
             this.RemoveUnreachableVertices();
         }
 
@@ -454,13 +454,13 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(collection != null, "Argument 'collection' cannot be null.");
             Debug.Assert(this.graph.ExistsVertex(collection), "Vertex corresponding to 'collection' must exist in the graph.");
-            
+
             this.graph
                 .LookupVertex(collection)
                 .GetDataServiceCollectionInfo(
-                    out source, 
-                    out sourceProperty, 
-                    out sourceEntitySet, 
+                    out source,
+                    out sourceProperty,
+                    out sourceEntitySet,
                     out targetEntitySet);
         }
 
@@ -493,14 +493,14 @@ namespace Microsoft.OData.Client
         /// <param name="propertyName">On input this is a complex object's member property name, on output it is the name of corresponding property of the ancestor entity.</param>
         /// <param name="propertyValue">On input this is a complex object's member property value, on output it is the value of the corresponding property of the ancestor entity.</param>
         public void GetAncestorEntityForComplexProperty(
-            ref object entity, 
-            ref string propertyName, 
+            ref object entity,
+            ref string propertyName,
             ref object propertyValue)
         {
             Vertex childVertex = this.graph.LookupVertex(entity);
             Debug.Assert(childVertex != null, "Must have a vertex in the graph corresponding to the entity.");
             Debug.Assert(childVertex.IsComplex == true, "Vertex must correspond to a complex object.");
-            
+
             // The complex object that contains the property could be contained in another complex object or collection,
             // so continue to walk the graph until we find a parent that is neither of these types.
             while (childVertex.IsComplex || childVertex.IsPrimitiveOrEnumOrComplexCollection)
@@ -551,7 +551,7 @@ namespace Microsoft.OData.Client
                 throw new InvalidOperationException(Strings.DataBinding_ComplexObjectAssociatedWithMultipleEntities(target.GetType()));
             }
         }
-        
+
         /// <summary>
         /// Adds complex items to the graph from the specified collection.
         /// </summary>
@@ -572,8 +572,8 @@ namespace Microsoft.OData.Client
         /// <param name="entity">Object whose properties are to be explored</param>
         private void AddFromProperties(object entity)
         {
-            // Once the entity is attached to the graph, we need to traverse all it's properties 
-            // and add related entities and collections to this entity. 
+            // Once the entity is attached to the graph, we need to traverse all it's properties
+            // and add related entities and collections to this entity.
             foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model))
             {
                 object propertyValue = bpi.PropertyInfo.GetValue(entity);
@@ -588,7 +588,7 @@ namespace Microsoft.OData.Client
                                     bpi.PropertyInfo.PropertyName,
                                     propertyValue,
                                     null);
-                            
+
                             break;
 
                         case BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection:
@@ -598,7 +598,7 @@ namespace Microsoft.OData.Client
                                     propertyValue,
                                     bpi.PropertyInfo.PrimitiveOrComplexCollectionItemType);
                             break;
-                            
+
                         case BindingPropertyKind.BindingPropertyKindEntity:
                             this.AddEntity(
                                     entity,
@@ -606,14 +606,14 @@ namespace Microsoft.OData.Client
                                     propertyValue,
                                     null,
                                     entity);
-                            
+
                             break;
-                            
+
                         default:
                             Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindComplex, "Must be complex type if PropertyKind is not entity, DataServiceCollection, or collection.");
                             this.AddComplexObject(
-                                    entity, 
-                                    bpi.PropertyInfo.PropertyName, 
+                                    entity,
+                                    bpi.PropertyInfo.PropertyName,
                                     propertyValue);
                             break;
                     }
@@ -675,7 +675,7 @@ namespace Microsoft.OData.Client
         private void DetachNotifications(object target)
         {
             Debug.Assert(target != null, "Argument 'target' cannot be null");
-            
+
             this.DetachCollectionNotifications(target);
 
             INotifyPropertyChanged notifyPropertyChanged = target as INotifyPropertyChanged;
@@ -718,7 +718,7 @@ namespace Microsoft.OData.Client
 
             /// <summary>The root vertex for the graph, DFS traversals start from this vertex</summary>
             private Vertex root;
-            
+
             /// <summary>Constructor</summary>
             public Graph()
             {
@@ -733,10 +733,10 @@ namespace Microsoft.OData.Client
                     Debug.Assert(this.root != null, "Must have a non-null root vertex when this call is made.");
                     return this.root;
                 }
-                
+
                 set
                 {
-                    Debug.Assert(this.root == null, "Must only initialize root vertex once.");   
+                    Debug.Assert(this.root == null, "Must only initialize root vertex once.");
                     Debug.Assert(this.ExistsVertex(value.Item), "Must already have the assigned vertex in the graph.");
                     this.root = value;
                 }
@@ -877,7 +877,7 @@ namespace Microsoft.OData.Client
                     }
                 }
             }
-            
+
             /// <summary>Collects all vertices unreachable from the root collection vertex</summary>
             /// <returns>Sequence of vertices that are unreachable from the root collection vertex</returns>
             /// <remarks>
@@ -901,7 +901,7 @@ namespace Microsoft.OData.Client
                 while (q.Count != 0)
                 {
                     Vertex current = q.Dequeue();
-                    
+
                     foreach (Edge e in current.OutgoingEdges)
                     {
                         if (e.Target.Color == VertexColor.White)
@@ -923,7 +923,7 @@ namespace Microsoft.OData.Client
         {
             /// <summary>Collection of incoming edges for the vertex</summary>
             private List<Edge> incomingEdges;
-            
+
             /// <summary>Collection of outgoing edges for the vertex</summary>
             private List<Edge> outgoingEdges;
 
@@ -1052,7 +1052,7 @@ namespace Microsoft.OData.Client
                 if (!this.IsRootDataServiceCollection)
                 {
                     Debug.Assert(this.Parent != null, "Parent must be non-null for child collection");
-                    
+
                     source = this.Parent.Item;
                     Debug.Assert(source != null, "Source object must be present for child collection");
 
@@ -1084,7 +1084,7 @@ namespace Microsoft.OData.Client
                 out object source,
                 out string sourceProperty,
                 out Type collectionItemType)
-            {                
+            {
                 Debug.Assert(this.Parent != null, "Parent must be non-null for collection");
 
                 source = this.Parent.Item;
@@ -1139,6 +1139,6 @@ namespace Microsoft.OData.Client
                     Object.ReferenceEquals(this.Target, other.Target) &&
                     this.Label == other.Label;
             }
-        }    
+        }
     }
 }

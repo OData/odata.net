@@ -41,7 +41,7 @@ namespace Microsoft.OData.Client
         /// The URI for this action.
         /// </summary>
         public Uri RequestUri { get; private set; }
-        
+
 #if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the action and returns the operation response.

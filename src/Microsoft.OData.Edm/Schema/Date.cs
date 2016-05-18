@@ -245,7 +245,7 @@ namespace Microsoft.OData.Edm
         /// the same as, or later than the object if it is a Date.
         /// </summary>
         /// <param name="obj">The object to compare to the current instance</param>
-        /// <returns>Value Description Less than zero This instance is earlier than value. 
+        /// <returns>Value Description Less than zero This instance is earlier than value.
         /// Zero This instance is the same as value.
         /// Greater than zero This instance is later than value.</returns>
         public int CompareTo(object obj)
@@ -267,7 +267,7 @@ namespace Microsoft.OData.Edm
         /// the same as, or later than the specified Date value.
         /// </summary>
         /// <param name="other">The object to compare to the current instance</param>
-        /// <returns>Value Description Less than zero This instance is earlier than value. 
+        /// <returns>Value Description Less than zero This instance is earlier than value.
         /// Zero This instance is the same as value.
         /// Greater than zero This instance is later than value.</returns>
         public int CompareTo(Date other)
@@ -288,7 +288,7 @@ namespace Microsoft.OData.Edm
 
         /// <summary>
         /// Compares the value of this instance to a specified object value
-        /// and returns an bool that indicates whether the specified object is <see cref="Microsoft.OData.Edm.Date"/> 
+        /// and returns an bool that indicates whether the specified object is <see cref="Microsoft.OData.Edm.Date"/>
         /// and this instance is same as the specified <see cref="Microsoft.OData.Edm.Date"/> value.
         /// </summary>
         /// <param name="obj">The object to compare to the current instance</param>

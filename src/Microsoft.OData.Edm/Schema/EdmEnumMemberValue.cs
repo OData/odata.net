@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the value of enum member
         /// </summary>
-        public long Value 
+        public long Value
         {
             get
             {

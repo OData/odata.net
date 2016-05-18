@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>
-    /// Class which wraps the dataservicecontext and exposes information required for 
+    /// Class which wraps the dataservicecontext and exposes information required for
     /// generating request to send to the server
     /// </summary>
     internal class RequestInfo
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Returns an instance of the IODataRequestMessage 
+        /// Returns an instance of the IODataRequestMessage
         /// </summary>
         /// <param name="requestMessageArgs">Arguments for creating the request message.</param>
         /// <returns>an instance of the IODataRequestMessage </returns>
@@ -420,7 +420,7 @@ namespace Microsoft.OData.Client
             // We are implementing the PostTunneling logic here. The reason for doing this is
             // 1> In this public class, the Method property returns the actual method (PUT, PATCH, DELETE),
             //    and not the verb that goes in the wire. So this class needs to know about
-            //    actual verb since it will be using this verb to send over http.     
+            //    actual verb since it will be using this verb to send over http.
             if (this.UsePostTunneling)
             {
                 bool setXHttpMethodHeader = false;

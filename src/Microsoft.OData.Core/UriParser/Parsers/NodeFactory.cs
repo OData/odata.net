@@ -103,7 +103,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Creates an AnyNode or an AllNode from the given 
+        /// Creates an AnyNode or an AllNode from the given
         /// </summary>
         /// <param name="state">State of binding.</param>
         /// <param name="parent">Parent node to the lambda.</param>
@@ -113,8 +113,8 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new LambdaNode bound to metadata.</returns>
         internal static LambdaNode CreateLambdaNode(
             BindingState state,
-            CollectionNode parent,                                           
-            SingleValueNode lambdaExpression, 
+            CollectionNode parent,
+            SingleValueNode lambdaExpression,
             RangeVariable newRangeVariable,
             QueryTokenKind queryTokenKind)
         {
@@ -136,7 +136,7 @@ namespace Microsoft.OData.UriParser
                         Source = parent,
                     };
             }
-            
+
             return lambdaNode;
         }
     }

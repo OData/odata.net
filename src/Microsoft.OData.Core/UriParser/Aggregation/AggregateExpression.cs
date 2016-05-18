@@ -46,7 +46,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// </summary>
         public SingleValueNode Expression
         {
-            get 
+            get
             {
                 return expression;
             }

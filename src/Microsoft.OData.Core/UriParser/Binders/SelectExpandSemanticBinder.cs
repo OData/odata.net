@@ -23,10 +23,10 @@ namespace Microsoft.OData.UriParser
         /// <param name="configuration">The configuration to use for parsing.</param>
         /// <returns>A select expand clause bound to metadata.</returns>
         public SelectExpandClause Bind(
-            IEdmStructuredType elementType, 
+            IEdmStructuredType elementType,
             IEdmNavigationSource navigationSource,
-            ExpandToken expandToken, 
-            SelectToken selectToken, 
+            ExpandToken expandToken,
+            SelectToken selectToken,
             ODataUriParserConfiguration configuration)
         {
             ExpandToken unifiedSelectExpandToken = SelectExpandSyntacticUnifier.Combine(expandToken, selectToken);

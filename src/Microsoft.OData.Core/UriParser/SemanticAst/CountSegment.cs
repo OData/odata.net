@@ -27,7 +27,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Build a segment representing $count
         /// </summary>
-        private CountSegment() 
+        private CountSegment()
         {
             this.Identifier = UriQueryConstants.CountSegment;
             this.SingleResult = true;

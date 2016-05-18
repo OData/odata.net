@@ -65,8 +65,8 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Read a metadata document. 
-        /// This method reads the metadata document from the input and returns 
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>

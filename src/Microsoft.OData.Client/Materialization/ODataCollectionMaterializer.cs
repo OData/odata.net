@@ -59,13 +59,13 @@ namespace Microsoft.OData.Client.Materialization
             Type underlyingExpectedType = Nullable.GetUnderlyingType(this.ExpectedType) ?? this.ExpectedType;
             bool isClrCollection = WebUtil.IsCLRTypeCollection(underlyingExpectedType, this.MaterializerContext.Model);
             Debug.Assert(isClrCollection || (SingleResult.HasValue && !SingleResult.Value), "expected type must be collection or single result must be false");
-            
-            // We are here for two cases: 
+
+            // We are here for two cases:
             // (1) Something like Execute<ICollection<T>>, in which case the underlyingExpectedType is ICollection<T>
             // (2) Execute<T> with the bool singleValue = false, in which case underlyingExpectedType is T
             Type collectionItemType = underlyingExpectedType;
             Type collectionICollectionType = ClientTypeUtil.GetImplementationType(underlyingExpectedType, typeof(ICollection<>));
-            
+
             if (collectionICollectionType != null)
             {
                 // Case 1 : Something like Execute<ICollection<T>>, in which case the underlyingExpectedType is ICollection<T>
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client.Materialization
             Type clrCollectionType = WebUtil.GetBackingTypeForCollectionProperty(collectionICollectionType);
             object collectionInstance = this.CollectionValueMaterializationPolicy.CreateCollectionInstance((IEdmCollectionTypeReference)expectedClientType, clrCollectionType);
 
-            // Enumerator over our collection reader was created, then ApplyDataCollections was refactored to 
+            // Enumerator over our collection reader was created, then ApplyDataCollections was refactored to
             // take an enumerable instead of a ODataCollectionValue. Enumerator is being used as a bridge
             ODataCollectionReader collectionReader = messageReader.CreateODataCollectionReader();
             NonEntityItemsEnumerable collectionEnumerable = new NonEntityItemsEnumerable(collectionReader);

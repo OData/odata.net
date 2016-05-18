@@ -32,8 +32,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="complexValue">The OData complex value.</param>
         internal void MaterializeComplexTypeProperty(Type propertyType, ODataComplexValue complexValue)
         {
-            //// TODO: we decide whether the type is primitive or complex only based on the payload. If there is a mismatch we throw a random exception. 
-            //// We should have a similar check to the one we have for non-projection codepath here. 
+            //// TODO: we decide whether the type is primitive or complex only based on the payload. If there is a mismatch we throw a random exception.
+            //// We should have a similar check to the one we have for non-projection codepath here.
             if (complexValue == null || complexValue.HasMaterializedValue())
             {
                 return;
@@ -41,10 +41,10 @@ namespace Microsoft.OData.Client.Materialization
 
             ClientTypeAnnotation complexType = null;
 
-            // TODO: We should call type resolver for complex types for projections if they are not instantiated by the user directly 
-            // with "new" operator. At the moment we don't do it at all. Let's be consistent for Collections and call type 
+            // TODO: We should call type resolver for complex types for projections if they are not instantiated by the user directly
+            // with "new" operator. At the moment we don't do it at all. Let's be consistent for Collections and call type
             // resolver as we do in DirectMaterializationPlan (even though this is only for negative cases for Collections as property.IsCollection
-            // must have been false otherwise we would have not end up here). 
+            // must have been false otherwise we would have not end up here).
             // This bug is about investigating when we actually do call type resolver and fix it so that we call it when needed and don't
             // call it when we should not (i.e. it should not be called for types created with "new" operator").
             if (!string.IsNullOrEmpty(complexValue.TypeName))

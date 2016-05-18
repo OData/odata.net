@@ -46,7 +46,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
-            
+
             Uri associationLinkUrl = duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(nestedResourceInfo, isExpanded, isCollection);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.

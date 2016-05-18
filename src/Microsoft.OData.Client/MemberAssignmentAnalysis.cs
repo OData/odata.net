@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     #endregion Namespaces
 
     /// <summary>
-    /// Use this class to analyze a member assignment and figure out the 
+    /// Use this class to analyze a member assignment and figure out the
     /// target path for a member-init on an entity type.
     /// </summary>
     /// <remarks>
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Client
         /// <param name="c">Expression to visit.</param>
         /// <returns>The same expression.</returns>
         /// <remarks>
-        /// There are three expressions of interest: the Test, the IfTrue 
+        /// There are three expressions of interest: the Test, the IfTrue
         /// branch, and the IfFalse branch. If this is a NullCheck expression,
         /// then we can traverse the non-null branch, which will be the
         /// correct path of the resulting value.

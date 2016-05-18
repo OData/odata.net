@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input edmType is null.</exception>
         /// <exception cref="ODataException">Throws if the input edmType is not relaed to the type of elements in the input entitySet.</exception>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        public TypeSegment(IEdmType edmType, IEdmNavigationSource navigationSource) 
+        public TypeSegment(IEdmType edmType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(edmType, "type");
 

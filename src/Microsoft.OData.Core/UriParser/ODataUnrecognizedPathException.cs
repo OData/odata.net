@@ -28,9 +28,9 @@ namespace Microsoft.OData.UriParser
         /// Initializes a new instance of the ODataUnrecognizedPathException class.
         /// </summary>
         /// <remarks>
-        /// The Message property is initialized to a system-supplied message 
-        /// that describes the error. This message takes into account the 
-        /// current system culture. 
+        /// The Message property is initialized to a system-supplied message
+        /// that describes the error. This message takes into account the
+        /// current system culture.
         /// </remarks>
         public ODataUnrecognizedPathException()
             : this((string)Strings.ODataUriParserException_GeneralError, (Exception)null)
@@ -55,7 +55,7 @@ namespace Microsoft.OData.UriParser
             : base(message, innerException)
         {
         }
-        
+
 #if ORCAS
         /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataUnrecognizedPathException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
         /// <param name="info"> A SerializationInfo containing the information required to serialize the new ODataUnrecognizedPathException. </param>
@@ -67,7 +67,7 @@ namespace Microsoft.OData.UriParser
         {
         }
 #endif
-        
+
         /// <summary>
         /// Segments that have been successfully parsed when this exception was thrown.
         /// </summary>

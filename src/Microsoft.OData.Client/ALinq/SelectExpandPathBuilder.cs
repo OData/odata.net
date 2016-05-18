@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
         public void StartNewPath()
         {
             Debug.Assert(this.ParamExpressionInScope != null, "this.ParamExpressionInScope != null -- should not be starting new path with no lambda parameter in scope.");
-            
+
             PathSegmentToken basePath = basePaths[this.ParamExpressionInScope];
             PathSegmentToken newExpandPathToAdd;
             if (basePath != null)
@@ -180,8 +180,8 @@ namespace Microsoft.OData.Client
 
             bool propertyTypeisEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(pi.PropertyType);
 
-            string convertedSourceTypeName = (convertedSourceType == null) ? 
-                null : 
+            string convertedSourceTypeName = (convertedSourceType == null) ?
+                null :
                 UriHelper.GetEntityTypeNameForUriAndValidateMaxProtocolVersion(convertedSourceType, context, ref this.uriVersion);
 
             string propertyServerDefinedName = ClientTypeUtil.GetServerDefinedName(pi);
@@ -189,10 +189,10 @@ namespace Microsoft.OData.Client
             string propertyName = convertedSourceType != null ?
                 String.Join(UriHelper.FORWARDSLASH.ToString(), new string[] { convertedSourceTypeName, propertyServerDefinedName }) :
                 propertyServerDefinedName;
-            
+
             if (propertyTypeisEntityType)
             {
-                // an entity, so need to append to expand path only              
+                // an entity, so need to append to expand path only
                 AppendToExpandPath(propertyName, false);
             }
             else
@@ -205,7 +205,7 @@ namespace Microsoft.OData.Client
                 // if 1) Then we just add it to the projection path
                 // if 2) then we add it to the expand path instead.
 
-                // we decide that based on whether this is the first property we're adding to 
+                // we decide that based on whether this is the first property we're adding to
                 // the path, and whether the base path we're starting from is empty.
                 if (firstSegmentInNewPath && basePathIsEmpty)
                 {

@@ -117,7 +117,7 @@ namespace Microsoft.OData.Evaluation
         {
             return nonComputedProperties == null ? null : nonComputedProperties.Where(p => !(p.ODataValue is ODataStreamReferenceValue));
         }
-        
+
         /// <summary>
         /// Gets the list of computed and non-computed actions for the entity.
         /// </summary>
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the edit link of a stream value.
         /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for; 
+        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for;
         /// or null for the default media resource.</param>
         /// <returns>
         /// The absolute URI of the edit link for the specified stream property or the default media resource.
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the read link of a stream value.
         /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the read link is computed for; 
+        /// <param name="streamPropertyName">The name of the stream property the read link is computed for;
         /// or null for the default media resource.</param>
         /// <returns>
         /// The absolute URI of the read link for the specified stream property or the default media resource.

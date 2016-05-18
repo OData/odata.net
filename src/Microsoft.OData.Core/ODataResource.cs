@@ -52,7 +52,7 @@ namespace Microsoft.OData
 
         /// <summary>The resource properties provided by the user or seen on the wire (never computed).</summary>
         private IEnumerable<ODataProperty> properties;
-        
+
         /// <summary>The resource actions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataAction> actions = new List<ODataAction>();
 

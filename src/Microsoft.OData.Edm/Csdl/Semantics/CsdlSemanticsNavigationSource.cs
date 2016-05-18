@@ -125,7 +125,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEdmNavigationPropertyBinding CreateSemanticMappingForBinding(CsdlNavigationPropertyBinding binding)
         {
             IEdmNavigationProperty navigationProperty = this.ResolveNavigationPropertyPathForBinding(binding);
-            
+
             IEdmNavigationSource targetNavigationSource = this.Container.FindEntitySetExtended(binding.Target);
             if (targetNavigationSource == null)
             {

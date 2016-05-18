@@ -134,7 +134,7 @@ namespace Microsoft.OData.Evaluation
                     }
 
                     string metadataReferencePropertyName = ODataConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetMetadataReferenceName(this.metadataContext.Model, bindableOperation);
-                    
+
                     bool isAction;
                     ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
                     if (bindableOperation.Parameters.Any() && this.resourceMetadataContext.ActualResourceTypeName != bindableOperation.Parameters.First().Type.FullName())

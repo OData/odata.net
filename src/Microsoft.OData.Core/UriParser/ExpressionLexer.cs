@@ -34,8 +34,8 @@ namespace Microsoft.OData.UriParser
     /// DateTimeOffset  dddd-dd-dd[T|' ']dd:mm[ss[.fffffff]]-dd:mm
     /// Duration            time"'"dd:mm[ss[.fffffff]]"'"
     /// Binary          (binary|X)'digit*'
-    /// GUID            8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
-    /// 
+    /// GUID            8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
+    ///
     /// Note: ABNF v4.0 actually has forbidden numeric string's trailing L,M,F,D though we allow them to be optional
     /// http://docs.oasis-open.org/odata/odata/v4.0/cs01/abnf/odata-abnf-construction-rules.txt
     /// decimalValue = [SIGN] 1*DIGIT ["." 1*DIGIT]
@@ -66,13 +66,13 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// For an identifier, EMD supports chars that match the regex  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]
-        /// IsLetterOrDigit covers Ll, Lu, Lt, Lo, Lm, Nd, this set covers the rest 
+        /// IsLetterOrDigit covers Ll, Lu, Lt, Lo, Lm, Nd, this set covers the rest
         /// </summary>
         private static readonly HashSet<UnicodeCategory> AdditionalUnicodeCategoriesForIdentifier = new HashSet<UnicodeCategory>(new UnicodeCategoryEqualityComparer())
         {
             UnicodeCategory.LetterNumber,
             UnicodeCategory.NonSpacingMark,
-            UnicodeCategory.SpacingCombiningMark, 
+            UnicodeCategory.SpacingCombiningMark,
             UnicodeCategory.ConnectorPunctuation, // covers "_"
             UnicodeCategory.Format
         };
@@ -201,8 +201,8 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Is the current char a valid non-starting char for an identifier.
-        /// Valid non-starting chars for identifier include all that are supported 
-        /// by EDM  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]. 
+        /// Valid non-starting chars for identifier include all that are supported
+        /// by EDM  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}].
         /// This list includes '_', which is ConnectorPunctuation (Pc)
         /// </summary>
         private bool IsValidNonStartingCharForIdentifier
@@ -255,8 +255,8 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Starting from an identifier, reads a sequence of dots and 
-        /// identifiers, and returns the text for it, with whitespace 
+        /// Starting from an identifier, reads a sequence of dots and
+        /// identifiers, and returns the text for it, with whitespace
         /// stripped.
         /// </summary>
         /// <param name="acceptStar">do we allow a star in this identifier</param>
@@ -441,7 +441,7 @@ namespace Microsoft.OData.UriParser
             var expressionText = this.Text.Substring(startPosition, this.textPos - startPosition);
 
             //// TODO: Consider introducing a token type and setting up the current token instead of returning string.
-            //// We've done weird stuff, and the state of hte lexer is weird now. All will be well once NextToken() is called, 
+            //// We've done weird stuff, and the state of hte lexer is weird now. All will be well once NextToken() is called,
             //// but until then CurrentToken is stale and misleading.
 
             return expressionText;
@@ -498,7 +498,7 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        /// <summary>Reads the next token, skipping whitespace as necessary.</summary> 
+        /// <summary>Reads the next token, skipping whitespace as necessary.</summary>
         /// <param name="error">Error that occurred while trying to process the next token.</param>
         /// <returns>The next token, which may be 'bad' if an error occurs.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "This parser method is all about the switch statement and would be harder to maintain if it were broken up.")]
@@ -538,7 +538,7 @@ namespace Microsoft.OData.UriParser
                             break;
                         }
 
-                        // If it looked like a numeric but wasn't (because it was a binary 0x... value for example), 
+                        // If it looked like a numeric but wasn't (because it was a binary 0x... value for example),
                         // we'll rewind and fall through to a simple '-' token.
                         this.SetTextPos(tokenPos);
                     }
@@ -630,7 +630,7 @@ namespace Microsoft.OData.UriParser
                         this.ParseIdentifier();
 
                         // Guids will have '-' in them
-                        // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
+                        // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
                         if (this.ch == '-'
                             && this.TryParseGuid(tokenPos))
                         {
@@ -891,7 +891,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // Guids will have alpha-numeric characters along with '-', so if a letter is encountered
-                // try to see if this is Guid or not. 
+                // try to see if this is Guid or not.
                 if (this.ch.HasValue && Char.IsLetter(this.ch.Value))
                 {
                     if (this.TryParseGuid(tokenPos))
@@ -1065,11 +1065,11 @@ namespace Microsoft.OData.UriParser
         /// <returns>A more accurate ExpressionTokenKind</returns>
         private static ExpressionTokenKind MakeBestGuessOnNoSuffixStr(string numericStr, ExpressionTokenKind guessedKind)
         {
-            // no suffix, so 
+            // no suffix, so
             // (1) make a best guess (note: later we support promoting each to later one: int32->int64->single->double->decimal).
             // look at value:       "2147483647" may be Int32/long, "2147483649" must be long.
             // look at precision:   "3258.67876576549" may be sinle/double/decimal, "3258.678765765489753678965390" must be decimal.
-            // (2) then let MetadataUtilsCommon.CanConvertPrimitiveTypeTo() method does further promotion when knowing expected sematics type. 
+            // (2) then let MetadataUtilsCommon.CanConvertPrimitiveTypeTo() method does further promotion when knowing expected sematics type.
             int tmpInt = 0;
             long tmpLong = 0;
             float tmpFloat = 0;
@@ -1204,7 +1204,7 @@ namespace Microsoft.OData.UriParser
         #region Private classes
         /// <summary>This class implements IEqualityComparer for UnicodeCategory</summary>
         /// <remarks>
-        /// Using this class rather than EqualityComparer&lt;T&gt;.Default 
+        /// Using this class rather than EqualityComparer&lt;T&gt;.Default
         /// saves from JIT'ing it in each AppDomain.
         /// </remarks>
         private sealed class UnicodeCategoryEqualityComparer : IEqualityComparer<UnicodeCategory>

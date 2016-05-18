@@ -100,7 +100,7 @@ namespace Microsoft.OData
 
             return priority;
         }
-        
+
         /// <summary>
         /// Creates a pattern instance to determine whether an annotation name matches the pattern.
         /// </summary>
@@ -140,7 +140,7 @@ namespace Microsoft.OData
         /// <param name="annotationName">Annotation name in question.</param>
         /// <returns>Returns true if the given annotation name matches the pattern, false otherwise.</returns>
         internal abstract bool Matches(string annotationName);
-        
+
         /// <summary>
         /// Compares the priority of <paramref name="pattern1"/> with <paramref name="pattern2"/>.
         /// </summary>
@@ -171,7 +171,7 @@ namespace Microsoft.OData
             {
                 return 0;
             }
-            
+
             // WildCard is the least specific pattern and thus has the lowest priority.
             if (pattern1 == WildCard)
             {
@@ -195,7 +195,7 @@ namespace Microsoft.OData
             {
                 return -1;
             }
-            
+
             if (pattern2.StartsWith(pattern1, StringComparison.Ordinal))
             {
                 return 1;

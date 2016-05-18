@@ -365,7 +365,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="type">The possibly null type reference.</param>
         /// <param name="primitiveKindFromValue">The primitive type kind to ensure.</param>
-        /// <returns>An <see cref="IEdmPrimitiveTypeReference"/> instance created for the <paramref name="primitiveKindFromValue"/> 
+        /// <returns>An <see cref="IEdmPrimitiveTypeReference"/> instance created for the <paramref name="primitiveKindFromValue"/>
         /// if <paramref name="type"/> is null; if <paramref name="type"/> is not null, validates it and then returns it.</returns>
         private static IEdmPrimitiveTypeReference EnsurePrimitiveType(IEdmPrimitiveTypeReference type, EdmPrimitiveTypeKind primitiveKindFromValue)
         {

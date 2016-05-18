@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    
+
     /// <summary>
     /// WellKnownText Writer
     /// </summary>
@@ -217,7 +217,7 @@ namespace Microsoft.Spatial
             this.shapeWritten = default(bool);
             this.coordinateSystemWritten = default(bool);
 
-            // we are unable to reset the text writer, we will just 
+            // we are unable to reset the text writer, we will just
             // noop and start writing fresh
             ////this.writer.
         }

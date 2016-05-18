@@ -112,7 +112,7 @@ namespace Microsoft.OData
 
         /// <summary>Media type for raw content (except binary).</summary>
         internal const string MimeTextPlain = MimeTextType + Separator + MimePlainSubType;
-        
+
         /// <summary>Media type for javascript content.</summary>
         internal const string TextJavaScript = MimeTextType + Separator + MimeJavaScriptType;
 

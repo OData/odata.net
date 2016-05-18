@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// This class binds parameter alias by :
-    /// (1) parse and bind the alias value's expression into SingleValueNode, then get its type. 
+    /// (1) parse and bind the alias value's expression into SingleValueNode, then get its type.
     /// (2) asign SingleValueNode's type to alias' ParameterAliasNode.
     /// </summary>
     internal sealed class ParameterAliasBinder
@@ -82,10 +82,10 @@ namespace Microsoft.OData.UriParser
             // TODO: change Settings.FilterLimit to ParameterAliasValueLimit
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(bindingState.Configuration.Settings.FilterLimit);
             QueryToken aliasValueToken = expressionParser.ParseExpressionText(aliasValueExpression);
-            
+
             // Special logic to handle parameter alias token.
             aliasValueToken = ParseComplexOrCollectionAlias(aliasValueToken, parameterType, bindingState.Model);
-            
+
             // Get the semantic node, and check for SingleValueNode
             QueryNode aliasValueNode = this.bindMethod(aliasValueToken);
             SingleValueNode result = aliasValueNode as SingleValueNode;

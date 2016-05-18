@@ -251,7 +251,7 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(this.State != WriterState.Start && this.State != WriterState.Completed, "IsTopLevel should only be called while writing the payload.");
 
-                // there is the root scope at the top (when the writer has not started or has completed) 
+                // there is the root scope at the top (when the writer has not started or has completed)
                 // and then the top-level scope (the top-level resource/resource set item) as the second scope on the stack
                 return this.scopes.Count == 2;
             }
@@ -1435,7 +1435,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Leave the current writer scope and return to the previous scope. 
+        /// Leave the current writer scope and return to the previous scope.
         /// When reaching the top-level replace the 'Started' scope with a 'Completed' scope.
         /// </summary>
         /// <remarks>Note that this method is never called once an error has been written or a fatal exception has been thrown.</remarks>

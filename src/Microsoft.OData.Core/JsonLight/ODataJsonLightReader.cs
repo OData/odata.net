@@ -113,7 +113,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
         /// Post-Condition: when reading a resource set:    the reader is positioned on the first item in the resource set or the end array node of an empty resource set
-        ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object 
+        ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object
         ///                                         node if there are no navigation links.
         /// </remarks>
         protected override bool ReadAtStartImplementation()
@@ -143,7 +143,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
         /// Post-Condition: when reading a resource set:    the reader is positioned on the first item in the resource set or the end array node of an empty resource set
-        ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object 
+        ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object
         ///                                         node if there are no navigation links.
         /// </remarks>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -175,7 +175,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  Any start node            - The first resource in the resource set
         ///                 JsonNodeType.EndArray     - The end of the resource set
-        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or 
+        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
         protected override bool ReadAtResourceSetStartImplementation()
@@ -191,7 +191,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  Any start node            - The first resource in the resource set
         ///                 JsonNodeType.EndArray     - The end of the resource set
-        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or 
+        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -447,7 +447,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
         /// Post-Condition: when reading a resource set:    the reader is positioned on the first item in the resource set or the end array node of an empty resource set
-        ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object 
+        ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object
         ///                                         node if there are no navigation links.
         /// </remarks>
         private bool ReadAtStartImplementationSynchronously(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
@@ -491,7 +491,7 @@ namespace Microsoft.OData.JsonLight
             {
                 ODataResourceSet resourceSet = new ODataResourceSet();
 
-                // Store the duplicate property names checker to use it later when reading the resource set end 
+                // Store the duplicate property names checker to use it later when reading the resource set end
                 // (since we allow resource set-related annotations to appear after the resource set's data).
                 this.topLevelScope.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
 
@@ -518,7 +518,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  Any start node            - The first resource in the resource set
         ///                 JsonNodeType.EndArray     - The end of the resource set
-        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or 
+        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
         private bool ReadAtResourceSetStartImplementationSynchronously()
@@ -1038,7 +1038,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the start of a resource and sets up the reader state correctly
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource; 
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <remarks>
@@ -1179,7 +1179,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Starts the resource, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource; 
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         private void StartResource(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
@@ -1519,7 +1519,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="nestedResourceInfo">The nested resource info attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedStructuredType">The expected type for the scope.</param>
-            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param> 
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedStructuredType"/> has the following meaning
             ///   it's the expected base type the entries in the expanded link (either the single resource
             ///   or entries in the expanded resource set).

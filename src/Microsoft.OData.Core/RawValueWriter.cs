@@ -25,7 +25,7 @@ namespace Microsoft.OData
         private readonly ODataMessageWriterSettings settings;
 
         /// <summary>
-        /// Underlying stream. 
+        /// Underlying stream.
         /// </summary>
         private readonly Stream stream;
 
@@ -131,7 +131,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Flushes the RawValueWriter. 
+        /// Flushes the RawValueWriter.
         /// The call gets pushed to the TextWriter (if there is one). In production code, this is StreamWriter.Flush, which turns into Stream.Flush.
         /// In the synchronous case the underlying stream is the message stream itself, which will then Flush as well.
         /// In the async case the underlying stream is the async buffered stream, which ignores Flush call.
@@ -152,7 +152,7 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         private void InitializeTextWriter()
         {
-            // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose 
+            // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose
             // the writer without disposing the underlying message stream.
             Stream nonDisposingStream;
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)

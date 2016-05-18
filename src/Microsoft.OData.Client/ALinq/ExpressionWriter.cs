@@ -253,7 +253,7 @@ namespace Microsoft.OData.Client
                 this.builder.Append(methodName);
                 this.builder.Append(UriHelper.LEFTPAREN);
 
-                // There is a single function, 'contains', which reorders its argument with 
+                // There is a single function, 'contains', which reorders its argument with
                 // respect to the CLR method. Thus handling it as a special case rather than
                 // using a more general argument reordering mechanism.
                 if (methodName == "contains")
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Client
                     }
                     else if (sequenceMethod == SequenceMethod.OfType && this.parent != null)
                     {
-                        // check to see if this is an OfType filter for Any or All. 
+                        // check to see if this is an OfType filter for Any or All.
                         // e.g. ctx.CreateQuery<Movie>("Movies").Where(m=>m.Actors.OfType<MegaStar>().Any())
                         //      which translates to /Movies()?$filter=Actors/MegaStar/any()
                         MethodCallExpression mce = this.parent as MethodCallExpression;
@@ -488,10 +488,10 @@ namespace Microsoft.OData.Client
                 return c;
             }
 
-            // DEVNOTE: 
-            // Rather than forcing every other codepath to have the 'Try...' pattern for formatting, 
+            // DEVNOTE:
+            // Rather than forcing every other codepath to have the 'Try...' pattern for formatting,
             // we catch the InvalidOperationException here to change the exception type.
-            // This is exceedingly rare, and not a scenario where performance is meaningful, so the 
+            // This is exceedingly rare, and not a scenario where performance is meaningful, so the
             // reduced complexity in all other call sites is worth the extra logic here.
             string result;
             BinaryExpression b = this.parent as BinaryExpression;
@@ -526,7 +526,7 @@ namespace Microsoft.OData.Client
                     throw new NotSupportedException(Strings.ALinq_CouldNotConvert(c.Value));
                 }
             }
-            
+
             Debug.Assert(result != null, "result != null");
             this.builder.Append(result);
             return c;
@@ -827,7 +827,7 @@ namespace Microsoft.OData.Client
             {
                 bool requiresParens = !parentType.HasValue ||
                     !AreExpressionTypesCollapsible(e.NodeType, parentType.Value, childDirection.Value);
-                
+
                 if (requiresParens)
                 {
                     this.builder.Append(UriHelper.LEFTPAREN);

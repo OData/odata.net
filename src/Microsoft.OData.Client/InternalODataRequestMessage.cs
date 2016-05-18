@@ -33,7 +33,7 @@ namespace Microsoft.OData.Client
         private readonly bool allowGetStream;
 
         /// <summary>
-        /// request stream 
+        /// request stream
         /// </summary>
         private Stream cachedRequestStream;
 
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
-        ///  Internet resource. 
+        ///  Internet resource.
         /// </summary>
         public override bool SendChunked
         {

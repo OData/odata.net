@@ -58,7 +58,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.ValidateToken(ExpressionTokenKind.Identifier);
 
             // An open paren here would indicate calling a method in regular C# syntax.
-            // TODO: Make this more generalized to work with any kind of function. 
+            // TODO: Make this more generalized to work with any kind of function.
             bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
             if (identifierIsFunction)
             {
@@ -68,9 +68,9 @@ namespace Microsoft.OData.UriParser
             if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
                 string fullIdentifier = this.lexer.ReadDottedIdentifier(false);
-                return new DottedIdentifierToken(fullIdentifier, parent); 
+                return new DottedIdentifierToken(fullIdentifier, parent);
             }
-            
+
             return this.ParseMemberAccess(parent);
         }
 

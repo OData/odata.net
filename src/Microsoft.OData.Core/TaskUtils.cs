@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
     using ExceptionUtils = CommonUtil;
 #endif
     #endregion Namespaces
-    
+
     /// <summary>
     /// Class with utility methods for working with and implementing Task based APIs
     /// </summary>
@@ -40,8 +40,8 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                // Note that in case of two threads competing here we would create two completed tasks, but only one 
-                // will be stored in the static variable. In any case, they are identical for all other purposes, 
+                // Note that in case of two threads competing here we would create two completed tasks, but only one
+                // will be stored in the static variable. In any case, they are identical for all other purposes,
                 // so it doesn't matter which one wins
                 if (completedTask == null)
                 {
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Client
             {
                 try
                 {
-                    // If the previous task completed with any exceptions, bail 
+                    // If the previous task completed with any exceptions, bail
                     if (antecedent != null && antecedent.IsFaulted)
                     {
                         trc.TrySetException(antecedent.Exception);

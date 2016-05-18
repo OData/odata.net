@@ -283,14 +283,14 @@ namespace Microsoft.OData.Client
         /// (particularly those in the Socket class) will avoid the cost of capturing and transferring the ExecutionContext
         /// to the callback thread by checking CompletedSynchronously, and calling the callback from within BeginXxx instead of
         /// on the completion port thread if the native winsock call completes quickly.
-        /// 
+        ///
         /// For other operations however (notably those in HttpWebRequest), they use the same underlying IAsyncResult implementation,
         /// but do NOT check CompletedSynchronously before returning from BeginXxx.  That means that CompletedSynchronously will
         /// be false if and only if you checked it from the thread which called BeginXxx BEFORE the operation completed.  It will
         /// then continue to be false even after IsCompleted becomes true.
-        /// 
+        ///
         /// Note that CompletedSynchronously == true does not guarantee anything about how much of your callback has executed.
-        /// 
+        ///
         /// The usual pattern for handling synchronous completion is that both the caller and callback should check CompletedSynchronously.
         /// If its true, the callback should do nothing and the caller should call EndRead and process the result.
         /// This guarantees that the caller and callback are not accessing the stream or buffer concurrently without the need
@@ -368,7 +368,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// If the background thread gets a ThreadAbort, the userCallback will never be invoked.
         /// This is why it's generally important to never wait forever, but to have more specific
-        /// time limit.  Also then cancel the operation, to make sure its stopped, to avoid 
+        /// time limit.  Also then cancel the operation, to make sure its stopped, to avoid
         /// multi-threading if your wait time limit was just too short.
         /// </remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
@@ -553,7 +553,7 @@ namespace Microsoft.OData.Client
                 if (contentStream.IsKnownMemoryStream)
                 {
                     MemoryStream memoryStream = contentStream.Stream as MemoryStream;
-#if PORTABLELIB                    
+#if PORTABLELIB
                     byte[] buffer = memoryStream.ToArray();
 #else
                     byte[] buffer = memoryStream.GetBuffer();
@@ -801,7 +801,7 @@ namespace Microsoft.OData.Client
                                 asyncResult = BaseAsyncResult.InvokeTask(contentStream.Stream.ReadAsync, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
 #else
                                 asyncResult = BaseAsyncResult.InvokeAsync(contentStream.Stream.BeginRead, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
-#endif                                
+#endif
                                 pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
                             }
 
@@ -898,7 +898,7 @@ namespace Microsoft.OData.Client
                     asyncResult = BaseAsyncResult.InvokeTask(contentStream.Stream.ReadAsync, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
 #else
                     asyncResult = BaseAsyncResult.InvokeAsync(contentStream.Stream.BeginRead, pereq.RequestContentBuffer, 0, pereq.RequestContentBuffer.Length, this.AsyncRequestContentEndRead, asyncStateBag);
-#endif                    
+#endif
                     pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
                 }
             }
@@ -1138,7 +1138,7 @@ namespace Microsoft.OData.Client
                             }
                             catch (Exception e)
                             {
-                                // if the request is aborted, then the connect stream 
+                                // if the request is aborted, then the connect stream
                                 // cannot be disposed - since not all bytes are written to it yet
                                 // In this case, we eat the exception
                                 // Otherwise, keep throwing, always throw if the exception is not catchable.

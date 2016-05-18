@@ -78,7 +78,7 @@ namespace Microsoft.Spatial
             private readonly string fullGlobeNamespace;
 
             #endregion
-            
+
             /// <summary>
             /// Output pipeline
             /// </summary>
@@ -225,7 +225,7 @@ namespace Microsoft.Spatial
                                 this.reader.MoveToElement();
                                 throw new FormatException(Strings.GmlReader_InvalidAttribute(attributeName, this.reader.Name));
                         }
-                    } 
+                    }
                     while (this.reader.MoveToNextAttribute());
 
                     this.reader.MoveToElement();
@@ -264,8 +264,8 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Creates a shape and parses the Polygon element. 
-            /// </summary>    
+            /// Creates a shape and parses the Polygon element.
+            /// </summary>
             private void ParseGmlPolygonShape()
             {
                 // GmlPolygonElement :=
@@ -302,7 +302,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Creates a shape and parses the MultiPoint element. 
+            /// Creates a shape and parses the MultiPoint element.
             /// </summary>
             private void ParseGmlMultiPointShape()
             {
@@ -481,13 +481,13 @@ namespace Microsoft.Spatial
                 //                GmlPointMemberElement* GmlPointMembersElement?
                 //            </MultiPoint>
                 //            | <MultiPoint/>
-                //        
+                //
                 //        GmlPointMemberElement :=
                 //            <pointMember>
                 //                GmlPointElement?
                 //            </pointMember>
                 //            | </pointMember>
-                //        
+                //
                 //        GmlPointMembersElement :=
                 //            <pointMembers>
                 //                GmlPointElement*
@@ -551,7 +551,7 @@ namespace Microsoft.Spatial
                     {
                         if (doubleList.Length < 2)
                         {
-                            // When parsing a pos, we need at least two coordinates. 
+                            // When parsing a pos, we need at least two coordinates.
                             throw new FormatException(Strings.GmlReader_PosNeedTwoNumbers);
                         }
 
@@ -588,7 +588,7 @@ namespace Microsoft.Spatial
                     {
                         this.ParseGmlPointPropertyElement(allowEmpty);
                     }
-                } 
+                }
                 while (this.IsPosListStart());
             }
 
@@ -612,7 +612,7 @@ namespace Microsoft.Spatial
             /// <summary>
             /// parses a GmlPosListElement.
             /// </summary>
-            /// <param name="allowEmpty">Alow empty posList</param>        
+            /// <param name="allowEmpty">Alow empty posList</param>
             private void ParseGmlPosListElement(bool allowEmpty)
             {
                 // GmlPosListElement :=
@@ -659,7 +659,7 @@ namespace Microsoft.Spatial
                     throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
                 }
             }
-            
+
             /// <summary>
             /// Reads the current content in the xml element as a double array
             /// </summary>
@@ -707,7 +707,7 @@ namespace Microsoft.Spatial
 
                 return !isEmptyElement;
             }
-            
+
             /// <summary>
             /// Is Start Element
             /// </summary>
@@ -770,7 +770,7 @@ namespace Microsoft.Spatial
                     }
                 }
             }
-            
+
             /// <summary>
             /// Is reader at the start of a pos or pointProperty
             /// </summary>

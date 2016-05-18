@@ -212,7 +212,7 @@ namespace Microsoft.OData
 
         /// <summary>"min" keyword for expressions.</summary>
         internal const string KeywordMin = "min";
-        
+
         /// <summary>"average" keyword for expressions.</summary>
         internal const string KeywordAverage = "average";
 

@@ -15,7 +15,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Helper class to verify that all items of a collection are of the same kind and type.
     /// </summary>
-    /// <remarks>This class is only used if no expected item type is specified for the collection; 
+    /// <remarks>This class is only used if no expected item type is specified for the collection;
     /// otherwise all items are already validated against the expected item type.</remarks>
     internal sealed class CollectionWithoutExpectedTypeValidator
     {

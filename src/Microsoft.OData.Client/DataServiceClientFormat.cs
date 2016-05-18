@@ -261,7 +261,7 @@ namespace Microsoft.OData.Client
         /// Chooses between using JSON-Light and the context-dependent media type for when Atom is selected based on the user-selected format.
         /// </summary>
         /// <param name="hasSelectQueryOption">
-        ///   Whether or not the select query option is present in the request URI. 
+        ///   Whether or not the select query option is present in the request URI.
         ///   If true, indicates that the client should ask the server to include all metadata in a JSON-Light response.
         /// </param>
         /// <returns>The media type to use (either JSON-Light or the provided value)</returns>

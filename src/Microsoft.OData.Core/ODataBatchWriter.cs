@@ -35,7 +35,7 @@ namespace Microsoft.OData
         private BatchWriterState state;
 
         /// <summary>
-        /// The boundary string for the current changeset (only set when writing a changeset, 
+        /// The boundary string for the current changeset (only set when writing a changeset,
         /// e.g., after WriteStartChangeSet has been called and before WriteEndChangeSet is called).
         /// </summary>
         /// <remarks>When not writing a changeset this field is null.</remarks>
@@ -53,11 +53,11 @@ namespace Microsoft.OData
         /// </summary>
         private bool changesetStartBoundaryWritten;
 
-        /// <summary>The request message for the operation that is currently written if it's a request; 
+        /// <summary>The request message for the operation that is currently written if it's a request;
         /// or null if no part is written right now or it's a response part.</summary>
         private ODataBatchOperationRequestMessage currentOperationRequestMessage;
 
-        /// <summary>The response message for the operation that is currently written if it's a response; 
+        /// <summary>The response message for the operation that is currently written if it's a response;
         /// or null if no part is written right now or it's a request part.</summary>
         private ODataBatchOperationResponseMessage currentOperationResponseMessage;
 
@@ -114,7 +114,7 @@ namespace Microsoft.OData
             OperationCreated,
 
             /// <summary>
-            /// ODataMessage.GetStreamAsync() has been called on an operation which caused a <see cref="ODataBatchOperationStream"/> to be created; 
+            /// ODataMessage.GetStreamAsync() has been called on an operation which caused a <see cref="ODataBatchOperationStream"/> to be created;
             /// the batch writer is unusable while an operation is being written.
             /// </summary>
             OperationStreamRequested,
@@ -150,7 +150,7 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>The response message for the operation that is currently written if it's a response; 
+        /// <summary>The response message for the operation that is currently written if it's a response;
         /// or null if no operation is written right now or it's a request operation.</summary>
         private ODataBatchOperationResponseMessage CurrentOperationResponseMessage
         {
@@ -383,7 +383,7 @@ namespace Microsoft.OData
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the operation; 
+        /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
         Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()

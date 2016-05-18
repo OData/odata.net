@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Invert the all of the paths in an expandToken, such that they are now in the same order as they are present in the 
+        /// Invert the all of the paths in an expandToken, such that they are now in the same order as they are present in the
         /// base url
         /// </summary>
         /// <param name="treeToInvert">the tree to invert paths on</param>

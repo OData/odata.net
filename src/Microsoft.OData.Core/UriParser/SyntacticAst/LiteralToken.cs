@@ -91,7 +91,7 @@ namespace Microsoft.OData.UriParser
         /// We should use this during type promotion when applying metadata.</remarks>
         internal string OriginalText
         {
-            get 
+            get
             {
                 return this.originalText;
             }

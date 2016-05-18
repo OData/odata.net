@@ -18,14 +18,14 @@ namespace Microsoft.OData
         None = 0,
 
         /// <summary>
-        /// Show root context URL of the payload and the context URL for any deleted entries or added or deleted links in a delta response, 
-        /// or for entities or entity collections whose set cannot be determined from the root context URL        
+        /// Show root context URL of the payload and the context URL for any deleted entries or added or deleted links in a delta response,
+        /// or for entities or entity collections whose set cannot be determined from the root context URL
         /// Used for atom and json with odata.metadata=minimal
         /// </summary>
         OnDemand = 1,
 
         /// <summary>
-        /// Show context URL for a collection, entity, primitive value, or service document. 
+        /// Show context URL for a collection, entity, primitive value, or service document.
         /// Used for json with odata.metadata=full
         /// </summary>
         Full = 2

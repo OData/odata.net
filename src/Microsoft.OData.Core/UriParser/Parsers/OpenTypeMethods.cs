@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     using Edm = Microsoft.OData.Edm;
     #endregion
 
-    /// <summary>Use this class to perform late-bound operations on open properties.</summary>    
+    /// <summary>Use this class to perform late-bound operations on open properties.</summary>
     /// <remarks>This class was copied from the product.</remarks>
     internal static class OpenTypeMethods
     {
@@ -330,7 +330,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetString">target string</param>
         /// <param name="substring">substring to be replaced.</param>
         /// <param name="newString">new string that replaces the sub string.</param>
-        /// <returns>returns a new string with the substring replaced with new string.</returns> 
+        /// <returns>returns a new string with the substring replaced with new string.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Parameters will be used in the actual impl")]
         public static object Replace(object targetString, object substring, object newString)
         {
@@ -410,7 +410,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Removes all leading and trailing white-space characters from the target string. 
+        /// Removes all leading and trailing white-space characters from the target string.
         /// </summary>
         /// <param name="targetString">target string.</param>
         /// <returns>returns the trimed string.</returns>
@@ -707,12 +707,12 @@ namespace Microsoft.OData.UriParser
         #region Helper methods
 
         /// <summary>
-        /// Returns the specified <paramref name="expression"/> with a 
+        /// Returns the specified <paramref name="expression"/> with a
         /// type assignable to System.Object.
         /// </summary>
         /// <param name="expression">Expression to convert.</param>
         /// <returns>
-        /// The specified <paramref name="expression"/> with a type assignable 
+        /// The specified <paramref name="expression"/> with a type assignable
         /// to System.Object.
         /// </returns>
         private static Expression ExpressionAsObject(Expression expression)

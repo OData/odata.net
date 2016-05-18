@@ -316,8 +316,8 @@ namespace Microsoft.OData.Client
 #endif
             // Setting the Contentlength when SendingRequest or SendRequest2 is subscribed to
             // because there are chances for the contentlength to be wrong and for a ProtocolViolation to occur
-            // in the HttpWebRequest. Previously this was only done for SendingRequest but because we are 
-            // deprecating SendingRequest it makes sense to do this for SendingRequest2 as people will move their 
+            // in the HttpWebRequest. Previously this was only done for SendingRequest but because we are
+            // deprecating SendingRequest it makes sense to do this for SendingRequest2 as people will move their
             // code to use the SendingRequest2. So each event is consistent and will work properly as expected.
             if (this.requestInfo.HasSendingRequest2EventHandlers)
             {
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Client
         private class TopLevelRequestMessageWrapper : ODataRequestMessageWrapper
         {
             /// <summary>
-            /// Wrapper for the top-level request messages which caches the request stream as it is written. In order to keep the sync and non-async 
+            /// Wrapper for the top-level request messages which caches the request stream as it is written. In order to keep the sync and non-async
             /// code the same, we write all requests into an cached stream and then copy it to the underlying network stream in sync or async manner.
             /// </summary>
             private readonly RequestMessageWithCachedStream messageWithCachedStream;
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Client
             internal TopLevelRequestMessageWrapper(DataServiceClientRequestMessage requestMessage, RequestInfo requestInfo, Descriptor descriptor)
                 : base(requestMessage, requestInfo, descriptor)
             {
-                // Wrapper for the top-level request messages which caches the request stream as it is written. In order to keep the sync and non-async 
+                // Wrapper for the top-level request messages which caches the request stream as it is written. In order to keep the sync and non-async
                 // code the same, we write all requests into an cached stream and then copy it to the underlying network stream in sync or async manner.
                 this.messageWithCachedStream = new RequestMessageWithCachedStream(this.requestMessage);
             }

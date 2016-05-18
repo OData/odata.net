@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         public UnresolvedEntityType(string qualifiedName, EdmLocation location)
             : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEntityType, Edm.Strings.Bad_UnresolvedEntityType(qualifiedName)) })
-        { 
+        {
         }
     }
 }

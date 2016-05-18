@@ -21,7 +21,7 @@ namespace Microsoft.OData
     internal static class Utils
     {
         /// <summary>
-        /// Calls IDisposable.Dispose() on the argument if it is not null 
+        /// Calls IDisposable.Dispose() on the argument if it is not null
         /// and is an IDisposable.
         /// </summary>
         /// <param name="o">The instance to dispose.</param>
@@ -74,7 +74,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Stable comparer of a sequence of key/value pairs where each pair 
+        /// Stable comparer of a sequence of key/value pairs where each pair
         /// knows its position in the sequence and its value.
         /// </summary>
         /// <typeparam name="T">The type of the values in the sequence.</typeparam>

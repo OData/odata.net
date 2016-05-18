@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Used for locking during updates to the unsorted elements list.
         /// </summary>
         private object unsortedElementsLock = new object();
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmDirectValueAnnotationsManager"/> class.
         /// </summary>
@@ -431,7 +431,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     return nameComparison;
                 }
             }
-            
+
             /* Left and right are distinct, have identical hash codes, and have identical names. */
 
             /* The first element to occur in the unsorted list is the greatest. */

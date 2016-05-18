@@ -182,7 +182,7 @@ namespace Microsoft.OData
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the reader; 
+        /// A task representing any action that is running as part of the status change of the reader;
         /// null if no such action exists.
         /// </returns>
         Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()
@@ -286,7 +286,7 @@ namespace Microsoft.OData
                     break;
 
                 case ODataBatchReaderState.Operation:
-                    // When reaching this state we already read the MIME headers of the operation. 
+                    // When reaching this state we already read the MIME headers of the operation.
                     // Clients MUST call CreateOperationRequestMessage
                     // or CreateOperationResponseMessage to read at least the headers of the operation.
                     // This is important since we need to read the ContentId header (if present) and
@@ -302,7 +302,7 @@ namespace Microsoft.OData
                     this.operationState = OperationState.None;
 
                     // Also add a pending ContentId header to the URL resolver now. We ensured above
-                    // that a message has been created for this operation and thus the headers (incl. 
+                    // that a message has been created for this operation and thus the headers (incl.
                     // a potential content ID header) have been read.
                     if (this.contentIdToAddOnNextRead != null)
                     {
@@ -318,7 +318,7 @@ namespace Microsoft.OData
                     break;
 
                 case ODataBatchReaderState.ChangesetStart:
-                    // When at the start of a changeset, skip ahead to the first operation in the 
+                    // When at the start of a changeset, skip ahead to the first operation in the
                     // changeset (or the end boundary of the changeset).
                     Debug.Assert(this.batchStream.ChangeSetBoundary != null, "Changeset boundary must have been set by now.");
                     this.batchReaderState = this.SkipToNextPartAndReadHeaders();
@@ -377,7 +377,7 @@ namespace Microsoft.OData
 
                 if (nextState == ODataBatchReaderState.ChangesetEnd)
                 {
-                    // Reset the URL resolver at the end of a changeset; Content IDs are 
+                    // Reset the URL resolver at the end of a changeset; Content IDs are
                     // unique within a given changeset.
                     this.urlResolver.Reset();
                 }
@@ -425,7 +425,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
@@ -479,7 +479,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
@@ -545,7 +545,7 @@ namespace Microsoft.OData
             // them.
             int firstSpaceIndex = requestLine.IndexOf(' ');
 
-            // Check whether there are enough characters after the first space for the 2nd and 3rd segments 
+            // Check whether there are enough characters after the first space for the 2nd and 3rd segments
             // (and a whitespace in between)
             if (firstSpaceIndex <= 0 || requestLine.Length - 3 <= firstSpaceIndex)
             {
@@ -561,8 +561,8 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
             }
 
-            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method  
-            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri  
+            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method
+            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri
             string httpVersionSegment = requestLine.Substring(lastSpaceIndex + 1);             // Request - Http version
 
             // Validate HttpVersion

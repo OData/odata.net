@@ -124,7 +124,7 @@ namespace Microsoft.OData.UriParser
         internal override bool Equals(ODataPathSegment other)
         {
             BatchReferenceSegment otherBatchReferenceSegment = other as BatchReferenceSegment;
-            return otherBatchReferenceSegment != null && 
+            return otherBatchReferenceSegment != null &&
                 otherBatchReferenceSegment.EdmType == this.edmType &&
                 otherBatchReferenceSegment.EntitySet == this.entitySet &&
                 otherBatchReferenceSegment.ContentId == this.contentId;

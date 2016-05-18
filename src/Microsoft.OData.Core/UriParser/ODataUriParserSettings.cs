@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser
         private int selectExpandLimit;
 
         /// <summary>
-        /// The maximum depth of the tree that results from parsing $expand. 
+        /// The maximum depth of the tree that results from parsing $expand.
         /// </summary>
         private int maxExpandDepth;
 
@@ -89,10 +89,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or sets the maximum depth of the tree that results from parsing $expand. 
+        /// Gets or sets the maximum depth of the tree that results from parsing $expand.
         /// </summary>
         /// <remarks>
-        /// This will be validated after parsing completes, and so should not be used to prevent the instantiation of large trees. 
+        /// This will be validated after parsing completes, and so should not be used to prevent the instantiation of large trees.
         /// Further, redundant expansions will be pruned before validation and will not count towards the maximum.
         /// </remarks>
         public int MaximumExpansionDepth
@@ -117,7 +117,7 @@ namespace Microsoft.OData.UriParser
         /// Gets or sets the maximum number of <see cref="ExpandedNavigationSelectItem"/> instances that can appear in the tree that results from parsing $expand.
         /// </summary>
         /// <remarks>
-        /// This will be validated after parsing completes, and so should not be used to prevent the instantiation of large trees. 
+        /// This will be validated after parsing completes, and so should not be used to prevent the instantiation of large trees.
         /// Further, redundant expansions will be pruned before validation and will not count towards the maximum.
         /// </remarks>
         public int MaximumExpansionCount
@@ -139,12 +139,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or Sets the maximum recursive depth for a select and expand clause, which limits the maximum depth of the tree that can be parsed by the 
+        /// Gets or Sets the maximum recursive depth for a select and expand clause, which limits the maximum depth of the tree that can be parsed by the
         /// syntactic parser. This guarantees a set level of performance.
         /// </summary>
         /// <remarks>
         /// The number here doesn't necessarily correspond exactly with the actual maximum recursive depth of the syntactic tree,
-        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20). 
+        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20).
         /// Think of it more as an upper bound.
         /// </remarks>
         /// <exception cref="ODataException">Throws if the input value is negative.</exception>
@@ -167,12 +167,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or Sets the limit on the maximum depth of the filter tree that can be parsed by the 
+        /// Gets or Sets the limit on the maximum depth of the filter tree that can be parsed by the
         /// syntactic parser. This guarantees a set level of performance.
         /// </summary>
         /// <remarks>
         /// The number here doesn't necessarily correspond exactly with the actual maximum recursive depth of the syntactic tree,
-        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20). 
+        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20).
         /// Think of it more as an upper bound.
         /// </remarks>
         /// <exception cref="ODataException">Throws if the input value is negative.</exception>
@@ -195,12 +195,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or sets the maximum recursive depth for an orderby clause, which limits the maximum depth of the tree that can be parsed by the 
+        /// Gets or sets the maximum recursive depth for an orderby clause, which limits the maximum depth of the tree that can be parsed by the
         /// syntactic parser. This guarantees a set level of performance.
         /// </summary>
         /// <remarks>
         /// The number here doesn't necessarily correspond exactly with the actual maximum recursive depth of the syntactic tree,
-        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20). 
+        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20).
         /// Think of it more as an upper bound.
         /// </remarks>
         /// <exception cref="ODataException">Throws if the input value is negative.</exception>
@@ -223,7 +223,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or Sets the limit on the maximum number of segments that can be parsed by the 
+        /// Gets or Sets the limit on the maximum number of segments that can be parsed by the
         /// syntactic parser. This guarantees a set level of performance.
         /// </summary>
         /// <remarks>
@@ -251,12 +251,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or sets the maximum recursive depth for an search clause, which limits the maximum depth of the tree that can be parsed by the 
+        /// Gets or sets the maximum recursive depth for an search clause, which limits the maximum depth of the tree that can be parsed by the
         /// syntactic parser. This guarantees a set level of performance.
         /// </summary>
         /// <remarks>
         /// The number here doesn't necessarily correspond exactly with the actual maximum recursive depth of the syntactic tree,
-        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20). 
+        /// i.e  a limit of 20 doesn't necessarily mean that a tree will have depth exactly 20, it may have depth 10 (but never over 20).
         /// Think of it more as an upper bound.
         /// </remarks>
         /// <exception cref="ODataException">Throws if the input value is negative.</exception>

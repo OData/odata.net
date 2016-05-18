@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser
         /// Gets the navigation source containing this single entity.
         /// </summary>
         public abstract IEdmNavigationSource NavigationSource { get; }
-    
+
         /// <summary>
         /// Gets the type of this single entity.
         /// </summary>

@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             get { return this.namespaceUri; }
         }
-       
+
         /// <summary>
         /// Gets the local name of the annotation.
         /// </summary>

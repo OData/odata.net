@@ -66,7 +66,7 @@ namespace Microsoft.OData.Evaluation
                 return new ODataEdmCollectionValue(collectionValue);
             }
 
-            // If the property value is not null, a complex value or a collection value, 
+            // If the property value is not null, a complex value or a collection value,
             // it has to be a primitive value
             return EdmValueUtils.ConvertPrimitiveValue(value, type == null ? null : type.AsPrimitive());
         }

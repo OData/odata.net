@@ -25,7 +25,7 @@ namespace Microsoft.OData.UriParser
         private DefaultUriLiteralParser()
         {
             // It is important that UriCustomTypeParsers will be added first, so it will be called before the others built-in parsers
-            this.uriTypeParsers = new List<IUriLiteralParser> 
+            this.uriTypeParsers = new List<IUriLiteralParser>
             {
                 { CustomUriLiteralParsers.Instance },
                 { UriPrimitiveTypeParser.Instance }

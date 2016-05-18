@@ -221,7 +221,7 @@ namespace Microsoft.OData.UriParser
         /// Binds an InnerPathToken.
         /// </summary>
         /// <param name="token">Token to bind.</param>
-        /// <returns>Either a SingleNavigationNode, CollectionNavigationNode, SinglePropertyAccessNode (complex), 
+        /// <returns>Either a SingleNavigationNode, CollectionNavigationNode, SinglePropertyAccessNode (complex),
         /// or CollectionPropertyAccessNode (primitive or complex) that is the metadata-bound version of the given token.</returns>
         protected virtual QueryNode BindInnerPathSegment(InnerPathToken token)
         {

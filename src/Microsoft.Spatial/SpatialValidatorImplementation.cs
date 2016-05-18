@@ -37,7 +37,7 @@ namespace Microsoft.Spatial
     ///     <CurvePolygonSimpleRing> := StartSimpleRing 0 <CurvePolygonImplicitRing>
     ///     <CurvePolygonCompoundCurveRing> := <CurvePolygonCompoundCurveRingStart> { <CurvePolygonCompoundCurveRingPart> }
     ///     <CurvePolygonCompoundCurveRingStart> := AddSegmentLine 0 BeginFigure { LineTo } | AddSegmentArc 0 BeginFigure { AddCircularArc }
-    ///     <CurvePolygonCompoundCurveRingPart> := AddSegmentLine { LineTo } | AddSegmentArc { AddCircularArc }    
+    ///     <CurvePolygonCompoundCurveRingPart> := AddSegmentLine { LineTo } | AddSegmentArc { AddCircularArc }
     /// ]]>
     /// </remarks>
     internal class SpatialValidatorImplementation : SpatialPipeline

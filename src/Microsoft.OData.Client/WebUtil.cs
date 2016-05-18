@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
         internal const int DefaultBufferSizeForStreamCopy = 64 * 1024;
 
         /// <summary>
-        /// Whether DataServiceCollection&lt;&gt; type is available. 
+        /// Whether DataServiceCollection&lt;&gt; type is available.
         /// </summary>
         private static bool? dataServiceCollectionAvailable = null;
 
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Client
                 Type collectionType = ClientTypeUtil.GetImplementationType(type, typeof(ICollection<>));
                 if (collectionType != null)
                 {
-                    // collectionType is ICollection so we know that the first generic parameter 
+                    // collectionType is ICollection so we know that the first generic parameter
                     // is the collection item type
                     if (!ClientTypeUtil.TypeIsEntity(collectionType.GetGenericArguments()[0], model))
                     {
@@ -320,7 +320,7 @@ namespace Microsoft.OData.Client
             try
             {
                 // here we could just assign idText to Identity
-                // however we used to check for AbsoluteUri, thus we need to 
+                // however we used to check for AbsoluteUri, thus we need to
                 // convert string to Uri and check for absoluteness
                 identity = UriUtil.CreateUri(identityValue, UriKind.Absolute);
             }
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Forces loading WindowsBase assembly. If WindowsBase assembly is not present JITter will throw an exception. 
+        /// Forces loading WindowsBase assembly. If WindowsBase assembly is not present JITter will throw an exception.
         /// This method MUST NOT be inlined otherwise we won't be able to catch the exception by JITter in the caller.
         /// </summary>
         /// <returns>typeof(DataServiceCollection&lt;&gt;)</returns>

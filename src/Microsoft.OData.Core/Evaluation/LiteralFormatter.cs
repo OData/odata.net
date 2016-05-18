@@ -363,7 +363,7 @@ namespace Microsoft.OData.Evaluation
             private static bool TryGetByteArrayFromBinary(object value, out byte[] array)
             {
                 // DEVNOTE: the client does not have a reference to System.Data.Linq, but the server does.
-                // So we need to interact with Binary differently.            
+                // So we need to interact with Binary differently.
 #if ODATA_SERVICE
                 Binary binary = value as Binary;
                 if (binary != null)
@@ -488,7 +488,7 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
-        /// Literal formatter for keys which are written as URI segments. 
+        /// Literal formatter for keys which are written as URI segments.
         /// Very similar to the default, but it never puts the type markers or single quotes around the value.
         /// </summary>
         private sealed class KeysAsSegmentsLiteralFormatter : LiteralFormatter

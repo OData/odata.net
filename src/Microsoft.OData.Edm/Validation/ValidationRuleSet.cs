@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm.Validation
     {
         private readonly Dictionary<Type, List<ValidationRule>> rules;
 
-        private static readonly ValidationRuleSet BaseRuleSet = 
+        private static readonly ValidationRuleSet BaseRuleSet =
             new ValidationRuleSet(new ValidationRule[]
             {
                 ValidationRules.EntityTypeKeyPropertyMustBelongToEntity,
@@ -109,9 +109,9 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.FunctionMustHaveReturnType,
             });
 
-        private static readonly ValidationRuleSet V4RuleSet = 
+        private static readonly ValidationRuleSet V4RuleSet =
             new ValidationRuleSet(
-                BaseRuleSet, 
+                BaseRuleSet,
                 new ValidationRule[]
                 {
                     ValidationRules.OperationUnsupportedReturnType,

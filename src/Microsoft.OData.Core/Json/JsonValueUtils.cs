@@ -52,7 +52,7 @@ namespace Microsoft.OData.Json
         private static readonly string[] SpecialCharToEscapedStringMap = CreateSpecialCharToEscapedStringMap();
 
         /// <summary>
-        /// Initialize static properties 
+        /// Initialize static properties
         /// </summary>
         static JsonValueUtils()
         {
@@ -201,10 +201,10 @@ namespace Microsoft.OData.Json
                 case ODataJsonDateTimeFormat.ISO8601DateTime:
                     {
                         // Uses the same format as DateTime but with offset:
-                        // jsonDateTime= quotation-mark   
-                        //  YYYY-MM-DDThh:mm:ss.sTZD 
-                        //  [("+" / "-") offset] 
-                        //  quotation-mark  
+                        // jsonDateTime= quotation-mark
+                        //  YYYY-MM-DDThh:mm:ss.sTZD
+                        //  [("+" / "-") offset]
+                        //  quotation-mark
                         //
                         // offset = 4DIGIT
                         string textValue = XmlConvert.ToString(value);
@@ -216,12 +216,12 @@ namespace Microsoft.OData.Json
                 case ODataJsonDateTimeFormat.ODataDateTime:
                     {
                         // Uses the same format as DateTime but with offset:
-                        // jsonDateTime= quotation-mark   
-                        //  "\/Date("  
-                        //  ticks 
-                        //  [("+" / "-") offset] 
-                        //  ")\/"  
-                        //  quotation-mark  
+                        // jsonDateTime= quotation-mark
+                        //  "\/Date("
+                        //  ticks
+                        //  [("+" / "-") offset]
+                        //  ")\/"
+                        //  quotation-mark
                         //
                         // ticks = *DIGIT
                         // offset = 4DIGIT

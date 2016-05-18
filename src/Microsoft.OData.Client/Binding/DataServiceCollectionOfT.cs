@@ -191,11 +191,11 @@ namespace Microsoft.OData.Client
         /// <summary>Creates new DataServiceCollection.</summary>
         /// <param name="entityMaterializer">The materializer</param>
         /// <param name="context"><see cref="DataServiceContext"/> associated with the new collection.</param>
-        /// <param name="items">Enumeration of items to initialize the new DataServiceCollection with.</param>       
+        /// <param name="items">Enumeration of items to initialize the new DataServiceCollection with.</param>
         /// <param name="trackingMode">The tracking mode for the new collection.</param>
         /// <param name="entitySetName">The name of the entity set the elements in the collection belong to.</param>
         /// <param name="entityChangedCallback">Delegate that gets called when an entity changes.</param>
-        /// <param name="collectionChangedCallback">Delegate that gets called when an entity collection changes.</param> 
+        /// <param name="collectionChangedCallback">Delegate that gets called when an entity collection changes.</param>
         /// <remarks>This is the internal constructor called from materializer and used inside our projection queries.</remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800", Justification = "Constructor and debug-only code can't reuse cast.")]
         internal DataServiceCollection(
@@ -224,10 +224,10 @@ namespace Microsoft.OData.Client
         }
 
         #region Properties
-        /// <summary>A completion event for the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, <see cref="LoadAsync()"/> 
+        /// <summary>A completion event for the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, <see cref="LoadAsync()"/>
         /// and <see cref="LoadNextPartialSetAsync"/> method.</summary>
-        /// <remarks>This event is raised exactly once for each call to the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, 
-        /// <see cref="LoadAsync()"/> or <see cref="LoadNextPartialSetAsync"/> method. It is called both when the operation 
+        /// <remarks>This event is raised exactly once for each call to the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>,
+        /// <see cref="LoadAsync()"/> or <see cref="LoadNextPartialSetAsync"/> method. It is called both when the operation
         /// succeeded and/or when it failed.</remarks>
         public event EventHandler<LoadCompletedEventArgs> LoadCompleted;
 
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Client
             foreach (T item in items)
             {
                 // if this is too slow, consider hashing the set
-                // or just use LoadProperties                    
+                // or just use LoadProperties
                 if (!this.Contains(item))
                 {
                     this.Add(item);
@@ -768,7 +768,7 @@ namespace Microsoft.OData.Client
             // to do this in WinForms/WCF once we decide to add it there as well.
             // Note that we must mark the operation as in progress before we actually call Begin
             //   as the async operation might end immediately inside the Begin call and we have no control
-            //   over the ordering between the End callback thread, the thread Begin is called from 
+            //   over the ordering between the End callback thread, the thread Begin is called from
             //   and the UI thread on which we process the end event.
             this.ongoingAsyncOperation = null;
             try

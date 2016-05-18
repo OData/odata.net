@@ -325,7 +325,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>. 
+        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>.
         /// </summary>
         /// <param name="primitiveValue">Primitive value to coerce.</param>
         /// <param name="targetEdmType">Edm primitive type to check against.</param>
@@ -481,7 +481,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>. 
+        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>.
         /// </summary>
         /// <param name="primitiveValue">Primitive value to coerce.</param>
         /// <param name="targetEdmType">Edm primitive type to check against.</param>

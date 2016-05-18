@@ -456,10 +456,10 @@ namespace Microsoft.OData.Evaluation
                         else
                         {
                             properties = this.actualResourceType.StructuralProperties();
-                            this.etagProperties = properties != null 
+                            this.etagProperties = properties != null
                                 ? properties
                                     .Where(p => p.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray() 
+                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray()
                                 : EmptyProperties;
                         }
                     }
@@ -542,7 +542,7 @@ namespace Microsoft.OData.Evaluation
                             IEnumerable<IEdmExpression> pathExpressions = (collectionExpression as IEdmCollectionExpression).Elements.Where(p => p is IEdmPathExpression);
                             foreach (IEdmPathExpression pathExpression in pathExpressions)
                             {
-                                // TODO: 
+                                // TODO:
                                 //  1. Add support for Complex type
                                 //  2. Add new exception when collectionExpression is not IEdmCollectionExpression: CoreOptimisticConcurrencyControl must be followed by collection expression
                                 IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.Path.LastOrDefault());

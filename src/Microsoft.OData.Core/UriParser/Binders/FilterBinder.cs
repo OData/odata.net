@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser
         /// Method to use to visit the token tree and bind the tokens recursively.
         /// </summary>
         private readonly MetadataBinder.QueryTokenVisitor bindMethod;
-        
+
         /// <summary>
         /// State to use for binding.
         /// </summary>

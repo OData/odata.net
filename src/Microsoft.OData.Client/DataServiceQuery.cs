@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB
         /// Synchronous methods not available
         /// <summary>
-        /// Returns an IEnumerable from an Internet resource. 
+        /// Returns an IEnumerable from an Internet resource.
         /// </summary>
         /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>
         internal abstract IEnumerable ExecuteInternal();

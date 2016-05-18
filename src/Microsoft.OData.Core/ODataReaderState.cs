@@ -17,42 +17,42 @@ namespace Microsoft.OData
 
         /// <summary>The start of a resource set has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataResourceSet"/> but no properties may be filled in until the ResourceSetEnd state is reached.
         /// </remarks>
         ResourceSetStart,
 
         /// <summary>The end of a resource set has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataResourceSet"/> with all properties filled in.
         /// </remarks>
         ResourceSetEnd,
 
         /// <summary>The start of a resource has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataResource"/> but no properties may be filled in until the EntryEnd state is reached.
         /// </remarks>
         ResourceStart,
 
         /// <summary>The end of a resource has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataResource"/> with all properties filled in.
         /// </remarks>
         ResourceEnd,
 
         /// <summary>The start of a nested resource info has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataNestedResourceInfo"/> but no properties may be filled in until the LinkEnd state is reached.
         /// </remarks>
         NestedResourceInfoStart,
 
         /// <summary>The end of a nested resource info has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
         /// an <see cref="ODataNestedResourceInfo"/> with all properties filled in.
         /// </remarks>
         NestedResourceInfoEnd,

@@ -12,7 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 #if PORTABLELIB
-    using System.Threading.Tasks;    
+    using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
@@ -66,8 +66,8 @@ namespace Microsoft.OData
         /// <summary>
         /// The current state of the reader.
         /// </summary>
-        public override sealed ODataCollectionReaderState State 
-        { 
+        public override sealed ODataCollectionReaderState State
+        {
             get
             {
                 this.inputContext.VerifyNotDisposed();
@@ -79,8 +79,8 @@ namespace Microsoft.OData
         /// <summary>
         /// The most recent item that has been read.
         /// </summary>
-        public override sealed object Item 
-        { 
+        public override sealed object Item
+        {
             get
             {
                 this.inputContext.VerifyNotDisposed();
@@ -110,9 +110,9 @@ namespace Microsoft.OData
         /// </summary>
         protected IEdmTypeReference ExpectedItemTypeReference
         {
-            get 
-            { 
-                return this.expectedItemTypeReference; 
+            get
+            {
+                return this.expectedItemTypeReference;
             }
 
             set
@@ -123,7 +123,7 @@ namespace Microsoft.OData
                 {
                     throw new ODataException(
                         Strings.ODataCollectionReaderCore_ExpectedItemTypeSetInInvalidState(
-                            this.State.ToString(), 
+                            this.State.ToString(),
                             ODataCollectionReaderState.Start.ToString()));
                 }
 

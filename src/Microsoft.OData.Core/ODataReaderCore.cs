@@ -228,7 +228,7 @@ namespace Microsoft.OData
             {
                 Debug.Assert(this.scopes != null, "Scopes must exist.");
 
-                // there is the root scope at the top (when the writer has not started or has completed) 
+                // there is the root scope at the top (when the writer has not started or has completed)
                 // and then the top-level scope (the top-level resource/resource set item) as the second scope on the stack
                 return this.scopes.Count <= 2;
             }
@@ -279,7 +279,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Returns true if we are reading a nested payload,
-        /// e.g. an expanded resource or resource set within a delta payload, 
+        /// e.g. an expanded resource or resource set within a delta payload,
         /// or a resource or a resource set within a parameters payload.
         /// </summary>
         protected bool IsReadingNestedPayload
@@ -293,8 +293,8 @@ namespace Microsoft.OData
         /// <summary>
         /// Validator to validate consistency of entries in top-level resource sets.
         /// </summary>
-        /// <remarks>We only use this for top-level resource sets since we support collection validation for 
-        /// resource sets only when metadata is available and in these cases we already validate the 
+        /// <remarks>We only use this for top-level resource sets since we support collection validation for
+        /// resource sets only when metadata is available and in these cases we already validate the
         /// types of the entries in nested resource sets.</remarks>
         protected ResourceSetWithoutExpectedTypeValidator CurrentResourceSetValidator
         {

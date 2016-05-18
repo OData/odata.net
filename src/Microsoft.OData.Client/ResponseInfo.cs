@@ -77,7 +77,7 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-        
+
         /// <summary>Returns the instance of entity tracker class which tracks all the entities and links for the context.</summary>
         internal EntityTracker EntityTracker
         {

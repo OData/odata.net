@@ -156,7 +156,7 @@ namespace Microsoft.OData.Metadata
         /// <param name="typeReference">The <see cref="IEdmTypeReference"/> to check.</param>
         /// <returns>true if the <paramref name="typeReference"/> is considered a value type; otherwise false.</returns>
         /// <remarks>
-        /// The notion of value type in the OData space is driven by the IDSMP requirements where 
+        /// The notion of value type in the OData space is driven by the IDSMP requirements where
         /// Clr types denote the primitive types.
         /// </remarks>
         internal static bool IsODataValueType(this IEdmTypeReference typeReference)

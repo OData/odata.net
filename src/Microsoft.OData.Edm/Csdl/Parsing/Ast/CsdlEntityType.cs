@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.key; }
         }
 
-        public bool HasStream 
+        public bool HasStream
         {
             get { return this.hasStream; }
         }

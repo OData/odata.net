@@ -46,7 +46,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
@@ -77,7 +77,7 @@ namespace Microsoft.OData.JsonLight
 
 #if PORTABLELIB
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
@@ -128,7 +128,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.StartObject      - the value of the property is an object
         ///                 JsonNodeType.StartArray       - the value of the property is an array - method will fail in this case.
         /// Post-Condition: almost anything - the node after the property value.
-        ///                 
+        ///
         /// Returns the value of the property read, which can be one of:
         /// - null
         /// - primitive value
@@ -268,7 +268,7 @@ namespace Microsoft.OData.JsonLight
                     // If we have an object value initialize the duplicate property names checker
                     duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
 
-                    // Read the payload type name 
+                    // Read the payload type name
                     string typeName;
                     bool typeNameFoundInPayload = this.TryReadPayloadTypeFromObject(
                         duplicatePropertyNamesChecker,
@@ -317,7 +317,7 @@ namespace Microsoft.OData.JsonLight
                 payloadTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*defaultPrimitivePayloadType*/ null,
-                    null, // expectedTypeReference 
+                    null, // expectedTypeReference
                     payloadTypeName,
                     this.Model,
                     this.MessageReaderSettings,
@@ -398,7 +398,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.PrimitiveValue - the reader didn't move
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
-        ///                 
+        ///
         /// If the method returns true, it consumed the value of the annotation from the reader.
         /// If it returns false, it didn't move the reader.
         /// </remarks>
@@ -473,16 +473,16 @@ namespace Microsoft.OData.JsonLight
         {
             // If we get here, we did not find a type name in the payload and don't have an expected type.
             // This can only happen for error cases when using open properties (for declared properties we always
-            // have an expected type and for open properties we always require a type). We then decide based on 
+            // have an expected type and for open properties we always require a type). We then decide based on
             // the node type of the reader.
-            // PrimitiveValue       - we know that it is a primitive value; 
+            // PrimitiveValue       - we know that it is a primitive value;
             // StartArray           - we know that we have a collection;
             // Other                - for a JSON object value (and if we did not already find a payload type name)
             //                        we have already started reading the object to find a type name (and have failed)
             //                        and might thus be on a Property or EndObject node.
-            //                        Also note that in this case we can't distinguish whether what we are looking at is 
-            //                        a complex value or a spatial value (both are JSON objects). We will report 
-            //                        'Complex' in that case which will fail we an appropriate error message 
+            //                        Also note that in this case we can't distinguish whether what we are looking at is
+            //                        a complex value or a spatial value (both are JSON objects). We will report
+            //                        'Complex' in that case which will fail we an appropriate error message
             //                        also for spatial ('value without type name found').
             switch (this.JsonReader.NodeType)
             {
@@ -525,7 +525,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
@@ -589,7 +589,7 @@ namespace Microsoft.OData.JsonLight
                     Func<string, object> propertyAnnotationReaderForTopLevelProperty =
                         annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
 
-                    // Read through all top-level properties, ignore the ones with reserved names (i.e., reserved 
+                    // Read through all top-level properties, ignore the ones with reserved names (i.e., reserved
                     // characters in their name) and throw if we find none or more than one properties without reserved name.
                     while (this.JsonReader.NodeType == JsonNodeType.Property)
                     {
@@ -807,7 +807,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads a type definition value.
         /// </summary>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="expectedValueTypeReference">The expected type definition reference of the value, or null if none is available.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
@@ -831,7 +831,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads a primitive value.
         /// </summary>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="expectedValueTypeReference">The expected type reference of the value, or null if none is available.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
@@ -905,7 +905,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads a primitive string as enum value.
         /// </summary>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="expectedValueTypeReference">The expected type reference of the value, or null if none is available.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
@@ -927,7 +927,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads a complex value.
         /// </summary>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
@@ -1152,7 +1152,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.StartObject      - the value of the property is an object
         ///                 JsonNodeType.StartArray       - the value of the property is an array
         /// Post-Condition: almost anything - the node after the property value.
-        ///                 
+        ///
         /// Returns the value of the property read, which can be one of:
         /// - null
         /// - primitive value
@@ -1410,7 +1410,7 @@ namespace Microsoft.OData.JsonLight
 
             // Then check whether the first property in the JSON object is the 'odata.type'
             // annotation; if we don't have an expected property type reference, the 'odata.type'
-            // annotation has to exist for complex properties. (This can happen for top-level open 
+            // annotation has to exist for complex properties. (This can happen for top-level open
             // properties).
             if (this.JsonReader.NodeType == JsonNodeType.Property && this.TryReadODataTypeAnnotation(out payloadTypeName))
             {

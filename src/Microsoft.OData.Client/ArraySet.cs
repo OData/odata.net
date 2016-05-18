@@ -107,7 +107,7 @@ namespace Microsoft.OData.Client
         {
             return this.GetEnumerator();
         }
-        
+
         /// <summary>Find the current index of element within the set</summary>
         /// <param name="item">item to find</param>
         /// <param name="comparer">comparison function</param>

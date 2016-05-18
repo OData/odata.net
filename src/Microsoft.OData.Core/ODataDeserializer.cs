@@ -11,7 +11,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     #endregion Namespaces
-    
+
     /// <summary>
     /// Base class for all OData deserializers.
     /// </summary>

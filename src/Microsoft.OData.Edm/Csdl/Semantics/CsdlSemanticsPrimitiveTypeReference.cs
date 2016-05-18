@@ -26,7 +26,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.schema = schema;
             this.Reference = reference;
-            this.definition = EdmCoreModel.Instance.GetPrimitiveType(this.Reference.Kind); 
+            this.definition = EdmCoreModel.Instance.GetPrimitiveType(this.Reference.Kind);
         }
 
         public bool IsNullable

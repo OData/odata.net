@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         private readonly IEdmEnumMemberValue value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmEnumValue"/> class. 
+        /// Initializes a new instance of the <see cref="EdmEnumValue"/> class.
         /// </summary>
         /// <param name="type">A reference to the enumeration type that describes this value.</param>
         /// <param name="member">The enumeration type value.</param>
@@ -24,7 +24,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmEnumValue"/> class. 
+        /// Initializes a new instance of the <see cref="EdmEnumValue"/> class.
         /// </summary>
         /// <param name="type">A reference to the enumeration type that describes this value.</param>
         /// <param name="value">The underlying type value.</param>

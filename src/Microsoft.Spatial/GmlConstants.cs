@@ -40,7 +40,7 @@ namespace Microsoft.Spatial
         /// System Reference Prefix
         /// </summary>
         internal const string SrsPrefix = "http://www.opengis.net/def/crs/EPSG/0/";
-        
+
         /// <summary>
         /// Gml representation of a point
         /// </summary>
@@ -70,7 +70,7 @@ namespace Microsoft.Spatial
         /// identifier element name
         /// </summary>
         internal const string IdentifierElement = "identifier";
-        
+
         /// <summary>
         /// Gml representation of a point
         /// </summary>
@@ -130,7 +130,7 @@ namespace Microsoft.Spatial
         /// Gml Polygon interior ring
         /// </summary>
         internal const string InteriorRing = "interior";
-        
+
         /// <summary>
         /// Gml Ring
         /// </summary>
@@ -187,7 +187,7 @@ namespace Microsoft.Spatial
         internal const string UomLabels = "uomLabels";
 
         /// <summary>
-        /// Attribute name for count 
+        /// Attribute name for count
         /// </summary>
         internal const string Count = "count";
     }

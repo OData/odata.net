@@ -49,12 +49,12 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Determines whether the specified exception can be caught and 
+        /// Determines whether the specified exception can be caught and
         /// handled, or whether it should be allowed to continue unwinding.
         /// </summary>
         /// <param name="e"><see cref="Exception"/> to test.</param>
         /// <returns>
-        /// true if the specified exception can be caught and handled; 
+        /// true if the specified exception can be caught and handled;
         /// false otherwise.
         /// </returns>
         internal static bool IsCatchableExceptionType(Exception e)

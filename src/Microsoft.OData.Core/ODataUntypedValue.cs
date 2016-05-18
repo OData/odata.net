@@ -14,8 +14,8 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the raw untyped value.</summary>
         /// <returns>The raw untyped value.</returns>
         /// <remarks>
-        /// The caller of the setter is responsible for formatting the value for the 
-        /// data transmission protocol it will be used in. 
+        /// The caller of the setter is responsible for formatting the value for the
+        /// data transmission protocol it will be used in.
         /// For instance, if the protocol is JSON, the caller must format this value as JSON.
         /// If the protocol is Atom, the caller must format this value as XML.
         /// This libarary will not perform any formatting.

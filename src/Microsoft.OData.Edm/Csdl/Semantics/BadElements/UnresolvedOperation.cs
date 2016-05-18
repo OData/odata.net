@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly string name;
         private readonly IEdmTypeReference returnType;
 
-        public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location) 
+        public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedOperation, errorMessage) })
         {
             qualifiedName = qualifiedName ?? string.Empty;

@@ -35,7 +35,7 @@ namespace Microsoft.OData
         internal ODataAsynchronousReader(ODataRawInputContext rawInputContext, Encoding encoding)
         {
             Debug.Assert(rawInputContext != null, "rawInputContext != null");
-            
+
             // Currently we only support single-byte UTF8 in async reader.
             if (encoding != null)
             {
@@ -259,7 +259,7 @@ namespace Microsoft.OData
             headerName = headerLine.Substring(0, colon).Trim();
             headerValue = headerLine.Substring(colon + 1).Trim();
         }
-        
+
         /// <summary>
         /// Reads a line from the underlying stream.
         /// </summary>

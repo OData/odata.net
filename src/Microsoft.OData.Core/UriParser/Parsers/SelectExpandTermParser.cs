@@ -46,7 +46,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Parses a select or expand term into a PathSegmentToken.
         /// Assumes the lexer is positioned at the beginning of the term to parse.
-        /// When done, the lexer will be positioned at whatever is after the identifier. 
+        /// When done, the lexer will be positioned at whatever is after the identifier.
         /// </summary>
         /// <param name="allowRef">Whether the $ref operation is valid in this token.</param>
         /// <returns>parsed query token</returns>
@@ -101,7 +101,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Uses the ExpressionLexer to visit the next ExpressionToken, and delegates parsing of segments, type segments, identifiers, 
+        /// Uses the ExpressionLexer to visit the next ExpressionToken, and delegates parsing of segments, type segments, identifiers,
         /// and the star token to other methods.
         /// </summary>
         /// <param name="previousSegment">Previously parsed PathSegmentToken, or null if this is the first token.</param>
@@ -148,7 +148,7 @@ namespace Microsoft.OData.UriParser
                     // expand option like "customer?$expand=VIPCUstomer/*" is not allowed as specification does not allowed any property before *.
                     throw new ODataException(ODataErrorStrings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
                 }
-                
+
                 propertyName = this.lexer.CurrentToken.Text;
                 this.lexer.NextToken();
             }

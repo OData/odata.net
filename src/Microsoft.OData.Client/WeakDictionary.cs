@@ -98,7 +98,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The count returned here may include entries for which the key has already been garbage collected.
         /// Call RemoveCollectedEntries to weed out collected entries and update the count accordingly.
-        /// </remarks>        
+        /// </remarks>
         public int Count
         {
             get { return this.dictionary.Count; }
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Client
         /// Removes the value with the specified key from the dictionary.
         /// </summary>
         /// <param name="key">The key of the element to remove.</param>
-        /// <returns>true if the element is successfully found and removed; 
+        /// <returns>true if the element is successfully found and removed;
         /// otherwise, false if key is not found in the dictionary.</returns>
         public bool Remove(TKey key)
         {
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Client
         /// Gets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key of the value to get.</param>
-        /// <param name="value">When this method returns, contains the value associated with the specified 
+        /// <param name="value">When this method returns, contains the value associated with the specified
         /// key, if the key is found; otherwise, the default value for the type of the value parameter.
         /// </param>
         /// <returns>true if the dictionary contains an element with the specified key; otherwise, false.</returns>
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Removes the left-over weak references for entries in the dictionary whose key has already been
-        /// reclaimed by the garbage collector. This will reduce the dictionary's Count by the number of 
+        /// reclaimed by the garbage collector. This will reduce the dictionary's Count by the number of
         /// dead key-value pairs that were eliminated.
         /// </summary>
         public void RemoveCollectedEntries()
@@ -349,10 +349,10 @@ namespace Microsoft.OData.Client
         ///  Let Wa = Alive Weak Reference
         ///  Let Wd = Dead Weak Reference
         ///  Let S  = Strong Reference
-        ///  
+        ///
         ///  x  | y  | Equals(x,y)
         /// -------------------------------------------------
-        ///  Wa | Wa | comparer.Equals(x.Target, y.Target) 
+        ///  Wa | Wa | comparer.Equals(x.Target, y.Target)
         ///  Wa | Wd | false
         ///  Wa | S  | comparer.Equals(x.Target, y)
         ///  Wd | Wa | false

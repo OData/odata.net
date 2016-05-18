@@ -50,11 +50,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         }
 
         public IEdmExpression EntitySet
-        { 
-            get 
+        {
+            get
             {
                 return this.entitySetCache.GetValue(this, ComputeEntitySetFunc, null);
-            } 
+            }
         }
 
         public abstract EdmContainerElementKind ContainerElementKind { get; }

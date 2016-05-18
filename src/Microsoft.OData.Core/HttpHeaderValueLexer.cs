@@ -93,19 +93,19 @@ namespace Microsoft.OData
 
             /// <summary>The current item is a token.</summary>
             Token,
-            
+
             /// <summary>The current item is a quoted-string.</summary>
             QuotedString,
-            
+
             /// <summary>The current item is the header element separator ','.</summary>
             ElementSeparator,
-            
+
             /// <summary>The current item is the parameter separator ';'.</summary>
             ParameterSeparator,
-            
+
             /// <summary>The current item is the value separator '='.</summary>
             ValueSeparator,
-            
+
             /// <summary>At the end of the header value.</summary>
             End
         }
@@ -192,7 +192,7 @@ namespace Microsoft.OData
                 if (lexer.Type == HttpHeaderValueItemType.Token)
                 {
                     var element = ReadHttpHeaderValueElement(ref lexer);
-                 
+
                     // If multiple elements with the same name encountered, the first one wins.
                     if (!headerValue.ContainsKey(element.Name))
                     {
@@ -457,7 +457,7 @@ namespace Microsoft.OData
                 Debug.Assert(this.startIndexOfNextItem <= this.httpHeaderValue.Length, "this.startIndexOfNextItem <= this.httpHeaderValue.Length");
                 Debug.Assert(!string.IsNullOrEmpty(this.originalText), "!string.IsNullOrEmpty(this.originalText)");
             }
-            
+
             /// <summary>
             /// The type of the current item.
             /// </summary>
@@ -494,7 +494,7 @@ namespace Microsoft.OData
                 }
 
                 throw new ODataException(Strings.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, separator.Value));
-            }            
+            }
         }
 
         /// <summary>
@@ -519,7 +519,7 @@ namespace Microsoft.OData
                     this.Value == ElementSeparator || this.Value == ParameterSeparator || this.Value == ValueSeparator,
                     "this.Value == CommaSeparator || this.Value == SemicolonSeparator || this.Value == EqualsSeparator");
             }
-            
+
             /// <summary>
             /// The type of the current item.
             /// </summary>

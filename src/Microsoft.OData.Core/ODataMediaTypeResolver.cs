@@ -92,7 +92,7 @@ namespace Microsoft.OData
 
                 // batch
                 new ODataMediaTypeFormat[]
-                { 
+                {
                     // Note that as per spec the multipart/mixed must have a boundary parameter which is not specified here. We will add that parameter
                     // when using this mime type because we need to generate a new boundary every time.
                     new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch),

@@ -49,7 +49,7 @@ namespace Microsoft.OData.JsonLight
         /// Flag which indicates that the odata.mediaEditLink metadata property has been written.
         /// </summary>
         bool MediaEditLinkWritten { get; set; }
-        
+
         /// <summary>
         /// Flag which indicates that the odata.mediaReadLink metadata property has been written.
         /// </summary>

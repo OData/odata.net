@@ -24,12 +24,12 @@ namespace Microsoft.OData.UriParser
         /// The name of the parameter
         /// </summary>
         private readonly string parameterName;
-        
+
         /// <summary>
         /// The value of this parameter
         /// </summary>
         private readonly QueryToken valueToken;
-        
+
         /// <summary>
         /// Creates a FunctionParameterToken
         /// </summary>
@@ -42,7 +42,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the name of this parameter 
+        /// Gets the name of this parameter
         /// </summary>
         public string ParameterName
         {

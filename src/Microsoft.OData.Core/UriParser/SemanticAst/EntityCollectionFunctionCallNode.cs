@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// list of parameters provided to this function
         /// </summary>
-        private readonly ReadOnlyCollection<QueryNode> parameters; 
+        private readonly ReadOnlyCollection<QueryNode> parameters;
 
         /// <summary>
         /// the type a single entity returned by this function

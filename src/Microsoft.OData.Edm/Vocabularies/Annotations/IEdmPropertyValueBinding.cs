@@ -21,4 +21,4 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         IEdmExpression Value { get; }
     }
-} 
+}

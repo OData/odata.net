@@ -106,8 +106,8 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Determines whether the <paramref name="current"/> Uri instance is a 
-        /// base of the specified Uri instance. 
+        /// Determines whether the <paramref name="current"/> Uri instance is a
+        /// base of the specified Uri instance.
         /// </summary>
         /// <param name="current">Candidate base URI.</param>
         /// <param name="uri">The specified Uri instance to test.</param>
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Service
             builder.Port = 80;
             builder.Scheme = "http";
             return builder.Uri;
-        } 
+        }
 #endif
     }
 }

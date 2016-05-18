@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="element">The annotated element.</param>
         /// <returns>The direct value annotations for the element.</returns>
         IEnumerable<IEdmDirectValueAnnotation> GetDirectValueAnnotations(IEdmElement element);
-        
+
         /// <summary>
         /// Sets an annotation value for an EDM element. If the value is null, no annotation is added and an existing annotation with the same name is removed.
         /// </summary>
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="localName">Name of the annotation within the namespace.</param>
         /// <param name="value">The value of the annotation.</param>
         void SetAnnotationValue(IEdmElement element, string namespaceName, string localName, object value);
-       
+
         /// <summary>
         /// Sets a set of annotation values. If a supplied value is null, no annotation is added and an existing annotation with the same name is removed.
         /// </summary>

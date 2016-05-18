@@ -17,7 +17,7 @@ namespace Microsoft.OData
     /// Represents the set of information available for payload kind detection.
     /// </summary>
     /// <remarks>This class is used to represent the input to run payload kind detection using
-    /// <see cref="ODataMessageReader.DetectPayloadKind"/>. See the documentation of that method for more 
+    /// <see cref="ODataMessageReader.DetectPayloadKind"/>. See the documentation of that method for more
     /// information.</remarks>
     internal sealed class ODataPayloadKindDetectionInfo
     {

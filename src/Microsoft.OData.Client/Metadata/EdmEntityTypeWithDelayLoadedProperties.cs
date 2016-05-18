@@ -40,10 +40,10 @@ namespace Microsoft.OData.Service.Providers
         /// <param name="hasStream">Denotes if the type is a media entity.</param>
         /// <param name="propertyLoadAction">An action that is used to create the properties for this type.</param>
         internal EdmEntityTypeWithDelayLoadedProperties(
-            string namespaceName, 
+            string namespaceName,
             string name,
-            IEdmEntityType baseType, 
-            bool isAbstract, 
+            IEdmEntityType baseType,
+            bool isAbstract,
             bool isOpen,
             bool hasStream,
             Action<EdmEntityTypeWithDelayLoadedProperties> propertyLoadAction)

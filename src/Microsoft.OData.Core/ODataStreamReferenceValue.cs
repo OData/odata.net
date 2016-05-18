@@ -88,7 +88,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if an edit link was provided by the user or seen on the wire, false otherwise. 
+        /// true if an edit link was provided by the user or seen on the wire, false otherwise.
         /// </summary>
         internal bool HasNonComputedEditLink
         {
@@ -97,7 +97,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if a read link was provided by the user or seen on the wire, false otherwise. 
+        /// true if a read link was provided by the user or seen on the wire, false otherwise.
         /// </summary>
         internal bool HasNonComputedReadLink
         {

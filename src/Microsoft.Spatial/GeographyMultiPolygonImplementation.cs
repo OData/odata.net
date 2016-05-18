@@ -66,7 +66,7 @@ namespace Microsoft.Spatial
         {
             get { return new ReadOnlyCollection<GeographyPolygon>(this.polygons); }
         }
-        
+
         /// <summary>
         /// Sends the current spatial object to the given sink
         /// </summary>

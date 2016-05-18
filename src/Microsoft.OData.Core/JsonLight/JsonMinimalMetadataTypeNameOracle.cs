@@ -14,7 +14,7 @@ namespace Microsoft.OData.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Class responsible for determining the type name that should be written on the wire for entries and values in JSON minimal metadata mode, 
+    /// Class responsible for determining the type name that should be written on the wire for entries and values in JSON minimal metadata mode,
     /// or the other metadata modes of JSON light when <see cref="ODataMessageWriterSettings.AutoComputePayloadMetadataInJson"/> is false.
     /// </summary>
     internal sealed class JsonMinimalMetadataTypeNameOracle : JsonLightTypeNameOracle
@@ -84,7 +84,7 @@ namespace Microsoft.OData.JsonLight
                     return null;
                 }
 
-                // Note: When writing derived complexType value in a payload, we don't have the expected type. 
+                // Note: When writing derived complexType value in a payload, we don't have the expected type.
                 // So always write @odata.type for top-level derived complex type.
                 if (typeReferenceFromMetadata == null && typeReferenceFromValue.IsComplex())
                 {

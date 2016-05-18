@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         private readonly TransformationNode childTransformations;
 
         private readonly IEnumerable<GroupByPropertyNode> groupingProperties;
-        
+
         /// <summary>
         /// Create a GroupByTransformationNode.
         /// </summary>

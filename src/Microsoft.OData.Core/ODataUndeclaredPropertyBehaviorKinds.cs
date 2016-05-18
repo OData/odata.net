@@ -32,7 +32,7 @@ namespace Microsoft.OData
         /// This flag can only be used when reading responses.
         /// If a link property in the payload is defined in the model it will be read as usual. If it is not declared
         /// it will still be read and reported, but it won't be validated against the model.
-        /// 
+        ///
         /// Link properties are:
         /// - Navigation links
         /// - Association links

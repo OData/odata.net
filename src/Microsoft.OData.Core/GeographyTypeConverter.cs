@@ -24,7 +24,7 @@ namespace Microsoft.OData
         /// <param name="reader">The Xml reader to use to read the value.</param>
         /// <remarks>In order to be consistent with how we are reading other types of property values elsewhere in the product, the reader
         /// is expected to be placed at the beginning of the element when entering this method. After this method call, the reader will be placed
-        /// at the EndElement, such that the next Element will be read in the next Read call. The deserializer that uses this value expects 
+        /// at the EndElement, such that the next Element will be read in the next Read call. The deserializer that uses this value expects
         /// the reader to be in these states when entering and leaving the method.
         /// </remarks>
         /// <returns>Geography instance that was read.</returns>

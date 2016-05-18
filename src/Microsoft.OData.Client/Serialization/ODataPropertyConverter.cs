@@ -177,7 +177,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Converts CLR value into ODataEnumValue. 
+        /// Converts CLR value into ODataEnumValue.
         /// </summary>
         /// <param name="enumClrType">The CLR type.</param>
         /// <param name="value">The Enum value.</param>
@@ -290,10 +290,10 @@ namespace Microsoft.OData.Client
                 collectionTypeName = collectionItemType.FullName;
             }
 
-            // Set the type name to use for client type lookups and validation. 
+            // Set the type name to use for client type lookups and validation.
             collection.TypeName = GetCollectionName(collectionTypeName);
 
-            // Ideally, we should not set type annotation on collection value. 
+            // Ideally, we should not set type annotation on collection value.
             // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
             if (setTypeAnnotation)
             {

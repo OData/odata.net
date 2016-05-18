@@ -19,7 +19,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper class around an IODataRequestMessageAsync to isolate our code from the interface implementation.
     /// </summary>
-    internal sealed class ODataRequestMessage : ODataMessage, 
+    internal sealed class ODataRequestMessage : ODataMessage,
 #if PORTABLELIB
         IODataRequestMessageAsync
 #else

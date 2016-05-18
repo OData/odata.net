@@ -148,8 +148,8 @@ namespace Microsoft.OData
                 return;
             }
 
-            // If we didn't find an expected type from looking up the term in the model, treat this value the same way we would for open property values. 
-            // That is, write the type name (unless its a primitive value with a JSON-native type).  If we did find an expected type, treat the annotation value like a 
+            // If we didn't find an expected type from looking up the term in the model, treat this value the same way we would for open property values.
+            // That is, write the type name (unless its a primitive value with a JSON-native type).  If we did find an expected type, treat the annotation value like a
             // declared property with an expected type. This will still write out the type if the value type is more derived than the declared type, for example.
             bool treatLikeOpenProperty = expectedType == null;
 

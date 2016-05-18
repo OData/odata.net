@@ -30,10 +30,10 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets the number of items in the resource set.</summary>
         /// <returns>The number of items in the resource set.</returns>
-        public long? Count 
-        { 
-            get; 
-            set; 
+        public long? Count
+        {
+            get;
+            set;
         }
 
         /// <summary>Gets or sets the URI that identifies the entity set represented by the resource set.</summary>
@@ -46,7 +46,7 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets the URI representing the next page link.</summary>
         /// <returns>The URI representing the next page link.</returns>
-        public Uri NextPageLink 
+        public Uri NextPageLink
         {
             get
             {

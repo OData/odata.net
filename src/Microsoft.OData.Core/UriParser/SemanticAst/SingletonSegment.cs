@@ -48,7 +48,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmType"/> of this <see cref="SingletonSegment"/>. 
+        /// Gets the <see cref="IEdmType"/> of this <see cref="SingletonSegment"/>.
         /// This will always be an  <see cref="IEdmEntityType"/> of this singleton.
         /// </summary>
         public override IEdmType EdmType

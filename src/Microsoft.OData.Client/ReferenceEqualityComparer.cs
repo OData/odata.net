@@ -55,7 +55,7 @@ namespace Microsoft.OData.Service
         /// <summary>Serves as hashing function for collections.</summary>
         /// <param name="obj">Object to hash.</param>
         /// <returns>
-        /// Hash code for the object; shouldn't change through the lifetime 
+        /// Hash code for the object; shouldn't change through the lifetime
         /// of <paramref name="obj"/>.
         /// </returns>
         int IEqualityComparer.GetHashCode(object obj)
@@ -89,12 +89,12 @@ namespace Microsoft.OData.Service
     }
 
     /// <summary>
-    /// Use this class to compare objects by reference in collections such as 
+    /// Use this class to compare objects by reference in collections such as
     /// dictionary or hashsets.
     /// </summary>
     /// <typeparam name="T">Type of objects to compare.</typeparam>
     /// <remarks>
-    /// Typically accesses statically as eg 
+    /// Typically accesses statically as eg
     /// ReferenceEqualityComparer&lt;Expression&gt;.Instance.
     /// </remarks>
     internal sealed class ReferenceEqualityComparer<T> : ReferenceEqualityComparer, IEqualityComparer<T>
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Service
         /// <summary>Serves as hashing function for collections.</summary>
         /// <param name="obj">Object to hash.</param>
         /// <returns>
-        /// Hash code for the object; shouldn't change through the lifetime 
+        /// Hash code for the object; shouldn't change through the lifetime
         /// of <paramref name="obj"/>.
         /// </returns>
         public int GetHashCode(T obj)

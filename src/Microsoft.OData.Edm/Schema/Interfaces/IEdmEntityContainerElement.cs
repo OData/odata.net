@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm
         None = 0,
 
         /// <summary>
-        /// Represents an element implementing <see cref="IEdmEntitySet"/>. 
+        /// Represents an element implementing <see cref="IEdmEntitySet"/>.
         /// </summary>
         EntitySet,
 
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm
         ActionImport,
 
         /// <summary>
-        /// Represents an element implementing <see cref="IEdmFunctionImport"/>. 
+        /// Represents an element implementing <see cref="IEdmFunctionImport"/>.
         /// </summary>
         FunctionImport,
 

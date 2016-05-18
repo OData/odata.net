@@ -44,7 +44,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the Context
         /// </summary>
-        /// <remarks>Implementation Note, only used in when a new DataServiceCollection, 
+        /// <remarks>Implementation Note, only used in when a new DataServiceCollection,
         ///  would like to remove this dependency but would need to change projection
         ///  plan, might happen in a subsequent refactor
         /// </remarks>
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Client.Materialization
                         this.MergeOption == MergeOption.OverwriteChanges ||
                        (this.MergeOption == MergeOption.PreserveChanges && state == EntityStates.Unchanged) ||
                        (this.MergeOption == MergeOption.PreserveChanges && state == EntityStates.Deleted);
-                    
+
                     this.MaterializationLog.FoundExistingInstance(entry);
 
                     return true;

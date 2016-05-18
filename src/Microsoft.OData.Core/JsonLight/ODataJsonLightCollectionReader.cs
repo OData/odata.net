@@ -37,7 +37,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         internal ODataJsonLightCollectionReader(
             ODataJsonLightInputContext jsonLightInputContext,
-            IEdmTypeReference expectedItemTypeReference, 
+            IEdmTypeReference expectedItemTypeReference,
             IODataReaderWriterListener listener)
             : base(jsonLightInputContext, expectedItemTypeReference, listener)
         {
@@ -65,8 +65,8 @@ namespace Microsoft.OData.JsonLight
 
             // Position the reader on the first node depending on whether we are reading a nested payload or not
             this.jsonLightCollectionDeserializer.ReadPayloadStart(
-                ODataPayloadKind.Collection, 
-                duplicatePropertyNamesChecker, 
+                ODataPayloadKind.Collection,
+                duplicatePropertyNamesChecker,
                 this.IsReadingNestedPayload,
                 /*allowEmptyPayload*/false);
 

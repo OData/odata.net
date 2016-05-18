@@ -128,13 +128,13 @@ namespace Microsoft.OData.Edm.Validation
         // unused 49,
         // unused 50,
 
-        /// <summary> 
-        /// Precision out of range 
+        /// <summary>
+        /// Precision out of range
         /// </summary>
         PrecisionOutOfRange = 51,
 
-        /// <summary> 
-        /// Scale out of range 
+        /// <summary>
+        /// Scale out of range
         /// </summary>
         ScaleOutOfRange = 52,
 
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Edm.Validation
 
         /// <summary>
         /// An object with an interface kind property does not implement the interface corresponding to the value of that property.
-        /// For example this error will be reported for an object that implements <see cref="IEdmType"/> interface with kind property reporting <see cref="EdmTypeKind"/>.Entity, 
+        /// For example this error will be reported for an object that implements <see cref="IEdmType"/> interface with kind property reporting <see cref="EdmTypeKind"/>.Entity,
         /// but does not implement <see cref="IEdmEntityType"/> interface.
         /// </summary>
         InterfaceCriticalKindValueMismatch = 77,
@@ -299,17 +299,17 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         InvalidPropertyInRelationshipConstraint = 111,
 
-        /// <summary> 
+        /// <summary>
         /// Type mismatch between ToProperty and FromProperty in the relationship constraint
         /// </summary>
         TypeMismatchRelationshipConstraint = 112,
 
-        /// <summary> 
+        /// <summary>
         /// Invalid multiplicty of the principal end of a navigation.
         /// </summary>
         InvalidMultiplicityOfPrincipalEnd = 113,
 
-        /// <summary> 
+        /// <summary>
         /// The number of properties in the FromProperty and ToProperty in the relationship constraint must be identical
         /// </summary>
         MismatchNumberOfPropertiesInRelationshipConstraint = 114,
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Edm.Validation
         //// <summary> No Properties defined in either FromProperty or ToProperty in the relationship constraint</summary>
         // MissingPropertyInRelationshipConstraint = 115,
 
-        /// <summary> 
+        /// <summary>
         /// Invalid multiplicty of the dependent end of a navigation.
         /// </summary>
         InvalidMultiplicityOfDependentEnd = 116,
@@ -327,8 +327,8 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         OpenTypeNotSupported = 117,
 
-        /// <summary> 
-        /// Same role referred in the ToRole and FromRole of a referential constraint 
+        /// <summary>
+        /// Same role referred in the ToRole and FromRole of a referential constraint
         /// </summary>
         SameRoleReferredInReferentialConstraint = 119,
 
@@ -348,13 +348,13 @@ namespace Microsoft.OData.Edm.Validation
         //// <summary> Precision must not be greater than 28 </summary>
         // PrecisionMoreThanAllowedMax = 127,
 
-        /// <summary> 
+        /// <summary>
         /// Properties that are part of entity key must be of scalar type
         /// </summary>
         EntityKeyMustBeScalar = 128,
 
-        /// <summary> 
-        /// Binary type properties which are part of entity key are currently supported before V2.0 
+        /// <summary>
+        /// Binary type properties which are part of entity key are currently supported before V2.0
         /// </summary>
         EntityKeyMustNotBeBinary = 129,
 
@@ -449,7 +449,7 @@ namespace Microsoft.OData.Edm.Validation
         //// <summary> Function declares a ReturnType attribute and element</summary>
         // AmbiguousFunctionReturnType = 156,
 
-        /// <summary> 
+        /// <summary>
         /// Nullable complex Type not supported in version 1.0 and 2.0.
         /// </summary>
         NullableComplexTypeProperty = 157,
@@ -458,7 +458,7 @@ namespace Microsoft.OData.Edm.Validation
         // NonComplexCollections = 158,
 
         /// <summary>
-        /// No Key defined on Entity Type 
+        /// No Key defined on Entity Type
         /// </summary>
         KeyMissingOnEntityType = 159,
 
@@ -466,15 +466,15 @@ namespace Microsoft.OData.Edm.Validation
         // InvalidNamespaceInUsing = 160,
 
         /// <summary>
-        /// Need not specify system namespace in using 
+        /// Need not specify system namespace in using
         /// </summary>
         SystemNamespaceEncountered = 161,
 
         //// <summary> Cannot use a reserved/system namespace as alias </summary>
         // CannotUseSystemNamespaceAsAlias = 162,
 
-        /// <summary> 
-        /// Invalid qualification specified for type 
+        /// <summary>
+        /// Invalid qualification specified for type
         /// </summary>
         InvalidNamespaceName = 163,
 
@@ -949,7 +949,7 @@ namespace Microsoft.OData.Edm.Validation
         NavigationPropertyWithRecursiveContainmentTargetMustBeOptional = 305,
 
         /// <summary>
-        /// If a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as 
+        /// If a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the source of navigation is Zero-Or-One.
         /// </summary>
         NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne = 306,

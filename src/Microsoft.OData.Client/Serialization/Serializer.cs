@@ -504,7 +504,7 @@ namespace Microsoft.OData.Client
                 // non-primitive value, use alias.
                 if (!UriHelper.IsPrimitiveValue(value))
                 {
-                    // name = @name 
+                    // name = @name
                     pathBuilder.Append(paramName);
                     pathBuilder.Append(UriHelper.EQUALSSIGN);
                     pathBuilder.Append(UriHelper.ENCODEDATSIGN);
@@ -653,7 +653,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Converts a <see cref="UriOperationParameter"/> value to an escaped string for use in a Uri. Wraps the call to ODL's ConvertToUriLiteral and escapes the results. 
+        /// Converts a <see cref="UriOperationParameter"/> value to an escaped string for use in a Uri. Wraps the call to ODL's ConvertToUriLiteral and escapes the results.
         /// </summary>
         /// <param name="paramName">The name of the <see cref="UriOperationParameter"/>. Used for error reporting.</param>
         /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
@@ -675,7 +675,7 @@ namespace Microsoft.OData.Client
             // do unecessary validations when writing without metadata.
             string literal = ODataUriUtils.ConvertToUriLiteral(valueInODataFormat, CommonUtil.ConvertToODataVersion(this.requestInfo.MaxProtocolVersionAsVersion), null /* edmModel */);
 
-            // The value from ConvertToUriValue will not be escaped, but will already contain literal delimiters like single quotes, so we 
+            // The value from ConvertToUriValue will not be escaped, but will already contain literal delimiters like single quotes, so we
             // need to use our own escape method that will preserve those characters instead of directly calling Uri.EscapeDataString that may escape them.
             // This is only necessary for primitives and nulls because the other structures are serialized using the JSON format and it uses double quotes
             // which have always been escaped.
@@ -738,7 +738,7 @@ namespace Microsoft.OData.Client
                         Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
                         valueInODataFormat = this.propertyConverter.CreateODataComplexValue(typeAnnotation.ElementType, value, null, false, null);
 
-                        // When using JsonVerbose to format query string parameters for Actions, 
+                        // When using JsonVerbose to format query string parameters for Actions,
                         // we cannot write out Complex values in the URI without the type name of the complex type in the JSON payload.
                         // If this value is null, the client has to set the ResolveName property on the DataServiceContext instance.
                         ODataComplexValue complexValue = (ODataComplexValue)valueInODataFormat;

@@ -75,7 +75,7 @@ namespace Microsoft.OData
             Start,
 
             /// <summary>
-            /// The writer has started writing and is writing the wrapper elements for the 
+            /// The writer has started writing and is writing the wrapper elements for the
             /// collection items (if any). No or all items have been written.
             /// </summary>
             Collection,
@@ -359,7 +359,7 @@ namespace Microsoft.OData
         {
             this.StartPayloadInStartState();
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
-            this.InterceptException(() => 
+            this.InterceptException(() =>
                 {
                     if (this.expectedItemType == null)
                     {
@@ -542,7 +542,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Leave the current writer scope and return to the previous scope. 
+        /// Leave the current writer scope and return to the previous scope.
         /// When reaching the top-level replace the 'Started' scope with a 'Completed' scope.
         /// </summary>
         /// <remarks>Note that this method is never called once an error has been written or a fatal exception has been thrown.</remarks>

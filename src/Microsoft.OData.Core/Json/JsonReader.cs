@@ -54,7 +54,7 @@ namespace Microsoft.OData.Json
         /// Stack of scopes.
         /// </summary>
         /// <remarks>
-        /// At the beginning the Root scope is pushed to the stack and stays there for the entire parsing 
+        /// At the beginning the Root scope is pushed to the stack and stays there for the entire parsing
         ///   (so that we don't have to check for empty stack and also to track the number of root-level values)
         /// Each time a new object or array is started the Object or Array scope is pushed to the stack.
         /// If a property inside an Object is found, the Property scope is pushed to the stack.
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Json
         /// </remarks>
         private readonly Stack<Scope> scopes;
 
-        /// <summary>true if annotations are allowed and thus the reader has to 
+        /// <summary>true if annotations are allowed and thus the reader has to
         /// accept more characters in property names than we do normally; otherwise false.</summary>
         private readonly bool allowAnnotations;
 

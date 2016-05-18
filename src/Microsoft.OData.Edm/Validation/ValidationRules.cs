@@ -1096,7 +1096,7 @@ namespace Microsoft.OData.Edm.Validation
 
         /// <summary>
         /// Validates multiplicity of the principal end:
-        /// 0..1 - if some dependent properties are nullable, 
+        /// 0..1 - if some dependent properties are nullable,
         ///    1 - if some dependent properties are not nullable.
         ///    * - not allowed.
         /// </summary>
@@ -1245,7 +1245,7 @@ namespace Microsoft.OData.Edm.Validation
                });
 
         /// <summary>
-        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as 
+        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the target of navigation is 0..1 or Many.
         /// This depends on there being a targetting cycle. Because of the rule <see cref="NavigationMappingMustBeBidirectional" />, we know that either this is always true, or there will be an error
         /// </summary>
@@ -1265,7 +1265,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as 
+        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the source of navigation is Zero-Or-One.
         /// This depends on there being a targetting cycle. Because of the rule <see cref="NavigationMappingMustBeBidirectional" />, we know that either this is always true, or there will be an error
         /// </summary>

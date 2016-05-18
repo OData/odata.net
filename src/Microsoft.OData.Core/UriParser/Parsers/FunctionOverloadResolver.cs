@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// Helper class to help bind function overloads. 
+    /// Helper class to help bind function overloads.
     /// This is shared between path and filter/orderby function resolution.
     /// </summary>
     internal static class FunctionOverloadResolver

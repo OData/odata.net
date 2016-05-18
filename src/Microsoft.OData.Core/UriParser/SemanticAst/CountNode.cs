@@ -22,7 +22,7 @@ namespace Microsoft.OData.UriParser
         /// The collection to be counted, could be any type of collection includes primitive type, enum type, complex type or entity type collection.
         /// </summary>
         private readonly CollectionNode source;
-        
+
         /// <summary>
         /// Constructs a new <see cref="CountNode"/>.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Microsoft.OData.UriParser
         {
             get { return this.source; }
         }
-        
+
         /// <summary>
         /// Gets the value type this node represents.
         /// </summary>

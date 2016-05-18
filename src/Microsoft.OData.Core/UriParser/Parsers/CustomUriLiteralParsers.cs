@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
         /// Parse the given uri text.
         /// Try to parse with a specific Uri literal parser regeistered for the target EdmType.
         /// If no parser is registered, try to parse with the general parsers.
-        /// This method is public becuase of the Interface, but the Singleton instance in internal so it could not be accessed by clients. 
+        /// This method is public becuase of the Interface, but the Singleton instance in internal so it could not be accessed by clients.
         /// </summary>
         /// <param name="text">Part of the Uri which has to be parsed to a value of EdmType <paramref name="targetType"/></param>
         /// <param name="targetType">The type which the uri text has to be parsed to</param>

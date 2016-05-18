@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.GeographyMultiPoint:
                     this.spatialReferenceIdentifier = CsdlConstants.Default_SpatialGeographySrid;
                     break;
-                
+
                 // In the case of a BadSpatialTypeReference, the PrimitiveTypeKind is none, and we will treat that the same as Geometry.
                 default:
                     this.spatialReferenceIdentifier = CsdlConstants.Default_SpatialGeometrySrid;

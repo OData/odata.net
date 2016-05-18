@@ -23,10 +23,10 @@ namespace Microsoft.OData.UriParser
         public SelectToken NormalizeSelectTree(SelectToken treeToNormalize)
         {
             PathReverser pathReverser = new PathReverser();
-            List<PathSegmentToken> invertedPaths = (from property in treeToNormalize.Properties 
+            List<PathSegmentToken> invertedPaths = (from property in treeToNormalize.Properties
                                                     select property.Accept(pathReverser)).ToList();
 
-            // to normalize a select token we just need to invert its paths, so that 
+            // to normalize a select token we just need to invert its paths, so that
             // we match the ordering on an ExpandToken.
             return new SelectToken(invertedPaths);
         }

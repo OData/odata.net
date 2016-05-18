@@ -57,7 +57,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <summary>
         /// Gets the <see cref="IEdmTypeReference"/> of this node.
         /// </summary>
-        public IEdmTypeReference TypeReference 
+        public IEdmTypeReference TypeReference
         {
             get
             {
@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 {
                     return typeReference;
                 }
-            } 
+            }
         }
 
         /// <summary>

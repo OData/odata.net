@@ -54,7 +54,7 @@ namespace Microsoft.OData.Edm
             {
                 return Convert.ToUInt32(value, CultureInfo.InvariantCulture);
             }
-            
+
             if (value is Decimal)
             {
                 return Convert.ToUInt64(value, CultureInfo.InvariantCulture);

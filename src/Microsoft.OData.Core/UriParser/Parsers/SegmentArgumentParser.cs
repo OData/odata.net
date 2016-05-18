@@ -141,7 +141,7 @@ namespace Microsoft.OData.UriParser
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>
-        /// true if the key instance was parsed; false if there was a 
+        /// true if the key instance was parsed; false if there was a
         /// syntactic error.
         /// </returns>
         /// <remarks>
@@ -168,7 +168,7 @@ namespace Microsoft.OData.UriParser
         /// <param name='text'>Text to parse (not null).</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <returns>
-        /// true if the given values were parsed; false if there was a 
+        /// true if the given values were parsed; false if there was a
         /// syntactic error.
         /// </returns>
         /// <remarks>
@@ -267,7 +267,7 @@ namespace Microsoft.OData.UriParser
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>
-        /// true if the key instance was parsed; false if there was a 
+        /// true if the key instance was parsed; false if there was a
         /// syntactic error.
         /// </returns>
         /// <remarks>

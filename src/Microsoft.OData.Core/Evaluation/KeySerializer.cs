@@ -171,7 +171,7 @@ namespace Microsoft.OData.Evaluation
                 Debug.Assert(builder != null, "builder != null");
                 Debug.Assert(keyProperties != null, "keyProperties != null");
 
-                // Keys-as-segments mode is only supported for non-composite keys, so if there is more than 1 key property, 
+                // Keys-as-segments mode is only supported for non-composite keys, so if there is more than 1 key property,
                 // then fall back to the default behavior for the edit link and identity.
                 if (keyProperties.Count > 1)
                 {
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Evaluation
                 else
                 {
                     AppendKeyWithSegments(builder, keyProperties, getPropertyValue);
-                }   
+                }
             }
 
             /// <summary>
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Evaluation
             {
                 Debug.Assert(keyProperties != null, "keyProperties != null");
                 Debug.Assert(keyProperties.Count == 1, "Only supported for non-composite keys.");
-                
+
                 builder.Append('/');
                 builder.Append(GetKeyValueAsString(getPropertyValue, keyProperties.Single(), LiteralFormatter.ForKeys(true)));
             }

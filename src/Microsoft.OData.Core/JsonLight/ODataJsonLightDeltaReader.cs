@@ -124,7 +124,7 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(this.scopes != null, "Scopes must exist.");
 
-                // there is the root scope at the top (when the writer has not started or has completed) 
+                // there is the root scope at the top (when the writer has not started or has completed)
                 // and then the top-level scope (the top-level resource/resource set item) as the second scope on the stack
                 return this.scopes.Count <= 2;
             }
@@ -750,7 +750,7 @@ namespace Microsoft.OData.JsonLight
 
             SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption);
 
-            // Store the duplicate property names checker to use it later when reading the resource set end 
+            // Store the duplicate property names checker to use it later when reading the resource set end
             // (since we allow resourceSet-related annotations to appear after the resource set's data).
             this.topLevelScope.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
 
@@ -775,7 +775,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// Pre-Condition:  Any start node            - The first resource in the resource set
         ///                 JsonNodeType.EndArray     - The end of the resource set
-        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or 
+        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
         private bool ReadAtDeltaResourceSetStartImplementationSynchronously()
@@ -1105,7 +1105,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the start of a delta item and sets up the reader state correctly
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource; 
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <remarks>
@@ -1186,7 +1186,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the resource object.
         /// Post-Condition: JsonNodeType.Property          The property after the odata.type (if there was any), or the property on which the method was called.
         ///                 JsonNodeType.EndObject         End of the resource object.
-        ///                 
+        ///
         /// This method fills the ODataResource.Id property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaResourceId()
@@ -1222,7 +1222,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the resource object.
         /// Post-Condition: JsonNodeType.Property          The property after the odata.type (if there was any), or the property on which the method was called.
         ///                 JsonNodeType.EndObject         End of the resource object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaDeletedEntry.Id property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaDeletedEntryId()
@@ -1254,7 +1254,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the resource object.
         /// Post-Condition: JsonNodeType.Property          The property after the odata.type (if there was any), or the property on which the method was called.
         ///                 JsonNodeType.EndObject         End of the resource object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaDeletedEntry.Reason property if the reason is found in the payload.
         /// </remarks>
         private void ReadDeltaDeletedEntryReason()
@@ -1301,7 +1301,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the link object.
         /// Post-Condition: JsonNodeType.Property          The properties.
         ///                 JsonNodeType.EndObject         End of the link object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaLink.Source property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaLinkSource()
@@ -1333,7 +1333,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the link object.
         /// Post-Condition: JsonNodeType.Property          The properties.
         ///                 JsonNodeType.EndObject         End of the link object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaLink.Relationship property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaLinkRelationship()
@@ -1365,7 +1365,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the link object.
         /// Post-Condition: JsonNodeType.Property          The properties.
         ///                 JsonNodeType.EndObject         End of the link object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaLink.Target property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaLinkTarget()
@@ -1401,7 +1401,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the link object.
         /// Post-Condition: JsonNodeType.Property          The properties.
         ///                 JsonNodeType.EndObject         End of the link object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaDeletedLink.Source property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaDeletedLinkSource()
@@ -1433,7 +1433,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the link object.
         /// Post-Condition: JsonNodeType.Property          The properties.
         ///                 JsonNodeType.EndObject         End of the link object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaLink.Relationship property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaDeletedLinkRelationship()
@@ -1465,7 +1465,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the link object.
         /// Post-Condition: JsonNodeType.Property          The properties.
         ///                 JsonNodeType.EndObject         End of the link object.
-        ///                 
+        ///
         /// This method fills the ODataDeltaLink.Target property if the id is found in the payload.
         /// </remarks>
         private void ReadDeltaDeletedLinkTarget()
@@ -1497,7 +1497,7 @@ namespace Microsoft.OData.JsonLight
         /// Starts the resource, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
         /// <param name="state">The reader state to switch to.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource; 
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <param name="entityTypeFromContextUri">The entity type read from context uri.</param>
@@ -1521,7 +1521,7 @@ namespace Microsoft.OData.JsonLight
         /// Starts the link, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
         /// <param name="state">The reader state to switch to.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource; 
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         private void StartDeltaLink(ODataDeltaReaderState state, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
@@ -1783,7 +1783,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="link">The link info attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected type for the scope.</param>
-            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param> 
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
             ///   it's the expected base type the entries in the expanded link (either the single resource
             ///   or entries in the expanded resource set).

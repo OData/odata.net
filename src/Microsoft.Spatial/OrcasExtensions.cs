@@ -7,7 +7,7 @@
 namespace Microsoft.Spatial
 {
     using System.Text;
-    
+
     /// <summary>
     /// This class holds extension methods for objects that have new capabilities
     /// in newer versions of .net, and this lets us make the calls look the same and reduces the #if noise

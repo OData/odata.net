@@ -88,7 +88,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// Returns the stream obtained from the data service. When reading from this stream
         /// the operations may throw if a network error occurs. This stream is read-only.
-        /// 
+        ///
         /// Caller must call Dispose/Close on either the returned stream or on the response
         /// object itself. Otherwise the network connection will be left open and the caller
         /// might run out of available connections.

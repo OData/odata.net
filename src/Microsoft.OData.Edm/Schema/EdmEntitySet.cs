@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the path that a navigation property targets. 
+        /// Gets the path that a navigation property targets.
         /// </summary>
         public override IEdmPathExpression Path
         {

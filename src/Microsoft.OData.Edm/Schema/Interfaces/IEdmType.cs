@@ -20,22 +20,22 @@ namespace Microsoft.OData.Edm
         None = 0,
 
         /// <summary>
-        /// Represents a type implementing <see cref="IEdmPrimitiveType"/>. 
+        /// Represents a type implementing <see cref="IEdmPrimitiveType"/>.
         /// </summary>
         Primitive = 1,
 
         /// <summary>
-        /// Represents a type implementing <see cref="IEdmEntityType"/>. 
+        /// Represents a type implementing <see cref="IEdmEntityType"/>.
         /// </summary>
         Entity = 2,
 
         /// <summary>
-        /// Represents a type implementing <see cref="IEdmComplexType"/>. 
+        /// Represents a type implementing <see cref="IEdmComplexType"/>.
         /// </summary>
         Complex = 4,
 
         /// <summary>
-        /// Represents a type implementing <see cref="IEdmCollectionType"/>. 
+        /// Represents a type implementing <see cref="IEdmCollectionType"/>.
         /// </summary>
         Collection = 8,
 

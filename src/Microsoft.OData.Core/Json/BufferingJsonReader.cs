@@ -45,7 +45,7 @@ namespace Microsoft.OData.Json
         private bool isBuffering;
 
         /// <summary>
-        /// A flag indicating that the last node for non-buffering read was taken from the buffer; we leave the 
+        /// A flag indicating that the last node for non-buffering read was taken from the buffer; we leave the
         /// node in the buffer until the next Read call.
         /// </summary>
         private bool removeOnNextRead;
@@ -230,8 +230,8 @@ namespace Microsoft.OData.Json
 
             Debug.Assert(this.bufferedNodesHead != null, "Expected at least the current node in the buffer when starting buffering.");
 
-            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the 
-            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't 
+            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
+            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
             // want to blindly continuing to read. The model is that with every call to StartBuffering you reset the position of the
             // current node in the list and start reading through the buffer again.
             if (this.currentBufferedNode == null)
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Json
             this.isBuffering = false;
             this.removeOnNextRead = true;
 
-            // We set the currentBufferedNode to null here to indicate that we want to reset the position of the current 
+            // We set the currentBufferedNode to null here to indicate that we want to reset the position of the current
             // buffered node when we turn on buffering the next time. So far this (i.e., resetting the position of the buffered
             // node) is the only mode the BufferingJsonReader supports. We can make resetting the current node position more explicit
             // if needed.
@@ -323,7 +323,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>true if a new node was found, or false if end of input was reached.</returns>
         /// <remarks>
-        /// If the parsingInStreamError field is false, the method will read ahead for every StartObject node read from the input to check whether the JSON object 
+        /// If the parsingInStreamError field is false, the method will read ahead for every StartObject node read from the input to check whether the JSON object
         /// represents an in-stream error. If so, it throws an <see cref="ODataErrorException"/>. If false, this check will not happen.
         /// This parsingInStremError field is set to true when trying to parse an in-stream error; in normal operation it is false.
         /// </remarks>
@@ -920,7 +920,7 @@ namespace Microsoft.OData.Json
 
         /// <summary>
         /// Skips over a JSON value (primitive, object or array) while parsing in-stream errors.
-        /// Note that the SkipValue extension method can not be used in this case as this method has to 
+        /// Note that the SkipValue extension method can not be used in this case as this method has to
         /// access the base instance's NodeType and call ReadInternal.
         /// </summary>
         /// <remarks>

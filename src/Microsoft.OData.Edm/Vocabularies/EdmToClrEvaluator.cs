@@ -84,7 +84,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             IEdmValue edmValue = this.Evaluate(expression);
             return this.edmToClrConverter.AsClrValue<T>(edmValue);
         }
-        
+
         /// <summary>
         /// Evaluates an expression in the context of a value.
         /// </summary>

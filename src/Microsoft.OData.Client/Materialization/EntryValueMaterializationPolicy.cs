@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client.Materialization
         internal EntityTrackingAdapter EntityTrackingAdapter { get; private set; }
 
         /// <summary>
-        /// Validates the specified <paramref name="property"/> matches 
+        /// Validates the specified <paramref name="property"/> matches
         /// the parsed <paramref name="link"/>.
         /// </summary>
         /// <param name="property">Property as understood by the type system.</param>
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Validates the specified <paramref name="property"/> matches 
+        /// Validates the specified <paramref name="property"/> matches
         /// the parsed <paramref name="atomProperty"/>.
         /// </summary>
         /// <param name="property">Property as understood by the type system.</param>
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Validates the specified <paramref name="property"/> matches 
+        /// Validates the specified <paramref name="property"/> matches
         /// the parsed <paramref name="link"/>.
         /// </summary>
         /// <param name="property">Property as understood by the type system.</param>
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Validates the specified <paramref name="property"/> matches 
+        /// Validates the specified <paramref name="property"/> matches
         /// the parsed <paramref name="atomProperty"/>.
         /// </summary>
         /// <param name="property">Property as understood by the type system.</param>

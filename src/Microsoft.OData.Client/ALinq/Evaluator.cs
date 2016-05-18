@@ -115,7 +115,7 @@ namespace Microsoft.OData.Client
                 Delegate fn = lambda.Compile();
                 object constantValue = fn.DynamicInvoke(null);
                 Debug.Assert(!(constantValue is Expression), "!(constantValue is Expression)");
-                
+
                 // Use the expression type unless it's an array type,
                 // where the actual type may be a vector array rather
                 // than an array with a dynamic lower bound.
@@ -204,5 +204,5 @@ namespace Microsoft.OData.Client
                 return expression;
             }
         }
-    } 
+    }
 }

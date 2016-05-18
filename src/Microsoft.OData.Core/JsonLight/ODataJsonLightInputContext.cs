@@ -35,7 +35,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>The text reader created for the input stream.</summary>
         /// <remarks>
-        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it. 
+        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it.
         /// We further set this field to null when the input is disposed and use it for checks whether the instance has already been disposed.
         /// </remarks>
         private TextReader textReader;
@@ -215,7 +215,7 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -232,7 +232,7 @@ namespace Microsoft.OData.JsonLight
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously read the property from the input and 
+        /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -365,8 +365,8 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -380,8 +380,8 @@ namespace Microsoft.OData.JsonLight
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Asynchronously read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>

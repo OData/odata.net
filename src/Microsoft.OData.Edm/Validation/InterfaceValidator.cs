@@ -903,8 +903,8 @@ namespace Microsoft.OData.Edm.Validation
 
                     if (!(property.Partner is BadNavigationProperty))
                     {
-                        // Validates that the partner of the partner navigation property leads to the same property and also 
-                        // validates that the partner property is not referencing the property itself ( except for the case that the Type of the navigation property is the same as  
+                        // Validates that the partner of the partner navigation property leads to the same property and also
+                        // validates that the partner property is not referencing the property itself ( except for the case that the Type of the navigation property is the same as
                         // its declaring property, ex: a Person entity has Navigation property Friend which has the target as Person and Partner as Friend )
                         if (property.Partner.Partner != property || (property.Partner == property && (ValidationHelper.ComputeNavigationPropertyTarget(property) != property.DeclaringEntityType())))
                         {
@@ -1567,7 +1567,7 @@ namespace Microsoft.OData.Edm.Validation
                 List<EdmError> errors = null;
 
                 ProcessEnumerable(expression, expression.EnumMembers, "EnumMembers", followup, ref errors);
-                
+
                 return errors;
             }
         }

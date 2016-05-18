@@ -217,7 +217,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <LabeledElementReference/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_LabeledElementReference, this.OnLabeledElementReferenceExpression);
 
-            XmlElementParser[] expressionParsers = 
+            XmlElementParser[] expressionParsers =
             {
                 //// <String/>
                 stringConstantExpressionParser,

@@ -30,7 +30,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Tries to parse a collection of function parameters for path.
-        /// </summary>     
+        /// </summary>
         /// <param name="parenthesisExpression">The contents of the parentheses portion of the current path segment.</param>
         /// <param name="configuration">The ODataUriParserConfiguration to create a UriQueryExpressionParser.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>

@@ -102,7 +102,7 @@ namespace Microsoft.OData
         /// Gets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key whose value to get.</param>
-        /// <param name="value">When this method returns, the value associated with the specified key, if the key is found; 
+        /// <param name="value">When this method returns, the value associated with the specified key, if the key is found;
         /// otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
         /// <returns>true if the dictionary contains an element with the specified key; otherwise, false.</returns>
         public bool TryGetValue(string key, out string value)

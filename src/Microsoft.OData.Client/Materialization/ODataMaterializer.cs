@@ -315,7 +315,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>Reads the next value from the input content.</summary>
         /// <returns>true if another value is available after reading; false otherwise.</returns>
         /// <remarks>
-        /// After invocation, the currentValue field (and CurrentValue property) will 
+        /// After invocation, the currentValue field (and CurrentValue property) will
         /// reflect the value materialized from the parser; possibly null if the
         /// result is true (for null values); always null if the result is false.
         /// </remarks>

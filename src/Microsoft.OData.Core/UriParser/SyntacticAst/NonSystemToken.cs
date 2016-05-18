@@ -13,13 +13,13 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using System.Collections.Generic;
-    
+
     #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing a segment in a path.
     /// </summary>
-    /// 
+    ///
     internal sealed class NonSystemToken : PathSegmentToken
     {
         /// <summary>

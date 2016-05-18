@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// <remarks>
         /// This method can be called if it is important to set all the message headers before calling any of the
         /// write methods on the <paramref name="messageWriter"/>.
-        /// If it is sufficient to set the headers when the write methods on the <paramref name="messageWriter"/> 
+        /// If it is sufficient to set the headers when the write methods on the <paramref name="messageWriter"/>
         /// are called, you don't have to call this method and setting the headers will happen automatically.
         /// </remarks>
         public static ODataFormat SetHeadersForPayload(ODataMessageWriter messageWriter, ODataPayloadKind payloadKind)
@@ -56,7 +56,7 @@ namespace Microsoft.OData
             return messageReader.GetFormat();
         }
 
-       
+
         /// <summary>
         /// Gets the reader behavior for null property value on the specified property.
         /// </summary>
@@ -67,7 +67,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
-            
+
             ODataEdmPropertyAnnotation annotation = model.GetAnnotationValue<ODataEdmPropertyAnnotation>(property);
             return annotation == null ? ODataNullValueBehaviorKind.Default : annotation.NullValueReadBehaviorKind;
         }
@@ -82,7 +82,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
-            
+
             ODataEdmPropertyAnnotation annotation = model.GetAnnotationValue<ODataEdmPropertyAnnotation>(property);
             if (annotation == null)
             {
@@ -159,17 +159,17 @@ namespace Microsoft.OData
         ///                 "-ns.*"    -- Excludes all annotation names under the namespace "ns".
         ///                 "-ns.name" -- Excludes only the annotation name "ns.name".
         /// Null or empty filter is equivalent to "-*".
-        /// 
+        ///
         /// The relative priority of the pattern is base on the relative specificity of the patterns being compared. If pattern1 is under the namespace pattern2,
         /// pattern1 is more specific than pattern2 because pattern1 matches a subset of what pattern2 matches. We give higher priority to the pattern that is more specific.
         /// For example:
         ///  "ns.*" has higher priority than "*"
         ///  "ns.name" has higher priority than "ns.*"
         ///  "ns1.name" has same priority as "ns2.*"
-        /// 
+        ///
         /// Patterns with the exclude operator takes higher precedence than the same pattern without.
         /// For example: "-ns.name" has higher priority than "ns.name".
-        /// 
+        ///
         /// Examples:
         ///   "ns1.*,ns.name"       -- Matches any annotation name under the "ns1" namespace and the "ns.name" annotation.
         ///   "*,-ns.*,ns.name"     -- Matches any annotation name outside of the "ns" namespace and only "ns.name" under the "ns" namespace.
@@ -209,7 +209,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Append default values required by OData to specified HTTP header.
-        /// 
+        ///
         /// When header name is ODataConstants.ContentTypeHeader:
         ///     If header value is application/json, append the following default values:
         ///         odata.metadata=minimal

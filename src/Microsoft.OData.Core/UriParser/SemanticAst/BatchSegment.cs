@@ -27,7 +27,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Build a segment to represent $batch.
         /// </summary>
-        private BatchSegment() 
+        private BatchSegment()
         {
             this.Identifier = UriQueryConstants.BatchSegment;
             this.TargetKind = RequestTargetKind.Batch;

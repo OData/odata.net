@@ -160,7 +160,7 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Returns MethodInfo instance for a generic type retrieved by using <paramref name="methodName"/> and gets 
+        /// Returns MethodInfo instance for a generic type retrieved by using <paramref name="methodName"/> and gets
         /// element type for the provided <paramref name="genericTypeDefinition"/>.
         /// </summary>
         /// <param name="propertyType">starting type</param>
@@ -364,11 +364,11 @@ namespace Microsoft.OData.Client.Metadata
                     //// we do support adding elements to collections
                     //// ICollection<PropertyType> { get; /*ignored set;*/ }
 
-                    //// indexed properties are not suported because 
+                    //// indexed properties are not suported because
                     //// we don't have anything to use as the index
                     //// PropertyType Property[object x] { /*ignored get;*/ /*ignored set;*/ }
 
-                    //// also ignored 
+                    //// also ignored
                     //// if PropertyType.IsPointer (like byte*)
                     //// if PropertyType.IsArray except for byte[] and char[]
                     //// if PropertyType == IntPtr or UIntPtr
@@ -389,7 +389,7 @@ namespace Microsoft.OData.Client.Metadata
                     }
 
                     // Ignore properties overriding abstract/virtual properties of a base type
-                    // when only getting the declared properties (otherwise the property will 
+                    // when only getting the declared properties (otherwise the property will
                     // only be included once in the property list anyways).
                     if (declaredOnly && IsOverride(type, propertyInfo))
                     {
@@ -723,7 +723,7 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Checks whether the specified <paramref name="type"/> is a 
+        /// Checks whether the specified <paramref name="type"/> is a
         /// closed constructed type of the generic type.
         /// </summary>
         /// <param name="type">Type to check.</param>

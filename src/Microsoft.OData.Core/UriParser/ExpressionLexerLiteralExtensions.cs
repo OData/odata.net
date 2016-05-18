@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser
     internal static class ExpressionLexerLiteralExtensions
     {
         /// <summary>
-        /// Returns whether the <paramref name="tokenKind"/> is a primitive literal type: 
+        /// Returns whether the <paramref name="tokenKind"/> is a primitive literal type:
         /// Binary, Boolean, DateTime, Decimal, Double, Guid, In64, Integer, Null, Single, or String.
         /// Internal for test use only
         /// </summary>
@@ -125,7 +125,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses a literal. 
+        /// Parses a literal.
         /// Precondition: lexer is at a literal token type: Boolean, DateTime, Decimal, Null, String, Int64, Integer, Double, Single, Guid, Binary.
         /// </summary>
         /// <param name="expressionLexer">The expression lexer.</param>

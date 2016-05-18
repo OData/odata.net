@@ -127,7 +127,7 @@ namespace Microsoft.OData.UriParser
                         return true;
                     }
 
-                    // we allow arbitary values to be encoded as a base 64 array, so we may have 
+                    // we allow arbitary values to be encoded as a base 64 array, so we may have
                     // found a binary value in place of another type. If so, convert it to a UTF-8
                     // string and interpret it normally.
                     string keyValue = Encoding.UTF8.GetString(byteArrayValue, 0, byteArrayValue.Length);
@@ -346,7 +346,7 @@ namespace Microsoft.OData.UriParser
             }
 
             /// <summary>
-            /// Determines whether the values for the specified types should be 
+            /// Determines whether the values for the specified types should be
             /// quoted in URI keys.
             /// </summary>
             /// <param name='type'>Type to check.</param>

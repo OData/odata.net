@@ -43,7 +43,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 // Otherwise $value is the value of the previous property (null is OK for open properties)
-                this.edmType = previousType; 
+                this.edmType = previousType;
             }
         }
 

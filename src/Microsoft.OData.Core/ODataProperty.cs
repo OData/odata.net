@@ -26,10 +26,10 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets the property name.</summary>
         /// <returns>The property name.</returns>
-        public string Name 
-        { 
-            get; 
-            set; 
+        public string Name
+        {
+            get;
+            set;
         }
 
         /// <summary>Gets or sets the property value.</summary>
@@ -66,7 +66,7 @@ namespace Microsoft.OData
         /// Property value, represented as an ODataValue.
         /// </summary>
         /// <remarks>
-        /// This value is the same as <see cref="Value"/>, except that primitive types are wrapped 
+        /// This value is the same as <see cref="Value"/>, except that primitive types are wrapped
         /// in an instance of ODataPrimitiveValue, and null values are represented by an instance of ODataNullValue.
         /// </remarks>
         internal ODataValue ODataValue

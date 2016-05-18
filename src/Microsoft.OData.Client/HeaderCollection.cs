@@ -193,7 +193,7 @@ namespace Microsoft.OData.Client
                     throw Error.InvalidOperation(message);
                 }
 
-                // if request version is 0.x, then we don't put a DSV header 
+                // if request version is 0.x, then we don't put a DSV header
                 // in this case it's up to the server to decide what version this request is
                 // (happens for example if Execute was used)
                 if (requestVersion.Major > 0)

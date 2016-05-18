@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
 
     using System.Collections.Generic;
     using System.Linq;
-        
+
     #endregion Namespaces
 
     /// <summary>
@@ -47,8 +47,8 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
 
             this.name = name;
-            this.arguments = argumentValues == null ? 
-                new ReadOnlyEnumerableForUriParser<FunctionParameterToken>(FunctionParameterToken.EmptyParameterList) : 
+            this.arguments = argumentValues == null ?
+                new ReadOnlyEnumerableForUriParser<FunctionParameterToken>(FunctionParameterToken.EmptyParameterList) :
                 new ReadOnlyEnumerableForUriParser<FunctionParameterToken>(argumentValues.Select(v => new FunctionParameterToken(null, v)));
             this.source = null;
         }

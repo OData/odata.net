@@ -591,7 +591,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// If an <see cref="IEdmOperationImport"/> is specified, then this method ensures that all parameters present in the 
+        /// If an <see cref="IEdmOperationImport"/> is specified, then this method ensures that all parameters present in the
         /// operation import are written to the payload.
         /// </summary>
         /// <remarks>The binding parameter is optional in the payload. Hence this method will not check for missing binding parameter.</remarks>
@@ -739,7 +739,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Leave the current writer scope and return to the previous scope. 
+        /// Leave the current writer scope and return to the previous scope.
         /// When reaching the top-level replace the 'Start' scope with a 'Completed' scope.
         /// </summary>
         /// <remarks>Note that this method is never called once the writer is in 'Error' state.</remarks>

@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm
         /// This pattern eliminates whether a text is potentially DateTimeOffset but not others like GUID, digit .etc
         /// </summary>
         internal static readonly Regex PotentialDateTimeOffsetValidator = CreateCompiled(@"^(\d{2,4})-(\d{1,2})-(\d{1,2})(T|(\s+))(\d{1,2}):(\d{1,2})", RegexOptions.Singleline);
-        
+
 #if PORTABLELIB
         /// <summary>
         /// Replacement for Uri.UriSchemeHttp, which does not exist on.
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Edm
             const int ColonBeforeSecondsOffset = 6;
             int indexOfColonBeforeSeconds = indexOfT + ColonBeforeSecondsOffset;
 
-            // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm 
+            // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm
             if (indexOfT > 0 &&
                 (text.Length == indexOfColonBeforeSeconds || text.Length > indexOfColonBeforeSeconds && text[indexOfColonBeforeSeconds] != ':'))
             {
@@ -755,7 +755,7 @@ namespace Microsoft.OData.Edm
         /// <param name="otherType">Type to test if typeType is a subclass.</param>
         /// <returns>True if thisType is a subclass of otherType, otherwise false.</returns>
         /// <remarks>
-        /// TODO: Add this back to TypeInfo. This method will still be needed since it works on Type, but the 
+        /// TODO: Add this back to TypeInfo. This method will still be needed since it works on Type, but the
         ///       implementation should just be able to call the TypeInfo version directly instead of the full implementation here.
         /// </remarks>
         internal static bool IsSubclassOf(this Type thisType, Type otherType)

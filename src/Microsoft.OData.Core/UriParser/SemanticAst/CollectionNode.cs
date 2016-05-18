@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces    
+    #region Namespaces
 
     using Microsoft.OData.Edm;
 
@@ -22,7 +22,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public abstract IEdmTypeReference ItemType
         {
-            get; 
+            get;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser
         /// Gets the kind of this node.
         /// </summary>
         public override QueryNodeKind Kind
-        {  
+        {
             get { return (QueryNodeKind)this.InternalKind; }
         }
     }

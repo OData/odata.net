@@ -57,11 +57,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Func<DataServiceClientRequestMessageArgs, DataServiceClientRequestMessage> OnMessageCreating
         {
-            get 
-            { 
-                return this.onmessageCreating; 
+            get
+            {
+                return this.onmessageCreating;
             }
-            
+
             set
             {
                 if (this.ContextUsingSendingRequest)
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
         {
             get { return this.OnMessageCreating != null; }
         }
-        
+
         /// <summary>
         /// Gets or sets the a value indicating whether the context is using the sending request event or not.
         /// </summary>

@@ -52,8 +52,8 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Data service versions supported on the client
         /// </summary>
-        internal static readonly Version[] SupportedResponseVersions = 
-        { 
+        internal static readonly Version[] SupportedResponseVersions =
+        {
             ODataVersion4
         };
 
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Similar to Activator.CreateInstance, but uses LCG to avoid 
+        /// Similar to Activator.CreateInstance, but uses LCG to avoid
         /// more stringent Reflection security constraints.in Silverlight
         /// </summary>
         /// <param name="type">Type to create.</param>
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Similar to ConstructorInfo.Invoke, but uses LCG to avoid 
+        /// Similar to ConstructorInfo.Invoke, but uses LCG to avoid
         /// more stringent Reflection security constraints in Silverlight
         /// </summary>
         /// <param name="constructor">Constructor to invoke.</param>
@@ -452,7 +452,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// checks whether the batch flag with independent Operation per change set is set 
+        /// checks whether the batch flag with independent Operation per change set is set
         /// </summary>
         /// <param name="options">options as specified by the user.</param>
         /// <returns>true if the given flag is set, otherwise false.</returns>
@@ -544,7 +544,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         /// <summary>
-        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/> 
+        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">Type parameter.</typeparam>
         /// <param name="enumerable">IEnumerable which contains the list of the objects that needs to be converted.</param>

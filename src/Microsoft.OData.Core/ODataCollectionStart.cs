@@ -41,7 +41,7 @@ namespace Microsoft.OData
             get;
             set;
         }
-        
+
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataCollectionWriter"/> for this <see cref="ODataCollectionStart"/>.
         /// </summary>

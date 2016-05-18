@@ -15,7 +15,7 @@ namespace Microsoft.OData
     using Microsoft.OData.UriParser;
 
     /// <summary>
-    /// Build QueryNode to String Representation 
+    /// Build QueryNode to String Representation
     /// </summary>
     internal sealed class NodeToStringBuilder : QueryNodeVisitor<String>
     {
@@ -535,7 +535,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Build BinaryOperatorNode to uri 
+        /// Build BinaryOperatorNode to uri
         /// </summary>
         /// <param name="operatorKind">the kind of the BinaryOperatorNode</param>
         /// <returns>String format of the operator</returns>

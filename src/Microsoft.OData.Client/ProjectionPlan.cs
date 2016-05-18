@@ -43,8 +43,8 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Provides a method to materialize a payload.</summary>
-        internal Func<object, object, Type, object> Plan 
-        { 
+        internal Func<object, object, Type, object> Plan
+        {
             get;
             set;
         }

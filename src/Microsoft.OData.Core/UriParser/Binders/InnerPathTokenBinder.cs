@@ -57,7 +57,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Given a property name, if the associated type reference is strucutred, then this returns  
+        /// Given a property name, if the associated type reference is strucutred, then this returns
         /// the property of the structured type. Otherwise, it returns null.
         /// </summary>
         /// <param name="parentReference">The parent type to be used to find binding options.</param>
@@ -183,7 +183,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we 
+        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we
         /// use the implicit parameter from the BindingState as the parent node.
         /// </summary>
         /// <param name="segmentToken">Token to determine the parent node for.</param>

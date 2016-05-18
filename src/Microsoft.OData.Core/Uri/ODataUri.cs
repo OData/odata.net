@@ -31,7 +31,7 @@ namespace Microsoft.OData
         private Uri serviceRoot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ODataUri"/> class. 
+        /// Initializes a new instance of the <see cref="ODataUri"/> class.
         /// </summary>
         public ODataUri()
         {
@@ -40,7 +40,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Create a new ODataUri. This contains the semantic meaning of the 
+        /// Create a new ODataUri. This contains the semantic meaning of the
         /// entire uri.
         /// </summary>
         /// <param name="parameterAliasValueAccessor">The ParameterAliasValueAccessor.</param>
@@ -136,7 +136,7 @@ namespace Microsoft.OData
         public ODataPath Path { get; set; }
 
         /// <summary>
-        /// Gets or sets any custom query options for this uri. 
+        /// Gets or sets any custom query options for this uri.
         /// </summary>
         public IEnumerable<QueryNode> CustomQueryOptions { get; set; }
 

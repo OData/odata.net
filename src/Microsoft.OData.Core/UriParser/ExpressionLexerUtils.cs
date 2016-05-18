@@ -13,7 +13,7 @@ namespace Microsoft.OData.Service.Parsing
     #region Namespaces
     using System;
     using System.Diagnostics;
-    
+
     #endregion Namespaces
 
     /// <summary>

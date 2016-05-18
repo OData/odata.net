@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <param name="type">The type to assert the expression as.</param>
         /// <param name="discoveredErrors">Errors produced if the expression does not match the specified type.</param>
         /// <returns>A value indicating whether the expression is valid for the given type or not.</returns>
-        /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further. 
+        /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further.
         /// If an expression claims a type, it must be validated that the type is valid for the expression. If the expression does not claim a type
         /// this method will attempt to check the validity of the expression itself with the asserted type.</remarks>
         public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <param name="matchExactly">A value indicating whether the expression must match the asserted type exactly, or simply be compatible.</param>
         /// <param name="discoveredErrors">Errors produced if the expression does not match the specified type.</param>
         /// <returns>A value indicating whether the expression is valid for the given type or not.</returns>
-        /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further. 
+        /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further.
         /// If an expression claims a type, it must be validated that the type is valid for the expression. If the expression does not claim a type
         /// this method will attempt to check the validity of the expression itself with the asserted type.</remarks>
         public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)

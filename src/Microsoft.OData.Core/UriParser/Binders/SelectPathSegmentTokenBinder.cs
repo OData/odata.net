@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
                     return nextSegment;
                 }
 
-                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName 
+                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName
                 // and that operation cannot be bound to the entities requested, the service MUST ignore the selectItem.
                 if (!edmType.IsOpen)
                 {

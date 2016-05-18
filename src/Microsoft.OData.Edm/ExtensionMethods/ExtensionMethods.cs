@@ -1507,7 +1507,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns the base type of the definition of this reference. 
+        /// Returns the base type of the definition of this reference.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <returns>The base type of the definition of this reference. </returns>
@@ -2157,7 +2157,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Checks whether all operations have the same return type 
+        /// Checks whether all operations have the same return type
         /// </summary>
         /// <param name="operations">the list to check</param>
         /// <param name="forceFullyQualifiedNameFilter">Ensures that the Where filter clause applies the Full name,</param>

@@ -23,7 +23,7 @@ namespace Microsoft.OData.UriParser
         internal static SingleValueNode BindRangeVariableToken(RangeVariableToken rangeVariableToken, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(rangeVariableToken, "rangeVariableToken");
-            
+
             RangeVariable rangeVariable = state.RangeVariables.SingleOrDefault(p => p.Name == rangeVariableToken.Name);
 
             if (rangeVariable == null)

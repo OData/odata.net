@@ -137,7 +137,7 @@ namespace Microsoft.OData.Client
             {
                 return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, true).SingleOrDefault();
             }
-            
+
             return this.Query.Execute().SingleOrDefault();
         }
 #endif
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Client
             {
                 return this.Context.BeginExecute<TElement>(this.RequestUri, callback, state, XmlConstants.HttpMethodGet, true);
             }
-            
+
             return this.Query.BeginExecute(callback, state);
         }
 

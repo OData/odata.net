@@ -290,12 +290,12 @@ namespace Microsoft.Spatial
             /// </summary>
             private void ParseTaggedText()
             {
-                // <geometry tagged text> ::= <point tagged text> | 
-                //                            <linestring tagged text> | 
+                // <geometry tagged text> ::= <point tagged text> |
+                //                            <linestring tagged text> |
                 //                            <polygon tagged text> |
                 //                            <multipoint tagged text> |
-                //                            <multilinestring tagged text> | 
-                //                            <multipolygon tagged text> | 
+                //                            <multilinestring tagged text> |
+                //                            <multipolygon tagged text> |
                 //                            <geometrycollection tagged text>
                 // <point tagged text> ::= point <point text>
                 // <linestring tagged text> ::= linestring <linestring text>
@@ -308,7 +308,7 @@ namespace Microsoft.Spatial
                 {
                     throw new FormatException(Strings.WellKnownText_UnknownTaggedText(String.Empty));
                 }
-                
+
                 switch (this.lexer.CurrentToken.Text.ToUpperInvariant())
                 {
                     case WellKnownTextConstants.WktPoint:

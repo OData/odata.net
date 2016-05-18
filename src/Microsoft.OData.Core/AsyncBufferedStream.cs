@@ -278,7 +278,7 @@ namespace Microsoft.OData
 
             this.bufferToAppendTo = null;
 
-            // clear the buffer queue to leave the stream in a 'clean' state even if 
+            // clear the buffer queue to leave the stream in a 'clean' state even if
             // flushing fails
             Queue<DataBuffer> buffers = this.bufferQueue;
             this.bufferQueue = new Queue<DataBuffer>();

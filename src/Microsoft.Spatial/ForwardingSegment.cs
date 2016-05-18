@@ -22,7 +22,7 @@ namespace Microsoft.Spatial
         internal static readonly SpatialPipeline SpatialPipelineNoOp = new SpatialPipeline(new NoOpGeographyPipeline(), new NoOpGeometryPipeline());
 
         /// <summary>
-        /// The current drawspatial that will be called and whose results will be forwarded to the 
+        /// The current drawspatial that will be called and whose results will be forwarded to the
         /// next segment
         /// </summary>
         private readonly SpatialPipeline current;
@@ -203,7 +203,7 @@ namespace Microsoft.Spatial
         internal class GeographyForwarder : GeographyPipeline
         {
             /// <summary>
-            /// The ForwardingSegment instance that this pipe is 
+            /// The ForwardingSegment instance that this pipe is
             /// associated with
             /// </summary>
             private readonly ForwardingSegment segment;
@@ -260,7 +260,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Begin drawing a Geography figure 
+            /// Begin drawing a Geography figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void BeginFigure(GeographyPosition position)
@@ -273,7 +273,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Finish drawing a Geography figure 
+            /// Finish drawing a Geography figure
             /// </summary>
             public override void EndFigure()
             {
@@ -281,7 +281,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Continue drawing a Geography figure 
+            /// Continue drawing a Geography figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void LineTo(GeographyPosition position)
@@ -330,7 +330,7 @@ namespace Microsoft.Spatial
         internal class GeometryForwarder : GeometryPipeline
         {
             /// <summary>
-            /// The ForwardingSegment instance that this pipe is 
+            /// The ForwardingSegment instance that this pipe is
             /// associated with
             /// </summary>
             private readonly ForwardingSegment segment;
@@ -387,7 +387,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Begin drawing a Geometry figure 
+            /// Begin drawing a Geometry figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void BeginFigure(GeometryPosition position)
@@ -397,7 +397,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Finish drawing a Geometry figure 
+            /// Finish drawing a Geometry figure
             /// </summary>
             public override void EndFigure()
             {
@@ -405,7 +405,7 @@ namespace Microsoft.Spatial
             }
 
             /// <summary>
-            /// Continue drawing a Geometry figure 
+            /// Continue drawing a Geometry figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void LineTo(GeometryPosition position)

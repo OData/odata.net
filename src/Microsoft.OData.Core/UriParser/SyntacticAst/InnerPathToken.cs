@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using System.Collections.Generic;
-        
+
     #endregion Namespaces
 
     /// <summary>

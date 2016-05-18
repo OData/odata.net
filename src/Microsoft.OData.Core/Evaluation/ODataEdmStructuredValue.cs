@@ -56,7 +56,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         public IEnumerable<IEdmPropertyValue> PropertyValues
         {
-            get 
+            get
             {
                 if (this.properties != null)
                 {

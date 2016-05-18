@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser
         /// Computes the <see cref="IEdmTypeReference"/> of the resource identified by this <see cref="ODataPath"/>.
         /// </summary>
         /// <param name="path">Path to compute the type for.</param>
-        /// <returns>The <see cref="IEdmTypeReference"/> of the resource, or null if the path does not identify a 
+        /// <returns>The <see cref="IEdmTypeReference"/> of the resource, or null if the path does not identify a
         /// resource with a type.</returns>
         public static IEdmTypeReference EdmType(this ODataPath path)
         {
@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
         /// Computes the <see cref="IEdmNavigationSource"/> of the resource identified by this <see cref="ODataPath"/>.
         /// </summary>
         /// <param name="path">Path to compute the set for.</param>
-        /// <returns>The <see cref="IEdmNavigationSource"/> of the resource, or null if the path does not identify a 
+        /// <returns>The <see cref="IEdmNavigationSource"/> of the resource, or null if the path does not identify a
         /// resource that is part of a set.</returns>
         public static IEdmNavigationSource NavigationSource(this ODataPath path)
         {
@@ -158,7 +158,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="urlConventions">Mark whether key is segment</param>
         /// <returns>The string representation of the Query Url path.</returns>
         public static string ToResourcePathString(this ODataPath path, ODataUrlConventions urlConventions)
-        {       
+        {
              return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlConventions.UrlConvention)).ToArray()).TrimStart('/');
         }
 

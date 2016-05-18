@@ -153,7 +153,7 @@ namespace Microsoft.OData.JsonLight
                                 return Enumerable.Empty<ODataPayloadKind>();
                             }
 
-                            // At this point we successfully read the first error property. 
+                            // At this point we successfully read the first error property.
                             // Skip the error value and check whether there are more properties.
                             this.JsonReader.SkipValue();
                         }

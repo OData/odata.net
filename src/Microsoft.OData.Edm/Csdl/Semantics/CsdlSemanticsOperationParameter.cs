@@ -43,7 +43,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             get { return this.typeCache.GetValue(this, ComputeTypeFunc, null); }
         }
-  
+
         public string Name
         {
             get { return this.parameter.Name; }

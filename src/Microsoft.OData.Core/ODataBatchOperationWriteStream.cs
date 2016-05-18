@@ -17,8 +17,8 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync. 
-    /// This stream communicates status changes to the owning batch writer (via IODataBatchOperationListener) 
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
+    /// This stream communicates status changes to the owning batch writer (via IODataBatchOperationListener)
     /// to properly flush buffered data and move the batch writer's state machine forward.
     /// </summary>
     internal sealed class ODataBatchOperationWriteStream : ODataBatchOperationStream

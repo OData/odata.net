@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// Gets the kind of this node.
         /// </summary>
         public override QueryNodeKind Kind
-        {  
+        {
             get { return (QueryNodeKind)this.InternalKind; }
         }
     }

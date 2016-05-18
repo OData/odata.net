@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="args">Arguments for creating the request message.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "SetHeader is a safe virtual method to be called from the constructor")]
-        public HttpWebRequestMessage(DataServiceClientRequestMessageArgs args) 
+        public HttpWebRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args.ActualMethod)
         {
             Util.CheckArgumentNull(args, "args");
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
             this.requestUrl = args.RequestUri;
 
             this.httpRequest = HttpWebRequestMessage.CreateRequest(this.ActualMethod, this.Url, args);
-            
+
             // Now set the headers.
             foreach (var keyValue in args.Headers)
             {
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
-        ///  Internet resource. 
+        ///  Internet resource.
         /// </summary>
         public override bool SendChunked
         {
@@ -418,7 +418,7 @@ namespace Microsoft.OData.Client
 
             bool headerSet = false;
 
-            // Weird behavior, looks like this won't work in silverlight on the .net portable libaries. 
+            // Weird behavior, looks like this won't work in silverlight on the .net portable libaries.
             // http://social.msdn.microsoft.com/Forums/en-US/netfxbcl/thread/7440fc9d-3490-4823-ac93-73706b535c6a/
             // http://connect.microsoft.com/VisualStudio/feedback/details/770104/cannot-set-useragent-of-a-httpwebrequest-in-portable-class-and-winrt-libraries
             // On Windows 8 store throws InvalidOperationException when setting the UserAgent

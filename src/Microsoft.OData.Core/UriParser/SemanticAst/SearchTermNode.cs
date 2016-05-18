@@ -27,7 +27,7 @@ namespace Microsoft.OData.UriParser
         /// The search term value.
         /// </summary>
         private readonly string text;
-       
+
         /// <summary>
         /// Create a SearchTermNode
         /// </summary>

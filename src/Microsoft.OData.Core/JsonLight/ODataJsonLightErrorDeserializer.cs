@@ -173,9 +173,9 @@ namespace Microsoft.OData.JsonLight
         /// The action should leave the reader positioned on the node after the property value.
         /// </param>
         /// <remarks>
-        /// 
+        ///
         /// This method should only be used for scopes where we allow (and ignore) annotations in a custom namespace, i.e. scopes which directly correspond to a class in the OM.
-        /// 
+        ///
         /// Pre-Condition:  JsonNodeType.StartObject    - The start of the JSON object being processed.
         ///                 any                         - Will throw if not StartObject.
         /// Post-Condition: any                         - The node after the EndObject node for the JSON object being processed.
@@ -225,7 +225,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// This method should read the property annotation value and return a representation of the value which will be later
         /// consumed by the resource reading code, or throw if ther is something unexpected.
-        /// 
+        ///
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property annotation property
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
@@ -252,7 +252,7 @@ namespace Microsoft.OData.JsonLight
                 return typeName;
             }
 
-            throw new ODataException(Strings.ODataJsonLightErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(propertyAnnotationName));            
+            throw new ODataException(Strings.ODataJsonLightErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(propertyAnnotationName));
         }
 
         /// <summary>
@@ -387,8 +387,8 @@ namespace Microsoft.OData.JsonLight
                             typeName as string,
                             null /*expectedValueTypeReference*/,
                             null /*duplicatePropertiesNamesChecker*/,
-                            null /*collectionValidator*/, 
-                            false /*validateNullValue*/, 
+                            null /*collectionValidator*/,
+                            false /*validateNullValue*/,
                             false /*isTopLevelPropertyValue*/,
                             false /*insideComplexValue*/,
                             propertyName);

@@ -128,25 +128,25 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal string Name
         {
-            get; 
+            get;
             private set;
         }
 
         internal CsdlLocation Location
         {
-            get; 
+            get;
             private set;
         }
 
         internal string Value
         {
-            get; 
+            get;
             private set;
         }
 
         internal bool IsAttribute
         {
-            get; 
+            get;
             private set;
         }
     }
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal bool IsUsed
         {
-            get; 
+            get;
             set;
         }
 

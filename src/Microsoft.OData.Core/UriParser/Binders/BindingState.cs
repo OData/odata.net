@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         private readonly Stack<RangeVariable> rangeVariables = new Stack<RangeVariable>();
 
         /// <summary>
-        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the 
+        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the
         /// implicit parameter ($it) for all expressions.
         /// </summary>
         private RangeVariable implicitRangeVariable;
@@ -78,7 +78,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the 
+        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the
         /// implicit parameter ($it) for all expressions.
         /// </summary>
         internal RangeVariable ImplicitRangeVariable

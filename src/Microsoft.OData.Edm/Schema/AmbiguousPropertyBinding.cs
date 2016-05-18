@@ -38,7 +38,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the type that this property belongs to.
         /// </summary>
-        public IEdmStructuredType DeclaringType 
+        public IEdmStructuredType DeclaringType
         {
             get { return this.declaringType; }
         }

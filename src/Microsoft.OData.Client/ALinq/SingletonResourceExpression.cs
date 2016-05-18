@@ -29,7 +29,7 @@ namespace Microsoft.OData.Client
         /// <param name="projection">the projection expression</param>
         /// <param name="resourceTypeAs">TypeAs type</param>
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
-        internal SingletonResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion) : 
+        internal SingletonResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion) :
             base(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion)
         {
             UseFilterAsPredicate = true;

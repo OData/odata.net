@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client
         private static readonly Dictionary<PropertyInfo, MethodInfo> propertiesAsMethodsMap;
 
         /// <summary>
-        /// Cache used to store element type (TElement) for key Type if key Type implements IEnumerable{TElement} or 
+        /// Cache used to store element type (TElement) for key Type if key Type implements IEnumerable{TElement} or
         /// null if the key Type does not implement IEnumerable{T} e.g.:
         /// List{Entity} - Entity
         /// Entity       - null
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(GeographyOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeographyPoint), typeof(GeographyPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
             expressionMethodMap.Add(typeof(GeometryOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeometryPoint), typeof(GeometryPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
 
-            // Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case           
+            // Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case
 #if !PORTABLELIB
             Debug.Assert(expressionMethodMap.Count == ExpectedCount, "expressionMethodMap.Count == ExpectedCount");
 #endif

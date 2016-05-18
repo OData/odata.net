@@ -58,7 +58,7 @@ namespace Microsoft.OData.UriParser
             bool foundNavProp = false;
             foreach (ODataPathSegment segment in this)
             {
-                if (segment is TypeSegment) 
+                if (segment is TypeSegment)
                 {
                     if (index == this.Count - 1)
                     {

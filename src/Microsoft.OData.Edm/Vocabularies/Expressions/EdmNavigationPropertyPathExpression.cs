@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Initializes a new instance of the <see cref="EdmNavigationPropertyPathExpression"/> class.
         /// </summary>
         /// <param name="path">Path segments.</param>
-        public EdmNavigationPropertyPathExpression(IEnumerable<string> path) 
+        public EdmNavigationPropertyPathExpression(IEnumerable<string> path)
             : base(path)
         {
         }

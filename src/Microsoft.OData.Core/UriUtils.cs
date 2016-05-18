@@ -102,11 +102,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Determines whether the <paramref name="baseUri"/> Uri instance is a 
-        /// base of the specified Uri instance. 
+        /// Determines whether the <paramref name="baseUri"/> Uri instance is a
+        /// base of the specified Uri instance.
         /// </summary>
         /// <remarks>
-        /// The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of "https://host2.org/Service.svc/Bla" 
+        /// The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of "https://host2.org/Service.svc/Bla"
         /// but is not a valid base for "http://host1.com/OtherService.svc/Bla".
         /// </remarks>
         /// <param name="baseUri">The candidate base URI.</param>
@@ -135,8 +135,8 @@ namespace Microsoft.OData
             try
             {
                 // ABNF shows guidValue defined as
-                // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
-                // which comes to length of 36 
+                // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
+                // which comes to length of 36
                 string trimmedText = text.Trim();
                 if (trimmedText.Length != 36 || trimmedText.IndexOf('-') != 8)
                 {
@@ -172,7 +172,7 @@ namespace Microsoft.OData
             }
             catch (FormatException exception)
             {
-                // This means it is a string similar to DateTimeOffset String, but cannot be parsed as DateTimeOffset and could not be a digit or GUID .etc. 
+                // This means it is a string similar to DateTimeOffset String, but cannot be parsed as DateTimeOffset and could not be a digit or GUID .etc.
                 Match m = PlatformHelper.PotentialDateTimeOffsetValidator.Match(text);
                 if (m.Success)
                 {

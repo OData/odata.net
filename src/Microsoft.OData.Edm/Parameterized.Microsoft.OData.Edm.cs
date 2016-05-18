@@ -2092,7 +2092,7 @@ namespace Microsoft.OData.Edm {
         internal static Exception ArgumentNull(string paramName) {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -2108,7 +2108,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality. 
+        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
         internal static Exception NotSupported() {
             return new NotSupportedException();

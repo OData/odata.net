@@ -27,7 +27,7 @@ namespace Microsoft.OData
         /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCoreAsync(
-            ODataInputContext inputContext, 
+            ODataInputContext inputContext,
             bool readingResourceSet,
             bool readingDelta,
             IODataReaderWriterListener listener)

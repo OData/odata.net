@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using System.Collections.Generic;
-        
+
     #endregion Namespaces
 
     /// <summary>
@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="properties">The properties according to which to select the results.</param>
         public SelectToken(IEnumerable<PathSegmentToken> properties)
         {
-            this.properties = properties != null ? new ReadOnlyEnumerableForUriParser<PathSegmentToken>(properties) 
+            this.properties = properties != null ? new ReadOnlyEnumerableForUriParser<PathSegmentToken>(properties)
                                                  : new ReadOnlyEnumerableForUriParser<PathSegmentToken>(new List<PathSegmentToken>());
         }
 

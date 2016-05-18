@@ -53,7 +53,7 @@ namespace Microsoft.OData.UriParser
 
             // Bind the expression
             SingleValueNode expression = this.BindExpressionToken(lambdaToken.Expression);
-            
+
             // Create the node
             LambdaNode lambdaNode = NodeFactory.CreateLambdaNode(state, parent, expression, rangeVariable, lambdaToken.Kind);
 
@@ -65,7 +65,7 @@ namespace Microsoft.OData.UriParser
 
             return lambdaNode;
         }
-        
+
         /// <summary>
         /// Bind the parent of the LambdaToken
         /// </summary>
@@ -85,7 +85,7 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
                 }
 
-                // support open collection properties 
+                // support open collection properties
                 return new CollectionOpenPropertyAccessNode(parentOpenPropertyNode.Source, parentOpenPropertyNode.Name);
             }
 

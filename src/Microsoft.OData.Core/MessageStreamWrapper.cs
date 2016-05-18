@@ -52,7 +52,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="innerStream">The inner <see cref="Stream"/> to wrap.</param>
         /// <param name="maxBytesToBeRead">The maximum number of bytes to be read from the <paramref name="innerStream"/>.</param>
-        /// <returns>A stream wrapping the <paramref name="innerStream"/> that ignores calls to Dispose and 
+        /// <returns>A stream wrapping the <paramref name="innerStream"/> that ignores calls to Dispose and
         /// enforces the maximum number of bytes to be read from the stream.</returns>
         internal static Stream CreateNonDisposingStreamWithMaxSize(Stream innerStream, long maxBytesToBeRead)
         {
@@ -73,7 +73,7 @@ namespace Microsoft.OData
             MessageStreamWrappingStream wrappingStream = stream as MessageStreamWrappingStream;
             return wrappingStream != null && wrappingStream.IgnoreDispose;
         }
-        
+
         /// <summary>
         /// Stream wrapper that supports counting the total number of bytes read from the stream and ensures
         /// that they don't exceed a specified maximum (used for security purposes) and ignoring calls

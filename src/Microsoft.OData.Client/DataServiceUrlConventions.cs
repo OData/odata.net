@@ -136,7 +136,7 @@ namespace Microsoft.OData.Client
             }
 
             // DEVNOTE: This can return null, and will be handled later. The reason for this is that the client
-            // and server have different ways of getting property values, but both will eventually hit the same 
+            // and server have different ways of getting property values, but both will eventually hit the same
             // codepath and that is where the null is handled.
             return primitiveValue.ToClrValue();
         }

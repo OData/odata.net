@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
-        ///  Internet resource. 
+        ///  Internet resource.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Make code very confusing and cumbersome to write code for various platforms. Hence suppressing the message")]
 #if !PORTABLELIB

@@ -7,7 +7,7 @@
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.UriParser
-{  
+{
     /// <summary>
     /// Node representing a type segment that casts an entity collection node.
     /// </summary>

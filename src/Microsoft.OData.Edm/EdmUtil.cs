@@ -446,7 +446,7 @@ namespace Microsoft.OData.Edm
                 if (!dictionary.TryGetValue(key, out val))
                 {
                     val = computedValue;
-                    dictionary.Add(key, computedValue);                    
+                    dictionary.Add(key, computedValue);
                 }
             }
 

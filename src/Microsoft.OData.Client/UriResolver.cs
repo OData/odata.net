@@ -37,7 +37,7 @@ namespace Microsoft.OData.Client
                 this.baseUriWithSlash = ForceSlashTerminatedUri(this.baseUri);
             }
         }
-        
+
         /// <summary>Gets the ResolveEntitySet value.</summary>
         internal Func<string, Uri> ResolveEntitySet
         {
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// This property returns the baseUri value with no validation at all
-        /// 
+        ///
         /// NOTE: this property should only be used to show the user what the BaseUri value is, all
         ///       other access should go through the GetBaseUriWithSlash() method
         /// </summary>
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
             {
                 return ForceNonSlashTerminatedUri(resolved);
             }
-            
+
             if (this.baseUriWithSlash != null)
             {
                 return UriUtil.CreateUri(this.baseUriWithSlash, UriUtil.CreateUri(entitySetName, UriKind.Relative));
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// returns the BaseUri property followed by a slash.
-        /// 
+        ///
         /// if the BaseUri property is null, an InvalidOperationException is thrown
         /// </summary>
         /// <returns>The BaseUri property with a slash.</returns>
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Converts the baseUri passed in to an absolute Uri and then validates that it is 
+        /// Converts the baseUri passed in to an absolute Uri and then validates that it is
         /// usable by the system.
         /// </summary>
         /// <param name="baseUri">The user provided baseUri value.</param>
@@ -204,7 +204,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Returns a Uri that is not slash terminated
-        /// 
+        ///
         /// Will be the passed in one if it is slash termination free, or a new one
         /// if the passed in one is slash terminated.
         /// </summary>
@@ -226,8 +226,8 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Returns a slash terminated Uri.  
-        /// 
+        /// Returns a slash terminated Uri.
+        ///
         /// Will be the passed in one if it is already slash terminated, or a new one
         /// if the passed in one is not slash terminated.
         /// </summary>
@@ -250,11 +250,11 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// returns the BaseUri property followed by a slash.
-        /// 
+        ///
         /// if the BaseUri property is null, an InvalidOperationException is thrown
         /// </summary>
         /// <param name="getErrorMessage">
-        /// Returns the error message to use if the BaseUri is not available. Using a function so we only have to 
+        /// Returns the error message to use if the BaseUri is not available. Using a function so we only have to
         /// look up the resource if an error is actually thrown;
         /// </param>
         /// <returns>The BaseUri property with a slash.</returns>

@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    
+
     /// <summary>
     /// Helper class for T4 Template, provide uniform API for different platforms
     /// </summary>

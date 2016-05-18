@@ -55,7 +55,7 @@ namespace Microsoft.OData
         private Encoding changesetEncoding;
 
         /// <summary>
-        /// true if the underlying stream was exhausted during a read operation; we won't try to read from the 
+        /// true if the underlying stream was exhausted during a read operation; we won't try to read from the
         /// underlying stream again once it was exhausted.
         /// </summary>
         private bool underlyingStreamExhausted;
@@ -251,7 +251,7 @@ namespace Microsoft.OData
                 switch (scanResult)
                 {
                     case ODataBatchReaderStreamScanResult.NoMatch:
-                        // The boundary was not found in the buffer or after the required number of bytes to be read; 
+                        // The boundary was not found in the buffer or after the required number of bytes to be read;
                         // Check whether we can satisfy the full read request from the buffer
                         // or whether we have to split the request and read more data into the buffer.
                         if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
@@ -336,7 +336,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Reads from the batch stream without checking for a boundary delimiter since we 
+        /// Reads from the batch stream without checking for a boundary delimiter since we
         /// know the length of the stream.
         /// </summary>
         /// <param name="userBuffer">The byte array to read bytes into.</param>
@@ -542,7 +542,7 @@ namespace Microsoft.OData
                         {
                             if (lineBufferSize == 0)
                             {
-                                // If there's nothing more to pull from the underlying stream, and we didn't read anything 
+                                // If there's nothing more to pull from the underlying stream, and we didn't read anything
                                 // in this invocation of ReadLine(), return null to indicate end of input.
                                 return null;
                             }
@@ -562,7 +562,7 @@ namespace Microsoft.OData
                         // This can happen if a line end is represented as \r\n and we found \r at the very last position in the buffer.
                         // In this case we copy the bytes into the result byte[] and continue at the start of the line end; this will guarantee
                         // that the next scan will find the full line end, not find any additional bytes and then skip the full line end.
-                        // It is safe to copy the string right here because we will also accept \r as a line end; we are just not sure whether there 
+                        // It is safe to copy the string right here because we will also accept \r as a line end; we are just not sure whether there
                         // will be a subsequent \n.
                         // This can also happen if the last byte in the stream is \r.
                         byteCount = lineEndStartPosition - this.batchBuffer.CurrentReadPosition;
@@ -618,7 +618,7 @@ namespace Microsoft.OData
             // If no batch encoding is specified we detect it from the first bytes in the buffer.
             if (this.batchEncoding == null)
             {
-                // NOTE: The batch encoding will only ever be null on the first call to this method which 
+                // NOTE: The batch encoding will only ever be null on the first call to this method which
                 //       happens before the batch reader skips to the first boundary.
                 this.batchEncoding = this.DetectEncoding();
             }
@@ -749,8 +749,8 @@ namespace Microsoft.OData
             {
                 isChangeSetPart = false;
 
-                // An operation part is required to have application/http content type and 
-                // binary content transfer encoding. 
+                // An operation part is required to have application/http content type and
+                // binary content transfer encoding.
                 string transferEncoding;
                 if (!headers.TryGetValue(ODataConstants.ContentTransferEncoding, out transferEncoding) ||
                     string.Compare(transferEncoding, ODataConstants.BatchContentTransferEncoding, StringComparison.OrdinalIgnoreCase) != 0)

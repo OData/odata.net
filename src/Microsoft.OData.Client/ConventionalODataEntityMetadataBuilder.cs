@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>The convention-based uri builder to use.</summary>
         private readonly ConventionalODataUriBuilder uriBuilder;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConventionalODataEntityMetadataBuilder"/> class.
         /// </summary>
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Client
         /// <param name="id">The id return to the caller</param>
         /// <returns>
         /// If writer should write odata.id property into wire
-        /// </returns> 
+        /// </returns>
         internal override bool TryGetIdForSerialization(out Uri id)
         {
             id = null;

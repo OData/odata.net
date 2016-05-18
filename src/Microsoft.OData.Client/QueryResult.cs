@@ -365,7 +365,7 @@ namespace Microsoft.OData.Client
             var response = this.GetResponse<TElement>(materializeAtom);
 
             // When query feed, the instance annotation can be materialized only when enumerating the feed.
-            // So we register this action which will be called when enumerating the feed. 
+            // So we register this action which will be called when enumerating the feed.
             materializeAtom.SetInstanceAnnotations = (instanceAnnotations) =>
             {
                 if (!this.responseInfo.Context.InstanceAnnotations.ContainsKey(response)

@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="navigationProperty">The navigaiton property this link or ref acts on</param>
         /// <param name="navigationSource">The navigation source of entities linked to by this <see cref="NavigationPropertyLinkSegment"/>. This can be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty is null.</exception>
-        public NavigationPropertyLinkSegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource) 
+        public NavigationPropertyLinkSegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
             this.navigationProperty = navigationProperty;

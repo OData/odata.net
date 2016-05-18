@@ -155,7 +155,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmType"/> of this <see cref="OperationSegment"/>. 
+        /// Gets the <see cref="IEdmType"/> of this <see cref="OperationSegment"/>.
         /// </summary>
         /// <remarks>
         /// This value will be null for void service operations.
@@ -169,7 +169,7 @@ namespace Microsoft.OData.UriParser
                 if (ReferenceEquals(this.computedReturnEdmType, UnknownSentinel))
                 {
                     throw new ODataException(ODataErrorStrings.OperationSegment_ReturnTypeForMultipleOverloads);
-                } 
+                }
 
                 return this.computedReturnEdmType;
             }

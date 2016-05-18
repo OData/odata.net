@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The argument types for this function signature.
         /// </summary>
-        public IEdmTypeReference[] ArgumentTypes 
+        public IEdmTypeReference[] ArgumentTypes
         {
             get
             {

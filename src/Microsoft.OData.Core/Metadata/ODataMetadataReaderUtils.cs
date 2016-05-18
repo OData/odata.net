@@ -36,7 +36,7 @@ namespace Microsoft.OData.Metadata
             {
                 // Use the encoding from the content type if specified.
                 // NOTE: The XmlReader will scan ahead and determine the encoding from the Xml declaration
-                //       and or the payload. Only if no encoding is specified in the Xml declaration and 
+                //       and or the payload. Only if no encoding is specified in the Xml declaration and
                 //       the Xml reader cannot figure out the encoding from the payload, can it happen
                 //       that we need to specify the encoding explicitly (and that wrapping the stream with
                 //       a stream reader makes a difference in the first place).

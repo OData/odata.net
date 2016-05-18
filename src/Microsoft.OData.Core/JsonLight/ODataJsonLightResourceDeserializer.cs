@@ -89,7 +89,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject         End of the resource object.
         /// Post-Condition: JsonNodeType.Property          The property after the odata.type (if there was any), or the property on which the method was called.
         ///                 JsonNodeType.EndObject         End of the resource object.
-        ///                 
+        ///
         /// This method fills the ODataResource.TypeName property if the type name is found in the payload.
         /// </remarks>
         internal void ReadResourceTypeName(IODataJsonLightReaderResourceState resourceState)
@@ -243,7 +243,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceSet">The <see cref="ODataResourceSet"/> to read the instance annotations for.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the top-level scope.</param>
-        /// <param name="forResourceSetStart">true when parsing the instance annotations before the resource set property; 
+        /// <param name="forResourceSetStart">true when parsing the instance annotations before the resource set property;
         /// false when parsing the instance annotations after the resource set property.</param>
         /// <param name="readAllResourceSetProperties">true if we should scan ahead for the annotations and ignore the actual data properties (used with
         /// the reordering reader); otherwise false.</param>
@@ -263,7 +263,7 @@ namespace Microsoft.OData.JsonLight
                     if (!forResourceSetStart && readAllResourceSetProperties)
                     {
                         // If this is not called for reading ResourceSetStart and we already scanned ahead and processed all resource set properties, we already checked for duplicate property names.
-                        // Use an empty duplicate property name checker since this.ParseProperty() read through the same property annotation of instance annotations again. 
+                        // Use an empty duplicate property name checker since this.ParseProperty() read through the same property annotation of instance annotations again.
                         duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(/*allowDuplicateProperties*/ true, this.JsonLightInputContext.ReadingResponse, !this.JsonLightInputContext.MessageReaderSettings.EnableFullValidation);
                     }
 
@@ -295,7 +295,7 @@ namespace Microsoft.OData.JsonLight
                                     {
                                         // We found the resource set property and are done parsing property annotations;
                                         // When we are in the mode where we scan ahead and read all resource set properties
-                                        // (for the reordering scenario), we have to start buffering and continue 
+                                        // (for the reordering scenario), we have to start buffering and continue
                                         // reading. Otherwise we found the resourceSet's data property and are done.
                                         if (readAllResourceSetProperties)
                                         {
@@ -367,7 +367,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// This method should read the property annotation value and return a representation of the value which will be later
         /// consumed by the resource reading code.
-        /// 
+        ///
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property annotation property
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
@@ -654,7 +654,7 @@ namespace Microsoft.OData.JsonLight
         /// Pre-Condition:  JsonNodeType.EndObject              The end of the resource object.
         ///                 JsonNodeType.Property               The property after the one we're to read.
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
-        ///                 JsonNodeType.Property               
+        ///                 JsonNodeType.Property
         /// </remarks>
         internal ODataJsonLightReaderNestedResourceInfo ReadPropertyWithoutValue(IODataJsonLightReaderResourceState resourceState, string propertyName)
         {
@@ -1142,7 +1142,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Checks if there is a next link annotation immediately after an expanded resource set, and reads and stores it if there is one. 
+        /// Checks if there is a next link annotation immediately after an expanded resource set, and reads and stores it if there is one.
         /// We fail here if we encounter any other property annotation for the expanded navigation (since these should come before the property itself).
         /// </summary>
         /// <param name="resourceSet">The resource set that was just read.</param>
@@ -1308,7 +1308,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Read a resource-level data property and check its version compliance. 
+        /// Read a resource-level data property and check its version compliance.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="edmProperty">The EDM property of the property being read, or null if the property is an open property.</param>
@@ -1354,7 +1354,7 @@ namespace Microsoft.OData.JsonLight
         /// Read an open property.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
         /// <param name="propertyName">The name of the open property to read.</param>
         /// <param name="propertyWithValue">true if the property has a value, false if it doesn't.</param>
@@ -1396,7 +1396,7 @@ namespace Microsoft.OData.JsonLight
                 payloadTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*defaultPrimitivePayloadType*/ null,
-                    null, // expectedTypeReference 
+                    null, // expectedTypeReference
                     payloadTypeName,
                     this.Model,
                     this.MessageReaderSettings,
@@ -1733,7 +1733,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        // skip over all unknown properties and read the next property or 
+                        // skip over all unknown properties and read the next property or
                         // the end of the metadata for the current propertyName
                         readerContext.JsonReader.SkipValue();
                         break;
@@ -1819,7 +1819,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        // skip over all unknown properties and read the next property or 
+                        // skip over all unknown properties and read the next property or
                         // the end of the metadata for the current propertyName
                         this.JsonReader.SkipValue();
                         break;
@@ -1918,7 +1918,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property:      first node of the metadata reference property's value. Currently 
+        /// Pre-Condition:  JsonNodeType.Property:      first node of the metadata reference property's value. Currently
         ///                                             actions and functions are the only supported metadata reference property,
         ///                                             we will throw if this is not a start object or start array node.
         /// Post-Condition: JsonNodeType.Property:      the property after the annotation value

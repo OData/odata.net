@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm
 
             this.namespaceName = namespaceName;
             this.name = name;
-            this.hasStream = hasStream; 
+            this.hasStream = hasStream;
         }
 
         /// <summary>

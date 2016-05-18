@@ -8,7 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
 
-    
+
 
     #endregion Namespaces
 

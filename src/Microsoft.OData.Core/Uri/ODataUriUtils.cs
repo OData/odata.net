@@ -20,7 +20,7 @@ namespace Microsoft.OData
     public static class ODataUriUtils
     {
         /// <summary>
-        /// Converts the given <paramref name="value"/> to a corresponding CLR type. Expects the 
+        /// Converts the given <paramref name="value"/> to a corresponding CLR type. Expects the
         /// <paramref name="value"/> to have already been properly unescaped from an actual Uri.
         /// </summary>
         /// <param name="value">Value from a Uri to be converted.</param>
@@ -32,13 +32,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Converts the given <paramref name="value"/> to a corresponding CLR type. Expects the 
+        /// Converts the given <paramref name="value"/> to a corresponding CLR type. Expects the
         /// <paramref name="value"/> to have already been properly unescaped from an actual Uri.
         /// </summary>
         /// <param name="value">Value from a Uri to be converted.</param>
         /// <param name="version">Version to be compliant with.</param>
         /// <param name="model">Optional model to perform verification against.</param>
-        /// <param name="typeReference">Optional IEdmTypeReference to perform verification against. 
+        /// <param name="typeReference">Optional IEdmTypeReference to perform verification against.
         ///  Callers must provide a <paramref name="model"/> containing this type if it is specified.</param>
         /// <returns>A CLR object that the <paramref name="value"/> represents or an EnumNode.</returns>
         public static object ConvertFromUriLiteral(string value, ODataVersion version, IEdmModel model, IEdmTypeReference typeReference)

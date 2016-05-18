@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenIn">The SelectToken to bind</param>
         /// <returns>A QueryNode bound to this SelectToken</returns>
         T Visit(SelectToken tokenIn);
-        
+
         /// <summary>
         /// Visits a StarToken
         /// </summary>

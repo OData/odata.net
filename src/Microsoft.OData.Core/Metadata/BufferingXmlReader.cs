@@ -81,7 +81,7 @@ namespace Microsoft.OData.Metadata
         private bool isBuffering;
 
         /// <summary>
-        /// A flag indicating that the last node for non-buffering read was taken from the buffer; we leave the 
+        /// A flag indicating that the last node for non-buffering read was taken from the buffer; we leave the
         /// node in the buffer until the next Read call.
         /// </summary>
         private bool removeOnNextRead;
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         public override bool IsEmptyElement
         {
-            get 
+            get
             {
                 return this.currentBufferedNodeToReport != null ? this.currentBufferedNodeToReport.Value.IsEmptyElement : this.reader.IsEmptyElement;
             }
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         public override string NamespaceURI
         {
-            get 
+            get
             {
                 return this.currentBufferedNodeToReport != null ? this.currentBufferedNodeToReport.Value.NamespaceUri : this.reader.NamespaceURI;
             }
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         public override string Value
         {
-            get 
+            get
             {
                 return this.currentBufferedNodeToReport != null ? this.currentBufferedNodeToReport.Value.Value : this.reader.Value;
             }
@@ -204,7 +204,7 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         public override int Depth
         {
-            get 
+            get
             {
                 return this.currentBufferedNodeToReport != null ? this.currentBufferedNodeToReport.Value.Depth : this.reader.Depth;
             }
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Metadata
 
                     return this.currentBufferedNodeToReport.Value.NodeType == XmlNodeType.None ? ReadState.Initial : ReadState.Interactive;
                 }
-                
+
                 return this.reader.ReadState;
             }
         }
@@ -267,7 +267,7 @@ namespace Microsoft.OData.Metadata
                         ? this.currentBufferedNodeToReport.Value.AttributeNodes.Count
                         : 0;
                 }
-                
+
                 return this.reader.AttributeCount;
             }
         }
@@ -468,7 +468,7 @@ namespace Microsoft.OData.Metadata
                                 newBaseUri = UriUtils.UriToAbsoluteUri(this.xmlBaseStack.Peek().BaseUri, newBaseUri);
                             }
                         }
-                        
+
                         this.xmlBaseStack.Push(new XmlBaseDefinition(newBaseUri, this.Depth));
                     }
                 }
@@ -498,13 +498,13 @@ namespace Microsoft.OData.Metadata
                     if (this.currentBufferedNodeToReport.Value.NodeType == XmlNodeType.Attribute)
                     {
                         Debug.Assert(
-                            this.currentBufferedNode.Value.NodeType == XmlNodeType.Element, 
+                            this.currentBufferedNode.Value.NodeType == XmlNodeType.Element,
                             "If the current node to report is attribute, the current node must be an element.");
                         this.currentBufferedNodeToReport = this.currentBufferedNode;
                         this.ValidateInternalState();
                         return true;
                     }
-                    
+
                     return false;
                 }
 
@@ -522,10 +522,10 @@ namespace Microsoft.OData.Metadata
                     this.ValidateInternalState();
                     return true;
                 }
-                
+
                 return false;
             }
-            
+
             return this.reader.MoveToElement();
         }
 
@@ -547,10 +547,10 @@ namespace Microsoft.OData.Metadata
                     this.ValidateInternalState();
                     return true;
                 }
-                
+
                 return false;
             }
-            
+
             return this.reader.MoveToFirstAttribute();
         }
 
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Metadata
                         this.ValidateInternalState();
                         return true;
                     }
-                    
+
                     return false;
                 }
 
@@ -640,7 +640,7 @@ namespace Microsoft.OData.Metadata
                 this.ValidateInternalState();
                 return true;
             }
-            
+
             return this.reader.ReadAttributeValue();
         }
 
@@ -692,7 +692,7 @@ namespace Microsoft.OData.Metadata
                 LinkedListNode<BufferedNode> attributeNode = this.FindAttributeBufferedNode(name, namespaceURI);
                 return attributeNode == null ? null : attributeNode.Value.Value;
             }
-            
+
             return this.reader.GetAttribute(name, namespaceURI);
         }
 
@@ -819,8 +819,8 @@ namespace Microsoft.OData.Metadata
 
             Debug.Assert(this.bufferedNodes.Count > 0, "Expected at least the current node in the buffer when starting buffering.");
 
-            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the 
-            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't 
+            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
+            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
             // want to blindly continuing to read. The model is that with every call to StartBuffering you reset the position of the
             // current node in the list and start reading through the buffer again.
             Debug.Assert(this.currentBufferedNode == null, "When starting to buffer, the currentBufferedNode must be null, since we always reset to the begining of the buffer.");
@@ -869,7 +869,7 @@ namespace Microsoft.OData.Metadata
             this.isBuffering = false;
             this.removeOnNextRead = true;
 
-            // We set the currentBufferedNode to null here to indicate that we want to reset the position of the current 
+            // We set the currentBufferedNode to null here to indicate that we want to reset the position of the current
             // buffered node when we turn on buffering the next time. So far this (i.e., resetting the position of the buffered
             // node) is the only mode the BufferingJsonReader supports. We can make resetting the current node position more explicit
             // if needed.

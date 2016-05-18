@@ -72,7 +72,7 @@ namespace Microsoft.Spatial
                 case '9':
                     tokenType = (int)WellKnownTextTokenType.Number;
                     return false;
-                
+
                 // E is special because of exponents
                 case 'e':
                 case 'E':

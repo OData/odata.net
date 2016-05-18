@@ -28,7 +28,7 @@ namespace Microsoft.OData
         /// <summary>The <see cref="ODataErrorExceptionSafeSerializationState"/> value containing <see cref="ODataError"/> instance representing the error
         /// read from the payload.
         /// </summary>
-#if ORCAS 
+#if ORCAS
         // Because we don't want the exception state to be serialized normally, we take care of that in the constructor.
         [NonSerialized]
 #endif
@@ -99,21 +99,21 @@ namespace Microsoft.OData
 #if ORCAS
 #pragma warning disable 0628
         // Warning CS0628:
-        // A sealed class cannot introduce a protected member because no other class will be able to inherit from the 
+        // A sealed class cannot introduce a protected member because no other class will be able to inherit from the
         // sealed class and use the protected member.
         //
         // This method is used by the runtime when deserializing an exception.
 
         /// <summary>
-        /// Initializes a new instance of the ODataErrorException class from the 
+        /// Initializes a new instance of the ODataErrorException class from the
         /// specified SerializationInfo and StreamingContext instances.
         /// </summary>
         /// <param name="info">
-        /// A SerializationInfo containing the information required to serialize 
+        /// A SerializationInfo containing the information required to serialize
         /// the new ODataException.
         /// </param>
         /// <param name="context">
-        /// A StreamingContext containing the source of the serialized stream 
+        /// A StreamingContext containing the source of the serialized stream
         /// associated with the new ODataErrorException.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]
@@ -143,11 +143,11 @@ namespace Microsoft.OData
         /// Recreates the <see cref="ODataError"/> instance of the exception.
         /// </summary>
         /// <param name="info">
-        /// A SerializationInfo containing the information required to serialize 
+        /// A SerializationInfo containing the information required to serialize
         /// the ODataErrorException.
         /// </param>
         /// <param name="context">
-        /// A StreamingContext containing the source of the serialized stream 
+        /// A StreamingContext containing the source of the serialized stream
         /// associated with the new ODataErrorException.
         /// </param>
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]

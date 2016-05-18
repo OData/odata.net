@@ -477,10 +477,10 @@ namespace Microsoft.OData.Client.Materialization
 
                     if (!property.IsEntityCollection)
                     {
-                        // Collection properties cannot be just set like primitive or complex properties. For collectionValue we have a special initialization logic in the 
-                        // ApplyDataValue (called from ProjectionValueForPath invoked above with: propertyValues[i](materializer, entry, expectedType)) method 
-                        // that ensures that we either re-use existing collectionValue or create an instance using the right type for the collectionValue.  As a result at this 
-                        // point the value of the collectionValue must already be set to a non-null value. 
+                        // Collection properties cannot be just set like primitive or complex properties. For collectionValue we have a special initialization logic in the
+                        // ApplyDataValue (called from ProjectionValueForPath invoked above with: propertyValues[i](materializer, entry, expectedType)) method
+                        // that ensures that we either re-use existing collectionValue or create an instance using the right type for the collectionValue.  As a result at this
+                        // point the value of the collectionValue must already be set to a non-null value.
                         if (!property.IsPrimitiveOrEnumOrComplexCollection)
                         {
                             property.SetValue(result, value, property.PropertyName, false);
@@ -510,7 +510,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Ensures that an entry of <paramref name="requiredType"/> is 
+        /// Ensures that an entry of <paramref name="requiredType"/> is
         /// available on the specified <paramref name="entry"/>.
         /// </summary>
         /// <param name="materializer">Materilizer used for logging. </param>
@@ -709,7 +709,7 @@ namespace Microsoft.OData.Client.Materialization
                             MaterializerEntry linkEntry = linkState.Entry;
 
                             // If this is a leaf, then we'll do a tracking, payload-driven
-                            // materialization. If this isn't the leaf, then we'll 
+                            // materialization. If this isn't the leaf, then we'll
                             // simply traverse through its properties.
                             if (segmentIsLeaf)
                             {

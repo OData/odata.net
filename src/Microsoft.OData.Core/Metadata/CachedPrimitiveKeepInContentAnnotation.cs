@@ -13,7 +13,7 @@ namespace Microsoft.OData.Metadata
     #endregion Namespaces
 
     /// <summary>
-    /// Annotation which stores a hashset of property names of a complex type that returned KeepInContent == true 
+    /// Annotation which stores a hashset of property names of a complex type that returned KeepInContent == true
     /// when written the first time. See the comments on ODataWriterBehavior.UseV1ProviderBehavior for more details.
     /// </summary>
     internal sealed class CachedPrimitiveKeepInContentAnnotation
@@ -29,8 +29,8 @@ namespace Microsoft.OData.Metadata
         /// <param name="keptInContentPropertyNames">Enumeration of property names that are kept in content.</param>
         internal CachedPrimitiveKeepInContentAnnotation(IEnumerable<string> keptInContentPropertyNames)
         {
-            this.keptInContentPropertyNames = keptInContentPropertyNames == null 
-                ? null 
+            this.keptInContentPropertyNames = keptInContentPropertyNames == null
+                ? null
                 : new HashSet<string>(keptInContentPropertyNames, StringComparer.Ordinal);
         }
 
@@ -43,8 +43,8 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            return this.keptInContentPropertyNames == null 
-                ? false 
+            return this.keptInContentPropertyNames == null
+                ? false
                 : this.keptInContentPropertyNames.Contains(propertyName);
         }
     }

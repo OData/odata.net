@@ -7,7 +7,7 @@
 namespace Microsoft.OData
 {
     /// <summary>
-    /// An enumeration representing the result of a scan operation through 
+    /// An enumeration representing the result of a scan operation through
     /// the batch reader stream's buffer.
     /// </summary>
     internal enum ODataBatchReaderStreamScanResult

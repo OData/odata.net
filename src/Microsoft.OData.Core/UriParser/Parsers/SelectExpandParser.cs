@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// Object that knows how to parse a select or expand expression. That is, a path to a property, 
+    /// Object that knows how to parse a select or expand expression. That is, a path to a property,
     /// a wildcard, operation name, etc, including nested expand options.
     /// </summary>
     internal sealed class SelectExpandParser
@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser
             this.MaxOrderByDepth = maxRecursiveDepth;
             this.MaxSearchDepth = maxRecursiveDepth;
 
-            // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options, 
+            // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
             this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/) : null;
 
@@ -90,7 +90,7 @@ namespace Microsoft.OData.UriParser
             this.resolver = resolver;
             this.parentEntityType = parentEntityType;
         }
-        
+
         /// <summary>
         /// The maximum depth for path nested in $expand.
         /// </summary>

@@ -74,7 +74,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
         /// <summary>
         /// Converts <paramref name="edmValue"/> to a CLR value of the specified type.
-        /// Supported values for <typeparamref name="T"/> are: 
+        /// Supported values for <typeparamref name="T"/> are:
         ///     CLR primitive types such as <see cref="System.String"/> and <see cref="System.Int32"/>,
         ///     CLR enum types,
         ///     <see cref="IEnumerable&lt;T&gt;"/>,
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             EdmUtil.CheckArgumentNull(edmValue, "edmValue");
 
-            // convertEnumValues: false -- no need to produce an object of the enum type because 
+            // convertEnumValues: false -- no need to produce an object of the enum type because
             // the produced underlying value will get converted to the enum type by (T)this.AsClrValue.
             bool convertEnumValues = false;
             return (T)this.AsClrValue(edmValue, typeof(T), convertEnumValues);
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
         /// <summary>
         /// Converts <paramref name="edmValue"/> to a CLR value of the specified type.
-        /// Supported values for <paramref name="clrType"/> are: 
+        /// Supported values for <paramref name="clrType"/> are:
         ///     CLR primitive types such as <see cref="System.String"/> and <see cref="System.Int32"/>,
         ///     CLR enum types,
         ///     <see cref="IEnumerable&lt;T&gt;"/>,
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Registers the <paramref name="clrObject"/> corresponding to the <paramref name="edmValue"/>.
         /// All subsequent conversions from this <paramref name="edmValue"/> performed by this instance of <see cref="EdmToClrConverter"/> will return the specified
-        /// <paramref name="clrObject"/>. Registration is required to support graph consistency and loops during conversion process. 
+        /// <paramref name="clrObject"/>. Registration is required to support graph consistency and loops during conversion process.
         /// This method should be called inside the <see cref="TryCreateObjectInstance"/> delegate if the delegate is calling back into <see cref="EdmToClrConverter"/>
         /// in order to populate properties of the <paramref name="clrObject"/>.
         /// </summary>
@@ -639,7 +639,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     // In case of enums, because the converter returns a primitive type value we want to convert it to the CLR enum type.
                     return convertEnumValues ? this.GetEnumValue(clrValue, clrType) : clrValue;
                 }
-                
+
                 object nonEnumclrValue = null;
                 if (!TryConvertAsNonGuidPrimitiveType(clrType, edmValue, out nonEnumclrValue))
                 {
@@ -899,7 +899,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     Type clrPropertyValueType;
                     if (clrPropertyValue == null)
                     {
-                        // If collection property has no value, create an instance of List<elementType> and 
+                        // If collection property has no value, create an instance of List<elementType> and
                         // assign it to the property.
                         clrPropertyValueType = TypeListOfT.MakeGenericType(elementType);
                         clrPropertyValue = Activator.CreateInstance(clrPropertyValueType);
@@ -916,7 +916,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         clrPropertyValueType = clrPropertyValue.GetType();
                     }
 
-                    // Find the ICollection<elementType>.Add(elementType) method. Note that IList<T> implements 
+                    // Find the ICollection<elementType>.Add(elementType) method. Note that IList<T> implements
                     MethodInfo clrPropertyValueTypeAddMethod = FindICollectionOfElementTypeAddMethod(clrPropertyValueType, elementType);
 
                     // Convert the collection elements and add them to the CLR collection.

@@ -66,10 +66,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 schema = new EdmSchema(namespaceName);
                 this.modelSchemas.Add(namespaceName, schema);
             }
-            
+
             schema.AddSchemaElement(element);
             this.activeSchema = schema;
-            
+
             base.ProcessSchemaElement(element);
         }
 

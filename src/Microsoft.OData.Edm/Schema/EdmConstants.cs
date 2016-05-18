@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm
         /// Version 4.0 of EDM. Corresponds to CSDL namespace "http://docs.oasis-open.org/odata/ns/edmx".
         /// </summary>
         public static readonly Version EdmVersion4 = new Version(4, 0);
-     
+
         /// <summary>
         /// The current latest version of EDM.
         /// </summary>

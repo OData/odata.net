@@ -416,7 +416,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <summary>
         /// All of the labeled expressions in a schema are collected into a dictionary so that references to them can be bound.
         /// The elements of the dictionary are Csdl objects and not CsdlSemantics objects because the semantics objects are not created
-        /// until and unless necessary. 
+        /// until and unless necessary.
         /// </summary>
         /// <returns>A dictionary containing entries for all labeled expressions in the schema.</returns>
         private Dictionary<string, object> ComputeLabeledExpressions()

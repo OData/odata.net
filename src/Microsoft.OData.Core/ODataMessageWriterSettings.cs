@@ -34,7 +34,7 @@ namespace Microsoft.OData
         private Uri baseUri;
 
         /// <summary>
-        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader' 
+        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader'
         /// fields and uses the default values for the respective format. If null is specified
         /// the default format and the default media type will be picked depending on the writer these settings are used with.
         /// </summary>
@@ -55,7 +55,7 @@ namespace Microsoft.OData
         private Func<string, bool> shouldIncludeAnnotation;
 
         /// <summary>
-        /// true if the Format property should be used to compute the media type; 
+        /// true if the Format property should be used to compute the media type;
         /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
         /// null if neither the format nor the acceptable media types/charsets have been set.
         /// </summary>
@@ -228,7 +228,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader' 
+        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader'
         /// properties and uses the default values for the respective format. If null is specified
         /// the default format and the default media type will be picked depending on the writer these settings are used with.
         /// </summary>
@@ -263,7 +263,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// true if the Format property should be used to compute the media type; 
+        /// true if the Format property should be used to compute the media type;
         /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
         /// null if neither the format nor the acceptable media types/charsets have been set.
         /// </summary>

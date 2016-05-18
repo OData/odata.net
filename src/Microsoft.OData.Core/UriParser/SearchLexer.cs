@@ -28,9 +28,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Pattern for searchWord
         /// From ABNF rule:
-        /// searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl, 
+        /// searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl,
         ///               ; but not the words AND, OR, and NOT
-        /// 
+        ///
         /// \p{L} means any kind of letter from any language, include [Lo] such as CJK single character.
         /// </summary>
         internal static readonly Regex InvalidWordPattern = new Regex(@"([^\p{L}\p{Nl}])");
@@ -62,7 +62,7 @@ namespace Microsoft.OData.UriParser
         {
         }
 
-        /// <summary>Reads the next token, skipping whitespace as necessary.</summary> 
+        /// <summary>Reads the next token, skipping whitespace as necessary.</summary>
         /// <param name="error">Error that occurred while trying to process the next token.</param>
         /// <returns>The next token, which may be 'bad' if an error occurs.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "This parser method is all about the switch statement and would be harder to maintain if it were broken up.")]

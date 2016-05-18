@@ -17,28 +17,28 @@ namespace Microsoft.OData
 
         /// <summary>The start of a delta resource set has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
         /// an <see cref="ODataDeltaResourceSet"/> but no properties may be filled in until the DeltaResourceSetEnd state is reached.
         /// </remarks>
         DeltaResourceSetStart,
 
         /// <summary>The end of a delta resource set has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
         /// an <see cref="ODataDeltaResourceSet"/> with all properties filled in.
         /// </remarks>
         DeltaResourceSetEnd,
 
         /// <summary>The start of a delta resource has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
         /// an <see cref="ODataResource"/> but no properties may be filled in until the EntryEnd state is reached.
         /// </remarks>
         DeltaResourceStart,
 
         /// <summary>The end of a delta resource has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns 
+        /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
         /// an <see cref="ODataResource"/> with all properties filled in.
         /// </remarks>
         DeltaResourceEnd,

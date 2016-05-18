@@ -48,7 +48,7 @@ namespace Microsoft.OData.UriParser
         /// We should only use this during type promotion when applying metadata.</remarks>
         internal string Text
         {
-            get 
+            get
             {
                 return this.text;
             }

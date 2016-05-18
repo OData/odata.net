@@ -148,7 +148,7 @@ namespace Microsoft.OData
 
                 this.envelopeWritten = true;
             }
-            
+
             return this.stream;
         }
 

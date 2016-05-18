@@ -35,6 +35,6 @@ namespace Microsoft.OData
         {
             get { return this.GetInstanceAnnotations(); }
             set { this.SetInstanceAnnotations(value); }
-        }        
+        }
     }
 }

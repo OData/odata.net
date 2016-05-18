@@ -123,7 +123,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Applies collectionValue item to the provided <paramref name="collectionInstance"/>. 
+        /// Applies collectionValue item to the provided <paramref name="collectionInstance"/>.
         /// </summary>
         /// <param name="collectionProperty">Atom property containing materialized Collection items.</param>
         /// <param name="collectionInstance">Collection instance. Must implement ICollection&lt;T&gt; where T is either primitive or complex type (not an entity).</param>
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Client.Materialization
                             ClientTypeAnnotation complexType = this.materializerContext.ResolveTypeForMaterialization(collectionItemType, complexValue.TypeName);
                             object complexInstance = this.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
 
-                            // set properties with metarialized data values if there are any (note that for a payload that looks as follows <element xmlns="http://docs.oasis-open.org/odata/ns/data"/> 
+                            // set properties with metarialized data values if there are any (note that for a payload that looks as follows <element xmlns="http://docs.oasis-open.org/odata/ns/data"/>
                             // and represents an item that is a complex type there are no properties to be set)
                             this.ComplexValueMaterializationPolicy.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
 

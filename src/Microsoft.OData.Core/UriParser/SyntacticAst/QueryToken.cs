@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
 
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData;
-        
+
     #endregion
 
     /// <summary>

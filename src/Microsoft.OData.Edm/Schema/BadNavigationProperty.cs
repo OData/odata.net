@@ -24,7 +24,7 @@ namespace Microsoft.OData.Edm
         private readonly Cache<BadNavigationProperty, IEdmTypeReference> type = new Cache<BadNavigationProperty, IEdmTypeReference>();
         private static readonly Func<BadNavigationProperty, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
-        public BadNavigationProperty(IEdmStructuredType declaringType, string name, IEnumerable<EdmError> errors) 
+        public BadNavigationProperty(IEdmStructuredType declaringType, string name, IEnumerable<EdmError> errors)
             : base(errors)
         {
             this.name = name ?? string.Empty;

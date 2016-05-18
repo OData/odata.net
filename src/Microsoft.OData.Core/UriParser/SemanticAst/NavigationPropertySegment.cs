@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="navigationProperty">The navigation property this segment represents.</param>
         /// <param name="navigationSource">The navigation source of the entities targetted by this navigation property. This can be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty is null.</exception>
-        public NavigationPropertySegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource) 
+        public NavigationPropertySegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
 

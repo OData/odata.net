@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             get { return EdmSchemaElementKind.TypeDefinition; }
         }
-        
+
         public string Namespace
         {
             get { return this.Context.Namespace; }

@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client
         /// <summary>Request header collection.</summary>
         internal HeaderCollection HeaderCollection
         {
-            get; 
+            get;
             private set;
         }
     }

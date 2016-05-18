@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// Cached projected properties annotation with all properties projected.
         /// </summary>
         private static readonly ProjectedPropertiesAnnotation allProjectedPropertiesMarker = new ProjectedPropertiesAnnotation(new string[] { StarSegment });
-        
+
         /// <summary>
         /// A hash set with the projected property names.
         /// </summary>

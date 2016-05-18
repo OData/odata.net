@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
         /// <param name="model">The client model.</param>
         /// <returns>The entity set name for the target object.</returns>
         /// <remarks>
-        /// Allow user code to provide the entity set name. If user code does not provide the entity set name, then 
+        /// Allow user code to provide the entity set name. If user code does not provide the entity set name, then
         /// this method will get the entity set name from the value of the EntitySetAttribute.
         /// The 'currently known' entity set name for top level collections can be provided through OEC constructor
         /// </remarks>
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                // If there is not a 'currently known' entity set name to validate against, then there must be 
+                // If there is not a 'currently known' entity set name to validate against, then there must be
                 // EntitySet attribute on the entity type
                 return BindingEntityInfo.GetEntitySetAttribute(target.GetType(), model);
             }
