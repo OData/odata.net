@@ -274,5 +274,33 @@
         </Rule>
       </Rules>
     </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.OData.StyleCop.LineLengthRule">
+      <Rules>
+        <Rule Name="LineMustNotBeTooLong">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.OData.StyleCop.UsingOutsideNamespaceRule">
+      <Rules>
+        <Rule Name="UsingDirectivesMustBePlacedOutsideNamespace">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.OData.StyleCop.UseVarRule">
+      <Rules>
+        <Rule Name="UseVarWhenPossible">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+      <AnalyzerSettings />
+    </Analyzer>
   </Analyzers>
 </StyleCopSettings>

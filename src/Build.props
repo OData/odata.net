@@ -26,7 +26,11 @@
   <ItemGroup>
     <CodeAnalysisDictionary Include="$(MSBuildThisFileDirectory)CustomDictionary.xml"/>
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <StyleCopAdditionalAddinPaths Include="$(NuGetPack)\Microsoft.OData.StyleCop.1.0.0\lib" />
+  </ItemGroup>
+
   <Import Project="..\Build.props" />
   <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" />
 
