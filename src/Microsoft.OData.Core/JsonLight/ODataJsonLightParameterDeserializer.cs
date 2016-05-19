@@ -170,7 +170,7 @@ namespace Microsoft.OData.JsonLight
 
                                             state = ODataParameterReaderState.Value;
                                         }
-                                        else if (((IEdmCollectionType)parameterTypeReference.Definition).ElementType.TypeKind() == EdmTypeKind.Entity)
+                                        else if ((((IEdmCollectionType)parameterTypeReference.Definition).ElementType.TypeKind() & (EdmTypeKind.Entity | EdmTypeKind.Complex)) != 0)
                                         {
                                             state = ODataParameterReaderState.ResourceSet;
                                         }

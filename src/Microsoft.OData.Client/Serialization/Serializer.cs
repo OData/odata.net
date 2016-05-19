@@ -321,6 +321,7 @@ namespace Microsoft.OData.Client
                     properties = entityType.PropertiesToSerialize();
                 }
 
+                // TODO : Need to change to write complex properties seperately.
                 entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, properties);
 
                 entryWriter.WriteStart(entry, entityDescriptor.Entity);
@@ -734,24 +735,6 @@ namespace Microsoft.OData.Client
 
                         break;
 
-                    case EdmTypeKind.Complex:
-                        Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
-                        valueInODataFormat = this.propertyConverter.CreateODataComplexValue(typeAnnotation.ElementType, value, null, false, null);
-
-                        // When using JsonVerbose to format query string parameters for Actions,
-                        // we cannot write out Complex values in the URI without the type name of the complex type in the JSON payload.
-                        // If this value is null, the client has to set the ResolveName property on the DataServiceContext instance.
-                        ODataComplexValue complexValue = (ODataComplexValue)valueInODataFormat;
-                        SerializationTypeNameAnnotation serializedTypeNameAnnotation =
-                            complexValue.GetAnnotation<SerializationTypeNameAnnotation>();
-                        if (serializedTypeNameAnnotation == null ||
-                            string.IsNullOrEmpty(serializedTypeNameAnnotation.TypeName))
-                        {
-                            throw Error.InvalidOperation(Strings.DataServiceException_GeneralError);
-                        }
-
-                        break;
-
                     case EdmTypeKind.Collection:
                         IEdmCollectionType edmCollectionType = edmType as IEdmCollectionType;
                         Debug.Assert(edmCollectionType != null, "edmCollectionType != null");
@@ -764,6 +747,7 @@ namespace Microsoft.OData.Client
                         valueInODataFormat = ConvertToCollectionValue(paramName, value, itemTypeAnnotation, useEntityReference);
                         break;
 
+                    case EdmTypeKind.Complex:
                     case EdmTypeKind.Entity:
                         Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
                         valueInODataFormat = ConvertToEntityValue(value, typeAnnotation.ElementType, useEntityReference);
@@ -798,10 +782,9 @@ namespace Microsoft.OData.Client
             {
                 case EdmTypeKind.Primitive:
                 case EdmTypeKind.Enum:
-                case EdmTypeKind.Complex:
                     valueInODataFormat = this.propertyConverter.CreateODataCollection(itemTypeAnnotation.ElementType, null, value, null, false, false);
                     break;
-
+                case EdmTypeKind.Complex:
                 case EdmTypeKind.Entity:
                     if (useEntityReference)
                     {

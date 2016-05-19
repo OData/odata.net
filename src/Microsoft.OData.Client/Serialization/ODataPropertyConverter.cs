@@ -138,9 +138,9 @@ namespace Microsoft.OData.Client
             Debug.Assert(value != null, "value != null");
 
             ClientEdmModel model = this.requestInfo.Model;
-            ClientTypeAnnotation entityTypeAnnotation = model.GetClientTypeAnnotation(entityType);
+            ClientTypeAnnotation entityTypeAnnotation = model.GetClientTypeAnnotation(value.GetType());
             Debug.Assert(entityTypeAnnotation != null, "entityTypeAnnotation != null");
-            Debug.Assert(entityTypeAnnotation.IsEntityType, "Unexpected type");
+            Debug.Assert(entityTypeAnnotation.IsStructuredType, "Unexpected type");
 
             ODataResource odataEntityValue = new ODataResource()
             {

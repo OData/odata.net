@@ -166,30 +166,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         case ODataParameterReaderState.Resource:
                             {
                                 var entryReader = parameterReader.CreateResourceReader();
-                                object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadEntryParameterValue(entryReader));
+                                object clrValue = ODataObjectModelConverter.ReadEntityOrEntityCollection(entryReader, false);
                                 parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
                                 break;
                             }
                         case ODataParameterReaderState.ResourceSet:
                             {
-                                IList collectionList = null;
                                 var feedReader = parameterReader.CreateResourceSetReader();
-                                while (feedReader.Read())
-                                {
-                                    if (feedReader.State == ODataReaderState.ResourceEnd)
-                                    {
-                                        object clrItem = ODataObjectModelConverter.ConvertPropertyValue(feedReader.Item);
-                                        if (collectionList == null)
-                                        {
-                                            Type itemType = clrItem.GetType();
-                                            Type listType = typeof(List<>).MakeGenericType(new[] { itemType });
-                                            collectionList = (IList)Utility.QuickCreateInstance(listType);
-                                        }
-
-                                        collectionList.Add(clrItem);
-                                    }
-                                }
-
+                                var collectionList = ODataObjectModelConverter.ReadEntityOrEntityCollection(feedReader, true);
                                 parameterValues.Add(Expression.Constant(collectionList, collectionList.GetType()));
                                 break;
                             }

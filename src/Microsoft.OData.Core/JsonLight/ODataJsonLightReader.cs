@@ -124,12 +124,17 @@ namespace Microsoft.OData.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker =
                 this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
 
-            // Position the reader on the first node depending on whether we are reading a nested payload or not.
+            // Position the reader on the first node depending on whether we are reading a nested payload or a Uri Operation Parameter or not.
             ODataPayloadKind payloadKind = this.ReadingResourceSet ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
+
+            // Following parameter "this.IsReadingNestedPayload || this.readingParameter" indicates whether to read
+            // { "value" :
+            // or
+            // { "parameterName" :
             this.jsonLightResourceDeserializer.ReadPayloadStart(
                 payloadKind,
                 duplicatePropertyNamesChecker,
-                this.IsReadingNestedPayload,
+                this.IsReadingNestedPayload || this.readingParameter,
                 /*allowEmptyPayload*/false);
 
             return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
@@ -498,9 +503,22 @@ namespace Microsoft.OData.JsonLight
                 bool isReordering = this.jsonLightInputContext.JsonReader is ReorderingJsonReader;
                 if (!this.IsReadingNestedPayload)
                 {
-                    // Skip top-level resource set annotations for nested resource sets.
-                    this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
-                        resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllFeedProperties*/isReordering);
+                    if (!this.readingParameter)
+                    {
+                        // Skip top-level resource set annotations for nested resource sets.
+                        this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
+                            resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllFeedProperties*/isReordering);
+                    }
+                    else
+                    {
+                        // This line will be used to read the first node of a resource set in Uri operation parameter, The first node is : '['
+                        // Node is in following format:
+                        // [
+                        //      {...}, <------------ complex object.
+                        //      {...}, <------------ complex object.
+                        // ]
+                        this.jsonLightResourceDeserializer.JsonReader.Read();
+                    }
                 }
 
                 this.ReadResourceSetStart(resourceSet, selectedProperties);

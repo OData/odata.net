@@ -96,13 +96,13 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ShouldBeAbleToCreateResourceSetWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
         public void ShouldBeAbleToCreateResourceSetWriterAsyncForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
         }
         #endregion CreateResourceSetWriter
 

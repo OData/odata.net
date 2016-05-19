@@ -126,10 +126,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" }, { \"StreetName\": \"Bla2\" }]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Collections.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
-            var collectioItems = result.Collections.Single().Value.Items;
+            result.Feeds.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
+            var collectioItems = result.Entries.First().Value;
             collectioItems.Should().HaveCount(2);
-            collectioItems.Should().OnlyContain(item => item is ODataComplexValue);
+            collectioItems.Should().OnlyContain(item => item is ODataResource);
         }
 
         [Fact]
@@ -140,10 +140,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61 }, { \"StreetName\": \"Bla2\", \"StreetNumber\" : 64 }]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Collections.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
-            var collectioItems = result.Collections.Single().Value.Items;
+            result.Feeds.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
+            var collectioItems = result.Entries.First().Value;
             collectioItems.Should().HaveCount(2);
-            collectioItems.Should().OnlyContain(item => item is ODataComplexValue);
+            collectioItems.Should().OnlyContain(item => item is ODataResource);
         }
 
         [Fact]

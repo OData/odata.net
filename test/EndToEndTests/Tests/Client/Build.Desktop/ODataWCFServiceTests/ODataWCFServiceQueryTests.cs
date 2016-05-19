@@ -202,13 +202,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
                         var reader = messageReader.CreateODataResourceSetReader();
+                        ODataResource entry = null;
 
                         while (reader.Read())
                         {
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(8, entry.Properties.Single(p => p.Name == "OrderID").Value);
+                                entry = reader.Item as ODataResource;
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
@@ -216,6 +216,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }
 
+                        Assert.AreEqual(8, entry.Properties.Single(p => p.Name == "OrderID").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -413,7 +414,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             {
                                 if (reader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    entries.Add(reader.Item as ODataResource);
+                                    var entry = reader.Item as ODataResource;
+                                    if (entry != null)
+                                    {
+                                        entries.Add(entry);
+                                    }
                                 }
                                 else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
                                 {
@@ -425,7 +430,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                             Assert.IsTrue(navigationLinks.Count > 0);
 
-                            var order = entries.FirstOrDefault(e => e.Id != null && e.Id.AbsoluteUri.Contains("Orders"));
+                            var order = entries.FirstOrDefault(e => e != null && e.Id != null && e.Id.AbsoluteUri.Contains("Orders"));
                             Assert.IsNotNull(order);
                             Assert.AreEqual(8, order.Properties.Single(p => p.Name == "OrderID").Value);
 
@@ -667,7 +672,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
                         ODataResource entry = reader.Item as ODataResource;
-                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "OrderID").Value);
+                        if (entry != null && entry.TypeName.EndsWith("Order"))
+                        {
+                            Assert.IsNotNull(entry.Properties.Single(p => p.Name == "OrderID").Value);
+                        }
                     }
                     else if (reader.State == ODataReaderState.ResourceSetEnd)
                     {

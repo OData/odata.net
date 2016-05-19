@@ -57,7 +57,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             return (expression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
         }
-        
+
         /// <summary>
         /// Visit an AllNode
         /// </summary>
@@ -77,9 +77,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             Expression rootExpression = this.TranslateNode(nodeIn.Source);
 
             return Expression.Call(
-                typeof (Enumerable),
+                typeof(Enumerable),
                 "All",
-                new Type[] {instanceType},
+                new Type[] { instanceType },
                 rootExpression,
                 Expression.Lambda(conditionExpression, parameter));
         }
@@ -103,9 +103,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             Expression rootExpression = this.TranslateNode(nodeIn.Source);
 
             return Expression.Call(
-                typeof (Enumerable),
+                typeof(Enumerable),
                 "Any",
-                new Type[] {instanceType},
+                new Type[] { instanceType },
                 rootExpression,
                 Expression.Lambda(conditionExpression, parameter));
         }
@@ -195,7 +195,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             Type propType = null;
             Expression propExpr = null;
-            
+
             // Element of collection could be primitive type or enum or complex or entity type 
             if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum()
                 || (nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionPropertyAccess)))
@@ -288,7 +288,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             // the value is enum
             if (nodeIn.TypeReference.IsEnum())
             {
-                ODataEnumValue enumValue = (ODataEnumValue) nodeIn.Value;
+                ODataEnumValue enumValue = (ODataEnumValue)nodeIn.Value;
                 object enumClrVal = Enum.Parse(EdmClrTypeUtils.GetInstanceType(enumValue.TypeName), enumValue.Value);
                 return Expression.Constant(enumClrVal, EdmClrTypeUtils.GetInstanceType(nodeIn.TypeReference));
             }
@@ -952,19 +952,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
                 var entityType = resourceType as IEdmEntityType;
 
-                var entryReader = reader.CreateODataResourceReader(
+                var entryReader = reader.CreateODataUriParameterResourceReader(
                     entityType == null ? null : new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
                     resourceType);
-                ODataResource entry = null;
-                while (entryReader.Read())
-                {
-                    if (entryReader.State == ODataReaderState.ResourceEnd)
-                    {
-                        entry = entryReader.Item as ODataResource;
-
-                    }
-                }
-                return ODataObjectModelConverter.ConvertPropertyValue(entry);
+                return ODataObjectModelConverter.ReadEntityOrEntityCollection(entryReader, false);
             }
         }
 
@@ -1014,31 +1005,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 }
 
                 var entityType = resourceType as IEdmEntityType;
-                var feedReader = reader.CreateODataResourceSetReader(
+                var feedReader = reader.CreateODataUriParameterResourceSetReader(
                     entityType == null ? null : new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
                     resourceType);
-                ODataResource entry = null;
-                while (feedReader.Read())
-                {
-                    if (feedReader.State == ODataReaderState.ResourceEnd)
-                    {
-                        entry = feedReader.Item as ODataResource;
-                        object item = ODataObjectModelConverter.ConvertPropertyValue(entry);
 
-
-                        if (list == null)
-                        {
-                            // create the list. This would require the first type is not derived type.
-                            var type = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
-                            Type listType = typeof(List<>).MakeGenericType(type);
-                            addMethod = listType.GetMethod("Add");
-                            list = Activator.CreateInstance(listType);
-                        }
-
-                        addMethod.Invoke(list, new[] { item });
-                    }
-                }
-                return list;
+                return ODataObjectModelConverter.ReadEntityOrEntityCollection(feedReader, true);
             }
         }
         #endregion
