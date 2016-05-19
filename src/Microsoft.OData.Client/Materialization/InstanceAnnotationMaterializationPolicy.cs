@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client.Materialization
         internal IDictionary<string, object> ConvertToClrInstanceAnnotations(ICollection<ODataInstanceAnnotation> instanceAnnotations)
         {
             var clientInstanceAnnotationValue = new Dictionary<string, object>(StringComparer.Ordinal);
-            if (instanceAnnotations != null || instanceAnnotations.Count > 0)
+            if (instanceAnnotations != null && instanceAnnotations.Count > 0)
             {
                 foreach (var instanceAnnotation in instanceAnnotations)
                 {
