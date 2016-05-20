@@ -668,8 +668,11 @@ namespace Microsoft.OData.Client
                     contentHeaders.TryGetHeader(XmlConstants.HttpResponseLocation, out location);
                     contentHeaders.TryGetHeader(XmlConstants.HttpODataEntityId, out odataEntityId);
 
-                    Debug.Assert(location == null || location == entityDescriptor.GetLatestEditLink().AbsoluteUri, "edit link must already be set to location header");
-                    Debug.Assert((location == null && odataEntityId == null) || (odataEntityId ?? location) == UriUtil.UriToString(entityDescriptor.GetLatestIdentity()), "Identity must already be set");
+                    Uri locationUri = null;
+                    bool isLocationValidUri = Uri.TryCreate(location, UriKind.Absolute, out locationUri);
+
+                    Debug.Assert(location == null || isLocationValidUri && locationUri == entityDescriptor.GetLatestEditLink(), "edit link must already be set to location header");
+                    Debug.Assert((location == null && odataEntityId == null) || odataEntityId != null ? odataEntityId == UriUtil.UriToString(entityDescriptor.GetLatestIdentity()) : locationUri == entityDescriptor.GetLatestIdentity(), "Identity must already be set");
                 }
 #endif
             }
