@@ -17,7 +17,7 @@
     <EnableLocalization>true</EnableLocalization>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
+  <!--<Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" /> -->
   <!-- References -->
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">

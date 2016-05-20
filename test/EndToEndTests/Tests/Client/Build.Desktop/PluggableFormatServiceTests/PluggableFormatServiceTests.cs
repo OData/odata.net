@@ -65,6 +65,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
+#if ENABLE_AVRO
         [TestMethod]
         public void QueryVCardEntityProperty()
         {
@@ -90,7 +91,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual("Name1", cpx.Properties.Single(p => p.Name == "N").Value);
         }
 
-#if ENABLE_AVRO
         [TestMethod]
         public void QueryAvroEntity()
         {
