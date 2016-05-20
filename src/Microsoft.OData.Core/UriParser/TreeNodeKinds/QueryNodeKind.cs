@@ -154,6 +154,11 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// Cast on a single value property.
         /// </summary>
         SingleValueCast = InternalQueryNodeKind.SingleValueCast,
+
+        /// <summary>
+        /// Node describing count of a collection contains primitive or enum or complex or entity type.
+        /// </summary>
+        CollectionCount = InternalQueryNodeKind.CollectionCount,
     }
 
     /// <summary>
