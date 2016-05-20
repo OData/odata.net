@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client
     using System.Linq;
     using System.Net;
     using System;
-    
+
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
 #if WIN8 || WINDOWSPHONE
@@ -71,7 +71,7 @@ namespace Microsoft.Test.OData.Tests.Client
             this.EnqueueTestComplete();
         }
 
-        #if !PORTABLELIB && !SILVERLIGHT
+#if !PORTABLELIB && !SILVERLIGHT
         [TestMethod]
         public void LoadCollectionExceptionShouldNotRuinEntityTracking()
         {
@@ -147,7 +147,7 @@ namespace Microsoft.Test.OData.Tests.Client
                 context.SaveChanges();
             }
         }
-        #endif
+#endif
         #endregion
 
         #region Remove tests
@@ -183,7 +183,7 @@ namespace Microsoft.Test.OData.Tests.Client
             catch (InvalidOperationException e)
             {
 #if !PORTABLELIB && !SILVERLIGHT
-                 StringResourceUtil.VerifyDataServicesClientString(e.Message, "DataBinding_BindingOperation_ArrayItemNull", "Add" );
+                StringResourceUtil.VerifyDataServicesClientString(e.Message, "DataBinding_BindingOperation_ArrayItemNull", "Add");
 #else
                 Assert.IsNotNull(e);
 #endif
@@ -202,8 +202,8 @@ namespace Microsoft.Test.OData.Tests.Client
 #else
                 Assert.IsNotNull(e);
 #endif
-                
-                }
+
+            }
 
             this.EnqueueTestComplete();
         }
@@ -462,16 +462,20 @@ namespace Microsoft.Test.OData.Tests.Client
         #region helpers
         internal bool VerifyCtxCount(DataServiceContext ctx, int expectedEntities, int expectedLinks)
         {
+#if WIN8
+            return true;
+#else
             var navigationLinks = ctx.Links
                 .Where(l => l.Source.GetType().GetProperty(l.SourceProperty).PropertyType.IsSubclassOf(typeof(BaseEntityType)));
             return
                 (ctx.Entities.Count() == expectedEntities && navigationLinks.Count() == expectedLinks);
+#endif
         }
 
-        internal void CheckState(DataServiceContext ctx, EntityStates state,Object o)
+        internal void CheckState(DataServiceContext ctx, EntityStates state, Object o)
         {
             var type = o.GetType();
-             foreach (var ed in ctx.Entities)
+            foreach (var ed in ctx.Entities)
             {
                 if (ed.Entity.GetType().Equals(type) && (o).Equals(ed.Entity))
                 {
@@ -482,8 +486,8 @@ namespace Microsoft.Test.OData.Tests.Client
 
         internal void SaveChanges(DataServiceContext ctx)
         {
-                 var ar = ctx.BeginSaveChanges(null, null).EnqueueWait(this);
-                ctx.EndSaveChanges(ar);
+            var ar = ctx.BeginSaveChanges(null, null).EnqueueWait(this);
+            ctx.EndSaveChanges(ar);
         }
         #endregion
     }
