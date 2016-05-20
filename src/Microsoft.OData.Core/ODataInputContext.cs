@@ -78,7 +78,7 @@ namespace Microsoft.OData
             this.urlResolver = messageInfo.UrlResolver;
             this.container = messageInfo.Container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
-            this.payloadValueConverter = this.model.GetPayloadValueConverter();
+            this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
         }
 
         /// <summary>

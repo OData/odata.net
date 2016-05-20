@@ -4280,16 +4280,6 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.ODataPayloadValueConverter GetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model)
-
-	[
-	ExtensionAttribute(),
-	]
-	public static void SetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.ODataPayloadValueConverter converter)
-
-	[
-	ExtensionAttribute(),
-	]
 	public static void SetSerializationInfo (Microsoft.OData.ODataCollectionStart collectionStart, Microsoft.OData.ODataCollectionStartSerializationInfo serializationInfo)
 
 	[

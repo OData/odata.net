@@ -22,7 +22,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The default instance for <see cref="ODataPayloadValueConverter"/>.
         /// </summary>
-        internal static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
+        private static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
 
         /// <summary>
         /// Converts the given primitive value defined in a type definition from the payload object.
@@ -128,6 +128,16 @@ namespace Microsoft.OData
 
             // otherwise just return the value without doing any conversion
             return value;
+        }
+
+        internal static ODataPayloadValueConverter GetPayloadValueConverter(IServiceProvider container)
+        {
+            if (container == null)
+            {
+                return Default;
+            }
+
+            return container.GetRequiredService<ODataPayloadValueConverter>();
         }
 
         /// <summary>

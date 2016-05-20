@@ -75,7 +75,7 @@ namespace Microsoft.OData
             this.urlResolver = messageInfo.UrlResolver;
             this.container = messageInfo.Container;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
-            this.payloadValueConverter = this.model.GetPayloadValueConverter();
+            this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = ValidatorFactory.CreateWriterValidator(messageWriterSettings.EnableFullValidation);
         }
 

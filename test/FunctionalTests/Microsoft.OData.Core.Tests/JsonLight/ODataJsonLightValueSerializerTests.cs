@@ -12,6 +12,7 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -188,19 +189,20 @@ namespace Microsoft.OData.Tests.JsonLight
         public void WritingDateTimeOffsetWithCustomFormat()
         {
             var df = EdmCoreModel.Instance.GetDateTimeOffset(false);
-            model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
             
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var value = new DateTimeOffset(2012, 4, 13, 2, 43, 10, TimeSpan.FromHours(8));
                 serializer.WritePrimitiveValue(value, df);
-            });
+            },
+            ContainerBuilderHelper.BuildContainer(
+                builder => builder.AddService<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>(ServiceLifetime.Singleton)));
 
             result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
         }
 
 
-        private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse)
+        private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider container = null)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -209,7 +211,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 Encoding = Encoding.Default,
                 IsResponse = writingResponse,
                 IsAsync = false,
-                Model = model
+                Model = model,
+                Container = container
             };
             var context = new ODataJsonLightOutputContext(messageInfo, settings);
             var serializer = new ODataJsonLightValueSerializer(context);
@@ -220,9 +223,9 @@ namespace Microsoft.OData.Tests.JsonLight
         /// Sets up a ODataJsonLightSerializer, runs the given test code, and then flushes and reads the stream back as a string for
         /// customized verification.
         /// </summary>
-        private string SetupSerializerAndRunTest(Action<ODataJsonLightValueSerializer> action)
+        private string SetupSerializerAndRunTest(Action<ODataJsonLightValueSerializer> action, IServiceProvider container = null)
         {
-            var serializer = CreateODataJsonLightValueSerializer(true);
+            var serializer = CreateODataJsonLightValueSerializer(true, container);
             action(serializer);
             serializer.JsonWriter.Flush();
             stream.Position = 0;

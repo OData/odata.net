@@ -12,6 +12,7 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -769,10 +770,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"Birthday\":\"Thu, 12 Apr 2012 18:43:10 GMT\"" +
                 "}";
 
-            model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
-
             ODataResource entry = null;
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
+            var diContainer = ContainerBuilderHelper.BuildContainer(
+                builder => builder.AddService<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>(ServiceLifetime.Singleton));
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, container: diContainer);
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -781,9 +782,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
         }
 
-        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action, bool isIeee754Compatible = true)
+        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null)
         {
-            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), Container = container};
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";

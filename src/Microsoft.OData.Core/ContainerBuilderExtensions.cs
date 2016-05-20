@@ -126,6 +126,7 @@ namespace Microsoft.OData
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageReaderSettings>().Clone());
             builder.AddServicePrototype(new ODataMessageWriterSettings());
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageWriterSettings>().Clone());
+            builder.AddService(ServiceLifetime.Singleton, sp => ODataPayloadValueConverter.GetPayloadValueConverter(null));
 
             return builder;
         }
