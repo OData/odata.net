@@ -5761,10 +5761,13 @@ public sealed class Microsoft.OData.UriParser.ODataUnrecognizedPathException : M
 }
 
 public sealed class Microsoft.OData.UriParser.ODataUriParser {
-	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri fullUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri relativeUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri relativeUri, System.IServiceProvider container)
 	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri, System.IServiceProvider container)
 
 	System.Func`2[[System.String],[Microsoft.OData.UriParser.BatchReferenceSegment]] BatchReferenceCallback  { public get; public set; }
+	System.IServiceProvider Container  { public get; }
 	System.Collections.Generic.IList`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] CustomODataQueryOptions  { public get; }
 	bool EnableUriTemplateParsing  { public get; public set; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }

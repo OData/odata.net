@@ -284,7 +284,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void AbsoluteUriInConstructorShouldThrow()
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_FullUriMustBeRelative);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_RelativeUriMustBeRelative);
         }
 
         [Fact]
