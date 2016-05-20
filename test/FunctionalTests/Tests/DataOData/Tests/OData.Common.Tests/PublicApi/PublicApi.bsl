@@ -6037,6 +6037,7 @@ public enum Microsoft.OData.Core.UriParser.TreeNodeKinds.QueryNodeKind : int {
 	All = 14
 	Any = 9
 	BinaryOperator = 4
+	CollectionCount = 28
 	CollectionFunctionCall = 18
 	CollectionNavigationNode = 10
 	CollectionOpenPropertyAccess = 25
