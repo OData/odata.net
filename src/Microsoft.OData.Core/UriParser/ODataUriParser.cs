@@ -84,18 +84,18 @@ namespace Microsoft.OData.UriParser
         /// Build an ODataUriParser
         /// </summary>
         /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="fullUri">full Uri to be parsed, it should be a relative Uri.</param>
-        public ODataUriParser(IEdmModel model, Uri fullUri)
+        /// <param name="relativeUri">Relative URI to be parsed.</param>
+        public ODataUriParser(IEdmModel model, Uri relativeUri)
         {
-            ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
+            ExceptionUtils.CheckArgumentNotNull(relativeUri, "fullUri");
 
-            if (fullUri.IsAbsoluteUri)
+            if (relativeUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.UriParser_FullUriMustBeRelative);
+                throw new ODataException(Strings.UriParser_RelativeUriMustBeRelative);
             }
 
             this.configuration = new ODataUriParserConfiguration(model);
-            this.fullUri = fullUri;
+            this.fullUri = relativeUri;
             this.queryOptions = QueryOptionUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.fullUri));
         }
 
