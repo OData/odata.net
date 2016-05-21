@@ -1038,7 +1038,7 @@ namespace Microsoft.OData.Edm
                 return PassThroughPrimitiveValueConverter.Instance;
             }
 
-            return model.GetPrimitiveValueConverter(type.FullName());
+            return model.GetPrimitiveValueConverter(type.Definition);
         }
 
         /// <summary>
@@ -1053,7 +1053,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(typeDefinition, "typeDefinition");
             EdmUtil.CheckArgumentNull(converter, "converter");
 
-            model.SetPrimitiveValueConverter(typeDefinition.FullName(), converter);
+            model.SetPrimitiveValueConverter(typeDefinition.Definition, converter);
         }
 
         #endregion
@@ -2635,29 +2635,19 @@ namespace Microsoft.OData.Edm
         /// Get the primitive value converter for the given type definition in the model.
         /// </summary>
         /// <param name="model">The model involved.</param>
-        /// <param name="fullTypeName">The full type name of a type definition.</param>
+        /// <param name="typeDefinition">The type definition.</param>
         /// <returns>The primitive value converter for the type definition.</returns>
-        internal static IPrimitiveValueConverter GetPrimitiveValueConverter(this IEdmModel model, string fullTypeName)
+        internal static IPrimitiveValueConverter GetPrimitiveValueConverter(this IEdmModel model, IEdmType typeDefinition)
         {
             Debug.Assert(model != null, "model != null");
-            Debug.Assert(!string.IsNullOrEmpty(fullTypeName), "fullTypeName must be provided");
+            Debug.Assert(typeDefinition != null, "typeDefinition must be provided");
 
             // If the model does not have primitive value converter map yet, use the pass-through implementation.
-            var mapForModel = model.GetAnnotationValue<IDictionary<string, IPrimitiveValueConverter>>(model, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation);
-            if (mapForModel == null)
+            var converter = model.GetAnnotationValue<IPrimitiveValueConverter>(typeDefinition, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation);
+            if (converter == null)
             {
                 return PassThroughPrimitiveValueConverter.Instance;
             }
-
-            // No converter provided for this type definition but already have some other type definitions.
-            // Use the pass-through converter because we don't want to have conflict with other type definitions.
-            IPrimitiveValueConverter converter;
-            if (!mapForModel.TryGetValue(fullTypeName, out converter))
-            {
-                return PassThroughPrimitiveValueConverter.Instance;
-            }
-
-            Debug.Assert(converter != null, "converter != null");
 
             return converter;
         }
@@ -2666,25 +2656,15 @@ namespace Microsoft.OData.Edm
         /// Set the primitive value converter for the given type definition in the model.
         /// </summary>
         /// <param name="model">The model involved.</param>
-        /// <param name="fullTypeName">The full type name of a type definition.</param>
+        /// <param name="typeDefinition">The type definition.</param>
         /// <param name="converter">The primitive value converter for the type definition.</param>
-        internal static void SetPrimitiveValueConverter(this IEdmModel model, string fullTypeName, IPrimitiveValueConverter converter)
+        internal static void SetPrimitiveValueConverter(this IEdmModel model, IEdmType typeDefinition, IPrimitiveValueConverter converter)
         {
             Debug.Assert(model != null, "model != null");
-            Debug.Assert(!string.IsNullOrEmpty(fullTypeName), "fullTypeName must be provided");
+            Debug.Assert(typeDefinition != null, "typeDefinition must be provided");
             Debug.Assert(converter != null, "converter != null");
 
-            // Get or create map for the model.
-            var mapForModel = model.GetAnnotationValue<IDictionary<string, IPrimitiveValueConverter>>(model, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation);
-            if (mapForModel == null)
-            {
-                mapForModel = new Dictionary<string, IPrimitiveValueConverter>(StringComparer.Ordinal);
-                model.SetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation, mapForModel);
-            }
-
-            // Create mapping for the type definition.
-            Debug.Assert(mapForModel != null, "mapForModel != null");
-            mapForModel[fullTypeName] = converter;
+            model.SetAnnotationValue(typeDefinition, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation, converter);
         }
 
         /// <summary>
@@ -2939,7 +2919,7 @@ namespace Microsoft.OData.Edm
 
                 model.AddElement(type);
 
-                model.SetPrimitiveValueConverter(qualifiedName, DefaultPrimitiveValueConverter.Instance);
+                model.SetPrimitiveValueConverter(type, DefaultPrimitiveValueConverter.Instance);
             }
 
             var typeReference = new EdmTypeDefinitionReference(type, isNullable);
