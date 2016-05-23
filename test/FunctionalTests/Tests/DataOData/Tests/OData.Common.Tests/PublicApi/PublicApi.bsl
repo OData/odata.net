@@ -1992,7 +1992,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmStructuredType ToStructuredType (Microsoft.OData.Edm.IEdmProperty property)
+	public static Microsoft.OData.Edm.IEdmStructuredType ToStructuredType (Microsoft.OData.Edm.IEdmTypeReference propertyTypeReference)
 
 	[
 	ExtensionAttribute(),

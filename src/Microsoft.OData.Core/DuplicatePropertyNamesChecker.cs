@@ -10,8 +10,9 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Text;
+    using Microsoft.OData.Json;
     using Microsoft.OData.JsonLight;
-
     #endregion Namespaces
 
     /// <summary>
@@ -87,7 +88,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Check the <paramref name="property"/> for duplicate property names in a resource or complex value.
+        /// Check the <paramref name="property"/> for duplicate property names in an entry or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
         /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.

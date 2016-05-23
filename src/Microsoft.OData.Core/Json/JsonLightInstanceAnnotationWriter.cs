@@ -176,6 +176,13 @@ namespace Microsoft.OData
                 return;
             }
 
+            if (instanceAnnotation.IsForUntypedProperty)
+            {
+                this.WriteInstanceAnnotationName(propertyName, name);
+                this.valueSerializer.WriteUntypedValue((ODataUntypedValue)value);
+                return;
+            }
+
             ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
             Debug.Assert(primitiveValue != null, "Did we add a new subclass of ODataValue?");
 

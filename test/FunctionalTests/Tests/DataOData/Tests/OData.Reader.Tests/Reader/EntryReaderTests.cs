@@ -195,6 +195,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexValue("TestModel.NonEmptyComplexType", true),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation", "odata.type"),
                     },
                 });
 

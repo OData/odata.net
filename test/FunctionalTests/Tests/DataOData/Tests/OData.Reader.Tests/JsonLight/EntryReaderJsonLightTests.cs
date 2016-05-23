@@ -748,6 +748,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Address\"," +
                         "\"OpenProperty\":\"value\"",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue","OpenProperty")
+                },
+                new OpenPropertyTestCase
+                {
+                    DebugDescription = "String open property with complex type information - should fail.",
+                    ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value"),
+                    Json =
+                        "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Address\"," +
+                        "\"OpenProperty\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation")
                 },
                 new OpenPropertyTestCase

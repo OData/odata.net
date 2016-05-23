@@ -1947,13 +1947,13 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the structured type targeted by this structural property.
+        /// Gets the structured type targeted by this structural property type reference.
         /// </summary>
-        /// <param name="property">Reference to the calling object.</param>
+        /// <param name="propertyTypeReference">Reference to the calling object.</param>
         /// <returns>The structured type targeted by this structural property.</returns>
-        public static IEdmStructuredType ToStructuredType(this IEdmProperty property)
+        public static IEdmStructuredType ToStructuredType(this IEdmTypeReference propertyTypeReference)
         {
-            IEdmType target = property.Type.Definition;
+            IEdmType target = propertyTypeReference.Definition;
             if (target.TypeKind == EdmTypeKind.Collection)
             {
                 target = ((IEdmCollectionType)target).ElementType.Definition;

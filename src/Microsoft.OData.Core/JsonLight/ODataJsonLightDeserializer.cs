@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Globalization;
-using System.Linq;
-
 namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -444,10 +444,12 @@ namespace Microsoft.OData.JsonLight
         /// Parses JSON object property starting with the current position of the JSON reader.
         /// </summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
+        /// <param name="annotationCollector">The property annotation collector.</param>
         /// <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
         /// <param name="handleProperty">Function callback to handle to resule of parse property.</param>
         internal void ProcessProperty(
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+            PropertyAnnotationCollector annotationCollector,
             Func<string, object> readPropertyAnnotationValue,
             Action<PropertyParsingResult, string> handleProperty)
         {
@@ -457,7 +459,8 @@ namespace Microsoft.OData.JsonLight
             this.AssertJsonCondition(JsonNodeType.Property);
 
             string propertyName;
-            PropertyParsingResult propertyParsingResult = this.ParseProperty(duplicatePropertyNamesChecker, readPropertyAnnotationValue, out propertyName);
+            PropertyParsingResult propertyParsingResult = this.ParseProperty(
+                duplicatePropertyNamesChecker, annotationCollector, readPropertyAnnotationValue, out propertyName);
 
             while (propertyParsingResult == PropertyParsingResult.CustomInstanceAnnotation && this.ShouldSkipCustomInstanceAnnotation(propertyName))
             {
@@ -467,7 +470,8 @@ namespace Microsoft.OData.JsonLight
                 // Skip over the instance annotation value and don't report it to the OM.
                 this.JsonReader.SkipValue();
 
-                propertyParsingResult = this.ParseProperty(duplicatePropertyNamesChecker, readPropertyAnnotationValue, out propertyName);
+                propertyParsingResult = this.ParseProperty(
+                    duplicatePropertyNamesChecker, annotationCollector, readPropertyAnnotationValue, out propertyName);
             }
 
             handleProperty(propertyParsingResult, propertyName);
@@ -622,8 +626,9 @@ namespace Microsoft.OData.JsonLight
         /// Note that when we add new odata annotations that cannot be skipped, we would bump the protocol version.
         /// </remarks>
         /// <param name="annotationName">The annotation name in question.</param>
+        /// <param name="skippedRawValue">Outputs the skipped raw json string.</param>
         /// <returns>Returns true if the annotation name and value is skipped; returns false otherwise.</returns>
-        private bool SkippedOverUnknownODataAnnotation(string annotationName)
+        private bool SkippedOverUnknownODataAnnotation(string annotationName, out string skippedRawValue)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             this.AssertJsonCondition(JsonNodeType.Property);
@@ -632,10 +637,13 @@ namespace Microsoft.OData.JsonLight
             {
                 // Read over the name and value.
                 this.JsonReader.Read();
-                this.JsonReader.SkipValue();
+                StringBuilder builder = new StringBuilder();
+                this.JsonReader.SkipValue(builder);
+                skippedRawValue = builder.ToString();
                 return true;
             }
 
+            skippedRawValue = null;
             return false;
         }
 
@@ -643,6 +651,7 @@ namespace Microsoft.OData.JsonLight
         /// Parses JSON object property starting with the current position of the JSON reader.
         /// </summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
+        /// <param name="annotationCollector">The property annotation collector, may be null.</param>
         /// <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
         /// <param name="parsedPropertyName">The name of the property or instance annotation found.</param>
         /// <returns>
@@ -661,6 +670,7 @@ namespace Microsoft.OData.JsonLight
         /// </returns>
         private PropertyParsingResult ParseProperty(
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+            PropertyAnnotationCollector annotationCollector,
             Func<string, object> readPropertyAnnotationValue,
             out string parsedPropertyName)
         {
@@ -695,14 +705,17 @@ namespace Microsoft.OData.JsonLight
                     return PropertyParsingResult.PropertyWithoutValue;
                 }
 
+                string skippedRawValue = null;
                 if (isPropertyAnnotation)
                 {
+                    PropertyAnnotationCollector.TryPeekAndCollectAnnotationRawValue(annotationCollector,
+                        this.JsonReader, propertyNameFromReader, annotationNameFromReader);
                     annotationNameFromReader = this.CompleteSimplifiedODataAnnotation(annotationNameFromReader);
 
                     // If this is a unknown odata annotation targeting a property, we skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
                     // Note that we don't skip over unknown odata annotations targeting another annotation. We don't allow annotations (except odata.type) targeting other annotations,
                     // so this.ProcessPropertyAnnotation() will test and fail for that case.
-                    if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader) && this.SkippedOverUnknownODataAnnotation(annotationNameFromReader))
+                    if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader) && this.SkippedOverUnknownODataAnnotation(annotationNameFromReader, out skippedRawValue))
                     {
                         continue;
                     }
@@ -716,8 +729,13 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // If this is a unknown odata annotation, skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
-                if (this.SkippedOverUnknownODataAnnotation(propertyNameFromReader))
+                if (this.SkippedOverUnknownODataAnnotation(propertyNameFromReader, out skippedRawValue))
                 {
+                    // collect 'odata.<unknown>' annotation:
+                    // here we know the original property name contains no '@', but '.' dot
+                    Debug.Assert(annotationNameFromReader == null, "annotationNameFromReader == null");
+                    PropertyAnnotationCollector.TryAddPropertyAnnotationRawValue(annotationCollector,
+                        "", propertyNameFromReader, skippedRawValue);
                     continue;
                 }
 
@@ -736,6 +754,12 @@ namespace Microsoft.OData.JsonLight
                     // Normal property
                     return PropertyParsingResult.PropertyWithValue;
                 }
+
+                // collect 'xxx.yyyy' annotation:
+                // here we know the original property name contains no '@', but '.' dot
+                Debug.Assert(annotationNameFromReader == null, "annotationNameFromReader == null");
+                PropertyAnnotationCollector.TryPeekAndCollectAnnotationRawValue(annotationCollector,
+                    this.JsonReader, "", propertyNameFromReader); // propertyNameFromReader is the annotation name
 
                 // Handle 'odata.XXXXX' annotations
                 if (isInstanceAnnotation && ODataJsonLightReaderUtils.IsODataAnnotationName(propertyNameFromReader))

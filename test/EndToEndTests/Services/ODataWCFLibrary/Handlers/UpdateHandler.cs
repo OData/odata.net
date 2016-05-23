@@ -227,12 +227,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var parentInstances = new Stack<object>();
                     var currentTargetEntitySet = this.QueryContext.Target.NavigationSource;
 
+                    int levelOfUndeclaredProperty = 0;
                     while (entryReader.Read())
                     {
                         switch (entryReader.State)
                         {
                             case ODataReaderState.ResourceStart:
                                 {
+                                    if (levelOfUndeclaredProperty > 0)
+                                    {
+                                        break;
+                                    }
+
                                     var entry = (ODataResource)entryReader.Item;
                                     if (entry == null)
                                     {
@@ -247,8 +253,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                     }
                                     else
                                     {
-                                        var parent = parentInstances.Peek();
-                                        if (parent == null)
+                                        var parent2 = parentInstances.Peek();
+                                        if (parent2 == null)
                                         {
                                             // Here is for collection, we need to create a brand new instance.
                                             var valueType = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
@@ -257,7 +263,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                         else
                                         {
 
-                                            parentInstances.Push(parent);
+                                            parentInstances.Push(parent2);
                                         }
                                     }
 
@@ -266,6 +272,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                             case ODataReaderState.ResourceEnd:
                                 {
+                                    if (levelOfUndeclaredProperty > 0)
+                                    {
+                                        break;
+                                    }
+
                                     var entry = (ODataResource)entryReader.Item;
                                     if (entry == null)
                                     {
@@ -310,6 +321,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                                 break;
                             case ODataReaderState.ResourceSetStart:
+                                if (levelOfUndeclaredProperty > 0)
+                                {
+                                    break;
+                                }
+
                                 odataItemStack.Push(entryReader.Item);
 
                                 //"null" here indicate that we need to create a new instance for collection to replace the old one.
@@ -318,6 +334,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                             case ODataReaderState.ResourceSetEnd:
                                 {
+                                    if (levelOfUndeclaredProperty > 0)
+                                    {
+                                        break;
+                                    }
+
                                     parentInstances.Pop();
                                     var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();
 
@@ -334,11 +355,21 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                             case ODataReaderState.NestedResourceInfoStart:
                                 {
-                                    object parent = parentInstances.Peek(); 
-                                    odataItemStack.Push(entryReader.Item);
-
+                                    object parent = parentInstances.Peek();
                                     var nestedResourceInfo = (ODataNestedResourceInfo)entryReader.Item;
                                     var property = parent.GetType().GetProperty(nestedResourceInfo.Name);
+                                    if (property == null || levelOfUndeclaredProperty > 0)
+                                    {
+                                        levelOfUndeclaredProperty++;
+                                    }
+
+                                    // skip undeclared property
+                                    if (levelOfUndeclaredProperty > 0)
+                                    {
+                                        break;
+                                    }
+
+                                    odataItemStack.Push(entryReader.Item);
                                     var propertyInstance = property.GetValue(parent);
                                     parentInstances.Push(propertyInstance);
 
@@ -359,6 +390,19 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                 }
                             case ODataReaderState.NestedResourceInfoEnd:
                                 {
+                                    // check: skip or not
+                                    int theLevelOfUndeclaredProperty = levelOfUndeclaredProperty;
+                                    if (levelOfUndeclaredProperty > 0)
+                                    {
+                                        levelOfUndeclaredProperty--;
+                                    }
+
+                                    // skip undeclared property
+                                    if (theLevelOfUndeclaredProperty > 0)
+                                    {
+                                        break;
+                                    }
+
                                     var navigationLink = (ODataNestedResourceInfo)entryReader.Item;
                                     parentInstances.Pop();
                                     var childAnnotation = odataItemStack.Pop().GetAnnotation<ChildInstanceAnnotation>();

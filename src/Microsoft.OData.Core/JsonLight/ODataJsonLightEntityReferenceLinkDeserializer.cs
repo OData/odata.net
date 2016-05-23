@@ -231,6 +231,7 @@ namespace Microsoft.OData.JsonLight
                 bool foundValueProperty = false;
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
+                    /* annotationCollector */ null,
                     propertyAnnotationValueReader,
                     (propertyParseResult, propertyName) =>
                     {
@@ -384,6 +385,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
+                    /* annotationCollector */ null,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, propertyName) =>
                     {

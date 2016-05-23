@@ -847,8 +847,8 @@ namespace Microsoft.OData.JsonLight
                 }
                 else if (!currentLink.IsCollection.Value)
                 {
-                    // We should get here only for declared navigation properties.
-                    Debug.Assert(this.CurrentResourceType != null, "We must have a declared navigation property to read expanded links.");
+                    // We should get here only for declared or undeclared navigation properties.
+                    Debug.Assert(this.CurrentResourceType != null || this.CurrentNestedResourceInfo.Name != null, "We must have a declared navigation property to read expanded links.");
 
                     // Expanded resource
                     ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink, true, false);
@@ -1231,7 +1231,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.jsonLightResourceDeserializer.JsonReader.Value == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
             Debug.Assert(
-                nestedProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                nestedProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties
+                 || this.jsonLightInputContext.MessageReaderSettings.ShouldSupportUndeclaredProperty(),
                 "A navigation property must be found for each link we find unless we're allowed to report undeclared links.");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");
