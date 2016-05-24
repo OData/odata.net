@@ -33,6 +33,9 @@ namespace Microsoft.OData
         /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
         private readonly ODataBatchUrlResolver urlResolver;
 
+        /// <summary>The dependency injection container to get related services.</summary>
+        private readonly IServiceProvider container;
+
         /// <summary>The current state of the batch reader.</summary>
         private ODataBatchReaderState batchReaderState;
 
@@ -70,6 +73,7 @@ namespace Microsoft.OData
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
             this.inputContext = inputContext;
+            this.container = inputContext.Container;
             this.synchronous = synchronous;
             this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
             this.batchStream = new ODataBatchReaderStream(inputContext, batchBoundary, batchEncoding);
@@ -473,7 +477,8 @@ namespace Microsoft.OData
                 headers,
                 /*operationListener*/ this,
                 this.contentIdToAddOnNextRead,
-                this.urlResolver);
+                this.urlResolver,
+                this.container);
 
             return requestMessage;
         }
@@ -521,7 +526,8 @@ namespace Microsoft.OData
                 headers,
                 this.contentIdToAddOnNextRead,
                 /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver);
+                this.urlResolver.BatchMessageUrlResolver,
+                this.container);
 
             //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
             ////       we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).

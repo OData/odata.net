@@ -150,7 +150,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             Stream stream = new TestStream();
             return (IODataRequestMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationRequestMessage),
-                new Type[] { typeof(Func<Stream>), typeof(string), typeof(Uri), batchOperationsHeadersType, batchOperationListenerType, typeof(string), urlResolverType, typeof(bool) },
+                new Type[] { typeof(Func<Stream>), typeof(string), typeof(Uri), batchOperationsHeadersType, batchOperationListenerType, typeof(string), urlResolverType, typeof(bool), typeof(IServiceProvider) },
                 (object)(Func<Stream>)(() => stream),
                 ODataConstants.MethodGet,
                 new Uri("http://www.odata.org/"),
@@ -158,7 +158,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 CreateListener(stream, false, writing),
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
-                writing);
+                writing,
+                /*container*/ null);
         }
 
         private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing)
@@ -167,8 +168,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             return (IODataResponseMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationResponseMessage),
-                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool) },
-                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing);
+                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool), typeof(IServiceProvider) },
+                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing, /*container*/ null);
         }
 
         private static object CreateListener(Stream stream, bool response, bool writing)

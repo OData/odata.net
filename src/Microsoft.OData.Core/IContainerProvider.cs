@@ -11,7 +11,11 @@ namespace Microsoft.OData
     /// <summary>
     /// An interface that provides a dependency injection container.
     /// </summary>
+#if ORCAS
+    internal interface IContainerProvider
+#else
     public interface IContainerProvider
+#endif
     {
         /// <summary>
         /// Gets a container which implements <see cref="IServiceProvider"/> and contains

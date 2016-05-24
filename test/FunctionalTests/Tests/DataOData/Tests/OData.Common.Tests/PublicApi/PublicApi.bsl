@@ -4417,9 +4417,10 @@ public sealed class Microsoft.OData.ODataAsynchronousWriter : IODataOutputInStre
 	public System.Threading.Tasks.Task FlushAsync ()
 }
 
-public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
+public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContainerProvider, IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
+	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }
@@ -4430,9 +4431,10 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IODataRe
 	public virtual void SetHeader (string headerName, string headerValue)
 }
 
-public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IODataResponseMessage, IODataResponseMessageAsync, IODataUrlResolver {
+public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContainerProvider, IODataResponseMessage, IODataResponseMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
+	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	int StatusCode  { public virtual get; public virtual set; }
 
