@@ -4400,7 +4400,8 @@ public sealed class Microsoft.OData.ODataAsynchronousReader {
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousResponseMessage]] CreateResponseMessageAsync ()
 }
 
-public sealed class Microsoft.OData.ODataAsynchronousResponseMessage : IODataResponseMessage, IODataResponseMessageAsync {
+public sealed class Microsoft.OData.ODataAsynchronousResponseMessage : IContainerProvider, IODataResponseMessage, IODataResponseMessageAsync {
+	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	int StatusCode  { public virtual get; public virtual set; }
 

@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+    using System;
     using System.Diagnostics;
     using System.Globalization;
 #if PORTABLELIB
@@ -25,6 +26,11 @@ namespace Microsoft.OData
         private readonly ODataRawOutputContext rawOutputContext;
 
         /// <summary>
+        /// The optional dependency injection container to get related services for message writing.
+        /// </summary>
+        private readonly IServiceProvider container;
+
+        /// <summary>
         /// Prevent the response message from being created more than one time since an async response message can only contain one inner message.
         /// </summary>
         private bool responseMessageCreated;
@@ -38,6 +44,7 @@ namespace Microsoft.OData
             Debug.Assert(rawOutputContext != null, "rawOutputContext != null");
 
             this.rawOutputContext = rawOutputContext;
+            this.container = rawOutputContext.Container;
             this.rawOutputContext.InitializeRawValueWriter();
         }
 
@@ -169,7 +176,7 @@ namespace Microsoft.OData
         /// <returns>The message that can be used to write the response.</returns>
         private ODataAsynchronousResponseMessage CreateResponseMessageImplementation()
         {
-            var responseMessage = ODataAsynchronousResponseMessage.CreateMessageForWriting(rawOutputContext.OutputStream, this.WriteInnerEnvelope);
+            var responseMessage = ODataAsynchronousResponseMessage.CreateMessageForWriting(rawOutputContext.OutputStream, this.WriteInnerEnvelope, this.container);
 
             responseMessageCreated = true;
 

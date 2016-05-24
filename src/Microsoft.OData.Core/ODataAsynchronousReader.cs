@@ -28,6 +28,11 @@ namespace Microsoft.OData
         private readonly ODataRawInputContext rawInputContext;
 
         /// <summary>
+        /// The optional dependency injection container to get related services for message writing.
+        /// </summary>
+        private readonly IServiceProvider container;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="rawInputContext">The input context to read the content from.</param>
@@ -43,6 +48,7 @@ namespace Microsoft.OData
             }
 
             this.rawInputContext = rawInputContext;
+            this.container = rawInputContext.Container;
         }
 
         /// <summary>
@@ -129,7 +135,7 @@ namespace Microsoft.OData
 
             this.ReadInnerEnvelope(out statusCode, out headers);
 
-            return ODataAsynchronousResponseMessage.CreateMessageForReading(this.rawInputContext.Stream, statusCode, headers);
+            return ODataAsynchronousResponseMessage.CreateMessageForReading(this.rawInputContext.Stream, statusCode, headers, this.container);
         }
 
         /// <summary>
