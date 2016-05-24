@@ -111,7 +111,7 @@ namespace Microsoft.OData
             this.writingResponse = false;
             this.urlResolver = requestMessage as IODataUrlResolver;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
-            this.model = model ?? EdmCoreModel.Instance;
+            this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
@@ -150,7 +150,7 @@ namespace Microsoft.OData
             this.writingResponse = true;
             this.urlResolver = responseMessage as IODataUrlResolver;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
-            this.model = model ?? EdmCoreModel.Instance;
+            this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
@@ -660,6 +660,15 @@ namespace Microsoft.OData
             return containerProvider == null ? null : containerProvider.Container;
 #else
             return null;
+#endif
+        }
+
+        private static IEdmModel GetModel(IServiceProvider container)
+        {
+#if PORTABLELIB
+            return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
+#else
+            return EdmCoreModel.Instance;
 #endif
         }
 

@@ -87,8 +87,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 new ODataMessageReaderSettings
                 {
                     BaseUri = ServiceConstants.ServiceBaseUri
-                },
-                this.DataSource.Model);
+                });
         }
 
     }

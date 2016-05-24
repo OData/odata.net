@@ -121,7 +121,7 @@ namespace Microsoft.OData
             // Validate OData version against request message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
 
-            this.model = model ?? EdmCoreModel.Instance;
+            this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
         }
 
@@ -162,7 +162,7 @@ namespace Microsoft.OData
             // Validate OData version against response message.
             ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
 
-            this.model = model ?? EdmCoreModel.Instance;
+            this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter
@@ -871,6 +871,15 @@ namespace Microsoft.OData
             return containerProvider == null ? null : containerProvider.Container;
 #else
             return null;
+#endif
+        }
+
+        private static IEdmModel GetModel(IServiceProvider container)
+        {
+#if PORTABLELIB
+            return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
+#else
+            return EdmCoreModel.Instance;
 #endif
         }
 

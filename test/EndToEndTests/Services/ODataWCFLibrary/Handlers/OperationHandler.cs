@@ -141,7 +141,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         private Expression[] ProcessActionInvokePostBody(IODataRequestMessage message, IEdmOperation operation)
         {
-            using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings(), this.DataSource.Model))
+            using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings()))
             {
                 List<Expression> parameterValues = new List<Expression>();
                 var parameterReader = messageReader.CreateODataParameterReader(operation);

@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             var navigationPropertyName = ((NavigationPropertyLinkSegment)odataPath.LastSegment).NavigationProperty.Name;
 
-            using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings(), this.DataSource.Model))
+            using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
             {
                 var referenceLink = messageReader.ReadEntityReferenceLink();
                 var queryContext = new QueryContext(this.ServiceRootUri, referenceLink.Url, this.DataSource.Model);
@@ -218,7 +218,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             if (this.QueryContext.Target.NavigationSource != null
                 && (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex))
             {
-                using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings(), this.DataSource.Model))
+                using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
                 {
                     var entryReader = messageReader.CreateODataResourceReader(this.QueryContext.Target.NavigationSource, (IEdmEntityType)this.QueryContext.Target.Type);
                     // Need to handle complex property or collection of complex property
@@ -422,7 +422,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             }
             else if (this.QueryContext.Target.Property != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Complex)
             {
-                using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings(), this.DataSource.Model))
+                using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
                 {
                     var property = messageReader.ReadProperty(this.QueryContext.Target.Property);
                     ODataComplexValue complexValue = property.Value as ODataComplexValue;

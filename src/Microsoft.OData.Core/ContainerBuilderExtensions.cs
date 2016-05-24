@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData
@@ -127,6 +128,7 @@ namespace Microsoft.OData
             builder.AddServicePrototype(new ODataMessageWriterSettings());
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageWriterSettings>().Clone());
             builder.AddService(ServiceLifetime.Singleton, sp => ODataPayloadValueConverter.GetPayloadValueConverter(null));
+            builder.AddService<IEdmModel>(ServiceLifetime.Singleton, sp => EdmCoreModel.Instance);
 
             return builder;
         }

@@ -108,7 +108,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             var odataPath = this.QueryContext.QueryPath;
             var collectionPropertyName = ((NavigationPropertyLinkSegment)odataPath.LastSegment).NavigationProperty.Name;
 
-            using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings(), this.DataSource.Model))
+            using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
             {
                 var referenceLink = messageReader.ReadEntityReferenceLink();
                 var queryContext = new QueryContext(this.ServiceRootUri, referenceLink.Url, this.DataSource.Model);
@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             object lastNewInstance = null;
 
-            using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings(), this.DataSource.Model))
+            using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings()))
             {
                 var odataItemStack = new Stack<ODataItem>();
                 var entityStack = new Stack<IEdmEntitySetBase>();

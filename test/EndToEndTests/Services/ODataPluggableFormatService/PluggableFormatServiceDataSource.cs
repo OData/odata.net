@@ -120,6 +120,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
         protected override void ConfigureContainer(IContainerBuilder builder)
         {
+            base.ConfigureContainer(builder);
             builder.AddService<ODataMediaTypeResolver, PluggableFormatResolver>(ServiceLifetime.Singleton);
         }
     }
