@@ -1061,8 +1061,11 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     if (annotation.Value != null)
                     {
+                        Uri uri = annotation.Value as Uri;
+                        object value = uri != null ? uri.OriginalString : annotation.Value;
+
                         // annotation.Value == null indicates that this annotation should be skipped.
-                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue(), true));
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, value.ToODataValue(), true));
                     }
                 }
             }

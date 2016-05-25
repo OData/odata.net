@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core
         /// <param name="areReservedNamesAllowed">Whether reserved (odata.*) names are allowed.</param>
         internal ODataInstanceAnnotation(string name, ODataValue value, bool areReservedNamesAllowed)
         {
-            if (areReservedNamesAllowed)
+            if (!areReservedNamesAllowed)
             {
                 ValidateName(name);
                 ValidateValue(value);
