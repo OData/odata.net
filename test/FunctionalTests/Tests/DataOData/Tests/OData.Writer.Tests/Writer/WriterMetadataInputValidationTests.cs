@@ -750,8 +750,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
-                    testConfiguration.MessageWriterSettings.AllowDuplicatePropertyNames = true;
-                    testConfiguration.MessageWriterSettings.AllowNullValuesForNonNullablePrimitiveTypes = true;
+                    testConfiguration.MessageWriterSettings.Validations &= ~WriterValidations.ThrowOnDuplicatePropertyNames
+                                                                           & ~WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes;
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyODataPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
                 });

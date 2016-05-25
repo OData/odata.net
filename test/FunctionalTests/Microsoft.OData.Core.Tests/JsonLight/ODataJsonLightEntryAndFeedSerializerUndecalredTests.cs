@@ -48,7 +48,7 @@
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
-            UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty
+            Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty
         };
 
         #region non-open entity's property unknown name + known value type

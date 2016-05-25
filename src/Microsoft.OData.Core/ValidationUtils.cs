@@ -190,7 +190,7 @@ namespace Microsoft.OData
             {
                 if (expectedItemType.IsODataPrimitiveTypeKind())
                 {
-                    if (!expectedItemType.IsNullable && !writerSettings.AllowNullValuesForNonNullablePrimitiveTypes)
+                    if (!expectedItemType.IsNullable && writerSettings.ThrowOnNullValuesForNonNullablePrimitiveTypes)
                     {
                         throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
                     }

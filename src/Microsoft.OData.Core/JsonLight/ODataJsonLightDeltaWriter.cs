@@ -1950,7 +1950,9 @@ namespace Microsoft.OData.JsonLight
                     "resource must be either DeltaResource or DeltaDeletedEntry.");
                 Debug.Assert(writerSettings != null, "writerSettings != null");
 
-                this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerSettings.AllowDuplicatePropertyNames, /*writingResponse*/ true);
+                this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
+                    !writerSettings.ThrowOnDuplicatePropertyNames,
+                    /*writingResponse*/ true);
                 this.serializationInfo = serializationInfo;
             }
 

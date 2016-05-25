@@ -451,6 +451,7 @@ Function BuildProcess
     RunBuild ('Microsoft.OData.E2E.Portable.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.OData.E2E.sln')
+    RunBuild ('Microsoft.OData.Performance.sln')
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }

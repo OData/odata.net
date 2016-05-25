@@ -45,7 +45,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The writer validator used during writing.
         /// </summary>
-        private readonly IWriterValidator writerValidator;
+        private readonly IBasicWriterValidator writerValidator;
 
         /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
@@ -61,7 +61,7 @@ namespace Microsoft.OData
             this.jsonWriter = this.valueSerializer.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
             this.writerValidator =
-                ValidatorFactory.CreateWriterValidator(this.valueSerializer.Settings.EnableFullValidation);
+                BasicWriterValidatorFactory.CreateBasicWriterValidator(this.valueSerializer.Settings.BasicValidation);
         }
 
         /// <summary>

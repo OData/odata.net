@@ -457,7 +457,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         testConfiguration,
                         (messageWriter) =>
                         {
-                            messageWriter.PrivateSettings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+                            messageWriter.PrivateSettings.Validations &= ~WriterValidations.ThrowOnUndeclaredProperty;
                             messageWriter.WriteProperty(testDescriptor.PayloadItems.Single());
                         },
                         this.Assert,

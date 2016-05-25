@@ -20,7 +20,7 @@
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
-            UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty
+            Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty
         };
 
         // ----------- begin of edm for entry reader -----------

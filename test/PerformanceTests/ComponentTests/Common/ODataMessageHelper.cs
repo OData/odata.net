@@ -123,9 +123,9 @@ namespace Microsoft.OData.Performance
         /// <summary>
         /// Creates ODataMessageWriterSettings
         /// </summary>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="basicValidation">Whether turn on BasicValidation</param>
         /// <returns>Instance of ODataMessageWriterSettings</returns>
-        private static ODataMessageWriterSettings CreateMessageWriterSettings(bool isFullValidation)
+        private static ODataMessageWriterSettings CreateMessageWriterSettings(bool basicValidation)
         {
             var settings = new ODataMessageWriterSettings
             {
@@ -134,7 +134,8 @@ namespace Microsoft.OData.Performance
                 EnableIndentation = Indent,
                 DisableMessageStreamDisposal = DisableMessageStreamDisposal,
                 Version = Version,
-                EnableFullValidation = isFullValidation,
+                Validations = WriterValidations.FullValidation
+                    & (basicValidation ? WriterValidations.FullValidation : ~WriterValidations.BasicValidation),
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,
@@ -155,11 +156,11 @@ namespace Microsoft.OData.Performance
         /// <param name="stream">Message stream</param>
         /// <param name="model">Edm model</param>
         /// <param name="messageKind">Is request or response</param>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="basicValidation">Whether turn on BasicValidation</param>
         /// <returns>Instance of ODataMessageWriter</returns>
-        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation)
+        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool basicValidation)
         {
-            var settings = CreateMessageWriterSettings(isFullValidation);
+            var settings = CreateMessageWriterSettings(basicValidation);
 
             if (messageKind == ODataMessageKind.Request)
             {

@@ -14,7 +14,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Configuration settings for OData message writers.
     /// </summary>
-    public sealed class ODataMessageWriterSettings : IMessageValidationSetting
+    public sealed class ODataMessageWriterSettings
     {
         /// <summary>
         /// The acceptable charsets used to the determine the encoding of the message.
@@ -49,8 +49,8 @@ namespace Microsoft.OData
         private ODataUri odataUri;
 
         /// <summary>
-        /// Func to evaluate whether an annotation should be writen by the writer. The func should return true if the annotation should
-        /// be writen and false if the annotation should be skipped.
+        /// Func to evaluate whether an annotation should be written by the writer. The func should return true if the annotation should
+        /// be written and false if the annotation should be skipped.
         /// </summary>
         private Func<string, bool> shouldIncludeAnnotation;
 
@@ -61,33 +61,42 @@ namespace Microsoft.OData
         /// </summary>
         private bool? useFormat;
 
+        /// <summary>
+        /// Validation settings.
+        /// </summary>
+        private WriterValidations validations;
+
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
-            this.AllowDuplicatePropertyNames = false;
-            this.AllowNullValuesForNonNullablePrimitiveTypes = false;
             this.AutoComputePayloadMetadataInJson = false;
             this.DisableMessageStreamDisposal = false;
             this.EnableCharactersCheck = false;
-            this.EnableFullValidation = true;
-            this.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
             this.EnableIndentation = false;
             this.ODataSimplified = false;
+            this.Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty;
         }
 
         /// <summary>
-        /// If set to true, allows the writers to write duplicate properties of entries and complex values (i.e., properties that have the same name). Defaults to 'false'.
+        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.WriterValidations.FullValidation"/>,
+        /// but without <see cref="T:Microsoft.OData.WriterValidations.ThrowOnUndeclaredProperty"/>.
         /// </summary>
-        /// <remarks>
-        /// Independently of this setting duplicate property names are never allowed if one of the duplicate property names refers to
-        /// a named stream property, an association link or a collection.
-        /// </remarks>
-        public bool AllowDuplicatePropertyNames { get; set; }
+        public WriterValidations Validations
+        {
+            get
+            {
+                return validations;
+            }
 
-        /// <summary>
-        /// If set to true, the writers will allow writing null values even if the metadata specifies a non-nullable primitive type. Default to 'false'
-        /// </summary>
-        public bool AllowNullValuesForNonNullablePrimitiveTypes { get; set; }
+            set
+            {
+                validations = value;
+                BasicValidation = (validations & WriterValidations.BasicValidation) != 0;
+                ThrowOnDuplicatePropertyNames = (validations & WriterValidations.ThrowOnDuplicatePropertyNames) != 0;
+                ThrowOnNullValuesForNonNullablePrimitiveTypes = (validations & WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes) != 0;
+                ThrowOnUndeclaredProperty = (validations & WriterValidations.ThrowOnUndeclaredProperty) != 0;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the writer should automatically generate or omit metadata in JSON payloads based on the metadata level.
@@ -126,17 +135,6 @@ namespace Microsoft.OData
         /// Flag to control whether the writer should check for valid Xml characters or not.
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
-
-        /// <summary>
-        /// If set to true, all the validation would be enabled. Else some validation will be skipped.
-        /// Default to true.
-        /// </summary>
-        public bool EnableFullValidation { get; set; }
-
-        /// <summary>
-        /// Gets or sets UndeclaredPropertyBehaviorKinds.
-        /// </summary>
-        public ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds { get; set; }
 
         /// <summary>
         /// Flag to control whether the writer should use indentation or not.
@@ -198,6 +196,26 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
         /// <returns>The OData protocol version to be used for writing payloads.</returns>
         public ODataVersion? Version { get; set; }
+
+        /// <summary>
+        /// Returns whether BasicValidation should be performed.
+        /// </summary>
+        internal bool BasicValidation { get; private set; }
+
+        /// <summary>
+        /// Returns whether ThrowOnDuplicatePropertyNames validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnDuplicatePropertyNames { get; private set; }
+
+        /// <summary>
+        /// Returns whether ThrowOnNullValuesForNonNullablePrimitiveTypes validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnNullValuesForNonNullablePrimitiveTypes { get; private set; }
+
+        /// <summary>
+        /// Returns whether ThrowOnNullValuesForNonNullablePrimitiveTypes validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnUndeclaredProperty { get; private set; }
 
         /// <summary>
         /// The acceptable media types used to determine the content type of the message.
@@ -300,8 +318,8 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Func to evaluate whether an annotation should be writen by the writer. The func should return true if the annotation should
-        /// be writen and false if the annotation should be skipped.
+        /// Func to evaluate whether an annotation should be written by the writer. The func should return true if the annotation should
+        /// be written and false if the annotation should be skipped.
         /// </summary>
         internal Func<string, bool> ShouldIncludeAnnotation
         {
@@ -383,17 +401,17 @@ namespace Microsoft.OData
         /// <summary>
         /// Determines if there is a JSON padding function defined.
         /// </summary>
-        /// <returns>True if the JsonPCallback property is not null or emtpy.</returns>
+        /// <returns>True if the JsonPCallback property is not null or empty.</returns>
         internal bool HasJsonPaddingFunction()
         {
             return !string.IsNullOrEmpty(this.JsonPCallback);
         }
 
         /// <summary>
-        /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be writen, false otherwise.
+        /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be written, false otherwise.
         /// </summary>
         /// <param name="annotationName">The name of the annotation in question.</param>
-        /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be writen, false otherwise.</returns>
+        /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be written, false otherwise.</returns>
         internal bool ShouldSkipAnnotation(string annotationName)
         {
             return this.ShouldIncludeAnnotation == null || !this.ShouldIncludeAnnotation(annotationName);
@@ -405,14 +423,10 @@ namespace Microsoft.OData
 
             this.acceptCharSets = other.acceptCharSets;
             this.acceptMediaTypes = other.acceptMediaTypes;
-            this.AllowDuplicatePropertyNames = other.AllowDuplicatePropertyNames;
-            this.AllowNullValuesForNonNullablePrimitiveTypes = other.AllowNullValuesForNonNullablePrimitiveTypes;
             this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
             this.BaseUri = other.BaseUri;
             this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
-            this.EnableFullValidation = other.EnableFullValidation;
-            this.UndeclaredPropertyBehaviorKinds = other.UndeclaredPropertyBehaviorKinds;
             this.EnableIndentation = other.EnableIndentation;
             this.format = other.format;
             this.JsonPCallback = other.JsonPCallback;
@@ -423,6 +437,11 @@ namespace Microsoft.OData
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
+            this.validations = other.validations;
+            this.BasicValidation = other.BasicValidation;
+            this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
+            this.ThrowOnNullValuesForNonNullablePrimitiveTypes = other.ThrowOnNullValuesForNonNullablePrimitiveTypes;
+            this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
         }
     }
 }

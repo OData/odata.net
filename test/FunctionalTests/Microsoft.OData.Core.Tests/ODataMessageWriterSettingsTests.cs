@@ -187,13 +187,13 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AllowDuplicatePropertyNamesShouldBeFalseByDefault()
         {
-            this.settings.AllowDuplicatePropertyNames.Should().BeFalse();
+            this.settings.ThrowOnDuplicatePropertyNames.Should().BeTrue();
         }
 
         [Fact]
         public void AllowNullValuesForNonNullablePrimitiveTypesShouldBeFalseByDefault()
         {
-            this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeFalse();
+            this.settings.ThrowOnNullValuesForNonNullablePrimitiveTypes.Should().BeTrue();
         }
 
         #endregion Default settings tests
@@ -363,8 +363,9 @@ namespace Microsoft.OData.Tests
 
             this.settings = new ODataMessageWriterSettings()
             {
-                AllowDuplicatePropertyNames = true,
-                AllowNullValuesForNonNullablePrimitiveTypes = true,
+                Validations = WriterValidations.FullValidation
+                              & ~WriterValidations.ThrowOnDuplicatePropertyNames
+                              & ~WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes,
                 AutoComputePayloadMetadataInJson = true,
                 BaseUri = baseUri,
                 EnableCharactersCheck = true,
@@ -380,8 +381,8 @@ namespace Microsoft.OData.Tests
                 Version = version,
             };
 
-            this.settings.AllowDuplicatePropertyNames.Should().BeTrue();
-            this.settings.AllowNullValuesForNonNullablePrimitiveTypes.Should().BeTrue();
+            this.settings.ThrowOnDuplicatePropertyNames.Should().BeFalse();
+            this.settings.ThrowOnNullValuesForNonNullablePrimitiveTypes.Should().BeFalse();
             this.settings.AutoComputePayloadMetadataInJson.Should().BeTrue();
             this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.EnableCharactersCheck.Should().BeTrue();

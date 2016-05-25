@@ -26,7 +26,7 @@ namespace Microsoft.OData
     internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener
     {
         /// <summary>The writer validator to use.</summary>
-        protected readonly IWriterValidator WriterValidator;
+        protected readonly IBasicWriterValidator WriterValidator;
 
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
@@ -1361,7 +1361,11 @@ namespace Microsoft.OData
                         odataUri = currentScope.ODataUri.Clone();
 
                         IEdmStructuredType currentResourceType = currentScope.ResourceType;
-                        var ComplexProperty = this.WriterValidator.ValidatePropertyDefined(nestedResourceInfo.Name, currentResourceType, this.outputContext.MessageWriterSettings) as IEdmStructuralProperty;
+                        var ComplexProperty = WriterValidationUtils.ValidatePropertyDefined(
+                            nestedResourceInfo.Name,
+                            currentResourceType,
+                            this.outputContext.MessageWriterSettings.ThrowOnUndeclaredProperty)
+                            as IEdmStructuralProperty;
                         if (ComplexProperty == null)
                         {
                             IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
@@ -1994,9 +1998,8 @@ namespace Microsoft.OData
                 if (resource != null)
                 {
                     this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        writerSettings.AllowDuplicatePropertyNames,
-                        writingResponse,
-                        !writerSettings.EnableFullValidation);
+                        !writerSettings.ThrowOnDuplicatePropertyNames,
+                        writingResponse);
                 }
 
                 this.serializationInfo = serializationInfo;

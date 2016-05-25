@@ -183,7 +183,7 @@ namespace Microsoft.OData.JsonLight
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,
                 owningType,
-                this.JsonLightOutputContext.MessageWriterSettings);
+                this.JsonLightOutputContext.MessageWriterSettings.ThrowOnUndeclaredProperty);
 
             string wirePropertyName = isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
@@ -251,7 +251,7 @@ namespace Microsoft.OData.JsonLight
 
         private void WriteUntypedValue(IEdmStructuredType owningType, string propertyName, string wirePropertyName, ODataUntypedValue untypedValue)
         {
-            if (this.MessageWriterSettings.ShouldSupportUndeclaredProperty())
+            if (!this.MessageWriterSettings.ThrowOnUndeclaredProperty)
             {
                 this.JsonWriter.WriteName(wirePropertyName);
                 this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
@@ -259,8 +259,8 @@ namespace Microsoft.OData.JsonLight
             }
 
             Debug.Assert(
-                this.MessageWriterSettings.ShouldThrowOnUndeclaredProperty(),
-                "this.MessageWriterSettings.ShouldThrowOnUndeclaredProperty()");
+                this.MessageWriterSettings.ThrowOnUndeclaredProperty,
+                "this.MessageWriterSettings.ThrowOnUndeclaredProperty");
             throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningType.FullTypeName()));
         }
 

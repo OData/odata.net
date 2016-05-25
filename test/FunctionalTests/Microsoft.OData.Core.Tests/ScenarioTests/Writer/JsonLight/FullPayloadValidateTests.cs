@@ -933,7 +933,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                enableFullValidation: true);
+                enableBasicValidation: true);
             result.Should().Be(expectedPayload);
 
             result = this.GetWriterOutputForContentTypeAndKnobValue(
@@ -943,7 +943,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                enableFullValidation: false);
+                enableBasicValidation: false);
             result.Should().Be(expectedPayload);
         }
 
@@ -992,16 +992,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string selectClause = null,
             string expandClause = null,
             string resourcePath = null,
-            bool enableFullValidation = true)
+            bool enableBasicValidation = true)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
-                UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
+                Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty
+                              & (enableBasicValidation ? WriterValidations.FullValidation : ~WriterValidations.BasicValidation),
                 AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
-                EnableFullValidation = enableFullValidation
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();

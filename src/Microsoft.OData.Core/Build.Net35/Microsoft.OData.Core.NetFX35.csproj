@@ -1548,11 +1548,20 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNodeKind.cs</Link>
     </Compile>
+    <Compile Include="..\BasicWriterValidator.cs">
+      <Link>Microsoft\OData\Core\BasicWriterValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\BasicWriterValidatorFactory.cs">
+      <Link>Microsoft\OData\Core\BasicWriterValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\DummyBasicWriterValidator.cs">
+      <Link>Microsoft\OData\Core\DummyBasicWriterValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\IBasicWriterValidator.cs">
+      <Link>Microsoft\OData\Core\IBasicWriterValidator.cs</Link>
+    </Compile>
     <Compile Include="..\IContainerProvider.cs">
       <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\IWriterValidator.cs">
-      <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
     </Compile>
     <Compile Include="..\Json\IJsonReader.cs">
       <Link>Microsoft\OData\Core\Json\IJsonReader.cs</Link>
@@ -1647,15 +1656,6 @@
     <Compile Include="..\Uri\SelectExpandClauseToStringBuilder.cs">
       <Link>Microsoft\OData\Core\Uri\SelectExpandClauseToStringBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\ValidatorFactory.cs">
-      <Link>ValidatorFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\WriterValidatorFullValidation.cs">
-      <Link>Microsoft\OData\Core\WriterValidatorFullValidation.cs</Link>
-    </Compile>
-    <Compile Include="..\WriterValidatorMinimalValidation.cs">
-      <Link>Microsoft\OData\Core\WriterValidatorMinimalValidation.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\CustomUriLiteralPrefixes.cs">
       <Link>Microsoft\OData\Core\UriParser\CustomUriLiteralPrefixes.cs</Link>
     </Compile>
@@ -1664,6 +1664,9 @@
     </Compile>
     <Compile Include="..\UriParser\UriFunctionsHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidations.cs">
+      <Link>Microsoft\OData\Core\WriterValidations.cs</Link>
     </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
