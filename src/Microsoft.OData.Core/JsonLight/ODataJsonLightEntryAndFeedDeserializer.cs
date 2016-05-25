@@ -111,6 +111,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                     // Read the annotation value.
                     entryState.Entry.TypeName = this.ReadODataTypeAnnotationValue();
+                    entryState.Entry.InstanceAnnotations.Add(new ODataInstanceAnnotation(ODataAnnotationNames.ODataType, entryState.Entry.TypeName.ToODataValue(), true));
                 }
             }
 
@@ -595,7 +596,7 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    entry.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, annotationValue.ToODataValue()));
+                    entry.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, annotationValue.ToODataValue(), true));
                     break;
             }
 
@@ -641,7 +642,7 @@ namespace Microsoft.OData.Core.JsonLight
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
                     object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
-                    feed.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue()));
+                    feed.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue(), true));
                     break;
             }
         }
@@ -1048,7 +1049,20 @@ namespace Microsoft.OData.Core.JsonLight
                     if (annotation.Value != null)
                     {
                         // annotation.Value == null indicates that this annotation should be skipped.
-                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue(), true));
+                    }
+                }
+            }
+
+            propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+            if (propertyAnnotations != null)
+            {
+                foreach (var annotation in propertyAnnotations)
+                {
+                    if (annotation.Value != null)
+                    {
+                        // annotation.Value == null indicates that this annotation should be skipped.
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue(), true));
                     }
                 }
             }

@@ -904,6 +904,19 @@ namespace Microsoft.OData.Core.JsonLight
                                             }
                                         }
 
+                                        propertyAnnotations = duplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+                                        if (propertyAnnotations != null)
+                                        {
+                                            foreach (var annotation in propertyAnnotations)
+                                            {
+                                                if (annotation.Value != null)
+                                                {
+                                                    // annotation.Value == null indicates that this annotation should be skipped.
+                                                    property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue(), true));
+                                                }
+                                            }
+                                        }
+
                                         properties.Add(property);
                                     }
                                 }
@@ -1089,7 +1102,7 @@ namespace Microsoft.OData.Core.JsonLight
                             throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(ODataAnnotationNames.ODataType));
                         }
 
-                        result = this.ReadComplexValue(
+                        ODataComplexValue complexValue = this.ReadComplexValue(
                             valueIsJsonObject,
                             insideComplexValue,
                             propertyName,
@@ -1097,6 +1110,13 @@ namespace Microsoft.OData.Core.JsonLight
                             payloadTypeName,
                             serializationTypeNameAnnotation,
                             duplicatePropertyNamesChecker);
+
+                        if (typeNameFoundInPayload)
+                        {
+                            complexValue.InstanceAnnotations.Add(new ODataInstanceAnnotation(ODataAnnotationNames.ODataType, payloadTypeName.ToODataValue(), true));
+                        }
+
+                        result = complexValue;
                         break;
 
                     case EdmTypeKind.Collection:

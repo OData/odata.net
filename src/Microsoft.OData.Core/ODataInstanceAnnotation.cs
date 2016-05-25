@@ -21,9 +21,23 @@ namespace Microsoft.OData.Core
         /// <param name="name">The name of the instance annotation.</param>
         /// <param name="value">The value of the instance annotation.</param>
         public ODataInstanceAnnotation(string name, ODataValue value)
+            : this(name, value, false)
         {
-            ValidateName(name);
-            ValidateValue(value);
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="ODataInstanceAnnotation"/> instance.
+        /// </summary>
+        /// <param name="name">The name of the instance annotation.</param>
+        /// <param name="value">The value of the instance annotation.</param>
+        /// <param name="areReservedNamesAllowed">Whether reserved (odata.*) names are allowed.</param>
+        internal ODataInstanceAnnotation(string name, ODataValue value, bool areReservedNamesAllowed)
+        {
+            if (areReservedNamesAllowed)
+            {
+                ValidateName(name);
+                ValidateValue(value);
+            }
             this.Name = name;
             this.Value = value;
         }
