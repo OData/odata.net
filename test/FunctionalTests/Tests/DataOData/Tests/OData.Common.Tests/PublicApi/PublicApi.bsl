@@ -5349,6 +5349,7 @@ public class Microsoft.OData.UriParser.ODataPath : Microsoft.OData.ODataAnnotata
 
 public class Microsoft.OData.UriParser.ODataQueryOptionParser {
 	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions)
+	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions, System.IServiceProvider container)
 
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }
 	Microsoft.OData.UriParser.ODataUriResolver Resolver  { public get; public set; }

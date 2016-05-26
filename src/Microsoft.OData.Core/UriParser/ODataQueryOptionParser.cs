@@ -55,13 +55,26 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetNavigationSource">The target navigation source to apply the query option on.</param>
         /// <param name="queryOptions">The dictionary storing query option key-value pairs.</param>
         public ODataQueryOptionParser(IEdmModel model, IEdmType targetEdmType, IEdmNavigationSource targetNavigationSource, IDictionary<string, string> queryOptions)
+            : this(model, targetEdmType, targetNavigationSource, queryOptions, null)
+        {
+        }
+
+        /// <summary>
+        /// Constructor for ODataQueryOptionParser
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="targetEdmType">The target EdmType to apply the query option on.</param>
+        /// <param name="targetNavigationSource">The target navigation source to apply the query option on.</param>
+        /// <param name="queryOptions">The dictionary storing query option key-value pairs.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        public ODataQueryOptionParser(IEdmModel model, IEdmType targetEdmType, IEdmNavigationSource targetNavigationSource, IDictionary<string, string> queryOptions, IServiceProvider container)
         {
             ExceptionUtils.CheckArgumentNotNull(queryOptions, "queryOptions");
 
             this.targetEdmType = targetEdmType;
             this.targetNavigationSource = targetNavigationSource;
             this.queryOptions = queryOptions;
-            this.Configuration = new ODataUriParserConfiguration(model)
+            this.Configuration = new ODataUriParserConfiguration(model, container)
             {
                 ParameterAliasValueAccessor = new ParameterAliasValueAccessor(queryOptions.Where(_ => _.Key.StartsWith("@", StringComparison.Ordinal)).ToDictionary(_ => _.Key, _ => _.Value))
             };

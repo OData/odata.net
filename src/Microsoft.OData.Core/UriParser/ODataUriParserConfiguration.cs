@@ -24,17 +24,6 @@ namespace Microsoft.OData.UriParser
         /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
         /// </summary>
         /// <param name="model">Model to use for metadata binding.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
-        /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
-        public ODataUriParserConfiguration(IEdmModel model)
-            : this(model, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
-        /// </summary>
-        /// <param name="model">Model to use for metadata binding.</param>
         /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
@@ -47,6 +36,17 @@ namespace Microsoft.OData.UriParser
             this.Settings = new ODataUriParserSettings();
             this.EnableUriTemplateParsing = false;
             this.EnableCaseInsensitiveUriFunctionIdentifier = false;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
+        internal ODataUriParserConfiguration(IEdmModel model)
+            : this(model, null)
+        {
         }
 
         /// <summary>

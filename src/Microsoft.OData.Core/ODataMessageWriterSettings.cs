@@ -102,8 +102,7 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the document base URI which is used as base for all relative URIs. </summary>
         /// <returns>The document base URI which is used as base for all relative URIs.</returns>
         /// <remarks>
-        /// This URI will be used in ATOM format only, it would be shown in &lt;xml:base /&gt; element, for JSON payload, base URI is context URI
-        /// If the URI does not end with a slash, a slash would be appended automatically.
+        /// Base URI is context URI; if the URI does not end with a slash, a slash would be appended automatically.
         /// </remarks>
         public Uri BaseUri
         {
