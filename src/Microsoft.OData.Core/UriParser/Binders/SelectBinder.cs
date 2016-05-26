@@ -29,10 +29,11 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
        /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver = null)
+        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "tokenIn");
             ExceptionUtils.CheckArgumentNotNull(edmType, "entityType");
+            ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             this.visitor = new SelectPropertyVisitor(model, edmType, maxDepth, expandClauseToDecorate, resolver);
         }

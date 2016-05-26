@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser
         /// Instance for <see cref="ODataUriResolver"/>.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        internal static readonly ODataUriResolver Default = new ODataUriResolver();
+        private static readonly ODataUriResolver Default = new ODataUriResolver();
 
         /// <summary>
         /// Whether to enable case insensitive for the resolver.
@@ -331,6 +331,16 @@ namespace Microsoft.OData.UriParser
             }
 
             return null;
+        }
+
+        internal static ODataUriResolver GetUriResolver(IServiceProvider container)
+        {
+            if (container == null)
+            {
+                return Default;
+            }
+
+            return container.GetRequiredService<ODataUriResolver>();
         }
     }
 }

@@ -18,13 +18,14 @@ namespace Microsoft.OData.Tests.UriParser.Binders
     /// </summary>
     public class InnerPathTokenBinderTests
     {
-        private static readonly ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
+        private static readonly ODataUriParserConfiguration Configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
+        private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
 
         #region Short-span integration tests on BindInnerPathSegment
         [Fact]
         public void CollectionNavigationPropertyShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASingleDog, state);
             var token = new InnerPathToken("MyPeople", new DummyToken(), null /*namedValues*/);
 
@@ -37,7 +38,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void MissingPropertyShouldThrow()
         {
             const string MissingPropertyName = "ThisPropertyDoesNotExist";
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASingleDog, state);
             var token = new InnerPathToken(MissingPropertyName, new DummyToken(), null /*namedValues*/);
 
@@ -51,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void DeclaredPropertyOnOpenTypeShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASinglePainting, state);
             var token = new InnerPathToken("Colors", new DummyToken(), null /*namedValues*/);
 
@@ -63,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void OpenPropertyShouldCreateMatchingNode()
         {
             const string OpenPropertyName = "Emotions";
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASinglePainting, state);
             var token = new InnerPathToken(OpenPropertyName, new DummyToken(), null /*namedValues*/);
 
@@ -74,7 +75,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void PrimitiveCollectionPropertyShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASingleDog, state);
             var token = new InnerPathToken("Nicknames", new DummyToken(), null /*namedValues*/);
 
@@ -85,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void ComplexCollectionPropertyShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASinglePerson, state);
             var token = new InnerPathToken("PreviousAddresses", new DummyToken(), null /*namedValues*/);
 
@@ -96,7 +97,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void CollectionOfDateTimeOffsetShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASingleLion, state);
             var token = new InnerPathToken("AttackDates", new DummyToken(), null /*namedValues*/);
 
@@ -107,7 +108,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void CollectionOfDateShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASinglePerson, state);
             var token = new InnerPathToken("MyDates", new DummyToken(), null /*namedValues*/);
 
@@ -118,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void CollectionOfTimeOfDayShouldCreateMatchingNode()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             var binder = new InnerPathTokenBinder(FakeBindMethods.BindMethodReturningASinglePerson, state);
             var token = new InnerPathToken("MyTimeOfDays", new DummyToken(), null /*namedValues*/);
 
@@ -129,7 +130,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void KeyLookupOnNavPropIntegrationTest()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             var metadataBinder = new MetadataBinder(state);
             var binder = new InnerPathTokenBinder(metadataBinder.Bind, state);
@@ -142,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void InnerPathTokenBinderShouldFailIfPropertySourceIsNotASingleValue()
         {
-            var state = new BindingState(configuration);
+            var state = new BindingState(Configuration);
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             var metadataBinder = new MetadataBinder(state);
             var binder = new InnerPathTokenBinder(metadataBinder.Bind, state);
@@ -158,35 +159,35 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void BindPropertyShouldReturnCorrectPropertyIfFoundForEntity()
         {
-            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "Shoe");
+            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "Shoe", DefaultUriResolver);
             result.Should().BeSameAs(HardCodedTestModel.GetPersonShoeProp());
         }
 
         [Fact]
         public void BindPropertyShouldReturnCorrectPropertyIfFoundForComplex()
         {
-            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonAddressProp().Type, "MyNeighbors");
+            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonAddressProp().Type, "MyNeighbors", DefaultUriResolver);
             result.Should().BeSameAs(HardCodedTestModel.GetAddressMyNeighborsProperty());
         }
 
         [Fact]
         public void BindPropertyShouldBeCaseSensitive()
         {
-            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "shoe");
+            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "shoe", DefaultUriResolver);
             result.Should().BeNull();
         }
 
         [Fact]
         public void BindPropertyShouldReturnNullIfNotFound()
         {
-            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "missing");
+            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "missing", DefaultUriResolver);
             result.Should().BeNull();
         }
 
         [Fact]
         public void BindPropertyShouldReturnNullIfTypeNotStructured()
         {
-            var result = InnerPathTokenBinder.BindProperty(EdmCoreModel.Instance.GetDecimal(false), "NotStructured");
+            var result = InnerPathTokenBinder.BindProperty(EdmCoreModel.Instance.GetDecimal(false), "NotStructured", DefaultUriResolver);
             result.Should().BeNull();
         }
 
@@ -211,7 +212,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmNavigationProperty property = HardCodedTestModel.GetPersonMyDogNavProp();
             SingleEntityNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
-            BindingState state = new BindingState(configuration);
+            BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 
             var result = InnerPathTokenBinder.GetNavigationNode(property, parent, null, state, keyBinder);
@@ -223,7 +224,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmNavigationProperty property = HardCodedTestModel.GetDogMyPeopleNavProp();
             SingleEntityNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
-            BindingState state = new BindingState(configuration);
+            BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 
             var result = InnerPathTokenBinder.GetNavigationNode(property, parent, null, state, keyBinder);

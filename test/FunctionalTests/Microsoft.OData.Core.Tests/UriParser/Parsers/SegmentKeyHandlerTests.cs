@@ -21,6 +21,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class SegmentKeyHandlerTests
     {
+        private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
         private readonly UrlConvention defaultConvention = UrlConvention.CreateWithExplicitValue(false);
         private readonly UrlConvention keyAsSegmentConvention = UrlConvention.CreateWithExplicitValue(true);
         private ODataPathSegment singleResultSegmentWithSingleKey;
@@ -44,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SegmentWithSingleDollarSignIsNotAKey()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, out keySegment).Should().BeFalse();
+            SegmentKeyHandler.TryHandleSegmentAsKey("$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, DefaultUriResolver, out keySegment).Should().BeFalse();
         }
 
         [Fact]
@@ -52,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             KeySegment keySegment;
             Action action = ()=>
-            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithCompositeKey, null, keyAsSegmentConvention, out keySegment);
+            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithCompositeKey, null, keyAsSegmentConvention, DefaultUriResolver, out keySegment);
             action.ShouldThrow<ODataException>("The number of keys specified in the URI does not match number of key properties for the resource 'Fully.Qualified.Namespace.Lion'.");
         }
 
@@ -60,21 +61,21 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SegmentWithSingleResultIsNotAKey()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.singleResultSegmentWithSingleKey, null, keyAsSegmentConvention, out keySegment).Should().BeFalse();
+            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.singleResultSegmentWithSingleKey, null, keyAsSegmentConvention, DefaultUriResolver, out keySegment).Should().BeFalse();
         }
 
         [Fact]
         public void IfBehaviorKnobIsTurnedOffThenNoSegmentIsAKey()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithSingleKey, null, defaultConvention, out keySegment).Should().BeFalse();
+            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithSingleKey, null, defaultConvention, DefaultUriResolver, out keySegment).Should().BeFalse();
         }
 
         [Fact]
         public void SegmentKeyShouldUnescapeDollarSign()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("$$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, out keySegment).Should().BeTrue();
+            SegmentKeyHandler.TryHandleSegmentAsKey("$$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, DefaultUriResolver, out keySegment).Should().BeTrue();
             keySegment.Should().NotBeSameAs(this.multipleResultSegmentWithSingleKey);
             keySegment.Should().NotBeNull();
             keySegment.Keys.Should().HaveCount(1);
@@ -96,6 +97,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
                 "10",
+                DefaultUriResolver,
                 out keySegment).Should().BeTrue();
             keySegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID1", 0), new KeyValuePair<string, object>("ID2", 10));
         }
@@ -115,6 +117,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
                 "10",
+                DefaultUriResolver,
                 out keySegment);
             implicitKeyWithOutRefIntegrityConstraint.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().FullTypeName()));
         }

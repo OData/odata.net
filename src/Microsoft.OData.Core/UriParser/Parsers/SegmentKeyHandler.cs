@@ -25,19 +25,15 @@ namespace Microsoft.OData.UriParser
         /// <param name="previous">Segment on which to compose.</param>
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="parenthesisExpression">Parenthesis expression of segment.</param>
+        /// <param name="resolver">The resolver to use.</param>
         /// <param name="keySegment">The key segment that was created if the key was non-empty.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
-        /// <param name="resolver">The resolver to use.</param>
         /// <returns>Whether the key was non-empty.</returns>
-        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false, ODataUriResolver resolver = null)
+        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, ODataUriResolver resolver, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false)
         {
             Debug.Assert(parenthesisExpression != null, "parenthesisExpression != null");
             Debug.Assert(previous != null, "segment!= null");
-
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
+            Debug.Assert(resolver != null, "resolver != null");
 
             if (previous.SingleResult)
             {
@@ -68,19 +64,15 @@ namespace Microsoft.OData.UriParser
         /// <param name="previous">The previous segment.</param>
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="urlConvention">The current url convention for the server.</param>
+        /// <param name="resolver">The resolver to use.</param>
         /// <param name="keySegment">The key segment that was created if the segment could be interpreted as a key.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
-        /// <param name="resolver">The resolver to use.</param>
         /// <returns>Whether or not the segment was interpreted as a key.</returns>
-        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, out KeySegment keySegment, bool enableUriTemplateParsing = false, ODataUriResolver resolver = null)
+        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, ODataUriResolver resolver, out KeySegment keySegment, bool enableUriTemplateParsing = false)
         {
             Debug.Assert(previous != null, "previous != null");
             Debug.Assert(urlConvention != null, "urlConvention != null");
-
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
+            Debug.Assert(resolver != null, "resolver != null");
 
             keySegment = null;
 

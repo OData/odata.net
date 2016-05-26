@@ -47,6 +47,7 @@ namespace Microsoft.OData.UriParser
         internal static SingleEntityNode EnsureParentIsEntityForNavProp(SingleValueNode parent)
         {
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
+
             SingleEntityNode parentEntity = parent as SingleEntityNode;
             if (parentEntity == null)
             {
@@ -64,12 +65,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="propertyName">The string designated the property name to be bound.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The property associated with string and parent type.</returns>
-        internal static IEdmProperty BindProperty(IEdmTypeReference parentReference, string propertyName, ODataUriResolver resolver = null)
+        internal static IEdmProperty BindProperty(IEdmTypeReference parentReference, string propertyName, ODataUriResolver resolver)
         {
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
+            ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             IEdmStructuredTypeReference structuredParentType =
                 parentReference == null ? null : parentReference.AsStructuredOrNull();

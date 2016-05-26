@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class FunctionOverloadResolverTests
     {
-        // TryResolveFunction
+        private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
 
         [Fact]
         public void ModelWithMultipleOverloadedActionsShouldThrow()
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[0];
 
             IEdmOperationImport function;
-            Action test = () => FunctionOverloadResolver.ResolveOperationImportFromList("Foo", parameters, model, out function, ODataUriResolver.Default);
+            Action test = () => FunctionOverloadResolver.ResolveOperationImportFromList("Foo", parameters, model, out function, DefaultUriResolver);
             test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("Foo"));
         }
 
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { "123 bob st." };
 
             IEdmOperation function;
-            Action test = () => FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetPersonType(), model, out function, ODataUriResolver.Default);
+            Action test = () => FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetPersonType(), model, out function, DefaultUriResolver);
             test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Fully.Qualified.Namespace.Move"));
         }
 
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperationImport function;
-            Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("Action", parameters, model, out function, ODataUriResolver.Default);
+            Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("Action", parameters, model, out function, DefaultUriResolver);
             resolve.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionOverloadResolver_MultipleActionImportOverloads("Action"));
         }
 
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new[] { "inOffice" };
 
             IEdmOperation function;
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.HasDog", parameters, HardCodedTestModel.GetPersonType(), HardCodedTestModel.TestModel, out function, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.HasDog", parameters, HardCodedTestModel.GetPersonType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters());
         }
 
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperation function;
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetEmployeeType(), HardCodedTestModel.TestModel, out function, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetEmployeeType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(HardCodedTestModel.GetMoveOverloadForEmployee());
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperation function;
-            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetManagerType(), HardCodedTestModel.TestModel, out function, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetManagerType(), HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(HardCodedTestModel.GetMoveOverloadForEmployee());
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var parameters = new string[] { };
 
             IEdmOperationImport function;
-            FunctionOverloadResolver.ResolveOperationImportFromList("GetCoolPeople", parameters, HardCodedTestModel.TestModel, out function, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationImportFromList("GetCoolPeople", parameters, HardCodedTestModel.TestModel, out function, DefaultUriResolver).Should().BeTrue();
             function.Should().BeSameAs(HardCodedTestModel.GetFunctionImportForGetCoolPeople());
         }
 
@@ -126,17 +126,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Resolve overload function import without parameter.
             var parameters = new string[] { };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
             functionImport.Should().BeSameAs(functionImportWithoutParameter);
 
             // Resolve overload function import with parameter.
             parameters = new string[] { "Parameter" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
             functionImport.Should().BeSameAs(functionImportWithParameter);
 
             // Resolve overload function import with parameter.
             parameters = new string[] { "Parameter", "Parameter2" };
-            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, ODataUriResolver.Default).Should().BeTrue();
+            FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver).Should().BeTrue();
             functionImport.Should().BeSameAs(functionImportWithTwoParameter);
         }
     }

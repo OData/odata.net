@@ -28,11 +28,6 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
         public static IEdmSchemaType FindTypeFromModel(IEdmModel model, string qualifiedName, ODataUriResolver resolver)
         {
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
-
             return resolver.ResolveType(model, qualifiedName);
         }
 
@@ -44,7 +39,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>a type reference to the enum type, or null if no such type exists.</returns>
         public static IEdmEnumType FindEnumTypeFromModel(IEdmModel model, string qualifiedName)
         {
-            IEdmEnumType enumType = FindTypeFromModel(model, qualifiedName, ODataUriResolver.Default) as IEdmEnumType;
+            IEdmEnumType enumType = FindTypeFromModel(model, qualifiedName, ODataUriResolver.GetUriResolver(null)) as IEdmEnumType;
             return enumType;
         }
 

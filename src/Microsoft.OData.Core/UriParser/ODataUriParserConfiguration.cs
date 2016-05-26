@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser
         private ODataUrlConventions urlConventions = ODataUrlConventions.Default;
 
         /// <summary>The resolver to use when parsing URLs.</summary>
-        private ODataUriResolver uriResolver = new ODataUriResolver();
+        private ODataUriResolver uriResolver;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
@@ -33,6 +33,7 @@ namespace Microsoft.OData.UriParser
 
             this.Model = model;
             this.Container = container;
+            this.Resolver = ODataUriResolver.GetUriResolver(container);
             this.Settings = new ODataUriParserSettings();
             this.EnableUriTemplateParsing = false;
             this.EnableCaseInsensitiveUriFunctionIdentifier = false;

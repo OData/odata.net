@@ -33,7 +33,7 @@ namespace Microsoft.OData.UriParser
         internal BinaryOperatorBinder(Func<QueryToken, QueryNode> bindMethod, ODataUriResolver resolver)
         {
             this.bindMethod = bindMethod;
-            this.resolver = resolver ?? ODataUriResolver.Default;
+            this.resolver = resolver;
         }
 
         /// <summary>

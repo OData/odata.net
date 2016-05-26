@@ -736,7 +736,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
 
         private void TestCaseInsensitiveBuiltIn<TResult>(string original, string caseInsensitive, Func<ODataUriParser, TResult> parse, Action<TResult> verify, string errorMessage)
         {
-            this.TestUriParserExtension(original, caseInsensitive, parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver.EnableCaseInsensitive = true);
+            this.TestUriParserExtension(original, caseInsensitive, parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver = new ODataUriResolver { EnableCaseInsensitive = true });
         }
 
         private void TestQueryOptionParserCaseInsensitiveBuiltIn<TResult>(
@@ -749,7 +749,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestExtension(
                 () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), original),
                 () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), caseInsensitive),
-                parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver.EnableCaseInsensitive = true);
+                parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver = new ODataUriResolver { EnableCaseInsensitive = true });
         }
     }
 }

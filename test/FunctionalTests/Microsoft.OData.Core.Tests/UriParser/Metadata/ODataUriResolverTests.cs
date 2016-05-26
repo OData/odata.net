@@ -29,10 +29,11 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [Fact]
         public void DefaultResolverShouldBeInvariant()
         {
+            // Now different parsers share the same instance of the default resolver.
             ODataQueryOptionParser parser1 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
             ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
             parser1.Resolver.EnableCaseInsensitive = true;
-            parser2.Resolver.EnableCaseInsensitive.Should().BeFalse();
+            parser2.Resolver.EnableCaseInsensitive.Should().BeTrue();
         }
 
         #region Enum vesus string

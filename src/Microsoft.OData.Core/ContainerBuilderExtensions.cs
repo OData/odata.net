@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData
 {
@@ -129,6 +130,7 @@ namespace Microsoft.OData
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageWriterSettings>().Clone());
             builder.AddService(ServiceLifetime.Singleton, sp => ODataPayloadValueConverter.GetPayloadValueConverter(null));
             builder.AddService<IEdmModel>(ServiceLifetime.Singleton, sp => EdmCoreModel.Instance);
+            builder.AddService(ServiceLifetime.Singleton, sp => ODataUriResolver.GetUriResolver(null));
 
             return builder;
         }

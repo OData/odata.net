@@ -10,18 +10,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class SelectBinderTests
     {
+        private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
+
         [Fact]
         public void NonSystemTokenTranslatedToSelectionItem()
         {
             var expandTree = new SelectExpandClause(new Collection<SelectItem>(), false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("Shoe", null, null) });
 
             binder.Bind(selectToken).SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonShoeProp())));
@@ -34,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                         {
                                             new PathSelectItem(new ODataSelectPath(new PropertySegment( HardCodedTestModel.GetPersonNameProp()))),
                                         }, false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("*", null, null) });
 
             binder.Bind(selectToken).SelectedItems.Single().ShouldBeWildcardSelectionItem();
@@ -43,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void WildcardDoesNotPreemptOtherSelectionItems()
         {
-            ODataSelectPath coolPeoplePath = new ODataSelectPath(new OperationSegment(new IEdmOperation[] { HardCodedTestModel.GetChangeStateAction() }, null));
+            ODataSelectPath coolPeoplePath = new ODataSelectPath(new OperationSegment(new[] { HardCodedTestModel.GetChangeStateAction() }, null));
             ODataSelectPath stuffPath = new ODataSelectPath(new OpenPropertySegment("stuff"));
             var expandTree = new SelectExpandClause(new Collection<SelectItem>()
                                         {
@@ -52,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                             new PathSelectItem(stuffPath),
                                             new PathSelectItem(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPaintingColorsProperty())))
                                         }, false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("*", null, null) });
             var item = binder.Bind(selectToken);
             item.SelectedItems.Should().HaveCount(4)
@@ -69,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                         {
                                             new WildcardSelectItem()
                                         }, false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("Name", null, null) });
             binder.Bind(selectToken).SelectedItems.Single().ShouldBeWildcardSelectionItem();
         }
@@ -78,7 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void AllSelectedIsSetIfSelectIsEmpty()
         {
             var expandTree = new SelectExpandClause(new Collection<SelectItem>(), false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>());
             binder.Bind(selectToken).AllSelected.Should().BeTrue();
         }
@@ -87,7 +88,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void AllSelectedIsNotSetIfSelectedIsNotEmpty()
         {
             var expandTree = new SelectExpandClause(new Collection<SelectItem>(), true);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>(){new NonSystemToken("Name", null, null)});
             binder.Bind(selectToken).AllSelected.Should().BeFalse();
         }
@@ -99,7 +100,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                                                 new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)), 
                                                                                                 HardCodedTestModel.GetPeopleSet(),
                                                                                                 new SelectExpandClause(new Collection<SelectItem>(), true))}, true);
-            SelectBinder binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            SelectBinder binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             SelectToken selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("MyDog", null, new NonSystemToken("Color", null, null)) });
 
             Action bindWithMultiLevelPath = () => binder.Bind(selectToken);
@@ -113,7 +114,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                                                                 new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)),
                                                                                                                 HardCodedTestModel.GetPeopleSet(),
                                                                                                                 new SelectExpandClause(new Collection<SelectItem>(), false))}, false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("Name", null, null) });
             var result = binder.Bind(selectToken);
             result.SelectedItems.Last().ShouldBePathSelectionItem(new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp())));
@@ -128,7 +129,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                                                 new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)), 
                                                                                                 HardCodedTestModel.GetPeopleSet(),
                                                                                                 new SelectExpandClause(new Collection<SelectItem>(), true))}, true);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>());
             var result = binder.Bind(selectToken);
             result.AllSelected.Should().BeTrue();
@@ -144,7 +145,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                                         new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)), 
                                                                                         HardCodedTestModel.GetPeopleSet(),
                                                                                         new SelectExpandClause(new Collection<SelectItem>(), false))}, false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("MyDog", null, null) });
             var result = binder.Bind(selectToken);
             result.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand.AllSelected.Should().BeFalse();
@@ -155,7 +156,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void NavPropEndPathResultsInNavPropLinkSelectionItem()
         {
             SelectExpandClause expandTree = new SelectExpandClause(new Collection<SelectItem>(), false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("MyDog", null, null) });
             var result = binder.Bind(selectToken);
             result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)));
@@ -169,7 +170,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                             new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)), 
                                                             HardCodedTestModel.GetPeopleSet(),
                                                             new SelectExpandClause(null, false))}, true);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>()
                 {
                     new NonSystemToken("substring", null, null)
@@ -187,7 +188,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                                 new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)), 
                                                                 HardCodedTestModel.GetPeopleSet(),
                                                                 new SelectExpandClause(null, false))}, true);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>()
                 {
                     new NonSystemToken("GetCoolPeople", null, null)
@@ -200,7 +201,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void MustFindNonTypeSegmentBeforeTheEndOfTheChain()
         {
             SelectExpandClause expandTree = new SelectExpandClause(new Collection<SelectItem>(), false);
-            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree);
+            var binder = new SelectBinder(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), 800, expandTree, DefaultUriResolver);
             var selectToken = new SelectToken(new List<PathSegmentToken>()
                 {
                     new NonSystemToken("Fully.Qualified.Namespace.Employee", null, null)

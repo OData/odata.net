@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public BinaryOperatorBinderTests()
         {
             this.shouldReturnLeft = true;
-            this.binaryOperatorBinder = new BinaryOperatorBinder(this.BindMethodThatReturnsSingleValueQueryNode, /*resolver*/ null);
+            this.binaryOperatorBinder = new BinaryOperatorBinder(this.BindMethodThatReturnsSingleValueQueryNode, ODataUriResolver.GetUriResolver(null));
         }
 
         [Fact]

@@ -76,6 +76,7 @@ namespace Microsoft.OData.UriParser
         public ODataUriParser(IEdmModel model, Uri serviceRoot, Uri fullUri, IServiceProvider container)
         {
             ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
+
             if (serviceRoot == null)
             {
                 throw new ODataException(ODataErrorStrings.UriParser_NeedServiceRootForThisOverload);

@@ -57,7 +57,7 @@ namespace Microsoft.OData.UriParser
             this.edmType = edmType;
             this.maxDepth = maxDepth;
             this.expandClauseToDecorate = expandClauseToDecorate;
-            this.resolver = resolver ?? ODataUriResolver.Default;
+            this.resolver = resolver;
         }
 
         /// <summary>
