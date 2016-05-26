@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataBatchUrlResolver.cs" company="Microsoft">
+// <copyright file="ODataBatchPayloadUriConverter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,48 +13,48 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// Implementation of the batch-specific URL resolver that resolves cross-referencing URLs properly.
+    /// Implementation of the batch-specific URL converter that converts cross-referencing URLs properly.
     /// </summary>
-    internal sealed class ODataBatchUrlResolver : IODataUrlResolver
+    internal sealed class ODataBatchPayloadUriConverter : IODataPayloadUriConverter
     {
-        /// <summary>The URL resolver from the batch message.</summary>
-        private readonly IODataUrlResolver batchMessageUrlResolver;
+        /// <summary>The URL converter from the batch message.</summary>
+        private readonly IODataPayloadUriConverter batchMessagePayloadUriConverter;
 
-        /// <summary>A hashset with all content IDs used so far in the batch; this is used for cross-referencing URL resolution.</summary>
+        /// <summary>A hashset with all content IDs used so far in the batch; this is used for cross-referencing URL conversion.</summary>
         private HashSet<string> contentIdCache;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="batchMessageUrlResolver">The URL resolver from the batch message.</param>
-        internal ODataBatchUrlResolver(IODataUrlResolver batchMessageUrlResolver)
+        /// <param name="batchMessagePayloadUriConverter">The URL converter from the batch message.</param>
+        internal ODataBatchPayloadUriConverter(IODataPayloadUriConverter batchMessagePayloadUriConverter)
         {
-            this.batchMessageUrlResolver = batchMessageUrlResolver;
+            this.batchMessagePayloadUriConverter = batchMessagePayloadUriConverter;
         }
 
         /// <summary>
-        /// The URL resolver from the batch message.
+        /// The URL converter from the batch message.
         /// </summary>
-        internal IODataUrlResolver BatchMessageUrlResolver
+        internal IODataPayloadUriConverter BatchMessagePayloadUriConverter
         {
             get
             {
-                return this.batchMessageUrlResolver;
+                return this.batchMessagePayloadUriConverter;
             }
         }
 
         /// <summary>
-        /// Method to implement a custom URL resolution scheme.
-        /// This method returns null if not custom resolution is desired.
+        /// Method to implement a custom URL conversion scheme.
+        /// This method returns null if not custom conversion is desired.
         /// If the method returns a non-null URL that value will be used without further validation.
         /// </summary>
-        /// <param name="baseUri">The (optional) base URI to use for the resolution.</param>
+        /// <param name="baseUri">The (optional) base URI to use for the conversion.</param>
         /// <param name="payloadUri">The URI read from the payload.</param>
         /// <returns>
-        /// A <see cref="Uri"/> instance that reflects the custom resolution of the method arguments
-        /// into a URL or null if no custom resolution is desired; in that case the default resolution is used.
+        /// A <see cref="Uri"/> instance that reflects the custom conversion of the method arguments
+        /// into a URL or null if no custom conversion is desired; in that case the default conversion is used.
         /// </returns>
-        Uri IODataUrlResolver.ResolveUrl(Uri baseUri, Uri payloadUri)
+        Uri IODataPayloadUriConverter.ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
             ExceptionUtils.CheckArgumentNotNull(payloadUri, "payloadUri");
 
@@ -87,13 +87,13 @@ namespace Microsoft.OData
                 }
             }
 
-            if (this.batchMessageUrlResolver != null)
+            if (this.batchMessagePayloadUriConverter != null)
             {
-                // If we have a resolver from the batch message use it as the fallback.
-                return this.batchMessageUrlResolver.ResolveUrl(baseUri, payloadUri);
+                // If we have a converter from the batch message use it as the fallback.
+                return this.batchMessagePayloadUriConverter.ConvertPayloadUri(baseUri, payloadUri);
             }
 
-            // Otherwise return null to use the default URL resolution instead.
+            // Otherwise return null to use the default URL conversion instead.
             return null;
         }
 

@@ -187,23 +187,23 @@ namespace Microsoft.OData.Tests
 
         internal class TestODataOutputContext : ODataOutputContext
         {
-            public TestODataOutputContext(ODataFormat format, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
+            public TestODataOutputContext(ODataFormat format, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataPayloadUriConverter urlResolver)
                 :base(format,
                     new ODataMessageInfo
                     {
                         IsAsync = !synchronous,
                         IsResponse = writingResponse,
                         Model = model,
-                        UrlResolver = urlResolver
+                        PayloadUriConverter = urlResolver
                     }, messageWriterSettings)
             {
             }
         }
 
-        internal class TestUrlResolver : IODataUrlResolver
+        internal class TestUrlResolver : IODataPayloadUriConverter
         {
             public Func<Uri, Uri, Uri> ResolveUrlFunc {get; set;}
-            public Uri ResolveUrl(Uri baseUri, Uri payloadUri)
+            public Uri ConvertPayloadUri(Uri baseUri, Uri payloadUri)
             {
                 return this.ResolveUrlFunc(baseUri, payloadUri);
             }

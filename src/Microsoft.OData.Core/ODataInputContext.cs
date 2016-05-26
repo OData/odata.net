@@ -38,7 +38,7 @@ namespace Microsoft.OData
         private readonly bool synchronous;
 
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs read from the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>The optional dependency injection container to get related services for message reading.</summary>
         private readonly IServiceProvider container;
@@ -75,7 +75,7 @@ namespace Microsoft.OData
             this.readingResponse = messageInfo.IsResponse;
             this.synchronous = !messageInfo.IsAsync;
             this.model = messageInfo.Model ?? EdmCoreModel.Instance;
-            this.urlResolver = messageInfo.UrlResolver;
+            this.payloadUriConverter = messageInfo.PayloadUriConverter;
             this.container = messageInfo.Container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
@@ -126,13 +126,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The optional URL resolver to perform custom URL resolution for URLs read from the payload.
+        /// The optional URL converter to perform custom URL conversion for URLs read from the payload.
         /// </summary>
-        public IODataUrlResolver UrlResolver
+        public IODataPayloadUriConverter PayloadUriConverter
         {
             get
             {
-                return this.urlResolver;
+                return this.payloadUriConverter;
             }
         }
 
@@ -599,9 +599,9 @@ namespace Microsoft.OData
         {
             Debug.Assert(payloadUri != null, "uri != null");
 
-            if (this.UrlResolver != null)
+            if (this.PayloadUriConverter != null)
             {
-                return this.UrlResolver.ResolveUrl(baseUri, payloadUri);
+                return this.PayloadUriConverter.ConvertPayloadUri(baseUri, payloadUri);
             }
 
             return null;

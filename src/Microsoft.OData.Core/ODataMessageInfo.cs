@@ -32,9 +32,9 @@ namespace Microsoft.OData
         public bool IsResponse { get; set; }
 
         /// <summary>
-        /// The optional URL resolver to perform custom URL resolution for URLs read from the payload.
+        /// The optional URL converter to perform custom URL conversion for URLs read from the payload.
         /// </summary>
-        public IODataUrlResolver UrlResolver { get; set; }
+        public IODataPayloadUriConverter PayloadUriConverter { get; set; }
 
         /// <summary>
         /// The optional dependency injection container to get related services for message writing.

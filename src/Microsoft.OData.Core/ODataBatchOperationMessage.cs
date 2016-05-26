@@ -26,8 +26,8 @@ namespace Microsoft.OData
         /// <summary>Listener interface to be notified of operation changes.</summary>
         private readonly IODataBatchOperationListener operationListener;
 
-        /// <summary>The URL resolver to perform custom URL resolution for URLs read or written from/to the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        /// <summary>The URL converter to perform custom URL conversion for URLs read or written from/to the payload.</summary>
+        private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>A function to retrieve the content stream for this batch operation message.</summary>
         private Func<Stream> contentStreamCreatorFunc;
@@ -41,13 +41,13 @@ namespace Microsoft.OData
         /// <param name="contentStreamCreatorFunc">A function to retrieve the content stream for this batch operation message.</param>
         /// <param name="headers">The headers of the batch operation message.</param>
         /// <param name="operationListener">Listener interface to be notified of part changes.</param>
-        /// <param name="urlResolver">The URL resolver to perform custom URL resolution for URLs read or written from/to the payload.</param>
+        /// <param name="payloadUriConverter">The URL resolver to perform custom URL resolution for URLs read or written from/to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         internal ODataBatchOperationMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver,
+            IODataPayloadUriConverter payloadUriConverter,
             bool writing)
             : base(writing, /*disableMessageStreamDisposal*/ false, /*maxMessageSize*/ -1)
         {
@@ -57,7 +57,7 @@ namespace Microsoft.OData
             this.contentStreamCreatorFunc = contentStreamCreatorFunc;
             this.operationListener = operationListener;
             this.headers = headers;
-            this.urlResolver = urlResolver;
+            this.payloadUriConverter = payloadUriConverter;
         }
 
         /// <summary>
@@ -179,9 +179,9 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(payloadUri, "payloadUri");
 
-            if (this.urlResolver != null)
+            if (this.payloadUriConverter != null)
             {
-                return this.urlResolver.ResolveUrl(baseUri, payloadUri);
+                return this.payloadUriConverter.ConvertPayloadUri(baseUri, payloadUri);
             }
 
             // Return null to indicate that no custom URL resolution is desired.

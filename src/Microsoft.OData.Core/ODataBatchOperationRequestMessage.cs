@@ -20,9 +20,9 @@ namespace Microsoft.OData
     /// Message representing an operation in a batch request.
     /// </summary>
 #if PORTABLELIB
-    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessageAsync, IODataUrlResolver, IContainerProvider
+    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessageAsync, IODataPayloadUriConverter, IContainerProvider
 #else
-    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessage, IODataUrlResolver, IContainerProvider
+    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessage, IODataPayloadUriConverter, IContainerProvider
 #endif
     {
         /// <summary>Gets or Sets the Content-ID for this request message.</summary>
@@ -45,7 +45,7 @@ namespace Microsoft.OData
         /// <param name="headers">The headers for the this request message.</param>
         /// <param name="operationListener">Listener interface to be notified of operation changes.</param>
         /// <param name="contentId">The content-ID for the operation request message.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
+        /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
         private ODataBatchOperationRequestMessage(
@@ -55,19 +55,19 @@ namespace Microsoft.OData
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
             string contentId,
-            IODataUrlResolver urlResolver,
+            IODataPayloadUriConverter payloadUriConverter,
             bool writing,
             IServiceProvider container)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
-            Debug.Assert(urlResolver != null, "urlResolver != null");
+            Debug.Assert(payloadUriConverter != null, "payloadUriConverter != null");
 
             this.Method = method;
             this.Url = requestUrl;
             this.ContentId = contentId;
 
-            this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, urlResolver, writing);
+            this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.Container = container;
         }
 
@@ -146,7 +146,7 @@ namespace Microsoft.OData
         /// <returns>A <see cref="Uri"/> instance that reflects the custom resolution of the method arguments into a URL or null if no custom resolution is desired; in that case the default resolution is used.</returns>
         /// <param name="baseUri">The (optional) base URI to use for the resolution.</param>
         /// <param name="payloadUri">The URI read from the payload.</param>
-        Uri IODataUrlResolver.ResolveUrl(Uri baseUri, Uri payloadUri)
+        Uri IODataPayloadUriConverter.ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
             return this.message.ResolveUrl(baseUri, payloadUri);
         }
@@ -158,7 +158,7 @@ namespace Microsoft.OData
         /// <param name="method">The HTTP method to use for the message to create.</param>
         /// <param name="requestUrl">The request URL for the message to create.</param>
         /// <param name="operationListener">The operation listener.</param>
-        /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
         internal static ODataBatchOperationRequestMessage CreateWriteMessage(
@@ -166,14 +166,14 @@ namespace Microsoft.OData
             string method,
             Uri requestUrl,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver,
+            IODataPayloadUriConverter payloadUriConverter,
             IServiceProvider container)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true, container);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, /*headers*/ null, operationListener, /*contentId*/ null, payloadUriConverter, /*writing*/ true, container);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Microsoft.OData
         /// <param name="headers">The headers to use for the operation request message.</param>
         /// <param name="operationListener">The operation listener.</param>
         /// <param name="contentId">The content-ID for the operation request message.</param>
-        /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to read the request content from.</returns>
         internal static ODataBatchOperationRequestMessage CreateReadMessage(
@@ -195,14 +195,14 @@ namespace Microsoft.OData
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
             string contentId,
-            IODataUrlResolver urlResolver,
+            IODataPayloadUriConverter payloadUriConverter,
             IServiceProvider container)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, headers, operationListener, contentId, urlResolver, /*writing*/ false, container);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, headers, operationListener, contentId, payloadUriConverter, /*writing*/ false, container);
         }
     }
 }

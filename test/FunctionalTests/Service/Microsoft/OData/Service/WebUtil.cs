@@ -1240,7 +1240,7 @@ namespace Microsoft.OData.Service
 
             // messageReaderSettings.EnableAtomSupport();
 
-            // We do our own URL resolution through custom IODataUrlResolver and follow up processing of URLs
+            // We do our own URL resolution through custom IODataPayloadUriConverter and follow up processing of URLs
             // as a result it doesn't matter which URI we use here (since we don't actually use its value anywhere).
             // So using the absolute URI of the service is the best we can do.
             messageReaderSettings.BaseUri = dataService.OperationContext.AbsoluteServiceUri;

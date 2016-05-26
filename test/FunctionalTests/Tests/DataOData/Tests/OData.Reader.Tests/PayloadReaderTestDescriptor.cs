@@ -534,7 +534,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Optional URL resolver to put on the message.
         /// </summary>
-        public IODataUrlResolver UrlResolver { get; set; }
+        public IODataPayloadUriConverter UrlResolver { get; set; }
 
         /// <summary>true to ignore the order of properties in the payload during comparison; otherwise false.</summary>
         public bool IgnorePropertyOrder { get; set; }

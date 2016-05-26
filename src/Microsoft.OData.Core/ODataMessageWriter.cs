@@ -36,8 +36,8 @@ namespace Microsoft.OData
         /// <summary>The model. Non-null if we do have metadata available.</summary>
         private readonly IEdmModel model;
 
-        /// <summary>The optional URL resolver to perform custom URL resolution for URLs written to the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        /// <summary>The optional URL converter to perform custom URL conversion for URLs written to the payload.</summary>
+        private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>The optional dependency injection container to get related services for message writing.</summary>
         private readonly IServiceProvider container;
@@ -109,7 +109,7 @@ namespace Microsoft.OData
             this.container = GetContainer(requestMessage);
             this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
             this.writingResponse = false;
-            this.urlResolver = requestMessage as IODataUrlResolver;
+            this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
@@ -148,7 +148,7 @@ namespace Microsoft.OData
             this.container = GetContainer(responseMessage);
             this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
             this.writingResponse = true;
-            this.urlResolver = responseMessage as IODataUrlResolver;
+            this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
@@ -1148,7 +1148,7 @@ namespace Microsoft.OData
                 this.messageInfo.IsAsync = isAsync;
                 this.messageInfo.MediaType = this.mediaType;
                 this.messageInfo.Model = this.model;
-                this.messageInfo.UrlResolver = this.urlResolver;
+                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
                 this.messageInfo.Container = this.container;
                 this.messageInfo.MessageStream = messageStream;
             }

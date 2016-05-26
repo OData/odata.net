@@ -109,7 +109,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             ReaderTestConfiguration testConfiguration,
             ODataPayloadKind? payloadKind,
             string customContentTypeHeader,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter urlResolver)
         {
             TestMessage message;
             if (testConfiguration.IsRequest)

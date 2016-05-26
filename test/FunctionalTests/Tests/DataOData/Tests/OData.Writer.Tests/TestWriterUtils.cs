@@ -370,7 +370,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             out TestMessage testMessage,
             ODataMessageWriterSettings settings = null,
             IEdmModel model = null,
-            IODataUrlResolver urlResolver = null)
+            IODataPayloadUriConverter urlResolver = null)
         {
             testMessage = CreateOutputMessageFromStream(stream, testConfiguration, null, null, urlResolver);
             return CreateMessageWriter(testMessage, model, testConfiguration, assert, settings);
@@ -455,7 +455,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             WriterTestConfiguration testConfiguration,
             ODataPayloadKind? payloadKind,
             string customContentTypeHeader,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter urlResolver)
         {
             TestMessage message;
 

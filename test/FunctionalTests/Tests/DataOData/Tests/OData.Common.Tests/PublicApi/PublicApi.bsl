@@ -3899,6 +3899,10 @@ public interface Microsoft.OData.IContainerProvider {
 	System.IServiceProvider Container  { public abstract get; }
 }
 
+public interface Microsoft.OData.IODataPayloadUriConverter {
+	System.Uri ConvertPayloadUri (System.Uri baseUri, System.Uri payloadUri)
+}
+
 public interface Microsoft.OData.IODataRequestMessage {
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public abstract get; }
 	string Method  { public abstract get; public abstract set; }
@@ -3924,10 +3928,6 @@ public interface Microsoft.OData.IODataResponseMessage {
 
 public interface Microsoft.OData.IODataResponseMessageAsync : IODataResponseMessage {
 	System.Threading.Tasks.Task`1[[System.IO.Stream]] GetStreamAsync ()
-}
-
-public interface Microsoft.OData.IODataUrlResolver {
-	System.Uri ResolveUrl (System.Uri baseUri, System.Uri payloadUri)
 }
 
 public abstract class Microsoft.OData.ODataAnnotatable {
@@ -4023,9 +4023,9 @@ public abstract class Microsoft.OData.ODataInputContext : IDisposable {
 
 	Microsoft.OData.ODataMessageReaderSettings MessageReaderSettings  { public get; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
+	Microsoft.OData.IODataPayloadUriConverter PayloadUriConverter  { public get; }
 	bool ReadingResponse  { public get; }
 	bool Synchronous  { public get; }
-	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; }
 
 	internal virtual Microsoft.OData.ODataAsynchronousReader CreateAsynchronousReader ()
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousReader]] CreateAsynchronousReaderAsync ()
@@ -4079,8 +4079,8 @@ public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
 
 	Microsoft.OData.ODataMessageWriterSettings MessageWriterSettings  { public get; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
+	Microsoft.OData.IODataPayloadUriConverter PayloadUriConverter  { public get; }
 	bool Synchronous  { public get; }
-	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; }
 	bool WritingResponse  { public get; }
 
 	internal virtual Microsoft.OData.ODataAsynchronousWriter CreateODataAsynchronousWriter ()
@@ -4418,7 +4418,7 @@ public sealed class Microsoft.OData.ODataAsynchronousWriter : IODataOutputInStre
 	public System.Threading.Tasks.Task FlushAsync ()
 }
 
-public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContainerProvider, IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
+public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContainerProvider, IODataPayloadUriConverter, IODataRequestMessage, IODataRequestMessageAsync {
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
@@ -4432,7 +4432,7 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContain
 	public virtual void SetHeader (string headerName, string headerValue)
 }
 
-public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContainerProvider, IODataResponseMessage, IODataResponseMessageAsync, IODataUrlResolver {
+public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContainerProvider, IODataPayloadUriConverter, IODataResponseMessage, IODataResponseMessageAsync {
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
@@ -4670,7 +4670,7 @@ public sealed class Microsoft.OData.ODataMessageInfo {
 	Microsoft.OData.ODataMediaType MediaType  { public get; public set; }
 	System.IO.Stream MessageStream  { public get; public set; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; public set; }
-	Microsoft.OData.IODataUrlResolver UrlResolver  { public get; public set; }
+	Microsoft.OData.IODataPayloadUriConverter PayloadUriConverter  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.ODataMessageQuotas {

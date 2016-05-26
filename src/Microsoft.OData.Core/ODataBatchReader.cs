@@ -30,8 +30,8 @@ namespace Microsoft.OData
         /// <summary>True if the writer was created for synchronous operation; false for asynchronous.</summary>
         private readonly bool synchronous;
 
-        /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        private readonly ODataBatchUrlResolver urlResolver;
+        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
+        private readonly ODataBatchPayloadUriConverter payloadUriConverter;
 
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
@@ -75,7 +75,7 @@ namespace Microsoft.OData
             this.inputContext = inputContext;
             this.container = inputContext.Container;
             this.synchronous = synchronous;
-            this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
+            this.payloadUriConverter = new ODataBatchPayloadUriConverter(inputContext.PayloadUriConverter);
             this.batchStream = new ODataBatchReaderStream(inputContext, batchBoundary, batchEncoding);
             this.allowLegacyContentIdBehaviour = true;
         }
@@ -310,7 +310,7 @@ namespace Microsoft.OData
                     // a potential content ID header) have been read.
                     if (this.contentIdToAddOnNextRead != null)
                     {
-                        this.urlResolver.AddContentId(this.contentIdToAddOnNextRead);
+                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
                         this.contentIdToAddOnNextRead = null;
                     }
 
@@ -383,7 +383,7 @@ namespace Microsoft.OData
                 {
                     // Reset the URL resolver at the end of a changeset; Content IDs are
                     // unique within a given changeset.
-                    this.urlResolver.Reset();
+                    this.payloadUriConverter.Reset();
                 }
             }
             else
@@ -416,7 +416,7 @@ namespace Microsoft.OData
                     // to subsequent operations.
                     Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
 
-                    if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                    if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
                     {
                         throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                     }
@@ -455,7 +455,7 @@ namespace Microsoft.OData
                     string contentId;
                     if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                     {
-                        if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                        if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
                         {
                             throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                         }
@@ -477,7 +477,7 @@ namespace Microsoft.OData
                 headers,
                 /*operationListener*/ this,
                 this.contentIdToAddOnNextRead,
-                this.urlResolver,
+                this.payloadUriConverter,
                 this.container);
 
             return requestMessage;
@@ -508,7 +508,7 @@ namespace Microsoft.OData
                     string contentId;
                     if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                     {
-                        if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                        if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
                         {
                             throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                         }
@@ -526,7 +526,7 @@ namespace Microsoft.OData
                 headers,
                 this.contentIdToAddOnNextRead,
                 /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver,
+                this.payloadUriConverter.BatchMessagePayloadUriConverter,
                 this.container);
 
             //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
@@ -591,7 +591,7 @@ namespace Microsoft.OData
             }
 
             requestUri = new Uri(uriSegment, UriKind.RelativeOrAbsolute);
-            requestUri = ODataBatchUtils.CreateOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.urlResolver);
+            requestUri = ODataBatchUtils.CreateOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
         }
 
         /// <summary>

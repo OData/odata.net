@@ -48,13 +48,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The URL resolver.
+        /// The URL converter.
         /// </summary>
-        internal IODataUrlResolver UrlResolver
+        internal IODataPayloadUriConverter PayloadUriConverter
         {
             get
             {
-                return this.outputContext.UrlResolver;
+                return this.outputContext.PayloadUriConverter;
             }
         }
 

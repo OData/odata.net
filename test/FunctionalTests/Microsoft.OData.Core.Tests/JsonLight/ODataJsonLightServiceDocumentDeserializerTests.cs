@@ -157,7 +157,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return deserializer.ReadServiceDocument();
         }
 
-        private ODataJsonLightServiceDocumentDeserializer CreateODataJsonServiceDocumentDeserializer(MemoryStream stream, IODataUrlResolver urlResolver = null)
+        private ODataJsonLightServiceDocumentDeserializer CreateODataJsonServiceDocumentDeserializer(MemoryStream stream, IODataPayloadUriConverter urlResolver = null)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = new EdmModel(),
-                UrlResolver = urlResolver,
+                PayloadUriConverter = urlResolver,
                 MessageStream = stream
             };
 

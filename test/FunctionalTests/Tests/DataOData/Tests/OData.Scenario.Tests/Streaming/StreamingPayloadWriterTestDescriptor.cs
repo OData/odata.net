@@ -227,7 +227,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             WriterTestConfiguration testConfiguration,
             ODataPayloadKind? payloadKind,
             string customContentTypeHeader,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter urlResolver)
         {
             TestMessage message;
             if (testConfiguration.IsRequest)

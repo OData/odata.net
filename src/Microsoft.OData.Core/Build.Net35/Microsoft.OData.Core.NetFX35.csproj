@@ -172,8 +172,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\IODataResponseMessageAsync.cs">
       <Link>Microsoft\OData\Core\IODataResponseMessageAsync.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataUrlResolver.cs">
-      <Link>Microsoft\OData\Core\IODataUrlResolver.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\IODataPayloadUriConverter.cs">
+      <Link>Microsoft\OData\Core\IODataPayloadUriConverter.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\IPrimitiveTypeConverter.cs">
       <Link>Microsoft\OData\Core\IPrimitiveTypeConverter.cs</Link>
@@ -514,8 +514,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReaderStreamScanResult.cs">
       <Link>Microsoft\OData\Core\ODataBatchReaderStreamScanResult.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchUrlResolver.cs">
-      <Link>Microsoft\OData\Core\ODataBatchUrlResolver.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchPayloadUriConverter.cs">
+      <Link>Microsoft\OData\Core\ODataBatchPayloadUriConverter.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchUtils.cs">
       <Link>Microsoft\OData\Core\ODataBatchUtils.cs</Link>

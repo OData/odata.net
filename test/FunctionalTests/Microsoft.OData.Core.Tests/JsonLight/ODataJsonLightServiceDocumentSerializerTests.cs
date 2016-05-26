@@ -113,7 +113,7 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteServiceDocumentShouldError(serviceDocument).ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
-        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataUrlResolver urlResolver = null)
+        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataPayloadUriConverter urlResolver = null)
         {
             var model = new EdmModel();
             var messageWriterSettings = new ODataMessageWriterSettings();
@@ -126,13 +126,13 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsResponse = false,
                 IsAsync = false,
                 Model = mainModel,
-                UrlResolver = urlResolver
+                PayloadUriConverter = urlResolver
             };
             var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, messageWriterSettings);
             return new ODataJsonLightServiceDocumentSerializer(jsonLightOutputContext);
         }
 
-        private static Action WriteServiceDocumentShouldError(ODataServiceDocument serviceDocument, IODataUrlResolver urlResolver = null)
+        private static Action WriteServiceDocumentShouldError(ODataServiceDocument serviceDocument, IODataPayloadUriConverter urlResolver = null)
         {
             MemoryStream memoryStream = new MemoryStream();
             var serializer = CreateODataJsonLightServiceDocumentSerializer(memoryStream, urlResolver);

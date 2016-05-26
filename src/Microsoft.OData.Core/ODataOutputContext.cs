@@ -39,7 +39,7 @@ namespace Microsoft.OData
         private readonly IEdmModel model;
 
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs written to the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>The optional dependency injection container to get related services for message writing.</summary>
         private readonly IServiceProvider container;
@@ -72,7 +72,7 @@ namespace Microsoft.OData
             this.writingResponse = messageInfo.IsResponse;
             this.synchronous = !messageInfo.IsAsync;
             this.model = messageInfo.Model ?? EdmCoreModel.Instance;
-            this.urlResolver = messageInfo.UrlResolver;
+            this.payloadUriConverter = messageInfo.PayloadUriConverter;
             this.container = messageInfo.Container;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
@@ -125,13 +125,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The optional URL resolver to perform custom URL resolution for URLs written to the payload.
+        /// The optional URL converter to perform custom URL conversion for URLs written to the payload.
         /// </summary>
-        public IODataUrlResolver UrlResolver
+        public IODataPayloadUriConverter PayloadUriConverter
         {
             get
             {
-                return this.urlResolver;
+                return this.payloadUriConverter;
             }
         }
 

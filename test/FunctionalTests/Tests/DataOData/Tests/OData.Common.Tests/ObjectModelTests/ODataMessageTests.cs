@@ -29,7 +29,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     {
         private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchOperationHeaders");
         private static readonly Type batchOperationListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.IODataBatchOperationListener");
-        private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.ODataBatchUrlResolver");
+        private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.ODataBatchPayloadUriConverter");
 
         [InjectDependency]
         public ICombinatorialEngineProvider CombinatorialEngineProvider { get; set; }
@@ -157,7 +157,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*headers*/ null,
                 CreateListener(stream, false, writing),
                 "1",
-                ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
+                ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataPayloadUriConverter) }, new object[] { null }),
                 writing,
                 /*container*/ null);
         }
@@ -168,7 +168,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             return (IODataResponseMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationResponseMessage),
-                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool), typeof(IServiceProvider) },
+                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataPayloadUriConverter), typeof(bool), typeof(IServiceProvider) },
                 (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing, /*container*/ null);
         }
 

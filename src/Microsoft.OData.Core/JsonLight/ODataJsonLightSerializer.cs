@@ -219,10 +219,10 @@ namespace Microsoft.OData.JsonLight
             Uri metadataDocumentUri = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri;
 
             Uri resultUri;
-            if (this.jsonLightOutputContext.UrlResolver != null)
+            if (this.jsonLightOutputContext.PayloadUriConverter != null)
             {
                 // The resolver returns 'null' if no custom resolution is desired.
-                resultUri = this.jsonLightOutputContext.UrlResolver.ResolveUrl(metadataDocumentUri, uri);
+                resultUri = this.jsonLightOutputContext.PayloadUriConverter.ConvertPayloadUri(metadataDocumentUri, uri);
                 if (resultUri != null)
                 {
                     return UriUtils.UriToString(resultUri);

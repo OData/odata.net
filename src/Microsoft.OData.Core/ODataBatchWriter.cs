@@ -28,8 +28,8 @@ namespace Microsoft.OData
         /// <summary>The boundary string for the batch structure itself.</summary>
         private readonly string batchBoundary;
 
-        /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        private readonly ODataBatchUrlResolver urlResolver;
+        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
+        private readonly ODataBatchPayloadUriConverter payloadUriConverter;
 
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
@@ -96,7 +96,7 @@ namespace Microsoft.OData
             this.rawOutputContext = rawOutputContext;
             this.container = rawOutputContext.Container;
             this.batchBoundary = batchBoundary;
-            this.urlResolver = new ODataBatchUrlResolver(rawOutputContext.UrlResolver);
+            this.payloadUriConverter = new ODataBatchPayloadUriConverter(rawOutputContext.PayloadUriConverter);
             this.rawOutputContext.InitializeRawValueWriter();
         }
 
@@ -562,7 +562,7 @@ namespace Microsoft.OData
             ODataBatchWriterUtils.WriteEndBoundary(this.rawOutputContext.TextWriter, currentChangeSetBoundary, !this.changesetStartBoundaryWritten);
 
             // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
-            this.urlResolver.Reset();
+            this.payloadUriConverter.Reset();
             this.currentOperationContentId = null;
         }
 
@@ -629,10 +629,10 @@ namespace Microsoft.OData
             // added to the cache which is fine since we cannot reference it anywhere.
             if (this.currentOperationContentId != null)
             {
-                this.urlResolver.AddContentId(this.currentOperationContentId);
+                this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.rawOutputContext.MessageWriterSettings.BaseUri, this.urlResolver));
+            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.rawOutputContext.MessageWriterSettings.BaseUri, this.payloadUriConverter));
 
             // create the new request operation
             this.CurrentOperationRequestMessage = ODataBatchOperationRequestMessage.CreateWriteMessage(
@@ -640,7 +640,7 @@ namespace Microsoft.OData
                 method,
                 uri,
                 /*operationListener*/ this,
-                this.urlResolver,
+                this.payloadUriConverter,
                 this.container);
 
             if (this.changeSetBoundary != null)
@@ -690,7 +690,7 @@ namespace Microsoft.OData
             this.CurrentOperationResponseMessage = ODataBatchOperationResponseMessage.CreateWriteMessage(
                 this.rawOutputContext.OutputStream,
                 /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver,
+                this.payloadUriConverter.BatchMessagePayloadUriConverter,
                 this.container);
             this.SetState(BatchWriterState.OperationCreated);
 
@@ -755,7 +755,7 @@ namespace Microsoft.OData
             // Check for duplicate content IDs; we have to do this here instead of in the cache itself
             // since the content ID of the last operation never gets added to the cache but we still
             // want to fail on the duplicate.
-            if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+            if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
             {
                 throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId));
             }

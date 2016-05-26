@@ -40,8 +40,8 @@ namespace Microsoft.OData
         /// <summary>The model. Non-null if we do have metadata available.</summary>
         private readonly IEdmModel model;
 
-        /// <summary>The optional URL resolver to perform custom URL resolution for URLs read from the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        /// <summary>The optional URL converter to perform custom URL conversion for URLs read from the payload.</summary>
+        private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>The optional dependency injection container to get related services for message reading.</summary>
         private readonly IServiceProvider container;
@@ -115,7 +115,7 @@ namespace Microsoft.OData
 
             this.readingResponse = false;
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
-            this.urlResolver = requestMessage as IODataUrlResolver;
+            this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against request message.
@@ -156,7 +156,7 @@ namespace Microsoft.OData
 
             this.readingResponse = true;
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
-            this.urlResolver = responseMessage as IODataUrlResolver;
+            this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against response message.
@@ -901,7 +901,7 @@ namespace Microsoft.OData
                 this.messageInfo.IsAsync = isAsync;
                 this.messageInfo.MediaType = this.contentType;
                 this.messageInfo.Model = this.model;
-                this.messageInfo.UrlResolver = this.urlResolver;
+                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
                 this.messageInfo.Container = this.container;
                 this.messageInfo.MessageStream = messageStream;
                 this.messageInfo.PayloadKind = this.readerPayloadKind;

@@ -13,9 +13,9 @@ namespace Microsoft.Test.Taupo.OData.Common
     #endregion Namespaces
 
     /// <summary>
-    /// A test implementation of the IODataUrlResolver interface
+    /// A test implementation of the IODataPayloadUriConverter interface
     /// </summary>
-    public class TestUrlResolver : IODataUrlResolver
+    public class TestUrlResolver : IODataPayloadUriConverter
     {
         /// <summary>
         /// List of calls made to the resolver so far.
@@ -69,7 +69,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// A <see cref="Uri"/> instance that reflects the custom resolution of the method arguments
         /// into a URL or null if no custom resolution is desired; in that case the default resolution is used.
         /// </returns>
-        public Uri ResolveUrl(Uri baseUri, Uri payloadUri)
+        public Uri ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
             this.calls.Add(new KeyValuePair<Uri, Uri>(baseUri, payloadUri));
             if (this.ResolutionCallback == null)
