@@ -609,6 +609,7 @@ public enum Microsoft.OData.Edm.EdmTypeKind : int {
 	None = 0
 	Primitive = 1
 	TypeDefinition = 64
+	Untyped = 128
 }
 
 public struct Microsoft.OData.Edm.Date : IComparable, IComparable`1, IEquatable`1 {
@@ -936,6 +937,12 @@ public interface Microsoft.OData.Edm.IEdmTypeReference : IEdmElement {
 }
 
 public interface Microsoft.OData.Edm.IEdmUnknownEntitySet : IEdmElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource {
+}
+
+public interface Microsoft.OData.Edm.IEdmUntypedType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
+}
+
+public interface Microsoft.OData.Edm.IEdmUntypedTypeReference : IEdmElement, IEdmTypeReference {
 }
 
 public interface Microsoft.OData.Edm.IPrimitiveValueConverter {
@@ -1347,6 +1354,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	ExtensionAttribute(),
 	]
 	public static bool IsTypeDefinition (Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsUntyped (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -2175,6 +2187,8 @@ public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, 
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] precision, bool isNullable)
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTimeOfDay (bool isNullable)
+	public Microsoft.OData.Edm.IEdmUntypedTypeReference GetUntyped ()
+	public Microsoft.OData.Edm.IEdmUntypedType GetUntypedType ()
 }
 
 public class Microsoft.OData.Edm.EdmDecimalTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmDecimalTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
@@ -2446,6 +2460,10 @@ public class Microsoft.OData.Edm.EdmTypeDefinition : Microsoft.OData.Edm.EdmType
 
 public class Microsoft.OData.Edm.EdmTypeDefinitionReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeDefinitionReference, IEdmTypeReference {
 	public EdmTypeDefinitionReference (Microsoft.OData.Edm.IEdmTypeDefinition typeDefinition, bool isNullable)
+}
+
+public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {
+	public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition)
 }
 
 public sealed class Microsoft.OData.Edm.EdmNavigationProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmNavigationProperty, IEdmProperty, IEdmVocabularyAnnotatable {

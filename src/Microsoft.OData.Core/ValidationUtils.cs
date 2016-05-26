@@ -80,7 +80,7 @@ namespace Microsoft.OData
             Debug.Assert(typeName != null, "typeName != null");
 
             // TODO : should delete the EdmTypeKind.Complex after we remove ODataComplexValue.
-            if ((typeKind & (EdmTypeKind.Primitive | EdmTypeKind.Enum | EdmTypeKind.Complex | EdmTypeKind.Collection)) <= 0)
+            if ((typeKind & (EdmTypeKind.Primitive | EdmTypeKind.Enum | EdmTypeKind.Complex | EdmTypeKind.Collection | EdmTypeKind.Untyped)) <= 0)
             {
                 throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
             }

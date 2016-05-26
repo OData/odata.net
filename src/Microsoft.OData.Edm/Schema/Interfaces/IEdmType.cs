@@ -53,6 +53,11 @@ namespace Microsoft.OData.Edm
         /// Represents a type implementing <see cref="IEdmTypeDefinition"/>.
         /// </summary>
         TypeDefinition = 64,
+
+        /// <summary>
+        /// Represents a type implementing <see cref="IEdmUntypedType"/>.
+        /// </summary>
+        Untyped = 128,
     }
 
     /// <summary>

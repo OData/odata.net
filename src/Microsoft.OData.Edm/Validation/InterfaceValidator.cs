@@ -724,6 +724,14 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmUntypedType : VisitorOfT<IEdmUntypedType>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmUntypedType type, List<object> followup, List<object> references)
+            {
+                return null;
+            }
+        }
+
         private sealed class VisitorOfIEdmEnumType : VisitorOfT<IEdmEnumType>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmEnumType type, List<object> followup, List<object> references)
@@ -1117,6 +1125,18 @@ namespace Microsoft.OData.Edm.Validation
             protected override IEnumerable<EdmError> VisitT(IEdmComplexTypeReference typeRef, List<object> followup, List<object> references)
             {
                 return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Complex ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
+            }
+        }
+
+        private sealed class VisitorOfIEdmUntypedTypeReference : VisitorOfT<IEdmUntypedTypeReference>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmUntypedTypeReference typeRef, List<object> followup, List<object> references)
+            {
+                return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Untyped)
+                    ?
+                    new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
+                    :
+                    null;
             }
         }
 

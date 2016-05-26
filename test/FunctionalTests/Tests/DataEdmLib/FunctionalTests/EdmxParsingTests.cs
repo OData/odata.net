@@ -1453,5 +1453,56 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(valid);
             Assert.AreEqual(0, validationResults.Count());
         }
+
+        #region Edm.Untyped
+
+        [TestMethod]
+        public void EdmxReaderEdmUntypedTest()
+        {
+            var edmx =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EnumType IsFlags=""true"" Name=""Gender"">
+        <Member Name=""Female"" Value=""2"" /> 
+        <Member Name=""Male"" Value=""1"" /> 
+      </EnumType>
+        <EntityType Name=""Family"">
+            <Key>
+            <PropertyRef Name=""GenderVal"" />
+            </Key>
+            <Property Name=""GenderVal"" Type=""NS1.Gender"" Nullable=""false"" />
+            <Property Name=""ExtendedInfo"" Type=""Edm.Untyped"" Nullable=""false"" />
+        </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+
+            Func<Uri, XmlReader> getReferencedModelReaderFunc = uri =>
+            {
+                return null;
+            };
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            EdmxReaderSettings settings = new EdmxReaderSettings()
+            {
+                GetReferencedModelReaderFunc = getReferencedModelReaderFunc,
+                IgnoreUnexpectedAttributesAndElements = true
+            };
+
+            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[0], settings, out model, out errors);
+            Assert.AreEqual(true, parsed);
+            Assert.AreEqual(0, errors.Count());
+            IEnumerable<EdmError> validationResults;
+            bool valid = model.Validate(out validationResults);
+            Assert.IsTrue(valid);
+            Assert.AreEqual(0, validationResults.Count());
+            IEdmEntityType familyType = (IEdmEntityType)model.FindType("NS1.Family");
+            IEdmUntypedTypeReference untypedReference = (IEdmUntypedTypeReference)familyType.FindProperty("ExtendedInfo").Type;
+            Assert.IsTrue(untypedReference.Definition.TypeKind == EdmTypeKind.Untyped);
+        }
+        #endregion
     }
 }

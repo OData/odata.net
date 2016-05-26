@@ -669,7 +669,7 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
             IEdmStructuredType resourceType = resourceState.ResourceType;
             IEdmProperty edmProperty = ReaderValidationUtils.FindDefinedProperty(propertyName, resourceType);
-            if (edmProperty != null)
+            if (edmProperty != null && !edmProperty.Type.IsUntyped())
             {
                 // Declared property - read it.
                 IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
@@ -893,7 +893,7 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
             IEdmStructuredType resouceType = resourceState.ResourceType;
             IEdmProperty edmProperty = ReaderValidationUtils.FindDefinedProperty(propertyName, resouceType);
-            if (edmProperty != null)
+            if (edmProperty != null && !edmProperty.Type.IsUntyped())
             {
                 IEdmStructuralProperty structuredProperty = edmProperty as IEdmStructuralProperty;
                 IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
@@ -1059,7 +1059,7 @@ namespace Microsoft.OData.JsonLight
                     out serializationTypeNameAnnotation);
             }
 
-            bool isKnownValueType = IsKnownValueTypeForOpenEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
+            bool isKnownValueType = IsKnownValueTypeForEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
             if (isKnownValueType)
             {
                 if (payloadTypeReference != null && payloadTypeReference.IsStructured())

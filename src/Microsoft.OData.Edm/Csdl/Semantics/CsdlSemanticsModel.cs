@@ -464,6 +464,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             return new CsdlSemanticsSpatialTypeReference(schema, (CsdlSpatialTypeReference)primitiveReference);
                     }
                 }
+                else
+                {
+                    CsdlUntypedTypeReference csdlUntypedTypeReference = typeReference as CsdlUntypedTypeReference;
+                    if (csdlUntypedTypeReference != null)
+                    {
+                        return new CsdlSemanticsUntypedTypeReference(schema, csdlUntypedTypeReference);
+                    }
+                }
 
                 return new CsdlSemanticsNamedTypeReference(schema, typeReference);
             }

@@ -569,14 +569,14 @@ namespace Microsoft.OData
             Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(
                 expectedTypeKind == EdmTypeKind.Enum || expectedTypeKind == EdmTypeKind.Complex || expectedTypeKind == EdmTypeKind.Entity ||
-                expectedTypeKind == EdmTypeKind.Collection || expectedTypeKind == EdmTypeKind.TypeDefinition,
+                expectedTypeKind == EdmTypeKind.Collection || expectedTypeKind == EdmTypeKind.TypeDefinition || expectedTypeKind == EdmTypeKind.Untyped,
                 "The expected type kind must be one of Enum, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 payloadTypeKind == EdmTypeKind.Complex || payloadTypeKind == EdmTypeKind.Entity ||
                 payloadTypeKind == EdmTypeKind.Collection || payloadTypeKind == EdmTypeKind.None ||
                 payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Enum ||
-                payloadTypeKind == EdmTypeKind.TypeDefinition,
-                "The payload type kind must be one of None, Primitive, Enum, Complex, Entity, Collection or TypeDefinition.");
+                payloadTypeKind == EdmTypeKind.TypeDefinition || payloadTypeKind == EdmTypeKind.Untyped,
+                "The payload type kind must be one of None, Primitive, Enum, Untyped, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 expectedTypeReference == null || expectedTypeReference.TypeKind() == expectedTypeKind,
                 "The expected type kind must match the expected type reference if that is available.");
@@ -984,6 +984,8 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.FullTypeName(), expectedTypeReference.FullName()));
                     }
 
+                    break;
+                case EdmTypeKind.Untyped:
                     break;
                 default:
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
@@ -34,7 +35,7 @@ namespace Microsoft.OData.Edm
         private readonly Dictionary<string, EdmPrimitiveTypeKind> primitiveTypeKinds = new Dictionary<string, EdmPrimitiveTypeKind>();
         private readonly Dictionary<EdmPrimitiveTypeKind, EdmValidCoreModelPrimitiveType> primitiveTypesByKind = new Dictionary<EdmPrimitiveTypeKind, EdmValidCoreModelPrimitiveType>();
         private readonly Dictionary<string, EdmValidCoreModelPrimitiveType> primitiveTypeByName = new Dictionary<string, EdmValidCoreModelPrimitiveType>();
-
+        private readonly EdmValidCoreModelUntypedType untypedType = new EdmValidCoreModelUntypedType();
         private readonly IEdmDirectValueAnnotationsManager annotationsManager = new EdmDirectValueAnnotationsManager();
 
         private EdmCoreModel()
@@ -200,7 +201,16 @@ namespace Microsoft.OData.Edm
         public IEdmSchemaType FindDeclaredType(string qualifiedName)
         {
             EdmValidCoreModelPrimitiveType element;
-            return this.primitiveTypeByName.TryGetValue(qualifiedName, out element) ? element : null;
+            if (this.primitiveTypeByName.TryGetValue(qualifiedName, out element))
+            {
+                return element;
+            }
+            else if (string.Equals(qualifiedName, CsdlConstants.TypeName_Untyped, StringComparison.Ordinal))
+            {
+                return untypedType;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -265,6 +275,15 @@ namespace Microsoft.OData.Edm
         public IEdmPrimitiveType GetPrimitiveType(EdmPrimitiveTypeKind kind)
         {
             return this.GetCoreModelPrimitiveType(kind);
+        }
+
+        /// <summary>
+        /// Gets Edm.Untyped type.
+        /// </summary>
+        /// <returns>IEdmUntypedType type definition.</returns>
+        public IEdmUntypedType GetUntypedType()
+        {
+            return untypedType;
         }
 
         /// <summary>
@@ -617,6 +636,15 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets a reference to a Edm.Untyped type definition.
+        /// </summary>
+        /// <returns>A new Edm.Untyped type reference.</returns>
+        public IEdmUntypedTypeReference GetUntyped()
+        {
+            return new EdmUntypedTypeReference(this.GetUntypedType());
+        }
+
+        /// <summary>
         /// Searches for vocabulary annotations specified by this model or a referenced model for a given element.
         /// </summary>
         /// <param name="element">The annotated element.</param>
@@ -643,6 +671,28 @@ namespace Microsoft.OData.Edm
         }
 
         #region Core model types and type references
+        internal sealed class EdmValidCoreModelUntypedType : EdmType, IEdmUntypedType, IEdmValidCoreModelElement
+        {
+            public override EdmTypeKind TypeKind
+            {
+                get { return EdmTypeKind.Untyped; }
+            }
+
+            public EdmSchemaElementKind SchemaElementKind
+            {
+                get { return EdmSchemaElementKind.TypeDefinition; }
+            }
+
+            public string Name
+            {
+                get { return "Untyped"; }
+            }
+
+            public string Namespace
+            {
+                get { return EdmNamespace; }
+            }
+        }
 
         internal sealed class EdmValidCoreModelPrimitiveType : EdmType, IEdmPrimitiveType, IEdmValidCoreModelElement
         {
@@ -692,7 +742,6 @@ namespace Microsoft.OData.Edm
                 get { return this.fullName; }
             }
         }
-
         #endregion
     }
 }

@@ -993,7 +993,9 @@ namespace Microsoft.OData.Edm.Validation
                         validatedType = property.Type.Definition;
                     }
 
-                    if (validatedType.TypeKind != EdmTypeKind.Primitive && validatedType.TypeKind != EdmTypeKind.Enum && validatedType.TypeKind != EdmTypeKind.Complex && !context.IsBad(validatedType))
+                    if (validatedType.TypeKind != EdmTypeKind.Primitive && validatedType.TypeKind != EdmTypeKind.Enum
+                        && validatedType.TypeKind != EdmTypeKind.Untyped && validatedType.TypeKind != EdmTypeKind.Complex
+                        && !context.IsBad(validatedType))
                     {
                         context.AddError(property.Location(), EdmErrorCode.InvalidPropertyType, Strings.EdmModel_Validator_Semantic_InvalidPropertyType(property.Type.TypeKind().ToString()));
                     }

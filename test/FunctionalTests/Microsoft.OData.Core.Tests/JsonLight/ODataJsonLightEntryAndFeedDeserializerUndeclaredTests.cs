@@ -39,6 +39,7 @@
             this.serverModel = new EdmModel();
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            addressType.AddProperty(new EdmStructuralProperty(addressType, "MyEdmUntypedProp3", EdmCoreModel.Instance.GetUntyped()));
             this.serverModel.AddElement(addressType);
 
             // non-open entity type
@@ -46,6 +47,7 @@
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
+            this.serverEntityType.AddStructuralProperty("MyEdmUntypedProp1", EdmCoreModel.Instance.GetUntyped());
 
             // open entity type
             this.serverOpenEntityType = new EdmEntityType("Server.NS", "ServerOpenEntityType",
@@ -53,6 +55,7 @@
             this.serverModel.AddElement(this.serverOpenEntityType);
             this.serverOpenEntityType.AddKeys(this.serverOpenEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverOpenEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
+            this.serverOpenEntityType.AddStructuralProperty("MyEdmUntypedProp2", EdmCoreModel.Instance.GetUntyped());
 
             EdmEntityContainer container = new EdmEntityContainer("Server.NS", "container1");
             this.serverEntitySet = container.AddEntitySet("serverEntitySet", this.serverEntityType);
@@ -660,6 +663,242 @@
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
+        #endregion
+
+        #region declared Edm.Untyped property
+        [Fact]
+        public void ReadNonOpenEntryEdmUntypedPropertyTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+                                   MyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
+            ODataResource entry = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                entry = reader.Item as ODataResource;
+            });
+
+            entry.Properties.Count().Should().Be(4);
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
+
+            return; // roundtrip test: writer
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",abc:null}}");
+        }
+
+        [Fact]
+        public void ReadOpenEntryEdmUntypedPropertyTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+                                   MyEdmUntypedProp2:{""MyProp12"":""bbb222"",abc:null}}";
+            ODataResource entry = null;
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                entry = reader.Item as ODataResource;
+            });
+
+            entry.Properties.Count().Should().Be(4);
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
+
+            return; // roundtrip test: writer
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",abc:null}}");
+        }
+
+        [Fact]
+        public void ReadNonOpenEntryEdmUntypedPropertyInComplexTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",MyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
+            ODataResource entry = null;
+            ODataResource complex1 = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex1 == null)
+                    {
+                        complex1 = (reader.Item as ODataResource);
+                    }
+                }
+            });
+
+            entry.Properties.Count().Should().Be(3);
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
+
+            return; // roundtrip test: writer
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",abc:null}}}");
+        }
+        #endregion
+
+        #region undeclared Edm.Untyped property with odata.type
+        [Fact]
+        public void ReadNonOpenEntryEdmUntypedPropertyODataTypeTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+            ""UndeclaredMyEdmUntypedProp1@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
+            ODataResource entry = null;
+            ODataResource complex1 = null;
+            ODataResource complex2 = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex1 == null)
+                    {
+                        complex1 = (reader.Item as ODataResource);
+                    }
+                    else if (complex2 == null)
+                    {
+                        complex2 = (reader.Item as ODataResource);
+                    }
+                }
+            });
+
+            entry.Properties.Count().Should().Be(4);
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1")).
+                Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
+                .RawValue.Should().Be("\"Edm.Untyped\"");
+
+            return; // roundtrip test: writer
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"UndeclaredMyEdmUntypedProp1@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",abc:null}}");
+        }
+
+        [Fact]
+        public void ReadOpenEntryEdmUntypedPropertyODataTypeTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+            ""UndeclaredMyEdmUntypedProp2@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp2:{""MyProp12"":""bbb222"",abc:null}}";
+            ODataResource entry = null;
+            ODataResource complex1 = null;
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex1 == null)
+                    {
+                        complex1 = (reader.Item as ODataResource);
+                    }
+                }
+            });
+            
+            entry.Properties.Count().Should().Be(4);
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2")).
+                Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
+                .RawValue.Should().Be("\"Edm.Untyped\"");
+
+
+            return; // roundtrip test: writer
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"UndeclaredMyEdmUntypedProp2@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",abc:null}}");
+        }
+
+        [Fact]
+        public void ReadNonOpenEntryEdmUntypedPropertyODataTypeInComplexTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",""UndeclaredMyEdmUntypedProp3@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
+            ODataResource entry = null;
+            ODataResource complex1 = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex1 == null)
+                    {
+                        complex1 = (reader.Item as ODataResource);
+                    }
+                }
+            });
+
+            entry.Properties.Count().Should().Be(3);
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
+            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
+                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
+            complex1.Properties
+                .Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
+                .RawValue.Should().Be("\"Edm.Untyped\"");
+
+            return; // roundtrip test: writer
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",abc:null}}}");
+        }
         #endregion
 
         #region writer methods for roundtrip testing

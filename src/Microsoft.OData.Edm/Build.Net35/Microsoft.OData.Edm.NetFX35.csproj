@@ -523,6 +523,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlTypeReference.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlUntypedTypeReference.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Common\EdmXmlDocumentParser.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Common\EdmXmlDocumentParser.cs</Link>
     </Compile>
@@ -619,6 +622,9 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelCsdlSchemaWriter.cs</Link>
@@ -1001,6 +1007,9 @@
     <Compile Include="..\Schema\EdmUnknownEntitySet.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUnknownEntitySet.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmUntypedTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\IEdmNavigationTargetMapping.cs">
       <Link>Microsoft\OData\Edm\Schema\IEdmNavigationTargetMapping.cs</Link>
     </Compile>
@@ -1171,6 +1180,12 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmTypeDefinition.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTypeDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmUntypedType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUntypedType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmUntypedTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmUntypedTypeReference.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmTypeDefinitionReference.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmTypeDefinitionReference.cs</Link>

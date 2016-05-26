@@ -199,14 +199,14 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Check if a property value type in non-open entity is deterministic .
+        /// Check if a property value type in entity or complex value is deterministic .
         /// </summary>
         /// <param name="jsonReaderNodeType">The current JsonReader NodeType.</param>
         /// <param name="jsonReaderValue">The current JsonReader Value</param>
         /// <param name="payloadTypeName">The 'odata.type' annotation in payload.</param>
         /// <param name="payloadTypeReference">The payloadTypeReference of 'odata.type'.</param>
         /// <returns>True if property value type is deterministic.</returns>
-        protected static bool IsKnownValueTypeForNonOpenEntityOrComplex(JsonNodeType jsonReaderNodeType, object jsonReaderValue, string payloadTypeName, IEdmTypeReference payloadTypeReference)
+        protected static bool IsKnownValueTypeForEntityOrComplex(JsonNodeType jsonReaderNodeType, object jsonReaderValue, string payloadTypeName, IEdmTypeReference payloadTypeReference)
         {
             // Known
             //   (1) recognized odata.type not Edm.Untyped
@@ -220,33 +220,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                return (payloadTypeReference != null); // TODO && not 'Edm.Untyped'
-            }
-        }
-
-        /// <summary>
-        /// Check if a property value type in open entity is deterministic .
-        /// </summary>
-        /// <param name="jsonReaderNodeType">The current JsonReader NodeType.</param>
-        /// <param name="jsonReaderValue">The current JsonReader Value</param>
-        /// <param name="payloadTypeName">The 'odata.type' annotation in payload.</param>
-        /// <param name="payloadTypeReference">The payloadTypeReference of 'odata.type'.</param>
-        /// <returns>True if property value type is deterministic.</returns>
-        protected static bool IsKnownValueTypeForOpenEntityOrComplex(JsonNodeType jsonReaderNodeType, object jsonReaderValue, string payloadTypeName, IEdmTypeReference payloadTypeReference)
-        {
-            // Known
-            //   (1) recognized odata.type not Edm.Untyped
-            //   (2) no odata.type and value is bool
-            // Unknown
-            //   (1) unrecognized odata.type or 'Edm.Untyped'
-            //   (2) no odata.type and value is null / string / numeric / collection
-            if (string.IsNullOrEmpty(payloadTypeName))
-            {
-                return (jsonReaderNodeType == JsonNodeType.PrimitiveValue) && (jsonReaderValue is bool);
-            }
-            else
-            {
-                return (payloadTypeReference != null); // TODO && not 'Edm.Untyped'
+                return (payloadTypeReference != null) && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped);
             }
         }
 
@@ -329,7 +303,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             object propertyValue = null;
-            bool isKnownValueType = IsKnownValueTypeForNonOpenEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
+            bool isKnownValueType = IsKnownValueTypeForEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
             if (isKnownValueType)
             {
                 this.JsonReader.AssertNotBuffering();
@@ -397,7 +371,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             object propertyValue = null;
-            bool isKnownValueType = IsKnownValueTypeForNonOpenEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
+            bool isKnownValueType = IsKnownValueTypeForEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
             if (isKnownValueType)
             {
                 ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
@@ -1862,6 +1836,10 @@ namespace Microsoft.OData.JsonLight
                             expectedTypeReference.AsTypeDefinition(),
                             validateNullValue,
                             propertyName);
+                        break;
+
+                    case EdmTypeKind.Untyped:
+                        result = this.JsonReader.ReadAsUntypedOrNullValue();
                         break;
 
                     default:

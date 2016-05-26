@@ -175,6 +175,8 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Value_SridVariable = EdmConstants.Value_SridVariable;
         internal const string Value_ScaleVariable = EdmConstants.Value_ScaleVariable;
 
+        internal const string TypeName_Untyped = "Edm.Untyped";
+
         internal const bool Default_Abstract = false;
         internal const EdmConcurrencyMode Default_ConcurrencyMode = EdmConcurrencyMode.None;
         internal const bool Default_ContainsTarget = false;

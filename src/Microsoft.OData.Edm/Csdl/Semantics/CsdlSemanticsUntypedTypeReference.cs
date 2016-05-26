@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="CsdlSemanticsPrimitiveTypeReference.cs" company="Microsoft">
+// <copyright file="CsdlSemanticsUntypedTypeReference.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,24 +9,24 @@ using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     /// <summary>
-    /// Provides the semantics of a reference to an EDM primitive type.
+    /// Provides the semantics of a reference to an EDM untyped type.
     /// </summary>
-    internal class CsdlSemanticsPrimitiveTypeReference : CsdlSemanticsElement, IEdmPrimitiveTypeReference
+    internal class CsdlSemanticsUntypedTypeReference : CsdlSemanticsElement, IEdmUntypedTypeReference
     {
-        internal readonly CsdlPrimitiveTypeReference Reference;
+        internal readonly CsdlUntypedTypeReference Reference;
         private readonly CsdlSemanticsSchema schema;
 
         /// <summary>
-        /// This doesn't need the full caching mechanism because the computation is cheap, and the likelihood of computing a primitive type reference without needing its definition is remote.
+        /// The IEdmUntypedType instance from EdmCoreModel.
         /// </summary>
-        private readonly IEdmPrimitiveType definition;
+        private readonly IEdmUntypedType definition;
 
-        public CsdlSemanticsPrimitiveTypeReference(CsdlSemanticsSchema schema, CsdlPrimitiveTypeReference reference)
+        public CsdlSemanticsUntypedTypeReference(CsdlSemanticsSchema schema, CsdlUntypedTypeReference reference)
             : base(reference)
         {
             this.schema = schema;
             this.Reference = reference;
-            this.definition = EdmCoreModel.Instance.GetPrimitiveType(this.Reference.Kind);
+            this.definition = EdmCoreModel.Instance.GetUntypedType();
         }
 
         public bool IsNullable

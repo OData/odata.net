@@ -38,6 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Csdl\EdmEnumValueParser.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlUntypedTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs" />
@@ -149,6 +151,9 @@
     <Compile Include="PrimitiveValueConverters\DefaultPrimitiveValueConverter.cs" />
     <Compile Include="EdmLocation.cs" />
     <Compile Include="ExtensionMethods\EdmElementComparer.cs" />
+    <Compile Include="Schema\EdmUntypedTypeReference.cs" />
+    <Compile Include="Schema\Interfaces\IEdmUntypedType.cs" />
+    <Compile Include="Schema\Interfaces\IEdmUntypedTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmTypeDefinitionReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmTypeDefinition.cs" />
     <Compile Include="Schema\Interfaces\IEdmActionImport.cs" />

@@ -62,6 +62,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if this reference refers to a Edm.Untyped type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a Edm.Untyped type.</returns>
+        public static bool IsUntyped(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.TypeKind() == EdmTypeKind.Untyped;
+        }
+
+        /// <summary>
         /// Returns true if this reference refers to an enumeration type.
         /// </summary>
         /// <param name="type">Type reference.</param>
