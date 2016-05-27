@@ -44,6 +44,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             cityInformationType.AddProperty(new EdmStructuralProperty(cityInformationType, "CountryRegion", EdmCoreModel.Instance.GetString(false)));
             cityInformationType.AddProperty(new EdmStructuralProperty(cityInformationType, "IsCapital", EdmCoreModel.Instance.GetBoolean(false)));
             model.AddElement(cityInformationType);
+
+            var infoFromCustomerType = new EdmComplexType(ns, "InfoFromCustomer");
+            infoFromCustomerType.AddProperty(new EdmStructuralProperty(infoFromCustomerType, "CustomerMessage", EdmCoreModel.Instance.GetString(true)));
+            model.AddElement(infoFromCustomerType);
             #endregion
 
             #region EnumType
@@ -173,7 +177,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             orderType.AddProperty(new EdmStructuralProperty(orderType, "OrderShelfLifes", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDuration(true)))));
             orderType.AddProperty(new EdmStructuralProperty(orderType, "ShipDate", EdmCoreModel.Instance.GetDate(false)));
             orderType.AddProperty(new EdmStructuralProperty(orderType, "ShipTime", EdmCoreModel.Instance.GetTimeOfDay(false)));
-
+            orderType.AddProperty(new EdmStructuralProperty(orderType, "InfoFromCustomer", new EdmComplexTypeReference(infoFromCustomerType, true)));
             model.AddElement(orderType);
             var orderSet = new EdmEntitySet(defaultContainer, "Orders", orderType);
             defaultContainer.AddElement(orderSet);

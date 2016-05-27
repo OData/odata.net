@@ -131,11 +131,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         internal const string InternalUri = "http://schemas.microsoft.com/ado/2011/04/edm/internal";
 
-        /// <summary>
-        /// The Payload Value Converter Annotation.
-        /// </summary>
-        internal const string PayloadValueConverterAnnotation = "PrimitivePayloadValueConverter";
-
         #endregion
     }
 }

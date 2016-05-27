@@ -1955,7 +1955,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    entityType = structuralProperty.ToStructuredType();
+                    entityType = structuralProperty.Type.ToStructuredType();
                     readingResourceSet = structuralProperty.Type.IsCollection();
                 }
 

@@ -391,6 +391,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextWriterWrapper.cs">
       <Link>Microsoft\OData\Core\Json\TextWriterWrapper.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PropertyAnnotationCollector.cs">
+      <Link>Microsoft\OData\Core\PropertyAnnotationCollector.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataErrorDetail.cs">
       <Link>Microsoft\OData\Core\ODataErrorDetail.cs</Link>
     </Compile>
@@ -1544,6 +1547,9 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="..\IContainerProvider.cs">
+      <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
     </Compile>
     <Compile Include="..\IWriterValidator.cs">
       <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>

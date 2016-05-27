@@ -15,6 +15,7 @@ using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
@@ -22,6 +23,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
     public class PrimitiveValuesRoundtripJsonLightTests
     {
         private EdmModel model;
+        private IServiceProvider container;
 
         public PrimitiveValuesRoundtripJsonLightTests()
         {
@@ -59,7 +61,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 Convert.ToBase64String(values[2])
             };
 
-            this.model.SetPayloadValueConverter(new BinaryFieldAsStringPrimitivePayloadValueConverter());
+            this.container = ContainerBuilderHelper.BuildContainer(
+                builder => builder.AddService<ODataPayloadValueConverter, BinaryFieldAsStringPrimitivePayloadValueConverter>(ServiceLifetime.Singleton));
 
             this.VerifyPrimitiveValuesRoundtripWithTypeInformationAndWithExpectedValues(values, "Edm.Binary", expectedValues);
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(expectedValues, "Edm.Binary");
@@ -653,7 +656,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 Encoding = Encoding.UTF8,
                 IsResponse = true,
                 IsAsync = false,
-                Model = this.model
+                Model = this.model,
+                Container = this.container
             };
 
             using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
@@ -671,7 +675,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 MediaType = mediaType,
                 IsAsync = false,
                 Model = this.model,
-                MessageStream = stream
+                MessageStream = stream,
+                Container = this.container
             };
 
             object actualValue;

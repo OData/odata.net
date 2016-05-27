@@ -60,8 +60,20 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="model">Model to use for metadata binding.</param>
         /// <param name="serviceRoot">Absolute URI of the service root.</param>
-        /// <param name="fullUri">full Uri to be parsed</param>
+        /// <param name="fullUri">Full URI to be parsed.</param>
         public ODataUriParser(IEdmModel model, Uri serviceRoot, Uri fullUri)
+            : this(model, serviceRoot, fullUri, null)
+        {
+        }
+
+        /// <summary>
+        /// Build an ODataUriParser
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="serviceRoot">Absolute URI of the service root.</param>
+        /// <param name="fullUri">Full URI to be parsed.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        public ODataUriParser(IEdmModel model, Uri serviceRoot, Uri fullUri, IServiceProvider container)
         {
             ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
             if (serviceRoot == null)
@@ -74,7 +86,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(serviceRoot));
             }
 
-            this.configuration = new ODataUriParserConfiguration(model);
+            this.configuration = new ODataUriParserConfiguration(model, container);
             this.serviceRoot = UriUtils.EnsureTaillingSlash(serviceRoot);
             this.fullUri = fullUri.IsAbsoluteUri ? fullUri : UriUtils.UriToAbsoluteUri(this.ServiceRoot, fullUri);
             this.queryOptions = QueryOptionUtils.ParseQueryOptions(this.fullUri);
@@ -84,18 +96,29 @@ namespace Microsoft.OData.UriParser
         /// Build an ODataUriParser
         /// </summary>
         /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="fullUri">full Uri to be parsed, it should be a relative Uri.</param>
-        public ODataUriParser(IEdmModel model, Uri fullUri)
+        /// <param name="relativeUri">Relative URI to be parsed.</param>
+        public ODataUriParser(IEdmModel model, Uri relativeUri)
+            : this(model, relativeUri, (IServiceProvider)null)
         {
-            ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
+        }
 
-            if (fullUri.IsAbsoluteUri)
+        /// <summary>
+        /// Build an ODataUriParser
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="relativeUri">Relative URI to be parsed.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        public ODataUriParser(IEdmModel model, Uri relativeUri, IServiceProvider container)
+        {
+            ExceptionUtils.CheckArgumentNotNull(relativeUri, "fullUri");
+
+            if (relativeUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.UriParser_FullUriMustBeRelative);
+                throw new ODataException(Strings.UriParser_RelativeUriMustBeRelative);
             }
 
-            this.configuration = new ODataUriParserConfiguration(model);
-            this.fullUri = fullUri;
+            this.configuration = new ODataUriParserConfiguration(model, container);
+            this.fullUri = relativeUri;
             this.queryOptions = QueryOptionUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.fullUri));
         }
 
@@ -113,6 +136,14 @@ namespace Microsoft.OData.UriParser
         public IEdmModel Model
         {
             get { return this.configuration.Model; }
+        }
+
+        /// <summary>
+        /// The optional dependency injection container to get related services for URI parsing.
+        /// </summary>
+        public IServiceProvider Container
+        {
+            get { return this.configuration.Container; }
         }
 
         /// <summary>

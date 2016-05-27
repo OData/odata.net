@@ -149,7 +149,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             orders[1].OrderDate = DateTimeOffset.Now;
             orders[1].OrderShelfLifes.Add(TimeSpan.FromHours(1.2));
 
-            expectedPropertyCount = 6;
+            expectedPropertyCount = 7;
             this.TestClientContext.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
         }
 

@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 
         public virtual IEdmModel Model
         {
-            get { return this.model ?? (this.model = this.CreateModel()); }
+            get { return this.model ?? (this.model = (IEdmModel)this.container.GetService(typeof(IEdmModel))); }
         }
 
         public IODataQueryProvider QueryProvider
@@ -100,6 +100,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 
         protected virtual void ConfigureContainer(IContainerBuilder builder)
         {
+            builder.AddService(ServiceLifetime.Singleton, sp => this.CreateModel());
         }
     }
 }

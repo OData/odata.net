@@ -75,7 +75,7 @@ namespace Microsoft.OData
             this.urlResolver = messageInfo.UrlResolver;
             this.container = messageInfo.Container;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
-            this.payloadValueConverter = this.model.GetPayloadValueConverter();
+            this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = ValidatorFactory.CreateWriterValidator(messageWriterSettings.EnableFullValidation);
         }
 
@@ -216,7 +216,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public virtual Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -269,6 +269,58 @@ namespace Microsoft.OData
         public virtual Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>The created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public virtual ODataWriter CreateODataUriParameterResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public virtual Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public virtual ODataWriter CreateODataUriParameterResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public virtual Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 #endif
 

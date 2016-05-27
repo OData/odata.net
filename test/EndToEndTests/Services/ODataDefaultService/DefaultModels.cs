@@ -185,6 +185,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public Collection<TimeSpan> OrderShelfLifes { get; set; }
         public Date ShipDate { get; set; }
         public TimeOfDay ShipTime { get; set; }
+        public InfoFromCustomer InfoFromCustomer { get; set; }
 
         public EntityCollection<OrderDetail> OrderDetails
         {
@@ -202,6 +203,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 this.OrderShelfLifes.Add((TimeSpan)item);
             }
         }
+    }
+
+    public class InfoFromCustomer : ClrObject
+    {
+        public String CustomerMessage { get; set; }
     }
 
     /// <summary>

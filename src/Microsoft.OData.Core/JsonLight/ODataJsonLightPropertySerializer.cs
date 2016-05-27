@@ -12,6 +12,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Globalization;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
@@ -178,7 +179,6 @@ namespace Microsoft.OData.JsonLight
 
             this.WriterValidator.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-
             WriteInstanceAnnotation(property, isTopLevel);
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,

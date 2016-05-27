@@ -37,6 +37,15 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             companyAddressType.AddProperty(new EdmStructuralProperty(companyAddressType, "CompanyName", EdmCoreModel.Instance.GetString(false)));
             model.AddElement(companyAddressType);
 
+            var orderDetailType = new EdmComplexType(ns, "OrderDetail");
+            orderDetailType.AddProperty(new EdmStructuralProperty(orderDetailType, "Quantity", EdmCoreModel.Instance.GetInt32(false)));
+            orderDetailType.AddProperty(new EdmStructuralProperty(orderDetailType, "UnitPrice", EdmCoreModel.Instance.GetSingle(false)));
+            model.AddElement(orderDetailType);
+
+            var infoFromCustomerType = new EdmComplexType(ns, "InfoFromCustomer");
+            infoFromCustomerType.AddProperty(new EdmStructuralProperty(infoFromCustomerType, "CustomerMessage", EdmCoreModel.Instance.GetString(false)));
+            model.AddElement(infoFromCustomerType);
+
             #endregion
 
             #region EnumType
@@ -68,6 +77,8 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             orderType.AddKeys(orderIdProperty);
             orderType.AddStructuralProperty("OrderDate", EdmCoreModel.Instance.GetDateTimeOffset(false));
             orderType.AddStructuralProperty("Notes", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            orderType.AddStructuralProperty("OrderDetails", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(orderDetailType, true))));
+            orderType.AddStructuralProperty("InfoFromCustomer", new EdmComplexTypeReference(infoFromCustomerType, true));
             model.AddElement(orderType);
 
             var ordersNavigation = customerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo

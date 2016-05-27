@@ -14,11 +14,6 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal sealed class ODataUriParserConfiguration
     {
-        /// <summary>
-        /// Model to use for metadata binding.
-        /// </summary>
-        private readonly IEdmModel model;
-
         /// <summary>The conventions to use when parsing URLs.</summary>
         private ODataUrlConventions urlConventions = ODataUrlConventions.Default;
 
@@ -32,10 +27,23 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
         public ODataUriParserConfiguration(IEdmModel model)
+            : this(model, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
+        public ODataUriParserConfiguration(IEdmModel model, IServiceProvider container)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            this.model = model;
+            this.Model = model;
+            this.Container = container;
             this.Settings = new ODataUriParserSettings();
             this.EnableUriTemplateParsing = false;
             this.EnableCaseInsensitiveUriFunctionIdentifier = false;
@@ -49,10 +57,12 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the model for this ODataUriParser
         /// </summary>
-        public IEdmModel Model
-        {
-            get { return this.model; }
-        }
+        public IEdmModel Model { get; private set; }
+
+        /// <summary>
+        /// The optional dependency injection container to get related services for URI parsing.
+        /// </summary>
+        public IServiceProvider Container { get; private set; }
 
         /// <summary>
         /// Gets or Sets the <see cref="ODataUrlConventions"/> to use while parsing, specifically

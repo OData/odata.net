@@ -247,18 +247,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         protected virtual ODataMessageReader CreateMessageReader(IODataRequestMessage message)
         {
-            return new ODataMessageReader(
-                message,
-                this.GetReaderSettings(),
-                this.DataSource.Model);
+            return new ODataMessageReader(message, this.GetReaderSettings());
         }
 
         protected virtual ODataMessageWriter CreateMessageWriter(IODataResponseMessage message)
         {
-            return new ODataMessageWriter(
-                message,
-                this.GetWriterSettings(),
-                this.DataSource.Model);
+            return new ODataMessageWriter(message, this.GetWriterSettings());
         }
 
         #endregion

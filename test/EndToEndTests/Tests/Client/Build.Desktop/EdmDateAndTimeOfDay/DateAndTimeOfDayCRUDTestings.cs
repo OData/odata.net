@@ -43,17 +43,18 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
                         var reader = messageReader.CreateODataResourceReader();
-
+                        ODataResource entry = null;
                         while (reader.Read())
                         {
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataResource entry = reader.Item as ODataResource;
-                                // Verify Date Property
-                                Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                entry = reader.Item as ODataResource;
                             }
                         }
+
+                        // Verify Date Property
+                        Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                        Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -147,9 +148,12 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                // Verify Date Property
-                                Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                if (entry != null && entry.TypeName.EndsWith("Order"))
+                                {
+                                    // Verify Date Property
+                                    Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                                    Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -181,9 +185,12 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                // Verify Date Property
-                                Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                if (entry != null)
+                                {
+                                    // Verify Date Property
+                                    Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                                    Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -216,14 +223,17 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                foreach (ODataResource pre in list)
+                                if (entry != null)
                                 {
-                                    Date entryDate = (Date)entry.Properties.Single(p => p.Name == "ShipDate").Value;
-                                    Date preDate = (Date)pre.Properties.Single(p => p.Name == "ShipDate").Value;
-                                    Assert.IsTrue(preDate > entryDate);
-                                }
-                                list.Add(entry);
+                                    foreach (ODataResource pre in list)
+                                    {
+                                        Date entryDate = (Date)entry.Properties.Single(p => p.Name == "ShipDate").Value;
+                                        Date preDate = (Date)pre.Properties.Single(p => p.Name == "ShipDate").Value;
+                                        Assert.IsTrue(preDate > entryDate);
+                                    }
 
+                                    list.Add(entry);
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -256,14 +266,17 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                foreach (ODataResource pre in list)
+                                if (entry != null)
                                 {
-                                    TimeOfDay entryTimeOfDay = (TimeOfDay)entry.Properties.Single(p => p.Name == "ShipTime").Value;
-                                    TimeOfDay preTimeOfDay = (TimeOfDay)pre.Properties.Single(p => p.Name == "ShipTime").Value;
-                                    Assert.IsTrue(preTimeOfDay > entryTimeOfDay);
-                                }
-                                list.Add(entry);
+                                    foreach (ODataResource pre in list)
+                                    {
+                                        TimeOfDay entryTimeOfDay = (TimeOfDay)entry.Properties.Single(p => p.Name == "ShipTime").Value;
+                                        TimeOfDay preTimeOfDay = (TimeOfDay)pre.Properties.Single(p => p.Name == "ShipTime").Value;
+                                        Assert.IsTrue(preTimeOfDay > entryTimeOfDay);
+                                    }
 
+                                    list.Add(entry);
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -414,8 +427,11 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(Date.MinValue, entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                Assert.AreEqual(TimeOfDay.MinValue, entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                if (entry != null)
+                                {
+                                    Assert.AreEqual(Date.MinValue, entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                                    Assert.AreEqual(TimeOfDay.MinValue, entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);

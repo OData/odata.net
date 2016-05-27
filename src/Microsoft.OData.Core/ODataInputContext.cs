@@ -78,7 +78,7 @@ namespace Microsoft.OData
             this.urlResolver = messageInfo.UrlResolver;
             this.container = messageInfo.Container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
-            this.payloadValueConverter = this.model.GetPayloadValueConverter();
+            this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Microsoft.OData
         /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
-        /// <param name="expectedResourceType">The expected base structured type for the items in the resource set.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
         public virtual ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
@@ -200,7 +200,7 @@ namespace Microsoft.OData
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
-        /// <param name="expectedResourceType">The expected base structured type for the items in the resource set.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
         public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
@@ -212,7 +212,7 @@ namespace Microsoft.OData
         /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
-        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
         public virtual ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
@@ -224,7 +224,7 @@ namespace Microsoft.OData
         /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
-        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
         public virtual Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
@@ -300,6 +300,53 @@ namespace Microsoft.OData
         }
 #endif
 
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public virtual ODataReader CreateUriParameterResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public virtual Task<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public virtual ODataReader CreateUriParameterResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public virtual Task<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+#endif
         /// <summary>
         /// Create a <see cref="ODataParameterReader"/>.
         /// </summary>

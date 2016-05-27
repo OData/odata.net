@@ -221,36 +221,40 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Calling Read() in Entry/Feed/Collection state without calling Create***Reader should fail.
                     IEdmOperationImport functionImport = createReaderMethod == CreateReaderMethods.CreateResourceReader ? functionImport_Entry : (createReaderMethod == CreateReaderMethods.CreateResourceSetReader ? functionImport_Feed : functionImport_ComplexCollection);
                     string payload = createReaderMethod == CreateReaderMethods.CreateResourceReader ? "{ entry : {} }" : (createReaderMethod == CreateReaderMethods.CreateResourceSetReader ? "{ feed : [] }" : "{ complexCollection : [] }");
-                    ODataParameterReaderState expectedParameterState = createReaderMethod == CreateReaderMethods.CreateResourceReader ? ODataParameterReaderState.Resource : (createReaderMethod == CreateReaderMethods.CreateResourceSetReader ? ODataParameterReaderState.ResourceSet : ODataParameterReaderState.Collection);
+                    ODataParameterReaderState expectedParameterState = createReaderMethod == CreateReaderMethods.CreateResourceReader ? ODataParameterReaderState.Resource : ODataParameterReaderState.ResourceSet;
+                    var expectedReaderMethod = createReaderMethod == CreateReaderMethods.CreateCollectionReader ? CreateReaderMethods.CreateResourceSetReader.ToString() : createReaderMethod.ToString();
                     reader = this.CreateParameterReaderForRequestOrResponse(model, functionImport, testConfiguration, payload);
                     reader.Read();
                     this.Assert.AreEqual(expectedParameterState, reader.State, "Unexpected parameter reader state.");
                     this.Assert.ExpectedException(
                         () => reader.Read(),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_SubReaderMustBeCreatedAndReadToCompletionBeforeTheNextReadOrReadAsyncCall", expectedParameterState.ToString(), createReaderMethod.ToString()), this.ExceptionVerifier);
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_SubReaderMustBeCreatedAndReadToCompletionBeforeTheNextReadOrReadAsyncCall", expectedParameterState.ToString(), expectedReaderMethod), this.ExceptionVerifier);
                     this.Assert.AreEqual(expectedParameterState, reader.State, "Unexpected parameter reader state.");
 
                     // Calling Read() in Entry/Feed/Collection state after Create***Reader() is called but before the created reader finishes should fail.
-                    object subReader = CreateSubReader(reader, createReaderMethod);
+                    var subReaderMethod = createReaderMethod == CreateReaderMethods.CreateCollectionReader
+                        ? CreateReaderMethods.CreateResourceSetReader : createReaderMethod;
+                    object subReader = CreateSubReader(reader,
+                        subReaderMethod);
                     this.Assert.ExpectedException(
                         () => reader.Read(),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_SubReaderMustBeInCompletedStateBeforeTheNextReadOrReadAsyncCall", expectedParameterState.ToString(), createReaderMethod.ToString()), this.ExceptionVerifier);
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_SubReaderMustBeInCompletedStateBeforeTheNextReadOrReadAsyncCall", expectedParameterState.ToString(), expectedReaderMethod), this.ExceptionVerifier);
                     this.Assert.AreEqual(expectedParameterState, reader.State, "Unexpected parameter reader state.");
 
                     // Calling Create*Reader() before the sub-reader is completed should fail.
                     string parameterName = createReaderMethod == CreateReaderMethods.CreateResourceReader ? "entry" : (createReaderMethod == CreateReaderMethods.CreateResourceSetReader ? "feed" : "complexCollection");
                     subReader.GetType().GetMethod("Read").Invoke(subReader, null);
                     this.Assert.ExpectedException(
-                        () => CreateSubReader(reader, createReaderMethod),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_CreateReaderAlreadyCalled", createReaderMethod.ToString(), parameterName), this.ExceptionVerifier);
+                        () => CreateSubReader(reader, subReaderMethod),
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_CreateReaderAlreadyCalled", expectedReaderMethod, parameterName), this.ExceptionVerifier);
                     this.Assert.AreEqual(expectedParameterState, reader.State, "Unexpected parameter reader state.");
 
                     // Calling Create*Reader() after sub-reader is completed should fail.
                     while ((bool)subReader.GetType().GetMethod("Read").Invoke(subReader, null)) ;
                     this.Assert.AreEqual("Completed", subReader.GetType().GetProperty("State").GetValue(subReader, null).ToString(), "Unexpected sub-reader state.");
                     this.Assert.ExpectedException(
-                        () => CreateSubReader(reader, createReaderMethod),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_CreateReaderAlreadyCalled", createReaderMethod.ToString(), parameterName), this.ExceptionVerifier);
+                        () => CreateSubReader(reader, subReaderMethod),
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_CreateReaderAlreadyCalled", expectedReaderMethod, parameterName), this.ExceptionVerifier);
                     this.Assert.AreEqual(expectedParameterState, reader.State, "Unexpected parameter reader state.");
 
                     // Finish reading...
@@ -259,8 +263,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     // Calling Create*Reader in Completed state should fail.
                     this.Assert.ExpectedException(
-                        () => CreateSubReader(reader, createReaderMethod),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState", createReaderMethod.ToString(), ODataParameterReaderState.Completed.ToString()), this.ExceptionVerifier);
+                        () => CreateSubReader(reader, subReaderMethod),
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState", expectedReaderMethod, ODataParameterReaderState.Completed.ToString()), this.ExceptionVerifier);
                     this.Assert.AreEqual(ODataParameterReaderState.Completed, reader.State, "Unexpected parameter reader state.");
 
                     // Exception in subReader should put parent reader in Exception state.
@@ -268,15 +272,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     reader = this.CreateParameterReaderForRequestOrResponse(model, functionImport, testConfiguration, payload);
                     reader.Read();
                     this.Assert.AreEqual(expectedParameterState, reader.State, "Unexpected parameter reader state.");
-                    subReader = CreateSubReader(reader, createReaderMethod);
+                    subReader = CreateSubReader(reader, subReaderMethod);
                     this.Assert.IsNotNull(TestExceptionUtils.RunCatching(() => { while ((bool)subReader.GetType().GetMethod("Read").Invoke(subReader, null)) { } }), "Expecting sub-reader.Read() to fail.");
                     this.Assert.AreEqual("Exception", subReader.GetType().GetProperty("State").GetValue(subReader, null).ToString(), "Unexpected sub-reader state.");
                     this.Assert.AreEqual(ODataParameterReaderState.Exception, reader.State, "Unexpected parameter reader state.");
 
                     // Calling Create*Reader in Exception state should fail.
                     this.Assert.ExpectedException(
-                        () => CreateSubReader(reader, createReaderMethod),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState", createReaderMethod.ToString(), ODataParameterReaderState.Exception.ToString()), this.ExceptionVerifier);
+                        () => CreateSubReader(reader, subReaderMethod),
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState", expectedReaderMethod, ODataParameterReaderState.Exception.ToString()), this.ExceptionVerifier);
                     this.Assert.AreEqual(ODataParameterReaderState.Exception, reader.State, "Unexpected parameter reader state.");
                 });
         }

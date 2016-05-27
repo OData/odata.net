@@ -225,7 +225,7 @@ namespace Microsoft.OData
                 model,
                 context =>
             {
-                ODataWriter writer = context.CreateODataResourceWriter(null, null);
+                ODataWriter writer = context.CreateODataUriParameterResourceWriter(null, null);
                 writer.WriteStart(resource);
                 writer.WriteEnd();
             });
@@ -246,9 +246,10 @@ namespace Microsoft.OData
                 model,
                 context =>
             {
-                ODataWriter writer = context.CreateODataResourceSetWriter(null, null);
+                ODataWriter writer = context.CreateODataUriParameterResourceSetWriter(null, null);
                 writer.WriteStart(new ODataResourceSet());
 
+                // TODO: Write Complex Properties in entry
                 foreach (var resource in entries)
                 {
                     writer.WriteStart(resource);

@@ -124,12 +124,17 @@ namespace Microsoft.OData.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker =
                 this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
 
-            // Position the reader on the first node depending on whether we are reading a nested payload or not.
+            // Position the reader on the first node depending on whether we are reading a nested payload or a Uri Operation Parameter or not.
             ODataPayloadKind payloadKind = this.ReadingResourceSet ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
+
+            // Following parameter "this.IsReadingNestedPayload || this.readingParameter" indicates whether to read
+            // { "value" :
+            // or
+            // { "parameterName" :
             this.jsonLightResourceDeserializer.ReadPayloadStart(
                 payloadKind,
                 duplicatePropertyNamesChecker,
-                this.IsReadingNestedPayload,
+                this.IsReadingNestedPayload || this.readingParameter,
                 /*allowEmptyPayload*/false);
 
             return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
@@ -498,9 +503,22 @@ namespace Microsoft.OData.JsonLight
                 bool isReordering = this.jsonLightInputContext.JsonReader is ReorderingJsonReader;
                 if (!this.IsReadingNestedPayload)
                 {
-                    // Skip top-level resource set annotations for nested resource sets.
-                    this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
-                        resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllFeedProperties*/isReordering);
+                    if (!this.readingParameter)
+                    {
+                        // Skip top-level resource set annotations for nested resource sets.
+                        this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
+                            resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllFeedProperties*/isReordering);
+                    }
+                    else
+                    {
+                        // This line will be used to read the first node of a resource set in Uri operation parameter, The first node is : '['
+                        // Node is in following format:
+                        // [
+                        //      {...}, <------------ complex object.
+                        //      {...}, <------------ complex object.
+                        // ]
+                        this.jsonLightResourceDeserializer.JsonReader.Read();
+                    }
                 }
 
                 this.ReadResourceSetStart(resourceSet, selectedProperties);
@@ -829,8 +847,8 @@ namespace Microsoft.OData.JsonLight
                 }
                 else if (!currentLink.IsCollection.Value)
                 {
-                    // We should get here only for declared navigation properties.
-                    Debug.Assert(this.CurrentResourceType != null, "We must have a declared navigation property to read expanded links.");
+                    // We should get here only for declared or undeclared navigation properties.
+                    Debug.Assert(this.CurrentResourceType != null || this.CurrentNestedResourceInfo.Name != null, "We must have a declared navigation property to read expanded links.");
 
                     // Expanded resource
                     ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink, true, false);
@@ -1213,7 +1231,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.jsonLightResourceDeserializer.JsonReader.Value == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
             Debug.Assert(
-                nestedProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties,
+                nestedProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties
+                 || this.jsonLightInputContext.MessageReaderSettings.ShouldSupportUndeclaredProperty(),
                 "A navigation property must be found for each link we find unless we're allowed to report undeclared links.");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");

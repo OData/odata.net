@@ -693,6 +693,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 deserializer.ProcessProperty(
                     duplicatePropertyNamesChecker,
+                    /* annotationCollector */ null,
                     (propertyName) => null,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -707,6 +708,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 Action readDuplicateProperty = () => deserializer.ProcessProperty(
                     duplicatePropertyNamesChecker,
+                    /* annotationCollector */ null,
                     (propertyName) => null,
                     (propertyParsingResult, propertyName) => { });
 
@@ -1121,6 +1123,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 deserializer.ProcessProperty(
                     duplicatePropertyNamesChecker,
+                    /* annotationCollector */ null,
                     (propertyName) => readPropertyAnnotationValue(deserializer.JsonReader, propertyName),
                     (propertyParsingResult, propertyName) =>
                     {

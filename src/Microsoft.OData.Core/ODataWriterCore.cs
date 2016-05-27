@@ -1175,7 +1175,7 @@ namespace Microsoft.OData
                         IEdmStructuralProperty complexProperty = this.ParentResourceType.FindProperty(currentNestedResourceInfo.Name) as IEdmStructuralProperty;
                         if (complexProperty != null)
                         {
-                            this.CurrentScope.ResourceType = complexProperty.ToStructuredType();
+                            this.CurrentScope.ResourceType = complexProperty.Type.ToStructuredType();
                             IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
 
                             this.CurrentScope.NavigationSource = parentNavigationSource;

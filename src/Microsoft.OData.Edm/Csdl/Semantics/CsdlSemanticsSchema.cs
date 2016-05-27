@@ -347,8 +347,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             foreach (var typeDefinition in schema.TypeDefinitions)
             {
-                this.AttachDefaultPrimitiveValueConverter(typeDefinition);
-                types.Add(new CsdlSemanticsTypeDefinitionDefinition(this, typeDefinition));
+                CsdlSemanticsTypeDefinitionDefinition edmTypeDefinition =
+                    new CsdlSemanticsTypeDefinitionDefinition(this, typeDefinition);
+                this.AttachDefaultPrimitiveValueConverter(typeDefinition, edmTypeDefinition);
+                types.Add(edmTypeDefinition);
             }
 
             foreach (var structuredType in this.schema.StructuredTypes)
@@ -381,7 +383,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// matches the default unsigned int type definitions defined in <see cref="PrimitiveValueConverterConstants"/>.
         /// </summary>
         /// <param name="typeDefinition">The type definition to be added to the schema.</param>
-        private void AttachDefaultPrimitiveValueConverter(CsdlTypeDefinition typeDefinition)
+        /// <param name="edmTypeDefinition">The EDM type definition to be added to the model.</param>
+        private void AttachDefaultPrimitiveValueConverter(CsdlTypeDefinition typeDefinition, IEdmTypeDefinition edmTypeDefinition)
         {
             Debug.Assert(typeDefinition != null, "typeDefinition != null");
 
@@ -408,9 +411,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return;
             }
 
-            this.Model.SetPrimitiveValueConverter(
-                String.Format(CultureInfo.InvariantCulture, "{0}.{1}", this.Namespace, typeDefinition.Name),
-                DefaultPrimitiveValueConverter.Instance);
+            this.Model.SetPrimitiveValueConverter(edmTypeDefinition, DefaultPrimitiveValueConverter.Instance);
         }
 
         /// <summary>

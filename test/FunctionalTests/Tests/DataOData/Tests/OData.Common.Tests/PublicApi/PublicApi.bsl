@@ -1992,7 +1992,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmStructuredType ToStructuredType (Microsoft.OData.Edm.IEdmProperty property)
+	public static Microsoft.OData.Edm.IEdmStructuredType ToStructuredType (Microsoft.OData.Edm.IEdmTypeReference propertyTypeReference)
 
 	[
 	ExtensionAttribute(),
@@ -4041,6 +4041,10 @@ public abstract class Microsoft.OData.ODataInputContext : IDisposable {
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateResourceReaderAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public virtual Microsoft.OData.ODataReader CreateResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public virtual Microsoft.OData.ODataReader CreateUriParameterResourceReader (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateUriParameterResourceReaderAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public virtual Microsoft.OData.ODataReader CreateUriParameterResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateUriParameterResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public virtual void Dispose ()
 	protected virtual void Dispose (bool disposing)
 	internal virtual Microsoft.OData.ODataEntityReferenceLink ReadEntityReferenceLink ()
@@ -4090,9 +4094,13 @@ public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
 	public virtual Microsoft.OData.ODataParameterWriter CreateODataParameterWriter (Microsoft.OData.Edm.IEdmOperation operation)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataParameterWriter]] CreateODataParameterWriterAsync (Microsoft.OData.Edm.IEdmOperation operation)
 	public virtual Microsoft.OData.ODataWriter CreateODataResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
-	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType entityType)
 	public virtual Microsoft.OData.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public virtual Microsoft.OData.ODataWriter CreateODataUriParameterResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataUriParameterResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public virtual Microsoft.OData.ODataWriter CreateODataUriParameterResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataUriParameterResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
 	public virtual void Dispose ()
 	protected virtual void Dispose (bool disposing)
 	internal virtual void WriteEntityReferenceLink (Microsoft.OData.ODataEntityReferenceLink link)
@@ -4272,16 +4280,6 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.ODataPayloadValueConverter GetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model)
-
-	[
-	ExtensionAttribute(),
-	]
-	public static void SetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.ODataPayloadValueConverter converter)
-
-	[
-	ExtensionAttribute(),
-	]
 	public static void SetSerializationInfo (Microsoft.OData.ODataCollectionStart collectionStart, Microsoft.OData.ODataCollectionStartSerializationInfo serializationInfo)
 
 	[
@@ -4402,7 +4400,8 @@ public sealed class Microsoft.OData.ODataAsynchronousReader {
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousResponseMessage]] CreateResponseMessageAsync ()
 }
 
-public sealed class Microsoft.OData.ODataAsynchronousResponseMessage : IODataResponseMessage, IODataResponseMessageAsync {
+public sealed class Microsoft.OData.ODataAsynchronousResponseMessage : IContainerProvider, IODataResponseMessage, IODataResponseMessageAsync {
+	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	int StatusCode  { public virtual get; public virtual set; }
 
@@ -4419,9 +4418,10 @@ public sealed class Microsoft.OData.ODataAsynchronousWriter : IODataOutputInStre
 	public System.Threading.Tasks.Task FlushAsync ()
 }
 
-public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
+public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContainerProvider, IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
+	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }
@@ -4432,9 +4432,10 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IODataRe
 	public virtual void SetHeader (string headerName, string headerValue)
 }
 
-public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IODataResponseMessage, IODataResponseMessageAsync, IODataUrlResolver {
+public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContainerProvider, IODataResponseMessage, IODataResponseMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
+	System.IServiceProvider Container  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	int StatusCode  { public virtual get; public virtual set; }
 
@@ -4709,11 +4710,15 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceReaderAsync (Microsoft.OData.Edm.IEdmStructuredType resourceType)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceReaderAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
 	public Microsoft.OData.ODataReader CreateODataResourceSetReader ()
-	public Microsoft.OData.ODataReader CreateODataResourceSetReader (Microsoft.OData.Edm.IEdmStructuredType expectedBaseResourceType)
-	public Microsoft.OData.ODataReader CreateODataResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedBaseResourceType)
+	public Microsoft.OData.ODataReader CreateODataResourceSetReader (Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public Microsoft.OData.ODataReader CreateODataResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceSetReaderAsync ()
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceSetReaderAsync (Microsoft.OData.Edm.IEdmStructuredType expectedBaseEntityType)
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedBaseEntityType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceSetReaderAsync (Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public Microsoft.OData.ODataReader CreateODataUriParameterResourceReader (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataUriParameterResourceReaderAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public Microsoft.OData.ODataReader CreateODataUriParameterResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataUriParameterResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataPayloadKindDetectionResult]] DetectPayloadKind ()
 	public System.Threading.Tasks.Task`1[[System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataPayloadKindDetectionResult]]]] DetectPayloadKindAsync ()
 	public virtual void Dispose ()
@@ -5749,10 +5754,13 @@ public sealed class Microsoft.OData.UriParser.ODataUnrecognizedPathException : M
 }
 
 public sealed class Microsoft.OData.UriParser.ODataUriParser {
-	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri fullUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri relativeUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri relativeUri, System.IServiceProvider container)
 	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri, System.IServiceProvider container)
 
 	System.Func`2[[System.String],[Microsoft.OData.UriParser.BatchReferenceSegment]] BatchReferenceCallback  { public get; public set; }
+	System.IServiceProvider Container  { public get; }
 	System.Collections.Generic.IList`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] CustomODataQueryOptions  { public get; }
 	bool EnableUriTemplateParsing  { public get; public set; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }

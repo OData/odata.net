@@ -190,6 +190,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
+                    /* annotationCollector */ null,
                     this.ReadErrorPropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {

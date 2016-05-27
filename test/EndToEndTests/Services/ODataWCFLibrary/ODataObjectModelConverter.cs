@@ -425,7 +425,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     if (collectionList == null)
                     {
                         Type listType = string.IsNullOrEmpty(collection.TypeName) ? null : EdmClrTypeUtils.GetInstanceType(collection.TypeName);
-                        if(listType == null)
+                        if (listType == null)
                         {
                             Type itemType = item.GetType();
                             listType = typeof(List<>).MakeGenericType(new[] { itemType });
@@ -526,6 +526,131 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             }
 
             return entry;
+        }
+
+        public static object ReadEntityOrEntityCollection(ODataReader reader, bool forFeed)
+        {
+            MethodInfo addMethod = null;
+
+            // Store the last entry of the top-level feed or the top-level entry;
+            ODataResource entry = null;
+
+            // Store entries at each level
+            Stack<ODataItem> items = new Stack<ODataItem>();
+
+            // Store the objects with its parent for current level.
+            // Example:
+            //    CompleCollection: [ complex1, complex2 ]
+            //    objects contains [{CompleCollection, complex1Obj}, {CompleCollection, complex2Obj}] when NestedResourceInfoEnd for CompleCollection
+            Stack<KeyValuePair<ODataItem, object>> objects = new Stack<KeyValuePair<ODataItem, object>>();
+
+            // Store the SetValue action for complex property.
+            Stack<KeyValuePair<ODataItem, Action<object>>> actions = new Stack<KeyValuePair<ODataItem, Action<object>>>();
+            while (reader.Read())
+            {
+                switch (reader.State)
+                {
+                    case ODataReaderState.ResourceStart:
+                    case ODataReaderState.NestedResourceInfoStart:
+                        {
+                            items.Push(reader.Item);
+                            break;
+                        }
+                    case ODataReaderState.NestedResourceInfoEnd:
+                        {
+                            items.Pop();
+                            // Create current complex property value.
+                            var currentProperty = reader.Item as ODataNestedResourceInfo;
+                            var parent = items.Peek() as ODataResource;
+                            var parentType = EdmClrTypeUtils.GetInstanceType(parent.TypeName);
+                            var propertyInfo = parentType.GetProperty(currentProperty.Name);
+                            if (propertyInfo != null)
+                            {
+                                var propertyType = propertyInfo.PropertyType;
+                                if (propertyType.IsGenericType)
+                                {
+                                    Type listType = typeof(List<>).MakeGenericType(propertyType.GetGenericArguments()[0]);
+                                    addMethod = listType.GetMethod("Add");
+                                    var currentList = Activator.CreateInstance(listType);
+                                    while (objects.Count > 0 && objects.Peek().Key == currentProperty)
+                                    {
+                                        addMethod.Invoke(currentList, new[] { objects.Pop().Value });
+                                    }
+
+                                    // Keep the order of all the items
+                                    MethodInfo reverseMethod = listType.GetMethod("Reverse", new Type[0]);
+                                    reverseMethod.Invoke(currentList, new object[0]);
+                                    actions.Push(new KeyValuePair<ODataItem, Action<object>>(parent, obj => propertyInfo.SetValue(obj, currentList)));
+                                }
+                                else
+                                {
+                                    var propertyValue = objects.Pop().Value;
+                                    actions.Push(new KeyValuePair<ODataItem, Action<object>>(parent, obj => propertyInfo.SetValue(obj, propertyValue)));
+                                }
+                            }
+
+                            break;
+                        }
+                    case ODataReaderState.ResourceEnd:
+                        {
+                            // Create object for current resource.
+                            entry = reader.Item as ODataResource;
+                            object item = ODataObjectModelConverter.ConvertPropertyValue(entry);
+                            while (actions.Count > 0 && actions.Peek().Key == entry)
+                            {
+                                actions.Pop().Value.Invoke(item);
+                            }
+
+                            items.Pop();
+                            var parent = items.Count > 0 ? items.Peek() : null;
+                            objects.Push(new KeyValuePair<ODataItem, object>(parent, item));
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+            if (forFeed)
+            {
+                // create the list. This would require the first type is not derived type.
+                List<object> topLeveObjects = new List<object>();
+                while (objects.Count > 0)
+                {
+                    topLeveObjects.Add(objects.Pop().Value);
+                }
+
+                Type type = null;
+                // Need to fix this if all items in the collection are null;
+                if (entry == null || string.IsNullOrEmpty(entry.TypeName))
+                {
+                    for (int i = 0; i < topLeveObjects.Count; i++)
+                    {
+                        if (topLeveObjects[i] != null)
+                        {
+                            type = topLeveObjects[i].GetType();
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    type = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
+                }
+
+                Type listType = typeof(List<>).MakeGenericType(type);
+                addMethod = listType.GetMethod("Add");
+                var list = Activator.CreateInstance(listType);
+                for (int i = topLeveObjects.Count - 1; i >= 0; i--)
+                {
+                    addMethod.Invoke(list, new[] { topLeveObjects[i] });
+                }
+
+                return list;
+            }
+            else
+            {
+                return objects.Pop().Value;
+            }
         }
 
         /// <summary>

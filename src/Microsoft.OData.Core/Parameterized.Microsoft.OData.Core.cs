@@ -2669,7 +2669,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The base URI '{0}' specified in ODataMessageWriterSettings.baseUri is invalid; it must either be null or an absolute URI."
+        /// A string like "The base URI '{0}' specified in ODataMessageWriterSettings.BaseUri is invalid; it must either be null or an absolute URI."
         /// </summary>
         internal static string WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, p0);
@@ -5339,11 +5339,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Parameter 'fullUri' must be a relative Uri if serviceRoot is not specified."
+        /// A string like "Parameter 'relativeUri' must be a relative Uri if serviceRoot is not specified."
         /// </summary>
-        internal static string UriParser_FullUriMustBeRelative {
+        internal static string UriParser_RelativeUriMustBeRelative {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_FullUriMustBeRelative);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_RelativeUriMustBeRelative);
             }
         }
 

@@ -230,15 +230,12 @@ namespace Microsoft.OData.Json
 
         internal static ODataValue ReadAsUntypedOrNullValue(this IJsonReader jsonReader)
         {
-            ODataValue propertyValue;
             StringBuilder builder = new StringBuilder();
             jsonReader.SkipValue(builder);
-            propertyValue = new ODataUntypedValue()
+            return new ODataUntypedValue()
             {
                 RawValue = builder.ToString(),
             };
-
-            return propertyValue;
         }
 
         /// <summary>

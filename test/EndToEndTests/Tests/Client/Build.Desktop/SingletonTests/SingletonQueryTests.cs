@@ -483,7 +483,10 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                         if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             ODataResource entry = reader.Item as ODataResource;
-                            entries.Add(entry);
+                            if (entry != null)
+                            {
+                                entries.Add(entry);
+                            }
                         }
                         else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {

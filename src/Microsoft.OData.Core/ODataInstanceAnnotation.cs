@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     using System;
     using System.Xml;
+    using System.Diagnostics;
     using Microsoft.OData.JsonLight;
 
     /// <summary>
@@ -21,11 +22,29 @@ namespace Microsoft.OData
         /// <param name="name">The name of the instance annotation.</param>
         /// <param name="value">The value of the instance annotation.</param>
         public ODataInstanceAnnotation(string name, ODataValue value)
+            : this(name, value, false)
         {
-            ValidateName(name);
-            ValidateValue(value);
-            this.Name = name;
-            this.Value = value;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="ODataInstanceAnnotation"/> instance.
+        /// </summary>
+        /// <param name="annotationName">The name of the instance annotation.</param>
+        /// <param name="annotationValue">The value of the instance annotation.</param>
+        /// <param name="isForUntypedProperty">If it is annotating an untyped property value.</param>
+        internal ODataInstanceAnnotation(string annotationName, ODataValue annotationValue, bool isForUntypedProperty)
+        {
+            Debug.Assert((!isForUntypedProperty) || (annotationValue is ODataUntypedValue),
+                "(!isForUntypedProperty) || (annotationValue is ODataUntypedValue)");
+            if (!isForUntypedProperty)
+            {
+                ValidateName(annotationName);
+                ValidateValue(annotationValue);
+            }
+
+            this.Name = annotationName;
+            this.Value = annotationValue;
+            this.IsForUntypedProperty = IsForUntypedProperty;
         }
 
         /// <summary>
@@ -37,6 +56,11 @@ namespace Microsoft.OData
         /// Instance annotation value.
         /// </summary>
         public ODataValue Value { get; private set; }
+
+        /// <summary>
+        /// Gets if it is annotating an untyped property value.
+        /// </summary>
+        internal bool IsForUntypedProperty { get; private set; }
 
         /// <summary>
         /// Validates that the given <paramref name="name"/> is a valid instance annotation name.

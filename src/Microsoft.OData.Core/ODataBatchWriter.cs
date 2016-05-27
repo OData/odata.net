@@ -31,6 +31,9 @@ namespace Microsoft.OData
         /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
         private readonly ODataBatchUrlResolver urlResolver;
 
+        /// <summary>The dependency injection container to get related services.</summary>
+        private readonly IServiceProvider container;
+
         /// <summary>The state the writer currently is in.</summary>
         private BatchWriterState state;
 
@@ -91,6 +94,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(batchBoundary, "batchBoundary");
 
             this.rawOutputContext = rawOutputContext;
+            this.container = rawOutputContext.Container;
             this.batchBoundary = batchBoundary;
             this.urlResolver = new ODataBatchUrlResolver(rawOutputContext.UrlResolver);
             this.rawOutputContext.InitializeRawValueWriter();
@@ -636,7 +640,8 @@ namespace Microsoft.OData
                 method,
                 uri,
                 /*operationListener*/ this,
-                this.urlResolver);
+                this.urlResolver,
+                this.container);
 
             if (this.changeSetBoundary != null)
             {
@@ -685,7 +690,8 @@ namespace Microsoft.OData
             this.CurrentOperationResponseMessage = ODataBatchOperationResponseMessage.CreateWriteMessage(
                 this.rawOutputContext.OutputStream,
                 /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver);
+                this.urlResolver.BatchMessageUrlResolver,
+                this.container);
             this.SetState(BatchWriterState.OperationCreated);
 
             Debug.Assert(this.currentOperationContentId == null, "The Content-ID header is only supported in request messages.");

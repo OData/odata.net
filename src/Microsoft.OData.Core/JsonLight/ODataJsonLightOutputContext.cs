@@ -173,29 +173,29 @@ namespace Microsoft.OData.JsonLight
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.AssertSynchronous();
 
-            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false);
         }
 
 #if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public override Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, entityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false));
         }
 #endif
 
@@ -254,6 +254,63 @@ namespace Microsoft.OData.JsonLight
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>The created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataWriter CreateODataUriParameterResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            return this.CreateODataResourceWriter(navigationSource, resourceType);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            return this.CreateODataResourceWriterAsync(navigationSource, resourceType);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataWriter CreateODataUriParameterResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true);
+        }
+
+#if PORTABLELIB
+
+        /// <summary>
+        /// Asynchronously Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true));
         }
 #endif
 
@@ -649,11 +706,12 @@ namespace Microsoft.OData.JsonLight
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="writingParameter">true means writing a resource set into a uri operation parameter, false writing a resource set in other payloads.</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType, bool writingParameter)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true);
+            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true, writingParameter);
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }
