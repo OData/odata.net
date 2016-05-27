@@ -155,6 +155,12 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "GetColorCmykImport(CO='Blue')",
                 parser =>
                 {
+                    if (!(parser.Resolver is StringAsEnumResolver))
+                    {
+                        // Use a new instance in order not to affect the global instance.
+                        parser.Resolver = new ODataUriResolver();
+                    }
+
                     parser.Resolver.EnableCaseInsensitive = true;
                     return parser.ParsePath();
                 },
@@ -187,7 +193,10 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var uriParser = new ODataUriParser(
                 Model,
                 ServiceRoot,
-                new Uri("http://host/GetMixedColorImport(co=['Blue', null])"));
+                new Uri("http://host/GetMixedColorImport(co=['Blue', null])"))
+            {
+                Resolver = new ODataUriResolver()
+            };
 
             var path = uriParser.ParsePath();
             var node = path.LastSegment
