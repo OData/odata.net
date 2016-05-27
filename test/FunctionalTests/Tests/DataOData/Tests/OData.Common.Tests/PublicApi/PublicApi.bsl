@@ -3889,6 +3889,18 @@ public enum Microsoft.OData.ServiceLifetime : int {
 	Transient = 2
 }
 
+[
+FlagsAttribute(),
+]
+public enum Microsoft.OData.WriterValidations : int {
+	BasicValidation = 1
+	FullValidation = -1
+	None = 0
+	ThrowOnDuplicatePropertyNames = 2
+	ThrowOnNullValuesForNonNullablePrimitiveTypes = 4
+	ThrowOnUndeclaredProperty = 8
+}
+
 public interface Microsoft.OData.IContainerBuilder {
 	Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.ServiceLifetime lifetime, System.Type serviceType, System.Func`2[[System.IServiceProvider],[System.Object]] implementationFactory)
 	Microsoft.OData.IContainerBuilder AddService (Microsoft.OData.ServiceLifetime lifetime, System.Type serviceType, System.Type implementationType)
@@ -4812,23 +4824,20 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 	public System.Threading.Tasks.Task WriteValueAsync (object value)
 }
 
-public sealed class Microsoft.OData.ODataMessageWriterSettings : IMessageValidationSetting {
+public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	public ODataMessageWriterSettings ()
 
-	bool AllowDuplicatePropertyNames  { public get; public set; }
-	bool AllowNullValuesForNonNullablePrimitiveTypes  { public get; public set; }
 	bool AutoComputePayloadMetadataInJson  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
-	bool EnableFullValidation  { public virtual get; public virtual set; }
 	bool EnableIndentation  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
-	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
+	Microsoft.OData.WriterValidations Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
 	public Microsoft.OData.ODataMessageWriterSettings Clone ()

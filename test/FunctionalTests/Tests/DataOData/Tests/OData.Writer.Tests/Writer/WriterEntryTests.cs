@@ -2603,8 +2603,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     if (allowDuplicates)
                     {
                         testConfiguration = testConfiguration.Clone();
-                        testConfiguration.MessageWriterSettings.AllowNullValuesForNonNullablePrimitiveTypes = true;
-                        testConfiguration.MessageWriterSettings.AllowDuplicatePropertyNames = true;
+                        testConfiguration.MessageWriterSettings.Validations &= ~WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes
+                                                                               & ~WriterValidations.ThrowOnDuplicatePropertyNames;
                     }
 
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);

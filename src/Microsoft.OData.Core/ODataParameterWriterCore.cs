@@ -74,7 +74,7 @@ namespace Microsoft.OData
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
 
-            /// <summary>An error had occured while writing the payload; nothing can be written anymore.</summary>
+            /// <summary>An error had occurred while writing the payload; nothing can be written anymore.</summary>
             Error
         }
 
@@ -83,7 +83,10 @@ namespace Microsoft.OData
         {
             get
             {
-                return this.duplicatePropertyNamesChecker ?? (this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, false /*isResponse*/, !this.outputContext.MessageWriterSettings.EnableFullValidation));
+                return this.duplicatePropertyNamesChecker
+                    ?? (this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
+                        outputContext.MessageWriterSettings.ThrowOnDuplicatePropertyNames,
+                        false /*isResponse*/));
             }
         }
 

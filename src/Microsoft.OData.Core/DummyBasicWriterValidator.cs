@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="WriterValidatorFullValidation.cs" company="Microsoft">
+// <copyright file="DummyBasicWriterValidator.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,7 +9,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
-    internal sealed class WriterValidatorFullValidation : IWriterValidator
+    internal sealed class DummyBasicWriterValidator : IBasicWriterValidator
     {
         /// <summary>
         /// Validates that message writer settings are correct.
@@ -18,7 +18,6 @@ namespace Microsoft.OData
         /// <param name="writingResponse">True if we are writing a response.</param>
         public void ValidateMessageWriterSettings(ODataMessageWriterSettings messageWriterSettings, bool writingResponse)
         {
-            WriterValidationUtils.ValidateMessageWriterSettings(messageWriterSettings, writingResponse);
         }
 
         /// <summary>
@@ -27,7 +26,6 @@ namespace Microsoft.OData
         /// <param name="property">The property to validate for not being null.</param>
         public void ValidatePropertyNotNull(ODataProperty property)
         {
-            WriterValidationUtils.ValidatePropertyNotNull(property);
         }
 
         /// <summary>
@@ -36,38 +34,6 @@ namespace Microsoft.OData
         /// <param name="propertyName">The property name to validate.</param>
         public void ValidatePropertyName(string propertyName)
         {
-            WriterValidationUtils.ValidatePropertyName(propertyName);
-        }
-
-        /// <summary>
-        /// Validates that a property with the specified name exists on a given structured type.
-        /// The structured type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</param>
-        /// <param name="messageValidationSetting">The IMessageValidationSetting object.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</returns>
-        public IEdmProperty ValidatePropertyDefined(
-            string propertyName,
-            IEdmStructuredType owningStructuredType,
-            IMessageValidationSetting messageValidationSetting)
-        {
-            return WriterValidationUtils.ValidatePropertyDefined(propertyName, owningStructuredType, messageValidationSetting);
-        }
-
-        /// <summary>
-        /// Validates that a navigation property with the specified name exists on a given entity type.
-        /// The entity type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the navigation property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</returns>
-        public IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType)
-        {
-            return WriterValidationUtils.ValidateNavigationPropertyDefined(propertyName, owningEntityType);
         }
 
         /// <summary>
@@ -77,7 +43,6 @@ namespace Microsoft.OData
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
         public void ValidateResourceInNestedResourceInfo(IEdmStructuredType resourceType, IEdmStructuredType parentNavigationPropertyType)
         {
-            WriterValidationUtils.ValidateResourceInExpandedLink(resourceType, parentNavigationPropertyType);
         }
 
         /// <summary>
@@ -87,7 +52,6 @@ namespace Microsoft.OData
         /// <param name="writingResponse">true if writing a response; otherwise false.</param>
         public void ValidateCanWriteOperation(ODataOperation operation, bool writingResponse)
         {
-            WriterValidationUtils.ValidateCanWriteOperation(operation, writingResponse);
         }
 
         /// <summary>
@@ -97,7 +61,6 @@ namespace Microsoft.OData
         /// <param name="writingRequest">Flag indicating whether the resource set is written as part of a request or a response.</param>
         public void ValidateResourceSetAtEnd(ODataResourceSet resourceSet, bool writingRequest)
         {
-            WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, writingRequest);
         }
 
         /// <summary>
@@ -106,7 +69,6 @@ namespace Microsoft.OData
         /// <param name="resource">The resource to validate.</param>
         public void ValidateResourceAtStart(ODataResource resource)
         {
-            WriterValidationUtils.ValidateResourceAtStart(resource);
         }
 
         /// <summary>
@@ -115,7 +77,6 @@ namespace Microsoft.OData
         /// <param name="resource">The resource to validate.</param>
         public void ValidateResourceAtEnd(ODataResource resource)
         {
-            WriterValidationUtils.ValidateResourceAtEnd(resource);
         }
 
         /// <summary>
@@ -125,7 +86,6 @@ namespace Microsoft.OData
         /// <param name="isDefaultStream">true if <paramref name="streamReference"/> is the default stream for an entity; false if it is a named stream property value.</param>
         public void ValidateStreamReferenceValue(ODataStreamReferenceValue streamReference, bool isDefaultStream)
         {
-            WriterValidationUtils.ValidateStreamReferenceValue(streamReference, isDefaultStream);
         }
 
         /// <summary>
@@ -137,7 +97,6 @@ namespace Microsoft.OData
         /// <remarks>This does NOT validate the value of the stream property, just the property itself.</remarks>
         public void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, bool writingResponse)
         {
-            WriterValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty, writingResponse);
         }
 
         /// <summary>
@@ -147,7 +106,6 @@ namespace Microsoft.OData
         /// <remarks>This should be called only for entity reference links inside the ODataEntityReferenceLinks.Links collection.</remarks>
         public void ValidateEntityReferenceLinkNotNull(ODataEntityReferenceLink entityReferenceLink)
         {
-            WriterValidationUtils.ValidateEntityReferenceLinkNotNull(entityReferenceLink);
         }
 
         /// <summary>
@@ -156,14 +114,13 @@ namespace Microsoft.OData
         /// <param name="entityReferenceLink">The entity reference link to validate.</param>
         public void ValidateEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
         {
-            WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
         }
 
         /// <summary>
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
-        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structured property or navigation property; or null if metadata is not available.</param>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
         /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         public IEdmNavigationProperty ValidateNestedResourceInfo(
@@ -171,16 +128,15 @@ namespace Microsoft.OData
             IEdmStructuredType declaringStructuredType,
             ODataPayloadKind? expandedPayloadKind)
         {
-            return WriterValidationUtils.ValidateNestedResourceInfo(nestedResourceInfo, declaringStructuredType, expandedPayloadKind);
+            return declaringStructuredType == null ? null : declaringStructuredType.FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
         }
 
         /// <summary>
-        /// Validates that the sepcified nested resource info has cardinality, that is it has the IsCollection value set.
+        /// Validates that the specified nested resource info has cardinality, that is it has the IsCollection value set.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         public void ValidateNestedResourceInfoHasCardinality(ODataNestedResourceInfo nestedResourceInfo)
         {
-            WriterValidationUtils.ValidateNestedResourceInfoHasCardinality(nestedResourceInfo);
         }
 
         /// <summary>
@@ -192,7 +148,6 @@ namespace Microsoft.OData
         /// <param name="model">The model to use to get the OData version.</param>
         public void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataMessageWriterSettings writerSettings, IEdmModel model)
         {
-            WriterValidationUtils.ValidateNullPropertyValue(expectedPropertyTypeReference, propertyName, writerSettings, model);
         }
 
         /// <summary>
@@ -202,7 +157,6 @@ namespace Microsoft.OData
         /// <param name="value">The value of the open property.</param>
         public void ValidateOpenPropertyValue(string propertyName, object value)
         {
-            ValidationUtils.ValidateOpenPropertyValue(propertyName, value);
         }
 
         /// <summary>
@@ -212,7 +166,6 @@ namespace Microsoft.OData
         /// <param name="format">Format that is being validated.</param>
         public void ValidateServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, ODataFormat format)
         {
-            ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, format);
         }
 
         /// <summary>
@@ -222,7 +175,6 @@ namespace Microsoft.OData
         /// <param name="isNullable">True if the items in the collection are nullable, false otherwise.</param>
         public void ValidateCollectionItem(object item, bool isNullable)
         {
-            ValidationUtils.ValidateCollectionItem(item, isNullable);
         }
 
         /// <summary>
@@ -239,7 +191,6 @@ namespace Microsoft.OData
             IEdmPrimitiveTypeReference valuePrimitiveTypeReference,
             IEdmTypeReference expectedTypeReference)
         {
-            ValidationUtils.ValidateIsExpectedPrimitiveType(value, valuePrimitiveTypeReference, expectedTypeReference);
         }
 
         /// <summary>
@@ -247,38 +198,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="typeReferenceFromMetadata">The metadata type reference to check.</param>
         /// <param name="typeReferenceFromValue">The value type reference to check.</param>
-        public void ValidateTypeReference(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue)
+        public void ValidateTypeReference(IEdmTypeReference typeReferenceFromMetadata,
+            IEdmTypeReference typeReferenceFromValue)
         {
-            // Make sure the types are the same
-            if (typeReferenceFromValue.IsODataPrimitiveTypeKind())
-            {
-                // Primitive types must match exactly except for nullability
-                ValidationUtils.ValidateMetadataPrimitiveType(typeReferenceFromMetadata, typeReferenceFromValue);
-            }
-            else if (typeReferenceFromMetadata.IsEntity())
-            {
-                ValidationUtils.ValidateEntityTypeIsAssignable((IEdmEntityTypeReference)typeReferenceFromMetadata, (IEdmEntityTypeReference)typeReferenceFromValue);
-            }
-            else if (typeReferenceFromMetadata.IsComplex())
-            {
-                ValidationUtils.ValidateComplexTypeIsAssignable(typeReferenceFromMetadata.Definition as IEdmComplexType, typeReferenceFromValue.Definition as IEdmComplexType);
-            }
-            else if (typeReferenceFromMetadata.IsCollection())
-            {
-                // Collection types must match exactly.
-                if (!(typeReferenceFromMetadata.Definition.IsElementTypeEquivalentTo(typeReferenceFromValue.Definition)))
-                {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.FullName(), typeReferenceFromMetadata.FullName()));
-                }
-            }
-            else
-            {
-                // For other types, compare their full type name.
-                if (typeReferenceFromMetadata.FullName() != typeReferenceFromValue.FullName())
-                {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.FullName(), typeReferenceFromMetadata.FullName()));
-                }
-            }
         }
 
         /// <summary>
@@ -289,7 +211,6 @@ namespace Microsoft.OData
         /// <param name="edmType">The edm type to use in the error.</param>
         public void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, IEdmType edmType)
         {
-            ValidationUtils.ValidateTypeKind(actualTypeKind, expectedTypeKind, edmType == null ? null : edmType.FullTypeName());
         }
 
         /// <summary>
@@ -299,7 +220,7 @@ namespace Microsoft.OData
         /// <returns>The <see cref="IEdmCollectionTypeReference"/> instance representing the collection passed as <paramref name="typeReference"/>.</returns>
         public IEdmCollectionTypeReference ValidateCollectionType(IEdmTypeReference typeReference)
         {
-            return ValidationUtils.ValidateCollectionType(typeReference);
+            return typeReference.AsCollectionOrNull();
         }
 
         /// <summary>
@@ -311,7 +232,6 @@ namespace Microsoft.OData
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
         public void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
         {
-            ValidationUtils.ValidateMediaResource(resource, resourceType, model, true);
         }
     }
 }

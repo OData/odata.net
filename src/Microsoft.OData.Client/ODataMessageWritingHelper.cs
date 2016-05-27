@@ -51,8 +51,8 @@ namespace Microsoft.OData.Client
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
             // Enable the Astoria client behavior in ODataLib.
-            writerSettings.AllowNullValuesForNonNullablePrimitiveTypes = false;
-            writerSettings.AllowDuplicatePropertyNames = false;
+            writerSettings.Validations |= WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes
+                                          | WriterValidations.ThrowOnDuplicatePropertyNames;
 
             this.requestInfo.Configurations.RequestPipeline.ExecuteWriterSettingsConfiguration(writerSettings);
 

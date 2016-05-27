@@ -17,7 +17,7 @@ namespace Microsoft.OData
     internal abstract class ODataSerializer
     {
         /// <summary>The writer validator used during serializing.</summary>
-        protected readonly IWriterValidator WriterValidator;
+        protected readonly IBasicWriterValidator WriterValidator;
 
         /// <summary>
         /// The output context to write to.
@@ -86,7 +86,9 @@ namespace Microsoft.OData
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return new DuplicatePropertyNamesChecker(this.MessageWriterSettings.AllowDuplicatePropertyNames, this.WritingResponse, !this.MessageWriterSettings.EnableFullValidation);
+            return new DuplicatePropertyNamesChecker(
+                !this.MessageWriterSettings.ThrowOnDuplicatePropertyNames,
+                this.WritingResponse);
         }
     }
 }

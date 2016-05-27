@@ -108,7 +108,7 @@
     <Compile Include="InstanceAnnotationWriteTracker.cs" />
     <Compile Include="InternalErrorCodes.cs" />
     <Compile Include="InternalErrorCodesCommon.cs" />
-    <Compile Include="IWriterValidator.cs" />
+    <Compile Include="IBasicWriterValidator.cs" />
     <Compile Include="JsonLight\IODataJsonLightReaderResourceState.cs" />
     <Compile Include="JsonLight\IODataJsonLightValueSerializer.cs" />
     <Compile Include="JsonLight\IODataJsonLightWriterResourceState.cs" />
@@ -561,8 +561,9 @@
     <Compile Include="Utils.cs" />
     <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="ValidationUtils.cs" />
-    <Compile Include="ValidatorFactory.cs" />
+    <Compile Include="BasicWriterValidatorFactory.cs" />
     <Compile Include="WriterUtils.cs" />
+    <Compile Include="WriterValidations.cs" />
     <Compile Include="WriterValidationUtils.cs" />
     <Compile Include="UriParser\Aggregation\ApplyBinder.cs" />
     <Compile Include="UriParser\Aggregation\FilterTransformationNode.cs" />
@@ -587,8 +588,8 @@
     <Compile Include="..\PlatformHelper.cs">
       <Link>PlatformHelper.cs</Link>
     </Compile>
-    <Compile Include="WriterValidatorFullValidation.cs" />
-    <Compile Include="WriterValidatorMinimalValidation.cs" />
+    <Compile Include="BasicWriterValidator.cs" />
+    <Compile Include="DummyBasicWriterValidator.cs" />
     <None Include="obj2c\i386\AssemblyAttributes.cs">
       <Visible>false</Visible>
     </None>
