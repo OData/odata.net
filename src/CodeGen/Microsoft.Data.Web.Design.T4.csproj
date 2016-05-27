@@ -3,7 +3,6 @@
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Service.Design.T4</AssemblyName>
     <OutputType>Library</OutputType>
-    <AllowPartialTrustedCalls>false</AllowPartialTrustedCalls>
     <ConditionalAPTCA_L2>true</ConditionalAPTCA_L2>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
