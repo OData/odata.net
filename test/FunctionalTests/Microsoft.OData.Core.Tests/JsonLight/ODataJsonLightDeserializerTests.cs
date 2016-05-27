@@ -954,33 +954,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
-        public void ParsingInstanceAnnotationsInEntityShouldReturnODataAnnotations()
-        {
-            var model = new EdmModel();
-            var complexType = new EdmComplexType("TestNamespace", "Address");
-            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
-            model.AddElement(complexType);
-            var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-            this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.type\":\"#TestNamespace.Address\",\"CountryRegion@odata.type\":\"#String\",\"CountryRegion@Annotation.1\":123,\"CountryRegion\":\"China\"}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*duplicatePropertyNamesChecker*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.InstanceAnnotations.Count.Should().Be(1);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("TestNamespace.Address"), complexValue.InstanceAnnotations.Single(ia => ia.Name == "odata.type").Value);
-            complexValue.Properties.Single().InstanceAnnotations.Count.Should().Be(2);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("Edm.String"), complexValue.Properties.Single().InstanceAnnotations.Single(ia => ia.Name == "odata.type").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), complexValue.Properties.Single().InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
-        }
-
-        [Fact]
         public void ParsingInstanceAnnotationsInComplexPropertyShouldSkipBaseOnSettings()
         {
             var model = new EdmModel();
