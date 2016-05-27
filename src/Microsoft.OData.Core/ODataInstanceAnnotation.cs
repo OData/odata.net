@@ -38,6 +38,7 @@ namespace Microsoft.OData.Core
                 ValidateName(name);
                 ValidateValue(value);
             }
+
             this.Name = name;
             this.Value = value;
         }
