@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.DependencyInjection
             this.scope = scope;
         }
 
-        public System.IServiceProvider ServiceProvider
+        public IServiceProvider ServiceProvider
         {
             get { return this.scope.ServiceProvider; }
         }
