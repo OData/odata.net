@@ -69,6 +69,7 @@ namespace Microsoft.OData.JsonLight
         /// Pre-Condition:  JsonNodeType.EndArray
         /// Post-Condition: JsonNodeType.Property   if the resource set is part of an expanded nested resource info and there are more properties in the object
         ///                 JsonNodeType.EndObject  if the resource set is a top-level resource set or the expanded nested resource info is the last property of the payload
+        ///                 JsonNodeType.EndOfInput  if the resource set is in a Uri operation parameter.
         /// </remarks>
         internal void ReadResourceSetContentEnd()
         {
@@ -77,7 +78,7 @@ namespace Microsoft.OData.JsonLight
 
             this.JsonReader.ReadEndArray();
 
-            this.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
+            this.AssertJsonCondition(JsonNodeType.EndOfInput, JsonNodeType.EndObject, JsonNodeType.Property);
         }
 
         /// <summary>

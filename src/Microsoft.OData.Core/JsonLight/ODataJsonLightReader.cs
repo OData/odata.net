@@ -583,6 +583,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput ||
                 !this.IsTopLevel && !this.jsonLightInputContext.ReadingResponse,
                 "Pre-Condition: expected JsonNodeType.EndObject or JsonNodeType.Property");
 
@@ -612,7 +613,14 @@ namespace Microsoft.OData.JsonLight
             //   "@odata.nextLink":"..."
             // } <--- current reader position
             // EOF
-            if (this.IsReadingNestedPayload && isTopLevelResourceSet)
+            //
+            // Normal resource set payload as uri operation parameter
+            // [
+            //   {...},
+            //   ...
+            // ]
+            // EOF <--- current reader position
+            if ((this.IsReadingNestedPayload || this.readingParameter) && isTopLevelResourceSet)
             {
                 // replace the 'Start' scope with the 'Completed' scope
                 this.ReplaceScope(ODataReaderState.Completed);
