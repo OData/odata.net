@@ -870,6 +870,7 @@ namespace Microsoft.OData.JsonLight
                     ICollection<ODataInstanceAnnotation> propertyAnnotations = property.GetInstanceAnnotations();
                     foreach (ODataInstanceAnnotation item in rawAnnotations)
                     {
+                        item.IsForUntypedProperty = true;
                         propertyAnnotations.Add(item);
                     }
 

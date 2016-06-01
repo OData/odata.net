@@ -1121,7 +1121,7 @@ namespace Microsoft.OData.JsonLight
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
             ODataProperty property = AddResourceProperty(resourceState, propertyName, propertyValue);
-            if ((propertyValue is ODataUntypedValue) && (annotationCollector != null))
+            if (annotationCollector != null)
             {
                 TryAttachRawAnnotationSetToPropertyValue(annotationCollector, property);
             }

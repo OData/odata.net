@@ -120,13 +120,15 @@ namespace Microsoft.OData
         /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
-        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the navigation property; or null if metadata is not available.</param>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structured property or navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <param name="messageWriterSettings">The <see cref="ODataMessageWriterSettings"/>.</param>
         /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         public IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmStructuredType declaringStructuredType,
-            ODataPayloadKind? expandedPayloadKind)
+            ODataPayloadKind? expandedPayloadKind,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             return declaringStructuredType == null ? null : declaringStructuredType.FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
         }

@@ -179,14 +179,15 @@ namespace Microsoft.OData.JsonLight
 
             this.WriterValidator.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-            WriteInstanceAnnotation(property, isTopLevel);
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
                 propertyName,
                 owningType,
                 this.JsonLightOutputContext.MessageWriterSettings.ThrowOnUndeclaredProperty);
 
             string wirePropertyName = isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
-            IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
+            bool isUndeclaredProperty = edmProperty == null;
+            IEdmTypeReference propertyTypeReference = isUndeclaredProperty ? null : edmProperty.Type;
+            WriteInstanceAnnotation(property, isTopLevel, isUndeclaredProperty);
             ODataValue value = property.ODataValue;
 
             // handle ODataUntypedValue
@@ -269,7 +270,8 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
-        private void WriteInstanceAnnotation(ODataProperty property, bool isTopLevel)
+        /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
+        private void WriteInstanceAnnotation(ODataProperty property, bool isTopLevel, bool isUndeclaredProperty)
         {
             if (property.InstanceAnnotations.Count != 0)
             {
@@ -279,7 +281,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, property.Name);
+                    this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
                 }
             }
         }

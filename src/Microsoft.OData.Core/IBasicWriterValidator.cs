@@ -98,11 +98,13 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the nested resources; or null if metadata is not available.</param>
         /// <param name="nestedPayloadKind">The <see cref="ODataPayloadKind"/> of the content of this nested resource info or null for deferred links.</param>
+        /// <param name="messageWriterSettings">The <see cref="ODataMessageWriterSettings"/>.</param>
         /// <returns>The type of the nested resource for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmStructuredType declaringStructuredType,
-            ODataPayloadKind? nestedPayloadKind);
+            ODataPayloadKind? nestedPayloadKind,
+            ODataMessageWriterSettings messageWriterSettings);
 
         /// <summary>
         /// Validates that the specified nested resource info has cardinality, that is it has the IsCollection value set.

@@ -60,7 +60,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets if it is annotating an untyped property value.
         /// </summary>
-        internal bool IsForUntypedProperty { get; private set; }
+        internal bool IsForUntypedProperty { get; set; }
 
         /// <summary>
         /// Validates that the given <paramref name="name"/> is a valid instance annotation name.

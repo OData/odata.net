@@ -104,9 +104,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
+        /// <param name="messageWriterSettings">The <see cref="ODataMessageWriterSettings"/>.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the navigation property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
-        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType)
+        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType, ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -115,9 +116,14 @@ namespace Microsoft.OData
                 return null;
             }
 
-            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType, true);
+            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType, messageWriterSettings.ThrowOnUndeclaredProperty);
             if (property == null)
             {
+                if (!messageWriterSettings.ThrowOnUndeclaredProperty)
+                {
+                    return null;
+                }
+
                 // We don't support open navigation properties
                 Debug.Assert(owningEntityType.IsOpen, "We should have already failed on non-existing property on a closed type.");
                 throw new ODataException(Strings.ValidationUtils_OpenNavigationProperty(propertyName, owningEntityType.FullTypeName()));
@@ -310,12 +316,14 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structural property or navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <param name="messageWriterSettings">The <see cref="ODataMessageWriterSettings"/>.</param>
         /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for nested resource info multiplicity in one place.")]
         internal static IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmStructuredType declaringStructuredType,
-            ODataPayloadKind? expandedPayloadKind)
+            ODataPayloadKind? expandedPayloadKind,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(
@@ -356,31 +364,32 @@ namespace Microsoft.OData
             IEdmNavigationProperty navigationProperty = null;
             if (errorTemplate == null && declaringStructuredType != null)
             {
-                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType as IEdmEntityType);
-                Debug.Assert(navigationProperty != null, "If we have a declaring type we expect a non-null navigation property since open nav props are not allowed.");
-
-                bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;
-
-                // Make sure the IsCollection property agrees with the metadata type for resource and resource set payloads
-                if (nestedResourceInfo.IsCollection.HasValue && isCollectionType != nestedResourceInfo.IsCollection)
+                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType as IEdmEntityType, messageWriterSettings);
+                if (navigationProperty != null)
                 {
-                    // Ignore the case where IsCollection is 'false' and we are writing an entity reference link
-                    // (see comment above)
-                    if (!(nestedResourceInfo.IsCollection == false && isEntityReferenceLinkPayload))
+                    bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;
+
+                    // Make sure the IsCollection property agrees with the metadata type for resource and resource set payloads
+                    if (nestedResourceInfo.IsCollection.HasValue && isCollectionType != nestedResourceInfo.IsCollection)
+                    {
+                        // Ignore the case where IsCollection is 'false' and we are writing an entity reference link
+                        // (see comment above)
+                        if (!(nestedResourceInfo.IsCollection == false && isEntityReferenceLinkPayload))
+                        {
+                            errorTemplate = isCollectionType
+                                ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata
+                                : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata;
+                        }
+                    }
+
+                    // Make sure that the payload kind agrees with the metadata.
+                    // For entity reference links we check separately in ODataWriterCore.CheckForNestedResourceInfoWithContent.
+                    if (!isEntityReferenceLinkPayload && expandedPayloadKind.HasValue && isCollectionType != isResourceSetPayload)
                     {
                         errorTemplate = isCollectionType
-                            ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata
-                            : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata;
+                            ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata
+                            : Strings.WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata;
                     }
-                }
-
-                // Make sure that the payload kind agrees with the metadata.
-                // For entity reference links we check separately in ODataWriterCore.CheckForNestedResourceInfoWithContent.
-                if (!isEntityReferenceLinkPayload && expandedPayloadKind.HasValue && isCollectionType != isResourceSetPayload)
-                {
-                    errorTemplate = isCollectionType
-                        ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata
-                        : Strings.WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata;
                 }
             }
 

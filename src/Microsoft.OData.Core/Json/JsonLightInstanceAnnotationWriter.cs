@@ -97,10 +97,11 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null)
+        /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null, bool isUndeclaredProperty = false)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
-            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName);
+            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), isUndeclaredProperty, propertyName);
         }
 
         /// <summary>
@@ -124,7 +125,6 @@ namespace Microsoft.OData
             string name = instanceAnnotation.Name;
             ODataValue value = instanceAnnotation.Value;
             Debug.Assert(!string.IsNullOrEmpty(name), "name should not be null or empty");
-            Debug.Assert(!ODataAnnotationNames.IsODataAnnotationName(name), "A reserved name cannot be used as instance annotation key");
             Debug.Assert(value != null, "value should not be null because we use ODataNullValue for null instead");
             Debug.Assert(!(value is ODataStreamReferenceValue), "!(value is ODataStreamReferenceValue) -- ODataInstanceAnnotation and InstanceAnnotationCollection will throw if the value is a stream value.");
             Debug.Assert(this.valueSerializer.Model != null, "this.valueSerializer.Model != null");
@@ -176,10 +176,12 @@ namespace Microsoft.OData
                 return;
             }
 
-            if (instanceAnnotation.IsForUntypedProperty)
+            ODataUntypedValue untypedValue = value as ODataUntypedValue;
+            if (untypedValue != null)
             {
+                Debug.Assert(instanceAnnotation.IsForUntypedProperty, "instanceAnnotation.IsForUntypedProperty");
                 this.WriteInstanceAnnotationName(propertyName, name);
-                this.valueSerializer.WriteUntypedValue((ODataUntypedValue)value);
+                this.valueSerializer.WriteUntypedValue(untypedValue);
                 return;
             }
 

@@ -1183,7 +1183,7 @@ namespace Microsoft.OData
                         else
                         {
                             IEdmNavigationProperty navigationProperty =
-                                 this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind);
+                                 this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind, this.outputContext.MessageWriterSettings);
                             if (navigationProperty != null)
                             {
                                 this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
@@ -1369,7 +1369,7 @@ namespace Microsoft.OData
                         if (ComplexProperty == null)
                         {
                             IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
-                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentEntityType, /*payloadKind*/null);
+                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentEntityType, /*payloadKind*/null, this.outputContext.MessageWriterSettings);
                             if (navigationProperty != null)
                             {
                                 resourceType = navigationProperty.ToEntityType();
