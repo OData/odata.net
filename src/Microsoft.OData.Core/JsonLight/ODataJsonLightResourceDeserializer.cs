@@ -897,8 +897,9 @@ namespace Microsoft.OData.JsonLight
             if (edmProperty != null && !edmProperty.Type.IsUntyped())
             {
                 IEdmStructuralProperty structuredProperty = edmProperty as IEdmStructuralProperty;
+                IEdmStructuredType structuredPropertyTypeOrItemType = structuredProperty == null ? null : structuredProperty.Type.ToStructuredType();
                 IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
-                if (structuredProperty != null && structuredProperty.Type.ToStructuredType() != null)
+                if (structuredPropertyTypeOrItemType != null)
                 {
                     // Complex property or collection of complex property.
                     bool isCollection = structuredProperty.Type.IsCollection();
@@ -906,11 +907,11 @@ namespace Microsoft.OData.JsonLight
 
                     if (isCollection)
                     {
-                        readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, structuredProperty, structuredProperty.Name);
+                        readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, structuredProperty, structuredPropertyTypeOrItemType, structuredProperty.Name);
                     }
                     else
                     {
-                        readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, structuredProperty, structuredProperty.Name);
+                        readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, structuredProperty, structuredPropertyTypeOrItemType, structuredProperty.Name);
                     }
 
                     resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
@@ -1063,7 +1064,8 @@ namespace Microsoft.OData.JsonLight
             bool isKnownValueType = IsKnownValueTypeForEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
             if (isKnownValueType)
             {
-                if (payloadTypeReference != null && payloadTypeReference.IsStructured())
+                IEdmStructuredType payloadTypeOrItemType = payloadTypeReference == null ? null : payloadTypeReference.ToStructuredType();
+                if (payloadTypeOrItemType != null)
                 {
                     // Complex property or collection of complex property.
                     bool isCollection = payloadTypeReference.IsCollection();
@@ -1071,11 +1073,11 @@ namespace Microsoft.OData.JsonLight
                     ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo;
                     if (isCollection)
                     {
-                        readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, /*structuredProperty*/ null, propertyName);
+                        readerNestedResourceInfo = ReadNonExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
                     }
                     else
                     {
-                        readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, /*structuredProperty*/ null, propertyName);
+                        readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
                     }
 
                     return readerNestedResourceInfo;

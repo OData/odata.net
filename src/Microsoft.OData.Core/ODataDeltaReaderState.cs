@@ -79,11 +79,11 @@ namespace Microsoft.OData
         /// </remarks>
         Completed,
 
-        /// <summary>An expanded navigation property was read.</summary>
+        /// <summary>A nested resource info was read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
-        /// the current item of the underlying expanded navigation property reader.
+        /// the current item of the underlying nested resource reader.
         /// </remarks>
-        ExpandedNavigationProperty,
+        NestedResource,
     }
 }

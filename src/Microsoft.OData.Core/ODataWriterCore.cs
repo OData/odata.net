@@ -1364,7 +1364,12 @@ namespace Microsoft.OData
                         var ComplexProperty = this.WriterValidator.ValidatePropertyDefined(
                             nestedResourceInfo.Name, currentResourceType)
                             as IEdmStructuralProperty;
-                        if (ComplexProperty == null)
+                        if (ComplexProperty != null)
+                        {
+                            resourceType = ComplexProperty.Type.ToStructuredType();
+                            navigationSource = null;
+                        }
+                        else
                         {
                             IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
                             IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNestedResourceInfo(nestedResourceInfo, currentEntityType, /*payloadKind*/null, this.outputContext.MessageWriterSettings);

@@ -3828,7 +3828,7 @@ public enum Microsoft.OData.ODataDeltaReaderState : int {
 	DeltaResourceSetStart = 1
 	DeltaResourceStart = 3
 	Exception = 8
-	ExpandedNavigationProperty = 10
+	NestedResource = 10
 	Start = 0
 }
 

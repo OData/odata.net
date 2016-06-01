@@ -1230,6 +1230,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(readerNestedResourceInfo != null, "readerNestedResourceInfo != null");
             ODataNestedResourceInfo nestedResourceInfo = readerNestedResourceInfo.NestedResourceInfo;
             IEdmProperty nestedProperty = readerNestedResourceInfo.NestedProperty;
+            IEdmStructuredType targetResourceType = readerNestedResourceInfo.NestedResourceType;
 
             Debug.Assert(
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
@@ -1238,19 +1239,16 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.jsonLightResourceDeserializer.JsonReader.Value == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
-            Debug.Assert(
-                nestedProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties
+            Debug.Assert(targetResourceType != null || nestedProperty != null || this.jsonLightInputContext.MessageReaderSettings.ReportUndeclaredLinkProperties
                  || this.jsonLightInputContext.MessageReaderSettings.ShouldSupportUndeclaredProperty(),
                 "A navigation property must be found for each link we find unless we're allowed to report undeclared links.");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");
-            Debug.Assert(
-                nestedProperty == null || nestedResourceInfo.Name == nestedProperty.Name,
+            Debug.Assert(nestedProperty == null || nestedResourceInfo.Name == nestedProperty.Name,
                 "The navigation property must match the nested resource info.");
 
             // we are at the beginning of a link
-            IEdmStructuredType targetResourceType = null;
-            if (nestedProperty != null)
+            if (targetResourceType == null && nestedProperty != null)
             {
                 IEdmTypeReference nestedPropertyType = nestedProperty.Type;
                 targetResourceType = nestedPropertyType.IsCollection()
@@ -1547,10 +1545,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedStructuredType">The expected type for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            /// <remarks>The <paramref name="expectedStructuredType"/> has the following meaning
-            ///   it's the expected base type the entries in the expanded link (either the single resource
-            ///   or entries in the expanded resource set).
-            /// In all cases the specified type must be an entity type.</remarks>
+            /// <remarks>The <paramref name="expectedStructuredType"/> is the expected base type the items in the nested resource info.</remarks>
             internal JsonLightNestedResourceInfoScope(ODataJsonLightReaderNestedResourceInfo nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmStructuredType expectedStructuredType, ODataUri odataUri)
                 : base(ODataReaderState.NestedResourceInfoStart, nestedResourceInfo.NestedResourceInfo, navigationSource, expectedStructuredType, odataUri)
             {

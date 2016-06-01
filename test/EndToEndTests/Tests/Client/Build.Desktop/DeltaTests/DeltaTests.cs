@@ -174,10 +174,13 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                             {
                                 Assert.IsNotNull(deltaReader.Item as ODataResource);
                             }
-                            else if (deltaReader.State == ODataDeltaReaderState.ExpandedNavigationProperty)
+                            else if (deltaReader.State == ODataDeltaReaderState.NestedResource)
                             {
                                 switch (deltaReader.SubState)
                                 {
+                                    case ODataReaderState.Start:
+                                        Assert.IsNotNull(deltaReader.Item as ODataNestedResourceInfo);
+                                        break;
                                     case ODataReaderState.ResourceSetEnd:
                                         Assert.IsNotNull(deltaReader.Item as ODataResourceSet);
                                         break;
@@ -186,6 +189,9 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                         break;
                                     case ODataReaderState.NestedResourceInfoEnd:
                                         Assert.IsNotNull(deltaReader.Item as ODataNestedResourceInfo);
+                                        break;
+                                    case ODataReaderState.Completed:
+                                        Assert.IsNotNull(deltaReader.Item);
                                         break;
                                 }
                             }

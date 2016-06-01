@@ -85,15 +85,15 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The current sub state of the reader.</returns>
         /// <remarks>
         /// The sub state is a complement to the current state if the current state itself is not enough to determine
-        /// the real state of the reader. The sub state is only meaningful in ExpandedNavigationProperty state.
+        /// the real state of the reader. The sub state is only meaningful in NestedResourceInfo state.
         /// </remarks>
         public override ODataReaderState SubState
         {
             get
             {
                 this.jsonLightInputContext.VerifyNotDisposed();
-                return this.State == ODataDeltaReaderState.ExpandedNavigationProperty
-                    ? this.CurrentJsonLightExpandedNavigationPropertyScope.SubState
+                return this.State == ODataDeltaReaderState.NestedResource
+                    ? this.CurrentJsonLightNestedResourceInfoScope.SubState
                     : ODataReaderState.Start;
             }
         }
@@ -105,8 +105,8 @@ namespace Microsoft.OData.JsonLight
             get
             {
                 this.jsonLightInputContext.VerifyNotDisposed();
-                return this.State == ODataDeltaReaderState.ExpandedNavigationProperty
-                    ? this.CurrentJsonLightExpandedNavigationPropertyScope.Item
+                return this.State == ODataDeltaReaderState.NestedResource
+                    ? this.CurrentJsonLightNestedResourceInfoScope.Item
                     : this.CurrentScope.Item;
             }
         }
@@ -191,15 +191,15 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Returns current scope cast to JsonLightExpandedNavigationPropertyScope
+        /// Returns current scope cast to JsonLightNestedResourceInfoScope
         /// </summary>
-        private JsonLightExpandedNavigationPropertyScope CurrentJsonLightExpandedNavigationPropertyScope
+        private JsonLightNestedResourceInfoScope CurrentJsonLightNestedResourceInfoScope
         {
             get
             {
-                Debug.Assert(this.State == ODataDeltaReaderState.ExpandedNavigationProperty,
-                    "This property can only be accessed in ExpandedNavigationProperty state.");
-                return (JsonLightExpandedNavigationPropertyScope)this.CurrentScope;
+                Debug.Assert(this.State == ODataDeltaReaderState.NestedResource,
+                    "This property can only be accessed in NestedResourceInfo state.");
+                return (JsonLightNestedResourceInfoScope)this.CurrentScope;
             }
         }
 
@@ -494,11 +494,11 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 case ODataDeltaReaderState.DeltaResourceSetEnd:
-                    result = this.ReadAtResourceSetEndImplementation();
+                    result = this.ReadAtDeltaResourceSetEndImplementation();
                     break;
 
-                case ODataDeltaReaderState.ExpandedNavigationProperty:
-                    result = this.ReadAtExpandedNavigationPropertyImplementation();
+                case ODataDeltaReaderState.NestedResource:
+                    result = this.ReadAtNestedResourceInfoImplementation();
                     break;
 
                 case ODataDeltaReaderState.Exception:    // fall through
@@ -550,11 +550,11 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 case ODataDeltaReaderState.DeltaResourceSetEnd:
-                    result = this.ReadAtResourceSetEndImplementationAsync();
+                    result = this.ReadAtDeltaResourceSetEndImplementationAsync();
                     break;
 
-                case ODataDeltaReaderState.ExpandedNavigationProperty:
-                    result = this.ReadAtExpandedNavigationPropertyImplementationAsync();
+                case ODataDeltaReaderState.NestedResource:
+                    result = this.ReadAtNestedResourceInfoImplementationAsync();
                     break;
 
                 case ODataDeltaReaderState.Exception:    // fall through
@@ -620,9 +620,9 @@ namespace Microsoft.OData.JsonLight
         /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        private bool ReadAtResourceSetEndImplementation()
+        private bool ReadAtDeltaResourceSetEndImplementation()
         {
-            return this.ReadAtResourceSetEndImplementationSynchronously();
+            return this.ReadAtDeltaResourceSetEndImplementationSynchronously();
         }
 
         /// <summary>
@@ -644,12 +644,12 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'ExpandedNavigationProperty'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfo'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        private bool ReadAtExpandedNavigationPropertyImplementation()
+        private bool ReadAtNestedResourceInfoImplementation()
         {
-            return this.ReadAtExpandedNavigationPropertyImplementationSynchronously();
+            return this.ReadAtNestedResourceInfoImplementationSynchronously();
         }
 
         #endregion
@@ -675,7 +675,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'ResourceSetStart'.
+        /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         private Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
@@ -684,12 +684,12 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'ResourceSetEnd'.
+        /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        private Task<bool> ReadAtResourceSetEndImplementationAsync()
+        private Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetEndImplementationSynchronously);
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetEndImplementationSynchronously);
         }
 
         /// <summary>
@@ -711,12 +711,12 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'ExpandedNavigationProperty'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfo'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false</returns>
-        private Task<bool> ReadAtExpandedNavigationPropertyImplementationAsync()
+        private Task<bool> ReadAtNestedResourceInfoImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtExpandedNavigationPropertyImplementationSynchronously);
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtNestedResourceInfoImplementationSynchronously);
         }
 #endif
 
@@ -807,7 +807,7 @@ namespace Microsoft.OData.JsonLight
         /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        private bool ReadAtResourceSetEndImplementationSynchronously()
+        private bool ReadAtDeltaResourceSetEndImplementationSynchronously()
         {
             Debug.Assert(this.State == ODataDeltaReaderState.DeltaResourceSetEnd, "this.State == ODataDeltaReaderState.ResourceSetEnd");
             Debug.Assert(
@@ -881,15 +881,15 @@ namespace Microsoft.OData.JsonLight
 
                 if (!readerNestedResourceInfo.HasValue)
                 {
-                    // No need to enter ExpandedNavigationProperty state
-                    // if there is no actual expanded resource set or resource to read.
+                    // No need to enter NestedResourceInfo state
+                    // if there is no actual nested resource set or resource to read.
                     continue;
                 }
 
-                this.EnterScope(new JsonLightExpandedNavigationPropertyScope(
+                this.EnterScope(new JsonLightNestedResourceInfoScope(
                     readerNestedResourceInfo,
                     this.CurrentNavigationSource,
-                    this.CurrentEntityType,
+                    readerNestedResourceInfo.NestedResourceType,
                     this.CurrentScope.ODataUri,
                     this.jsonLightInputContext));
 
@@ -946,18 +946,18 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'ExpandedNavigationProperty'.
+        /// Implementation of the reader logic when in state 'NestedResourceInfo'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        private bool ReadAtExpandedNavigationPropertyImplementationSynchronously()
+        private bool ReadAtNestedResourceInfoImplementationSynchronously()
         {
-            Debug.Assert(this.State == ODataDeltaReaderState.ExpandedNavigationProperty,
-                "this.State == ODataDeltaReaderState.ExpandedNavigationProperty");
+            Debug.Assert(this.State == ODataDeltaReaderState.NestedResource,
+                "this.State == ODataDeltaReaderState.NestedResourceInfo");
 
             if (this.SubState == ODataReaderState.Completed)
             {
-                // Leave ExpandedNavigationProperty state if the inner reader finished reading.
-                this.PopScope(ODataDeltaReaderState.ExpandedNavigationProperty);
+                // Leave NestedResourceInfo state if the inner reader finished reading.
+                this.PopScope(ODataDeltaReaderState.NestedResource);
 
                 // We always have delta payload left to read.
                 return true;
@@ -974,7 +974,7 @@ namespace Microsoft.OData.JsonLight
 
             // We place the call to Read() AFTER the two conditions above because we want to
             // enable the user to catch the Completed state and do something he wants.
-            this.CurrentJsonLightExpandedNavigationPropertyScope.ExpandedNavigationPropertyReader.Read();
+            this.CurrentJsonLightNestedResourceInfoScope.NestedResourceInfoReader.Read();
 
             // We always have expanded payload or delta payload left to read.
             return true;
@@ -1138,8 +1138,8 @@ namespace Microsoft.OData.JsonLight
                         this.jsonLightInputContext.Model,
                         contextUri,
                         ODataPayloadKind.Delta,
-                        /*clientCustomTypeResolver*/null,
-                        /*needParseFragment*/true);
+                    /*clientCustomTypeResolver*/null,
+                    /*needParseFragment*/true);
                 deltaKind = contextUriParseResult.DeltaKind;
                 entityTypeFromContextUri = contextUriParseResult.EdmType as IEdmEntityType;
             }
@@ -1685,7 +1685,7 @@ namespace Microsoft.OData.JsonLight
                     (state == ODataDeltaReaderState.DeltaResourceStart || state == ODataDeltaReaderState.DeltaResourceEnd) && (item == null || item is ODataResource) ||
                     (state == ODataDeltaReaderState.DeltaResourceSetStart || state == ODataDeltaReaderState.DeltaResourceSetEnd) && item is ODataDeltaResourceSet ||
                     state == ODataDeltaReaderState.DeltaLink && (item == null || item is ODataDeltaLink) ||
-                    state == ODataDeltaReaderState.ExpandedNavigationProperty && item == null ||
+                    state == ODataDeltaReaderState.NestedResource && item is ODataNestedResourceInfo ||
                     state == ODataDeltaReaderState.Start && item == null ||
                     state == ODataDeltaReaderState.Completed && item == null,
                     "Reader state and associated item do not match.");
@@ -1913,53 +1913,40 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// A reader scope; keeping track of the current reader state and an item associated with this state.
         /// </summary>
-        private sealed class JsonLightExpandedNavigationPropertyScope : Scope
+        private sealed class JsonLightNestedResourceInfoScope : Scope
         {
             /// <summary>
-            /// The underlying reader for reading expanded resource set or resource.
+            /// The underlying reader for reading nested resource set or resource.
             /// </summary>
-            private readonly ODataReader expandedNavigationPropertyReader;
+            private readonly ODataReader nestedResourceInfoReader;
 
             /// <summary>
             /// Constructor creating a new reader scope.
             /// </summary>
             /// <param name="nestedResourceInfo">The nested resource info attached to this scope.</param>
             /// <param name="parentNavigationSource">The parent navigation source for the scope.</param>
-            /// <param name="parentEntityType">The parent type for the scope.</param>
+            /// <param name="expectedResourceType">The resource type for the scope.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <param name="jsonLightInputContext">The input context for Json.</param>
-            /// <remarks>The <paramref name="parentEntityType"/> has the following meaning
-            ///   it's the expected base type the entries in the expanded link (either the single resource
-            ///   or entries in the expanded resource set).
-            /// In all cases the specified type must be an entity type.</remarks>
-            public JsonLightExpandedNavigationPropertyScope(ODataJsonLightReaderNestedResourceInfo nestedResourceInfo, IEdmNavigationSource parentNavigationSource, IEdmEntityType parentEntityType, ODataUri odataUri, ODataJsonLightInputContext jsonLightInputContext)
-                : base(ODataDeltaReaderState.ExpandedNavigationProperty, null /*item*/, parentNavigationSource, parentEntityType, odataUri)
+            /// <remarks>The <paramref name="expectedResourceType"/> is the expected base type the items in the nested resource info.</remarks>
+            public JsonLightNestedResourceInfoScope(ODataJsonLightReaderNestedResourceInfo nestedResourceInfo, IEdmNavigationSource parentNavigationSource, IEdmStructuredType expectedResourceType, ODataUri odataUri, ODataJsonLightInputContext jsonLightInputContext)
+                : base(ODataDeltaReaderState.NestedResource, nestedResourceInfo.NestedResourceInfo, parentNavigationSource, null, odataUri)
             {
                 Debug.Assert(nestedResourceInfo != null, "navigationLinkInfo != null");
-                Debug.Assert(nestedResourceInfo.NavigationProperty != null || nestedResourceInfo.StructuralProperty != null,
-                    "nestedResourceInfo.NavigationProperty != null || nestedResourceInfo.StructuralProperty != null");
+                Debug.Assert(nestedResourceInfo.NavigationProperty != null || nestedResourceInfo.StructuralProperty != null || expectedResourceType != null,
+                    "nestedResourceInfo.NavigationProperty != null || nestedResourceInfo.StructuralProperty != null || expectedResourceType != null");
                 Debug.Assert(parentNavigationSource != null, "parentNavigationSource != null");
-                Debug.Assert(parentEntityType != null, "parentEntityType != null");
+                Debug.Assert(expectedResourceType != null, "parentEntityType != null");
                 Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
 
-                var navigationProperty = nestedResourceInfo.NavigationProperty;
-                var structuralProperty = nestedResourceInfo.StructuralProperty;
+                bool readingResourceSet = nestedResourceInfo.NestedResourceSet != null;
                 IEdmNavigationSource navigationSource = null;
-                IEdmStructuredType entityType = null;
-                bool readingResourceSet = false;
-                if (navigationProperty != null)
+                if (nestedResourceInfo.NavigationProperty != null)
                 {
                     navigationSource = parentNavigationSource.FindNavigationTarget(nestedResourceInfo.NavigationProperty);
-                    entityType = nestedResourceInfo.NavigationProperty.ToEntityType();
-                    readingResourceSet = nestedResourceInfo.NavigationProperty.Type.IsCollection();
-                }
-                else
-                {
-                    entityType = structuralProperty.Type.ToStructuredType();
-                    readingResourceSet = structuralProperty.Type.IsCollection();
                 }
 
-                this.expandedNavigationPropertyReader = new ODataJsonLightReader(jsonLightInputContext, navigationSource, entityType, readingResourceSet, readingDelta: true);
+                this.nestedResourceInfoReader = new ODataJsonLightReader(jsonLightInputContext, navigationSource, expectedResourceType, readingResourceSet, readingDelta: true);
             }
 
             /// <summary>
@@ -1967,23 +1954,28 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             public ODataReaderState SubState
             {
-                get { return this.expandedNavigationPropertyReader.State; }
+                get { return this.nestedResourceInfoReader.State; }
             }
 
             /// <summary>
-            /// The current item of the underlying expanded navigation property reader.
+            /// The current item. It will be the nested resource info when the subState is Start or Complected, or the item of the underlying nested resource info reader.
             /// </summary>
             public new ODataItem Item
             {
-                get { return this.expandedNavigationPropertyReader.Item; }
+                get
+                {
+                    return this.State == ODataDeltaReaderState.NestedResource
+                        && (this.SubState == ODataReaderState.Start || this.SubState == ODataReaderState.Completed)
+                        ? base.Item : this.nestedResourceInfoReader.Item;
+                }
             }
 
             /// <summary>
-            /// The underlying reader for reading expanded resource set or resource.
+            /// The underlying reader for reading nested resource set or resource.
             /// </summary>
-            public ODataReader ExpandedNavigationPropertyReader
+            public ODataReader NestedResourceInfoReader
             {
-                get { return this.expandedNavigationPropertyReader; }
+                get { return this.nestedResourceInfoReader; }
             }
         }
 

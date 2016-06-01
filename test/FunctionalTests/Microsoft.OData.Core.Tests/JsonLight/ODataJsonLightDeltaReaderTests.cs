@@ -17,11 +17,11 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightDeltaReaderTests
     {
-        private const string payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.id\":\"Orders(10643)\",\"ShippingAddress\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
+        private const string payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
 
-        private const string payloadWithNavigationLinks = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"ShippingAddress\":{\"@odata.type\":\"MyNS.ShippingAddress\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
+        private const string payloadWithNavigationLinks = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"@odata.type\":\"MyNS.Address\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
 
-        private const string payloadWithSimplifiedAnnotations = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@context\":\"http://host/service/$metadata#Orders/$entity\",\"@type\":\"MyNS.Order\",\"@id\":\"Orders(10643)\",\"ShippingAddress\":{\"@type\":\"MyNS.ShippingAddress\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
+        private const string payloadWithSimplifiedAnnotations = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@context\":\"http://host/service/$metadata#Orders/$entity\",\"@type\":\"MyNS.Order\",\"@id\":\"Orders(10643)\",\"Address\":{\"@type\":\"MyNS.Address\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
 
         #region Entities
 
@@ -66,8 +66,10 @@ namespace Microsoft.OData.Tests.JsonLight
         private readonly ODataDeltaDeletedEntry customerDeleted = new ODataDeltaDeletedEntry("Customers('ANTON')", DeltaDeletedEntryReason.Deleted);
 
         private EdmEntitySet customers;
+        private EdmEntitySet orders;
 
         private EdmEntityType customer;
+        private EdmEntityType order;
 
         #endregion
 
@@ -108,7 +110,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ReadODataType()
         {
-            var payloadWithODataType = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"ShippingAddress\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}}]}";
+            var payloadWithODataType = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}}]}";
             var tuples = this.ReadItem(payloadWithODataType, this.GetModel(), customers, customer);
             this.ValidateTuples(tuples);
         }
@@ -163,10 +165,13 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "{" +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":10643," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -202,10 +207,13 @@ namespace Microsoft.OData.Tests.JsonLight
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"@odata.editLink\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":10643," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -238,10 +246,13 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "{" +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":10643," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -344,10 +355,13 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "{" +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":\"Id shouldn't be a string\"," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -367,24 +381,106 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #endregion
 
+        #region ComplexProperty
+
+        [Fact]
+        public void ReadNestedComplexProperty()
+        {
+            var payload =
+                "{" +
+                    "\"@odata.context\":\"http://host/service/$metadata#Orders/$delta\"," +
+                    "\"value\":" +
+                    "[" +
+                        "{" +
+                            "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                            "\"Id\":10643," +
+                            "\"Address\":" +
+                            "{" +
+                                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                                "\"City\":" +
+                                "{" +
+                                    "\"CityName\":\"Tsawassen\"" +
+                                "}," +
+                                "\"Region\":\"BC\"," +
+                                "\"PostalCode\":\"T2F 8M4\"" +
+                            "}" +
+                        "}" +
+                    "]" +
+                "}";
+            var tuples = this.ReadItem(payload, this.GetModel(), orders, order);
+            this.ValidateTuples(tuples);
+        }
+
+        [Fact]
+        public void ReadNestedOpenCollectionOfComplexProperty()
+        {
+            var payload =
+                "{" +
+                    "\"@odata.context\":\"http://host/service/$metadata#Orders/$delta\"," +
+                    "\"value\":" +
+                    "[" +
+                        "{" +
+                            "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                            "\"Id\":10643," +
+                            "\"Addresses@odata.type\":\"#Collection(MyNS.Address)\"," +
+                            "\"Addresses\":" +
+                            "[" +
+                                "{" +
+                                    "\"@odata.type\":\"#MyNS.Address\"," +
+                                    "\"Street\":\"23 Tsawassen Blvd.\"," +
+                                    "\"City\":" + 
+                                    "{" + 
+                                        "\"CityName\":\"Tsawassen\"" +
+                                    "}," +
+                                    "\"Region\":\"BC\"," +
+                                    "\"PostalCode\":\"T2F 8M4\"" +
+                                "}," +
+                                "{" +
+                                    "\"@odata.type\":\"#MyNS.Address\"," +
+                                    "\"Street\":\"ZixingRoad.\"," +
+                                    "\"City\":" +
+                                    "{" +
+                                        "\"CityName\":\"Shanghai\"" +
+                                    "}," +
+                                    "\"PostalCode\":\"200001\"" +
+                                "}" +
+
+                            "]" +
+                        "}" +
+                    "]" +
+                "}";
+            var tuples = this.ReadItem(payload, this.GetModel(), orders, order);
+            this.ValidateTuples(tuples);
+        }
+
+        #endregion
+
         #region Private Methods
 
         private IEdmModel GetModel()
         {
             EdmModel myModel = new EdmModel();
 
-            EdmComplexType shippingAddress = new EdmComplexType("MyNS", "ShippingAddress");
-            shippingAddress.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
-            shippingAddress.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
-            shippingAddress.AddStructuralProperty("Region", EdmPrimitiveTypeKind.String);
-            shippingAddress.AddStructuralProperty("PostalCode", EdmPrimitiveTypeKind.String);
-            myModel.AddElement(shippingAddress);
+            EdmComplexType city = new EdmComplexType("MyNS", "City");
+            city.AddStructuralProperty("CityName", EdmPrimitiveTypeKind.String);
+            myModel.AddElement(city);
 
-            EdmComplexTypeReference shippingAddressReference = new EdmComplexTypeReference(shippingAddress, true);
+            EdmComplexType address = new EdmComplexType("MyNS", "Address");
+            address.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            address.AddStructuralProperty("City", new EdmComplexTypeReference(city, false));
+            address.AddStructuralProperty("Region", EdmPrimitiveTypeKind.String);
+            address.AddStructuralProperty("PostalCode", EdmPrimitiveTypeKind.String);
+            myModel.AddElement(address);
 
-            EdmEntityType order = new EdmEntityType("MyNS", "Order");
+            EdmComplexType homeAddress = new EdmComplexType("MyNS", "HomeAddress", address);
+            homeAddress.AddStructuralProperty("IsHomeAddress", EdmPrimitiveTypeKind.Boolean);
+            myModel.AddElement(address);
+
+            EdmComplexTypeReference AddressReference = new EdmComplexTypeReference(address, true);
+
+            order = new EdmEntityType("MyNS", "Order", null, false, true);
             order.AddKeys(order.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            order.AddStructuralProperty("ShippingAddress", shippingAddressReference);
+            order.AddStructuralProperty("Address", AddressReference);
             myModel.AddElement(order);
 
             EdmEntityType person = new EdmEntityType("MyNS", "Person");
@@ -432,7 +528,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Name = "FavouriteProducts",
                 Target = product,
                 TargetMultiplicity = EdmMultiplicity.Many,
-                
+
             });
             EdmNavigationProperty productBeingViewed = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
             {
@@ -443,7 +539,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             EdmEntityContainer container = new EdmEntityContainer("MyNS", "Example30");
             customers = container.AddEntitySet("Customers", customer);
-            container.AddEntitySet("Orders", order);
+            orders = container.AddEntitySet("Orders", order);
             EdmEntitySet products = container.AddEntitySet("Products", product);
             customers.AddNavigationTarget(favouriteProducts, products);
             customers.AddNavigationTarget(productBeingViewed, products);
@@ -545,11 +641,13 @@ namespace Microsoft.OData.Tests.JsonLight
                         Assert.Equal(deltaDeletedLink.Relationship, linkToOrder10643.Relationship);
                         Assert.True(this.IdEqual(deltaDeletedLink.Target, linkToOrder10643.Target));
                         break;
-                    case ODataDeltaReaderState.ExpandedNavigationProperty:
+                    case ODataDeltaReaderState.NestedResource:
                         switch (tuple.Item3)
                         {
                             case ODataReaderState.Completed:
                             case ODataReaderState.Start:
+                                ODataNestedResourceInfo nestedResource = tuple.Item1 as ODataNestedResourceInfo;
+                                Assert.NotNull(nestedResource);
                                 break;
                             case ODataReaderState.EntityReferenceLink:
                                 break;
@@ -568,6 +666,14 @@ namespace Microsoft.OData.Tests.JsonLight
                                 {
                                     Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
                                 }
+                                else if (entry.TypeName == "MyNS.Address")
+                                {
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "Street").Value);
+                                }
+                                else if (entry.TypeName == "MyNS.City")
+                                {
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "CityName").Value);
+                                }
                                 break;
                             case ODataReaderState.ResourceStart:
                                 Assert.NotNull(tuple.Item1 as ODataResource);
@@ -582,9 +688,9 @@ namespace Microsoft.OData.Tests.JsonLight
                                 Assert.NotNull(tuple.Item1 as ODataNestedResourceInfo);
                                 break;
                             case ODataReaderState.NestedResourceInfoStart:
-                                ODataNestedResourceInfo navigationLink = tuple.Item1 as ODataNestedResourceInfo;
-                                Assert.NotNull(navigationLink);
-                                Assert.True(navigationLink.Name.Equals("Details") || navigationLink.Name.Equals("ShippingAddress"));
+                                ODataNestedResourceInfo nestedResourceInfo = tuple.Item1 as ODataNestedResourceInfo;
+                                Assert.NotNull(nestedResourceInfo);
+                                Assert.True(nestedResourceInfo.Name.Equals("Details") || nestedResourceInfo.Name.Equals("Address") || nestedResourceInfo.Name.Equals("City"));
                                 break;
                             default:
                                 Assert.True(false, "Wrong reader sub state.");

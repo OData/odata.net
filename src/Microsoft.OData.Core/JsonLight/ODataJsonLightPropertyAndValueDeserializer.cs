@@ -469,15 +469,16 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="collectionProperty">The collection of complex property for which to read the nested resource info. null for undeclared property.</param>
+        /// <param name="nestedResourceType">The item type of the resource set, which should be provided when the collectionProperty is undeclared.</param>
         /// <param name="propertyName">The propert name.</param>
         /// <returns>The nested resource info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonLightReaderNestedResourceInfo ReadNonExpandedResourceSetNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, string propertyName)
+        protected static ODataJsonLightReaderNestedResourceInfo ReadNonExpandedResourceSetNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, IEdmStructuredType nestedResourceType, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
-            Debug.Assert((propertyName != null) || (collectionProperty != null && collectionProperty.Type.ToStructuredType().IsODataComplexTypeKind()),
+            Debug.Assert((propertyName != null) || (collectionProperty != null && collectionProperty.Type.ToStructuredType().IsODataComplexTypeKind()) || (nestedResourceType != null && nestedResourceType.IsODataComplexTypeKind()),
                 "The property name shouldn't be null or the item in the collection property should be complex instance");
 
             ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
@@ -516,7 +517,14 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, expandedResourceSet);
+            if (collectionProperty != null)
+            {
+                return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, expandedResourceSet);
+            }
+            else
+            {
+                return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, nestedResourceType, expandedResourceSet);
+            }
         }
 
         /// <summary>
@@ -524,15 +532,16 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="complexProperty">The complex property for which to read the nested resource info. null for undeclared property.</param>
+        /// <param name="nestedResourceType">The nested resource type which should be provided for undeclared property.</param>
         /// <param name="propertyName">The propert name.</param>
         /// <returns>The nested resource info for the complex property to read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonLightReaderNestedResourceInfo ReadNonExpandedResourceNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty complexProperty, string propertyName)
+        protected static ODataJsonLightReaderNestedResourceInfo ReadNonExpandedResourceNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty complexProperty, IEdmStructuredType nestedResourceType, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
-            Debug.Assert(complexProperty != null || propertyName != null, "complexProperty != null || propertyName != null");
+            Debug.Assert(complexProperty != null || nestedResourceType != null || propertyName != null, "complexProperty != null || nestedResourceType != null || propertyName != null");
 
             ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
             {
@@ -546,7 +555,14 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(ODataAnnotationNames.ODataType));
             }
 
-            return ODataJsonLightReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, complexProperty);
+            if (complexProperty != null)
+            {
+                return ODataJsonLightReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, complexProperty);
+            }
+            else
+            {
+                return ODataJsonLightReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, nestedResourceType);
+            }
         }
 
         /// <summary>

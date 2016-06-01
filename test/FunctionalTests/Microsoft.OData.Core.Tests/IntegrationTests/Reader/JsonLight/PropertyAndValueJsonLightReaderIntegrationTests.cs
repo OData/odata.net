@@ -177,7 +177,30 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             ODataResource entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
+            List<ODataResource> complexCollection = new List<ODataResource>();
+            ODataNestedResourceInfo nestedOpenCollection = null;
+            bool startComplexCollection = false;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.NestedResourceInfoStart:
+                            startComplexCollection = true;
+                            break;
+                        case ODataReaderState.ResourceEnd:
+                            if(startComplexCollection)
+                            {
+                                complexCollection.Add(reader.Item as ODataResource);
+                            }
+                            entry = reader.Item as ODataResource;
+                            break;
+                        case ODataReaderState.NestedResourceInfoEnd:
+                            startComplexCollection = false;
+                            nestedOpenCollection = reader.Item as ODataNestedResourceInfo;
+                            break;
+                    }
+                });
             Assert.NotNull(entry);
 
             var intCollection = entry.Properties.FirstOrDefault(
@@ -195,17 +218,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Assert.Equal(1, (int)list[1]);
             Assert.Equal(2, (int)list[2]);
 
-            var complexCollection = entry.Properties.FirstOrDefault(
-                s => string.Equals(
-                    s.Name,
-                    "OpenComplexTypeCollection",
-                    StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+            Assert.Equal("OpenComplexTypeCollection", nestedOpenCollection.Name);
 
-            foreach (var val in complexCollection.Items)
+            foreach (var val in complexCollection)
             {
-                ((ODataComplexValue)val).Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
+                val.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
             }
-
         }
 
         [Fact]

@@ -232,11 +232,11 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Returns the current JsonLightExpandedNavigationPropertyScope.
         /// </summary>
-        private JsonLightExpandedNavigationPropertyScope CurrentExpandedNavigationPropertyScope
+        private JsonLightNestedResourceInfoScope CurrentExpandedNavigationPropertyScope
         {
             get
             {
-                JsonLightExpandedNavigationPropertyScope jsonLightExpandedNavigationPropertyScope = this.CurrentScope as JsonLightExpandedNavigationPropertyScope;
+                JsonLightNestedResourceInfoScope jsonLightExpandedNavigationPropertyScope = this.CurrentScope as JsonLightNestedResourceInfoScope;
                 Debug.Assert(jsonLightExpandedNavigationPropertyScope != null, "Asking for JsonLightExpandedNavigationPropertyScope when the current scope is not an JsonLightExpandedNavigationPropertyScope.");
                 return jsonLightExpandedNavigationPropertyScope;
             }
@@ -1452,7 +1452,7 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
 
                 // TODO: Update this one in the code change for writer.
-                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType as IEdmEntityType, startScope.SelectedProperties, startScope.ODataUri);
+                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType, startScope.SelectedProperties, startScope.ODataUri);
                 this.InterceptException(this.EndPayload);
             }
         }
@@ -1466,7 +1466,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The OdataUri info of this scope.</param>
-        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             Debug.Assert(
                 state == WriterState.Error ||
@@ -1480,23 +1480,24 @@ namespace Microsoft.OData.JsonLight
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
 
+            var entityType = resourceType as IEdmEntityType;
             Scope scope;
             switch (state)
             {
                 case WriterState.DeltaResource:
-                    scope = this.CreateDeltaResourceScope(WriterState.DeltaResource, item, navigationSource, resourceType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaResourceScope(WriterState.DeltaResource, item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaDeletedEntry:
-                    scope = this.CreateDeltaResourceScope(WriterState.DeltaDeletedEntry, item, navigationSource, resourceType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaResourceScope(WriterState.DeltaDeletedEntry, item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaResourceSet:
-                    scope = this.CreateDeltaResourceSetScope(item, navigationSource, resourceType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaResourceSetScope(item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaLink:
-                    scope = this.CreateDeltaLinkScope(WriterState.DeltaLink, item, navigationSource, resourceType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaLinkScope(WriterState.DeltaLink, item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaDeletedLink:
-                    scope = this.CreateDeltaLinkScope(WriterState.DeltaDeletedLink, item, navigationSource, resourceType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaLinkScope(WriterState.DeltaDeletedLink, item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.ExpandedNavigationProperty:
                     scope = this.CreateExpandedNavigationPropertyScope(item, navigationSource, resourceType, selectedProperties, odataUri);
@@ -1628,9 +1629,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created scope.</returns>
-        private ExpandedNavigationPropertyScope CreateExpandedNavigationPropertyScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private NestedResourceInfoScope CreateExpandedNavigationPropertyScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmStructuredType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new JsonLightExpandedNavigationPropertyScope(
+            return new JsonLightNestedResourceInfoScope(
                 nestedResourceInfo,
                 navigationSource,
                 entityType,
@@ -1845,7 +1846,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="resourceType">The structured type of the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            public Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 this.state = state;
                 this.item = item;
@@ -2157,21 +2158,21 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// A scope for an expanded navigation property.
+        /// A scope for a nested resource info.
         /// </summary>
-        private abstract class ExpandedNavigationPropertyScope : Scope
+        private abstract class NestedResourceInfoScope : Scope
         {
             /// <summary>
-            /// Constructor to create a new expanded navigation property scope.
+            /// Constructor to create a new nested resource info scope.
             /// </summary>
             /// <param name="nestedResourceInfo">The nested resource info for the resource set.</param>
             /// <param name="navigationSource">The navigation source of the parent delta resource.</param>
-            /// <param name="entityType">The entity type of the parent delta resource.</param>
+            /// <param name="resourceType">The structured type of the parent delta resource.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            protected ExpandedNavigationPropertyScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource,
-                IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(WriterState.ExpandedNavigationProperty, nestedResourceInfo, navigationSource, entityType, selectedProperties, odataUri)
+            protected NestedResourceInfoScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource,
+                IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.ExpandedNavigationProperty, nestedResourceInfo, navigationSource, resourceType, selectedProperties, odataUri)
             {
             }
         }
@@ -2332,31 +2333,31 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// A scope for an expanded navigation property in JSON Light writer.
+        /// A scope for a nested resource info in JSON Light writer.
         /// </summary>
-        private sealed class JsonLightExpandedNavigationPropertyScope : ExpandedNavigationPropertyScope
+        private sealed class JsonLightNestedResourceInfoScope : NestedResourceInfoScope
         {
             /// <summary>
-            /// The writer for writing expanded navigation property in delta response.
+            /// The writer for writing nested resource info in delta response.
             /// </summary>
             private JsonLightExpandedNavigationPropertyWriter jsonLightExpandedNavigationPropertyWriter;
 
             /// <summary>
-            /// Constructor to create a new expanded navigation property scope.
+            /// Constructor to create a new nested resource info scope.
             /// </summary>
             /// <param name="nestedResourceInfo">The nested resource info for the resource set.</param>
             /// <param name="navigationSource">The navigation source of the parent delta resource.</param>
-            /// <param name="entityType">The entity type of the parent delta resource.</param>
+            /// <param name="resourceType">The structured type of this nested resource.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             /// <param name="parentDeltaResource">The parent delta resource.</param>
             /// <param name="jsonLightOutputContext">The output context for Json.</param>
-            public JsonLightExpandedNavigationPropertyScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource,
-                IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri,
+            public JsonLightNestedResourceInfoScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource,
+                IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri,
                 ODataResource parentDeltaResource, ODataJsonLightOutputContext jsonLightOutputContext)
-                : base(nestedResourceInfo, navigationSource, entityType, selectedProperties, odataUri)
+                : base(nestedResourceInfo, navigationSource, resourceType, selectedProperties, odataUri)
             {
-                this.jsonLightExpandedNavigationPropertyWriter = new JsonLightExpandedNavigationPropertyWriter(navigationSource, entityType, parentDeltaResource, jsonLightOutputContext);
+                this.jsonLightExpandedNavigationPropertyWriter = new JsonLightExpandedNavigationPropertyWriter(navigationSource, resourceType, parentDeltaResource, jsonLightOutputContext);
             }
 
             /// <summary>
@@ -2604,15 +2605,15 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Constructor to create an <see cref="JsonLightExpandedNavigationPropertyWriter"/>.
             /// </summary>
-            /// <param name="navigationSource">The navigation source of the parent delta resource.</param>
-            /// <param name="entityType">The entity type of the parent delta resource.</param>
+            /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+            /// <param name="resourceType">The structured type of the nested resource.</param>
             /// <param name="parentDeltaResource">The parent delta resource.</param>
             /// <param name="jsonLightOutputContext">The output context for Json.</param>
-            public JsonLightExpandedNavigationPropertyWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType,
+            public JsonLightExpandedNavigationPropertyWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType,
                 ODataResource parentDeltaResource, ODataJsonLightOutputContext jsonLightOutputContext)
             {
                 this.parentDeltaResource = parentDeltaResource;
-                this.resourceWriter = new ODataJsonLightWriter(jsonLightOutputContext, navigationSource, entityType, /*writingResourceSet*/ false, writingDelta: true);
+                this.resourceWriter = new ODataJsonLightWriter(jsonLightOutputContext, navigationSource, resourceType, /*writingResourceSet*/ false, writingDelta: true);
             }
 
             /// <summary>

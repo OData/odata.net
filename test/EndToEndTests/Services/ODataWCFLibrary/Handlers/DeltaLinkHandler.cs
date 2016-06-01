@@ -239,6 +239,33 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         Id = new Uri(ServiceConstants.ServiceBaseUri, customerSet.Name + "(1)"),
                         Properties = new[] { new ODataProperty { Name = "FirstName", Value = "GGGG" } }
                     };
+                    var nestedResourceInfoIndeltaEntry = new ODataNestedResourceInfo
+                    {
+                        Name = "HomeAddress",
+                        IsCollection = false,
+                    };
+                    var nestedResource = new ODataResource
+                    {
+                        Properties = new[]
+                        {
+                            new ODataProperty{ Name = "Street", Value = "Zixing Road" },
+                            new ODataProperty{ Name = "City", Value = "Shanghai" },
+                            new ODataProperty{ Name = "PostalCode", Value = "200001" },
+                        }
+                    };
+
+                    var nestedResourceInfoInExpanded = new ODataNestedResourceInfo
+                    {
+                        Name = "InfoFromCustomer",
+                        IsCollection = false,
+                    };
+                    var nestedResourceInExpanded = new ODataResource
+                    {
+                        Properties = new[]
+                        {
+                            new ODataProperty{ Name = "CustomerMessage", Value = "XXL" },
+                        }
+                    };
 
                     // Expanded feed
                     var navigationLink = new ODataNestedResourceInfo()
@@ -284,11 +311,19 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     // Delta feed and entry
                     deltaWriter.WriteStart(deltaFeed);
                     deltaWriter.WriteStart(deltaEntry);
+                    deltaWriter.WriteStart(nestedResourceInfoIndeltaEntry);
+                    deltaWriter.WriteStart(nestedResource);
+                    deltaWriter.WriteEnd();
+                    deltaWriter.WriteEnd();
 
                     // Expanded feed
                     deltaWriter.WriteStart(navigationLink);
                     deltaWriter.WriteStart(expandedFeed);
                     deltaWriter.WriteStart(expandedEntry);
+                    deltaWriter.WriteStart(nestedResourceInfoInExpanded);
+                    deltaWriter.WriteStart(nestedResourceInExpanded);
+                    deltaWriter.WriteEnd();
+                    deltaWriter.WriteEnd();
                     deltaWriter.WriteEnd();
                     deltaWriter.WriteEnd();
                     deltaWriter.WriteEnd();
