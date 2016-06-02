@@ -60,7 +60,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
-            this.WriterValidator.ValidateEntityReferenceLink(entityReferenceLink);
+            WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
 
             this.JsonWriter.StartObjectScope();
 
@@ -121,7 +121,7 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (ODataEntityReferenceLink entityReferenceLink in entityReferenceLinksEnumerable)
                 {
-                    this.WriterValidator.ValidateEntityReferenceLinkNotNull(entityReferenceLink);
+                    WriterValidationUtils.ValidateEntityReferenceLinkNotNull(entityReferenceLink);
                     this.WriteEntityReferenceLinkImplementation(entityReferenceLink, /* isTopLevel */ false);
                 }
             }

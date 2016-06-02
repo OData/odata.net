@@ -1001,7 +1001,7 @@ namespace Microsoft.OData.JsonLight
                     case WriterState.DeltaResourceSet:
                         {
                             ODataDeltaResourceSet resourceSet = (ODataDeltaResourceSet)currentScope.Item;
-                            this.jsonLightOutputContext.WriterValidator.ValidateResourceSetAtEnd(DeltaConverter.ToODataResourceSet(resourceSet), /*writingResponse*/ false);
+                            WriterValidationUtils.ValidateResourceSetAtEnd(DeltaConverter.ToODataResourceSet(resourceSet), /*writingResponse*/ false);
                             this.EndDeltaResourceSet(resourceSet);
                         }
 
@@ -1950,9 +1950,8 @@ namespace Microsoft.OData.JsonLight
                     "resource must be either DeltaResource or DeltaDeletedEntry.");
                 Debug.Assert(writerSettings != null, "writerSettings != null");
 
-                this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                    !writerSettings.ThrowOnDuplicatePropertyNames,
-                    /*writingResponse*/ true);
+                this.duplicatePropertyNamesChecker =
+                    writerSettings.Validator.CreateDuplicatePropertyNamesChecker(true);
                 this.serializationInfo = serializationInfo;
             }
 

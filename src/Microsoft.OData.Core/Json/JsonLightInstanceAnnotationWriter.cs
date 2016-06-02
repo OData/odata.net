@@ -45,7 +45,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The writer validator used during writing.
         /// </summary>
-        private readonly IBasicWriterValidator writerValidator;
+        private readonly IWriterValidator writerValidator;
 
         /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
@@ -60,8 +60,7 @@ namespace Microsoft.OData
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
-            this.writerValidator =
-                BasicWriterValidatorFactory.CreateBasicWriterValidator(this.valueSerializer.Settings.BasicValidation);
+            this.writerValidator = this.valueSerializer.Settings.Validator;
         }
 
         /// <summary>
@@ -71,7 +70,9 @@ namespace Microsoft.OData
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker, bool ignoreFilter = false, string propertyName = null)
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+                                               InstanceAnnotationWriteTracker tracker,
+                                               bool ignoreFilter = false, string propertyName = null)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
@@ -140,7 +141,9 @@ namespace Microsoft.OData
             {
                 if (expectedType != null && !expectedType.IsNullable)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.FullName()));
+                    throw new ODataException(
+                        ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(
+                            instanceAnnotation.Name, expectedType.FullName()));
                 }
 
                 this.WriteInstanceAnnotationName(propertyName, name);
@@ -164,7 +167,8 @@ namespace Microsoft.OData
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty, this.writerValidator);
+                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(
+                    this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty, this.writerValidator);
                 string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromCollectionValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {

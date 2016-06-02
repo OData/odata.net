@@ -403,7 +403,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates that the sepcified nested resource info has cardinality, that is it has the IsCollection value set.
+        /// Validates that the specified nested resource info has cardinality, that is it has the IsCollection value set.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         internal static void ValidateNestedResourceInfoHasCardinality(ODataNestedResourceInfo nestedResourceInfo)

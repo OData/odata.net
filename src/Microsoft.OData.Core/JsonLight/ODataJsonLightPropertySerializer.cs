@@ -169,7 +169,7 @@ namespace Microsoft.OData.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            this.WriterValidator.ValidatePropertyNotNull(property);
+            WriterValidationUtils.ValidatePropertyNotNull(property);
 
             string propertyName = property.Name;
             if (projectedProperties.ShouldSkipProperty(propertyName))
@@ -177,12 +177,10 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            this.WriterValidator.ValidatePropertyName(propertyName);
+            WriterValidationUtils.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
-                propertyName,
-                owningType,
-                this.JsonLightOutputContext.MessageWriterSettings.ThrowOnUndeclaredProperty);
+            IEdmProperty edmProperty = this.JsonLightOutputContext.MessageWriterSettings.Validator.
+                                       ValidatePropertyDefined(propertyName, owningType);
 
             string wirePropertyName = isTopLevel ? JsonLightConstants.ODataValuePropertyName : propertyName;
             bool isUndeclaredProperty = edmProperty == null;
@@ -208,7 +206,7 @@ namespace Microsoft.OData.JsonLight
 
                 Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                this.WriterValidator.ValidateStreamReferenceProperty(property, edmProperty, this.WritingResponse);
+                WriterValidationUtils.ValidateStreamReferenceProperty(property, edmProperty, this.WritingResponse);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
                 return;
             }
@@ -336,7 +334,8 @@ namespace Microsoft.OData.JsonLight
             IEdmTypeReference propertyTypeReference,
             bool isTopLevel)
         {
-            this.WriterValidator.ValidateNullPropertyValue(propertyTypeReference, property.Name, this.MessageWriterSettings, this.Model);
+            this.MessageWriterSettings.Validator.ValidateNullPropertyValue(
+                propertyTypeReference, property.Name, this.Model);
 
             if (isTopLevel)
             {

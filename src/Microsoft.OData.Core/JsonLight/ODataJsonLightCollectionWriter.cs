@@ -130,7 +130,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (item == null)
             {
-                ValidationUtils.ValidateNullCollectionItem(expectedItemType, this.jsonLightOutputContext.MessageWriterSettings);
+                this.jsonLightOutputContext.WriterValidator.ValidateNullCollectionItem(expectedItemType);
                 this.jsonLightOutputContext.JsonWriter.WriteValue((string)null);
             }
             else

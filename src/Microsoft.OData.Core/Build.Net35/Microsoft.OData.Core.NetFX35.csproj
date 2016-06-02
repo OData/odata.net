@@ -1548,20 +1548,11 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNodeKind.cs</Link>
     </Compile>
-    <Compile Include="..\BasicWriterValidator.cs">
-      <Link>Microsoft\OData\Core\BasicWriterValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\BasicWriterValidatorFactory.cs">
-      <Link>Microsoft\OData\Core\BasicWriterValidatorFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\DummyBasicWriterValidator.cs">
-      <Link>Microsoft\OData\Core\DummyBasicWriterValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\IBasicWriterValidator.cs">
-      <Link>Microsoft\OData\Core\IBasicWriterValidator.cs</Link>
-    </Compile>
     <Compile Include="..\IContainerProvider.cs">
       <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\IWriterValidator.cs">
+      <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
     </Compile>
     <Compile Include="..\Json\IJsonReader.cs">
       <Link>Microsoft\OData\Core\Json\IJsonReader.cs</Link>
@@ -1667,6 +1658,15 @@
     </Compile>
     <Compile Include="..\WriterValidations.cs">
       <Link>Microsoft\OData\Core\WriterValidations.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidator.cs">
+      <Link>Microsoft\OData\Core\WriterValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidatorWithBasicValidation.cs">
+      <Link>Microsoft\OData\Core\WriterValidatorWithBasicValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidatorWithoutBasicValidation.cs">
+      <Link>Microsoft\OData\Core\WriterValidatorWithoutBasicValidation.cs</Link>
     </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">

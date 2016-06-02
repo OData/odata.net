@@ -190,8 +190,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entityType">The entity type of the resource.</param>
         protected override void ValidateMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            if (!this.jsonLightOutputContext.MessageWriterSettings.BasicValidation
-                || this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson)
+            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson)
             {
                 // resource.MediaResource is always null for NoMetadata mode. Skip the media resource validation.
             }

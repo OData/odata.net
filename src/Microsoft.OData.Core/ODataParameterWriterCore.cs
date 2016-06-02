@@ -83,10 +83,10 @@ namespace Microsoft.OData
         {
             get
             {
-                return this.duplicatePropertyNamesChecker
-                    ?? (this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        outputContext.MessageWriterSettings.ThrowOnDuplicatePropertyNames,
-                        false /*isResponse*/));
+                return this.duplicatePropertyNamesChecker ??
+                       (this.duplicatePropertyNamesChecker =
+                           outputContext.MessageWriterSettings.Validator.
+                           CreateDuplicatePropertyNamesChecker(false));
             }
         }
 

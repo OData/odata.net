@@ -258,7 +258,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // We need to validate here to ensure that the metadata is not null, otherwise call to the method 'UriToString' will throw.
                 ValidationUtils.ValidateOperationNotNull(o, isAction);
-                this.WriterValidator.ValidateCanWriteOperation(o, this.JsonLightOutputContext.WritingResponse);
+                WriterValidationUtils.ValidateCanWriteOperation(o, this.JsonLightOutputContext.WritingResponse);
                 ODataJsonLightValidationUtils.ValidateOperation(this.MetadataDocumentBaseUri, o);
                 return this.GetOperationMetadataString(o);
             });

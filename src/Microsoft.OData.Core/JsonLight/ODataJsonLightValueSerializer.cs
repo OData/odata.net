@@ -278,7 +278,7 @@ namespace Microsoft.OData.JsonLight
                 DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null;
                 foreach (object item in items)
                 {
-                    this.WriterValidator.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
+                    ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
 
                     ODataComplexValue itemAsComplexValue = item as ODataComplexValue;
                     if (itemAsComplexValue != null)

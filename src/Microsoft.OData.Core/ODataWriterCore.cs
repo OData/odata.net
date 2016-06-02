@@ -26,7 +26,7 @@ namespace Microsoft.OData
     internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener
     {
         /// <summary>The writer validator to use.</summary>
-        protected readonly IBasicWriterValidator WriterValidator;
+        protected readonly IWriterValidator WriterValidator;
 
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
@@ -992,7 +992,7 @@ namespace Microsoft.OData
                         if (!this.SkipWriting)
                         {
                             ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
-                            this.WriterValidator.ValidateResourceSetAtEnd(resourceSet, !this.outputContext.WritingResponse);
+                            WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, !this.outputContext.WritingResponse);
                             this.EndResourceSet(resourceSet);
                         }
 
@@ -1087,7 +1087,7 @@ namespace Microsoft.OData
             {
                 this.InterceptException(() =>
                 {
-                    this.WriterValidator.ValidateEntityReferenceLink(entityReferenceLink);
+                    WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
                     this.WriteEntityReferenceInNavigationLinkContent((ODataNestedResourceInfo)this.CurrentScope.Item, entityReferenceLink);
                 });
             }
@@ -1183,7 +1183,7 @@ namespace Microsoft.OData
                         else
                         {
                             IEdmNavigationProperty navigationProperty =
-                                 this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind, this.outputContext.MessageWriterSettings);
+                                 WriterValidationUtils.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind, this.outputContext.MessageWriterSettings);
                             if (navigationProperty != null)
                             {
                                 this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
@@ -1361,15 +1361,13 @@ namespace Microsoft.OData
                         odataUri = currentScope.ODataUri.Clone();
 
                         IEdmStructuredType currentResourceType = currentScope.ResourceType;
-                        var ComplexProperty = WriterValidationUtils.ValidatePropertyDefined(
-                            nestedResourceInfo.Name,
-                            currentResourceType,
-                            this.outputContext.MessageWriterSettings.ThrowOnUndeclaredProperty)
+                        var ComplexProperty = this.WriterValidator.ValidatePropertyDefined(
+                            nestedResourceInfo.Name, currentResourceType)
                             as IEdmStructuralProperty;
                         if (ComplexProperty == null)
                         {
                             IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
-                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentEntityType, /*payloadKind*/null, this.outputContext.MessageWriterSettings);
+                            IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNestedResourceInfo(nestedResourceInfo, currentEntityType, /*payloadKind*/null, this.outputContext.MessageWriterSettings);
                             if (navigationProperty != null)
                             {
                                 resourceType = navigationProperty.ToEntityType();
@@ -1997,9 +1995,8 @@ namespace Microsoft.OData
 
                 if (resource != null)
                 {
-                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        !writerSettings.ThrowOnDuplicatePropertyNames,
-                        writingResponse);
+                    this.duplicatePropertyNamesChecker =
+                        writerSettings.Validator.CreateDuplicatePropertyNamesChecker(writingResponse);
                 }
 
                 this.serializationInfo = serializationInfo;

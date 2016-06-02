@@ -50,12 +50,23 @@ namespace Microsoft.OData
         private Dictionary<string, DuplicationRecord> propertyNameCache;
 
         /// <summary>
+        /// Creates a disabled DuplicatePropertyNamesChecker instance.
+        /// </summary>
+        /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
+        /// <param name="isResponse">true if we're processing a response; false if it's a request.</param>
+        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse)
+            : this(allowDuplicateProperties, isResponse, false)
+        {
+            // nop
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
         /// <param name="isResponse">true if we're processing a response; false if it's a request.</param>
         /// <param name="disabled">Disable the check process if it is true.</param>
-        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse, bool disabled = false)
+        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse, bool disabled)
         {
             this.allowDuplicateProperties = allowDuplicateProperties;
             this.isResponse = isResponse;

@@ -26,7 +26,7 @@ namespace Microsoft.OData
         /// <param name="expectedTypeKind">The expected type kind for the given type name.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>The type with the given name and kind if a user model was available, otherwise null.</returns>
-        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, IBasicWriterValidator writerValidator)
+        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
 
@@ -101,7 +101,7 @@ namespace Microsoft.OData
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>A type for the <paramref name="complexValue"/> or null if no type name is specified and no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeForComplexValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataComplexValue complexValue, bool isOpenPropertyType, IBasicWriterValidator writerValidator)
+        internal static IEdmTypeReference ResolveAndValidateTypeForComplexValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataComplexValue complexValue, bool isOpenPropertyType, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
 
@@ -129,7 +129,7 @@ namespace Microsoft.OData
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>A type for the <paramref name="collectionValue"/> or null if no type name is specified and no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeForCollectionValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataCollectionValue collectionValue, bool isOpenPropertyType, IBasicWriterValidator writerValidator)
+        internal static IEdmTypeReference ResolveAndValidateTypeForCollectionValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataCollectionValue collectionValue, bool isOpenPropertyType, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
 
@@ -153,7 +153,7 @@ namespace Microsoft.OData
                 }
 
                 // validate that the collection type represents a valid Collection type (e.g., is unordered).
-                typeReferenceFromValue = writerValidator.ValidateCollectionType(typeReferenceFromValue);
+                typeReferenceFromValue = ValidationUtils.ValidateCollectionType(typeReferenceFromValue);
             }
 
             return typeReferenceFromValue;
@@ -230,7 +230,7 @@ namespace Microsoft.OData
         /// <param name="typeReferenceFromValue">The (optional) type from the value (the actual type).</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>The type as derived from the <paramref name="typeReferenceFromMetadata"/> and/or <paramref name="typeReferenceFromValue"/>.</returns>
-        private static IEdmTypeReference ResolveTypeFromMetadataAndValue(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue, IBasicWriterValidator writerValidator)
+        private static IEdmTypeReference ResolveTypeFromMetadataAndValue(IEdmTypeReference typeReferenceFromMetadata, IEdmTypeReference typeReferenceFromValue, IWriterValidator writerValidator)
         {
             if (typeReferenceFromMetadata == null)
             {

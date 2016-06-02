@@ -95,6 +95,7 @@ namespace Microsoft.OData
                 ThrowOnDuplicatePropertyNames = (validations & WriterValidations.ThrowOnDuplicatePropertyNames) != 0;
                 ThrowOnNullValuesForNonNullablePrimitiveTypes = (validations & WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes) != 0;
                 ThrowOnUndeclaredProperty = (validations & WriterValidations.ThrowOnUndeclaredProperty) != 0;
+                Validator = WriterValidator.Create(this);
             }
         }
 
@@ -195,6 +196,11 @@ namespace Microsoft.OData
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
         /// <returns>The OData protocol version to be used for writing payloads.</returns>
         public ODataVersion? Version { get; set; }
+
+        /// <summary>
+        /// Gets the validator corresponding to the validation settings.
+        /// </summary>
+        internal IWriterValidator Validator { get; private set; }
 
         /// <summary>
         /// Returns whether BasicValidation should be performed.
@@ -441,6 +447,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnNullValuesForNonNullablePrimitiveTypes = other.ThrowOnNullValuesForNonNullablePrimitiveTypes;
             this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
+            this.Validator = other.Validator;
         }
     }
 }

@@ -108,9 +108,9 @@ namespace Microsoft.OData
             {
                 if (this.duplicatePropertyNamesChecker == null)
                 {
-                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        !this.outputContext.MessageWriterSettings.ThrowOnDuplicatePropertyNames,
-                        this.outputContext.WritingResponse);
+                    this.duplicatePropertyNamesChecker =
+                        this.outputContext.MessageWriterSettings.Validator.CreateDuplicatePropertyNamesChecker(
+                            this.outputContext.WritingResponse);
                 }
 
                 return this.duplicatePropertyNamesChecker;
@@ -392,7 +392,7 @@ namespace Microsoft.OData
 
             this.InterceptException(() =>
             {
-                this.outputContext.WriterValidator.ValidateCollectionItem(item, true /* isNullable */);
+                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
                 this.WriteCollectionItem(item, this.expectedItemType);
             });
         }

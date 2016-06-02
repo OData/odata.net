@@ -46,6 +46,7 @@
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="IContainerProvider.cs" />
+    <Compile Include="IWriterValidator.cs" />
     <Compile Include="Json\DefaultJsonReaderFactory.cs" />
     <Compile Include="Json\DefaultJsonWriterFactory.cs" />
     <Compile Include="Json\IJsonReader.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="InstanceAnnotationWriteTracker.cs" />
     <Compile Include="InternalErrorCodes.cs" />
     <Compile Include="InternalErrorCodesCommon.cs" />
-    <Compile Include="IBasicWriterValidator.cs" />
     <Compile Include="JsonLight\IODataJsonLightReaderResourceState.cs" />
     <Compile Include="JsonLight\IODataJsonLightValueSerializer.cs" />
     <Compile Include="JsonLight\IODataJsonLightWriterResourceState.cs" />
@@ -561,7 +561,6 @@
     <Compile Include="Utils.cs" />
     <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="ValidationUtils.cs" />
-    <Compile Include="BasicWriterValidatorFactory.cs" />
     <Compile Include="WriterUtils.cs" />
     <Compile Include="WriterValidations.cs" />
     <Compile Include="WriterValidationUtils.cs" />
@@ -588,8 +587,9 @@
     <Compile Include="..\PlatformHelper.cs">
       <Link>PlatformHelper.cs</Link>
     </Compile>
-    <Compile Include="BasicWriterValidator.cs" />
-    <Compile Include="DummyBasicWriterValidator.cs" />
+    <Compile Include="WriterValidator.cs" />
+    <Compile Include="WriterValidatorWithBasicValidation.cs" />
+    <Compile Include="WriterValidatorWithoutBasicValidation.cs" />
     <None Include="obj2c\i386\AssemblyAttributes.cs">
       <Visible>false</Visible>
     </None>

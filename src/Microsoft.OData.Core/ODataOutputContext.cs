@@ -51,7 +51,7 @@ namespace Microsoft.OData
         private readonly ODataPayloadValueConverter payloadValueConverter;
 
         /// <summary>The writer validator used in writing.</summary>
-        private readonly IBasicWriterValidator writerValidator;
+        private readonly IWriterValidator writerValidator;
 
         /// <summary>
         /// Constructor.
@@ -76,7 +76,7 @@ namespace Microsoft.OData
             this.container = messageInfo.Container;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
-            this.writerValidator = BasicWriterValidatorFactory.CreateBasicWriterValidator(messageWriterSettings.BasicValidation);
+            this.writerValidator = messageWriterSettings.Validator;
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The writer validator used in writing.
         /// </summary>
-        internal IBasicWriterValidator WriterValidator
+        internal IWriterValidator WriterValidator
         {
             get
             {
