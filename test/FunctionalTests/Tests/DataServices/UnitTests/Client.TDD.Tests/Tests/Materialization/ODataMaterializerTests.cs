@@ -624,6 +624,80 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
 
         #endregion
 
+        #region Expected an entity containing a property of derived complex type, return the entity with a property of abstract base type, but the real object is sub type.
+
+        [TestMethod]
+        public void MaterializeEntityContainingAbstractComplexTypeWithDerivedInstance()
+        {
+            var response = @"
+{
+    ""@odata.context"":""http://localhost/foo/$metadata#BaseETs/$entity"",
+    ""EP0"":0,
+    ""EAbsCTP"":{
+        @odata.type: ""#NS.BaseCT"",
+        ""CP0"":0,
+        ""CP1"":1
+    },
+    ""EColOfAbsCTP"":[
+        {
+            @odata.type: ""#NS.BaseCT"",
+            ""CP0"":0,
+            ""CP1"":1
+        }
+    ],
+    ""EColOfNullableAbsCTP"":[],
+    ""EColOfNullableInt"":[],
+    ""EColOfInt"":[
+        1
+    ],
+    ""ENullableEnum"":null,
+    ""ENullableAbsCTP"":null,
+    ""EK0"":0,
+    ""EP1"":1,
+    ""EAbsBaseCTP"":{
+        @odata.type: ""#NS.BaseCT"",
+        ""CP0"":0,
+        ""CP1"":1
+    },
+    ""EBaseCTP"":{
+        @odata.type: ""#NS.BaseCT"",
+        ""CP0"":0,
+        ""CP1"":1
+    },
+    ""EColOfAbsBaseCTP"":[
+        {
+            @odata.type: ""#NS.BaseCT"",
+            ""CP0"":0,
+            ""CP1"":1
+        }
+    ],
+    ""EColOfBaseCTP"":[
+        {
+            ""CP0"":0,
+            ""CP1"":1
+        }
+    ],
+    ""EColOfNullableAbsBaseCTP"":[],
+    ""EColOfNullableBaseCTP"":[],
+    ""EColOfEnum"":[
+        ""EnumP1"",
+        ""EnumP2""
+    ],
+    ""ENullablePrimitive"":0
+}";
+
+            SetResponse(response);
+
+            BaseET entity = this.dsc.BaseETs.ByKey(0).GetValue();
+            var derivedCT = entity.EAbsBaseCTP as BaseCT;
+
+            Assert.IsNotNull(derivedCT);
+            Assert.AreEqual(0, derivedCT.CP0);
+            Assert.AreEqual(1, derivedCT.CP1);
+        }
+
+        #endregion
+
         private void SetResponse(string response)
         {
             dsc.Configurations.RequestPipeline.OnMessageCreating = (args) =>
