@@ -233,7 +233,7 @@ namespace Microsoft.OData.Client.Materialization
                     object complexInstance = prop.GetValue(instance);
 
                     // Validating property inheritance in complexvalue and instance
-                    if (prop.PropertyType.Name != property.Name)
+                    if (prop.PropertyType.FullName != complexValue.TypeName)
                     {
                         complexType = this.MaterializerContext.ResolveTypeForMaterialization(prop.PropertyType, complexValue.TypeName);
 

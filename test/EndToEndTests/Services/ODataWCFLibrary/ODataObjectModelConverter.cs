@@ -389,8 +389,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     var item = ConvertPropertyValue(odataItem);
                     if (collectionList == null)
                     {
-                        Type itemType = item.GetType();
-                        Type listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                        Type listType = string.IsNullOrEmpty(collection.TypeName) ? null : EdmClrTypeUtils.GetInstanceType(collection.TypeName);
+                        if (listType == null)
+                        {
+                            Type itemType = item.GetType();
+                            listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                        }
                         collectionList = (IList)Utility.QuickCreateInstance(listType);
                     }
 
