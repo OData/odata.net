@@ -7,10 +7,10 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using Microsoft.OData.UriParser.Aggregation;
+    using System.Linq;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser.Aggregation;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
@@ -559,7 +559,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if optionName is OData query option, vise versa.</returns>
         private static bool IsODataQueryOption(string optionName)
         {
-            switch (optionName.ToLower())
+            switch (optionName.ToLowerInvariant())
             {
                 case UriQueryConstants.FilterQueryOption:
                 case UriQueryConstants.ApplyQueryOption:

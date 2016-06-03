@@ -46,7 +46,7 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1036\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\fr" />    
     <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1040\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\it" />    
     <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1041\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\ja" />    
-    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1042\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\ko" />    
+    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1042\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\ko" />
     <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1049\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\ru" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Client\**\*.cs" target="src\Microsoft.OData.Client" />
     <!-- files imported from EdmLib -->
