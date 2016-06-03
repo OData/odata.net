@@ -3,9 +3,6 @@
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <OutputType>Library</OutputType>
-    <!-- pre-process -->
-    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-    <SecurityMigration>false</SecurityMigration>
     <!-- process -->
     <DefineConstants>$(DefineConstants);ODATA_CLIENT</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
