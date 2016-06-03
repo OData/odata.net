@@ -11,6 +11,9 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Use this class to invoke projection methods from <see cref="ODataEntityMaterializer"/>.

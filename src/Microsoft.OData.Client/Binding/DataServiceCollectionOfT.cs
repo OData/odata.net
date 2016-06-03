@@ -15,6 +15,9 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Threading;
     using Microsoft.OData.Client.Materialization;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     #endregion Namespaces
 

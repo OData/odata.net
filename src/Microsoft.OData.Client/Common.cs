@@ -21,6 +21,9 @@ namespace Microsoft.OData.Service
 #if !ODATA_CLIENT
     using Microsoft.OData.Client;
 #endif
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Common defintions and functions for the server and client lib

@@ -36,12 +36,7 @@ namespace Microsoft.OData.Edm
     using System.Linq;
 #endif
     using System.Reflection;
-#if PORTABLELIB
-#endif
     using System.Xml;
-#if !SPATIAL
-
-#endif
 
     /// <summary>
     /// Helper methods that provide a common API surface on all platforms.
@@ -576,8 +571,7 @@ namespace Microsoft.OData.Edm
         {
 #if PORTABLELIB
             return GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
-#endif
-#if !PORTABLELIB
+#else
             BindingFlags bindingFlags = BindingFlags.Instance;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             return type.GetConstructor(bindingFlags, null, argTypes, null);
@@ -737,6 +731,7 @@ namespace Microsoft.OData.Edm
         }
 
         #region Extension Methods to replace missing functionality (used for PORTABLELIB only, methods with these signatures already exist on other platforms)
+#if !NETSTANDARD1_3
         /// <summary>
         /// Replacement for Type.IsAssignableFrom(Type)
         /// </summary>
@@ -747,6 +742,7 @@ namespace Microsoft.OData.Edm
         {
             return thisType.GetTypeInfo().IsAssignableFrom(otherType.GetTypeInfo());
         }
+#endif
 
         /// <summary>
         /// Replacement for Type.IsSubclassOf(Type).
@@ -943,6 +939,7 @@ namespace Microsoft.OData.Edm
             return type.GetTypeInfo().GetCustomAttributes(inherit);
         }
 
+#if !NETSTANDARD1_3
         /// <summary>
         /// Replacement for Type.GetGenericArguments().
         /// </summary>
@@ -959,6 +956,7 @@ namespace Microsoft.OData.Edm
                 return type.GenericTypeArguments;
             }
         }
+#endif
 
         /// <summary>
         /// Replacement for Type.GetInterfaces().

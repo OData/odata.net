@@ -15,6 +15,9 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Threading;
     using Microsoft.OData.Client.Metadata;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
     #endregion
 
     /// <summary>Type of property stored in BindingPropertyInfo.</summary>

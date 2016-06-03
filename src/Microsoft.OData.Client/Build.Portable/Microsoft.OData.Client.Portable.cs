@@ -275,11 +275,7 @@ namespace Microsoft.OData.Client {
         ResourceManager resources;
 
         internal TextRes() {
-#if !PORTABLELIB
-            resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().Assembly);
-#else
-            resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().GetTypeInfo().Assembly);
-#endif
+            resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().GetAssembly());
         }
 
         private static TextRes GetLoader() {

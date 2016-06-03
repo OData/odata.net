@@ -28,6 +28,9 @@ namespace Microsoft.OData.Metadata
     using ErrorStrings = Microsoft.OData.Strings;
     using PlatformHelper = Microsoft.OData.PlatformHelper;
 #endif
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
     #endregion Namespaces
 
     /// <summary>

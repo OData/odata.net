@@ -14,6 +14,9 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq.Expressions;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// base visitor class for walking an expression tree bottom up.

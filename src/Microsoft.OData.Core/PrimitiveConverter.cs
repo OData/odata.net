@@ -14,6 +14,9 @@ namespace Microsoft.OData
     using System.Xml;
     using Microsoft.OData.Json;
     using Microsoft.Spatial;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
     #endregion
 
     /// <summary>

@@ -13,6 +13,9 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Class which contains all the logic for resolving the type from the wire name.

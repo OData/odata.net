@@ -15,6 +15,9 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using DSClient = Microsoft.OData.Client;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Used to materialize entities from an <see cref="ODataResource"/> to an object.

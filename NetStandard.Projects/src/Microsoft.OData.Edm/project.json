@@ -1,0 +1,34 @@
+﻿{
+  "version": "6.15.0-*",
+
+  "buildOptions": {
+    "define": [
+      "CODE_ANALYSIS",
+      "PORTABLELIB"
+    ],
+    "compile": {
+      "include": "../../../src/Microsoft.OData.Edm/**/*.cs",
+      "includeFiles": [
+        "../../../src/AssemblyInfo/AssemblyKeys.cs",
+        "../../../src/PlatformHelper.cs"
+      ],
+      "excludeFiles": [
+        "../../../src/Microsoft.OData.Edm/Csdl/Semantics/IEdmReferentialConstraint.cs"
+      ]
+    }
+  },
+
+  "dependencies": {
+    "Newtonsoft.Json": "9.0.1",
+    "System.Diagnostics.Tools": "4.0.1",
+    "System.Reflection.Metadata": "1.3.0",
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.Runtime": "4.1.0",
+    "System.Runtime.Handles": "4.0.1",
+    "System.Xml.ReaderWriter": "4.0.11"
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}

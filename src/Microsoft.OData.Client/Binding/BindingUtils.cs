@@ -10,6 +10,9 @@ namespace Microsoft.OData.Client
 
     using System;
     using System.Diagnostics;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 #endregion
 
     /// <summary>Utilities for binding related operations</summary>

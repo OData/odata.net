@@ -1,0 +1,34 @@
+{
+  "version": "6.15.0-*",
+
+  "buildOptions": {
+    "define": [
+      "PORTABLELIB"
+    ],
+    "compile": {
+      "include": "../../../../../test/EndToEndTests/Services/TestServices/**/*.cs",
+      "includeFiles": [
+        "../../../../../test/EndToEndTests/Services/CSDSCReferences/Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs",
+        "../../../../../test/EndToEndTests/Services/CSDSCReferences/Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs",
+        "../../../../../test/EndToEndTests/Services/CSDSCReferences/Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs",
+        "../../../../../test/EndToEndTests/Services/CSDSCReferences/Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs",
+        "../../../../../test/EndToEndTests/Services/CSDSCReferences/Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs"
+      ],
+      "exclude": [
+        "../../../../../test/EndToEndTests/Services/TestServices/PublicProvider/**/*.cs",
+        "../../../../../test/EndToEndTests/Services/TestServices/T4Clients/**/*.cs"
+
+      ]
+    }
+  },
+
+  "dependencies": {
+    "Core": {
+      "target": "project"
+    }
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}

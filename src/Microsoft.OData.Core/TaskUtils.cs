@@ -20,6 +20,9 @@ namespace Microsoft.OData.Client
 #if ODATA_CLIENT
     using ExceptionUtils = CommonUtil;
 #endif
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
     #endregion Namespaces
 
     /// <summary>

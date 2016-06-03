@@ -13,6 +13,9 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Used to materialize a property from an <see cref="ODataMessageReader"/>.

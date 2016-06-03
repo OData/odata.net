@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.OData.Client", "..\NetStandard.Projects\src\Microsoft.OData.Client\Microsoft.OData.Client.xproj", "{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.OData.Core", "..\NetStandard.Projects\src\Microsoft.OData.Core\Microsoft.OData.Core.xproj", "{786C830F-07A1-408B-BD7F-6EE04809D6DB}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.OData.Edm", "..\NetStandard.Projects\src\Microsoft.OData.Edm\Microsoft.OData.Edm.xproj", "{7D921888-FE03-4C3F-80FE-2F624505461C}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.Spatial", "..\NetStandard.Projects\src\Microsoft.Spatial\Microsoft.Spatial.xproj", "{5D921888-FE03-4C3F-40FE-2F624505461D}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.Test.OData.Framework", "..\NetStandard.Projects\test\EndToEndTests\Framework\Core\Microsoft.Test.OData.Framework.xproj", "{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.Test.OData.Services.TestServices", "..\NetStandard.Projects\test\EndToEndTests\Services\TestServices\Microsoft.Test.OData.Services.TestServices.xproj", "{B8A072BE-5B90-4193-A289-6CC8750D0DAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{786C830F-07A1-408B-BD7F-6EE04809D6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{786C830F-07A1-408B-BD7F-6EE04809D6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{786C830F-07A1-408B-BD7F-6EE04809D6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{786C830F-07A1-408B-BD7F-6EE04809D6DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D921888-FE03-4C3F-80FE-2F624505461C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D921888-FE03-4C3F-80FE-2F624505461C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D921888-FE03-4C3F-80FE-2F624505461C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D921888-FE03-4C3F-80FE-2F624505461C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D921888-FE03-4C3F-40FE-2F624505461D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D921888-FE03-4C3F-40FE-2F624505461D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D921888-FE03-4C3F-40FE-2F624505461D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D921888-FE03-4C3F-40FE-2F624505461D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8A072BE-5B90-4193-A289-6CC8750D0DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8A072BE-5B90-4193-A289-6CC8750D0DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8A072BE-5B90-4193-A289-6CC8750D0DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8A072BE-5B90-4193-A289-6CC8750D0DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

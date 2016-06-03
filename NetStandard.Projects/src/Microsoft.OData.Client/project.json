@@ -1,0 +1,99 @@
+{
+  "version": "6.15.0-*",
+
+  "buildOptions": {
+    "define": [
+      "ODATA_CLIENT",
+      "PORTABLELIB"
+    ],
+    "compile": {
+      "include": "../../../src/Microsoft.OData.Client/**/*.cs",
+      "includeFiles": [
+        "../../../src/AssemblyInfo/AssemblyKeys.cs",
+        "../../../src/Microsoft.OData.Edm/Csdl/EdmValueParser.cs",
+        "../../../src/Microsoft.OData.Edm/Csdl/EdmValueWriter.cs",
+        "../../../src/Microsoft.OData.Core/ExceptionUtils.cs",
+        "../../../src/Microsoft.OData.Core/InternalErrorCodesCommon.cs",
+        "../../../src/Microsoft.OData.Core/SimpleLazy.cs",
+        "../../../src/Microsoft.OData.Core/TaskUtils.cs",
+        "../../../src/Microsoft.OData.Core/Evaluation/EdmValueUtils.cs",
+        "../../../src/Microsoft.OData.Core/Evaluation/KeySerializer.cs",
+        "../../../src/Microsoft.OData.Core/Evaluation/LiteralFormatter.cs",
+        "../../../src/Microsoft.OData.Core/Evaluation/ODataResourceMetadataBuilder.cs",
+        "../../../src/Microsoft.OData.Core/Evaluation/ODataUriBuilder.cs",
+        "../../../src/Microsoft.OData.Core/Evaluation/UrlConvention.cs",
+        "../../../src/Microsoft.OData.Core/Json/JsonSharedUtils.cs",
+        "../../../src/Microsoft.OData.Core/Metadata/EdmLibraryExtensions.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/Aggregation/AggregateExpressionToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/Aggregation/AggregateToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/Aggregation/ApplyTransformationToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/Aggregation/GroupByToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/AllToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/AnyToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/BinaryOperatorToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/CustomQueryOptionToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/DottedIdentifierToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/EndPathToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/ExpandTermToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/ExpandToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/FunctionCallToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/FunctionParameterAliasToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/FunctionParameterToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/InnerPathToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/LambdaToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/LiteralToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/NonSystemToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/OrderByToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/PathSegmentToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/PathToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/QueryToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/RangeVariableToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/SelectToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/StarToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/SystemToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/SyntacticAst/UnaryOperatorToken.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/TreeNodeKinds/QueryTokenKind.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/Visitors/IPathSegmentTokenVisitor.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/Visitors/ISyntacticTreeVisitor.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/NamedValue.cs",
+        "../../../src/Microsoft.OData.Core/UriParser/ReadOnlyEnumerableForUriParser.cs",
+        "../../../src/PlatformHelper.cs"
+      ],
+      "excludeFiles": [
+        "../../../src/Microsoft.OData.Client/AtomParser.cs",
+        "../../../src/Microsoft.OData.Client/DataServiceTransportInfo.cs",
+        "../../../src/Microsoft.OData.Client/ReadingWritingEntityEventArgs.cs",
+        "../../../src/Microsoft.OData.Client/Microsoft.OData.Client.cs",
+        "../../../src/Microsoft.OData.Client/Parameterized.Microsoft.OData.Client.cs",
+        "../../../src/Microsoft.OData.Client/ALinq/ParameterReplacerVisitor.cs",
+        "../../../src/Microsoft.OData.Client/Metadata/EdmEntitySetFacade.cs",
+        "../../../src/Microsoft.OData.Client/Metadata/EdmFunctionImportFacade.cs",
+        "../../../src/Microsoft.OData.Client/Metadata/EdmFunctionParameterFacade.cs",
+        "../../../src/Microsoft.OData.Client/Metadata/EdmNavigationPropertyFacade.cs"
+      ]
+    }
+  },
+
+  "dependencies": {
+    "Microsoft.OData.Core": {
+      "target": "project"
+    },
+    "Microsoft.OData.Edm": {
+      "target": "project"
+    },
+    "Microsoft.Spatial": {
+      "target": "project"
+    },
+    "System.ComponentModel.EventBasedAsync": "4.0.11",
+    "System.Diagnostics.Tools": "4.0.1",
+    "System.Linq.Queryable": "4.0.1",
+    "System.Net.Requests": "4.0.11",
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.Runtime": "4.1.0",
+    "System.Text.RegularExpressions": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}

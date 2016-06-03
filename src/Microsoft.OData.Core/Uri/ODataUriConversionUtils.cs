@@ -16,6 +16,9 @@ using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Metadata;
 using ODataErrorStrings = Microsoft.OData.Strings;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
 namespace Microsoft.OData
 {

@@ -11,6 +11,9 @@ namespace Microsoft.OData.Client.Materialization
     using System.Globalization;
     using System.Xml.Linq;
     using Microsoft.Spatial;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Converter for primitive values which do not match the client property types. This can happen for two reasons:

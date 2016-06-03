@@ -8,6 +8,7 @@ obj/
 *.user
 *.vstemplate
 !src/CodeGen/ODataT4CodeGenerator.vstemplate
+*.lock.json
 
 # TFS files
 *.vspscc
@@ -17,7 +18,7 @@ sln/TestResults/
 
 # VS2015 IDE generated files
 sln/*.ide/
-sln/.vs/
+.vs/
 
 # StyleCop files
 StyleCop.Cache

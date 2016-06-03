@@ -1,0 +1,22 @@
+{
+  "version": "6.15.0-*",
+
+  "buildOptions": {
+    "define": [
+      "PORTABLELIB"
+    ],
+    "compile": {
+      "include": "../../../../../test/EndToEndTests/Framework/Core/**/*.cs"
+    }
+  },
+
+  "dependencies": {
+    "Microsoft.OData.Client": {
+      "target": "project"
+    }
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}
