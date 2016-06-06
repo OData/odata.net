@@ -3,8 +3,9 @@
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Service.Design.T4</AssemblyName>
     <OutputType>Library</OutputType>
-    <AllowPartialTrustedCalls>false</AllowPartialTrustedCalls>
-    <ConditionalAPTCA_L2>true</ConditionalAPTCA_L2>
+    <!-- Comment it temporary to avoid build break. -->
+    <!-- <AllowPartialTrustedCalls>false</AllowPartialTrustedCalls> -->
+    <!-- <ConditionalAPTCA_L2>true</ConditionalAPTCA_L2> -->
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
     <ProjectGuid>{E4167281-C1AF-48C1-9BBD-0453BFB8CE2D}</ProjectGuid>
