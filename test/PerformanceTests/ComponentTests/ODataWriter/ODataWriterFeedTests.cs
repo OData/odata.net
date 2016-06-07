@@ -96,8 +96,14 @@ namespace Microsoft.OData.Performance
 
             for (int i0 = 0; i0 < entryCount; ++i0)
             {
-                var entry1 = includeSpatial ? EntryWithSpatialData() : EntryWithoutSpatialData();
-                writer.WriteStart(entry1);
+                if (includeSpatial)
+                {
+                    EntryWithSpatialData(writer);
+                }
+                else
+                {
+                    EntryWithoutSpatialData(writer);
+                }
 
                 #region Nav Prop Group
                 if (expandNavigationLinks)
@@ -112,14 +118,14 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                             {
-                                new ODataProperty {Name = "BillOfMaterialsID", Value = 5}, 
-                                new ODataProperty {Name = "ProductAssemblyID", Value = -1}, 
-                                new ODataProperty {Name = "ComponentID", Value = 1}, 
-                                new ODataProperty {Name = "StartDate", Value = DateTimeOffset.Now}, 
-                                new ODataProperty {Name = "EndDate", Value = null}, 
-                                new ODataProperty {Name = "UnitMeasureCode", Value = "abc"}, 
-                                new ODataProperty {Name = "BOMLevel", Value = (short)0}, 
-                                new ODataProperty {Name = "PerAssemblyQty", Value = Decimal.MinusOne}, 
+                                new ODataProperty {Name = "BillOfMaterialsID", Value = 5},
+                                new ODataProperty {Name = "ProductAssemblyID", Value = -1},
+                                new ODataProperty {Name = "ComponentID", Value = 1},
+                                new ODataProperty {Name = "StartDate", Value = DateTimeOffset.Now},
+                                new ODataProperty {Name = "EndDate", Value = null},
+                                new ODataProperty {Name = "UnitMeasureCode", Value = "abc"},
+                                new ODataProperty {Name = "BOMLevel", Value = (short)0},
+                                new ODataProperty {Name = "PerAssemblyQty", Value = Decimal.MinusOne},
                                 new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                             }
                         };
@@ -141,14 +147,14 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                             {
-                                new ODataProperty {Name = "BillOfMaterialsID", Value = 8}, 
-                                new ODataProperty {Name = "ProductAssemblyID", Value = 1}, 
+                                new ODataProperty {Name = "BillOfMaterialsID", Value = 8},
+                                new ODataProperty {Name = "ProductAssemblyID", Value = 1},
                                 new ODataProperty {Name = "ComponentID", Value = -1},
-                                new ODataProperty {Name = "StartDate", Value = DateTimeOffset.MaxValue}, 
-                                new ODataProperty {Name = "EndDate", Value = DateTimeOffset.Now}, 
-                                new ODataProperty {Name = "UnitMeasureCode", Value = "abc"}, 
-                                new ODataProperty {Name = "BOMLevel", Value = Int16.MaxValue}, 
-                                new ODataProperty {Name = "PerAssemblyQty", Value = Decimal.MinusOne}, 
+                                new ODataProperty {Name = "StartDate", Value = DateTimeOffset.MaxValue},
+                                new ODataProperty {Name = "EndDate", Value = DateTimeOffset.Now},
+                                new ODataProperty {Name = "UnitMeasureCode", Value = "abc"},
+                                new ODataProperty {Name = "BOMLevel", Value = Int16.MaxValue},
+                                new ODataProperty {Name = "PerAssemblyQty", Value = Decimal.MinusOne},
                                 new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MaxValue},
                             }
                         };
@@ -165,9 +171,9 @@ namespace Microsoft.OData.Performance
                     {
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "ProductModelID", Value = 10}, 
-                            new ODataProperty {Name = "Name", Value = "abc123"}, 
-                            new ODataProperty {Name = "CatalogDescription", Value = "abc123"}, 
+                            new ODataProperty {Name = "ProductModelID", Value = 10},
+                            new ODataProperty {Name = "Name", Value = "abc123"},
+                            new ODataProperty {Name = "CatalogDescription", Value = "abc123"},
                             new ODataProperty {Name = "Instructions", Value = "abc123"},
                             new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()},
                             new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
@@ -184,10 +190,10 @@ namespace Microsoft.OData.Performance
                     {
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "ProductSubcategoryID", Value = 12}, 
-                            new ODataProperty {Name = "ProductCategoryID", Value = 1}, 
-                            new ODataProperty {Name = "Name", Value = string.Empty}, 
-                            new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()}, 
+                            new ODataProperty {Name = "ProductSubcategoryID", Value = 12},
+                            new ODataProperty {Name = "ProductCategoryID", Value = 1},
+                            new ODataProperty {Name = "Name", Value = string.Empty},
+                            new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()},
                             new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                         }
                     };
@@ -202,8 +208,8 @@ namespace Microsoft.OData.Performance
                     {
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "UnitMeasureCode", Value = "abcdef12345"}, 
-                            new ODataProperty {Name = "Name", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"}, 
+                            new ODataProperty {Name = "UnitMeasureCode", Value = "abcdef12345"},
+                            new ODataProperty {Name = "Name", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"},
                             new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                         }
                     };
@@ -218,8 +224,8 @@ namespace Microsoft.OData.Performance
                     {
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "UnitMeasureCode", Value = "abcdef12345"}, 
-                            new ODataProperty {Name = "Name", Value = "abc123"}, 
+                            new ODataProperty {Name = "UnitMeasureCode", Value = "abcdef12345"},
+                            new ODataProperty {Name = "Name", Value = "abc123"},
                             new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MaxValue},
                         }
                     };
@@ -238,9 +244,9 @@ namespace Microsoft.OData.Performance
                             Properties = new[]
                                 {
                                     new ODataProperty {Name = "ProductID", Value = 17},
-                                    new ODataProperty {Name = "StartDate", Value = DateTimeOffset.Parse("2012-06-08T16:20:53.2388635-07:00")}, 
-                                    new ODataProperty {Name = "EndDate", Value = DateTimeOffset.Now}, 
-                                    new ODataProperty {Name = "StandardCost", Value = Decimal.Zero}, 
+                                    new ODataProperty {Name = "StartDate", Value = DateTimeOffset.Parse("2012-06-08T16:20:53.2388635-07:00")},
+                                    new ODataProperty {Name = "EndDate", Value = DateTimeOffset.Now},
+                                    new ODataProperty {Name = "StandardCost", Value = Decimal.Zero},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MaxValue},
                                 }
                         };
@@ -260,8 +266,8 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                             {
-                                new ODataProperty {Name = "ProductID", Value = 20}, 
-                                new ODataProperty {Name = "DocumentID", Value = 21}, 
+                                new ODataProperty {Name = "ProductID", Value = 20},
+                                new ODataProperty {Name = "DocumentID", Value = 21},
                                 new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                             }
                         };
@@ -281,12 +287,12 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                                 {
-                                    new ODataProperty {Name = "ProductID", Value = 24}, 
-                                    new ODataProperty {Name = "LocationID", Value = (short)25}, 
-                                    new ODataProperty {Name = "Shelf", Value = "abc123"}, 
-                                    new ODataProperty {Name = "Bin", Value = Byte.MinValue}, 
-                                    new ODataProperty {Name = "Quantity", Value = (short)0}, 
-                                    new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()}, 
+                                    new ODataProperty {Name = "ProductID", Value = 24},
+                                    new ODataProperty {Name = "LocationID", Value = (short)25},
+                                    new ODataProperty {Name = "Shelf", Value = "abc123"},
+                                    new ODataProperty {Name = "Bin", Value = Byte.MinValue},
+                                    new ODataProperty {Name = "Quantity", Value = (short)0},
+                                    new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                                 }
                         };
@@ -306,10 +312,10 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                                 {
-                                    new ODataProperty {Name = "ProductID", Value = 28}, 
-                                    new ODataProperty {Name = "StartDate", Value = DateTimeOffset.Parse("2012-06-08T16:20:53.2544949-07:00")}, 
-                                    new ODataProperty {Name = "EndDate", Value = DateTimeOffset.MaxValue}, 
-                                    new ODataProperty {Name = "ListPrice", Value = Decimal.Zero}, 
+                                    new ODataProperty {Name = "ProductID", Value = 28},
+                                    new ODataProperty {Name = "StartDate", Value = DateTimeOffset.Parse("2012-06-08T16:20:53.2544949-07:00")},
+                                    new ODataProperty {Name = "EndDate", Value = DateTimeOffset.MaxValue},
+                                    new ODataProperty {Name = "ListPrice", Value = Decimal.Zero},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                                 }
                         };
@@ -329,9 +335,9 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                             {
-                                new ODataProperty {Name = "ProductID", Value = 31}, 
-                                new ODataProperty {Name = "ProductPhotoID", Value = 32}, 
-                                new ODataProperty {Name = "Primary", Value = false}, 
+                                new ODataProperty {Name = "ProductID", Value = 31},
+                                new ODataProperty {Name = "ProductPhotoID", Value = 32},
+                                new ODataProperty {Name = "Primary", Value = false},
                                 new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                             }
                         };
@@ -351,13 +357,13 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                                 {
-                                    new ODataProperty {Name = "ProductReviewID", Value = 35}, 
-                                    new ODataProperty {Name = "ProductID", Value = Int32.MaxValue}, 
-                                    new ODataProperty {Name = "ReviewerName", Value = string.Empty}, 
+                                    new ODataProperty {Name = "ProductReviewID", Value = 35},
+                                    new ODataProperty {Name = "ProductID", Value = Int32.MaxValue},
+                                    new ODataProperty {Name = "ReviewerName", Value = string.Empty},
                                     new ODataProperty {Name = "ReviewDate", Value = DateTimeOffset.MinValue},
-                                    new ODataProperty {Name = "EmailAddress", Value = string.Empty}, 
-                                    new ODataProperty {Name = "Rating", Value = 0}, 
-                                    new ODataProperty {Name = "Comments", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"}, 
+                                    new ODataProperty {Name = "EmailAddress", Value = string.Empty},
+                                    new ODataProperty {Name = "Rating", Value = 0},
+                                    new ODataProperty {Name = "Comments", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                                 }
                         };
@@ -377,15 +383,15 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                                 {
-                                    new ODataProperty {Name = "ProductID", Value = 38}, 
-                                    new ODataProperty {Name = "VendorID", Value = 39}, 
-                                    new ODataProperty {Name = "AverageLeadTime", Value = Int32.MinValue}, 
-                                    new ODataProperty {Name = "StandardPrice", Value = Decimal.MinValue}, 
-                                    new ODataProperty {Name = "LastReceiptCost", Value = Decimal.MinValue}, 
-                                    new ODataProperty {Name = "LastReceiptDate", Value = DateTimeOffset.MaxValue}, 
-                                    new ODataProperty {Name = "MinOrderQty", Value = 0}, 
+                                    new ODataProperty {Name = "ProductID", Value = 38},
+                                    new ODataProperty {Name = "VendorID", Value = 39},
+                                    new ODataProperty {Name = "AverageLeadTime", Value = Int32.MinValue},
+                                    new ODataProperty {Name = "StandardPrice", Value = Decimal.MinValue},
+                                    new ODataProperty {Name = "LastReceiptCost", Value = Decimal.MinValue},
+                                    new ODataProperty {Name = "LastReceiptDate", Value = DateTimeOffset.MaxValue},
+                                    new ODataProperty {Name = "MinOrderQty", Value = 0},
                                     new ODataProperty {Name = "MaxOrderQty", Value = 1},
-                                    new ODataProperty {Name = "OnOrderQty", Value = 1}, 
+                                    new ODataProperty {Name = "OnOrderQty", Value = 1},
                                     new ODataProperty {Name = "UnitMeasureCode", Value = string.Empty},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                                 }
@@ -409,13 +415,13 @@ namespace Microsoft.OData.Performance
                                     new ODataProperty {Name = "PurchaseOrderID", Value = 42},
                                     new ODataProperty {Name = "PurchaseOrderDetailID", Value = 43},
                                     new ODataProperty {Name = "DueDate", Value = DateTimeOffset.Now},
-                                    new ODataProperty {Name = "OrderQty", Value = (short)0}, 
-                                    new ODataProperty {Name = "ProductID", Value = Int32.MaxValue}, 
+                                    new ODataProperty {Name = "OrderQty", Value = (short)0},
+                                    new ODataProperty {Name = "ProductID", Value = Int32.MaxValue},
                                     new ODataProperty {Name = "UnitPrice", Value = Decimal.Zero},
                                     new ODataProperty {Name = "LineTotal", Value = Decimal.MinValue},
-                                    new ODataProperty {Name = "ReceivedQty", Value = 123.456m}, 
-                                    new ODataProperty {Name = "RejectedQty", Value = 123.456m}, 
-                                    new ODataProperty {Name = "StockedQty", Value = Decimal.MaxValue}, 
+                                    new ODataProperty {Name = "ReceivedQty", Value = 123.456m},
+                                    new ODataProperty {Name = "RejectedQty", Value = 123.456m},
+                                    new ODataProperty {Name = "StockedQty", Value = Decimal.MaxValue},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                                 }
                         };
@@ -436,10 +442,10 @@ namespace Microsoft.OData.Performance
                             Properties = new[]
                                 {
                                     new ODataProperty {Name = "ShoppingCartItemID", Value = 46},
-                                    new ODataProperty {Name = "ShoppingCartID", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"}, 
-                                    new ODataProperty {Name = "Quantity", Value = -1}, 
-                                    new ODataProperty {Name = "ProductID", Value = 0}, 
-                                    new ODataProperty {Name = "DateCreated", Value = DateTimeOffset.Now}, 
+                                    new ODataProperty {Name = "ShoppingCartID", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"},
+                                    new ODataProperty {Name = "Quantity", Value = -1},
+                                    new ODataProperty {Name = "ProductID", Value = 0},
+                                    new ODataProperty {Name = "DateCreated", Value = DateTimeOffset.Now},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                                 }
                         };
@@ -460,7 +466,7 @@ namespace Microsoft.OData.Performance
                             Properties = new[]
                                 {
                                     new ODataProperty {Name = "SpecialOfferID", Value = 49},
-                                    new ODataProperty {Name = "ProductID", Value = 50}, 
+                                    new ODataProperty {Name = "ProductID", Value = 50},
                                     new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                                 }
@@ -481,14 +487,14 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                                 {
-                                    new ODataProperty {Name = "TransactionID", Value = 53}, 
-                                    new ODataProperty {Name = "ProductID", Value = -1}, 
-                                    new ODataProperty {Name = "ReferenceOrderID", Value = Int32.MaxValue}, 
-                                    new ODataProperty {Name = "ReferenceOrderLineID", Value = 1}, 
+                                    new ODataProperty {Name = "TransactionID", Value = 53},
+                                    new ODataProperty {Name = "ProductID", Value = -1},
+                                    new ODataProperty {Name = "ReferenceOrderID", Value = Int32.MaxValue},
+                                    new ODataProperty {Name = "ReferenceOrderLineID", Value = 1},
                                     new ODataProperty {Name = "TransactionDate", Value = DateTimeOffset.MinValue},
-                                    new ODataProperty {Name = "TransactionType", Value = "a"}, 
-                                    new ODataProperty {Name = "Quantity", Value = Int32.MinValue}, 
-                                    new ODataProperty {Name = "ActualCost", Value = Decimal.MaxValue}, 
+                                    new ODataProperty {Name = "TransactionType", Value = "a"},
+                                    new ODataProperty {Name = "Quantity", Value = Int32.MinValue},
+                                    new ODataProperty {Name = "ActualCost", Value = Decimal.MaxValue},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MinValue},
                                 }
                         };
@@ -508,15 +514,15 @@ namespace Microsoft.OData.Performance
                         {
                             Properties = new[]
                                 {
-                                    new ODataProperty {Name = "WorkOrderID", Value = 56}, 
-                                    new ODataProperty {Name = "ProductID", Value = Int32.MinValue}, 
-                                    new ODataProperty {Name = "OrderQty", Value = 1}, 
-                                    new ODataProperty {Name = "StockedQty", Value = -1}, 
-                                    new ODataProperty {Name = "ScrappedQty", Value = (short)1}, 
+                                    new ODataProperty {Name = "WorkOrderID", Value = 56},
+                                    new ODataProperty {Name = "ProductID", Value = Int32.MinValue},
+                                    new ODataProperty {Name = "OrderQty", Value = 1},
+                                    new ODataProperty {Name = "StockedQty", Value = -1},
+                                    new ODataProperty {Name = "ScrappedQty", Value = (short)1},
                                     new ODataProperty {Name = "StartDate", Value = DateTimeOffset.MaxValue},
                                     new ODataProperty {Name = "EndDate", Value = DateTimeOffset.Now},
-                                    new ODataProperty {Name = "DueDate", Value = DateTimeOffset.MinValue}, 
-                                    new ODataProperty {Name = "ScrapReasonID", Value = Int16.MaxValue}, 
+                                    new ODataProperty {Name = "DueDate", Value = DateTimeOffset.MinValue},
+                                    new ODataProperty {Name = "ScrapReasonID", Value = Int16.MaxValue},
                                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.Now},
                                 }
                         };
@@ -536,149 +542,168 @@ namespace Microsoft.OData.Performance
             #endregion
         }
 
-        private ODataResource EntryWithSpatialData()
+        private void EntryWithSpatialData(ODataWriter writer)
         {
             var entry = new ODataResource
             {
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ProductID", Value = 2}, 
-                    new ODataProperty {Name = "Name", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"}, 
-                    new ODataProperty {Name = "ProductNumber", Value = "abcdefghijklmnopqrstuvwxy"}, 
-                    new ODataProperty {Name = "MakeFlag", Value = false}, 
-                    new ODataProperty {Name = "FinishedGoodsFlag", Value = false}, 
-                    new ODataProperty {Name = "Color", Value = "abcdefghijklmno"}, 
-                    new ODataProperty {Name = "SafetyStockLevel", Value = (short)0}, 
-                    new ODataProperty {Name = "ReorderPoint", Value = (short)-1}, 
-                    new ODataProperty {Name = "StandardCost", Value = Decimal.MaxValue}, 
+                    new ODataProperty {Name = "ProductID", Value = 2},
+                    new ODataProperty {Name = "Name", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"},
+                    new ODataProperty {Name = "ProductNumber", Value = "abcdefghijklmnopqrstuvwxy"},
+                    new ODataProperty {Name = "MakeFlag", Value = false},
+                    new ODataProperty {Name = "FinishedGoodsFlag", Value = false},
+                    new ODataProperty {Name = "Color", Value = "abcdefghijklmno"},
+                    new ODataProperty {Name = "SafetyStockLevel", Value = (short)0},
+                    new ODataProperty {Name = "ReorderPoint", Value = (short)-1},
+                    new ODataProperty {Name = "StandardCost", Value = Decimal.MaxValue},
                     new ODataProperty {Name = "ListPrice", Value = Decimal.Zero},
-                    new ODataProperty {Name = "Size", Value = null}, 
+                    new ODataProperty {Name = "Size", Value = null},
                     new ODataProperty {Name = "SizeUnitMeasureCode", Value = string.Empty},
-                    new ODataProperty {Name = "WeightUnitMeasureCode", Value = "abc"}, 
+                    new ODataProperty {Name = "WeightUnitMeasureCode", Value = "abc"},
                     new ODataProperty {Name = "Weight", Value = Decimal.MaxValue},
-                    new ODataProperty {Name = "DaysToManufacture", Value = 0}, 
+                    new ODataProperty {Name = "DaysToManufacture", Value = 0},
                     new ODataProperty {Name = "ProductLine", Value = "ab"},
-                    new ODataProperty {Name = "Class", Value = "ab"}, 
+                    new ODataProperty {Name = "Class", Value = "ab"},
                     new ODataProperty {Name = "Style", Value = "ab"},
-                    new ODataProperty {Name = "ProductSubcategoryID", Value = Int32.MinValue}, 
-                    new ODataProperty {Name = "ProductModelID", Value = null}, 
-                    new ODataProperty {Name = "SellStartDate", Value = DateTimeOffset.Now}, 
-                    new ODataProperty {Name = "SellEndDate", Value = null}, 
-                    new ODataProperty {Name = "DiscontinuedDate", Value = DateTimeOffset.Now}, 
-                    new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()}, 
+                    new ODataProperty {Name = "ProductSubcategoryID", Value = Int32.MinValue},
+                    new ODataProperty {Name = "ProductModelID", Value = null},
+                    new ODataProperty {Name = "SellStartDate", Value = DateTimeOffset.Now},
+                    new ODataProperty {Name = "SellEndDate", Value = null},
+                    new ODataProperty {Name = "DiscontinuedDate", Value = DateTimeOffset.Now},
+                    new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()},
                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MaxValue},
                     new ODataProperty {Name = "LuckyNumbers", Value = new ODataCollectionValue
                     {
-                        TypeName = "Collection(Edm.Int64)", 
+                        TypeName = "Collection(Edm.Int64)",
                         Items = Enumerable.Range(0, 10).Select(n => -1L)
-                    }}, 
-                    new ODataProperty {Name = "TimeZones", Value = new ODataCollectionValue
-                    {
-                        TypeName = "Collection(PerformanceServices.Edm.AdventureWorks.TimeZone)", 
-                        Items = Enumerable.Range(0, 10).Select(n => new ODataComplexValue
-                        {
-                            TypeName = "PerformanceServices.Edm.AdventureWorks.TimeZone", 
-                            Properties = new[]
+                    }},
+                    new ODataProperty {Name = "OpenProperty0", Value = Byte.MinValue},
+                    new ODataProperty {Name = "OpenProperty1", Value = 0L},
+                    new ODataProperty {Name = "OpenProperty2", Value = GeographyFactory.Point(32, -100).Build()},
+                    new ODataProperty {Name = "OpenProperty3", Value = GeometryFactory.MultiPoint().Point(10.2, 11.2).Point(0.1, 0.1).Build()},
+                }
+            };
+
+            writer.WriteStart(entry);
+
+            // collection of complex value
+            writer.WriteStart(new ODataNestedResourceInfo { Name = "TimeZones", IsCollection = true, });
+            writer.WriteStart(new ODataResourceSet {  });
+            for (int i = 0; i < 10; ++i)
+            {
+                var complexEntry = new ODataResource
+                {
+                    TypeName = "PerformanceServices.Edm.AdventureWorks.TimeZone",
+                    Properties = new[]
                             {
-                                new ODataProperty 
+                                new ODataProperty
                                 {
                                     Name = "Region", Value = GeographyFactory.Polygon().Ring(33.1, -110).LineTo(1, 2).LineTo(35.97, -110.15).LineTo(11.45, 87.75).Ring(35.97, -110).LineTo(0.03, -0.01).LineTo(45.23, 23.10).Build()
                                 },
                                 new ODataProperty
                                 {
                                     Name = "Offset", Value = DateTimeOffset.Now
-                                }, 
+                                },
                                 new ODataProperty
                                 {
                                     Name = "StartTime", Value = TimeSpan.MaxValue
                                 },
                             }
-                        })
-                    }}, 
-                    new ODataProperty {Name = "OpenProperty0", Value = Byte.MinValue}, 
-                    new ODataProperty {Name = "OpenProperty1", Value = 0L}, 
-                    new ODataProperty {Name = "OpenProperty2", Value = GeographyFactory.Point(32, -100).Build()}, 
-                    new ODataProperty {Name = "OpenProperty3", Value = new ODataComplexValue
-                    {
-                        TypeName = "PerformanceServices.Edm.AdventureWorks.AddressSpatial", 
-                        Properties = new[]
+                };
+                writer.WriteStart(complexEntry);
+                writer.WriteEnd();
+            }
+            writer.WriteEnd();
+            writer.WriteEnd();
+
+            // complex value
+            writer.WriteStart(new ODataNestedResourceInfo { Name = "OpenProperty4", IsCollection = false});
+            writer.WriteStart(new ODataResource
+            {
+                TypeName = "PerformanceServices.Edm.AdventureWorks.AddressSpatial",
+                Properties = new[]
                         {
                             new ODataProperty {Name = "Coordinates", Value = GeographyFactory.MultiPoint().Point(10.2, 11.2).Point(0.1, 0.1).Build()},
-                            new ODataProperty {Name = "StreetCoordinates", Value = GeographyFactory.LineString(32, -100).LineTo(0, 100).LineTo(0.9, -10.3).LineTo(16.85, 35).Build()}, 
-                            new ODataProperty {Name = "Region", Value = GeometryFactory.Polygon().Ring(33.1, -110).LineTo(1, 2).LineTo(35.97, -110.15).LineTo(11.45, 87.75).Ring(35.97, -110).LineTo(0.03, -0.01).LineTo(45.23, 23.10).Build()}, 
+                            new ODataProperty {Name = "StreetCoordinates", Value = GeographyFactory.LineString(32, -100).LineTo(0, 100).LineTo(0.9, -10.3).LineTo(16.85, 35).Build()},
+                            new ODataProperty {Name = "Region", Value = GeometryFactory.Polygon().Ring(33.1, -110).LineTo(1, 2).LineTo(35.97, -110.15).LineTo(11.45, 87.75).Ring(35.97, -110).LineTo(0.03, -0.01).LineTo(45.23, 23.10).Build()},
                             new ODataProperty {Name = "NeighbouringRegions", Value = GeographyFactory.MultiPolygon().Polygon().Ring(33.1, -110).LineTo(35.97, -110.15).LineTo(11.45, 87.75).LineTo(-1, -0.9).Ring(35.97, -110).LineTo(0.03, -0.01).LineTo(45.23, 23.10).LineTo(9.01, 1).Polygon().Ring(35.97, -110).LineTo(0.03, -0.01).LineTo(45.23, 23.10).LineTo(0.9, 100.5).Ring(33.1, -110).LineTo(35.97, -110.15).LineTo(11.45, 87.75).LineTo(88.77, 33.55).Build()},
                         }
-                    }}, 
-                    new ODataProperty {Name = "OpenProperty4", Value = GeometryFactory.MultiPoint().Point(10.2, 11.2).Point(0.1, 0.1).Build()},
-                }
-            };
-
-            return entry;
+            });
+            writer.WriteEnd();
+            writer.WriteEnd();
         }
 
-        private ODataResource EntryWithoutSpatialData()
+        private void EntryWithoutSpatialData(ODataWriter writer)
         {
             var entry = new ODataResource
             {
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ProductID", Value = 2}, 
-                    new ODataProperty {Name = "Name", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"}, 
-                    new ODataProperty {Name = "ProductNumber", Value = "abcdefghijklmnopqrstuvwxy"}, 
-                    new ODataProperty {Name = "MakeFlag", Value = false}, 
-                    new ODataProperty {Name = "FinishedGoodsFlag", Value = false}, 
-                    new ODataProperty {Name = "Color", Value = "abcdefghijklmno"}, 
-                    new ODataProperty {Name = "SafetyStockLevel", Value = (short)0}, 
-                    new ODataProperty {Name = "ReorderPoint", Value = (short)-1}, 
-                    new ODataProperty {Name = "StandardCost", Value = Decimal.MaxValue}, 
+                    new ODataProperty {Name = "ProductID", Value = 2},
+                    new ODataProperty {Name = "Name", Value = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"},
+                    new ODataProperty {Name = "ProductNumber", Value = "abcdefghijklmnopqrstuvwxy"},
+                    new ODataProperty {Name = "MakeFlag", Value = false},
+                    new ODataProperty {Name = "FinishedGoodsFlag", Value = false},
+                    new ODataProperty {Name = "Color", Value = "abcdefghijklmno"},
+                    new ODataProperty {Name = "SafetyStockLevel", Value = (short)0},
+                    new ODataProperty {Name = "ReorderPoint", Value = (short)-1},
+                    new ODataProperty {Name = "StandardCost", Value = Decimal.MaxValue},
                     new ODataProperty {Name = "ListPrice", Value = Decimal.Zero},
-                    new ODataProperty {Name = "Size", Value = null}, 
+                    new ODataProperty {Name = "Size", Value = null},
                     new ODataProperty {Name = "SizeUnitMeasureCode", Value = string.Empty},
-                    new ODataProperty {Name = "WeightUnitMeasureCode", Value = "abc"}, 
+                    new ODataProperty {Name = "WeightUnitMeasureCode", Value = "abc"},
                     new ODataProperty {Name = "Weight", Value = Decimal.MaxValue},
-                    new ODataProperty {Name = "DaysToManufacture", Value = 0}, 
+                    new ODataProperty {Name = "DaysToManufacture", Value = 0},
                     new ODataProperty {Name = "ProductLine", Value = "ab"},
-                    new ODataProperty {Name = "Class", Value = "ab"}, 
+                    new ODataProperty {Name = "Class", Value = "ab"},
                     new ODataProperty {Name = "Style", Value = "ab"},
-                    new ODataProperty {Name = "ProductSubcategoryID", Value = Int32.MinValue}, 
-                    new ODataProperty {Name = "ProductModelID", Value = null}, 
-                    new ODataProperty {Name = "SellStartDate", Value = DateTimeOffset.Now}, 
-                    new ODataProperty {Name = "SellEndDate", Value = null}, 
-                    new ODataProperty {Name = "DiscontinuedDate", Value = DateTimeOffset.Now}, 
-                    new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()}, 
+                    new ODataProperty {Name = "ProductSubcategoryID", Value = Int32.MinValue},
+                    new ODataProperty {Name = "ProductModelID", Value = null},
+                    new ODataProperty {Name = "SellStartDate", Value = DateTimeOffset.Now},
+                    new ODataProperty {Name = "SellEndDate", Value = null},
+                    new ODataProperty {Name = "DiscontinuedDate", Value = DateTimeOffset.Now},
+                    new ODataProperty {Name = "rowguid", Value = Guid.NewGuid()},
                     new ODataProperty {Name = "ModifiedDate", Value = DateTimeOffset.MaxValue},
                     new ODataProperty {Name = "LuckyNumbers", Value = new ODataCollectionValue
                     {
-                        TypeName = "Collection(Edm.Int64)", 
+                        TypeName = "Collection(Edm.Int64)",
                         Items = Enumerable.Range(0, 10).Select(n => -1L)
-                    }}, 
-                    new ODataProperty {Name = "TimeZones", Value = new ODataCollectionValue
-                    {
-                        TypeName = "Collection(PerformanceServices.Edm.AdventureWorks.TimeZone)", 
-                        Items = Enumerable.Range(0, 10).Select(n => new ODataComplexValue
-                        {
-                            TypeName = "PerformanceServices.Edm.AdventureWorks.TimeZone", 
-                            Properties = new[]
+                    }},
+                    new ODataProperty {Name = "OpenProperty0", Value = Byte.MinValue},
+                    new ODataProperty {Name = "OpenProperty1", Value = 0L},
+                    new ODataProperty {Name = "OpenProperty2", Value = GeographyFactory.Point(32, -100).Build()},
+                    new ODataProperty {Name = "OpenProperty4", Value = GeometryFactory.MultiPoint().Point(10.2, 11.2).Point(0.1, 0.1).Build()},
+                }
+            };
+
+            writer.WriteStart(entry);
+
+            // collection of complex value
+            writer.WriteStart(new ODataNestedResourceInfo { Name = "TimeZones", IsCollection = true, });
+            writer.WriteStart(new ODataResourceSet { });
+            for (int i = 0; i < 10; ++i)
+            {
+                var complexEntry = new ODataResource
+                {
+                    TypeName = "PerformanceServices.Edm.AdventureWorks.TimeZone",
+                    Properties = new[]
                             {
                                 new ODataProperty
                                 {
                                     Name = "Offset", Value = DateTimeOffset.Now
-                                }, 
+                                },
                                 new ODataProperty
                                 {
                                     Name = "StartTime", Value = TimeSpan.MaxValue
                                 },
                             }
-                        })
-                    }}, 
-                    new ODataProperty {Name = "OpenProperty0", Value = Byte.MinValue}, 
-                    new ODataProperty {Name = "OpenProperty1", Value = 0L}, 
-                    new ODataProperty {Name = "OpenProperty2", Value = GeographyFactory.Point(32, -100).Build()}, 
-                    new ODataProperty {Name = "OpenProperty4", Value = GeometryFactory.MultiPoint().Point(10.2, 11.2).Point(0.1, 0.1).Build()},
-                }
-            };
-
-            return entry;
+                };
+                writer.WriteStart(complexEntry);
+                writer.WriteEnd();
+            }
+            writer.WriteEnd();
+            writer.WriteEnd();
         }
     }
 }

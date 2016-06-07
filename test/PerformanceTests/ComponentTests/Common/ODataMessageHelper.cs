@@ -147,6 +147,8 @@ namespace Microsoft.OData.Performance
             settings.ODataUri = new ODataUri() { ServiceRoot = BaseUri };
             settings.SetContentType(ODataFormat.Json);
 
+            settings.Validations &= ~WriterValidations.ThrowOnUndeclaredProperty;
+
             return settings;
         }
 
