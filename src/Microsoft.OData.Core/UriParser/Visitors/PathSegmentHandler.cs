@@ -98,7 +98,7 @@ namespace Microsoft.OData.UriParser
         /// Handle an OpenPropertySegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
-        public virtual void Handle(OpenPropertySegment segment)
+        public virtual void Handle(DynamicPathSegment segment)
         {
             throw new NotImplementedException();
         }

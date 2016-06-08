@@ -220,7 +220,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
                 {
-                    var entryReader = messageReader.CreateODataResourceReader(this.QueryContext.Target.NavigationSource, (IEdmEntityType)this.QueryContext.Target.Type);
+                    var entryReader = messageReader.CreateODataResourceReader(this.QueryContext.Target.NavigationSource, (IEdmStructuredType)this.QueryContext.Target.Type);
                     // Need to handle complex property or collection of complex property
                     var odataItemStack = new Stack<ODataItem>();
                     var entityStack = new Stack<IEdmNavigationSource>();

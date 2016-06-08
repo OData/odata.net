@@ -158,10 +158,10 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
-        public override string Translate(OpenPropertySegment segment)
+        public override string Translate(DynamicPathSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return "/" + segment.PropertyName;
+            return "/" + segment.Identifier;
         }
 
         /// <summary>

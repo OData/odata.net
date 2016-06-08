@@ -68,7 +68,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="segment">the segment to Translate</param>
         /// <returns>UserDefinedValue</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
-        public override bool Translate(OpenPropertySegment segment)
+        public override bool Translate(DynamicPathSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return false;

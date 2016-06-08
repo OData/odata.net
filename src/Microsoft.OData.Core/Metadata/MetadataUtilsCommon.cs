@@ -213,6 +213,11 @@ namespace Microsoft.OData.Metadata
             return typeReference.Definition.IsEntityCollectionType();
         }
 
+        /// <summary>
+        /// Checks whether a type reference refers to a OData collection value type of structured elements.
+        /// </summary>
+        /// <param name="typeReference">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="typeReference"/> is an OData collection value type of structured type; otherwise false.</returns>
         internal static bool IsStructuredCollectionType(this IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
@@ -253,7 +258,7 @@ namespace Microsoft.OData.Metadata
 
             IEdmCollectionType collectionType = type as IEdmCollectionType;
 
-            // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
+            // Return false if this is not a collection type, or if it's not a collection of entity types (i.e., a navigation property)
             if (collectionType == null || (collectionType.ElementType != null && collectionType.ElementType.TypeKind() != EdmTypeKind.Entity))
             {
                 return false;
@@ -264,17 +269,16 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Checks whether a type refers to a OData collection value type of entity elements.
+        /// Checks whether a type refers to a OData collection value type of structured elements.
         /// </summary>
         /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
-        /// <returns>true if the <paramref name="type"/> is an entity OData collection value type; otherwise false.</returns>
+        /// <returns>true if the <paramref name="type"/> is an OData collection value type of structured type; otherwise false.</returns>
         internal static bool IsStructuredCollectionType(this IEdmType type)
         {
             Debug.Assert(type != null, "type != null");
 
             IEdmCollectionType collectionType = type as IEdmCollectionType;
 
-            // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
             if (collectionType == null
                 || (collectionType.ElementType != null
                     && (collectionType.ElementType.TypeKind() != EdmTypeKind.Entity && collectionType.ElementType.TypeKind() != EdmTypeKind.Complex)))
@@ -284,6 +288,42 @@ namespace Microsoft.OData.Metadata
 
             Debug.Assert(collectionType.TypeKind == EdmTypeKind.Collection, "Expected collection type kind.");
             return true;
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is an entity or entity collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
+        internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType)
+        {
+            IEdmEntityType entityType;
+            return edmType.IsEntityOrEntityCollectionType(out entityType);
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is an entity or entity collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <param name="entityType">The entity type. If the given type was a collection, this will be the element type.</param>
+        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
+        internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType, out IEdmEntityType entityType)
+        {
+            Debug.Assert(edmType != null, "targetEdmType != null");
+            if (edmType.TypeKind == EdmTypeKind.Entity)
+            {
+                entityType = (IEdmEntityType)edmType;
+                return true;
+            }
+
+            if (edmType.TypeKind != EdmTypeKind.Collection)
+            {
+                entityType = null;
+                return false;
+            }
+
+            entityType = ((IEdmCollectionType)edmType).ElementType.Definition as IEdmEntityType;
+            return entityType != null;
         }
 
         /// <summary>

@@ -1234,8 +1234,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAlias.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAlias.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\OpenPropertySegment.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\OpenPropertySegment.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\DynamicPathSegment.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\DynamicPathSegment.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\OperationImportSegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\OperationImportSegment.cs</Link>
@@ -1586,6 +1586,9 @@
     </Compile>
     <Compile Include="..\UriParser\FunctionSignatureWithReturnType.cs">
       <Link>Microsoft\OData\Core\UriParser\FunctionSignatureWithReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ParseDynamicPathSegment.cs">
+      <Link>Microsoft\OData\Core\UriParser\ParseDynamicPathSegment.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Parsers\CustomUriLiteralParsers.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\CustomUriLiteralParsers.cs</Link>

@@ -65,6 +65,20 @@ namespace Microsoft.OData.UriParser
             this.entitySet = entitySet;
             this.computedReturnEdmType = operationImport.Operation.ReturnType != null ? operationImport.Operation.ReturnType.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
+
+            if (this.computedReturnEdmType != null)
+            {
+                this.TargetEdmNavigationSource = entitySet;
+                this.TargetEdmType = computedReturnEdmType;
+                this.TargetKind = this.TargetEdmType.GetTargetKindFromType();
+                this.SingleResult = computedReturnEdmType.TypeKind != EdmTypeKind.Collection;
+            }
+            else
+            {
+                this.TargetEdmNavigationSource = null;
+                this.TargetEdmType = null;
+                this.TargetKind = RequestTargetKind.VoidOperation;
+            }
         }
 
         /// <summary>

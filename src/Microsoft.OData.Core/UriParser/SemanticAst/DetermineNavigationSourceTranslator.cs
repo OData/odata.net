@@ -138,7 +138,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="segment">The OpenPropertySegment to look in.</param>
         /// <returns>null, since an OpenProperty doesn't have an navigation source</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
-        public override IEdmNavigationSource Translate(OpenPropertySegment segment)
+        public override IEdmNavigationSource Translate(DynamicPathSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return null;

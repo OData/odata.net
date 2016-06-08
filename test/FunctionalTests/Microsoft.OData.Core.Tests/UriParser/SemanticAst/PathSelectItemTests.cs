@@ -16,8 +16,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void ConstructorShouldSetPropertyName()
         {
-            var item = new PathSelectItem(new ODataSelectPath(new OpenPropertySegment("abc")));
-            item.SelectedPath.FirstSegment.ShouldBeOpenPropertySegment("abc");
+            var item = new PathSelectItem(new ODataSelectPath(new DynamicPathSegment("abc")));
+            item.SelectedPath.FirstSegment.ShouldBeDynamicPathSegment("abc");
         }
 
         [Fact]

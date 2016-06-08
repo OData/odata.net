@@ -12,6 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
+    using Microsoft.OData.Metadata;
     using ErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
@@ -181,15 +182,7 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.CreateSyntaxError();
             }
 
-            IEdmEntityType entityType;
-            bool isEntity = segment.TargetEdmType.IsEntityOrEntityCollectionType(out entityType);
-            Debug.Assert(isEntity, "Key target type should be an entity type.");
-
-            var keySegment = new KeySegment(keyPairs, entityType, segment.TargetEdmNavigationSource);
-            keySegment.CopyValuesFrom(segment);
-            keySegment.SingleResult = true;
-
-            return keySegment;
+            return new KeySegment(segment, keyPairs, targetEntityType, segment.TargetEdmNavigationSource);
         }
     }
 }

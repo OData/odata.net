@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void PathsWithEqualivalentSegmentsAreEqual()
         {
-            new ODataPath(new OpenPropertySegment("foo")).Equals(new ODataPath(new OpenPropertySegment("foo"))).Should().BeTrue();
+            new ODataPath(new DynamicPathSegment("foo")).Equals(new ODataPath(new DynamicPathSegment("foo"))).Should().BeTrue();
         }
 
         [Fact]

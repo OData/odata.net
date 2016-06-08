@@ -52,11 +52,30 @@ namespace Microsoft.OData.UriParser
             this.keys = new ReadOnlyCollection<KeyValuePair<string, object>>(keys.ToList());
             this.edmType = edmType;
             this.navigationSource = navigationSource;
+            this.SingleResult = true;
 
             // Check that the type they gave us is related to the type of the set
             if (navigationSource != null)
             {
                 ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "KeySegments");
+            }
+        }
+
+        /// <summary>
+        /// Construct a Segment that represents a key lookup.
+        /// </summary>
+        /// <param name="previous">The segment to apply the key to.</param>
+        /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
+        /// <param name="edmType">The type of the item this key returns.</param>
+        /// <param name="navigationSource">The navigation source that this key is used to search.</param>
+        /// <exception cref="ODataException">Throws if the input entity set is not related to the input type.</exception>
+        public KeySegment(ODataPathSegment previous, IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
+            : this(keys, edmType, navigationSource)
+        {
+            if (previous != null)
+            {
+                this.CopyValuesFrom(previous);
+                this.SingleResult = true;
             }
         }
 

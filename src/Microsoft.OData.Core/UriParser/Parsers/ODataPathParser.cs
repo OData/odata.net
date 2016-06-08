@@ -273,36 +273,6 @@ namespace Microsoft.OData.UriParser
             return false;
         }
 
-        /// <summary>Determines a matching target kind from the specified type.</summary>
-        /// <param name="type">ResourceType of element to get kind for.</param>
-        /// <returns>An appropriate <see cref="RequestTargetKind"/> for the specified <paramref name="type"/>.</returns>
-        private static RequestTargetKind TargetKindFromType(IEdmType type)
-        {
-            Debug.Assert(type != null, "type != null");
-
-            switch (type.TypeKind)
-            {
-                case EdmTypeKind.Complex:
-                    return RequestTargetKind.ComplexObject;
-                case EdmTypeKind.Entity:
-                    return RequestTargetKind.Resource;
-                case EdmTypeKind.Collection:
-                    if (type.IsEntityOrEntityCollectionType())
-                    {
-                        return RequestTargetKind.Resource;
-                    }
-
-                    return RequestTargetKind.Collection;
-                case EdmTypeKind.Enum:
-                    return RequestTargetKind.Enum;
-                case EdmTypeKind.TypeDefinition:
-                    return RequestTargetKind.Primitive;
-                default:
-                    Debug.Assert(type.TypeKind == EdmTypeKind.Primitive, "typeKind == ResourceTypeKind.Primitive");
-                    return RequestTargetKind.Primitive;
-            }
-        }
-
         /// <summary>
         /// Checks for single result, otherwise throws.
         /// </summary>
@@ -313,32 +283,6 @@ namespace Microsoft.OData.UriParser
             if (!isSingleResult)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_CannotQueryCollections(identifier));
-            }
-        }
-
-        /// <summary>
-        /// Determines the entity set for segment.
-        /// </summary>
-        /// <param name="identifier">The identifier.</param>
-        /// <param name="returnType">Type of the return.</param>
-        /// <param name="segment">The segment.</param>
-        /// <param name="targetset">The targetset.</param>
-        /// <param name="singleOperation">The single operation.</param>
-        /// <exception cref="ODataException">Throws and exception if entity set not specified.</exception>
-        private static void DetermineEntitySetForSegment(string identifier, IEdmTypeReference returnType, ODataPathSegment segment, IEdmEntitySetBase targetset, IEdmOperation singleOperation)
-        {
-            if (returnType != null)
-            {
-                segment.TargetEdmNavigationSource = targetset;
-                segment.TargetEdmType = returnType.Definition;
-                segment.TargetKind = TargetKindFromType(segment.TargetEdmType);
-                segment.SingleResult = !singleOperation.ReturnType.IsCollection();
-            }
-            else
-            {
-                segment.TargetEdmNavigationSource = null;
-                segment.TargetEdmType = null;
-                segment.TargetKind = RequestTargetKind.VoidOperation;
             }
         }
 
@@ -460,7 +404,7 @@ namespace Microsoft.OData.UriParser
             if (previous.TargetKind == RequestTargetKind.Batch                  /* $batch */
                 || previous.TargetKind == RequestTargetKind.Metadata            /* $metadata */
                 || previous.TargetKind == RequestTargetKind.PrimitiveValue      /* $value, see TryCreateValueSegment */
-                || previous.TargetKind == RequestTargetKind.OpenPropertyValue   /* $value, see TryCreateValueSegment */
+                || previous.TargetKind == RequestTargetKind.DynamicValue   /* $value, see TryCreateValueSegment */
                 || previous.TargetKind == RequestTargetKind.EnumValue           /* $value, see TryCreateValueSegment */
                 || previous.TargetKind == RequestTargetKind.MediaResource       /* $value or Media resource, see TryCreateValueSegment/CreateNamedStreamSegment */
                 || previous.TargetKind == RequestTargetKind.VoidOperation       /* service operation with void return type */
@@ -657,9 +601,9 @@ namespace Microsoft.OData.UriParser
             {
                 segment.TargetKind = RequestTargetKind.EnumValue;
             }
-            else if (previous.TargetKind == RequestTargetKind.OpenProperty)
+            else if (previous.TargetKind == RequestTargetKind.Dynamic)
             {
-                segment.TargetKind = RequestTargetKind.OpenPropertyValue;
+                segment.TargetKind = RequestTargetKind.DynamicValue;
             }
             else
             {
@@ -674,29 +618,42 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Creates a new segment for an open property.
+        /// Creates a new segment for an unknown path segment or an open property.
         /// </summary>
         /// <param name="previous">previous segment info.</param>
         /// <param name="identifier">name of the segment.</param>
         /// <param name="parenthesisExpression">whether this segment has a query portion or not.</param>
-        private void CreateOpenPropertySegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
+        private void CreateDynamicPathSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
         {
-            ODataPathSegment segment = new OpenPropertySegment(identifier);
+            if (this.configuration.ParseDynamicPathSegmentFunc != null)
+            {
+                var segments = this.configuration.ParseDynamicPathSegmentFunc(previous, identifier, parenthesisExpression);
+                this.parsedSegments.AddRange(segments);
+                return;
+            }
+
+            if (previous == null)
+            {
+                throw ExceptionUtil.CreateResourceNotFoundError(identifier);
+            }
+
+            CheckSingleResult(previous.SingleResult, previous.Identifier);
 
             // Handle an open type property. If the current leaf isn't an
             // object (which implies it's already an open type), then
             // it should be marked as an open type.
-            if (previous.TargetEdmType != null && !previous.TargetEdmType.IsOpenType())
+            if ((previous.TargetEdmType != null && !previous.TargetEdmType.IsOpenType()))
             {
-                throw ExceptionUtil.CreateResourceNotFoundError(segment.Identifier);
+                throw ExceptionUtil.CreateResourceNotFoundError(identifier);
             }
 
             // Open navigation properties are not supported on OpenTypes.
             if (parenthesisExpression != null)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.OpenNavigationPropertiesNotSupportedOnOpenTypes(segment.Identifier));
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.OpenNavigationPropertiesNotSupportedOnOpenTypes(identifier));
             }
 
+            ODataPathSegment segment = new DynamicPathSegment(identifier);
             this.parsedSegments.Add(segment);
         }
 
@@ -784,7 +741,7 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            throw ExceptionUtil.CreateResourceNotFoundError(identifier);
+            this.CreateDynamicPathSegment(null, identifier, parenthesisExpression);
         }
 
         /// <summary>
@@ -847,8 +804,6 @@ namespace Microsoft.OData.UriParser
             }
 
             ODataPathSegment segment = new OperationImportSegment(singleImport, targetset, resolvedParameters);
-
-            DetermineEntitySetForSegment(identifier, returnType, segment, targetset, singleImport.Operation);
 
             this.parsedSegments.Add(segment);
 
@@ -929,8 +884,6 @@ namespace Microsoft.OData.UriParser
                 Identifier = identifier
             };
 
-            DetermineEntitySetForSegment(identifier, returnType, segment, targetset, singleOperation);
-
             this.parsedSegments.Add(segment);
 
             this.TryBindKeySegmentIfNoResolvedParametersAndParathesisValueExsts(parenthesisExpression, returnType, resolvedParameters, segment);
@@ -988,9 +941,8 @@ namespace Microsoft.OData.UriParser
             {
                 // if its not one of the recognized special segments, then it must be a property, type-segment, or key value.
                 Debug.Assert(
-                    previous.TargetKind == RequestTargetKind.ComplexObject
-                    || previous.TargetKind == RequestTargetKind.Resource
-                    || previous.TargetKind == RequestTargetKind.OpenProperty,
+                    previous.TargetKind == RequestTargetKind.Resource
+                    || previous.TargetKind == RequestTargetKind.Dynamic,
                     "previous.TargetKind(" + previous.TargetKind + ") can have properties");
 
                 if (previous.TargetEdmType == null)
@@ -998,7 +950,7 @@ namespace Microsoft.OData.UriParser
                     // A segment will correspond to a property in the object model;
                     // if we are processing an open type, anything further in the
                     // URI also represents an open type property.
-                    Debug.Assert(previous.TargetKind == RequestTargetKind.OpenProperty, "For open properties, the target resource type must be null");
+                    Debug.Assert(previous.TargetKind == RequestTargetKind.Dynamic, "For open properties, the target resource type must be null");
                 }
                 else
                 {
@@ -1032,9 +984,7 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            // Try to create an open property if applicable, or throw
-            CheckSingleResult(previous.SingleResult, previous.Identifier);
-            this.CreateOpenPropertySegment(previous, identifier, parenthesisExpression);
+            this.CreateDynamicPathSegment(previous, identifier, parenthesisExpression);
         }
 
         /// <summary>
@@ -1046,7 +996,6 @@ namespace Microsoft.OData.UriParser
         private bool TryBindProperty(string identifier, out IEdmProperty projectedProperty)
         {
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
-            Debug.Assert(previous.TargetKind != RequestTargetKind.OpenProperty, "Since the query element type is known, this can't be open property");
             Debug.Assert(previous.TargetEdmType != null, "Previous wasn't open, so it should have a resource type");
             Debug.Assert(previous.TargetEdmNavigationSource == null || previous.TargetEdmType.IsEntityOrEntityCollectionType(), "if the previous segment has a target resource set, then its target resource type must be an entity");
 
@@ -1198,9 +1147,14 @@ namespace Microsoft.OData.UriParser
                 switch (property.Type.TypeKind())
                 {
                     case EdmTypeKind.Complex:
-                        segment.TargetKind = RequestTargetKind.ComplexObject;
+                        segment.TargetKind = RequestTargetKind.Resource;
                         break;
                     case EdmTypeKind.Collection:
+                        if (property.Type.IsStructuredCollectionType())
+                        {
+                             segment.TargetKind = RequestTargetKind.Resource;
+                        }
+
                         segment.TargetKind = RequestTargetKind.Collection;
                         break;
                     case EdmTypeKind.Enum:

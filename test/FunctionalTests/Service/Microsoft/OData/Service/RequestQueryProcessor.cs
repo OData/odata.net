@@ -241,10 +241,10 @@ namespace Microsoft.OData.Service
                 return currentNode;
             }
 
-            var openPropertySegment = lastSegment as OpenPropertySegment;
+            var openPropertySegment = lastSegment as DynamicPathSegment;
             if (openPropertySegment != null)
             {
-                return ApplyProjectionForProperty(currentNode, openPropertySegment.PropertyName, null /*property*/, targetResourceType);
+                return ApplyProjectionForProperty(currentNode, openPropertySegment.Identifier, null /*property*/, targetResourceType);
             }
 
             var propertySegment = lastSegment as PropertySegment;

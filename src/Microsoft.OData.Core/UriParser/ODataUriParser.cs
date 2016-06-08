@@ -195,6 +195,15 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Gets or sets the function which can be used to parse an unknown path segment or an open property segment.
+        /// </summary>
+        public ParseDynamicPathSegment ParseDynamicPathSegmentFunc
+        {
+            get { return this.configuration.ParseDynamicPathSegmentFunc; }
+            set { this.configuration.ParseDynamicPathSegmentFunc = value; }
+        }
+
+        /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
         public IDictionary<string, SingleValueNode> ParameterAliasNodes
@@ -454,7 +463,16 @@ namespace Microsoft.OData.UriParser
             Uri pathUri = this.fullUri;
             ExceptionUtils.CheckArgumentNotNull(pathUri, "pathUri");
 
-            UriPathParser pathParser = new UriPathParser(this.Settings.PathLimit);
+            UriPathParser pathParser = null;
+            if (this.Container == null)
+            {
+                pathParser = new UriPathParser(this.Settings);
+            }
+            else
+            {
+                pathParser = this.Container.GetService<UriPathParser>();
+            }
+
             var rawSegments = pathParser.ParsePathIntoSegments(pathUri, this.ServiceRoot);
             return ODataPathFactory.BindPath(rawSegments, this.configuration);
         }
@@ -508,9 +526,9 @@ namespace Microsoft.OData.UriParser
             InitQueryOptionDic();
 
             this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.targetEdmType, this.targetNavigationSource, queryOptionDic)
-                                        {
-                                            Configuration = this.configuration
-                                        };
+            {
+                Configuration = this.configuration
+            };
         }
 
         /// <summary>

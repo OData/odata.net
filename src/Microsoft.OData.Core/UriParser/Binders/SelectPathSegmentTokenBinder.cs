@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
 
             if (edmType.IsOpen)
             {
-                return new OpenPropertySegment(tokenIn.Identifier);
+                return new DynamicPathSegment(tokenIn.Identifier);
             }
 
             throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));

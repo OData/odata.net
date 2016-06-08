@@ -74,12 +74,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<NavigationPropertySegment>(navPropSegment);
         }
 
-        public static AndConstraint<OpenPropertySegment> ShouldBeOpenPropertySegment(this ODataPathSegment segment, string openPropertyName)
+        public static AndConstraint<DynamicPathSegment> ShouldBeDynamicPathSegment(this ODataPathSegment segment, string identifier)
         {
-            segment.Should().BeOfType<OpenPropertySegment>();
-            OpenPropertySegment openPropertySegment = segment.As<OpenPropertySegment>();
-            openPropertySegment.PropertyName.Should().Be(openPropertyName);
-            return new AndConstraint<OpenPropertySegment>(openPropertySegment);
+            segment.Should().BeOfType<DynamicPathSegment>();
+            DynamicPathSegment openPropertySegment = segment.As<DynamicPathSegment>();
+            openPropertySegment.Identifier.Should().Be(identifier);
+            return new AndConstraint<DynamicPathSegment>(openPropertySegment);
         }
 
         public static AndConstraint<OperationImportSegment> ShouldBeOperationImportSegment(this ODataPathSegment segment, params IEdmOperationImport[] operationImports)

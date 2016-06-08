@@ -157,7 +157,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
-        public override string Translate(OpenPropertySegment segment)
+        public override string Translate(DynamicPathSegment segment)
         {
             throw new NotImplementedException();
         }

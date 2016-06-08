@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void WildcardDoesNotPreemptOtherSelectionItems()
         {
             ODataSelectPath coolPeoplePath = new ODataSelectPath(new OperationSegment(new[] { HardCodedTestModel.GetChangeStateAction() }, null));
-            ODataSelectPath stuffPath = new ODataSelectPath(new OpenPropertySegment("stuff"));
+            ODataSelectPath stuffPath = new ODataSelectPath(new DynamicPathSegment("stuff"));
             var expandTree = new SelectExpandClause(new Collection<SelectItem>()
                                         {
                                             new PathSelectItem(coolPeoplePath),

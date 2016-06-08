@@ -256,7 +256,7 @@ namespace Microsoft.OData.UriParser
             }
 
 
-            UriPathParser pathParser = new UriPathParser(maxDepth);
+            UriPathParser pathParser = new UriPathParser(new ODataUriParserSettings() { PathLimit = maxDepth });
             var path = pathParser.ParsePathIntoSegments(queryUri, serviceBaseUri);
 
             // COMPAT 32: Differencies in query options parsing in WCF DS

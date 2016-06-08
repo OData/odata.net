@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void QualifiedNameShouldTreatAsDynamicPropertyInOpenType()
         {
             var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("A.B", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetOpenEmployeeType(), DefaultUriResolver);
-            segment.ShouldBeOpenPropertySegment("A.B");
+            segment.ShouldBeDynamicPathSegment("A.B");
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void UnqualifiedActionNameOnOpenTypeShouldBeInterpretedAsAnOpenProperty()
         {
             ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Restore", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), DefaultUriResolver);
-            segment.ShouldBeOpenPropertySegment("Restore");
+            segment.ShouldBeDynamicPathSegment("Restore");
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void UnfoundProperyOnOpenTypeResultsInOpenPropertySelectionItem()
         {
             ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Effervescence", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), DefaultUriResolver);
-            segment.ShouldBeOpenPropertySegment("Fully.Qualified.Namespace.Effervescence");
+            segment.ShouldBeDynamicPathSegment("Fully.Qualified.Namespace.Effervescence");
         }
 
         [Fact]

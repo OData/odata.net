@@ -139,7 +139,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// </summary>
         /// <param name="segment">The OpenPropertySegment</param>
         /// <returns>The linq expression</returns>
-        public override Expression Translate(OpenPropertySegment segment)
+        public override Expression Translate(DynamicPathSegment segment)
         {
             throw new NotImplementedException("OpenPropertySegment translation is not supported");
         }

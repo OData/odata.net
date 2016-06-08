@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Parser which consumes the URI path and produces the lexical object model.
     /// </summary>
-    internal sealed class UriPathParser
+    public class UriPathParser
     {
         /// <summary>
         /// The maximum number of segments allowed.
@@ -23,35 +23,10 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="maxSegments">The maximum number of segments for each part of the query.</param>
-        internal UriPathParser(int maxSegments)
+        /// <param name="settings">The Uri parser settings.</param>
+        public UriPathParser(ODataUriParserSettings settings)
         {
-            this.maxSegments = maxSegments;
-        }
-
-        /// <summary>
-        /// Parses the <paramref name="escapedRelativePathUri"/> and returns a list of strings for each segment.
-        /// </summary>
-        /// <param name="escapedRelativePathUri">The relative URI which holds the query to parse.</param>
-        /// <returns>a list of strings for each segment in the uri.</returns>
-        internal string[] ParsePath(string escapedRelativePathUri)
-        {
-            if (escapedRelativePathUri == null || String.IsNullOrEmpty(escapedRelativePathUri.Trim()))
-            {
-                return new string[0];
-            }
-
-            // TODO: The code below has a bug that / in the named values will be considered a segment separator
-            //   so for example /Customers('abc/pqr') is treated as two segments, which is wrong.
-            string[] segments = escapedRelativePathUri.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // TODO: lookup astoria max segments...
-            if (segments.Length >= this.maxSegments)
-            {
-                throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
-            }
-
-            return segments;
+            this.maxSegments = settings.PathLimit;
         }
 
         /// <summary>
@@ -60,7 +35,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="fullUri">The full URI of the request.</param>
         /// <param name="serviceBaseUri">The service base URI for the request.</param>
         /// <returns>List of unescaped segments.</returns>
-        internal ICollection<string> ParsePathIntoSegments(Uri fullUri, Uri serviceBaseUri)
+        public virtual ICollection<string> ParsePathIntoSegments(Uri fullUri, Uri serviceBaseUri)
         {
             if (serviceBaseUri == null)
             {

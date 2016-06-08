@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData.UriParser
 {
@@ -18,42 +19,6 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal static class PathParserModelUtils
     {
-        /// <summary>
-        /// Returns whether or not the type is an entity or entity collection type.
-        /// </summary>
-        /// <param name="edmType">The type to check.</param>
-        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
-        internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType)
-        {
-            IEdmEntityType entityType;
-            return edmType.IsEntityOrEntityCollectionType(out entityType);
-        }
-
-        /// <summary>
-        /// Returns whether or not the type is an entity or entity collection type.
-        /// </summary>
-        /// <param name="edmType">The type to check.</param>
-        /// <param name="entityType">The entity type. If the given type was a collection, this will be the element type.</param>
-        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
-        internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType, out IEdmEntityType entityType)
-        {
-            Debug.Assert(edmType != null, "targetEdmType != null");
-            if (edmType.TypeKind == EdmTypeKind.Entity)
-            {
-                entityType = (IEdmEntityType)edmType;
-                return true;
-            }
-
-            if (edmType.TypeKind != EdmTypeKind.Collection)
-            {
-                entityType = null;
-                return false;
-            }
-
-            entityType = ((IEdmCollectionType)edmType).ElementType.Definition as IEdmEntityType;
-            return entityType != null;
-        }
-
         /// <summary>
         /// Gets the target entity set for the given operation import.
         /// </summary>
@@ -164,6 +129,35 @@ namespace Microsoft.OData.UriParser
         {
             IEdmCollectionType collectionType = type as IEdmCollectionType;
             return (collectionType != null) ? collectionType.ElementType.Definition : type;
+        }
+
+        /// <summary>Determines a matching target kind from the specified type.</summary>
+        /// <param name="type">ResourceType of element to get kind for.</param>
+        /// <returns>An appropriate <see cref="RequestTargetKind"/> for the specified <paramref name="type"/>.</returns>
+        internal static RequestTargetKind GetTargetKindFromType(this IEdmType type)
+        {
+            Debug.Assert(type != null, "type != null");
+
+            switch (type.TypeKind)
+            {
+                case EdmTypeKind.Complex:
+                case EdmTypeKind.Entity:
+                    return RequestTargetKind.Resource;
+                case EdmTypeKind.Collection:
+                    if (type.IsStructuredCollectionType())
+                    {
+                        return RequestTargetKind.Resource;
+                    }
+
+                    return RequestTargetKind.Collection;
+                case EdmTypeKind.Enum:
+                    return RequestTargetKind.Enum;
+                case EdmTypeKind.TypeDefinition:
+                    return RequestTargetKind.Primitive;
+                default:
+                    Debug.Assert(type.TypeKind == EdmTypeKind.Primitive, "typeKind == ResourceTypeKind.Primitive");
+                    return RequestTargetKind.Primitive;
+            }
         }
     }
 }

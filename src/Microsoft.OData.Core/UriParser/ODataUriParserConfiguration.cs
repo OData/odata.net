@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -34,7 +35,16 @@ namespace Microsoft.OData.UriParser
             this.Model = model;
             this.Container = container;
             this.Resolver = ODataUriResolver.GetUriResolver(container);
-            this.Settings = new ODataUriParserSettings();
+
+            if (this.Container == null)
+            {
+                this.Settings = new ODataUriParserSettings();
+            }
+            else
+            {
+                this.Settings = this.Container.GetRequiredService<ODataUriParserSettings>();
+            }
+
             this.EnableUriTemplateParsing = false;
             this.EnableCaseInsensitiveUriFunctionIdentifier = false;
         }
@@ -88,6 +98,11 @@ namespace Microsoft.OData.UriParser
         /// Gets or Sets a callback that returns a BatchReferenceSegment (to be used for $0 in batch)
         /// </summary>
         public Func<string, BatchReferenceSegment> BatchReferenceCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets the function which can be used to parse an unknown path segment or an open property segment.
+        /// </summary>
+        public ParseDynamicPathSegment ParseDynamicPathSegmentFunc { get; set; }
 
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.

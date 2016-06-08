@@ -282,7 +282,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             results.AllSelected.Should().BeFalse();
             results.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new TypeSegment(HardCodedTestModel.GetFramedPaintingType(), HardCodedTestModel.GetPaintingsSet()),
-                    new OpenPropertySegment("OpenProp")));
+                    new DynamicPathSegment("OpenProp")));
         }
 
         [Fact]
@@ -292,7 +292,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             item.ShouldBePathSelectionItem(new ODataSelectPath(
                     new TypeSegment(HardCodedTestModel.GetOpenEmployeeType(), HardCodedTestModel.GetPeopleSet()),
-                    new OpenPropertySegment("OpenProp")));
+                    new DynamicPathSegment("OpenProp")));
         }
 
         [Fact]
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void UnqualifiedActionNameOnOpenTypeShouldBeInterpretedAsAnOperation()
         {
-            ParseSingleSelectForPainting("Restore").ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("Restore")));
+            ParseSingleSelectForPainting("Restore").ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("Restore")));
         }
 
         [Fact]
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPaintingType(),
                 HardCodedTestModel.GetPaintingsSet());
 
-            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("SomeOpenProperty")));
+            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("SomeOpenProperty")));
             result.AllSelected.Should().BeFalse();
         }
 
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var items = result.SelectedItems.ToArray();
             items[0].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPaintingArtistProp())));
-            items[1].ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("SomeOpenProperty")));
+            items[1].ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("SomeOpenProperty")));
             result.AllSelected.Should().BeFalse();
         }
 

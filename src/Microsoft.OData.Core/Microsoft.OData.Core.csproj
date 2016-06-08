@@ -334,6 +334,7 @@
     <Compile Include="TaskUtils.cs" />
     <Compile Include="TypeNameOracle.cs" />
     <Compile Include="TypeUtils.cs" />
+    <Compile Include="UriParser\ParseDynamicPathSegment.cs" />
     <Compile Include="UriParser\Parsers\CustomUriLiteralParsers.cs" />
     <Compile Include="UriParser\Parsers\DefaultUriLiteralParser.cs" />
     <Compile Include="UriParser\Parsers\IUriLiteralParser.cs" />
@@ -474,7 +475,7 @@
     <Compile Include="UriParser\SemanticAst\ODataPathSegment.cs" />
     <Compile Include="UriParser\SemanticAst\ODataSelectPath.cs" />
     <Compile Include="UriParser\SemanticAst\ODataUnresolvedFunctionParameterAlias.cs" />
-    <Compile Include="UriParser\SemanticAst\OpenPropertySegment.cs" />
+    <Compile Include="UriParser\SemanticAst\DynamicPathSegment.cs" />
     <Compile Include="UriParser\SemanticAst\OperationImportSegment.cs" />
     <Compile Include="UriParser\SemanticAst\OperationSegment.cs" />
     <Compile Include="UriParser\SemanticAst\OperationSegmentParameter.cs" />

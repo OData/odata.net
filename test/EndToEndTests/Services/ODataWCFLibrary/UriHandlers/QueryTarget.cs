@@ -250,12 +250,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
             this.canonicalSegments.Add(segment);
         }
 
-        public override void Handle(OpenPropertySegment segment)
+        public override void Handle(DynamicPathSegment segment)
         {
             this.ThrowIfResolved();
 
             this.NavigationSource = null;
-            this.Property = new EdmOpenStructuralProperty(segment.PropertyName);
+            this.Property = new EdmOpenStructuralProperty(segment.Identifier);
             this.Type = segment.EdmType;
             this.ElementType = this.GetElementType(this.Type);
 

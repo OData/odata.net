@@ -66,9 +66,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             return WriteParameterValue(value.Value);
         }
 
-        public override string Translate(OpenPropertySegment segment)
+        public override string Translate(DynamicPathSegment segment)
         {
-            return string.Format("(OpenProperty: {0})", segment.PropertyName);
+            return string.Format("(OpenProperty: {0})", segment.Identifier);
         }
 
         public override string Translate(CountSegment segment)

@@ -77,14 +77,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public override void Handle(PathSelectItem item)
         {
             var propertySegment = item.SelectedPath.LastSegment as PropertySegment;
-            var openPropertySegment = item.SelectedPath.LastSegment as OpenPropertySegment;
+            var openPropertySegment = item.SelectedPath.LastSegment as DynamicPathSegment;
 
             // we ignore the NavigationPropertySegment since we already handle it as ExpandedNavigationSelectItem
             if (propertySegment != null || openPropertySegment != null)
             {
                 List<ODataProperty> properties = this.ProjectedEntry.Properties == null ? new List<ODataProperty>() : this.ProjectedEntry.Properties.ToList();
 
-                string propertyName = (propertySegment != null) ? propertySegment.Property.Name : openPropertySegment.PropertyName;
+                string propertyName = (propertySegment != null) ? propertySegment.Property.Name : openPropertySegment.Identifier;
                 properties.Add(this.OriginalEntry.Properties.Single(p => p.Name == propertyName));
 
                 this.ProjectedEntry.Properties = properties.AsEnumerable();

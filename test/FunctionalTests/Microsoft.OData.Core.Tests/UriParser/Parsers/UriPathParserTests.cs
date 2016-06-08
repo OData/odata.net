@@ -10,7 +10,6 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -18,10 +17,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     {
         private readonly Uri baseUri = new Uri("http://www.example.com/Tests/OData.svc/");
         private UriPathParser pathParser;
+        private ODataUriParserSettings uriParserSettings = new ODataUriParserSettings() { PathLimit = 1000 };
 
         public UriPathParserTests()
         {
-            this.pathParser = new UriPathParser(1000);
+            this.pathParser = new UriPathParser(uriParserSettings);
         }
 
         // TODO: Consider if we want to do anything special for the characters discussed here: http://blogs.msdn.com/b/peter_qian/archive/2010/05/25/using-wcf-data-service-with-restricted-characrters-as-keys.aspx
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ParsePathThrowsIfDepthLimitIsReached()
         {
-            this.pathParser = new UriPathParser(2);
+            this.pathParser = new UriPathParser(new ODataUriParserSettings() { PathLimit = 2});
             Action enumerate = () => this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two/Three"), this.baseUri);
             enumerate.ShouldThrow<ODataException>(Strings.UriQueryPathParser_TooManySegments);
         }

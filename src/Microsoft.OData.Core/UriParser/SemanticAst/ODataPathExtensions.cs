@@ -136,7 +136,7 @@ namespace Microsoft.OData.UriParser
         public static bool IsIndividualProperty(this ODataPath path)
         {
             ODataPathSegment lastSegmentWithTypeCast = path.TrimEndingTypeSegment().LastSegment;
-            return lastSegmentWithTypeCast is PropertySegment || lastSegmentWithTypeCast is OpenPropertySegment;
+            return lastSegmentWithTypeCast is PropertySegment || lastSegmentWithTypeCast is DynamicPathSegment;
         }
 
         /// <summary>

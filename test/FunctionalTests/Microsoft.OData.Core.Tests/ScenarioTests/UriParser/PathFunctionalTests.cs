@@ -549,7 +549,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OpenPropertyOnOpenEntity()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(1)/SomeOpenProp");
-            path.LastSegment.ShouldBeOpenPropertySegment("SomeOpenProp")
+            path.LastSegment.ShouldBeDynamicPathSegment("SomeOpenProp")
                 .And.EdmType.Should().BeNull();
         }
 
@@ -557,7 +557,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OpenPropertyOnOpenComplex()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyOpenAddress/SomeOpenProp");
-            path.LastSegment.ShouldBeOpenPropertySegment("SomeOpenProp")
+            path.LastSegment.ShouldBeDynamicPathSegment("SomeOpenProp")
                 .And.EdmType.Should().BeNull();
         }
 
@@ -1171,9 +1171,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 s => s.ShouldBeEntitySetSegment(HardCodedTestModel.GetPaintingsSet()),
                 s => s.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", -415)),
-                s => s.ShouldBeOpenPropertySegment("OpenOne"),
-                s => s.ShouldBeOpenPropertySegment("OpenTwo"),
-                s => s.ShouldBeOpenPropertySegment("OpenThree")
+                s => s.ShouldBeDynamicPathSegment("OpenOne"),
+                s => s.ShouldBeDynamicPathSegment("OpenTwo"),
+                s => s.ShouldBeDynamicPathSegment("OpenThree")
             });
         }
 
@@ -1189,7 +1189,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SegmentWithPeriodsOnOpenTypeIsAProperty()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(1)/Not.A.Type.Or.Operation");
-            path.LastSegment.ShouldBeOpenPropertySegment("Not.A.Type.Or.Operation");
+            path.LastSegment.ShouldBeDynamicPathSegment("Not.A.Type.Or.Operation");
             path.NavigationSource().Should().BeNull();
         }
 
@@ -1197,7 +1197,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SegmentsWithPeriodsAfterOpenPropertyIsAnOpenProperty()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(-415)/OpenProperty/Not.A.Type.Or.Operation");
-            path.LastSegment.ShouldBeOpenPropertySegment("Not.A.Type.Or.Operation");
+            path.LastSegment.ShouldBeDynamicPathSegment("Not.A.Type.Or.Operation");
         }
 
         /// <summary>
@@ -1212,8 +1212,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 s => s.ShouldBeEntitySetSegment(HardCodedTestModel.GetPaintingsSet()),
                 s => s.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", -415)),
-                s => s.ShouldBeOpenPropertySegment("OpenProperty"),
-                s => s.ShouldBeOpenPropertySegment("Fully.Qualified.Namespace.Person"),
+                s => s.ShouldBeDynamicPathSegment("OpenProperty"),
+                s => s.ShouldBeDynamicPathSegment("Fully.Qualified.Namespace.Person"),
             });
         }
 

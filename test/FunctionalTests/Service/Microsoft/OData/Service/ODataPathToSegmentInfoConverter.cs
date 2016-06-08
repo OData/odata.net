@@ -663,7 +663,7 @@ namespace Microsoft.OData.Service
             }
 
             CheckSingleResult(previous.SingleResult, previous.Identifier);
-            segmentInfo = CreateOpenPropertySegment(previous, ((OpenPropertySegment)segment).PropertyName);
+            segmentInfo = CreateOpenPropertySegment(previous, ((DynamicPathSegment)segment).Identifier);
             Debug.Assert(segmentInfo.TargetSource == RequestTargetSource.Property, "segment.TargetSource == RequestTargetSource.Property");
             return segmentInfo;
         }

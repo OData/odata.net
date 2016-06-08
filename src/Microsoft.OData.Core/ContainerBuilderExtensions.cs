@@ -131,6 +131,8 @@ namespace Microsoft.OData
             builder.AddService(ServiceLifetime.Singleton, sp => ODataPayloadValueConverter.GetPayloadValueConverter(null));
             builder.AddService<IEdmModel>(ServiceLifetime.Singleton, sp => EdmCoreModel.Instance);
             builder.AddService(ServiceLifetime.Singleton, sp => ODataUriResolver.GetUriResolver(null));
+            builder.AddService<ODataUriParserSettings>(ServiceLifetime.Scoped);
+            builder.AddService<UriPathParser>(ServiceLifetime.Scoped);
 
             return builder;
         }

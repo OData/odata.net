@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
 
     /// <summary>
     /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/>, <see cref="NavigationPropertySegment"/>,
-    /// <see cref="PropertySegment"/>, <see cref="OperationSegment"/>, or <see cref="OpenPropertySegment"/>.
+    /// <see cref="PropertySegment"/>, <see cref="OperationSegment"/>, or <see cref="DynamicPathSegment"/>.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataSelectPathCollection just doesn't sound right")]
     public class ODataSelectPath : ODataPath
@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser
                         throw new ODataException(ODataErrorStrings.ODataSelectPath_CannotEndInTypeSegment);
                     }
                 }
-                else if (segment is OpenPropertySegment || segment is PropertySegment)
+                else if (segment is DynamicPathSegment || segment is PropertySegment)
                 {
                     continue;
                 }

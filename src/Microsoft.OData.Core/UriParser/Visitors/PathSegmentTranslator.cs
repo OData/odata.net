@@ -99,7 +99,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
-        public virtual T Translate(OpenPropertySegment segment)
+        public virtual T Translate(DynamicPathSegment segment)
         {
             throw new NotImplementedException();
         }

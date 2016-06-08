@@ -347,7 +347,7 @@
     <Compile Include="UriParser\SemanticAst\ODataPathExtensionsTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPathTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataSelectPathTests.cs" />
-    <Compile Include="UriParser\SemanticAst\OpenPropertySegmentTests.cs" />
+    <Compile Include="UriParser\SemanticAst\DynamicPathSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\OperationImportSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\PathSelectItemTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetExpressionResolverTests.cs" />
@@ -393,6 +393,7 @@
     <Compile Include="UriParser\NodeAssertions.cs" />
     <Compile Include="UriParser\ODataQueryOptionParserTests.cs" />
     <Compile Include="UriParser\ODataUriParserTests.cs" />
+    <Compile Include="UriParser\ODataUriParserInjectionTests.cs" />
     <Compile Include="UriParser\ODataUrlConventionsTests.cs" />
     <Compile Include="UriParser\SegmentAssertions.cs" />
     <Compile Include="UriParser\Visitors\QueryNodeVisitorTests.cs" />
