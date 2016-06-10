@@ -91,7 +91,8 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             Debug.Assert(Enum.IsDefined(typeof(RequestTargetKind), this.TargetKind), "enum value is not valid");
             Debug.Assert(
                 this.TargetKind != RequestTargetKind.Resource ||
-                this.TargetEdmNavigationSource != null || 
+                this.TargetEdmNavigationSource != null ||
+                this.TargetEdmType != null ||
                 this.TargetKind == RequestTargetKind.OpenProperty ||
                 this is OperationSegment ||
                 this is OperationImportSegment,

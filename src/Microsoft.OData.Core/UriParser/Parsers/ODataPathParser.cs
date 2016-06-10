@@ -1162,6 +1162,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
         private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
         {
+            Debug.Assert(previous != null, "previous != null");
             if (property.Type.IsStream())
             {
                 // The server used to allow arbitrary key expressions after named streams because this check was missing.
@@ -1180,7 +1181,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 var navigationProperty = (IEdmNavigationProperty)property;
-                IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty);
+                IEdmNavigationSource navigationSource = null;
+                if (previous.TargetEdmNavigationSource != null)
+                {
+                    navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty);
+                }
 
                 // Relationship between TargetMultiplicity and navigation property:
                 //  1) EdmMultiplicity.Many <=> collection navigation property
