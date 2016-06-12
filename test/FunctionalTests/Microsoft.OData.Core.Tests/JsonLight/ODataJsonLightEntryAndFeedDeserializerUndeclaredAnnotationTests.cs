@@ -13,10 +13,7 @@
 
     public class ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests
     {
-        private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
-        {
-            UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty
-        };
+        private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings();
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
@@ -33,6 +30,8 @@
 
         public ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests()
         {
+            this.readerSettings.Validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
+            this.readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
             this.serverModel = new EdmModel();
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);

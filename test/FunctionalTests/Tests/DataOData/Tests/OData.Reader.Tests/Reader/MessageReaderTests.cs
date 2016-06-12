@@ -89,27 +89,42 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         ODataExpectedExceptions.ODataException("ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute", "foo/"),
                         this.ExceptionVerifier);
 
+                    var settings = new ODataMessageReaderSettings();
+
                     // Verify the None UndeclaredPropertyBehaviorKinds works on both request and response.
+                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        ODataUndeclaredPropertyBehaviorKinds.None,
+                        settings.Validations);
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None}),
+                        () => settingsAction.Action(message, settings),
                         null,
                         this.ExceptionVerifier);
 
                     // Verify the IgnoreUndeclaredValueProperty UndeclaredPropertyBehaviorKinds fails on requests.
+                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
+                        settings.Validations);
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty }),
+                        () => settingsAction.Action(message, settings),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
                         this.ExceptionVerifier);
 
                     // Verify the ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
+                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
+                        settings.Validations);
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty }),
+                        () => settingsAction.Action(message, settings),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
                         this.ExceptionVerifier);
 
                     // Verify the IgnoreUndeclaredValueProperty | ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
+                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty
+                        | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
+                        settings.Validations);
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty }),
+                        () => settingsAction.Action(message, settings),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
                         this.ExceptionVerifier);
                 });

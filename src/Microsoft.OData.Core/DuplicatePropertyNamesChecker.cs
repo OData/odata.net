@@ -33,9 +33,6 @@ namespace Microsoft.OData
         /// <summary>true if we're processing a response; false if it's a request.</summary>
         private readonly bool isResponse;
 
-        /// <summary>Disable the check process if it is true.</summary>
-        private readonly bool disabled;
-
 #if DEBUG
         /// <summary>Name of the nested resource info for which we were asked to check duplication on its start.</summary>
         /// <remarks>If this is set, the next call must be a real check for the same nested resource info.</remarks>
@@ -50,27 +47,14 @@ namespace Microsoft.OData
         private Dictionary<string, DuplicationRecord> propertyNameCache;
 
         /// <summary>
-        /// Creates a disabled DuplicatePropertyNamesChecker instance.
+        /// Creates a DuplicatePropertyNamesChecker instance.
         /// </summary>
         /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
         /// <param name="isResponse">true if we're processing a response; false if it's a request.</param>
         public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse)
-            : this(allowDuplicateProperties, isResponse, false)
-        {
-            // nop
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
-        /// <param name="isResponse">true if we're processing a response; false if it's a request.</param>
-        /// <param name="disabled">Disable the check process if it is true.</param>
-        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse, bool disabled)
         {
             this.allowDuplicateProperties = allowDuplicateProperties;
             this.isResponse = isResponse;
-            this.disabled = disabled;
         }
 
         /// <summary>
@@ -107,11 +91,6 @@ namespace Microsoft.OData
         /// <param name="property">The property to be checked.</param>
         internal void CheckForDuplicatePropertyNames(ODataProperty property)
         {
-            if (this.disabled)
-            {
-                return;
-            }
-
             Debug.Assert(property != null, "property != null");
 #if DEBUG
             Debug.Assert(this.startNestedResourceInfoName == null, "CheckForDuplicatePropertyNamesOnNestedResourceInfoStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
@@ -157,11 +136,6 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
         internal void CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(ODataNestedResourceInfo nestedResourceInfo)
         {
-            if (this.disabled)
-            {
-                return;
-            }
-
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 #if DEBUG
             this.startNestedResourceInfoName = nestedResourceInfo.Name;
@@ -189,10 +163,6 @@ namespace Microsoft.OData
         /// <returns>The association link uri with the same name if there already was one.</returns>
         internal Uri CheckForDuplicatePropertyNames(ODataNestedResourceInfo nestedResourceInfo, bool isExpanded, bool? isCollection)
         {
-            if (this.disabled)
-            {
-                return null;
-            }
 #if DEBUG
             this.startNestedResourceInfoName = null;
 #endif
@@ -268,11 +238,6 @@ namespace Microsoft.OData
         /// <returns>The navigation link with the same name as the association link if there's one.</returns>
         internal ODataNestedResourceInfo CheckForDuplicateAssociationLinkNames(string associationLinkName, Uri associationLinkUrl)
         {
-            if (this.disabled)
-            {
-                return null;
-            }
-
             Debug.Assert(associationLinkName != null, "associationLinkName != null");
 #if DEBUG
             Debug.Assert(this.startNestedResourceInfoName == null, "CheckForDuplicatePropertyNamesOnNestedResourceInfoStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
@@ -329,7 +294,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">The name of the property to add annotation to. string.empty means the annotation is for the current scope.</param>
         /// <param name="annotationName">The name of the annotation to add.</param>
-        /// <param name="annotationValue">The valud of the annotation to add.</param>
+        /// <param name="annotationValue">The value of the annotation to add.</param>
         internal void AddODataPropertyAnnotation(string propertyName, string annotationName, object annotationValue)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -361,7 +326,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">The name of the property to add annotation to. string.empty means the annotation is for the current scope.</param>
         /// <param name="annotationName">The name of the annotation to add.</param>
-        /// <param name="annotationValue">The valud of the annotation to add.</param>
+        /// <param name="annotationValue">The value of the annotation to add.</param>
         internal void AddCustomPropertyAnnotation(string propertyName, string annotationName, object annotationValue = null)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -387,7 +352,7 @@ namespace Microsoft.OData
         /// Returns OData annotations for the specified property with name <paramref name="propertyName"/>.
         /// </summary>
         /// <param name="propertyName">The name of the property to return the annotations for.</param>
-        /// <returns>Enumeration of pairs of OData annotation name and and the annotation value, or null if there are no OData annotations for the property.</returns>
+        /// <returns>Enumeration of pairs of OData annotation name and the annotation value, or null if there are no OData annotations for the property.</returns>
         internal Dictionary<string, object> GetODataPropertyAnnotations(string propertyName)
         {
             Debug.Assert(propertyName != null, "propertyName != null");
@@ -410,7 +375,7 @@ namespace Microsoft.OData
         /// Returns custom instance annotations for the specified property with name <paramref name="propertyName"/>.
         /// </summary>
         /// <param name="propertyName">The name of the property to return the annotations for.</param>
-        /// <returns>Enumeration of pairs of custom instance annotation name and and the annotation value, or null if there are no OData annotations for the property.</returns>
+        /// <returns>Enumeration of pairs of custom instance annotation name and the annotation value, or null if there are no OData annotations for the property.</returns>
         internal Dictionary<string, object> GetCustomPropertyAnnotations(string propertyName)
         {
             Debug.Assert(propertyName != null, "propertyName != null");
@@ -438,11 +403,6 @@ namespace Microsoft.OData
         /// </remarks>
         internal void MarkPropertyAsProcessed(string propertyName)
         {
-            if (this.disabled)
-            {
-                return;
-            }
-
             Debug.Assert(propertyName != null, "propertyName != null");
 
             DuplicationRecord duplicationRecord;
@@ -491,7 +451,7 @@ namespace Microsoft.OData
         /// Determines the effective value for the isCollection flag.
         /// </summary>
         /// <param name="isExpanded">true if the nested resource info is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singletong or null if we don't know.</param>
+        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singleton or null if we don't know.</param>
         /// <returns>The effective value of the isCollection flag. Note that we can't rely on singleton links which are not expanded since
         /// those can appear even in cases where the actual navigation property is a collection.
         /// We allow singleton deferred links for collection properties in requests, as that is one way of expressing a bind operation.</returns>
@@ -506,7 +466,7 @@ namespace Microsoft.OData
         /// <param name="duplicationRecord">The duplication record to modify.</param>
         /// <param name="nestedResourceInfo">The nested resource info found for this property.</param>
         /// <param name="isExpanded">true if the nested resource info is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singletong or null if we don't know.</param>
+        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singleton or null if we don't know.</param>
         private static void ApplyNestedResourceInfoToDuplicationRecord(DuplicationRecord duplicationRecord, ODataNestedResourceInfo nestedResourceInfo, bool isExpanded, bool? isCollection)
         {
             duplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;

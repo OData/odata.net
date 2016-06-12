@@ -109,9 +109,8 @@ namespace Microsoft.OData.Json
 
                 // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
                 //       type; we always fall back to the expected type.
-                ReaderValidationUtils.ValidateNullValue(
+                inputContext.MessageReaderSettings.Validator.ValidateNullValue(
                     expectedTypeReference,
-                    inputContext.MessageReaderSettings,
                     validateNullValue,
                     propertyName,
                     isDynamicProperty);

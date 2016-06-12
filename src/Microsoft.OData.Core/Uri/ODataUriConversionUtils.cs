@@ -73,7 +73,9 @@ namespace Microsoft.OData
         /// <returns>An ODataComplexValue or ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
         internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings() { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty };
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            settings.Validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
+            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
 
             using (StringReader reader = new StringReader(value))
             {

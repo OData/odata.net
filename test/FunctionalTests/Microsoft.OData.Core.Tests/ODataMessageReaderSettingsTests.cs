@@ -22,19 +22,20 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
 
-            Assert.False(settings.AllowDuplicatePropertyNames, "The AllowDuplicatePropertyNames should be false by default");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
             Assert.Null(settings.BaseUri);
             Assert.Null(settings.ClientCustomTypeResolver);
             Assert.False(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion should be false by default.");
             Assert.False(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
-            Assert.True(settings.EnableFullValidation, "The EnableFullValidation should be true by default");
-            Assert.False(settings.EnableLaxMetadataValidation, "The EnableLaxMetadataValidation should be false by default");
+            Assert.True((settings.Validations & ReaderValidations.BasicValidation) != 0, "BasicValidation should be true by default");
+            Assert.True((settings.Validations & ReaderValidations.StrictMetadataValidation) != 0, "The StrictMetadataValidation should be true by default");
             Assert.True(settings.EnableReadingEntryContentInEntryStartState, "The EnableReadingEntryContentInEntryStartState should be true by default");
             Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
             Assert.Null(settings.UseKeyAsSegment);
-            Assert.True(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds should be Default by default.");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredLinkProperty) != 0, "ThrowOnUndeclaredLinkProperty should be true by default.");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredValueProperty) == 0, "ThrowOnUndeclaredValueProperty should be false by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
@@ -50,17 +51,13 @@ namespace Microsoft.OData.Tests
 
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings
             {
-                AllowDuplicatePropertyNames = true,
                 BaseUri = baseUri,
                 DisablePrimitiveTypeConversion = true,
                 DisableMessageStreamDisposal = true,
                 EnableCharactersCheck = true,
-                EnableFullValidation = false,
-                EnableLaxMetadataValidation = true,
                 EnableReadingEntryContentInEntryStartState = false,
                 ODataSimplified = true,
                 UseKeyAsSegment = true,
-                UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
                 MaxProtocolVersion = ODataVersion.V4,
                 MessageQuotas = new ODataMessageQuotas
                 {
@@ -70,18 +67,24 @@ namespace Microsoft.OData.Tests
                     MaxReceivedMessageSize = 5,
                 },
             };
+            settings.Validations &= ~ReaderValidations.StrictMetadataValidation
+                                    & ~ReaderValidations.ThrowOnDuplicatePropertyNames
+                                    & ~ReaderValidations.BasicValidation
+                                    & ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            settings.Validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
 
-            Assert.True(settings.AllowDuplicatePropertyNames, "The AllowDuplicatePropertyNames was not correctly remembered");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) == 0, "The ThrowOnDuplicatePropertyNames was not correctly remembered");
             Assert.True(baseUri.Equals(settings.BaseUri), "The BaseUri was not correctly remembered.");
             Assert.True(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion was not correctly remembered.");
             Assert.True(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal was not correctly remembered.");
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
-            Assert.False(settings.EnableFullValidation, "The EnableFullValidation was not correctly remembered");
-            Assert.True(settings.EnableLaxMetadataValidation, "The EnableLaxMetadataValidation was not correctly remembered");
-            Assert.False(settings.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState was not correctly remebered");
+            Assert.True((settings.Validations & ReaderValidations.BasicValidation) == 0, "BasicValidation was not correctly remembered");
+            Assert.False(settings.StrictMetadataValidation, "The StrictMetadataValidation was not correctly remembered");
+            Assert.False(settings.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState was not correctly remembered");
             Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
             Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
-            Assert.True(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty == settings.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds was not correctly remembered.");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredLinkProperty) != 0, "ThrowOnUndeclaredLinkProperty was not correctly remembered.");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredValueProperty) == 0, "ThrowOnUndeclaredValueProperty was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
             Assert.True(3 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be 3");
@@ -124,7 +127,8 @@ namespace Microsoft.OData.Tests
 
             // Compare original and settings created from copy constructor after setting rest of the values 
             settings.DisableMessageStreamDisposal = true;
-            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty | ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredLinkProperty
+                                    & ~ReaderValidations.ThrowOnUndeclaredValueProperty;
             settings.MaxProtocolVersion = ODataVersion.V4;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;
@@ -175,20 +179,18 @@ namespace Microsoft.OData.Tests
 
             Assert.True(expected != null, "expected settings cannot be null");
             Assert.True(actual != null, "actual settings cannot be null");
-            Assert.True(expected.AllowDuplicatePropertyNames == actual.AllowDuplicatePropertyNames, "AllowDuplicatePropertyNames does not match");
+            Assert.True(expected.Validations == actual.Validations, "Validations does not match");
             Assert.True(Uri.Compare(expected.BaseUri, actual.BaseUri, UriComponents.AbsoluteUri, UriFormat.Unescaped, StringComparison.CurrentCulture) == 0,
                 "BaseUri does not match");
             Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
             Assert.True(expected.DisableMessageStreamDisposal == actual.DisableMessageStreamDisposal, "DisableMessageStreamDisposal does not match");
             Assert.True(expected.DisablePrimitiveTypeConversion == actual.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
-            Assert.True(expected.EnableFullValidation == actual.EnableFullValidation, "EnableFullValidation does not match");
-            Assert.True(expected.EnableLaxMetadataValidation == actual.EnableLaxMetadataValidation, "EnableLaxMetadataValidation does not match");
             Assert.True(expected.EnableReadingEntryContentInEntryStartState == actual.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState does not match");
             Assert.True(expected.ODataSimplified == actual.ODataSimplified, "ODataSimplified does not match");
             Assert.True(expected.ShouldIncludeAnnotation == actual.ShouldIncludeAnnotation, "UseKeyAsSegment does not match");
             Assert.True(expected.UseKeyAsSegment == actual.UseKeyAsSegment, "UseKeyAsSegment does not match");
-            Assert.True(expected.UndeclaredPropertyBehaviorKinds == actual.UndeclaredPropertyBehaviorKinds, "UndeclaredPropertyBehaviorKinds does not match");
+            Assert.True(expected.Validations == actual.Validations, "Validations does not match");
             Assert.True(expected.MaxProtocolVersion == actual.MaxProtocolVersion, "MaxProtocolVersion does not match.");
             Assert.True(expected.MessageQuotas.MaxPartsPerBatch == actual.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch does not match");
             Assert.True(expected.MessageQuotas.MaxOperationsPerChangeset == actual.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset does not match");

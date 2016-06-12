@@ -177,13 +177,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             return;
                         }
 #endif
+                        var settings = new ODataMessageReaderSettings
+                        {
+                            DisableMessageStreamDisposal = disableMessageStreamDisposal
+                        };
+                        settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                            ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
+                            settings.Validations);
                         configurations.Add(new ReaderTestConfiguration(
                             format,
-                            new ODataMessageReaderSettings()
-                            {
-                                DisableMessageStreamDisposal = disableMessageStreamDisposal,
-                                UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
-                            },
+                            settings,
                             isRequest,
                             synchronous));
                     });
@@ -216,13 +219,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             return;
                         }
 #endif
+                        var settings = new ODataMessageReaderSettings
+                        {
+                            DisableMessageStreamDisposal = limitedCombination.DisableMessageStreamDisposal
+                        };
+                        settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                            ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
+                            settings.Validations);
                         configurations.Add(new ReaderTestConfiguration(
                             format,
-                            new ODataMessageReaderSettings()
-                            {
-                                DisableMessageStreamDisposal = limitedCombination.DisableMessageStreamDisposal,
-                                UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
-                            },
+                            settings,
                             isRequest,
                             limitedCombination.Synchronous));
                     });

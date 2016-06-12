@@ -97,14 +97,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 case TestODataBehaviorKind.Default:
                     break;
                 case TestODataBehaviorKind.WcfDataServicesClient:
-                    testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                    testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                    testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
                     // EnableReadingEntryContentInEntryStartState == true
                     break;
             }

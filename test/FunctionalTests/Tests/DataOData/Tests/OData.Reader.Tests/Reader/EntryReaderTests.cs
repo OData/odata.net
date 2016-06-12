@@ -455,9 +455,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     if (useServerBehavior)
                     {
-                        testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                         testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                        testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
                         // EnableReadingEntryContentInEntryStartState == true
                     }
 
@@ -1308,7 +1308,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         (testDescriptor, testConfiguration) =>
                         {
                             testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                            testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds;
+                            testConfiguration.MessageReaderSettings.Validations =
+                                ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                                    undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                             testDescriptor.RunTest(testConfiguration);
                         });
@@ -1593,7 +1595,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = behavior;
+                    testConfiguration.MessageReaderSettings.Validations =
+                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                            behavior, testConfiguration.MessageReaderSettings.Validations);
 
                     testDescriptor.RunTest(testConfiguration);
                 });

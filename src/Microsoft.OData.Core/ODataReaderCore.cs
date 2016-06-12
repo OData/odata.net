@@ -459,13 +459,12 @@ namespace Microsoft.OData
             SerializationTypeNameAnnotation serializationTypeNameAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmStructuredTypeReference targetResourceTypeReference =
-                (IEdmStructuredTypeReference)ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+                (IEdmStructuredTypeReference)this.inputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.Complex | EdmTypeKind.Entity,
                     /*defaultPrimitivePayloadType*/ null,
                     this.CurrentResourceType.ToTypeReference(),
                     resourceTypeNameFromPayload,
                     this.inputContext.Model,
-                    this.inputContext.MessageReaderSettings,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);

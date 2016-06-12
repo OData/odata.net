@@ -207,9 +207,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     if (allowDuplicateProperties)
                     {
-                        testConfiguration.MessageReaderSettings.AllowDuplicatePropertyNames = true;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                         testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                        testConfiguration.MessageReaderSettings.EnableLaxMetadataValidation = true;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
                         // EnableReadingEntryContentInEntryStartState == true
 
                     }

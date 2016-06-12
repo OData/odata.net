@@ -1557,13 +1557,12 @@ namespace Microsoft.OData.JsonLight
             SerializationTypeNameAnnotation serializationTypeNameAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmEntityTypeReference targetEntityTypeReference =
-                (IEdmEntityTypeReference)ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+                (IEdmEntityTypeReference)this.jsonLightInputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.Entity,
                 /*defaultPrimitivePayloadType*/ null,
                     this.CurrentEntityType.ToTypeReference(),
                     entityTypeNameFromPayload,
                     this.jsonLightInputContext.Model,
-                    this.jsonLightInputContext.MessageReaderSettings,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);

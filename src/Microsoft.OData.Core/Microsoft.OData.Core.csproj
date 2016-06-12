@@ -46,6 +46,7 @@
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="IContainerProvider.cs" />
+    <Compile Include="IReaderValidator.cs" />
     <Compile Include="IWriterValidator.cs" />
     <Compile Include="Json\DefaultJsonReaderFactory.cs" />
     <Compile Include="Json\DefaultJsonWriterFactory.cs" />
@@ -58,6 +59,10 @@
     <Compile Include="PropertyMetadataTypeInfo.cs" />
     <Compile Include="PropertySerializationInfo.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
+    <Compile Include="ReaderValidations.cs" />
+    <Compile Include="ReaderValidator.cs" />
+    <Compile Include="ReaderValidatorWithBasicValidation.cs" />
+    <Compile Include="ReaderValidatorWithoutBasicValidation.cs" />
     <Compile Include="ServiceLifetime.cs" />
     <Compile Include="IContainerBuilder.cs" />
     <Compile Include="Metadata\ODataAtomErrorDeserializer.cs" />
@@ -565,7 +570,6 @@
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitor.cs" />
     <Compile Include="UriUtils.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="IMessageValidationSetting.cs" />
     <Compile Include="ValidationUtils.cs" />
     <Compile Include="WriterUtils.cs" />
     <Compile Include="WriterValidations.cs" />

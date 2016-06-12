@@ -290,13 +290,12 @@ namespace Microsoft.OData.JsonLight
                 // only try resolving for known type (the below will throw on unknown type name) :
                 SerializationTypeNameAnnotation serializationTypeNameAnnotation;
                 EdmTypeKind targetTypeKind;
-                payloadTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+                payloadTypeReference = this.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
                     payloadTypeName,
                     this.Model,
-                    this.MessageReaderSettings,
                     this.GetNonEntityValueKind,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);
@@ -358,13 +357,12 @@ namespace Microsoft.OData.JsonLight
                 // only try resolving for known type (the below will throw on unknown type name) :
                 SerializationTypeNameAnnotation serializationTypeNameAnnotation;
                 EdmTypeKind targetTypeKind;
-                payloadTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+                payloadTypeReference = this.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
                     payloadTypeName,
                     this.Model,
-                    this.MessageReaderSettings,
                     this.GetNonEntityValueKind,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);
@@ -1062,11 +1060,11 @@ namespace Microsoft.OData.JsonLight
             {
                 // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
                 //       type; we always fall back to the expected type.
-                ReaderValidationUtils.ValidateNullValue(
+                this.MessageReaderSettings.Validator.ValidateNullValue(
                     expectedPropertyTypeReference,
-                    this.MessageReaderSettings,
                     /*validateNullValue*/ true,
-                    /*propertyName*/ null);
+                    /*propertyName*/ null,
+                    null);
 
                 // We don't allow properties or non-custom annotations in the null payload.
                 this.ValidateNoPropertyInNullPayload(duplicatePropertyNamesChecker);
@@ -1526,7 +1524,9 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 PropertyAnnotationCollector innerAnnotationCollector = new PropertyAnnotationCollector();
-                innerAnnotationCollector.ShouldCollectAnnotation = this.MessageReaderSettings.ShouldSupportUndeclaredProperty();
+
+                innerAnnotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredValueProperty;
+
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
                     innerAnnotationCollector,
@@ -1601,7 +1601,7 @@ namespace Microsoft.OData.JsonLight
             object propertyValue = null;
             if (edmProperty == null)
             {
-                if (this.MessageReaderSettings.ShouldThrowOnUndeclaredProperty())
+                if (this.MessageReaderSettings.ThrowOnUndeclaredValueProperty)
                 {
                     IEdmStructuredType owningStructuredType = (complexValueTypeReference != null)
                         ?
@@ -1612,8 +1612,8 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     Debug.Assert(
-                        this.MessageReaderSettings.ShouldSupportUndeclaredProperty(),
-                        "this.MessageReaderSettings.ShouldSupportUndeclaredProperty()");
+                        !this.MessageReaderSettings.ThrowOnUndeclaredValueProperty,
+                        "!this.MessageReaderSettings.ThrowOnUndeclaredValueProperty");
                     bool isTopLevelPropertyValue = false;
                     propertyValue = this.InnerReadNonOpenUndeclaredPropertyInComplex(
                         duplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
@@ -1739,13 +1739,12 @@ namespace Microsoft.OData.JsonLight
 
             SerializationTypeNameAnnotation serializationTypeNameAnnotation;
             EdmTypeKind targetTypeKind;
-            IEdmTypeReference targetTypeReference = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
+            IEdmTypeReference targetTypeReference = this.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                 EdmTypeKind.None,
                 /*defaultPrimitivePayloadType*/ null,
                 expectedTypeReference,
                 payloadTypeName,
                 this.Model,
-                this.MessageReaderSettings,
                 this.GetNonEntityValueKind,
                 out targetTypeKind,
                 out serializationTypeNameAnnotation);

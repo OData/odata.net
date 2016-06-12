@@ -111,11 +111,11 @@ namespace Microsoft.OData.JsonLight
             if (value == null)
             {
                 // Only primitive type references are validated. Core model is sufficient.
-                ReaderValidationUtils.ValidateNullValue(
+                messageReaderSettings.Validator.ValidateNullValue(
                     primitiveTypeReference,
-                    messageReaderSettings,
                     validateNullValue,
-                    propertyName);
+                    propertyName,
+                    null);
                 return null;
             }
 

@@ -154,7 +154,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, undeclaredPropertyBehaviorKinds);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds;
+                    testConfiguration.MessageReaderSettings.Validations =
+                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                            undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                     // These descriptors are already tailored specifically for Json Light and 
                     // do not require normalization.
@@ -254,7 +256,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     var settings = testConfiguration.Format == ODataFormat.Json ? this.JsonLightSettings : this.Settings;
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, undeclaredPropertyBehaviorKinds);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds;
+                    testConfiguration.MessageReaderSettings.Validations =
+                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                            undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                     // These descriptors are already tailored specifically for Json Light and 
                     // do not require normalization.
@@ -357,7 +361,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, undeclaredPropertyBehaviorKinds);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds;
+                    testConfiguration.MessageReaderSettings.Validations =
+                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                            undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                     // These descriptors are already tailored specifically for Json Light and 
                     // do not require normalization.

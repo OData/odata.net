@@ -3901,6 +3901,19 @@ public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
 }
 
+[
+FlagsAttribute(),
+]
+public enum Microsoft.OData.ReaderValidations : int {
+	BasicValidation = 1
+	FullValidation = -1
+	None = 0
+	StrictMetadataValidation = 4
+	ThrowOnDuplicatePropertyNames = 2
+	ThrowOnUndeclaredLinkProperty = 16
+	ThrowOnUndeclaredValueProperty = 8
+}
+
 public enum Microsoft.OData.ServiceLifetime : int {
 	Scoped = 1
 	Singleton = 0
@@ -4772,24 +4785,21 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 	public System.Threading.Tasks.Task`1[[System.Object]] ReadValueAsync (Microsoft.OData.Edm.IEdmTypeReference expectedTypeReference)
 }
 
-public sealed class Microsoft.OData.ODataMessageReaderSettings : IMessageValidationSetting {
+public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	public ODataMessageReaderSettings ()
 
-	bool AllowDuplicatePropertyNames  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
 	System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] ClientCustomTypeResolver  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool DisablePrimitiveTypeConversion  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
-	bool EnableFullValidation  { public virtual get; public virtual set; }
-	bool EnableLaxMetadataValidation  { public get; public set; }
 	bool EnableReadingEntryContentInEntryStartState  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
-	Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public virtual get; public virtual set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
+	Microsoft.OData.ReaderValidations Validations  { public get; public set; }
 
 	public Microsoft.OData.ODataMessageReaderSettings Clone ()
 }

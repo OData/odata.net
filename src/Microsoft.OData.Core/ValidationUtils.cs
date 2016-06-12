@@ -25,35 +25,38 @@ namespace Microsoft.OData
         /// <remarks>Keep this array in sync with MetadataProviderUtils.InvalidCharactersInPropertyNames in Astoria.</remarks>
         internal static readonly char[] InvalidCharactersInPropertyNames = new char[] { ':', '.', '@' };
 
-        /// <summary>Maximum batch boundary length supported (not includeding leading CRLF or '-').</summary>
+        /// <summary>Maximum batch boundary length supported (not including leading CRLF or '-').</summary>
         private const int MaxBoundaryLength = 70;
 
-        #region undeclared property setting logic
-
         /// <summary>
-        /// Retuns if undeclared property should be supported(read undeclared prmitive value into ODataUntypdValue).
+        /// Apply a source ODataUndeclaredPropertyBehaviorKinds value to a target ReaderValidations value, and return the
+        /// resulting ReaderValidations value.
         /// </summary>
-        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
-        /// <returns>True if undeclared property should be supported.</returns>
-        internal static bool ShouldSupportUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
+        /// <param name="kinds">The source ODataUndeclaredPropertyBehaviorKinds value.</param>
+        /// <param name="validations">The target ReaderValidations value.</param>
+        /// <returns>The resulting ReaderValidations value.</returns>
+        internal static ReaderValidations ApplyUndeclaredPropertyBehaviorKinds(ODataUndeclaredPropertyBehaviorKinds kinds, ReaderValidations validations)
         {
-            // ignore messageValidationSetting.EnableFullValidation
-            return messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
-                ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
-        }
+            if ((kinds & ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty) != 0)
+            {
+                validations &= ~ReaderValidations.ThrowOnUndeclaredLinkProperty;
+            }
+            else
+            {
+                validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
+            }
 
-        /// <summary>
-        /// Retuns if undeclared property should lead to an exception.
-        /// </summary>
-        /// <param name="messageValidationSetting">The IMessageValidationSetting.</param>
-        /// <returns>True if undeclared property should cause exception.</returns>
-        internal static bool ShouldThrowOnUndeclaredProperty(this IMessageValidationSetting messageValidationSetting)
-        {
-            // ignore messageValidationSetting.EnableFullValidation
-            return !messageValidationSetting.UndeclaredPropertyBehaviorKinds.HasFlag(
-                          ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty);
+            if ((kinds & ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty) != 0)
+            {
+                validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            }
+            else
+            {
+                validations |= ReaderValidations.ThrowOnUndeclaredValueProperty;
+            }
+
+            return validations;
         }
-        #endregion
 
         /// <summary>
         /// Validates that an open property value is supported.

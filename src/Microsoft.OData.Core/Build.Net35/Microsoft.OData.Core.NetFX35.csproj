@@ -178,9 +178,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\IPrimitiveTypeConverter.cs">
       <Link>Microsoft\OData\Core\IPrimitiveTypeConverter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\IMessageValidationSetting.cs">
-      <Link>Microsoft\OData\Core\IMessageValidationSetting.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\InstanceAnnotationWriteTracker.cs">
       <Link>Microsoft\OData\Core\InstanceAnnotationWriteTracker.cs</Link>
     </Compile>
@@ -1551,6 +1548,9 @@
     <Compile Include="..\IContainerProvider.cs">
       <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
     </Compile>
+    <Compile Include="..\IReaderValidator.cs">
+      <Link>Microsoft\OData\Core\IReaderValidator.cs</Link>
+    </Compile>
     <Compile Include="..\IWriterValidator.cs">
       <Link>Microsoft\OData\Core\IWriterValidator.cs</Link>
     </Compile>
@@ -1586,6 +1586,17 @@
     </Compile>
     <Compile Include="..\PropertyValueTypeInfo.cs">
       <Link>PropertyValueTypeInfo.cs</Link>
+    <Compile Include="..\ReaderValidations.cs">
+      <Link>Microsoft\OData\Core\ReaderValidations.cs</Link>
+    </Compile>
+    <Compile Include="..\ReaderValidator.cs">
+      <Link>Microsoft\OData\Core\ReaderValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\ReaderValidatorWithBasicValidation.cs">
+      <Link>Microsoft\OData\Core\ReaderValidatorWithBasicValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\ReaderValidatorWithoutBasicValidation.cs">
+      <Link>Microsoft\OData\Core\ReaderValidatorWithoutBasicValidation.cs</Link>
     </Compile>
     <Compile Include="..\ServicePrototype.cs">
       <Link>Microsoft\OData\Core\ServicePrototype.cs</Link>
