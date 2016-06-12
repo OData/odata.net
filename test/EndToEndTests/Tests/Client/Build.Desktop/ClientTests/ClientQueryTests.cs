@@ -198,6 +198,36 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
         [TestMethod]
+        public void ProjectionWithNulPropagationCheck()
+        {
+            this.RunOnAtomAndJsonFormats(
+                this.CreateContext,
+                (contextWrapper) =>
+                {
+                    var query = from o in contextWrapper.Context.OrderLine
+                                where o.OrderId == -10 && o.ProductId == -10
+                                select new OrderLine
+                                {
+                                    OrderId = o.OrderId,
+                                    Order = o.Order == null ? null : new Order
+                                    {
+                                        Customer = o.Order.Customer == null ? null : new Customer
+                                        {
+                                            Husband = o.Order.Customer.Husband == null ? null : new Customer
+                                            {
+                                                Name = o.Order.Customer.Husband.Name
+                                            },
+                                        }
+                                    }
+                                };
+
+                    Uri uri = ((DataServiceQuery<OrderLine>)query).RequestUri;
+                    Assert.IsTrue(query.ToList().Count == 1);
+                    Assert.AreEqual("?$expand=Order($expand=Customer($expand=Husband($select=Name)))&$select=OrderId", uri.Query);
+                });
+        }
+
+        [TestMethod]
         public void DataServiceCollectionSubQueryTrackingItems()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, DataServiceCollectionSubQueryTrackingItems);
