@@ -1358,10 +1358,35 @@ namespace Microsoft.OData.Core
                                 case EdmNavigationSourceKind.ContainedEntitySet:
                                     if (odataUri.Path == null)
                                     {
-                                        throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                        odataUri.Path = new ODataPath();
+                                        var segmentStack = new Stack<ODataPathSegment>();
+                                        object navigationSourceHandle = navigationSource;
+
+                                        do
+                                        {
+                                            var containedNavigationSource = navigationSourceHandle as IEdmContainedEntitySet;
+
+                                            if (containedNavigationSource != null)
+                                            {
+                                                segmentStack.Push(new NavigationPropertySegment(containedNavigationSource.NavigationProperty, containedNavigationSource.ParentNavigationSource));
+                                                navigationSourceHandle = containedNavigationSource.ParentNavigationSource;
+                                            }
+                                            else 
+                                            {
+                                                segmentStack.Push(new EntitySetSegment(navigationSourceHandle as IEdmEntitySet));
+                                                navigationSourceHandle = null;
+                                            }
+                                        }
+                                        while (navigationSourceHandle != null);
+
+                                        foreach (var segment in segmentStack)
+                                        {
+                                            odataUri.Path.Add(segment);
+                                        }
                                     }
 
                                     odataPath = odataUri.Path;
+
                                     if (ShouldAppendKey(currentNavigationSource))
                                     {
                                         ODataItem odataItem = this.CurrentScope.Item;
