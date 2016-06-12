@@ -780,7 +780,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PublicProviderReflectionSer
       </EntityType>
       <EntityType Name=""ProductPageView"" BaseType=""Microsoft.Test.OData.Services.AstoriaDefaultService.PageView"">
         <Property Name=""ProductId"" Type=""Edm.Int32"" Nullable=""false"" />
-        <Property Name=""ConcurrencyToken"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" />
+        <Property Name=""ConcurrencyToken"" Type=""Edm.String"" />
       </EntityType>
       <EntityType Name=""LastLogin"">
         <Key>
@@ -834,7 +834,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PublicProviderReflectionSer
         <Property Name=""OrderId"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""ProductId"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Quantity"" Type=""Edm.Int32"" Nullable=""false"" />
-        <Property Name=""ConcurrencyToken"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" />
+        <Property Name=""ConcurrencyToken"" Type=""Edm.String"" />
         <NavigationProperty Name=""Order"" Type=""Microsoft.Test.OData.Services.AstoriaDefaultService.Order"" />
         <NavigationProperty Name=""Product"" Type=""Microsoft.Test.OData.Services.AstoriaDefaultService.Product"" />
       </EntityType>
@@ -848,7 +848,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PublicProviderReflectionSer
         <Property Name=""ProductId"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Description"" Type=""Edm.String"" />
         <Property Name=""Dimensions"" Type=""Microsoft.Test.OData.Services.AstoriaDefaultService.Dimensions"" />
-        <Property Name=""BaseConcurrency"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" />
+        <Property Name=""BaseConcurrency"" Type=""Edm.String"" />
         <Property Name=""ComplexConcurrency"" Type=""Microsoft.Test.OData.Services.AstoriaDefaultService.ConcurrencyInfo"" />
         <Property Name=""NestedComplexConcurrency"" Type=""Microsoft.Test.OData.Services.AstoriaDefaultService.AuditInfo"" />
         <NavigationProperty Name=""RelatedProducts"" Type=""Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Product)"" Partner=""RelatedProducts"" />
@@ -860,7 +860,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PublicProviderReflectionSer
         <Property Name=""Discontinued"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
         <Property Name=""ReplacementProductId"" Type=""Edm.Int32"" />
         <Property Name=""DiscontinuedPhone"" Type=""Microsoft.Test.OData.Services.AstoriaDefaultService.Phone"" />
-        <Property Name=""ChildConcurrencyToken"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" />
+        <Property Name=""ChildConcurrencyToken"" Type=""Edm.String"" />
       </EntityType>
       <ComplexType Name=""Dimensions"">
         <Property Name=""Width"" Type=""Edm.Decimal"" Nullable=""false"" />

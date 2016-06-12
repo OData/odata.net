@@ -855,7 +855,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void EdmPropertyReferenceExpression()
         {
-            var e = new EdmPropertyReferenceExpression(new EdmStringConstant("base"), new EdmStructuralProperty(new EdmComplexType("NS", "Complex"), "p1", EdmCoreModel.Instance.GetBoolean(false), null, EdmConcurrencyMode.None));
+            var e = new EdmPropertyReferenceExpression(new EdmStringConstant("base"), new EdmStructuralProperty(new EdmComplexType("NS", "Complex"), "p1", EdmCoreModel.Instance.GetBoolean(false), null));
             Assert.AreEqual(EdmExpressionKind.PropertyReference, e.ExpressionKind, "e.ExpressionKind");
             Assert.AreEqual("base", ((IEdmStringValue)e.Base).Value, "e.Base");
             Assert.AreEqual("p1", e.ReferencedProperty.Name, "e.ReferencedProperty");
@@ -863,7 +863,7 @@ namespace EdmLibTests.FunctionalTests
 
             try
             {
-                new EdmPropertyReferenceExpression(null, new EdmStructuralProperty(new EdmComplexType("NS", "Complex2"), "p1", EdmCoreModel.Instance.GetBoolean(false), null, EdmConcurrencyMode.None));
+                new EdmPropertyReferenceExpression(null, new EdmStructuralProperty(new EdmComplexType("NS", "Complex2"), "p1", EdmCoreModel.Instance.GetBoolean(false), null));
                 Assert.Fail("exception expected");
             }
             catch (ArgumentNullException)

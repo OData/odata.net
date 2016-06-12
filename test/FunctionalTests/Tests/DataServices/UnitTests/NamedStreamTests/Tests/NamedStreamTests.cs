@@ -387,9 +387,8 @@ namespace AstoriaUnitTests.Tests
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(NorthwindDefaultStreamService)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true"), new KeyValuePair<string, string>("Orders", "true") },
-                    null,
                     "NamedStreamTests_EFMetadataSerialization"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -444,7 +443,7 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
-                    using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(mles, null, "NamedStreamTests_EFMetadataStreamProvider"))
+                    using (NorthwindDefaultStreamService.SetupNorthwindWithStream(mles, "NamedStreamTests_EFMetadataStreamProvider"))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(NorthwindDefaultStreamService)))
                     {
                         OpenWebDataServiceHelper.ForceVerboseErrors = true;
@@ -1466,9 +1465,8 @@ namespace AstoriaUnitTests.Tests
                 DSPMediaResourceStorage mediaStorage = null;
 
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(NorthwindDefaultStreamService)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true"), new KeyValuePair<string, string>("Orders", "true") },
-                    null,
                     "NamedStreamTests_EFBasicScenarios"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
                 {

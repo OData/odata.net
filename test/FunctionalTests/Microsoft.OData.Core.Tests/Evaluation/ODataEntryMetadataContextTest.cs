@@ -32,8 +32,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             ActualEntityType = new EdmEntityType("ns", "TypeName");
             ActualEntityType.AddKeys(new IEdmStructuralProperty[] {ActualEntityType.AddStructuralProperty("ID2", EdmPrimitiveTypeKind.Int32), ActualEntityType.AddStructuralProperty("ID3", EdmPrimitiveTypeKind.Int32)});
-            ActualEntityType.AddStructuralProperty("Name2", EdmCoreModel.Instance.GetString(isNullable:true), /*defaultValue*/null, EdmConcurrencyMode.Fixed);
-            ActualEntityType.AddStructuralProperty("Name3", EdmCoreModel.Instance.GetString(isNullable: true), /*defaultValue*/null, EdmConcurrencyMode.Fixed);
+            ActualEntityType.AddStructuralProperty("Name2", EdmCoreModel.Instance.GetString(isNullable:true), /*defaultValue*/null);
+            ActualEntityType.AddStructuralProperty("Name3", EdmCoreModel.Instance.GetString(isNullable: true), /*defaultValue*/null);
             ActualEntityType.AddStructuralProperty("StreamProp1", EdmPrimitiveTypeKind.Stream);
             ActualEntityType.AddStructuralProperty("StreamProp2", EdmPrimitiveTypeKind.Stream);
 

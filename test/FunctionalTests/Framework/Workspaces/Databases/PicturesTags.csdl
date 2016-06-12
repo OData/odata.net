@@ -74,8 +74,8 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" />
-    <Property Name="Name" Type="String"  MaxLength="Max" Unicode="true" FixedLength="false" ConcurrencyMode="Fixed"/> 
-    <Property Name="Date" Type="String"  MaxLength="Max" Unicode="true" FixedLength="false" ConcurrencyMode="Fixed" /> 
+    <Property Name="Name" Type="String"  MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Date" Type="String"  MaxLength="Max" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="Tags" Relationship="PT.PictureTag" FromRole="Pictures" ToRole="Tags" />
   </EntityType>
   <EntityType Name="Tag">

@@ -2777,33 +2777,6 @@ namespace EDMMetadataExtensions
         {
             return GetNavPropsCore(entityType, true);
         }
-
-        public static bool HasConcurrencyToken(this IEdmEntityType entityType)
-        {
-            bool entityTypeHasConTokens = false;
-            foreach (var property in entityType.StructuralProperties())
-            {
-                entityTypeHasConTokens = property.ConcurrencyMode == EdmConcurrencyMode.Fixed;
-                if (entityTypeHasConTokens)
-                    break;
-            }
-            return entityTypeHasConTokens;
-        }
-
-        public static List<string> EtagProperties(this IEdmEntityType entityType)
-        {
-            List<string> propertiesAsEtags = new List<string>();
-            bool entityTypeHasConTokens = false;
-            foreach (var property in entityType.StructuralProperties())
-            {
-                entityTypeHasConTokens = property.ConcurrencyMode == EdmConcurrencyMode.Fixed;
-                if (entityTypeHasConTokens)
-                {
-                    propertiesAsEtags.Add(property.Name);
-                }
-            }
-            return propertiesAsEtags;
-        }
     }
 #endif
 

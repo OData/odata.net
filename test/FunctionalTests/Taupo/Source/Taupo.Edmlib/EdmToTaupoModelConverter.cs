@@ -149,11 +149,6 @@ namespace Microsoft.Test.Taupo.Edmlib
             var taupoProperty = new MemberProperty(edmProperty.Name);
             taupoProperty.PropertyType = this.ConvertToTaupoDataType(edmProperty.Type);
 
-            if (edmProperty.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-            {
-                taupoProperty.Add(new ConcurrencyTokenAnnotation());
-            }
-
             if (!string.IsNullOrEmpty(edmProperty.DefaultValueString))
             {
                 taupoProperty.DefaultValue = edmProperty.DefaultValueString;

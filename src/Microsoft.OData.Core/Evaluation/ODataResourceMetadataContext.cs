@@ -448,20 +448,9 @@ namespace Microsoft.OData.Evaluation
                     if (this.etagProperties == null)
                     {
                         IEnumerable<IEdmStructuralProperty> properties = this.ComputeETagPropertiesFromAnnotation();
-                        if (properties.Any())
-                        {
-                            this.etagProperties = properties
-                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray();
-                        }
-                        else
-                        {
-                            properties = this.actualResourceType.StructuralProperties();
-                            this.etagProperties = properties != null
-                                ? properties
-                                    .Where(p => p.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray()
-                                : EmptyProperties;
-                        }
+                        this.etagProperties = properties.Any()
+                            ? properties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray()
+                            : EmptyProperties;
                     }
 
                     return this.etagProperties;

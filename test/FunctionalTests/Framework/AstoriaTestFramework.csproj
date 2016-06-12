@@ -259,9 +259,7 @@
     <Compile Include="Features\Blobs\Client\PicturesTagsWorkspaces.cs" />
     <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsHelperService.svc.cs" />
     <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsHelperService.svc" />
-    <Compile Include="Features\Concurrency\ConcurrencyAttribute.cs" />
     <Compile Include="Features\Concurrency\ConcurrencyUtil.cs" />
-    <Compile Include="Features\Concurrency\ConcurrencyWorkspaces.cs" />
     <Compile Include="Features\Containment\ContainmentUtil.cs" />
     <Compile Include="Features\Containment\ContainmentAttribute.cs" />
     <Compile Include="Features\Containment\ContainmentQuery.cs" />
@@ -303,7 +301,6 @@
     <Compile Include="Resources\SystemResourceIdentifiers.cs" />
     <Compile Include="Resources\MicrosoftDataWebResourceIdentifiers.cs" />
     <Compile Include="Resources\ResourceUtil.cs" />
-    <Compile Include="TestExecutionLayer\AstoriaClientTestCase.cs" />
     <Compile Include="TestExecutionLayer\AstoriaWebDataServiceBase.cs" />
     <Compile Include="TestExecutionLayer\dptestmoduleattribute.cs" />
     <Compile Include="TestExecutionLayer\MatrixVariation.cs" />

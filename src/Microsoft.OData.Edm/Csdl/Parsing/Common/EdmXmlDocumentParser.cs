@@ -207,26 +207,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return null;
         }
 
-        protected EdmConcurrencyMode? OptionalConcurrencyMode(string attributeName)
-        {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
-            if (!attr.IsMissing)
-            {
-                switch (attr.Value)
-                {
-                    case CsdlConstants.Value_None:
-                        return EdmConcurrencyMode.None;
-                    case CsdlConstants.Value_Fixed:
-                        return EdmConcurrencyMode.Fixed;
-                    default:
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidConcurrencyMode, Edm.Strings.CsdlParser_InvalidConcurrencyMode(attr.Value));
-                        break;
-                }
-            }
-
-            return null;
-        }
-
         protected EdmMultiplicity RequiredMultiplicity(string attributeName)
         {
             XmlAttributeInfo attr = this.GetRequiredAttribute(this.currentElement, attributeName);

@@ -19,7 +19,7 @@
   </EntityType>
   <EntityType Name="Customer" BaseType="NS1.Person">
     <Property Name="IsVIP" Type="Edm.Boolean" />
-    <Property Name="LastUpdated" Type="Edm.DateTimeOffset" ConcurrencyMode="Fixed" Nullable="false" />
+    <Property Name="LastUpdated" Type="Edm.DateTimeOffset" Nullable="false" />
     <Property Name="BillingAddress" Type="NS1.Address" Nullable="false" />
     <Property Name="ShippingAddress" Type="NS1.Address" Nullable="false" />
     <NavigationProperty Name="ToOrders" Type="Collection(NS1.Order)" Partner="ToCustomer" />

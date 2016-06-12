@@ -68,15 +68,6 @@ namespace System.Data.Test.Astoria
         {
             return new NodeFacet(FacetKind.AbstractType, Clr.Value(true));
         }
-        public static NodeFacet ConcurrencyMode(ConcurrencyMode mode)
-        {
-            NodeValue nodeValue = new NodeValue(mode, null);
-            return new NodeFacet(FacetKind.ConcurrencyMode, nodeValue);
-        }
-        public static NodeFacet ConcurrencyModeFixed()
-        {
-            return NodeFacet.ConcurrencyMode(System.Data.Test.Astoria.ConcurrencyMode.Fixed);
-        }       
         public static NodeFacet Sortable(bool value)
         {
             return new NodeFacet(FacetKind.Sortable, Clr.Value(value));

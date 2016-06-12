@@ -726,7 +726,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("BadProp", badProp.Name, "Bad property keeps name");
             Assert.AreEqual(entityType, badProp.DeclaringType, "Correct declaring type");
             Assert.AreEqual(EdmPropertyKind.None, badProp.PropertyKind, "Bad Prop has prop kind of none");
-            Assert.AreEqual(EdmConcurrencyMode.None, badProp.ConcurrencyMode, "Bad prop has concurrency mode of none");
             Assert.IsNull(badProp.DefaultValueString, "Bad prop has no default value");
             IEdmTypeReference badType = badProp.Type;
             Assert.AreEqual(EdmTypeKind.None, badType.TypeKind(), "BadProp type set to none");
@@ -904,25 +903,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(parsed, "parsed");
             Assert.AreEqual(0, errors.Count(), "Correct number of errors");
             Assert.IsNull(((IEdmComplexType)model.FindType("Grumble.Person")).Properties().First().Type.AsString().MaxLength, "MaxLength is null.");
-        }
-
-        [TestMethod]
-        public void ParseBadConcurrencyMode()
-        {
-            const string csdl =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""Grumble"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <ComplexType Name=""Person"">
-        <Property Name=""Foo"" Type=""String"" ConcurrencyMode=""BAD"" Nullable=""false"" />
-    </ComplexType>
-</Schema>";
-
-            IEdmModel model;
-            IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-            Assert.IsFalse(parsed, "parsed");
-            Assert.AreEqual(1, errors.Count(), "Correct number of errors");
-            Assert.AreEqual(EdmErrorCode.InvalidConcurrencyMode, errors.First().ErrorCode, "Correct error code.");
         }
 
         [TestMethod]

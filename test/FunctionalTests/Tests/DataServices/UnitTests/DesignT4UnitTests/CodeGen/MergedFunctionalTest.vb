@@ -485,14 +485,14 @@ Namespace MergedFunctionalTest
  "        <Property Name=""ValueProp"" Type=""Edm.String"" Nullable=""false"" />" & _
  "      </EntityType>" & _
  "      <EntityType Name=""Child"" BaseType=""MergedFunctionalTest.Person"">" & _
- "        <Property Name=""Description"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" />" & _
+ "        <Property Name=""Description"" Type=""Edm.String"" />" & _
  "      </EntityType>" & _
  "      <EntityType Name=""Person"">" & _
  "        <Key>" & _
  "          <PropertyRef Name=""ID"" />" & _
  "        </Key>" & _
  "        <Property Name=""ID"" Type=""Edm.Guid"" Nullable=""false"" />" & _
- "        <Property Name=""Name"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" />" & _
+ "        <Property Name=""Name"" Type=""Edm.String"" />" & _
  "      </EntityType>" & _
  "      <EntityType Name=""TestType"">" & _
  "        <Key>" & _

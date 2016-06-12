@@ -65,7 +65,6 @@ namespace EdmLibTests.FunctionalTests
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ConcurrencyModeTypes(edmVersion), edmVersion);
                 this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.CollectionTypeTypeRefSimpleTypeCanHaveFacets(edmVersion), edmVersion);
             }
         }
@@ -559,14 +558,14 @@ namespace EdmLibTests.FunctionalTests
 
             var codegenerationTargetNamespace = EdmConstants.CodegenNamespace;
             var annotationTargetNamespace = EdmConstants.AnnotationNamespace;
-            var codegenerationXsdFileName = "System.Data.Resources.CodeGenerationSchema.xsd";
-            var annotationXsdFileName = "System.Data.Resources.AnnotationSchema.xsd";
+            var codegenerationXsdFileName = "Microsoft.OData.Resources.CodeGenerationSchema.xsd";
+            var annotationXsdFileName = "Microsoft.OData.Resources.AnnotationSchema.xsd";
 
             EdmLibXmlSchemas = new Dictionary<EdmVersion, XmlSchemaSet>();
             var schemas = new XmlSchemaSet();
             schemas.Add(codegenerationTargetNamespace, XmlReader.Create(this.GetXsdStream(codegenerationXsdFileName)));
             schemas.Add(annotationTargetNamespace, XmlReader.Create(this.GetXsdStream(annotationXsdFileName)));
-            schemas.Add(EdmConstants.EdmOasisNamespace, XmlReader.Create(this.GetXsdStream("System.Data.Resources.CSDLSchema_4.xsd")));
+            schemas.Add(EdmConstants.EdmOasisNamespace, XmlReader.Create(this.GetXsdStream("Microsoft.OData.Resources.CSDLSchema_4.xsd")));
             EdmLibXmlSchemas.Add(EdmVersion.V40, schemas);
         }
     }

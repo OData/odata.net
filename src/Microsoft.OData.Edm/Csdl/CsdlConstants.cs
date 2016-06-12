@@ -56,7 +56,6 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_Binary = "Binary";
         internal const string Attribute_Bool = "Bool";
         internal const string Attribute_Collation = "Collation";
-        internal const string Attribute_ConcurrencyMode = "ConcurrencyMode";
         internal const string Attribute_ContainsTarget = "ContainsTarget";
         internal const string Attribute_Date = "Date";
         internal const string Attribute_DateTimeOffset = "DateTimeOffset";
@@ -168,7 +167,6 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Value_EndMany = "*";
         internal const string Value_EndOptional = "0..1";
         internal const string Value_EndRequired = "1";
-        internal const string Value_Fixed = "Fixed";
         internal const string Value_Max = EdmConstants.Value_Max;
         internal const string Value_None = "None";
         internal const string Value_Ref = "Ref";
@@ -178,7 +176,6 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string TypeName_Untyped = "Edm.Untyped";
 
         internal const bool Default_Abstract = false;
-        internal const EdmConcurrencyMode Default_ConcurrencyMode = EdmConcurrencyMode.None;
         internal const bool Default_ContainsTarget = false;
         internal const bool Default_HasStream = false;
         internal const bool Default_IncludeInServiceDocument = false;
@@ -196,8 +193,6 @@ namespace Microsoft.OData.Edm.Csdl
 
         internal const int Max_NameLength = 480;
         internal const int Max_NamespaceLength = 512;
-
-        internal const string Version3Xsd = "Edm.Csdl.CSDLSchema_3.xsd";
 
         #endregion
 

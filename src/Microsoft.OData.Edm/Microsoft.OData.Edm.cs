@@ -165,7 +165,6 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_PrecisionOutOfRange = "EdmModel_Validator_Semantic_PrecisionOutOfRange";
         internal const string EdmModel_Validator_Semantic_StringMaxLengthOutOfRange = "EdmModel_Validator_Semantic_StringMaxLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_MaxLengthOutOfRange = "EdmModel_Validator_Semantic_MaxLengthOutOfRange";
-        internal const string EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode = "EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode";
         internal const string EdmModel_Validator_Semantic_EnumMemberValueOutOfRange = "EdmModel_Validator_Semantic_EnumMemberValueOutOfRange";
         internal const string EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined = "EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined";
         internal const string EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly = "EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly";
@@ -257,7 +256,6 @@ namespace Microsoft.OData.Edm {
         internal const string CsdlParser_InvalidAlias = "CsdlParser_InvalidAlias";
         internal const string CsdlParser_InvalidDeleteAction = "CsdlParser_InvalidDeleteAction";
         internal const string CsdlParser_MissingTypeAttributeOrElement = "CsdlParser_MissingTypeAttributeOrElement";
-        internal const string CsdlParser_InvalidConcurrencyMode = "CsdlParser_InvalidConcurrencyMode";
         internal const string CsdlParser_InvalidEndRoleInRelationshipConstraint = "CsdlParser_InvalidEndRoleInRelationshipConstraint";
         internal const string CsdlParser_InvalidMultiplicity = "CsdlParser_InvalidMultiplicity";
         internal const string CsdlParser_ReferentialConstraintRequiresOneDependent = "CsdlParser_ReferentialConstraintRequiresOneDependent";
@@ -304,7 +302,6 @@ namespace Microsoft.OData.Edm {
         internal const string UnknownEnumVal_PrimitiveKind = "UnknownEnumVal_PrimitiveKind";
         internal const string UnknownEnumVal_ContainerElementKind = "UnknownEnumVal_ContainerElementKind";
         internal const string UnknownEnumVal_EdmxTarget = "UnknownEnumVal_EdmxTarget";
-        internal const string UnknownEnumVal_ConcurrencyMode = "UnknownEnumVal_ConcurrencyMode";
         internal const string UnknownEnumVal_PropertyKind = "UnknownEnumVal_PropertyKind";
         internal const string UnknownEnumVal_TermKind = "UnknownEnumVal_TermKind";
         internal const string UnknownEnumVal_ExpressionKind = "UnknownEnumVal_ExpressionKind";

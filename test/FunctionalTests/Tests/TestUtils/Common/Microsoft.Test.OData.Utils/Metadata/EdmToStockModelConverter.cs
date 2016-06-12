@@ -619,8 +619,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                                         stockPropertyDeclaringType,
                                         edmProperty.Name,
                                         ConvertToStockTypeReference(edmProperty.Type, stockModel),
-                                        edmProperty.DefaultValueString,
-                                        edmProperty.ConcurrencyMode
+                                        edmProperty.DefaultValueString
                                      );
             ((EdmStructuredType)stockPropertyDeclaringType).AddProperty(stockProperty);
 

@@ -396,11 +396,6 @@ namespace Microsoft.OData.Edm.Validation
         // TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
 
         /// <summary>
-        /// ConcurrencyMode value was malformed
-        /// </summary>
-        InvalidConcurrencyMode = 144,
-
-        /// <summary>
         /// Conurency can't change for any sub types of an EntitySet type.
         /// </summary>
         ConcurrencyRedefinedOnSubtypeOfEntitySetType = 145,

@@ -526,7 +526,7 @@ Model Present: true
           <PropertyRef Name="OrderId" />
           <PropertyRef Name="ProductId" />
         </Key>
-        <Property Name="ConcurrencyToken" Type="Edm.String" ConcurrencyMode="Fixed" Nullable="false" />
+        <Property Name="ConcurrencyToken" Type="Edm.String" Nullable="false" />
         <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
         <Property Name="OrderLineStream" Type="Edm.Stream" Nullable="false" />
         <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
@@ -606,7 +606,7 @@ Model Present: true
         <Key>
           <PropertyRef Name="ProductId" />
         </Key>
-        <Property Name="BaseConcurrency" Type="Edm.String" ConcurrencyMode="Fixed" Nullable="false" />
+        <Property Name="BaseConcurrency" Type="Edm.String" Nullable="false" />
         <Property Name="ComplexConcurrency" Type="DefaultNamespace.ConcurrencyInfo" Nullable="false" />
         <Property Name="Description" Type="Edm.String" MaxLength="1000" />
         <Property Name="Dimensions" Type="DefaultNamespace.Dimensions" Nullable="false" />

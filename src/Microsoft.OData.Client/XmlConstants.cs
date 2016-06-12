@@ -814,9 +814,6 @@ namespace Microsoft.OData.Service
         /// <summary>The attribute name of the 'SRID' facet.</summary>
         internal const string CsdlSridAttributeName = "SRID";
 
-        /// <summary>Name of the concurrency attribute.</summary>
-        internal const string CsdlConcurrencyAttributeName = "ConcurrencyMode";
-
         /// <summary>Name of the default value attribute.</summary>
         internal const string CsdlDefaultValueAttributeName = "DefaultValue";
 

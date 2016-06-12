@@ -250,7 +250,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.</summary>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which TElement represents the type of the query results.</returns>
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         /// <exception cref="T:System.NotSupportedException">When during materialization an object is encountered in the input stream that cannot be deserialized to an instance of TElement.</exception>

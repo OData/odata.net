@@ -6,8 +6,8 @@
       Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
-  <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="System.Data.Resources.CodeGenerationSchema.xsd" />
-  <xs:import namespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation" schemaLocation="System.Data.Resources.AnnotationSchema.xsd" />
+  <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="Microsoft.OData.Resources.CodeGenerationSchema.xsd" />
+  <xs:import namespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation" schemaLocation="Microsoft.OData.Resources.AnnotationSchema.xsd" />
   <xs:element name="Schema" type="edm:TSchema" />
   <xs:complexType name="TSchema">
     <xs:sequence>
@@ -127,8 +127,8 @@
     </xs:sequence>
     <xs:anyAttribute processContents="skip" namespace="##any" />
   </xs:complexType>
-  <!-- 
-        types of the top level elements 
+  <!--
+        types of the top level elements
     -->
   <xs:complexType name="TUsing">
     <xs:sequence>
@@ -671,8 +671,8 @@
     </xs:simpleContent>
   </xs:complexType>
 
-  <!-- 
-        base types  
+  <!--
+        base types
     -->
   <xs:group name="TOperations">
     <xs:choice>
@@ -763,7 +763,6 @@
     <xs:attribute name="Collation" type="edm:TCollationFacet" use="optional" />
     <xs:attribute name="SRID" type="edm:TSridFacet" use="optional" />
     <!--End Facets -->
-    <xs:attribute name="ConcurrencyMode" type="edm:TConcurrencyMode" use="optional" />
     <xs:attribute ref="cg:SetterAccess" use="optional" />
     <xs:attribute ref="cg:GetterAccess" use="optional" />
   </xs:attributeGroup>
@@ -859,10 +858,10 @@
               <xs:sequence>
                 <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
                 <xs:element name="End" minOccurs="0" maxOccurs="2">
-                  <!-- 
-                       1. The number of Ends has to match with ones defined in AssociationType 
-                       2. Value for attribute Name should match the defined ones and EntitySet should be of the 
-                          defined Entity Type in AssociationType 
+                  <!--
+                       1. The number of Ends has to match with ones defined in AssociationType
+                       2. Value for attribute Name should match the defined ones and EntitySet should be of the
+                          defined Entity Type in AssociationType
                     -->
                   <xs:complexType>
                     <xs:sequence>
@@ -890,8 +889,8 @@
       <xs:anyAttribute namespace="##other" processContents="lax" />
     </xs:complexType>
   </xs:element>
-  <!-- 
-    general  (more or less) purpose simple types 
+  <!--
+    general  (more or less) purpose simple types
     -->
   <xs:simpleType name="TParameterMode">
     <xs:restriction base="xs:token">
@@ -979,12 +978,6 @@
       <xs:enumeration value="0..1" />
       <xs:enumeration value="1" />
       <xs:enumeration value="*" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TConcurrencyMode">
-    <xs:restriction base="xs:token">
-      <xs:enumeration value="None" />
-      <xs:enumeration value="Fixed" />
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>

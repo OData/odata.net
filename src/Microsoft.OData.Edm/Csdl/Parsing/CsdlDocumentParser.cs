@@ -541,10 +541,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             CsdlTypeReference type = this.ParseTypeReference(typeName, childValues, element.Location, Optionality.Required);
             string name = Required(CsdlConstants.Attribute_Name);
             string defaultValue = Optional(CsdlConstants.Attribute_DefaultValue);
-            EdmConcurrencyMode? concurrencyMode = OptionalConcurrencyMode(CsdlConstants.Attribute_ConcurrencyMode);
-            bool isFixedConcurrency = (concurrencyMode ?? EdmConcurrencyMode.None) == EdmConcurrencyMode.Fixed;
 
-            return new CsdlProperty(name, type, isFixedConcurrency, defaultValue, Documentation(childValues), element.Location);
+            return new CsdlProperty(name, type, defaultValue, Documentation(childValues), element.Location);
         }
 
         private CsdlTerm OnTermElement(XmlElementInfo element, XmlElementValueCollection childValues)

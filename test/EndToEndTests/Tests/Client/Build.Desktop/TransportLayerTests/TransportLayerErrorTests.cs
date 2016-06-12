@@ -41,25 +41,6 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         }
 
         [TestMethod]
-        public void UpdateEntryWithIncorrectETag()
-        {
-            var defaultContext = this.CreateDefaultContext();
-            var httpClientContext = this.CreateHttpClientBasedContext();
-            defaultContext.SendingRequest2 += SetInvalidETag;
-            httpClientContext.SendingRequest2 += SetInvalidETag;
-
-            this.CompareErrors(
-                new[] { defaultContext, httpClientContext }, 
-                (ctx) =>
-                {
-                    var product = ctx.Context.Product.First();
-                    product.Description = "New description " + Guid.NewGuid().ToString();
-                    ctx.UpdateObject(product);
-                    ctx.SaveChanges();
-                });
-        }
-
-        [TestMethod]
         public void JsonQueryWithInvalidDataServiceVersion()
         {
             var defaultContext = this.CreateDefaultContext();
@@ -91,11 +72,6 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                     ctx.AddObject("Message", new Message {MessageId = 4638, Body = "Var1"});
                     ctx.SaveChanges();
                 });
-        }
-
-        private static void  SetInvalidETag(object obj, SendingRequest2EventArgs args)
-        {
-            args.RequestMessage.SetHeader("If-Match", "W/\"var1\""); 
         }
 
         private static void  SetInvalidDataServiceVersion(object obj, SendingRequest2EventArgs args)

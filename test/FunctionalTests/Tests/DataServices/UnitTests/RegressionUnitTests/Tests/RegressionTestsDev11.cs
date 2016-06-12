@@ -2608,7 +2608,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                     contextType,
                                     UnitTestsUtil.JsonLightMimeType,
                                     "POST",
-                                    verifyETag: true);
+                                    verifyETag: contextType == typeof(AstoriaUnitTests.ObjectContextStubs.CustomObjectContext));
                     }
                 }
             }

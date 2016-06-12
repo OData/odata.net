@@ -54,7 +54,6 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.DecimalTypeReferenceScaleOutOfRange,
                 ValidationRules.BinaryTypeReferenceBinaryMaxLengthNegative,
                 ValidationRules.StringTypeReferenceStringMaxLengthNegative,
-                ValidationRules.StructuralPropertyInvalidPropertyTypeConcurrencyMode,
                 ValidationRules.EnumMemberValueMustHaveSameTypeAsUnderlyingType,
                 ValidationRules.EnumTypeEnumMemberNameAlreadyDefined,
                 ValidationRules.BoundOperationMustHaveParameters,

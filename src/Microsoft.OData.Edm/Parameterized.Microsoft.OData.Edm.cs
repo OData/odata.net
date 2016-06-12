@@ -724,13 +724,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A property with a fixed concurrency mode cannot be of type '{0}'. The property type must be a primitive type."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode, p0);
-        }
-
-        /// <summary>
         /// A string like "The value of enum member '{0}' exceeds the range of its underlying type."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_EnumMemberValueOutOfRange(object p0) {
@@ -1412,13 +1405,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The concurrency mode '{0}' is not valid. Concurrency mode must be: 'None', or 'Fixed'."
-        /// </summary>
-        internal static string CsdlParser_InvalidConcurrencyMode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidConcurrencyMode, p0);
-        }
-
-        /// <summary>
         /// A string like "There is no Role with name '{0}' defined in relationship '{1}'."
         /// </summary>
         internal static string CsdlParser_InvalidEndRoleInRelationshipConstraint(object p0, object p1) {
@@ -1768,13 +1754,6 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string UnknownEnumVal_EdmxTarget(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_EdmxTarget, p0);
-        }
-
-        /// <summary>
-        /// A string like "Invalid concurrency mode: '{0}'"
-        /// </summary>
-        internal static string UnknownEnumVal_ConcurrencyMode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_ConcurrencyMode, p0);
         }
 
         /// <summary>

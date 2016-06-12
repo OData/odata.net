@@ -210,7 +210,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, property.Type, this.TypeReferenceAsXml);
             }
 
-            this.WriteOptionalAttribute(CsdlConstants.Attribute_ConcurrencyMode, property.ConcurrencyMode, CsdlConstants.Default_ConcurrencyMode, ConcurrencyModeAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_DefaultValue, property.DefaultValueString, EdmValueWriter.StringAsXml);
         }
 
@@ -719,19 +718,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
 
             this.xmlWriter.WriteEndElement();
-        }
-
-        private static string ConcurrencyModeAsXml(EdmConcurrencyMode mode)
-        {
-            switch (mode)
-            {
-                case EdmConcurrencyMode.Fixed:
-                    return CsdlConstants.Value_Fixed;
-                case EdmConcurrencyMode.None:
-                    return CsdlConstants.Value_None;
-                default:
-                    throw new InvalidOperationException(Strings.UnknownEnumVal_ConcurrencyMode(mode.ToString()));
-            }
         }
 
         private static string ParameterAsXml(IEdmOperationParameter parameter)

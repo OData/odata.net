@@ -338,6 +338,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyInvalidRequestForVariousProviders(null, "/Customers(1)?$expand=Orders", UnitTestsUtil.MimeAny, "GET", 400, ifMatch);
                 UnitTestsUtil.VerifyInvalidRequestForVariousProviders(null, "/Customers(1)?$expand=Orders", UnitTestsUtil.MimeAny, "GET", 400, ifNoneMatch);
             }
+
             [Ignore] // Remove Atom
             [TestMethod, Variation("Should throw if the link type attribute has invalid value")]
             public void ShouldThrowIfLinkTypeAttributeIsInvalid()
@@ -756,13 +757,6 @@ namespace AstoriaUnitTests.Tests
                         new KeyValuePair<string, string[]>("/Orders(0)", new string[] { String.Format("/{0}[DollarAmount=0]", JsonValidator.ObjectString) })};
                     UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Orders(0)", uriAndXPathsToVerify, typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "GET", null, false);
                 }
-            }
-
-            [TestMethod, Variation("mark etag properties with Concurrency attribute in csdl for reflection provider")]
-            public void TestConcurrencyAttributeOnEtagPropertiesInCsdl()
-            {
-                Stream responseStream = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.MimeApplicationXml, "/$metadata", typeof(CustomDataContext));
-                UnitTestsUtil.VerifyXPaths(responseStream, UnitTestsUtil.MimeApplicationXml, new string[] { "//csdl:Schema/csdl:EntityType[@Name='Customer' and csdl:Property[@Name='GuidValue' and @ConcurrencyMode='Fixed']]" });
             }
 
             [TestMethod, Variation("Protocol: exception thrown in XML with filter=null")]
@@ -4110,9 +4104,8 @@ Content-Type: application/atom+xml;type=entry
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(BaseTestWebRequest), "HostInterfaceType"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(NorthwindDefaultStreamService), "GetServiceOverride"))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                    null,
                     "RegressionTest_StreamWithMissingInterface_EF"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {

@@ -140,11 +140,10 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the property.</param>
         /// <param name="type">Type of the property.</param>
         /// <param name="defaultValue">The default value of this property.</param>
-        /// <param name="concurrencyMode">The concurrency mode of this property.</param>
         /// <returns>Created structural property.</returns>
-        public EdmStructuralProperty AddStructuralProperty(string name, IEdmTypeReference type, string defaultValue, EdmConcurrencyMode concurrencyMode)
+        public EdmStructuralProperty AddStructuralProperty(string name, IEdmTypeReference type, string defaultValue)
         {
-            EdmStructuralProperty property = new EdmStructuralProperty(this, name, type, defaultValue, concurrencyMode);
+            EdmStructuralProperty property = new EdmStructuralProperty(this, name, type, defaultValue);
             this.AddProperty(property);
             return property;
         }

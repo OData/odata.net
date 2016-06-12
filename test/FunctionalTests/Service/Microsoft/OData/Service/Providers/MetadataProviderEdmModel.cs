@@ -1608,10 +1608,7 @@ namespace Microsoft.OData.Service.Providers
                 }
 
                 string defaultValue = MetadataProviderUtils.GetAndRemoveDefaultValue(customAnnotations);
-                EdmConcurrencyMode concurrencyMode = resourceProperty.IsOfKind(ResourcePropertyKind.ETag)
-                    ? EdmConcurrencyMode.Fixed
-                    : EdmConcurrencyMode.None;
-                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, primitiveTypeReference, defaultValue, concurrencyMode);
+                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, primitiveTypeReference, defaultValue);
                 declaringType.AddProperty(result);
 
                 string mimeType = resourceProperty.MimeType;
@@ -1627,7 +1624,7 @@ namespace Microsoft.OData.Service.Providers
                 // NOTE: WCF DS does not support complex ETag properties
                 string defaultValue = MetadataProviderUtils.GetAndRemoveDefaultValue(customAnnotations);
 
-                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, typeReference, defaultValue, EdmConcurrencyMode.None);
+                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, typeReference, defaultValue);
                 declaringType.AddProperty(result);
 
                 // We need to mark all complex types in EF provider as "allow null" in order to maintain backward compat behavior
@@ -1642,7 +1639,7 @@ namespace Microsoft.OData.Service.Providers
             {
                 string defaultValue = MetadataProviderUtils.GetAndRemoveDefaultValue(customAnnotations);
                 IEdmTypeReference collectionTypeReference = this.EnsureTypeReference(resourceProperty.ResourceType, customAnnotations);
-                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, collectionTypeReference, defaultValue, EdmConcurrencyMode.None);
+                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, collectionTypeReference, defaultValue);
                 declaringType.AddProperty(result);
             }
             else if (resourceProperty.IsOfKind(ResourcePropertyKind.ResourceSetReference) || resourceProperty.IsOfKind(ResourcePropertyKind.ResourceReference))

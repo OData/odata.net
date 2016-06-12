@@ -266,44 +266,6 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
-        [TestMethod]
-        public void VerifyMetadataSerializerDoesThrowIfDerviedTypeRedefinesETag()
-        {
-            // regression test: Including derived properties on an ETag yields an error on service metadata document
-            string csdlContentWithConcurrencyReDefinedOnSubType = @"<?xml version='1.0' encoding='utf-8'?>
-<edmx:Edmx Version='4.0' xmlns:edmx='http://docs.oasis-open.org/odata/ns/edmx'>
-  <edmx:DataServices xmlns:m='http://docs.oasis-open.org/odata/ns/metadata'>
-    <Schema Namespace='Scratch' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
-      <EntityType Name='Child' BaseType='Scratch.Person'>
-        <Property Name='Description' Type='Edm.String' ConcurrencyMode='Fixed' />
-      </EntityType>
-      <EntityType Name='Person'>
-        <Key>
-          <PropertyRef Name='ID' />
-        </Key>
-        <Property Name='ID' Type='Edm.Int32' Nullable='false' />
-        <Property Name='Name' Type='Edm.String' ConcurrencyMode='Fixed' />
-      </EntityType>
-      <Function Name='GetPeople'>
-        <ReturnType Type='Collection(Scratch.Person)' />
-      </Function>
-      <EntityContainer Name='DataProvider'>
-        <EntitySet Name='People' EntityType='Scratch.Person' />
-        <FunctionImport Name='GetPeople' Function='Scratch.GetPeople' EntitySet='People' m:HttpMethod='GET' />
-      </EntityContainer>
-    </Schema>
-  </edmx:DataServices>
-</edmx:Edmx>";
-
-            var csdlReader = XmlReader.Create(new StringReader(csdlContentWithConcurrencyReDefinedOnSubType));
-            IEdmModel modelWithConcurrencyRedefined = null;
-            IEnumerable<EdmError> errors = null;
-            EdmxReader.TryParse(csdlReader, out  modelWithConcurrencyRedefined, out errors);
-            Assert.IsFalse(errors.Any(), "Expected model to be parsed without any errors");
-            Version edmxVersion = EdmConstants.EdmVersion4;
-            MetadataSerializer.ValidateModel(modelWithConcurrencyRedefined, edmxVersion);
-        }
-
         #endregion ResourceSetPathExpression Internals Tests
     }
 }

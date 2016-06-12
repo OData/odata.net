@@ -137,7 +137,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""myByte"" Type=""Edm.Byte"" />
     <Property Name=""myStream"" Type=""Edm.Stream"" />
     <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" MaxLength=""128"" Unicode=""false"" />
-    <Property Name=""myStringMax"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" MaxLength=""max"" Unicode=""false"" />
+    <Property Name=""myStringMax"" Type=""Edm.String"" MaxLength=""max"" Unicode=""false"" />
     <Property Name=""myTimeOfDay"" Type=""Edm.TimeOfDay"" Precision=""4"" />
   </ComplexType>
 </Schema>";

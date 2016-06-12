@@ -1144,7 +1144,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Loads deferred content for a specified property from the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads deferred content for a specified property from the data service.</summary>
         /// <returns>The response to the load operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1163,7 +1163,7 @@ namespace Microsoft.OData.Client
             return this.LoadProperty(entity, propertyName, (Uri)null);
         }
 
-        /// <summary>Loads a page of related entities by using the supplied next link URI.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads a page of related entities by using the supplied next link URI.</summary>
         /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1186,7 +1186,7 @@ namespace Microsoft.OData.Client
             return result.LoadProperty();
         }
 
-        /// <summary>Loads the next page of related entities from the data service by using the supplied query continuation object.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1209,7 +1209,7 @@ namespace Microsoft.OData.Client
             return result.LoadProperty();
         }
 
-        /// <summary>Loads the next page of related entities from the data service by using the supplied generic query continuation object.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads the next page of related entities from the data service by using the supplied generic query continuation object.</summary>
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1558,7 +1558,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Synchronously submits a group of queries as a batch to the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
         /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
         public DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries)
@@ -1733,7 +1733,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Sends a request to the data service to execute a specific URI.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The results of the query operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <typeparam name="TElement">The type that the query returns.</typeparam>
@@ -1751,7 +1751,7 @@ namespace Microsoft.OData.Client
             return InnerSynchExecute<TElement>(requestUri, XmlConstants.HttpMethodGet, null);
         }
 
-        /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>The response that contains the next page of data in the query result.</returns>
         /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
         /// <typeparam name="T">The type returned by the query.</typeparam>
@@ -1764,7 +1764,7 @@ namespace Microsoft.OData.Client
             return request.Execute<T>(this, qc);
         }
 
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
         /// <returns>The response of the operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
@@ -1788,7 +1788,7 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
         /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
@@ -1806,7 +1806,7 @@ namespace Microsoft.OData.Client
             return InnerSynchExecute<TElement>(requestUri, httpMethod, singleResult, operationParameters);
         }
 
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
         /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
@@ -1896,14 +1896,14 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges.Remarks" />.</returns>
         public DataServiceResponse SaveChanges()
         {
             return this.SaveChanges(this.SaveChangesDefaultOptions);
         }
 
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
         /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         public DataServiceResponse SaveChanges(SaveChangesOptions options)
@@ -2442,7 +2442,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB
 
         /// <summary>
-        /// Loads all pages of related entities for a specified property from the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.
+        /// Loads all pages of related entities for a specified property from the data service.
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>

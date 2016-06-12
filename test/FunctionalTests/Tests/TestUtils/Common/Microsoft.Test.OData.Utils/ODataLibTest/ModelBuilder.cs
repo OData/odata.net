@@ -129,15 +129,14 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
         /// <param name="entityType">The <see cref="EntityType"/> to add the new property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="type">The data type of the property.</param>
-        /// <param name="concurrencyMode">A flag indicating whether the property is an ETag property (default = false).</param>
         /// <returns>The <paramref name="entityType"/> instance after adding the property to it.</returns>
-        public static EdmEntityType KeyProperty(this EdmEntityType entityType, string propertyName, IEdmTypeReference type, EdmConcurrencyMode concurrencyMode = EdmConcurrencyMode.None)
+        public static EdmEntityType KeyProperty(this EdmEntityType entityType, string propertyName, IEdmTypeReference type)
         {
             ExceptionUtilities.CheckArgumentNotNull(entityType, "entityType");
             ExceptionUtilities.CheckArgumentNotNull(propertyName, "propertyName");
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
 
-            var property = entityType.AddStructuralProperty(propertyName, type, string.Empty, concurrencyMode);
+            var property = entityType.AddStructuralProperty(propertyName, type, string.Empty);
             entityType.AddKeys(property);
 
             return entityType;
@@ -269,16 +268,15 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
         /// <param name="structuralType">The structural type to add the new property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="type">The data type of the property.</param>
-        /// <param name="isETagProperty">true if the property is an ETag property; otherwise false (default).</param>
         /// <returns>The <paramref name="structuralType"/> instance after adding the property to it.</returns>
-        public static T Property<T>(this T structuralType, string propertyName, IEdmTypeReference type, EdmConcurrencyMode isETagProperty = EdmConcurrencyMode.None)
+        public static T Property<T>(this T structuralType, string propertyName, IEdmTypeReference type)
             where T : EdmStructuredType
         {
             ExceptionUtilities.CheckArgumentNotNull(structuralType, "structuralType");
             ExceptionUtilities.CheckArgumentNotNull(propertyName, "propertyName");
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
 
-            structuralType.AddStructuralProperty(propertyName, type, string.Empty, isETagProperty);
+            structuralType.AddStructuralProperty(propertyName, type, string.Empty);
             return structuralType;
         }
 

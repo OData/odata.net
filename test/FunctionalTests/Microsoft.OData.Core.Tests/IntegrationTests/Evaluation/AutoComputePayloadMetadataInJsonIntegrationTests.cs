@@ -207,11 +207,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             EntityType.AddKeys(EntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             EntityType.AddStructuralProperty("StreamProp1", EdmPrimitiveTypeKind.Stream);
             EntityType.AddStructuralProperty("StreamProp2", EdmPrimitiveTypeKind.Stream);
-            EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
+            IEdmStructuralProperty nameProperty = EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null);
             DerivedType = new EdmEntityType("Namespace", "DerivedType", EntityType, false, true);
             AnotherEntityType = new EdmEntityType("Namespace", "AnotherEntityType", null, false, false, true);
             AnotherEntityType.AddKeys(AnotherEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
-            AnotherEntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
+            AnotherEntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null);
 
             var deferredNavLinkProp = EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
             {
@@ -302,6 +302,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             Model.AddElement(DerivedType);
             Model.AddElement(AnotherEntityType);
             Model.AddElement(container);
+            Model.SetOptimisticConcurrencyAnnotation(EntitySet, new[] { nameProperty });
 
             var alwaysBindableAction1 = new EdmAction("Namespace", "AlwaysBindableAction1", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
             alwaysBindableAction1.AddParameter(new EdmOperationParameter(alwaysBindableAction1, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));

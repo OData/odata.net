@@ -10,7 +10,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
@@ -22,6 +21,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     public class TripPinServiceTests : ODataWCFServiceTestsBase<DefaultContainer>
     {
         private const string NameSpacePrefix = "Microsoft.OData.SampleService.Models.TripPin.";
+        private int lastResponseStatusCode;
 
         public TripPinServiceTests()
             : base(ServiceDescriptors.TripPinServiceDescriptor)
@@ -1277,6 +1277,127 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 EntryToUpdate = CreateEntry("russellwhyte"),
                 ExpectedStatusCode = 428,
             }.Execute();
+        }
+
+        #endregion
+
+        #region ETag other tests
+
+        [TestMethod]
+        public void AttachToWithEtag()
+        {
+            var context = TestClientContext;
+
+            var person = context.People.First();
+            string personEtag = context.GetEntityDescriptor(person).ETag;
+            var attachToPeople = new Person {UserName = person.UserName};
+            context.Detach(person);
+
+            context.AttachTo("People", attachToPeople, personEtag);
+            context.LoadProperty(attachToPeople, "Photo");
+        }
+
+        [TestMethod]
+        public void SetEtagValueAfterQueryUpdate()
+        {
+            var context = CreateDefaultContainer();
+            context.MergeOption = Microsoft.OData.Client.MergeOption.PreserveChanges;
+
+            var personToModify = context.People.First();
+            var personToDelete = context.People.Skip(1).First();
+
+            //caching Etags
+            var personToModifyETag = context.GetEntityDescriptor(personToModify).ETag;
+            var personToDeleteETag = context.GetEntityDescriptor(personToDelete).ETag;
+
+            context.UpdateObject(personToModify);
+            personToModify.FirstName = "Tom";
+
+            context.DeleteObject(personToDelete);
+            // We currently do not allow setting state from Deleted to Modified and LS is fine with the extra step to change State to Unchanged first
+            context.ChangeState(personToDelete, Microsoft.OData.Client.EntityStates.Unchanged);
+            context.ChangeState(personToDelete, Microsoft.OData.Client.EntityStates.Modified);
+
+            //Updating entities in the store using a new Client context object
+            var contextToUpdate = this.CreateDefaultContainer();
+
+            var person1 = contextToUpdate.People.First();
+            var person2 = contextToUpdate.People.Skip(1).First();
+
+            person1.FirstName = "David";
+            person1.Concurrency = 200240;
+            person2.FirstName = "Mark";
+            person2.Concurrency = 200241;
+
+            contextToUpdate.UpdateObject(person1);
+            contextToUpdate.UpdateObject(person2);
+
+            contextToUpdate.SaveChanges();
+
+            //Quering the attached entities to update them
+            context.People.First();
+            context.People.Skip(1).First();
+
+            Assert.AreEqual(contextToUpdate.GetEntityDescriptor(person1).ETag, context.GetEntityDescriptor(personToModify).ETag, "ETag not updated by query");
+            Assert.AreEqual(contextToUpdate.GetEntityDescriptor(person2).ETag, context.GetEntityDescriptor(personToDelete).ETag, "ETag not updated by query");
+            Assert.AreNotEqual(personToModify.FirstName, person1.FirstName, "Query updated entity in Modified State");
+            Assert.AreNotEqual(personToDelete.FirstName, person2.FirstName, "Query updated entity in Modified State");
+
+            context.GetEntityDescriptor(personToModify).ETag = personToModifyETag;
+            context.GetEntityDescriptor(personToDelete).ETag = personToDeleteETag;
+
+            Assert.AreEqual(personToModifyETag, context.GetEntityDescriptor(personToModify).ETag, "Etag not updated");
+            Assert.AreEqual(personToDeleteETag, context.GetEntityDescriptor(personToDelete).ETag, "Etag not updated");
+
+            context.ChangeState(personToDelete, Microsoft.OData.Client.EntityStates.Deleted);
+            Assert.AreEqual(Microsoft.OData.Client.EntityStates.Deleted, context.GetEntityDescriptor(personToDelete).State, "ChangeState API did not change the entity State form Modified to Deleted");
+        }
+
+        [TestMethod]
+        public void UpdateEntryWithIncorrectETag()
+        {
+            var defaultContext = this.CreateDefaultContext();
+            var httpClientContext = this.CreateDefaultContext();
+
+            httpClientContext.Configurations.RequestPipeline.OnMessageCreating =
+                (args) =>
+                {
+                    var message = new Microsoft.OData.Client.HttpWebRequestMessage(args);
+                    foreach (var header in args.Headers)
+                    {
+                        message.SetHeader(header.Key, header.Value);
+                    }
+                    return message;
+                };
+
+            defaultContext.SendingRequest2 += (obj, args) => args.RequestMessage.SetHeader("If-Match", "W/\"var1\"");
+            httpClientContext.SendingRequest2 += (obj, args) => args.RequestMessage.SetHeader("If-Match", "W/\"var1\"");
+
+            var exceptions = new Exception[2];
+            var statusCodes = new int[2];
+            int idx = 0;
+
+            foreach (var ctx in new[] { defaultContext, httpClientContext })
+            {
+                try
+                {
+                    var person = ctx.People.First();
+                    person.FirstName = "NewName" + Guid.NewGuid().ToString();
+                    ctx.UpdateObject(person);
+                    ctx.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    exceptions[idx] = ex;
+                }
+
+                Assert.IsNotNull(exceptions[idx], "Expected exception but none was thrown");
+                statusCodes[idx] = this.lastResponseStatusCode;
+                ++idx;
+            }
+
+            Assert.AreEqual(statusCodes[0], statusCodes[1]);
+            AssertExceptionsAreEqual(exceptions[0], exceptions[1]);
         }
 
         #endregion
@@ -2842,5 +2963,36 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
         #endregion
+
+        private static void AssertExceptionsAreEqual(Exception expected, Exception actual)
+        {
+            Assert.AreEqual(expected.GetType(), actual.GetType());
+
+            if (expected.InnerException == null)
+            {
+                Assert.IsNull(actual.InnerException);
+            }
+            else
+            {
+                Assert.IsNotNull(actual.InnerException);
+                AssertExceptionsAreEqual(expected.InnerException, actual.InnerException);
+            }
+        }
+
+        private DefaultContainer CreateDefaultContext()
+        {
+            var context = CreateDefaultContainer();
+            context.ReceivingResponse += (sender, args) => { this.lastResponseStatusCode = args.ResponseMessage.StatusCode; };
+
+            return context;
+        }
+
+        internal DefaultContainer CreateDefaultContainer()
+        {
+            var context = Activator.CreateInstance(typeof(DefaultContainer), ServiceBaseUri) as DefaultContainer;
+            Assert.IsNotNull(context, "Failed to cast DataServiceContext to specified type '{0}'", typeof(DefaultContainer).Name);
+
+            return context;
+        }
     }
 }

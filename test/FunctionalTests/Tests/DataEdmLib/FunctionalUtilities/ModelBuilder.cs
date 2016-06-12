@@ -430,7 +430,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var customerType = new EdmEntityType("NS1", "Customer", personType);
             customerType.AddStructuralProperty("IsVIP", EdmPrimitiveTypeKind.Boolean);
-            customerType.AddProperty(new EdmStructuralProperty(customerType, "LastUpdated", EdmCoreModel.Instance.GetDateTimeOffset(false), null, EdmConcurrencyMode.Fixed));
+            customerType.AddProperty(new EdmStructuralProperty(customerType, "LastUpdated", EdmCoreModel.Instance.GetDateTimeOffset(false), null));
             customerType.AddStructuralProperty("BillingAddress", new EdmComplexTypeReference(addressType, false));
             customerType.AddStructuralProperty("ShippingAddress", new EdmComplexTypeReference(addressType, false));
             model.AddElement(customerType);
@@ -589,7 +589,7 @@ namespace EdmLibTests.FunctionalUtilities
             var contactDetailsTypeReference = new EdmComplexTypeReference(contactDetailsType, false);
 
             var concurrencyInfoType = new EdmComplexType("NS1", "ConcurrencyInfo");
-            concurrencyInfoType.AddStructuralProperty("Token", EdmCoreModel.Instance.GetString(isUnbounded: false, maxLength: 20, isUnicode: false, isNullable: false), string.Empty, EdmConcurrencyMode.Fixed);
+            concurrencyInfoType.AddStructuralProperty("Token", EdmCoreModel.Instance.GetString(isUnbounded: false, maxLength: 20, isUnicode: false, isNullable: false), string.Empty);
             concurrencyInfoType.AddStructuralProperty("QueriedDateTimeOffset", EdmCoreModel.Instance.GetDateTimeOffset(true));
             model.AddElement(concurrencyInfoType);
             var concurrencyInfoTypeReference = new EdmComplexTypeReference(concurrencyInfoType, false);
@@ -686,7 +686,7 @@ namespace EdmLibTests.FunctionalUtilities
             productType.AddKeys(productType.AddStructuralProperty("ProductId", EdmPrimitiveTypeKind.Int32, false));
             productType.AddStructuralProperty("Description", EdmCoreModel.Instance.GetString(isUnbounded: false, isNullable: true, maxLength: 1000, isUnicode: false));
             productType.AddStructuralProperty("Dimensions", dimensionsTypeReference);
-            productType.AddStructuralProperty("BaseConcurrency", EdmCoreModel.Instance.GetString(false), string.Empty, EdmConcurrencyMode.Fixed);
+            productType.AddStructuralProperty("BaseConcurrency", EdmCoreModel.Instance.GetString(false), string.Empty);
             productType.AddStructuralProperty("ComplexConcurrency", concurrencyInfoTypeReference);
             productType.AddStructuralProperty("NestedComplexConcurrency", auditInfoTypeReference);
             model.AddElement(productType);
@@ -839,7 +839,7 @@ namespace EdmLibTests.FunctionalUtilities
             var orderLineProductId = orderLineType.AddStructuralProperty("ProductId", EdmPrimitiveTypeKind.Int32, false);
             orderLineType.AddKeys(orderLineOrderId, orderLineProductId);
             orderLineType.AddStructuralProperty("Quantity", EdmPrimitiveTypeKind.Int32);
-            orderLineType.AddStructuralProperty("ConcurrencyToken", EdmCoreModel.Instance.GetString(false), string.Empty, EdmConcurrencyMode.Fixed);
+            orderLineType.AddStructuralProperty("ConcurrencyToken", EdmCoreModel.Instance.GetString(false), string.Empty);
             model.AddElement(orderLineType);
 
             var orderLineOrder = new EdmNavigationPropertyInfo { Name = "Order", Target = orderType, TargetMultiplicity = EdmMultiplicity.One, DependentProperties = new[] { orderLineOrderId }, PrincipalProperties = orderType.Key() };
@@ -1438,46 +1438,6 @@ namespace EdmLibTests.FunctionalUtilities
             </Collection>
         </Annotation>
     </Annotations>
-</Schema>";
-            return new XElement[] { XElement.Parse(csdl) };
-        }
-
-        public static IEdmModel DerivedEntityTypeWithFixedConcurrencyModeModel()
-        {
-            var model = new EdmModel();
-
-            var entityA = new EdmEntityType("NS", "A");
-            var entityAId = entityA.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
-            entityA.AddKeys(entityAId);
-            model.AddElement(entityA);
-
-            var entityB = new EdmEntityType("NS", "B", entityA);
-            var entityBName = entityB.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false), null, EdmConcurrencyMode.Fixed);
-            model.AddElement(entityB);
-
-            var container = new EdmEntityContainer("NS", "Container");
-            var entitySetA = container.AddEntitySet("SetA", entityA);
-            model.AddElement(container);
-
-            return model;
-        }
-
-        public static IEnumerable<XElement> DerivedEntityTypeWithFixedConcurrencyModeCsdl()
-        {
-            var csdl =
-@"<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <EntityType Name=""A"">
-        <Key>
-            <PropertyRef Name=""Id"" />
-        </Key>
-        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    </EntityType>
-    <EntityType Name=""B"" BaseType=""NS.A"">
-        <Property Name=""Name"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" Nullable=""false"" />
-    </EntityType>
-    <EntityContainer Name=""Container"">
-        <EntitySet Name=""SetA"" EntityType=""NS.A"" />
-    </EntityContainer>
 </Schema>";
             return new XElement[] { XElement.Parse(csdl) };
         }

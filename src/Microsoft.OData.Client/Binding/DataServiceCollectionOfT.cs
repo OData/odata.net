@@ -264,7 +264,7 @@ namespace Microsoft.OData.Client
         }
         #endregion Properties
 
-        /// <summary>Loads a collection of entity objects into the collection.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads a collection of entity objects into the collection.</summary>
         /// <param name="items">Collection of entity objects to be added to the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" />.</param>
         /// <remarks>
         /// When tracking is enabled, the behavior of Load would be to attach all those entities that are not already tracked by the context
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Loads a single entity object into the collection.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads a single entity object into the collection.</summary>
         /// <param name="item">Entity object to be added.</param>
         /// <remarks>
         /// When tracking is enabled, the behavior of Load would be to attach the entity if it is not already tracked by the context

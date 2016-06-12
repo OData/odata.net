@@ -205,9 +205,8 @@ namespace AstoriaUnitTests.Tests
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(InterceptorChecker)))
-                    using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                    using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                         new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(typeToApplyAttribute, attributeValue) },
-                        null,
                         "BlobSupportTest_BlobEdmMetadataTest"))
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                     {
@@ -309,9 +308,8 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("Format", UnitTestsUtil.ResponseFormats),
                     new Dimension("Location", new WebServerLocation[] { WebServerLocation.InProcessStreamedWcf, WebServerLocation.InProcess, WebServerLocation.InProcessWcf }));
 
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                    null,
                     "BlobSupportTest_BlobProjectionTests_EFProvider"))
                 {
                     string blobETag = "\"BlobETag123\"";
@@ -1594,9 +1592,8 @@ namespace AstoriaUnitTests.Tests
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(InterceptorChecker)))
-                    using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                    using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                         new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                        null,
                         "BlobSupportTest_BlobBatchingTest"))
                     using (PhotoDataServiceContext.CreateChangeScope())
                     using (TestWebRequest request = TestWebRequest.CreateForLocation(serverLocation))
@@ -2294,9 +2291,8 @@ namespace AstoriaUnitTests.Tests
             public void BlobCallbackQueryOptionTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                    null,
                     "BlobSupportTest_BlobProjectionTests_EFProvider"))
                 {
                     string blobETag = "\"BlobETag123\"";
@@ -3107,14 +3103,10 @@ namespace AstoriaUnitTests.Tests
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true"),
                         new KeyValuePair<string, string>("Orders", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed"),
-                        new KeyValuePair<string[], string>(new string[] {"Orders", "Freight"}, "Fixed")
                     },
                     "BlobSupportTest_BlobProjectionTests_EFProvider"))
                 {
@@ -3524,14 +3516,10 @@ namespace AstoriaUnitTests.Tests
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true"),
                         new KeyValuePair<string, string>("Orders", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed"),
-                        new KeyValuePair<string[], string>(new string[] {"Orders", "Freight"}, "Fixed")
                     },
                     "BlobSupportTest_BlobProjectionTestsClientQueries_EFProvider"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -4372,12 +4360,9 @@ namespace AstoriaUnitTests.Tests
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Orders", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Orders", "Freight"}, "Fixed")
                     },
                     "BlobSupportTest_BlobAndOrderby_EFProvider"))
                 {
@@ -4747,12 +4732,9 @@ namespace AstoriaUnitTests.Tests
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed")
                     },
                     "BlobSupportTest_BlobAndTopSkip_EFProvider"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -5043,12 +5025,9 @@ namespace AstoriaUnitTests.Tests
 
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed")
                     },
                     "BlobSupportTest_BlobAndTopSkip_EFProvider"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())

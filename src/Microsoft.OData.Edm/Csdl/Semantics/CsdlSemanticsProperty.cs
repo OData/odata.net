@@ -54,11 +54,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.property.DefaultValue; }
         }
 
-        public EdmConcurrencyMode ConcurrencyMode
-        {
-            get { return this.property.IsFixedConcurrency ? EdmConcurrencyMode.Fixed : EdmConcurrencyMode.None; }
-        }
-
         public EdmPropertyKind PropertyKind
         {
             get { return EdmPropertyKind.Structural; }

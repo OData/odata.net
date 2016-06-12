@@ -102,11 +102,11 @@ namespace EdmLibTests.FunctionalUtilities
     <Key>
         <PropertyRef Name=""Id"" />
     </Key>
-    <Property Name=""Id"" Type=""Int32"" Nullable=""false""/>
+    <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
   </EntityType>
   <EntityType Name=""Entity2"" BaseType=""Bork.Entity1"">
-    <Property Name=""OtherFixed"" Type=""Int32"" ConcurrencyMode=""Fixed""/> 
-    <Property Name=""OtherNone"" Type=""Int32"" ConcurrencyMode=""None""/> 
+    <Property Name=""OtherFixed"" Type=""Int32"" /> 
+    <Property Name=""OtherNone"" Type=""Int32"" /> 
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""Entity1_a"" EntityType=""Bork.Entity1"" />
@@ -740,12 +740,12 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(t1);
             var t2 = new EdmEntityType("Foo2", "_!@#$%^&*()");
             t2.AddStructuralProperty("Data", EdmCoreModel.Instance.GetString(true));
-            var id = t2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = t2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             t2.AddKeys(id);
             model.AddElement(t2);
 
             var t3 = new EdmEntityType(string.Empty, string.Empty);
-            id = t3.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            id = t3.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             t3.AddKeys(id);
             model.AddElement(t3);
 
@@ -1063,7 +1063,7 @@ namespace EdmLibTests.FunctionalUtilities
             var type1 = new EdmEntityType("Foo", "EntityType1");
             var type2 = new EdmEntityType("Foo", "EntityType2");
 
-            var id = new EdmStructuralProperty(type1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(type1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
 
             type1.AddKeys(id);
             type2.AddKeys(id);
@@ -1714,7 +1714,7 @@ namespace EdmLibTests.FunctionalUtilities
             container.AddElement(new EdmEntitySet(container, new string('E', 480), type));
             container.AddElement(new EdmEntitySet(container, new string('E', 481), type));
 
-            type.AddKeys(type.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None));
+            type.AddKeys(type.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null));
             var model = new EdmModel();
             model.AddElement(type);
             model.AddElement(container);
@@ -1767,15 +1767,15 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id1 = entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id1);
 
             var entity2 = new EdmEntityType("Foo", "Baz");
-            var id2 = entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id2 = entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity2.AddKeys(id2);
 
             var entity3 = new EdmEntityType("Foo", "Bas");
-            var id3 = entity3.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id3 = entity3.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity3.AddKeys(id3);
 
             StubEdmNavigationProperty entity1Navigation = new StubEdmNavigationProperty("ToBaz")
@@ -2143,26 +2143,6 @@ namespace EdmLibTests.FunctionalUtilities
             }
         }
 
-        public static XElement[] ConcurrencyModePropertyTypes(EdmVersion edmVersion)
-        {
-            const string csdl =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""Bork"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <ComplexType Name=""MyComplexType"" >
-    <Property Name=""Data"" Type=""Edm.String"" />
-  </ComplexType>
-  <EntityType Name=""Entity2"">
-    <Key>
-        <PropertyRef Name=""Id"" />
-    </Key>
-    <Property Name=""Id"" Type=""Int32"" Nullable=""false""/>
-    <Property Name=""OtherNone"" Type=""Int32"" ConcurrencyMode=""None""/> 
-    <Property Name=""MyComplexType"" Type=""Bork.MyComplexType"" ConcurrencyMode=""Fixed"" Nullable=""false""/> 
-  </EntityType>
-</Schema>";
-            return FixUpWithEdmVersion(csdl, edmVersion);
-        }
-
         public static XElement[] BinaryKeyTypeSupportInV40(EdmVersion edmVersion)
         {
             const string csdl =
@@ -2228,23 +2208,6 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        [CustomCsdlSchemaCompliantTest]
-        public static XElement[] ConcurrencyModeTypes(EdmVersion edmVersion)
-        {
-            const string csdl =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""Bork"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <ComplexType Name=""ComplexType"">
-    <Property Name=""Data"" Type=""Edm.String"" />
-  </ComplexType>
-  <ComplexType Name=""MyComplexType"">
-    <Property Name=""OtherNone"" Type=""Int32"" ConcurrencyMode=""None""/> 
-    <Property Name=""MyComplexTypeProperty"" Type=""Bork.ComplexType"" ConcurrencyMode=""Fixed"" Nullable=""false""/> 
-  </ComplexType>
-</Schema>";
-            return FixUpWithEdmVersion(csdl, edmVersion);
-        }
-
         public static XElement[] InvalidBinaryValues(EdmVersion edmVersion)
         {
             var csdl =
@@ -2264,7 +2227,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
             var entity = new EdmEntityType("Foo", "Bar");
-            var id = new EdmStructuralProperty(entity, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(entity, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity.AddKeys(id);
             var entityContainer = new EdmEntityContainer("Foo", "Container");
             entityContainer.AddEntitySet("Baz", entity);
@@ -2277,7 +2240,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
             var entity = new EdmEntityType("Foo", "Bar");
-            var id = new EdmStructuralProperty(entity, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(entity, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity.AddKeys(id);
             var entityContainer = new EdmEntityContainer("Foo", "Container");
             entityContainer.AddSingleton("Baz", entity);
@@ -2290,7 +2253,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id);
 
             var entity2 = new EdmEntityType("Foo", "Baz", entity1);
@@ -2303,7 +2266,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id);
 
             var function = new EdmFunction("namespace", "function1", new EdmEntityReferenceTypeReference(new EdmEntityReferenceType(entity1), false));
@@ -2315,7 +2278,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id);
 
             var function = new EdmFunction("namespace", "function1", new EdmEntityTypeReference(entity1, false));
@@ -2327,10 +2290,10 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id);
             var entity2 = new StubEdmEntityType("Foo", "Baz");
-            var id2 = new EdmStructuralProperty(entity1, "badProp", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id2 = new EdmStructuralProperty(entity1, "badProp", EdmCoreModel.Instance.GetInt16(false), null);
             entity2.SetKey(id2);
             entity2.Add(id2);
 
@@ -2383,15 +2346,15 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id1 = entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id1);
 
             var entity2 = new EdmEntityType("Foo", "Baz");
-            var id2 = entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id2 = entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity2.AddKeys(id2);
 
             var entity3 = new EdmEntityType("Foo", "Bas");
-            var id3 = entity3.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id3 = entity3.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity3.AddKeys(id3);
 
             StubEdmNavigationProperty entity1Navigation = new StubEdmNavigationProperty("ToBaz")
@@ -2418,11 +2381,11 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id1);
 
             var entity2 = new EdmEntityType("Foo", "Baz");
-            var id2 = new EdmStructuralProperty(entity2, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id2 = new EdmStructuralProperty(entity2, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity2.AddKeys(id2);
 
             EdmNavigationProperty entity1Navigation = entity1.AddBidirectionalNavigation(
@@ -2440,11 +2403,11 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new EdmEntityType("Foo", "Bar");
-            entity1.AddKeys(entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None));
+            entity1.AddKeys(entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null));
 
 
             var entity2 = new EdmEntityType("Foo", "Baz");
-            entity2.AddKeys(entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None));
+            entity2.AddKeys(entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null));
 
             EdmNavigationProperty entity1Navigation = entity1.AddBidirectionalNavigation(
                 new EdmNavigationPropertyInfo() { Name = "ToBaz", Target = entity2, TargetMultiplicity = EdmMultiplicity.ZeroOrOne },
@@ -2487,7 +2450,7 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new StubEdmEntityType("Foo", "Bar");
-            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.Add(id1);
             entity1.SetKey(id1);
 
@@ -2526,7 +2489,7 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new StubEdmEntityType("Foo", "Bar");
-            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.Add(id1);
             entity1.SetKey(id1);
 
@@ -2594,18 +2557,18 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = new EdmStructuralProperty(entity1, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id1);
 
             var entity2 = new EdmEntityType("Foo", "Baz");
-            var id2 = new EdmStructuralProperty(entity2, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id2 = new EdmStructuralProperty(entity2, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity2.AddKeys(id2);
 
             StubEdmNavigationProperty navProp1 = new StubEdmNavigationProperty("ToBaz");
             StubEdmNavigationProperty navProp2 = new StubEdmNavigationProperty("ToBar");
             navProp1.Type = new EdmEntityTypeReference(entity2, false);
             navProp1.DeclaringType = entity1;
-            navProp1.ReferentialConstraint = EdmReferentialConstraint.Create(new[] { new EdmStructuralProperty(entity2, "Id1", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None) }, entity2.Key());
+            navProp1.ReferentialConstraint = EdmReferentialConstraint.Create(new[] { new EdmStructuralProperty(entity2, "Id1", EdmCoreModel.Instance.GetInt16(false), null) }, entity2.Key());
             navProp1.Partner = navProp2;
 
             navProp2.Type = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(entity1, false)));
@@ -2627,11 +2590,11 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity1 = new EdmEntityType("Foo", "Bar");
-            var id1 = entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = entity1.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity1.AddKeys(id1);
 
             var entity2 = new EdmEntityType("Foo", "Baz");
-            var id2 = entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id2 = entity2.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity2.AddKeys(id2);
 
             var complexType = new EdmComplexType("Foo", "Bas");
@@ -2847,7 +2810,7 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             var entity = new EdmEntityType("Foo", "Bar");
-            var id1 = new EdmStructuralProperty(entity, "Id", EdmCoreModel.Instance.GetInt16(false), null, EdmConcurrencyMode.None);
+            var id1 = new EdmStructuralProperty(entity, "Id", EdmCoreModel.Instance.GetInt16(false), null);
             entity.AddKeys(id1);
 
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
@@ -2996,7 +2959,7 @@ namespace EdmLibTests.FunctionalUtilities
             EdmModel model = new EdmModel();
 
             EdmComplexType complex = new EdmComplexType("Foo", "Bar");
-            new EdmStructuralProperty(complex, "Baz", EdmCoreModel.Instance.GetBinary(false, -1, false), null, EdmConcurrencyMode.None);
+            new EdmStructuralProperty(complex, "Baz", EdmCoreModel.Instance.GetBinary(false, -1, false), null);
             model.AddElement(complex);
             return model;
         }

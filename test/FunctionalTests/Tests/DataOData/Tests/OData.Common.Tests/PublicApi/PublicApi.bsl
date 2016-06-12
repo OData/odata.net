@@ -478,11 +478,6 @@ public class Microsoft.Spatial.SpatialPipeline {
 	public virtual Microsoft.Spatial.SpatialPipeline ChainTo (Microsoft.Spatial.SpatialPipeline destination)
 }
 
-public enum Microsoft.OData.Edm.EdmConcurrencyMode : int {
-	Fixed = 1
-	None = 0
-}
-
 public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 	ActionImport = 2
 	EntitySet = 1
@@ -900,7 +895,6 @@ public interface Microsoft.OData.Edm.IEdmStringTypeReference : IEdmElement, IEdm
 }
 
 public interface Microsoft.OData.Edm.IEdmStructuralProperty : IEdmElement, IEdmNamedElement, IEdmProperty, IEdmVocabularyAnnotatable {
-	Microsoft.OData.Edm.EdmConcurrencyMode ConcurrencyMode  { public abstract get; }
 	string DefaultValueString  { public abstract get; }
 }
 
@@ -1055,7 +1049,7 @@ public abstract class Microsoft.OData.Edm.EdmStructuredType : Microsoft.OData.Ed
 	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type)
 	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type)
 	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, bool isNullable)
-	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue, Microsoft.OData.Edm.EdmConcurrencyMode concurrencyMode)
+	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue)
 	public virtual Microsoft.OData.Edm.IEdmProperty FindProperty (string name)
 }
 
@@ -2433,9 +2427,8 @@ public class Microsoft.OData.Edm.EdmStringTypeReference : Microsoft.OData.Edm.Ed
 
 public class Microsoft.OData.Edm.EdmStructuralProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmProperty, IEdmStructuralProperty, IEdmVocabularyAnnotatable {
 	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type)
-	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValueString, Microsoft.OData.Edm.EdmConcurrencyMode concurrencyMode)
+	public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValueString)
 
-	Microsoft.OData.Edm.EdmConcurrencyMode ConcurrencyMode  { public virtual get; }
 	string DefaultValueString  { public virtual get; }
 	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
 }
@@ -2731,7 +2724,6 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	InvalidBinary = 283
 	InvalidBoolean = 27
 	InvalidCastExpressionIncorrectNumberOfOperands = 303
-	InvalidConcurrencyMode = 144
 	InvalidDate = 375
 	InvalidDateTime = 285
 	InvalidDateTimeOffset = 286
@@ -2997,7 +2989,6 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStringTypeReference]] StringTypeReferenceStringMaxLengthNegative = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStringTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStringTypeReference]] StringTypeReferenceStringUnboundedNotValidForMaxLength = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStringTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] StructuralPropertyInvalidPropertyType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuralProperty]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] StructuralPropertyInvalidPropertyTypeConcurrencyMode = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuralProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeBaseTypeMustBeSameKindAsDerivedKind = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeInaccessibleBaseType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeInvalidMemberNameMatchesTypeName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]

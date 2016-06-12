@@ -96,19 +96,19 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             this.weaklyBackedCustomerEdmType = new MetadataProviderEdmEntityType("Fake", weaklyBackedDerivedType, this.derivedCustomerEdmType, false, false, false, t => { });
             this.model.AddElement(this.weaklyBackedCustomerEdmType);
 
-            this.nameProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nameResourceProperty, EdmCoreModel.Instance.GetString(true), null, EdmConcurrencyMode.None);
+            this.nameProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nameResourceProperty, EdmCoreModel.Instance.GetString(true), null);
             this.customerEdmType.AddProperty(this.nameProperty);
 
             var addressEdmType = new MetadataProviderEdmComplexType("Fake", addressResourceType, null, false, false, t => {});
             this.model.AddElement(addressEdmType);
 
-            this.addressProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressResourceProperty, new EdmComplexTypeReference(addressEdmType, true), null, EdmConcurrencyMode.None);
+            this.addressProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressResourceProperty, new EdmComplexTypeReference(addressEdmType, true), null);
             this.customerEdmType.AddProperty(this.addressProperty);
 
-            this.namesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, namesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false))), null, EdmConcurrencyMode.None);
+            this.namesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, namesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false))), null);
             this.customerEdmType.AddProperty(this.namesProperty);
 
-            this.addressesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressEdmType, false))), null, EdmConcurrencyMode.None);
+            this.addressesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressEdmType, false))), null);
             this.customerEdmType.AddProperty(this.addressesProperty);
 
             this.bestFriendNavigation = new MetadataProviderEdmNavigationProperty(this.customerEdmType, bestFriendResourceProperty, new EdmEntityTypeReference(this.customerEdmType, true));
@@ -117,16 +117,16 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             this.otherFriendsNavigation = new MetadataProviderEdmNavigationProperty(this.customerEdmType, otherFriendsResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(this.customerEdmType, true))));
             this.customerEdmType.AddProperty(this.otherFriendsNavigation);
 
-            this.weaklyBackedProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, this.weaklyBackedResourceProperty, EdmCoreModel.Instance.GetString(true), null, EdmConcurrencyMode.None);
+            this.weaklyBackedProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, this.weaklyBackedResourceProperty, EdmCoreModel.Instance.GetString(true), null);
             this.customerEdmType.AddProperty(this.weaklyBackedProperty);
 
-            var guid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid1ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null, EdmConcurrencyMode.None);
+            var guid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid1ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null);
             this.customerEdmType.AddProperty(guid1EdmProperty);
-            var guid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid2ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null, EdmConcurrencyMode.None);
+            var guid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid2ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null);
             this.customerEdmType.AddProperty(guid2EdmProperty);
-            var nullableGuid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid1ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null, EdmConcurrencyMode.None);
+            var nullableGuid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid1ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null);
             this.customerEdmType.AddProperty(nullableGuid1EdmProperty);
-            var nullableGuid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid2ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null, EdmConcurrencyMode.None);
+            var nullableGuid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid2ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null);
             this.customerEdmType.AddProperty(nullableGuid2EdmProperty);
 
             this.entitySet = new EdmEntitySetWithResourceSet(new EdmEntityContainer("Fake", "Container"), resourceSetWrapper, this.customerEdmType);

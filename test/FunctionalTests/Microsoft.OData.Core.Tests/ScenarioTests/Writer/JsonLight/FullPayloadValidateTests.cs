@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             EntityType = new EdmEntityType("Namespace", "EntityType", null, false, false, false);
             EntityType.AddKeys(EntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
-            EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
+            IEdmStructuralProperty nameProperty = EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null);
             DerivedType = new EdmEntityType("Namespace", "DerivedType", EntityType, false, true);
 
             var expandedCollectionNavProp = EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
@@ -103,6 +103,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             Model.AddElement(EntityType);
             Model.AddElement(DerivedType);
             Model.AddElement(container);
+            Model.SetOptimisticConcurrencyAnnotation(EntitySet, new[] { nameProperty });
 
             ModelWithFunction = new EdmModel();
             ModelWithFunction.AddElement(EntityType);

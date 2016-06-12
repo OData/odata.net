@@ -730,7 +730,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""myByte"" Type=""Edm.Byte"" />
     <Property Name=""myStream"" Type=""Edm.Stream"" />
     <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" Collation=""Latin1_General_CS_AS_KS_WS ASC"" MaxLength=""128"" Unicode=""false"" />
-    <Property Name=""myStringMax"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" MaxLength=""Max"" Unicode=""false"" />
+    <Property Name=""myStringMax"" Type=""Edm.String"" MaxLength=""Max"" Unicode=""false"" />
     <Property Name=""myGeography"" Type=""Edm.Geography"" SRID=""1"" />
     <Property Name=""myPoint"" Type=""Edm.GeographyPoint"" SRID=""2"" />
     <Property Name=""myLineString"" Type=""Edm.GeographyLineString"" SRID=""3"" />

@@ -12,7 +12,6 @@ namespace Microsoft.OData.Edm
     public class EdmStructuralProperty : EdmProperty, IEdmStructuralProperty
     {
         private readonly string defaultValueString;
-        private readonly EdmConcurrencyMode concurrencyMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmStructuralProperty"/> class.
@@ -21,7 +20,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the property.</param>
         /// <param name="type">The type of the property.</param>
         public EdmStructuralProperty(IEdmStructuredType declaringType, string name, IEdmTypeReference type)
-            : this(declaringType, name, type, null,  EdmConcurrencyMode.None)
+            : this(declaringType, name, type, null)
         {
         }
 
@@ -32,13 +31,11 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the property.</param>
         /// <param name="type">The type of the property.</param>
         /// <param name="defaultValueString">The default value of this property.</param>
-        /// <param name="concurrencyMode">The concurrency mode of this property.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Justification = "defaultValue might be confused for an IEdmValue.")]
-        public EdmStructuralProperty(IEdmStructuredType declaringType, string name, IEdmTypeReference type, string defaultValueString, EdmConcurrencyMode concurrencyMode)
+        public EdmStructuralProperty(IEdmStructuredType declaringType, string name, IEdmTypeReference type, string defaultValueString)
             : base(declaringType, name, type)
         {
             this.defaultValueString = defaultValueString;
-            this.concurrencyMode = concurrencyMode;
         }
 
         /// <summary>
@@ -48,14 +45,6 @@ namespace Microsoft.OData.Edm
         public string DefaultValueString
         {
             get { return this.defaultValueString; }
-        }
-
-        /// <summary>
-        /// Gets the concurrency mode of this property.
-        /// </summary>
-        public EdmConcurrencyMode ConcurrencyMode
-        {
-            get { return this.concurrencyMode; }
         }
 
         /// <summary>

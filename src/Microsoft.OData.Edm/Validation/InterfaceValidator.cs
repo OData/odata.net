@@ -886,14 +886,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             protected override IEnumerable<EdmError> VisitT(IEdmStructuralProperty property, List<object> followup, List<object> references)
             {
-                if (property.ConcurrencyMode < EdmConcurrencyMode.None || property.ConcurrencyMode > EdmConcurrencyMode.Fixed)
-                {
-                    return new EdmError[] { CreateEnumPropertyOutOfRangeError(property, property.ConcurrencyMode, "ConcurrencyMode") };
-                }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
 

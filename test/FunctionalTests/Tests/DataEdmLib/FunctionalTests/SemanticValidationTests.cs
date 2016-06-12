@@ -963,16 +963,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateConcurrencyModePropertyTypes()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                {12, 6, EdmErrorCode.InvalidPropertyType },
-            };
-            this.VerifySemanticValidation(ValidationTestModelBuilder.ConcurrencyModePropertyTypes(this.EdmVersion), expectedErrors);
-        }
-
-        [TestMethod]
         public void ValidateBinaryKeyTypeSupportInV40()
         {
             this.VerifySemanticValidation(ValidationTestModelBuilder.BinaryKeyTypeSupportInV40(EdmVersion.V40), EdmVersion.V40, null);
@@ -1888,16 +1878,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateConcurrencyModeTypes()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                {8, 6, EdmErrorCode.InvalidPropertyType}
-            };
-            this.VerifySemanticValidation(ValidationTestModelBuilder.ConcurrencyModeTypes(this.EdmVersion), expectedErrors);
-        }
-
-        [TestMethod]
         public void DuplicateNavigationPropertyMappingsOkayIfPropertiesAreSilent()
         {
             string csdl = @"
@@ -2085,25 +2065,6 @@ namespace EdmLibTests.FunctionalTests
                 { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
             };
             this.VerifySemanticValidation(model, Microsoft.Test.OData.Utils.Metadata.EdmVersion.Latest, expectedError);
-        }
-
-        [TestMethod]
-        public void ValidateDerivedEntityTypeWithFixedConcurrencyModeModel()
-        {
-            var expectedErrors = new EdmLibTestErrors();
-            var model = ModelBuilder.DerivedEntityTypeWithFixedConcurrencyModeModel();
-
-            this.VerifySemanticValidation(model, Microsoft.Test.OData.Utils.Metadata.EdmVersion.V40, expectedErrors);
-        }
-
-        [TestMethod]
-        public void ValidateDerivedEntityTypeWithFixedConcurrencyModeCsdl()
-        {
-            var expectedErrors = new EdmLibTestErrors();
-            var csdl = ModelBuilder.DerivedEntityTypeWithFixedConcurrencyModeCsdl();
-            var model = this.GetParserResult(csdl);
-
-            this.VerifySemanticValidation(model, Microsoft.Test.OData.Utils.Metadata.EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]

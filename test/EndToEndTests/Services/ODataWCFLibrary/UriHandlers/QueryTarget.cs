@@ -423,11 +423,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
                 get { throw new NotImplementedException(); }
             }
 
-            public EdmConcurrencyMode ConcurrencyMode
-            {
-                get { throw new NotImplementedException(); }
-            }
-
             public EdmPropertyKind PropertyKind
             {
                 get { throw new NotImplementedException(); }

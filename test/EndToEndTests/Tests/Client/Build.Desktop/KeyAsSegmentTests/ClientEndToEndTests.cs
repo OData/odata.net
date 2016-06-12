@@ -129,20 +129,6 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
         [TestMethod]
-        public void AttachToWithEtag()
-        {
-            var contextWrapper = this.CreateWrappedContext();
-
-            var product = contextWrapper.Context.Product.First();
-            string productEtag = contextWrapper.GetEntityDescriptor(product).ETag;
-            var attachToProduct = new Product { ProductId = product.ProductId };
-            contextWrapper.Detach(product);
-
-            contextWrapper.AttachTo("Product", attachToProduct, productEtag);
-            contextWrapper.LoadProperty(attachToProduct, "Detail");
-        }
-
-        [TestMethod]
         public void ContextReferencesTest()
         {
             var contextWrapper = this.CreateWrappedContext();

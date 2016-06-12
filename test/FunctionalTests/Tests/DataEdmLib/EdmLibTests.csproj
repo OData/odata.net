@@ -175,25 +175,13 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Resources\System.Data.Resources.AnnotationSchema.xsd">
+    <EmbeddedResource Include="Resources\Microsoft.OData.Resources.AnnotationSchema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CodeGenerationSchema.xsd">
+    <EmbeddedResource Include="Resources\Microsoft.OData.Resources.CodeGenerationSchema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_1_1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_2.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_3.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_4.xsd">
+    <EmbeddedResource Include="Resources\Microsoft.OData.Resources.CSDLSchema_4.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

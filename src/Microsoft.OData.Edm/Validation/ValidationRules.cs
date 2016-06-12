@@ -1001,24 +1001,6 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
-        /// <summary>
-        /// Validates that if the concurrency mode of a property is fixed, the type is primitive.
-        /// </summary>
-        public static readonly ValidationRule<IEdmStructuralProperty> StructuralPropertyInvalidPropertyTypeConcurrencyMode =
-            new ValidationRule<IEdmStructuralProperty>(
-                (context, property) =>
-                {
-                    if (property.ConcurrencyMode == EdmConcurrencyMode.Fixed &&
-                        !property.Type.IsPrimitive() &&
-                        !context.IsBad(property.Type.Definition))
-                    {
-                        context.AddError(
-                        property.Location(),
-                        EdmErrorCode.InvalidPropertyType,
-                        Strings.EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode((property.Type.IsCollection() ? EdmConstants.Type_Collection : property.Type.TypeKind().ToString())));
-                    }
-                });
-
         #endregion
 
         #region IEdmNavigationProperty

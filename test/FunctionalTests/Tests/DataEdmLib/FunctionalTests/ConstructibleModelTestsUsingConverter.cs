@@ -726,7 +726,7 @@ namespace EdmLibTests.FunctionalTests
             orderLine.AddKeys(orderLineOrderId);
             orderLine.AddKeys(orderLineProductId);
             EdmStructuralProperty orderLineQuantity = orderLine.AddStructuralProperty("Quantity", EdmCoreModel.Instance.GetInt32(false));
-            EdmStructuralProperty orderLineConcurrencyToken = orderLine.AddStructuralProperty("ConcurrencyToken", EdmCoreModel.Instance.GetString(false), null, EdmConcurrencyMode.Fixed);
+            EdmStructuralProperty orderLineConcurrencyToken = orderLine.AddStructuralProperty("ConcurrencyToken", EdmCoreModel.Instance.GetString(false), null);
             EdmStructuralProperty orderLineStream = orderLine.AddStructuralProperty("OrderLineStream", EdmCoreModel.Instance.GetStream(false));
             model.AddElement(orderLine);
 
@@ -740,7 +740,7 @@ namespace EdmLibTests.FunctionalTests
             product.AddKeys(productId);
             EdmStructuralProperty productDescription = product.AddStructuralProperty("Description", EdmCoreModel.Instance.GetString(false, 1000, true, true));
             EdmStructuralProperty productDimensions = product.AddStructuralProperty("Dimensions", new EdmComplexTypeReference(dimensions, false));
-            EdmStructuralProperty productBaseConcurrency = new EdmStructuralProperty( product, "BaseConcurrency", EdmCoreModel.Instance.GetString(false), null, EdmConcurrencyMode.Fixed);
+            EdmStructuralProperty productBaseConcurrency = new EdmStructuralProperty( product, "BaseConcurrency", EdmCoreModel.Instance.GetString(false), null);
             product.AddProperty(productBaseConcurrency);
             EdmStructuralProperty productComplexConcurrency = product.AddStructuralProperty("ComplexConcurrency", new EdmComplexTypeReference(concurrency, false));
             EdmStructuralProperty productNestedComplexConcurrency = product.AddStructuralProperty("NestedComplexConcurrency", new EdmComplexTypeReference(audit, false));

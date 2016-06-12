@@ -51,11 +51,6 @@ namespace Microsoft.OData.Edm
             get { return null; }
         }
 
-        public EdmConcurrencyMode ConcurrencyMode
-        {
-            get { return EdmConcurrencyMode.None; }
-        }
-
         public EdmPropertyKind PropertyKind
         {
             get { return EdmPropertyKind.None; }
