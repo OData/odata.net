@@ -46,17 +46,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         protected override XmlReader InitializeReader(XmlReader reader)
         {
             XmlReaderSettings readerSettings = new XmlReaderSettings
-                                                   {
-                                                       CheckCharacters = true,
-                                                       CloseInput = false,
-                                                       IgnoreWhitespace = true,
-                                                       ConformanceLevel = ConformanceLevel.Auto,
-                                                       IgnoreComments = true,
-                                                       IgnoreProcessingInstructions = true,
+            {
+                CheckCharacters = true,
+                CloseInput = false,
+                IgnoreWhitespace = true,
+                ConformanceLevel = ConformanceLevel.Auto,
+                IgnoreComments = true,
+                IgnoreProcessingInstructions = true,
 #if !ORCAS
-                                                       DtdProcessing = DtdProcessing.Prohibit
+                DtdProcessing = DtdProcessing.Prohibit
 #endif
-                                                   };
+            };
 
             // user specified a stream to read from, read from it.
             // The Uri is just used to identify the stream in errors.
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 }
             }
 
-           return EdmMultiplicity.One;
+            return EdmMultiplicity.One;
         }
 
         protected EdmOnDeleteAction RequiredOnDeleteAction(string attributeName)
