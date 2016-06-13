@@ -27,28 +27,19 @@ namespace Microsoft.OData
         /// </summary>
         private ReaderValidations validations;
 
-        /// <summary>
-        /// Custom type resolver used by the Client.
-        /// </summary>
-        private Func<IEdmType, string, IEdmType> clientCustomTypeResolver;
-
-        /// <summary>
-        /// Whether primitive type conversion is disabled.
-        /// </summary>
-        private bool disablePrimitiveTypeConversion;
-
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
         /// with default values.</summary>
         public ODataMessageReaderSettings()
         {
-            this.clientCustomTypeResolver = null;
-            this.disablePrimitiveTypeConversion = false;
+            this.ClientCustomTypeResolver = null;
+            this.DisablePrimitiveTypeConversion = false;
             this.DisableMessageStreamDisposal = false;
             this.EnableCharactersCheck = false;
             this.EnableReadingEntryContentInEntryStartState = true;
             this.ODataSimplified = false;
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
             Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            Validator = new ReaderValidator(this);
         }
 
         /// <summary>
@@ -64,10 +55,11 @@ namespace Microsoft.OData
             set
             {
                 validations = value;
+                BasicValidation = (validations & ReaderValidations.BasicValidation) != 0;
+                ThrowOnDuplicatePropertyNames = (validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0;
                 StrictMetadataValidation = (validations & ReaderValidations.StrictMetadataValidation) != 0;
                 ThrowOnUndeclaredLinkProperty = (validations & ReaderValidations.ThrowOnUndeclaredLinkProperty) != 0;
                 ThrowOnUndeclaredValueProperty = (validations & ReaderValidations.ThrowOnUndeclaredValueProperty) != 0;
-                Validator = ReaderValidator.Create(this);
             }
         }
 
@@ -96,35 +88,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets or sets custom type resolver used by the Client.
         /// </summary>
-        public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver
-        {
-            get
-            {
-                return clientCustomTypeResolver;
-            }
-
-            set
-            {
-                clientCustomTypeResolver = value;
-                Validator = ReaderValidator.Create(this);
-            }
-        }
+        public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver { get; set; }
 
         /// <summary>Gets or sets a value that indicates whether not to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
         /// <returns>true if primitive values and report values are not converted; false if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is false.</returns>
-        public bool DisablePrimitiveTypeConversion
-        {
-            get
-            {
-                return disablePrimitiveTypeConversion;
-            }
-
-            set
-            {
-                disablePrimitiveTypeConversion = value;
-                Validator = ReaderValidator.Create(this);
-            }
-        }
+        public bool DisablePrimitiveTypeConversion { get; set; }
 
         /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
         /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
@@ -193,9 +161,19 @@ namespace Microsoft.OData
         public bool? UseKeyAsSegment { get; set; }
 
         /// <summary>
-        /// Gets a validator corresponding to the validation settings.
+        /// Gets the bound validator.
         /// </summary>
         internal IReaderValidator Validator { get; private set; }
+
+        /// <summary>
+        /// Returns whether BasicValidation is enabled.
+        /// </summary>
+        internal bool BasicValidation { get; private set; }
+
+        /// <summary>
+        /// Returns whether ThrowOnDuplicatePropertyNames validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnDuplicatePropertyNames { get; private set; }
 
         /// <summary>
         /// Returns whether StrictMetadataValidation is enabled.
@@ -260,9 +238,9 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
             this.BaseUri = other.BaseUri;
-            this.clientCustomTypeResolver = other.clientCustomTypeResolver;
+            this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
             this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
-            this.disablePrimitiveTypeConversion = other.disablePrimitiveTypeConversion;
+            this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
@@ -271,11 +249,13 @@ namespace Microsoft.OData
             this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.ODataSimplified = other.ODataSimplified;
+
             this.validations = other.validations;
+            this.BasicValidation = other.BasicValidation;
+            this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.StrictMetadataValidation = other.StrictMetadataValidation;
             this.ThrowOnUndeclaredLinkProperty = other.ThrowOnUndeclaredLinkProperty;
             this.ThrowOnUndeclaredValueProperty = other.ThrowOnUndeclaredValueProperty;
-            this.Validator = other.Validator;
         }
     }
 }

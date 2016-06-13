@@ -61,8 +61,6 @@
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="ReaderValidations.cs" />
     <Compile Include="ReaderValidator.cs" />
-    <Compile Include="ReaderValidatorWithBasicValidation.cs" />
-    <Compile Include="ReaderValidatorWithoutBasicValidation.cs" />
     <Compile Include="ServiceLifetime.cs" />
     <Compile Include="IContainerBuilder.cs" />
     <Compile Include="Metadata\ODataAtomErrorDeserializer.cs" />
