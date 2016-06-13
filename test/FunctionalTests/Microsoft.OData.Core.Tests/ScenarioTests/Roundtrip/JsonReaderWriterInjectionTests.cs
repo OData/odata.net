@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.Test.OData.DependencyInjection;
@@ -307,11 +308,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             public object Value
             {
                 get { return this.value; }
-            }
-
-            public string RawValue
-            {
-                get { return "\"" + this.value + "\""; }
             }
 
             public JsonNodeType NodeType

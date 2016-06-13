@@ -106,33 +106,6 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// The raw value (string or char) of the last reported node.
-        /// </summary>
-        /// <remarks>
-        /// Depending on whether buffering is on or off this will return the node raw value of the last
-        /// buffered read or the node raw value of the last unbuffered read.
-        /// </remarks>
-        public virtual string RawValue
-        {
-            get
-            {
-                if (this.bufferedNodesHead != null)
-                {
-                    if (this.isBuffering)
-                    {
-                        Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
-                        return this.currentBufferedNode.RawValue;
-                    }
-
-                    // in non-buffering mode if we have buffered nodes satisfy the request from the first node there
-                    return this.bufferedNodesHead.RawValue;
-                }
-
-                return this.innerReader.RawValue;
-            }
-        }
-
-        /// <summary>
         /// The value of the last reported node.
         /// </summary>
         /// <remarks>
@@ -220,7 +193,7 @@ namespace Microsoft.OData.Json
             if (this.bufferedNodesHead == null)
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
-                this.bufferedNodesHead = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value, this.innerReader.RawValue);
+                this.bufferedNodesHead = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value);
             }
             else
             {
@@ -355,7 +328,7 @@ namespace Microsoft.OData.Json
                         result = this.innerReader.Read();
 
                         // Add the new node to the end
-                        BufferedNode newNode = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value, this.innerReader.RawValue);
+                        BufferedNode newNode = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value);
                         newNode.Previous = this.bufferedNodesHead.Previous;
                         newNode.Next = this.bufferedNodesHead;
                         this.bufferedNodesHead.Previous.Next = newNode;
@@ -1006,9 +979,6 @@ namespace Microsoft.OData.Json
             /// <summary>The type of the node read.</summary>
             private readonly JsonNodeType nodeType;
 
-            /// <summary>The Json raw value of the node.</summary>
-            private readonly string nodeRawValue;
-
             /// <summary>The value of the node.</summary>
             private readonly object nodeValue;
 
@@ -1017,11 +987,9 @@ namespace Microsoft.OData.Json
             /// </summary>
             /// <param name="nodeType">The type of the node read.</param>
             /// <param name="value">The value of the node.</param>
-            /// <param name="rawValue">The Json raw string or char of the node.</param>
-            internal BufferedNode(JsonNodeType nodeType, object value, string rawValue)
+            internal BufferedNode(JsonNodeType nodeType, object value)
             {
                 this.nodeType = nodeType;
-                this.nodeRawValue = rawValue;
                 this.nodeValue = value;
                 this.Previous = this;
                 this.Next = this;
@@ -1035,17 +1003,6 @@ namespace Microsoft.OData.Json
                 get
                 {
                     return this.nodeType;
-                }
-            }
-
-            /// <summary>
-            /// The raw value (string or char) of the node.
-            /// </summary>
-            internal string RawValue
-            {
-                get
-                {
-                    return this.nodeRawValue;
                 }
             }
 

@@ -5035,7 +5035,6 @@ public enum Microsoft.OData.Json.JsonNodeType : int {
 public interface Microsoft.OData.Json.IJsonReader {
 	bool IsIeee754Compatible  { public abstract get; }
 	Microsoft.OData.Json.JsonNodeType NodeType  { public abstract get; }
-	string RawValue  { public abstract get; }
 	object Value  { public abstract get; }
 
 	bool Read ()

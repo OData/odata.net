@@ -7,6 +7,8 @@
 namespace Microsoft.OData.Json
 {
     using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
     using System.Text;
 
     /// <summary>
@@ -183,7 +185,38 @@ namespace Microsoft.OData.Json
         /// </remarks>
         internal static void SkipValue(this IJsonReader jsonReader)
         {
-            SkipValue(jsonReader, null);
+            Debug.Assert(jsonReader != null, "jsonReader != null");
+            int depth = 0;
+            do
+            {
+                switch (jsonReader.NodeType)
+                {
+                    case JsonNodeType.StartArray:
+                    case JsonNodeType.StartObject:
+                        depth++;
+                        break;
+
+                    case JsonNodeType.EndArray:
+                    case JsonNodeType.EndObject:
+                        Debug.Assert(depth > 0, "Seen too many scope ends.");
+                        depth--;
+                        break;
+
+                    default:
+                        Debug.Assert(
+                            jsonReader.NodeType != JsonNodeType.EndOfInput,
+                            "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
+                        break;
+                }
+            }
+            while (jsonReader.Read() && depth > 0);
+
+            if (depth > 0)
+            {
+                // Not all open scopes were closed:
+                // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+            }
         }
 
         /// <summary>
@@ -194,44 +227,77 @@ namespace Microsoft.OData.Json
         internal static void SkipValue(this IJsonReader jsonReader, StringBuilder jsonRawValueStringBuilder)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
-
-            int depth = 0;
-            do
+            using (StringWriter stringWriter = new StringWriter(jsonRawValueStringBuilder, CultureInfo.InvariantCulture))
             {
-                switch (jsonReader.NodeType)
+                JsonWriter jsonWriter = new JsonWriter(stringWriter, indent: false, isIeee754Compatible: false);
+                int depth = 0;
+                do
                 {
-                    case JsonNodeType.PrimitiveValue:
-                        break;
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-                    default:
-                        Debug.Assert(
-                            jsonReader.NodeType != JsonNodeType.EndOfInput,
-                            "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
-                        break;
+                    switch (jsonReader.NodeType)
+                    {
+                        case JsonNodeType.PrimitiveValue:
+                            if (jsonReader.Value == null)
+                            {
+                                jsonWriter.WriteValue((string)null);
+                            }
+                            else
+                            {
+                                jsonWriter.WritePrimitiveValue(jsonReader.Value);
+                            }
+
+                            break;
+
+                        case JsonNodeType.StartArray:
+                            jsonWriter.StartArrayScope();
+                            depth++;
+                            break;
+
+                        case JsonNodeType.StartObject:
+                            jsonWriter.StartObjectScope();
+                            depth++;
+                            break;
+
+                        case JsonNodeType.EndArray:
+                            jsonWriter.EndArrayScope();
+                            Debug.Assert(depth > 0, "Seen too many scope ends.");
+                            depth--;
+                            break;
+
+                        case JsonNodeType.EndObject:
+                            jsonWriter.EndObjectScope();
+                            Debug.Assert(depth > 0, "Seen too many scope ends.");
+                            depth--;
+                            break;
+
+                        case JsonNodeType.Property:
+                            jsonWriter.WriteName(jsonReader.GetPropertyName());
+                            break;
+
+                        default:
+                            Debug.Assert(
+                                jsonReader.NodeType != JsonNodeType.EndOfInput,
+                                "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
+                            break;
+                    }
+                }
+                while (jsonReader.Read() && depth > 0);
+
+                if (depth > 0)
+                {
+                    // Not all open scopes were closed:
+                    // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
+                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
                 }
 
-                if (jsonRawValueStringBuilder != null)
-                {
-                    jsonRawValueStringBuilder.Append(jsonReader.RawValue);
-                }
-
-                jsonReader.ReadNext();
+                jsonWriter.Flush();
             }
-            while (depth > 0);
         }
 
         internal static ODataValue ReadAsUntypedOrNullValue(this IJsonReader jsonReader)
         {
             StringBuilder builder = new StringBuilder();
             jsonReader.SkipValue(builder);
+            Debug.Assert(builder.Length > 0, "builder.Length > 0");
             return new ODataUntypedValue()
             {
                 RawValue = builder.ToString(),

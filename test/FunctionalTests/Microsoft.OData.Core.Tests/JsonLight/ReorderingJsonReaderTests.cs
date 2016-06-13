@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests.JsonLight
             }";
 
             var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
-            
+
             // Expect type name first.
             reader.ReadPropertyName().Should().Be("@odata.type");
             reader.ReadPrimitiveValue().Should().Be("SomeEntityType");
